@@ -46,6 +46,7 @@ Development
 ## Unit Testing
 
 - We are using Jest by facebook
+- Run `npm test`
 
 Notes
 ========

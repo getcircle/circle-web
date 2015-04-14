@@ -53,5 +53,19 @@
     "flux-react-router": "~0.6.1",
     "gulp-batch": "~1.0.5",
     "flux": "~2.0.1"
+  },
+  "jest": {
+    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react"],
+    "scriptPreprocessor": "<rootDir>/jest_preprocessor.js",
+    "testFileExtensions": [
+      "spec.js",
+      "spec.coffee",
+      "spec.cjsx"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "coffee",
+      "cjsx"
+    ]
   }
 }
