@@ -1,0 +1,20 @@
+{
+  "name": "circle-web",
+  "root": "./",
+  "clean_urls": true,
+  "error_page": "error.html",
+  "routes": {
+    "dist": "dist",
+    "**": "index.html"
+  },
+  "exclude": [
+    "legacy",
+    "node_modules",
+    "divshot.json",
+    "src",
+    ".gitignore",
+    "README.md",
+    "package.json"
+    "server.coffee"
+  ]
+}
