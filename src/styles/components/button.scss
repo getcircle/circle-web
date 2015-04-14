@@ -1,0 +1,23 @@
+@import 'base/settings';
+
+.btn {
+    background: $call-to-action-background-color;
+    color: $call-to-action-text-color;
+}
+
+// btn__icon means icon is contained with icon
+// We don't want to nest these using scss since it
+// increase specificity. Instead we just namespace.
+.btn__icon {
+    font-size: $large-icon-size;
+}
+
+.btn__text {
+    font-size: $action-text-size;
+}
+
+// btn--secondary means we have a variation on btn
+.btn--secondary {
+    background: $secondary-action-background-color;
+    color: $secondary-action-text-color;
+}

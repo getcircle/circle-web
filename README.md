@@ -39,6 +39,10 @@ SublimeText 3
 Development
 ===========
 
+## Start up the watcher while developing
+
+- Run `gulp watch` to constantly compile js and scss changes
+
 ## Architecture
 
 - We are mostly following Flux but adding in routing
@@ -47,6 +51,12 @@ Development
 
 - We are using Jest by facebook
 - Run `npm test`
+
+## Styling
+
+- We are using scss
+- We are following smacss mostly
+- We are using the BEM naming convention
 
 Notes
 ========
