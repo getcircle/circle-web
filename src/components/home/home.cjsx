@@ -38,8 +38,9 @@ class Home extends React.Component
                 { t('Go to Page 2') }
             </a>
 
-            <button onClick={ @handleClick }>
-                { t('Increment count') }
+            <button className='btn' onClick={ @handleClick }>
+                <i className="btn__icon" />
+                <span className='btn__text'>{ t('Increment count') }</span>
             </button>
 
             <p> Click Count: { @state.clickCount } </p>
