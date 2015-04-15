@@ -55,7 +55,9 @@
     "flux": "~2.0.1"
   },
   "jest": {
-    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react"],
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react"
+    ],
     "scriptPreprocessor": "<rootDir>/jest_preprocessor.js",
     "testFileExtensions": [
       "spec.js",
