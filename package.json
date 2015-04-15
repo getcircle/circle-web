@@ -52,7 +52,8 @@
     "jest-cli": "~0.4.0",
     "flux-react-router": "~0.6.1",
     "gulp-batch": "~1.0.5",
-    "flux": "~2.0.1"
+    "flux": "~2.0.1",
+    "superagent": "~1.2.0"
   },
   "jest": {
     "unmockedModulePathPatterns": [

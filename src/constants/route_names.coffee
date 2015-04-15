@@ -2,3 +2,4 @@
 module.exports =
     'home': '/'
     'page2': '/page2'
+    'ajaxTest': '/ajax-test'
