@@ -14,7 +14,7 @@
     "src",
     ".gitignore",
     "README.md",
-    "package.json"
+    "package.json",
     "server.coffee"
   ]
 }
