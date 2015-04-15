@@ -32,16 +32,20 @@ class Home extends React.Component
         # you can use "#{}" inside double quotes
         # {} is jsx, #{} is coffeescript
         <div className="app">
-            { t('Test, yo yo yo') }
+            <h1>{ t('Test, yo yo yo') }</h1>
 
-            <a href="#{ routes.page2 }" onClick={router.deferTo(routes.page2)}>
-                { t('Go to Page 2') }
-            </a>
+            <p>
+                <a href="#{ routes.page2 }" onClick={router.deferTo(routes.page2)}>
+                    { t('Go to Page 2') }
+                </a>
+            </p>
 
-            <button className='btn' onClick={ @handleClick }>
-                <i className="btn__icon" />
-                <span className='btn__text'>{ t('Increment count') }</span>
-            </button>
+            <p>
+                <button className='btn' onClick={ @handleClick }>
+                    <i className="btn__icon" />
+                    <span className='btn__text'>{ t('Increment count') }</span>
+                </button>
+            </p>
 
             <p> Click Count: { @state.clickCount } </p>
         </div>
