@@ -11,6 +11,7 @@
     "legacy",
     "node_modules",
     "divshot.json",
+    "__mocks__",
     "src",
     ".gitignore",
     "README.md",
