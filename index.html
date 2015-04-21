@@ -1,13 +1,289 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>CircleWeb</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-        <link rel="stylesheet" href="dist/app.css">
-    </head>
-    <body>
-        <div class="js-content"></div>
-        <script src="dist/app.js"></script>
-    </body>
+<html dir="ltr" lang="en-US">
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Circle" />
+
+    <!-- Stylesheets
+    ============================================= -->
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="static/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/circle.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/circle-dark.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/font-icons.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/animate.css" type="text/css" />
+
+    <link rel="stylesheet" href="static/css/responsive.css" type="text/css" />
+    <link rel="stylesheet" href="static/css/colors.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <!--[if lt IE 9]>
+        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <![endif]-->
+
+    <!-- External JavaScripts
+    ============================================= -->
+    <script type="text/javascript" src="static/js/jquery.js"></script>
+    <script type="text/javascript" src="static/js/plugins.js"></script>
+
+    <!-- Document Title
+    ============================================= -->
+    <title>Circle - Everything you need to know about your company</title>
+
+</head>
+
+<body class="stretched">
+
+    <!-- Document Wrapper
+    ============================================= -->
+    <div id="wrapper" class="clearfix">
+
+        <!-- Header
+        ============================================= -->
+        <header id="header" class="page-section dark static-sticky" style="border-bottom:0;">
+            <div id="header-wrap">
+                <div class="container clearfix">
+                    <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+                    <!-- Logo
+                    ============================================= -->
+                    <div id="logo">
+
+                        <a href="index.html" class="standard-logo" data-dark-logo="static/images/Circle.png">
+                            <img src="static/images/Circle.png" alt="Circle Logo">
+                        </a>
+                        <a href="index.html" class="retina-logo" data-dark-logo="static/images/Circle@2x.png">
+                            <img src="static/images/Circle@2x.png" alt="Circle Logo">
+                        </a>
+                    </div><!-- #logo end -->
+                    <!-- Primary Navigation
+                    ============================================= -->
+                    <nav id="primary-menu">
+                        <ul class="one-page-menu">
+                            <li class="current"><a href="#" data-href="#section-features"><div>Features</div></a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#myModal"><div>Request a Demo</div></a></li>
+                        </ul>
+                    </nav><!-- #primary-menu end -->
+                </div>
+            </div>
+        </header><!-- #header end -->
+
+        <section class="slider dark" style="background: #2F373E 0 0; background-size: cover; height: 750px; overflow: visible; ">
+            <div id="section-home" class="heading-block title-center nobottomborder page-section">
+                <h1 style="font-size: 28px;">Corporate directory your employees will love.</h1>
+                <span style="font-size: 20px; color: #aaa;">Access all the information on co-workers, teams, and locations.</span>
+                <div>
+                    <img src="static/images/Profile.png" alt="Circle app screenshot" style="width: 700px;" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Content
+        ============================================= -->
+        <section id="content" style="overflow: visible;">
+
+            <div class="content-wrap">
+
+                <div class="container clearfix">
+
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-body">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                        <h4 class="modal-title" id="myModalLabel">Have a question?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="#" method="post" role="form" class="nobottommargin clearfix">
+                                            <div class="col_half">
+                                                <input type="text" class="form-control input-lg not-dark" value="" placeholder="Name*">
+                                            </div>
+                                            <div class="col_half col_last">
+                                                <input type="email" class="form-control input-lg not-dark" value="" placeholder="Email*">
+                                            </div>
+                                            <div class="col_half">
+                                                <input type="text" class="form-control input-lg not-dark" value="" placeholder="Job Title">
+                                            </div>
+                                            <div class="col_half col_last">
+                                                <input type="text" class="form-control input-lg not-dark" value="" placeholder="Company name">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                            <div class="col_full nobottommargin">
+                                                <button class="btn btn-lg btn-primary btn-block nomargin" value="submit" type="submit" style="">
+                                                    Request a demo
+                                                </button>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear bottommargin-lg"></div>
+
+                    <div id="section-features" class="heading-block title-center page-section">
+                        <h2>Features Overview</h2>
+                        <!-- <span>Some of the Features that are gonna blow your mind off</span> -->
+                    </div>
+
+                    <div class="col_one_third">
+                        <div class="feature-box fbox-plain">
+                            <h3>Skills Graph</h3>
+                            <p>Circle builds a skills graph of all the employees in the organization. Easily search for people who know iOS or French or Python, etc.</p>
+                        </div>
+                    </div>
+
+                    <div class="col_one_third">
+                        <div class="feature-box fbox-plain">
+                            <h3>Work Profile</h3>
+                            <p>A central work identity with data from active directory, company HRIS, external social accounts like Github, Facebook, Twitter, etc.</p>
+                        </div>
+                    </div>
+
+                    <div class="col_one_third col_last">
+                        <div class="feature-box fbox-plain">
+                            <h3>Easy Provisioning of Users</h3>
+                            <p>Circle seamlessly integrates with your existing systems and adds users as per your custom setup.</p>
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+
+                    <div class="col_one_third">
+                        <div class="feature-box fbox-plain">
+                            <h3>Quickly find &amp; Contact</h3>
+                            <p>Find and contact any employee in two taps.</p>
+                        </div>
+                    </div>
+
+                    <div class="col_one_third">
+                        <div class="feature-box fbox-plain">
+                            <h3>Rich profiles built to connect team members</h3>
+                            <p>Looks beautiful &amp; ultra-sharp on Retina Screen Displays. Retina Icons, Fonts &amp; all others graphics are optimized.</p>
+                        </div>
+                    </div>
+
+                    <div class="col_one_third col_last">
+                        <div class="feature-box fbox-plain">
+                            <h3>Search across people, offices, teams, and skills</h3>
+                            <p>Canvas includes tons of optimized code that are completely customizable and deliver unmatched fast performance.</p>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="section footer-stick">
+                    <div class="container clearfix">
+                        <div id="section-buy" class="heading-block title-center nobottomborder page-section">
+                            <h2>Start connecting with your co-workers</h2>
+                        </div>
+                        <div class="center">
+                            <a href="#" data-scrollto="#section-pricing" class="button button-xlarge nobottommargin"><i class="icon-user2"></i>Request a demo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- #content end -->
+
+        <!-- Footer
+        ============================================= -->
+        <footer id="footer" class="dark">
+            <div class="container">
+                <!-- Footer Widgets
+                ============================================= -->
+                <div class="footer-widgets-wrap clearfix">
+                    <div class="col_two_third">
+                        <div class="col_one_third">
+                            <div class="widget clearfix">
+                                <p>RH Labs Inc.</p>
+                                <div style="background: url('static/images/world-map.png') no-repeat center center; background-size: 100%;">
+                                    <address>
+                                        <strong>Headquarters:</strong><br>
+                                        319 Primrose Road, Suite A<br>
+                                        Burlingame, CA 94010<br>
+                                    </address>
+                                    <abbr title="Email Address"><strong>Email:</strong></abbr> hello@circlehq.co
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col_one_third">
+                            <div class="widget widget_links clearfix">
+                            </div>
+                        </div>
+                        <div class="col_one_third col_last">
+                            <div class="widget clearfix">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col_one_third col_last">
+                        <div class="widget subscribe-widget clearfix hidden">
+                            <h5><strong>Subscribe</strong> to our Newsletter to be the first to hear about our product updates:</h5>
+                            <div id="widget-subscribe-form-result" data-notify-type="success" data-notify-msg=""></div>
+                            <form id="widget-subscribe-form" action="include/subscribe.php" role="form" method="post" class="nobottommargin">
+                                <div class="input-group divcenter">
+                                    <span class="input-group-addon"><i class="icon-email2"></i></span>
+                                    <input type="email" id="widget-subscribe-form-email" name="widget-subscribe-form-email" class="form-control required email" placeholder="Enter your Email">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-success" type="submit">Subscribe</button>
+                                    </span>
+                                </div>
+                            </form>
+                            <script type="text/javascript">
+                                $("#widget-subscribe-form").validate({
+                                    submitHandler: function(form) {
+                                        $(form).find('.input-group-addon').find('.icon-email2').removeClass('icon-email2').addClass('icon-line-loader icon-spin');
+                                        $(form).ajaxSubmit({
+                                            target: '#widget-subscribe-form-result',
+                                            success: function() {
+                                                $(form).find('.input-group-addon').find('.icon-line-loader').removeClass('icon-line-loader icon-spin').addClass('icon-email2');
+                                                $('#widget-subscribe-form').find('.form-control').val('');
+                                                $('#widget-subscribe-form-result').attr('data-notify-msg', $('#widget-subscribe-form-result').html()).html('');
+                                                SEMICOLON.widget.notifications($('#widget-subscribe-form-result'));
+                                            }
+                                        });
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div><!-- .footer-widgets-wrap end -->
+            </div>
+
+            <!-- Copyrights
+            ============================================= -->
+            <div id="copyrights">
+
+                <div class="container clearfix">
+
+                    <div class="col_half">
+                        Copyrights &copy; 2014 All Rights Reserved by RH Labs, Inc.<br>
+                        <div class="copyright-links"><a href="terms.html">Terms of Use</a> / <a href="privacy.html">Privacy Policy</a></div>
+                    </div>
+
+                    <div class="col_half col_last tright">
+                        <div class="fright clearfix">
+                        </div>
+
+                        <div class="clear"></div>
+
+                        <i class="icon-envelope2"></i> hello@circlehq.co
+                    </div>
+
+                </div>
+
+            </div><!-- #copyrights end -->
+
+        </footer><!-- #footer end -->
+
+    </div><!-- #wrapper end -->
+
+    <!-- Go To Top
+    ============================================= -->
+    <div id="gotoTop" class="icon-angle-up"></div>
+
+    <!-- Footer Scripts
+    ============================================= -->
+    <script type="text/javascript" src="static/js/functions.js"></script>
+
+</body>
 </html>
