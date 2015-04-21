@@ -7216,11 +7216,13 @@ body:not(.device-touch) .button.button-full strong {
 	letter-spacing: 1px;
 	margin-bottom: 0;
 	color: #333;
+    text-align: center;
 }
 
 .feature-box p {
 	margin: 8px 0 0 0;
 	color: #999;
+    text-align: center;
 }
 
 .feature-box .before-heading { font-size: 14px; }
