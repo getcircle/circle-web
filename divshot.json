@@ -3,6 +3,9 @@
   "root": "./",
   "clean_urls": true,
   "error_page": "error.html",
+  "routes": {
+    "**": "index.html"
+  },
   "exclude": [
     "legacy",
     "node_modules",
