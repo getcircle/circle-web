@@ -1,7 +1,7 @@
-jest.dontMock('../dashboard_actions.coffee')
+jest.dontMock('../../dashboard/actions.coffee')
 
-dashboardActions = require('../dashboard_actions')
-renderUtils = require('../../../utils/render')
+dashboardActions = require('../../dashboard/actions')
+renderUtils = require('../../../../utils/render')
 
 describe 'DashboardActions', ->
 

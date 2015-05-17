@@ -1,10 +1,10 @@
 React = require 'react'
 request = require 'superagent'
 
-Home = require '../../components/home/home'
-Page2 = require '../../components/home/page2'
-ResponseCard = require '../../components/response/card'
-renderUtils = require '../../utils/render'
+Home = require '../../../components/home/home'
+Page2 = require '../../../components/home/page2'
+ResponseCard = require '../../../components/response/card'
+renderUtils = require '../../../utils/render'
 
 
 module.exports =
