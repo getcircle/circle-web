@@ -1,6 +1,5 @@
 EventEmitter = require('events').EventEmitter
 
-actionTypes = require '../constants/action_types'
 BaseStore = require './base_store'
 
 
