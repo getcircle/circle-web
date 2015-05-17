@@ -6,7 +6,7 @@
     "start": "coffee server.coffee",
     "test": "jest",
     "debug-test": "mocha debug ./test/spec_helper.coffee ./public/**/*.spec.coffee",
-    "setup-dns": "echo '127.0.0.1 local.circle-web.divshot.io' >> /etc/hosts && dscacheutil -flushcache"
+    "setup-dns": "echo '127.0.0.1 local.circlehq.co' >> /etc/hosts && dscacheutil -flushcache"
   },
   "repository": {
     "type": "git",
