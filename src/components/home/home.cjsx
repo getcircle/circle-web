@@ -14,10 +14,10 @@ class Home extends React.Component
         this.state = clickStore.toJSON()
 
     componentDidMount: ->
-        clickStore.addChangeListener(this.handleClickStoreChange);
+        clickStore.addChangeListener(this.handleClickStoreChange)
 
     componentWillUnmount: ->
-        clickStore.removeChangeListener(this.handleClickStoreChange);
+        clickStore.removeChangeListener(this.handleClickStoreChange)
 
     handleClickStoreChange: =>
         this.setState clickStore.toJSON()

@@ -1,4 +1,4 @@
-jest.dontMock('../dashboard_actions.coffee');
+jest.dontMock('../dashboard_actions.coffee')
 
 dashboardActions = require('../dashboard_actions')
 renderUtils = require('../../../utils/render')
@@ -20,4 +20,4 @@ describe 'DashboardActions', ->
         expect(true).toBeTruthy()
 
     it 'calls getBody', ->
-        expect(renderUtils.getBody.mock.calls.length).toEqual(2);
+        expect(renderUtils.getBody.mock.calls.length).toEqual(2)

@@ -9,13 +9,13 @@ renderUtils = require '../../utils/render'
 
 module.exports =
     home: ->
-        React.unmountComponentAtNode(renderUtils.getBody());
+        React.unmountComponentAtNode(renderUtils.getBody())
         React.render(
             <Home />,
             renderUtils.getBody()
         )
     other: ->
-        React.unmountComponentAtNode(renderUtils.getBody());
+        React.unmountComponentAtNode(renderUtils.getBody())
         React.render(
             <Page2 />,
             renderUtils.getBody()
@@ -25,7 +25,7 @@ module.exports =
             .get('http://ip.jsontest.com/')
             .end (err, response) ->
                 if not err
-                    React.unmountComponentAtNode(renderUtils.getBody());
+                    React.unmountComponentAtNode(renderUtils.getBody())
                     React.render(
                         <ResponseCard response={ response.body } />,
                         renderUtils.getBody()

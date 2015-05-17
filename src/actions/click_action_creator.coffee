@@ -5,4 +5,3 @@ module.exports =
     click: ->
         dispatcher.dispatch
             type: actionTypes.clickStore.INCREMENT_CLICK_COUNT
-
