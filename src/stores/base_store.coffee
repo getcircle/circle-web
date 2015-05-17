@@ -1,6 +1,6 @@
 EventEmitter = require('events').EventEmitter
 
-dispatcher = require = '../dispatcher/dispatcher'
+dispatcher = require '../dispatcher/dispatcher'
 
 CHANGE_EVENT = 'change'
 
@@ -28,3 +28,5 @@ class BaseStore extends EventEmitter
 
     removeChangeListener: (callback) ->
         this.removeListener CHANGE_EVENT, callback
+
+module.exports = BaseStore

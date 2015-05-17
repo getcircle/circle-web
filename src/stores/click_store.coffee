@@ -2,13 +2,12 @@ EventEmitter = require('events').EventEmitter
 
 actionTypes = require '../constants/action_types'
 BaseStore = require './base_store'
-dispatcher = require '../dispatcher/dispatcher'
 
 
 class ClickStore extends BaseStore
 
     constructor: ->
-        super('ClickStore')
+        super
         @attributes =
             clickCount: 0
 
