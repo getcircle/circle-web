@@ -1,6 +1,7 @@
 ReactRouter = require 'flux-react-router'
 
-dashboard = require('./dashboard_urls')(ReactRouter)
+# Register our routes
+require('./dashboard/routes')(ReactRouter)
 
 
 # MonkeyPatching ReactRouter to preventDefault
