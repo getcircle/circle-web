@@ -18,6 +18,9 @@
     "url": "https://github.com/getcircle/circle-web/issues"
   },
   "homepage": "https://github.com/getcircle/circle-web",
+  "dependencies": {
+    "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.0.0"
+  },
   "devDependencies": {
     "gulp": "~3.8.11",
     "coffee-script": "~1.9.1",
