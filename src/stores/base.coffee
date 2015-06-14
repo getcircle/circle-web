@@ -10,11 +10,8 @@ class BaseStore extends EventEmitter
     constructor: ->
         @dispatchToken = dispatcher.register (action) =>
             # Use the object as a hash map to search for a corresponding
-            # handler for the action.type
-            #
-            # XXX does attempting to call this without checking the value
-            # cause a failure or is that some coffeescript magic?
-            @[action.type](action)
+            # handler for the action.type.
+            if @[action.type]? then @[action.type](action) else @handleAction(action)
 
     emitChange: ->
         this.emit CHANGE_EVENT
@@ -28,5 +25,7 @@ class BaseStore extends EventEmitter
 
     removeChangeListener: (callback) ->
         this.removeListener CHANGE_EVENT, callback
+
+    handleAction: (action) ->
 
 module.exports = BaseStore

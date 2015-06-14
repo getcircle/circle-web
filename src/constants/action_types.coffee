@@ -1,3 +1,8 @@
+actionKeys = require '../utils/action_keys'
+
 module.exports =
-    clickStore:
-        INCREMENT_CLICK_COUNT: 'increment_click_count'
+
+    AuthStore: actionKeys
+        AUTHENTICATION_STARTED: null
+        AUTHENTICATION_COMPLETED: null
+        AUTHENTICATION_FAILED: null

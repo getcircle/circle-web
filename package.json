@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/getcircle/circle-web",
   "dependencies": {
-    "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.0.2"
+    "lodash": "^3.8.0",
+    "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.17.3",
+    "rsvp": "^3.0.18"
   },
   "devDependencies": {
     "gulp": "~3.8.11",
@@ -57,7 +59,7 @@
     "flux-react-router": "~0.6.1",
     "gulp-batch": "~1.0.5",
     "flux": "~2.0.1",
-    "superagent": "~1.2.0"
+    "superagent": "git+ssh://git@github.com/mhahn/superagent.git"
   },
   "jest": {
     "unmockedModulePathPatterns": [
