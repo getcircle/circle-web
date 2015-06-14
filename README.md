@@ -26,7 +26,7 @@ other global concerns
 - `npm test`
 - `sudo npm run-script setup-dns`
 - `npm start`
-- `open http://local.circle-web.divshot.io:9110/`
+- `npm run-script open`
 
 ## Dev Environment
 
