@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/getcircle/circle-web",
   "dependencies": {
-    "lodash": "^3.8.0",
     "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.17.3",
     "rsvp": "^3.0.18"
   },
