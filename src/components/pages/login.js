@@ -2,7 +2,7 @@ import {decorate} from 'react-mixin';
 import {Navigation} from 'react-router';
 import React from 'react';
 
-import authStore from '../../stores/auth';
+import AuthStore from '../../stores/auth';
 import LoginForm from '../forms/auth/login';
 import t from '../../utils/gettext';
 
@@ -16,19 +16,19 @@ class Login extends React.Component {
     }
 
     componentDidMount() {
-        authStore.addChangeListener(this.handleAuthStoreChange);
+        AuthStore.addChangeListener(this.handleAuthStoreChange);
     }
 
     componentWillUnmount() {
-        authStore.removeChangeListener(this.handleAuthStoreChange);
+        AuthStore.removeChangeListener(this.handleAuthStoreChange);
     }
 
     handleAuthStoreChange() {
-        if (!authStore.isAuthenticated()) {
+        if (!AuthStore.isAuthenticated()) {
             // XXX set error state and display error message
             return;
         }
-        this.transitionTo('/');
+        this.transitionTo(this.props.query.nextPath || '/');
     }
 
     render() {

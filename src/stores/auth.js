@@ -9,12 +9,12 @@ class AuthStore extends BaseStore {
 
     constructor() {
         super();
-        this.authenticationCompleted = this.authenticationCompleted.bind(this);
+        this.login = this.login.bind(this);
     }
 
-    authenticationCompleted(action) {
-        _currentUser = action.result.user;
-        _currentToken = action.result.token;
+    login(action) {
+        _currentUser = action.user;
+        _currentToken = action.token;
         this.emitChange();
     }
 
