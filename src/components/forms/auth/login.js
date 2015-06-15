@@ -2,10 +2,8 @@ import * as mui from 'material-ui';
 import React from 'react/addons';
 import {decorate} from 'react-mixin';
 
-import * as authActions from '../../actions/auth';
-import authStore from '../../stores/auth';
-import client from '../../services/client';
-import t from '../../utils/gettext';
+import * as authActions from '../../../actions/auth';
+import t from '../../../utils/gettext';
 
 const Colors = mui.Styles.Colors;
 const RaisedButton = mui.RaisedButton;
@@ -19,13 +17,11 @@ class LoginForm extends React.Component {
     constructor() {
         super();
         this.state = {
-            isAuthenticated: false,
             email: null,
             password: null,
             emailErrorText: null,
             passwordErrorText: null
         }
-        this.handleAuthStoreChange = this.handleAuthStoreChange.bind(this);
         this._handleTouchTap = this._handleTouchTap.bind(this);
     }
 
@@ -35,25 +31,10 @@ class LoginForm extends React.Component {
         };
     }
 
-    componentDidMount() {
-        authStore.addChangeListener(this.handleAuthStoreChange);
-    }
-
-    componentWillUnmount() {
-        authStore.removeChangeListener(this.handleAuthStoreChange);
-    }
-
     getChildContext() {
         return {
             muiTheme: ThemeManager.getCurrentTheme()
         };
-    }
-
-    handleAuthStoreChange() {
-        this.setState({
-            // XXX why does the initial state not refer to auth store? #parris-question
-            isAuthenticated: authStore.isAuthenticated()
-        });
     }
 
     _validateInputs() {
@@ -78,11 +59,8 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        let authenticationState = this.state.isAuthenticated ? 'authenticated' : 'unauthenticated';
         return (
             <div>
-                <h2>{ t('Login Form') }</h2>
-                <p>User is {authenticationState}.</p>
                 <TextField
                     ref="email"
                     floatingLabelText="Work Email Address"
