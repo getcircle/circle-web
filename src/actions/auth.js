@@ -8,7 +8,7 @@ export function authenticate(email, password) {
         type: ActionTypes.AuthStore.AUTHENTICATION_STARTED
     });
 
-    parameters = {
+    let parameters = {
         backend: services.user.actions.authenticate_user.RequestV1.AuthBackendV1.INTERNAL,
         credentials: {
             key: email,
@@ -19,16 +19,16 @@ export function authenticate(email, password) {
 
     let request = new services.user.actions.authenticate_user.RequestV1(parameters);
     client.sendRequest(request)
-        .then(function(response) {
-            dispatcher.dispatch({
-                type: ActionTypes.AuthStore.AUTHENTICATION_COMPLETED,
-                result: response.result
-            });
-        })
-        .catch(function(error) {
-            dispatcher.dispatch({
-                type: ActionTypes.AuthStore.AUTHENTICATION_FAILED,
-                error: error
-            })
+    .then(function(response) {
+        dispatcher.dispatch({
+            type: ActionTypes.AuthStore.AUTHENTICATION_COMPLETED,
+            result: response.result
         });
+    })
+    .catch(function(error) {
+        dispatcher.dispatch({
+            type: ActionTypes.AuthStore.AUTHENTICATION_FAILED,
+            error: error
+        });
+    });
 }

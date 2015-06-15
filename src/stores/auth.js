@@ -7,6 +7,11 @@ var _currentToken = null;
 
 class AuthStore extends BaseStore {
 
+    constructor() {
+        super();
+        this.authenticationCompleted = this.authenticationCompleted.bind(this);
+    }
+
     authenticationCompleted(action) {
         _currentUser = action.result.user;
         _currentToken = action.result.token;

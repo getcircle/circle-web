@@ -1,6 +1,6 @@
 import actionKeys from '../utils/action_keys'
 
-ActionTypes = {
+const ActionTypes = {
     AuthStore: actionKeys({
         AUTHENTICATION_STARTED: null,
         AUTHENTICATION_COMPLETED: null,

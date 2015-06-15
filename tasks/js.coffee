@@ -12,7 +12,7 @@ gulp.task 'js', ->
         entries: './src/app.js',
         extensions: ['.jsx', '.js']
     })
-    .transform(babelify)
+    .transform(babelify.configure({stage: 1}))
     .bundle()
     .pipe(plumber(
         errorHandler: growlNotifications('JS Compilation Error')

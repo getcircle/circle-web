@@ -4,7 +4,7 @@ import protobufs from 'protobufs';
 import requests from 'superagent';
 import RSVP from 'rsvp';
 
-ENVIRONMENTS = keymirror({
+const ENVIRONMENTS = keymirror({
     local: null,
     production: null
 });
@@ -20,7 +20,7 @@ class WrappedResponse {
         this.errorDetails = this._getErrorDetails();
     }
 
-    static _getResponseExtensionName(action) {
+    _getResponseExtensionName(action) {
         let basePath = protobufs.services.registry.responses.$type.fqn();
         return [basePath, _.capitalize(action.control.service), action.control.action].join('.');
     }
@@ -73,7 +73,7 @@ class Transport {
     }
 
     sendRequest(serializedRequest) {
-        deferred = RSVP.defer();
+        let deferred = RSVP.defer();
         // TODO set authorization header for authenticated requests
         requests
             .post(this._endpoint)
@@ -86,7 +86,7 @@ class Transport {
                 } else {
                     // TODO should reject with failures from the service
                     // TODO should handle any decoding errors
-                    response = new WrappedResponse(res);
+                    let response = new WrappedResponse(res);
                     deferred.resolve(response);
                 }
             });
@@ -127,8 +127,8 @@ class Client {
         return this.transport.sendRequest(serializedRequest);
     }
 
-    static _getRequestExtensionName(service, action) {
-        basePath = protobufs.services.registry.requests.$type.fqn();
+    _getRequestExtensionName(service, action) {
+        let basePath = protobufs.services.registry.requests.$type.fqn();
         return [basePath, _.capitalize(service), action].join('.');
     }
 

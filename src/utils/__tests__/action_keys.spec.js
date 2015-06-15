@@ -2,7 +2,7 @@ jest
     .dontMock('../action_keys')
     .dontMock('lodash');
 
-import actionKeys from '../action_keys';
+const actionKeys = require('../action_keys');
 
 describe('actionKeys', () => {
 
