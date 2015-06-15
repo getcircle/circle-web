@@ -9,7 +9,7 @@ growlNotifications = require './growl_notifications'
 
 gulp.task 'js', ->
     browserify({
-        entries: './src/app.js',
+        entries: './src/app.jsx',
         extensions: ['.jsx', '.js']
     })
     .transform(babelify.configure({stage: 1}))
