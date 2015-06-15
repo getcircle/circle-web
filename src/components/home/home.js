@@ -1,17 +1,13 @@
-Link = require('react-router').Link
-React = require 'react'
+import {Link} form 'react-router';
+import React from 'react';
 
-t = require '../../utils/gettext'
-
-LoginForm = require '../auth/login_form'
+import t from '../../utils/gettext'
+import LoginForm from '../auth/login_form'
 
 
 class Home extends React.Component
 
     render: ->
-        # sometimes {} doesn't work
-        # you can use "#{}" inside double quotes
-        # {} is jsx, #{} is coffeescript
         <div className="app">
             <h1>{ t('Test, yo yo yo') }</h1>
             <p>

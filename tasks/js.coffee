@@ -1,18 +1,20 @@
 gulp = require 'gulp'
-browserify = require 'gulp-browserify'
+babelify = require 'babelify'
+browserify = require 'browserify'
 plumber = require 'gulp-plumber'
 rename = require 'gulp-rename'
 
 growlNotifications = require './growl_notifications'
 
 gulp.task 'js', ->
-  gulp.src('./src/app.cjsx', { read: false })
-    .pipe(plumber(
-        errorHandler: growlNotifications('JS Compilation Error')
-    ))
-    .pipe(browserify({
-        transform: ['coffee-reactify'],
-        extensions: ['.cjsx', '.coffee'],
-    }))
-    .pipe(rename('app.js'))
+    browserify({
+        entries: './src/app.js',
+        extensions: ['.jsx', '.js']
+    })
+    .transform(babelify)
+    .bundle()
+    .pipe(source('app.js'))
     .pipe(gulp.dest('./dist/'))
+    #.pipe(plumber(
+        #errorHandler: growlNotifications('JS Compilation Error')
+    #))
