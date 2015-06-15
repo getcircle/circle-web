@@ -11,7 +11,7 @@ export function authenticate(email, password) {
     parameters = {
         backend: services.user.actions.authenticate_user.RequestV1.AuthBackendV1.INTERNAL,
         credentials: {
-            key: email
+            key: email,
             secret: password
         },
         client_type: services.user.containers.token.ClientTypeV1.WEB
@@ -27,7 +27,7 @@ export function authenticate(email, password) {
         })
         .catch(function(error) {
             dispatcher.dispatch({
-                type: ActionTypes.AuthStore.AUTHENTICATION_FAILED
+                type: ActionTypes.AuthStore.AUTHENTICATION_FAILED,
                 error: error
             })
         });

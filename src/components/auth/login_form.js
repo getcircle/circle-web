@@ -1,14 +1,15 @@
 import React from 'react';
-import t from '../../utils/gettext'
+import t from '../../utils/gettext';
 
-import authActions from '../../actions/auth'
-import authStore from '../../stores/auth'
-import client form '../../services/client'
+import authActions from '../../actions/auth';
+import authStore from '../../stores/auth';
+import client from '../../services/client';
 
 
 class LoginForm extends React.Component {
 
     constructor() {
+        super();
         this.state = {
             isAuthenticated: false
         }

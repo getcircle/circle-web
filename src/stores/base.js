@@ -8,6 +8,7 @@ const CHANGE_EVENT = 'change';
 class BaseStore extends EventEmitter {
 
     constructor() {
+        super();
         this.dispatchToken = dispatcher.register((action) => {
             let handler = this[action.type];
             if (typeof handler !== 'undefined' && handler !== null) {

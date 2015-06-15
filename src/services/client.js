@@ -80,16 +80,16 @@ class Transport {
             .type('application/x-protobuf')
             .send(serializedRequest)
             .responseType('arraybuffer')
-            .end((err, res) =>
+            .end((err, res) => {
                 if (err) {
-                    deferred.reject err
+                    deferred.reject(err);
                 } else {
                     // TODO should reject with failures from the service
                     // TODO should handle any decoding errors
                     response = new WrappedResponse(res);
                     deferred.resolve(response);
                 }
-            );
+            });
             return deferred.promise;
     }
 
@@ -129,11 +129,11 @@ class Client {
 
     static _getRequestExtensionName(service, action) {
         basePath = protobufs.services.registry.requests.$type.fqn();
-        return [basePath, _.capitalize(service), action].join '.'
+        return [basePath, _.capitalize(service), action].join('.');
     }
 
-    set token() {
-        this.transport.token = token
+    set token(value) {
+        this.transport.token = value;
     }
 }
 

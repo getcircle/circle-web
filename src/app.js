@@ -1,3 +1,5 @@
+require("babel/register");
+
 import fastclick from 'fastclick';
 import React from 'react';
 import {Router, DefaultRoute, Route, RouteHandler} from 'react-router';

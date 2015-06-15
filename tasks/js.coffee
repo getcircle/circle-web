@@ -3,6 +3,7 @@ babelify = require 'babelify'
 browserify = require 'browserify'
 plumber = require 'gulp-plumber'
 rename = require 'gulp-rename'
+source = require 'vinyl-source-stream'
 
 growlNotifications = require './growl_notifications'
 
@@ -13,8 +14,8 @@ gulp.task 'js', ->
     })
     .transform(babelify)
     .bundle()
+    .pipe(plumber(
+        errorHandler: growlNotifications('JS Compilation Error')
+    ))
     .pipe(source('app.js'))
     .pipe(gulp.dest('./dist/'))
-    #.pipe(plumber(
-        #errorHandler: growlNotifications('JS Compilation Error')
-    #))
