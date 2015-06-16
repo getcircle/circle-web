@@ -14,10 +14,10 @@ export function authenticateUser(email, password) {
 
     let request = new services.user.actions.authenticate_user.RequestV1(parameters);
     client.sendRequest(request)
-    .then(function(response) {
-        AuthActions.login(response.result.user, response.result.token);
-    })
-    .catch(function(error) {
-        console.log(`Error logging in: ${error}`);
-    });
+        .then(function(response) {
+            AuthActions.login(response.result.user, response.result.token);
+        })
+        .catch(function(error) {
+            console.log(`Error logging in: ${error}`);
+        });
 }
