@@ -2,7 +2,6 @@ import _ from 'lodash';
 import keymirror from 'keymirror';
 import protobufs from 'protobufs';
 import requests from 'superagent';
-import RSVP from 'rsvp';
 
 const ENVIRONMENTS = keymirror({
     local: null,
@@ -73,24 +72,24 @@ class Transport {
     }
 
     sendRequest(serializedRequest) {
-        let deferred = RSVP.defer();
-        // TODO set authorization header for authenticated requests
-        requests
-            .post(this._endpoint)
-            .type('application/x-protobuf')
-            .send(serializedRequest)
-            .responseType('arraybuffer')
-            .end((err, res) => {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    // TODO should reject with failures from the service
-                    // TODO should handle any decoding errors
-                    let response = new WrappedResponse(res);
-                    deferred.resolve(response);
-                }
-            });
-            return deferred.promise;
+        return new Promise((resolve, reject) => {
+            // TODO set authorization header for authenticated requests
+            requests
+                .post(this._endpoint)
+                .type('application/x-protobuf')
+                .send(serializedRequest)
+                .responseType('arraybuffer')
+                .end((err, res) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        // TODO should reject with failures from the service
+                        // TODO should handle any decoding errors
+                        let response = new WrappedResponse(res);
+                        resolve(response);
+                    }
+                });
+        });
     }
 
 }

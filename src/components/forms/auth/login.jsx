@@ -2,7 +2,7 @@ import * as mui from 'material-ui';
 import React from 'react/addons';
 import {decorate} from 'react-mixin';
 
-import * as UserService from '../../../services/user';
+import * as AuthActions from '../../../actions/auth';
 import t from '../../../utils/gettext';
 
 const Colors = mui.Styles.Colors;
@@ -54,7 +54,7 @@ class LoginForm extends React.Component {
         event.preventDefault();
         let valid = this._validateInputs();
         if (valid) {
-            UserService.authenticateUser(this.state.email, this.state.password);
+            AuthActions.authenticate(this.state.email, this.state.password);
         }
     }
 

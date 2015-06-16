@@ -13,11 +13,16 @@ export function authenticateUser(email, password) {
     };
 
     let request = new services.user.actions.authenticate_user.RequestV1(parameters);
-    client.sendRequest(request)
-        .then(function(response) {
-            AuthActions.login(response.result.user, response.result.token);
-        })
-        .catch(function(error) {
-            console.log(`Error logging in: ${error}`);
-        });
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                debugger;
+                let {user, token} = response.result;
+                resolve({user, token});
+            })
+            .catch((error) => {
+                console.log(`Error logging in: ${error}`);
+                reject(error);
+            });
+    });
 }

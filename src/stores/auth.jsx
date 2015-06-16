@@ -1,35 +1,32 @@
-import ActionTypes from '../constants/action_types'
-import BaseStore from './base';
-
-var _currentUser = null;
-var _currentToken = null;
+import alt from '../alt';
+import {createStore} from 'alt/utils/decorators';
 
 
-class AuthStore extends BaseStore {
+import AuthActions from '../actions/auth';
+
+
+@createStore(alt, 'AuthStore')
+class AuthStore {
 
     constructor() {
-        super();
-        this.login = this.login.bind(this);
+        this.user = null;
+        this.token = null;
+
+        this.bindListeners({
+            handleLogin: AuthActions.LOGIN
+        });
     }
 
-    login(action) {
-        _currentUser = action.user;
-        _currentToken = action.token;
-        this.emitChange();
+    handleLogin(action) {
+        this.user = action.user;
+        this.token = action.token;
     }
 
-    get currentUser() {
-        return _currentUser;
-    }
-
-    get currentToken() {
-        return _currentToken;
-    }
-
-    isAuthenticated() {
-        return _currentUser !== null;
+    static isAuthenticated() {
+        let state = this.getState();
+        return state.token !== null;
     }
 
 }
 
-export default new AuthStore();
+export default AuthStore;

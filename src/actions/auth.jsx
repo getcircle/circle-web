@@ -1,12 +1,33 @@
-import ActionTypes from '../constants/action_types';
-import dispatcher from '../dispatcher/dispatcher';
+import alt from '../alt';
+import {createActions} from 'alt/utils/decorators';
+import {authenticateUser} from '../services/user';
 
-export function login(user, token) {
-    localStorage.setItem('user', user.toBase64());
-    localStorage.setItem('token', token);
-    dispatcher.dispatch({
-        type: ActionTypes.AuthStore.LOGIN,
-        user: user,
-        token: token
-    });
+
+@createActions(alt)
+class AuthActions {
+
+    authenticate(email, password) {
+        this.dispatch();
+
+        authenticateUser(email, password)
+            .then((response) => {
+                this.actions.login(response.user, response.token);
+            })
+            .catch((error) => {
+                this.actions.authenticateFailed(error);
+            });
+    }
+
+    authenticateFailed(error) {
+        this.dispatch(error);
+    }
+
+    login(user, token) {
+        localStorage.setItem('user', user.toBase64());
+        localStorage.setItem('token', token);
+        this.dispatch({user, token});
+    }
+
 }
+
+export default AuthActions;

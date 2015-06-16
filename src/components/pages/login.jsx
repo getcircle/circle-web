@@ -1,3 +1,4 @@
+import connectToStores from 'alt/utils/connectToStores';
 import {decorate} from 'react-mixin';
 import {Navigation} from 'react-router';
 import React from 'react';
@@ -10,25 +11,20 @@ import t from '../../utils/gettext';
 @decorate(Navigation)
 class Login extends React.Component {
 
-    constructor() {
-        super();
-        this.handleAuthStoreChange = this.handleAuthStoreChange.bind(this);
+    static getStores(props) {
+        return [AuthStore];
     }
 
-    componentDidMount() {
-        AuthStore.addChangeListener(this.handleAuthStoreChange);
+    static getPropsFromStores(props) {
+        return AuthStore.getState();
     }
 
-    componentWillUnmount() {
-        AuthStore.removeChangeListener(this.handleAuthStoreChange);
-    }
-
-    handleAuthStoreChange() {
-        if (!AuthStore.isAuthenticated()) {
-            // XXX set error state and display error message
-            return;
+    shouldComponentUpdate(nextProps, nextState) {
+        if (AuthStore.isAuthenticated()) {
+            this.transitionTo(this.props.query.nextPath || '/');
+            return false;
         }
-        this.transitionTo(this.props.query.nextPath || '/');
+        return true;
     }
 
     render() {
@@ -41,4 +37,13 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+const Component = connectToStores(Login);
+// HoC connectToStores doesn't copy over static methods
+Component.willTransitionTo = function(transition, params, query, callback) {
+    if (AuthStore.isAuthenticated()) {
+        transition.redirect('/');
+    }
+    callback();
+}
+
+export default Component;
