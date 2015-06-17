@@ -47,8 +47,7 @@ class LoginForm extends React.Component {
         return {
             common: {
                 display: 'block',
-                marginLeft: 'auto',
-                marginRight: 'auto'
+                margin: '0 auto'
             },
             button: {
                 marginTop: 25,
