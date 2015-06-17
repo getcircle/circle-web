@@ -1,7 +1,7 @@
 import connectToStores from 'alt/utils/connectToStores';
 import React from 'react';
 
-import AuthStore from '../stores/auth';
+import AuthStore from '../stores/AuthStore';
 
 
 export default (ComposedComponent) => {
@@ -21,7 +21,8 @@ export default (ComposedComponent) => {
             );
         }
 
-    };
+    }
+
     let Component = connectToStores(AuthenticatedComponent);
     // HoC connectToStores doesn't copy over static methods
     Component.willTransitionTo = function(transition, params, query, callback) {
@@ -29,6 +30,6 @@ export default (ComposedComponent) => {
             transition.redirect('/login', {}, {nextPath: transition.path});
         }
         callback();
-    }
+    };
     return Component;
-}
+};

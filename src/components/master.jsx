@@ -20,7 +20,7 @@ class Master extends React.Component {
     getChildContext() {
         return {
             muiTheme: ThemeManager.getCurrentTheme()
-        }
+        };
     }
 
     getStyles() {
@@ -45,8 +45,8 @@ class Master extends React.Component {
             <AppCanvas>
                 <RouteHandler />
           </AppCanvas>
-        )
+        );
     }
-};
+}
 
 export default Master;

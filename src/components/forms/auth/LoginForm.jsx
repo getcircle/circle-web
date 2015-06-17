@@ -2,7 +2,7 @@ import * as mui from 'material-ui';
 import React from 'react/addons';
 import {decorate} from 'react-mixin';
 
-import * as AuthActions from '../../../actions/auth';
+import AuthActions from '../../../actions/AuthActions';
 import t from '../../../utils/gettext';
 
 const Colors = mui.Styles.Colors;
@@ -21,7 +21,7 @@ class LoginForm extends React.Component {
             password: null,
             emailErrorText: null,
             passwordErrorText: null
-        }
+        };
         this._handleTouchTap = this._handleTouchTap.bind(this);
     }
 
@@ -38,7 +38,7 @@ class LoginForm extends React.Component {
     }
 
     _validateInputs() {
-        let valid = true
+        let valid = true;
         if (this.state.email === null || this.state.email.trim() === '') {
             this.setState({emailErrorText: t('Email is required')});
             valid = false;

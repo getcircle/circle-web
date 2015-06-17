@@ -2,7 +2,7 @@ import alt from '../alt';
 import {createStore} from 'alt/utils/decorators';
 
 
-import AuthActions from '../actions/auth';
+import AuthActions from '../actions/AuthActions';
 
 
 @createStore(alt, 'AuthStore')
@@ -17,9 +17,9 @@ class AuthStore {
         });
     }
 
-    handleLogin(action) {
-        this.user = action.user;
-        this.token = action.token;
+    handleLogin({user, token}) {
+        this.user = user;
+        this.token = token;
     }
 
     static isAuthenticated() {

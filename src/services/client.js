@@ -46,7 +46,8 @@ class Transport {
 
     constructor(token) {
         this.token = token;
-        this.environment = ENVIRONMENTS.local
+        // TODO figure out where to put these configs
+        this.environment = ENVIRONMENTS.local;
     }
 
     get _scheme() {

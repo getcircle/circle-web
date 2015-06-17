@@ -5,4 +5,4 @@ export function getBody() {
         _body = document.getElementsByClassName('js-content')[0];
     }
     return _body;
-};
+}

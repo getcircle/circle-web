@@ -3,8 +3,8 @@ import {decorate} from 'react-mixin';
 import {Navigation} from 'react-router';
 import React from 'react';
 
-import AuthStore from '../../stores/auth';
-import LoginForm from '../forms/auth/login';
+import AuthStore from '../../stores/AuthStore';
+import LoginForm from '../forms/auth/LoginForm';
 import t from '../../utils/gettext';
 
 
@@ -33,7 +33,7 @@ class Login extends React.Component {
                 <h1>{ t('Login') }</h1>
                 <LoginForm />
             </div>
-        )
+        );
     }
 }
 
@@ -44,6 +44,6 @@ Component.willTransitionTo = function(transition, params, query, callback) {
         transition.redirect('/');
     }
     callback();
-}
+};
 
 export default Component;

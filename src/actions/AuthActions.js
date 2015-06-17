@@ -1,6 +1,6 @@
 import alt from '../alt';
 import {createActions} from 'alt/utils/decorators';
-import {authenticateUser} from '../services/user';
+import {authenticateUser} from '../services/UserService';
 
 
 @createActions(alt)
