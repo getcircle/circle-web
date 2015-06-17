@@ -28,8 +28,12 @@ class Login extends React.Component {
     }
 
     render() {
+        let containerStyle = {
+            textAlign: 'center'
+        };
+
         return (
-            <div>
+            <div style={containerStyle}>
                 <h1>{ t('Login') }</h1>
                 <LoginForm />
             </div>
