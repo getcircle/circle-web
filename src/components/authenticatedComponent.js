@@ -1,23 +1,29 @@
 import connectToStores from 'alt/utils/connectToStores';
 import React from 'react';
+import * as mui from 'material-ui';
 
 import AuthStore from '../stores/AuthStore';
+
+const {AppBar, AppCanvas, ClearFix, Styles} = mui;
+const {Spacing} = Styles;
 
 
 export default (ComposedComponent) => {
     class AuthenticatedComponent extends React.Component {
 
-        static getStores(props) {
+        static getStores() {
             return [AuthStore];
         }
 
-        static getPropsFromStores(props) {
+        static getPropsFromStores() {
             return AuthStore.getState();
         }
 
         render() {
             return (
-                <ComposedComponent {...this.props} />
+                <AppCanvas>
+                    <ComposedComponent {...this.props} />
+                </AppCanvas>
             );
         }
 

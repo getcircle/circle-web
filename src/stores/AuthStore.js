@@ -1,7 +1,6 @@
 import alt from '../alt';
 import {createStore} from 'alt/utils/decorators';
 
-
 import AuthActions from '../actions/AuthActions';
 
 
@@ -13,7 +12,7 @@ class AuthStore {
         this.token = null;
 
         this.bindListeners({
-            handleLogin: AuthActions.LOGIN
+            handleLogin: AuthActions.LOGIN,
         });
     }
 

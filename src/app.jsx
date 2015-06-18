@@ -1,4 +1,4 @@
-require("babel/register");
+require('babel/register');
 
 import fastclick from 'fastclick';
 import React from 'react';
@@ -30,7 +30,7 @@ Router
     .create({
         routes: Routes,
         scrollBehavior: Router.ScrollToTopBehavior,
-        location: Router.HistoryLocation
+        location: Router.HistoryLocation,
     })
     .run(function(Handler) {
         React.render(<Handler />, getBody());

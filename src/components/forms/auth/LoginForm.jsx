@@ -6,8 +6,6 @@ import AuthActions from '../../../actions/AuthActions';
 import t from '../../../utils/gettext';
 import autoBind from '../../../utils/autobind';
 
-const ClearFix = mui.ClearFix;
-const Colors = mui.Styles.Colors;
 const RaisedButton = mui.RaisedButton;
 const StylePropable = mui.Mixins.StylePropable;
 const TextField = mui.TextField;
@@ -26,20 +24,20 @@ class LoginForm extends React.Component {
             email: null,
             password: null,
             emailErrorText: null,
-            passwordErrorText: null
+            passwordErrorText: null,
         };
         this._handleTouchTap = this._handleTouchTap.bind(this);
     }
 
     static get childContextTypes() {
         return {
-            muiTheme: React.PropTypes.object
+            muiTheme: React.PropTypes.object,
         };
     }
 
     getChildContext() {
         return {
-            muiTheme: ThemeManager.getCurrentTheme()
+            muiTheme: ThemeManager.getCurrentTheme(),
         };
     }
 
@@ -47,12 +45,12 @@ class LoginForm extends React.Component {
         return {
             common: {
                 display: 'block',
-                margin: '0 auto'
+                margin: '0 auto',
             },
             button: {
                 marginTop: 25,
-                maxWidth: 256
-            }
+                maxWidth: 256,
+            },
         };
     }
 

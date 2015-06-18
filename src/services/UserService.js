@@ -1,18 +1,19 @@
 import client from '../services/client';
 import {services} from 'protobufs';
-import AuthActions from '../actions/AuthActions';
 
 export default {
 
     authenticateUser(email, password) {
+        /*eslint-disable camelcase*/
         let parameters = {
             backend: services.user.actions.authenticate_user.RequestV1.AuthBackendV1.INTERNAL,
             credentials: {
                 key: email,
-                secret: password
+                secret: password,
             },
-            client_type: services.user.containers.token.ClientTypeV1.WEB
+            client_type: services.user.containers.token.ClientTypeV1.WEB,
         };
+        /*eslint-enable camelcase*/
 
         let request = new services.user.actions.authenticate_user.RequestV1(parameters);
         return new Promise((resolve, reject) => {
@@ -26,7 +27,6 @@ export default {
                     reject(error);
                 });
         });
-    }
-
+    },
 
 };

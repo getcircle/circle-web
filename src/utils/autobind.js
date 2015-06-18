@@ -6,7 +6,7 @@ function autoBind(Mixin) {
 					this[name] = this[name].bind(this);
 				}
 			});
-		}
+		},
 	};
 }
 

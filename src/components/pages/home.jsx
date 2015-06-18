@@ -1,4 +1,3 @@
-import {Link} from 'react-router';
 import React from 'react';
 
 import authenticatedComponent from '../authenticatedComponent';

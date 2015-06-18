@@ -29,7 +29,7 @@ class Login extends React.Component {
 
     render() {
         let containerStyle = {
-            textAlign: 'center'
+            textAlign: 'center',
         };
 
         return (

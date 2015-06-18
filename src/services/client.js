@@ -5,7 +5,7 @@ import requests from 'superagent';
 
 const ENVIRONMENTS = keymirror({
     local: null,
-    production: null
+    production: null,
 });
 
 
