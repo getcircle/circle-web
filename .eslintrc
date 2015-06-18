@@ -1,0 +1,22 @@
+{
+    "env": {
+        "browser": true,
+        "amd": true
+    },
+    "plugins": [
+        "react"
+    ],
+    "parser": "babel-eslint",
+    "rules": {
+        "strict": 0,
+        "quotes": [1, "single"],
+        "comma-dangle": [1, "always-multiline"],
+        "no-underscore-dangle": 0,
+        "no-unused-vars": [2, {"vars": "all", "args": "none"}]
+    },
+    "ecmaFeatures": {
+        "jsx": true,
+        "objectLiteralShorthandMethods": true
+    },
+    "ext": ".js,.jsx"
+}
