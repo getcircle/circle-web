@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Circle Web App",
   "scripts": {
-    "start": "babel-node server.js",
+    "start": "npm run-script open && babel-node server.js",
     "test": "jest",
     "debug-test": "mocha debug ./test/spec_helper.coffee ./public/**/*.spec.coffee",
     "setup-dns": "echo '127.0.0.1 local.circlehq.co' >> /etc/hosts && dscacheutil -flushcache",
