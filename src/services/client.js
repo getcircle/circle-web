@@ -44,14 +44,18 @@ class WrappedResponse {
 
 class Transport {
 
-    constructor(token) {
-        this.token = token;
+    constructor() {
         // TODO figure out where to put these configs
-        this.environment = ENVIRONMENTS.local;
+        this._environment = ENVIRONMENTS.local;
+        this._token = null;
+    }
+
+    set token(value) {
+        this._token = value;
     }
 
     get _scheme() {
-        switch (this.environment) {
+        switch (this._environment) {
             case ENVIRONMENTS.local:
                 return 'http';
             default:
@@ -60,7 +64,7 @@ class Transport {
     }
 
     get _host() {
-        switch (this.environment) {
+        switch (this._environment) {
             case ENVIRONMENTS.local:
                 return 'localhost:8000';
             default:
@@ -77,6 +81,7 @@ class Transport {
             // TODO set authorization header for authenticated requests
             requests
                 .post(this._endpoint)
+                .set('Authorization', this._token ? `Token ${this._token}` : '')
                 .type('application/x-protobuf')
                 .send(serializedRequest)
                 .responseType('arraybuffer')
@@ -98,7 +103,8 @@ class Transport {
 
 class Client {
 
-    constructor() {
+    constructor(token) {
+        this._token = token;
         this.transport = new Transport();
     }
 
@@ -107,7 +113,7 @@ class Client {
         let service = params.$type.fqn().split('.')[2];
         let actionExtensionName = this._getRequestExtensionName(service, action);
 
-        let serviceControl = new protobufs.soa.ControlV1({service: service, token: this.token});
+        let serviceControl = new protobufs.soa.ControlV1({service: service, token: this._token});
         let serviceRequest = new protobufs.soa.ServiceRequestV1({control: serviceControl});
 
         let actionControl = new protobufs.soa.ActionControlV1({service: service, action: action});
@@ -132,9 +138,11 @@ class Client {
         return [basePath, _.capitalize(service), action].join('.');
     }
 
-    set token(value) {
-        this.transport.token = value;
+    authenticate(token) {
+        this._token = token;
+        this.transport.token = token;
     }
+
 }
 
 export default new Client();

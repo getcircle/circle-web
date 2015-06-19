@@ -31,8 +31,8 @@ export default (ComposedComponent) => {
 
     let Component = connectToStores(AuthenticatedComponent);
     // HoC connectToStores doesn't copy over static methods
-    Component.willTransitionTo = function(transition, params, query, callback) {
-        if (!AuthStore.isAuthenticated()) {
+    Component.willTransitionTo = function (transition, params, query, callback) {
+        if (!AuthStore.isLoggedIn()) {
             transition.redirect('/login', {}, {nextPath: transition.path});
         }
         callback();

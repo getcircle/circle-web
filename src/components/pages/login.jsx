@@ -20,7 +20,7 @@ class Login extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (AuthStore.isAuthenticated()) {
+        if (AuthStore.isLoggedIn()) {
             this.transitionTo(this.props.query.nextPath || '/');
             return false;
         }
@@ -44,7 +44,7 @@ class Login extends React.Component {
 const Component = connectToStores(Login);
 // HoC connectToStores doesn't copy over static methods
 Component.willTransitionTo = function(transition, params, query, callback) {
-    if (AuthStore.isAuthenticated()) {
+    if (AuthStore.isLoggedIn()) {
         transition.redirect('/');
     }
     callback();

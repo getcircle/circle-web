@@ -1,6 +1,7 @@
 import alt from '../alt';
 import {createActions} from 'alt/utils/decorators';
 import {authenticateUser} from '../services/UserService';
+import {getProfileWithUserId} from '../services/ProfileService';
 
 
 @createActions(alt)
@@ -8,10 +9,18 @@ class AuthActions {
 
     authenticate(email, password) {
         this.dispatch();
-
         authenticateUser(email, password)
             .then((response) => {
-                this.actions.login(response.user, response.token);
+                let user = response.user;
+                let token = response.token;
+                this.actions.completeAuthentication(user, token);
+                return Promise.resolve(user);
+            })
+            .then((user) => {
+                return getProfileWithUserId(user.id);
+            })
+            .then((profile) => {
+                this.actions.login(profile);
             })
             .catch((error) => {
                 this.actions.authenticateFailed(error);
@@ -22,10 +31,12 @@ class AuthActions {
         this.dispatch(error);
     }
 
-    login(user, token) {
-        localStorage.setItem('user', user.toBase64());
-        localStorage.setItem('token', token);
+    completeAuthentication(user, token) {
         this.dispatch({user, token});
+    }
+
+    login(profile) {
+        this.dispatch(profile);
     }
 
 }

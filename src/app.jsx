@@ -10,6 +10,7 @@ import AuthActions from './actions/AuthActions';
 import {getBody} from './utils/render';
 import Routes from './routes';
 
+const ProfileV1 = services.profile.containers.ProfileV1;
 const UserV1 = services.user.containers.UserV1;
 
 // export for http://fb.me/react-devtools
@@ -22,8 +23,10 @@ fastclick(document.body);
 
 let user = localStorage.getItem('user');
 let token = localStorage.getItem('token');
-if (user && token) {
-    AuthActions.login(UserV1.decode64(user), token);
+let profile = localStorage.getItem('profile');
+if (user && token && profile) {
+	AuthActions.completeAuthentication(UserV1.decode64(user), token);
+    AuthActions.login(ProfileV1.decode64(profile));
 }
 
 Router
