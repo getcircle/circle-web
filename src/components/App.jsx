@@ -8,7 +8,7 @@ const {AppCanvas, FullWidthSection} = mui;
 const ThemeManager = new mui.Styles.ThemeManager();
 
 
-class Master extends React.Component {
+class App extends React.Component {
 
     static get childContextTypes() {
         return {
@@ -31,4 +31,4 @@ class Master extends React.Component {
     }
 }
 
-export default Master;
+export default App;

@@ -37,6 +37,6 @@ Router
         scrollBehavior: Router.ScrollToTopBehavior,
         location: Router.HistoryLocation,
     })
-    .run(function(Handler) {
+    .run((Handler) => {
         React.render(<Handler />, getBody());
     });
