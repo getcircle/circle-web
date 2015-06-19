@@ -5,9 +5,9 @@ import {decorate} from 'react-mixin';
 import {Navigation} from 'react-router';
 import React from 'react';
 
-import AuthStore from '../../stores/AuthStore';
-import LoginForm from '../forms/auth/LoginForm';
-import t from '../../utils/gettext';
+import AuthStore from '../stores/AuthStore';
+import LoginForm from '../components/forms/auth/LoginForm';
+import t from '../utils/gettext';
 
 
 @decorate(Navigation)
@@ -45,9 +45,9 @@ class Login extends React.Component {
 
 const Component = connectToStores(Login);
 // HoC connectToStores doesn't copy over static methods
-Component.willTransitionTo = function(transition, params, query, callback) {
+Component.willTransitionTo = function (transition, params, query, callback) {
     if (AuthStore.isLoggedIn()) {
-        transition.redirect('/');
+        transition.redirect('profile-feed');
     }
     callback();
 };

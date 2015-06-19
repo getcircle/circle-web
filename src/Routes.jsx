@@ -12,8 +12,8 @@ const Routes = (
         	name="login"
         	handler={require('./pages/Login')} />
         <Route
-        	name="home"
-        	handler={require('./pages/Home')} />
+        	name="profile-feed"
+        	handler={require('./components/ProfileFeed')} />
     </Route>
 );
 

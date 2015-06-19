@@ -3,8 +3,8 @@
 import * as mui from 'material-ui';
 import React from 'react';
 
-import requireAuth from '../requireAuth';
-import t from '../../utils/gettext';
+import requireAuth from './requireAuth';
+import t from '../utils/gettext';
 
 const {Avatar} = mui;
 
