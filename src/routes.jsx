@@ -1,16 +1,17 @@
+/*eslint-disable no-unused-vars*/
 import React from 'react';
+/*eslint-enable no-unused-vars*/
 import {Route, DefaultRoute} from 'react-router';
 
-import Home from './components/pages/Home';
-import Login from './components/pages/Login';
-import Master from './components/Master';
-
 const Routes = (
-    <Route name="root" path="/" handler={Master}>
-        <Route name="login" handler={Login} />
-        <Route name="home" handler={Home} />
-
-        <DefaultRoute handler={Home} />
+    <Route name="root" path="/" handler={require('./components/Master')}>
+        <DefaultRoute handler={require('./pages/Login')} />
+        <Route
+        	name="login"
+        	handler={require('./pages/Login')} />
+        <Route
+        	name="home"
+        	handler={require('./pages/Home')} />
     </Route>
 );
 
