@@ -6,7 +6,7 @@ import React from 'react';
 import {Route, DefaultRoute} from 'react-router';
 
 const Routes = (
-    <Route name="root" path="/" handler={require('./components/Master')}>
+    <Route name="root" path="/" handler={require('./components/App')}>
         <DefaultRoute handler={require('./pages/Login')} />
         <Route
         	name="login"
