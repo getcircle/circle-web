@@ -1,7 +1,7 @@
 'use strict';
 
-import {authenticateUser} from '../services/UserService';
-import {getProfileWithUserId} from '../services/ProfileService';
+import {authenticateUser} from '../services/user';
+import {getProfileWithUserId} from '../services/profile';
 
 class AuthActions {
 
