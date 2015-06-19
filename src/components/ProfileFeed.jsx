@@ -9,7 +9,7 @@ import t from '../utils/gettext';
 const {Avatar} = mui;
 
 
-class Home extends React.Component {
+class ProfileFeed extends React.Component {
 
     render() {
         return (
@@ -23,4 +23,4 @@ class Home extends React.Component {
 
 }
 
-export default requireAuth(Home);
+export default requireAuth(ProfileFeed);
