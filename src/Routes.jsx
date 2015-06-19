@@ -7,7 +7,7 @@ import {Route, DefaultRoute} from 'react-router';
 
 const Routes = (
     <Route name="root" path="/" handler={require('./components/App')}>
-        <DefaultRoute handler={require('./pages/Login')} />
+        <DefaultRoute handler={require('./pages/ProfileFeed')} />
         <Route
         	name="login"
         	handler={require('./pages/Login')} />
