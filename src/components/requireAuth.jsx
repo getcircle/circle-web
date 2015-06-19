@@ -1,14 +1,10 @@
 import connectToStores from 'alt/utils/connectToStores';
 import React from 'react';
-import * as mui from 'material-ui';
 
 import AuthStore from '../stores/AuthStore';
 
-const {AppBar, AppCanvas, ClearFix, Styles} = mui;
-const {Spacing} = Styles;
 
-
-export default (ComposedComponent) => {
+const requireAuth = (ComposedComponent) => {
     class AuthenticatedComponent extends React.Component {
 
         static getStores() {
@@ -20,11 +16,7 @@ export default (ComposedComponent) => {
         }
 
         render() {
-            return (
-                <AppCanvas>
-                    <ComposedComponent {...this.props} />
-                </AppCanvas>
-            );
+            return <ComposedComponent {...this.props} />;
         }
 
     }
@@ -39,3 +31,5 @@ export default (ComposedComponent) => {
     };
     return Component;
 };
+
+export default requireAuth;

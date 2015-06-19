@@ -1,7 +1,7 @@
 import * as mui from 'material-ui';
 import React from 'react';
 
-import authenticatedComponent from '../authenticatedComponent';
+import requireAuth from '../requireAuth';
 import t from '../../utils/gettext';
 
 const {Avatar} = mui;
@@ -21,4 +21,4 @@ class Home extends React.Component {
 
 }
 
-export default authenticatedComponent(Home);
+export default requireAuth(Home);
