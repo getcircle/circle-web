@@ -8,15 +8,25 @@
     ],
     "parser": "babel-eslint",
     "rules": {
-        "strict": 0,
-        "quotes": [1, "single"],
-        "comma-dangle": [1, "always-multiline"],
-        "no-underscore-dangle": 0,
-        "no-unused-vars": [2, {"vars": "all", "args": "none"}]
+        "quotes": [2, "single"],
+        "eol-last": [2],
+        "no-mixed-requires": [0],
+        "no-underscore-dangle": [0],
+        "camelcase": 2,
+        "dot-notation": [2,  {"allowPattern": "^[a-z]+(_[a-z]+)+$"}],
+        "curly": 0,
+        "no-unused-expressions": 0,
+        "space-before-function-paren": [2, {"anonymous": "always", "named": "never"}],
+        "comma-dangle": 0,
+        "react/display-name": 0,
+        "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+        "no-mixed-spaces-and-tabs": 0,
     },
     "ecmaFeatures": {
         "jsx": true,
-        "objectLiteralShorthandMethods": true
+        "objectLiteralShorthandMethods": true,
+        "modules": true,
+        "blockBindings": true
     },
     "ext": ".js,.jsx"
 }
