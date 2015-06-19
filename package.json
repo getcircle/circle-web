@@ -46,6 +46,7 @@
     "gulp-util": "~3.0.4",
     "gulp-watch": "~4.2.4",
     "hammerjs": "~2.0.4",
+    "invariant": "^2.1.0",
     "iz": "~0.7.1",
     "jest-cli": "~0.4.0",
     "jsdom": "~4.4.0",
@@ -58,14 +59,16 @@
     "node-notifier": "~4.1.2",
     "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.17.3",
     "q": "~1.2.0",
+    "qs": "^3.1.0",
     "react": "~0.13.1",
     "react-mixin": "^1.3.1",
-    "react-router": "git+ssh://git@github.com/rackt/react-router.git",
+    "react-router": "^1.0.0-beta1",
     "react-tap-event-plugin": "^0.1.7",
     "require-dir": "~0.1.0",
     "spin": "0.0.1",
     "superagent": "git+ssh://git@github.com/mhahn/superagent.git",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "warning": "^1.0.2"
   },
   "jest": {
     "unmockedModulePathPatterns": [

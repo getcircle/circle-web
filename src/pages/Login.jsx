@@ -1,11 +1,9 @@
 'use strict';
 
-import connectToStores from 'alt/utils/connectToStores';
-import {decorate} from 'react-mixin';
-import {Navigation} from 'react-router';
+import { decorate } from 'react-mixin';
+import { Navigation } from 'react-router';
 import React from 'react';
 
-import AuthStore from '../stores/AuthStore';
 import LoginForm from '../components/forms/auth/LoginForm';
 import t from '../utils/gettext';
 
@@ -13,20 +11,31 @@ import t from '../utils/gettext';
 @decorate(Navigation)
 class Login extends React.Component {
 
-    static getStores(props) {
-        return [AuthStore];
+    static propTypes = {
+        flux: React.PropTypes.object.isRequired,
     }
 
-    static getPropsFromStores(props) {
-        return AuthStore.getState();
+    componentDidMount() {
+        this.props.flux
+            .getStore('AuthStore')
+            .listen(this._handleStoreChange);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (AuthStore.isLoggedIn()) {
-            this.transitionTo(this.props.query.nextPath || '/');
-            return false;
+    componentWillUnmount() {
+        this.props.flux
+            .getStore('AuthStore')
+            .unlisten(this._handleStoreChange);
+    }
+
+    _handleStoreChange = this._handleStoreChange.bind(this)
+    _handleStoreChange() {
+        const loggedIn = this.props.flux
+            .getStore('AuthStore')
+            .isLoggedIn();
+
+        if (loggedIn) {
+            this.replaceWith(this.props.location.nextPathname || '/');
         }
-        return true;
     }
 
     render() {
@@ -37,19 +46,10 @@ class Login extends React.Component {
         return (
             <div style={containerStyle}>
                 <h1>{ t('Login') }</h1>
-                <LoginForm />
+                <LoginForm actions={this.props.flux.getActions('AuthActions')} />
             </div>
         );
     }
 }
 
-const Component = connectToStores(Login);
-// HoC connectToStores doesn't copy over static methods
-Component.willTransitionTo = function (transition, params, query, callback) {
-    if (AuthStore.isLoggedIn()) {
-        transition.redirect('profile-feed');
-    }
-    callback();
-};
-
-export default Component;
+export default Login;

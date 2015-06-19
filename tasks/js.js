@@ -13,7 +13,7 @@ gulp.task('js', function () {
         entries: './src/main.jsx',
         extensions: ['.jsx', '.js']
     })
-        .transform(babelify.configure({stage: 1}))
+        .transform(babelify.configure({stage: 0}))
         .bundle()
         .pipe(plumber({
             errorHandler: growlNotifications('JS Compilation Error'),

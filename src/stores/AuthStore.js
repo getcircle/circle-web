@@ -1,27 +1,19 @@
 'use strict';
 
-import {createStore} from 'alt/utils/decorators';
-
-import alt from '../alt';
-import AuthActions from '../actions/AuthActions';
 import client from '../services/client';
 
 
-@createStore(alt, 'AuthStore')
 class AuthStore {
 
     constructor() {
+        this.bindActions(this.alt.getActions('AuthActions'));
+
         this.user = null;
         this.token = null;
         this.profile = null;
-
-        this.bindListeners({
-            handleLogin: AuthActions.LOGIN,
-            handleCompleteAuthentication: AuthActions.COMPLETE_AUTHENTICATION,
-        });
     }
 
-    handleCompleteAuthentication({user, token}) {
+    onCompleteAuthentication({user, token}) {
         this.user = user;
         this.token = token;
         localStorage.setItem('user', user.toBase64());
@@ -29,7 +21,7 @@ class AuthStore {
         client.authenticate(token);
     }
 
-    handleLogin(profile) {
+    onLogin(profile) {
         this.profile = profile;
         localStorage.setItem('profile', profile.toBase64());
     }

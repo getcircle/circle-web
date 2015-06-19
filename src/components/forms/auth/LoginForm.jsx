@@ -4,7 +4,6 @@ import * as mui from 'material-ui';
 import React from 'react/addons';
 import {decorate} from 'react-mixin';
 
-import AuthActions from '../../../actions/AuthActions';
 import t from '../../../utils/gettext';
 import autoBind from '../../../utils/autobind';
 
@@ -18,7 +17,11 @@ const ThemeManager = new mui.Styles.ThemeManager();
 @decorate(autoBind(StylePropable))
 @decorate(React.addons.PureRenderMixin)
 @decorate(React.addons.LinkedStateMixin)
-class LoginForm extends React.Component {
+export default class LoginForm extends React.Component {
+
+    static propTypes = {
+        actions: React.PropTypes.object.isRequired,
+    }
 
     constructor() {
         super();
@@ -73,7 +76,7 @@ class LoginForm extends React.Component {
         event.preventDefault();
         let valid = this._validateInputs();
         if (valid) {
-            AuthActions.authenticate(this.state.email, this.state.password);
+            this.props.actions.authenticate(this.state.email, this.state.password);
         }
     }
 
@@ -109,4 +112,4 @@ class LoginForm extends React.Component {
 
 }
 
-export default LoginForm;
+// export default LoginForm;
