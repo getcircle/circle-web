@@ -1,3 +1,5 @@
+'use strict';
+
 import {services} from 'protobufs';
 
 import client from './client';

@@ -1,3 +1,5 @@
+'use strict';
+
 import connectToStores from 'alt/utils/connectToStores';
 import {decorate} from 'react-mixin';
 import {Navigation} from 'react-router';

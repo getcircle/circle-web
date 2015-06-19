@@ -1,3 +1,5 @@
+'use strict';
+
 import {createActions} from 'alt/utils/decorators';
 
 import alt from '../alt';

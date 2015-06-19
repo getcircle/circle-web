@@ -1,3 +1,5 @@
+'use strict';
+
 import {createStore} from 'alt/utils/decorators';
 
 import alt from '../alt';

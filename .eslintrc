@@ -20,7 +20,8 @@
         "comma-dangle": 0,
         "react/display-name": 0,
         "no-unused-vars": [2, {"vars": "all", "args": "none"}],
-        "no-mixed-spaces-and-tabs": 0
+        "no-mixed-spaces-and-tabs": 0,
+        "global-strict": [2, "always"]
     },
     "ecmaFeatures": {
         "jsx": true,

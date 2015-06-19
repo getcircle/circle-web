@@ -1,3 +1,5 @@
+'use strict';
+
 import alt from '../alt';
 import {createActions} from 'alt/utils/decorators';
 import {authenticateUser} from '../services/UserService';

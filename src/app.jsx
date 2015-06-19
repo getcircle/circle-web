@@ -1,3 +1,5 @@
+'use strict';
+
 require('babel/register');
 
 import fastclick from 'fastclick';

@@ -1,4 +1,6 @@
-function autoBind(Mixin) {
+'use strict';
+
+const autoBind = (Mixin) => {
 	return {
 		componentWillMount() {
 			Object.keys(Mixin).forEach((name) => {
@@ -8,6 +10,6 @@ function autoBind(Mixin) {
 			});
 		},
 	};
-}
+};
 
 export default autoBind;

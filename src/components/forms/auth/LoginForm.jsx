@@ -1,3 +1,5 @@
+'use strict';
+
 import * as mui from 'material-ui';
 import React from 'react/addons';
 import {decorate} from 'react-mixin';
