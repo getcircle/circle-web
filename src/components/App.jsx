@@ -1,9 +1,12 @@
 'use strict';
 
 import * as mui from 'material-ui';
+import { assign } from 'lodash';
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react';
+
+import Header from './Header';
 
 const { AppCanvas, FullWidthSection } = mui;
 const ThemeManager = new mui.Styles.ThemeManager();
@@ -42,8 +45,10 @@ class App extends React.Component {
     }
 
     render() {
+        const props: Object = assign({}, this.state, this.props);
         return (
             <AppCanvas>
+                <Header {...props} />
                 {this.props.children}
             </AppCanvas>
         );
