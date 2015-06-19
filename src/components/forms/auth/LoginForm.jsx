@@ -12,7 +12,6 @@ const StylePropable = mui.Mixins.StylePropable;
 const TextField = mui.TextField;
 const ThemeManager = new mui.Styles.ThemeManager();
 
-
 @decorate(StylePropable)
 @decorate(autoBind(StylePropable))
 @decorate(React.addons.PureRenderMixin)
@@ -112,4 +111,4 @@ export default class LoginForm extends React.Component {
 
 }
 
-// export default LoginForm;
+export default LoginForm;

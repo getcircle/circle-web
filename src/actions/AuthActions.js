@@ -3,7 +3,6 @@
 import {authenticateUser} from '../services/UserService';
 import {getProfileWithUserId} from '../services/ProfileService';
 
-
 class AuthActions {
 
     authenticate(email, password) {

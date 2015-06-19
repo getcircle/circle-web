@@ -7,7 +7,6 @@ import React from 'react';
 import LoginForm from '../components/forms/auth/LoginForm';
 import t from '../utils/gettext';
 
-
 @decorate(Navigation)
 class Login extends React.Component {
 

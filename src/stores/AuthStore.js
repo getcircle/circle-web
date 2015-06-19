@@ -2,7 +2,6 @@
 
 import client from '../services/client';
 
-
 class AuthStore {
 
     constructor() {

@@ -8,7 +8,6 @@ import React from 'react';
 const { AppCanvas, FullWidthSection } = mui;
 const ThemeManager = new mui.Styles.ThemeManager();
 
-
 @decorate(Navigation)
 class App extends React.Component {
 

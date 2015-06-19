@@ -10,7 +10,6 @@ const ENVIRONMENTS = keymirror({
     production: null,
 });
 
-
 class WrappedResponse {
 
     constructor(httpResponse) {
@@ -42,7 +41,6 @@ class WrappedResponse {
     }
 
 }
-
 
 class Transport {
 
@@ -101,7 +99,6 @@ class Transport {
     }
 
 }
-
 
 class Client {
 

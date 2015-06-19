@@ -5,7 +5,6 @@ import {services} from 'protobufs';
 import client from './client';
 import logger from '../utils/logger';
 
-
 export function authenticateUser(email, password) {
     /*eslint-disable camelcase*/
     let parameters = {

@@ -2,7 +2,6 @@
 
 import Alt from 'alt';
 
-
 class Flux extends Alt {
 
 	constructor(config = {}) {
