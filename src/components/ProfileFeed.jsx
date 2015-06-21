@@ -1,24 +1,29 @@
 'use strict';
 
-import connectToStores from 'alt/utils/connectToStores';
 import React from 'react';
 
+import connectToStore from '../utils/connectToStore';
 import Feed from './Feed';
+import ThemeManager from '../utils/ThemeManager';
 
-@connectToStores
+@connectToStore
 class ProfileFeed extends React.Component {
+
+    static store = 'ProfileFeedStore';
 
 	static propTypes = {
 		flux: React.PropTypes.object.isRequired,
         categories: React.PropTypes.array.isRequired,
 	}
 
-    static getStores(props) {
-        return [props.flux.getStore('ProfileFeedStore')];
+    static childContextTypes = {
+        muiTheme: React.PropTypes.object,
     }
 
-    static getPropsFromStores(props) {
-        return props.flux.getStore('ProfileFeedStore').getState();
+    getChildContext() {
+        return {
+            muiTheme: ThemeManager.getCurrentTheme(),
+        };
     }
 
     componentWillMount() {

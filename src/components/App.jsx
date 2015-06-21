@@ -1,27 +1,31 @@
 'use strict';
 
-import * as mui from 'material-ui';
+import mui from 'material-ui';
 import { assign } from 'lodash';
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react';
 
 import Header from './Header';
+import ThemeManager from '../utils/ThemeManager';
 
-const { AppCanvas, FullWidthSection } = mui;
-const ThemeManager = new mui.Styles.ThemeManager();
+const { AppCanvas } = mui;
 
 @decorate(Navigation)
 class App extends React.Component {
 
-    static get childContextTypes() {
-        return {
-            muiTheme: React.PropTypes.object,
-        };
-    }
-
     _defaultRoute() {
         this.replaceWith('feed');
+    }
+
+    static childContextTypes = {
+        muiTheme: React.PropTypes.object,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: ThemeManager.getCurrentTheme(),
+        };
     }
 
     componentWillMount() {
@@ -38,17 +42,15 @@ class App extends React.Component {
         return true;
     }
 
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
-    }
-
     render() {
         const props: Object = assign({}, this.state, this.props);
+        let header;
+        if (this.props.flux.getStore('AuthStore').isLoggedIn()) {
+            header = <Header {...props} />;
+        }
         return (
             <AppCanvas>
-                <Header {...props} />
+                {header}
                 {this.props.children}
             </AppCanvas>
         );

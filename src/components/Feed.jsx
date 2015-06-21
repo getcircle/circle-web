@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import Category from './Category';
+
 class Feed extends React.Component {
 
 	static propTypes = {
@@ -11,20 +13,16 @@ class Feed extends React.Component {
 	_renderCategories() {
 		return this.props.categories.map((category, index) => {
 			return (
-				<div key={index}>
-					<h1>{category.title}</h1>
-					<h1>{category.total_count}</h1>
-					<h1>{category.content_key}</h1>
-				</div>
+				<Category key={index} category={category} />
 			);
 		});
 	}
 
 	render() {
 		return (
-			<div>
+			<section>
 				{this._renderCategories()}
-			</div>
+			</section>
 		);
 	}
 

@@ -4,13 +4,12 @@ import * as mui from 'material-ui';
 import React from 'react/addons';
 import {decorate} from 'react-mixin';
 
-import t from '../../../utils/gettext';
 import autoBind from '../../../utils/autobind';
+import t from '../../../utils/gettext';
 
 const RaisedButton = mui.RaisedButton;
 const StylePropable = mui.Mixins.StylePropable;
 const TextField = mui.TextField;
-const ThemeManager = new mui.Styles.ThemeManager();
 
 @decorate(StylePropable)
 @decorate(autoBind(StylePropable))
@@ -31,18 +30,6 @@ export default class LoginForm extends React.Component {
             passwordErrorText: null,
         };
         this._handleTouchTap = this._handleTouchTap.bind(this);
-    }
-
-    static get childContextTypes() {
-        return {
-            muiTheme: React.PropTypes.object,
-        };
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
     }
 
     getStyles() {

@@ -6,6 +6,7 @@ import React from 'react';
 
 import LoginForm from '../components/forms/auth/LoginForm';
 import t from '../utils/gettext';
+import ThemeManager from '../utils/ThemeManager';
 
 @decorate(Navigation)
 class Login extends React.Component {
@@ -24,6 +25,18 @@ class Login extends React.Component {
         this.props.flux
             .getStore('AuthStore')
             .unlisten(this._handleStoreChange);
+    }
+
+    static get childContextTypes() {
+        return {
+            muiTheme: React.PropTypes.object,
+        };
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: ThemeManager.getCurrentTheme(),
+        };
     }
 
     _handleStoreChange = this._handleStoreChange.bind(this)
