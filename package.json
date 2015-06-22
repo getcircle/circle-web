@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/getcircle/circle-web",
   "devDependencies": {
+    "modularized-normalize-scss": "git://github.com/hail2u/normalize.scss.git",
     "alt": "^0.16.10",
     "babel": "^5.5.8",
     "babel-eslint": "^3.1.17",

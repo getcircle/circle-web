@@ -1,15 +1,4 @@
-@import 'base/_normalize';
-@import 'layout/_layout';
-
-@import 'components/_button';
-
-html {
-  font-family: 'Roboto', sans-serif;
-}
-
-body {
-	margin: 0 auto;
-}
+@import '../../node_modules/modularized-normalize-scss/normalize';
 
 h1, h2 {
     font-weight: 300;
