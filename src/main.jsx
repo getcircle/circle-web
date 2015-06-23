@@ -32,7 +32,7 @@ const UserV1 = services.user.containers.UserV1;
     let token = localStorage.getItem('token');
     let profile = localStorage.getItem('profile');
     if (user && token && profile) {
-        flux.getActions('AuthActions').completeAuthentication(UserV1.decode64(user), token);
+        flux.getActions('AuthActions').completeAuthentication({token, user: UserV1.decode64(user)});
         flux.getActions('AuthActions').login(ProfileV1.decode64(profile));
     }
 
