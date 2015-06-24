@@ -1,6 +1,6 @@
 'use strict';
 
-import {assign} from 'lodash';
+import _ from 'lodash';
 import connectToStores from 'alt/utils/connectToStores';
 import React from 'react';
 
@@ -23,7 +23,7 @@ const connectToStore = (Spec, Component = Spec) => {
         render() {
             return React.createElement(
                 Component,
-                assign({}, this.props, this.state),
+                _.assign({}, this.props, this.state),
             );
         }
 

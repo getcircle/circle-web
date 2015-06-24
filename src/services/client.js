@@ -142,6 +142,11 @@ class Client {
         this.transport.token = token;
     }
 
+    logout() {
+        this._token = null;
+        this.transport.token = null;
+    }
+
 }
 
 export default new Client();

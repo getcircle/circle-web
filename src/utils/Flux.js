@@ -17,7 +17,7 @@ class Flux extends Alt {
         this.addStore('AuthStore', require('../stores/AuthStore'));
         this.addStore('ProfileFeedStore', require('../stores/ProfileFeedStore'));
         this.addStore('OrganizationFeedStore', require('../stores/OrganizationFeedStore'));
-        this.addStore('RequestsActions', require('../stores/RequestsActions'));
+        this.addStore('RequestsStore', require('../stores/RequestsStore'));
     }
 }
 

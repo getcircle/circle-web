@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'lodash';
 import {services} from 'protobufs';
 
 import client from '../services/client';
@@ -10,51 +11,45 @@ class AuthStore {
 
     constructor() {
         this.bindActions(this.alt.getActions('AuthActions'));
-        this._setInitialState();
+        _.forEach(this._getInitialState(), (value, key) => {
+            this[key] = value;
+        });
     }
 
-    _setInitialState() {
-        this.user = null;
-        this.token = null;
-        this.profile = null;
-        this.googleClient = null;
-        this.authenticationInstructions = null;
-        this.shouldUseGoogleLogin = false;
-        this.shouldUseInternalLogin = false;
+    _getInitialState() {
+        return {
+            user: null,
+            token: null,
+            profile: null,
+            googleClient: null,
+            authenticationInstructions: null,
+            authBackend: null,
+        };
     }
 
     onCompleteAuthentication({user, token}) {
-        this.user = user;
-        this.token = token;
+        this.setState({user, token});
         localStorage.setItem('user', user.toBase64());
         localStorage.setItem('token', token);
         client.authenticate(token);
     }
 
     onLogin(profile) {
-        this.profile = profile;
+        this.setState({profile});
         localStorage.setItem('profile', profile.toBase64());
     }
 
     onLogoutSuccess() {
         localStorage.clear();
-        this._setInitialState();
-    }
-
-    onStartGoogleClient(details) {
-        this.googleClient = details.client;
+        this.setState(this._getInitialState());
+        client.logout();
     }
 
     onGetAuthenticationInstructionsSuccess(instructions) {
-        this.authenticationInstructions = instructions;
-        switch (instructions.backend) {
-            case AuthStore.backends.GOOGLE:
-                this.shouldUseGoogleLogin = true;
-                break;
-            case AuthStore.backends.INTERNAL:
-                this.shouldUseInternalLogin = true;
-                break;
-        }
+        this.setState({
+            authenticationInstructions: instructions,
+            authBackend: instructions.backend,
+        });
     }
 
     static isAuthenticated() {

@@ -8,7 +8,7 @@ class RequestsStore {
     }
 
     _setInProgress(inProgress: boolean) {
-        this._setInProgress({inProgress});
+        this.setState({inProgress});
     }
 
     onStart() {

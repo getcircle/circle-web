@@ -1,7 +1,7 @@
 'use strict';
 
+import _ from 'lodash';
 import mui from 'material-ui';
-import { assign } from 'lodash';
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react';
@@ -43,7 +43,7 @@ class App extends React.Component {
     }
 
     render() {
-        const props: Object = assign({}, this.state, this.props);
+        const props: Object = _.assign({}, this.state, this.props);
         let header;
         if (this.props.flux.getStore('AuthStore').isLoggedIn()) {
             header = <Header {...props} />;

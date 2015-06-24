@@ -1,7 +1,7 @@
 'use strict';
 
 import { authenticateUser, getAuthenticationInstructions, logout } from '../services/user';
-import {getProfileWithUserId} from '../services/profile';
+import { getProfileWithUserId } from '../services/profile';
 
 class AuthActions {
 
@@ -18,7 +18,7 @@ class AuthActions {
     }
 
     authenticate(backend, key, secret) {
-        this.dispatch();
+        this.alt.getActions('RequestsActions').start();
         authenticateUser(backend, key, secret)
             .then((response) => {
                 let user = response.user;
@@ -27,42 +27,44 @@ class AuthActions {
                 return Promise.resolve(user);
             })
             .then((user) => getProfileWithUserId(user.id))
-            .then((profile) => this.actions.login(profile))
-            .catch((error) => this.actions.authenticateFailed(error));
-    }
-
-    startGoogleClient() {
-        window.gapi.load('auth2', () => {
-            const client = window.gapi.auth2.init({
-                /*eslint-disable camelcase*/
-                // TODO: should be coming from settings
-                client_id: '1077014421904-1a697ks3qvtt6975qfqhmed8529en8s2.apps.googleusercontent.com',
-                scope: (
-                    'https://www.googleapis.com/auth/plus.login ' +
-                    'https://www.googleapis.com/auth/plus.profile.emails.read'
-                ),
-                /*eslint-enable camelcase*/
+            .then((profile) => {
+                this.actions.login(profile);
+                this.alt.getActions('RequestsActions').success();
+            })
+            .catch((error) => {
+                this.actions.authenticateFailed(error);
+                this.alt.getActions('RequestsActions').fail(error);
             });
-            this.dispatch({client});
-        });
     }
 
     getAuthenticationInstructions(email) {
-        this.dispatch();
+        this.alt.getActions('RequestsActions').start();
         getAuthenticationInstructions(email)
             .then((instructions) => {
                 this.actions.getAuthenticationInstructionsSuccess(instructions);
+                this.alt.getActions('RequestsActions').success();
+                // XXX not sure if this is the best place for this logic.
+                if (instructions.backend === this.alt.getStore('AuthStore').backends.GOOGLE) {
+                    this.alt.getActions('GoogleAuthActions').startClient();
+                }
             })
             .catch((error) => {
                 this.actions.getAuthenticationInstructionsFailed(error);
+                this.alt.getActions('RequestsActions').fail(error);
             });
     }
 
     logout() {
-        this.dispatch();
+        this.alt.getActions('RequestsActions').start();
         logout()
-            .then(() => this.actions.logoutSuccess())
-            .catch((error) => this.actions.logoutFailed(error));
+            .then(() => {
+                this.actions.logoutSuccess();
+                this.alt.getActions('RequestsActions').success();
+            })
+            .catch((error) => {
+                this.actions.logoutFailed(error);
+                this.alt.getActions('RequestsActions').fail(error);
+            });
     }
 
 }
