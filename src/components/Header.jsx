@@ -1,12 +1,10 @@
 'use strict';
 
 import connectToStores from 'alt/utils/connectToStores';
-import { decorate } from 'react-mixin';
-import { Link, Navigation } from 'react-router';
+import { Link } from 'react-router';
 import React from 'react';
 
 @connectToStores
-@decorate(Navigation)
 class Header extends React.Component {
 
     static propTypes = {
@@ -32,7 +30,7 @@ class Header extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!nextProps.flux.getStore('AuthStore').isLoggedIn()) {
-            this.transitionTo('login');
+            this.context.router.transitionTo('login');
         }
     }
 
