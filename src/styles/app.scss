@@ -1,5 +1,12 @@
 @import '../../node_modules/modularized-normalize-scss/normalize';
+@import 'lib/flexboxgrid';
 
 h1, h2 {
     font-weight: 300;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }

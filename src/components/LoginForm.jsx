@@ -107,35 +107,19 @@ class LoginForm extends React.Component {
         }
     }
 
-    _getStyles() {
-        return {
-            button: {
-                marginTop: 25,
-                width: 256,
-            },
-            common: {
-                display: 'block',
-                textAlign: 'center',
-            },
-            section: {
-                textAlign: 'center',
-                display: 'flex',
-                flexFlow: 'column',
-                alignItems: 'center',
-            },
-        };
-    }
-
-    _getPasswordField(styles) {
+    _getPasswordField() {
         if (this.props.backend === AuthStore.backends.INTERNAL) {
-            return <TextField
-                    key="password"
-                    style={styles.common}
-                    type="password"
-                    floatingLabelText="Password"
-                    valueLink={this.linkState('password')}
-                    errorText={this.state.passwordErrorText}
-                />;
+            return (
+                <div className="row center-xs">
+                    <TextField
+                        key="password"
+                        type="password"
+                        floatingLabelText="Password"
+                        valueLink={this.linkState('password')}
+                        errorText={this.state.passwordErrorText}
+                    />
+                </div>
+            );
         }
     }
 
@@ -153,26 +137,40 @@ class LoginForm extends React.Component {
         // return false;
     }
 
+    _getStyles() {
+        return {
+            button: {
+                width: 256,
+            },
+        };
+    }
+
     render() {
         const styles = this._getStyles();
         return (
-            <section style={styles.section}>
-                <h1>{ t('Login') }</h1>
-                <TextField
-                    floatingLabelText="Work Email Address"
-                    valueLink={this.linkState('email')}
-                    errorText={this.state.emailErrorText}
-                    style={styles.common}
-                />
-                {this._getPasswordField(styles)}
-                <RaisedButton
-                    label={`${ t('Login') }`}
-                    style={this.mergeStyles(styles.common, styles.button)}
-                    primary={true}
-                    onTouchTap={this._handleTouchTap}
-                    // TODO should be checking if valid email first
-                    disabled={this._canSubmit() ? false : true}
-                />
+            <section>
+                <div className="row center-xs">
+                    <h1>{ t('Login') }</h1>
+                </div>
+                <div className="row center-xs">
+                    <TextField
+                        className="row center-xs"
+                        floatingLabelText="Work Email Address"
+                        valueLink={this.linkState('email')}
+                        errorText={this.state.emailErrorText}
+                    />
+                </div>
+                {this._getPasswordField()}
+                <div className="row center-xs">
+                    <RaisedButton
+                        label={`${ t('Login') }`}
+                        style={styles.button}
+                        primary={true}
+                        onTouchTap={this._handleTouchTap}
+                        // TODO should be checking if valid email first
+                        disabled={this._canSubmit() ? false : true}
+                    />
+                </div>
             </section>
         );
     }
