@@ -10,3 +10,19 @@ h1, h2 {
     min-height: 100vh;
     flex-direction: column;
 }
+
+.app--header {
+    box-sizing: border-box;
+    padding-top: 80px;
+    background-color: rgb(31, 37, 50);
+}
+
+.wrap {
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+body .row {
+    margin: 0px;
+}

@@ -50,8 +50,12 @@ class App extends React.Component {
         }
         return (
             <AppCanvas>
-                {header}
-                {this.props.children}
+                <div>
+                    {header}
+                    <div className="wrap">
+                        {this.props.children}
+                    </div>
+                </div>
             </AppCanvas>
         );
     }
