@@ -64,6 +64,16 @@ class Header extends React.Component {
         this.transitionTo(tab.props.route);
     }
 
+    _getInitialSelectedIndex() {
+        let index = 0;
+        switch (this.props.location.pathname) {
+            case '/company':
+                index = 1;
+                break;
+        }
+        return index;
+    }
+
     render() {
         const styles = this._getStyles();
         return (
@@ -73,7 +83,7 @@ class Header extends React.Component {
                         <Link to="login" style={styles.link} onClick={this._handleLogout}>Logout</Link>
                     </div>
                     <div className="row">
-                        <Tabs tabItemContainerStyle={styles.tabs}>
+                        <Tabs tabItemContainerStyle={styles.tabs} initialSelectedIndex={this._getInitialSelectedIndex()}>
                             <Tab style={styles.tab} label={ t('FEED') } route="feed" onActive={this._onActive} />
                             <Tab style={styles.tab} label={ t('COMPANY') } route="company" onActive={this._onActive} />
                         </Tabs>

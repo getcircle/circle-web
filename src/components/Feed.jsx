@@ -6,25 +6,29 @@ import Category from './Category';
 
 class Feed extends React.Component {
 
-	static propTypes = {
-		categories: React.PropTypes.array.isRequired
-	}
+    static propTypes = {
+        categories: React.PropTypes.array.isRequired
+    }
 
-	_renderCategories() {
-		return this.props.categories.map((category, index) => {
-			return (
-				<Category key={index} category={category} />
-			);
-		});
-	}
+    _renderCategories() {
+        return this.props.categories.map((category, index) => {
+            return (
+                <div className="row">
+                    <div className="col-xs-offset-2 col-xs-8">
+                        <Category key={index} category={category} />
+                    </div>
+                </div>
+            );
+        });
+    }
 
-	render() {
-		return (
-			<section>
-				{this._renderCategories()}
-			</section>
-		);
-	}
+    render() {
+        return (
+            <section>
+                {this._renderCategories()}
+            </section>
+        );
+    }
 
 }
 

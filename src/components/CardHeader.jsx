@@ -12,15 +12,15 @@ class CardHeader extends React.Component {
 
     getStyles() {
         return {
-            section: {
-                display: 'flex',
-            },
             title: {
-                flex: 1,
+                fontSize: 24,
+                lineHeight: '36px',
+            },
+            'countContainer': {
+                textAlign: 'right',
             },
             'count': {
-                flex: 1,
-                textAlign: 'right',
+                fontSize: 24,
             },
         };
     }
@@ -28,9 +28,17 @@ class CardHeader extends React.Component {
     render() {
         const styles = this.getStyles();
         return (
-            <header style={styles.section}>
-                <h2 style={styles.title}>{this.props.title}</h2>
-                <p styles={styles.count}>{this.props.count}</p>
+            <header>
+                <div className="row">
+                    <div className="col-xs">
+                        <span style={styles.title}>{this.props.title}</span>
+                    </div>
+                    <div className="col-xs">
+                        <div style={styles.countContainer}>
+                            <span style={styles.count}>{this.props.count}</span>
+                        </div>
+                    </div>
+                </div>
             </header>
         );
     }

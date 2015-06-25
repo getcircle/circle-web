@@ -15,16 +15,26 @@ class FlatProfileCardContent extends React.Component {
         muiTheme: React.PropTypes.object.isRequired,
     }
 
-    _getAvatars() {
+    _getAvatars(styles) {
         return this.props.profiles.map((profile, index) => {
-            return <Avatar key={index} src={profile.image_url} />;
+            return <Avatar style={styles.avatar} key={index} src={profile.image_url} />;
         });
     }
 
+    _getStyles() {
+        return {
+            container: {
+                padding: '15px',
+            },
+            avatar: {},
+        };
+    }
+
     render() {
+        const styles = this._getStyles();
         return (
-            <div>
-                {this._getAvatars()}
+            <div style={styles.container}>
+                {this._getAvatars(styles)}
             </div>
         );
     }
