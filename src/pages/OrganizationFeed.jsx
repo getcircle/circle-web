@@ -3,7 +3,7 @@
 import React from 'react';
 
 import connectToStore from '../utils/connectToStore';
-import Feed from './Feed';
+import Feed from '../components/Feed';
 
 import ThemeManager from '../utils/ThemeManager';
 
@@ -39,3 +39,4 @@ class OrganizationFeed extends React.Component {
 }
 
 export default OrganizationFeed;
+
