@@ -3,6 +3,7 @@
 import React from 'react';
 
 import connectToStore from '../utils/connectToStore';
+import ProfilesGrid from '../components/ProfilesGrid';
 import ThemeManager from '../utils/ThemeManager';
 
 @connectToStore
@@ -42,25 +43,12 @@ class Profiles extends React.Component {
     _handleScroll = this._handleScroll.bind(this);
     _handleScroll(event) {
         if (!this.props.loading && this.props.nextRequest !== null) {
-            this.setState({loading: true});
             this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest);
         }
     }
 
-    _renderProfiles() {
-        return this.props.profiles.map((profile, index) => {
-            return (
-                <li key={index}>{profile.full_name}</li>
-            );
-        });
-    }
-
     render() {
-        return (
-            <ul>
-                {this._renderProfiles()}
-            </ul>
-        );
+        return <ProfilesGrid profiles={this.props.profiles} />;
     }
 
 }
