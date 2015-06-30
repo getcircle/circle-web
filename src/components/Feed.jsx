@@ -13,9 +13,9 @@ class Feed extends React.Component {
     _renderCategories() {
         return this.props.categories.map((category, index) => {
             return (
-                <div className="row">
+                <div key={index} className="row">
                     <div className="col-xs-offset-2 col-xs-8">
-                        <Category key={index} category={category} />
+                        <Category category={category} />
                     </div>
                 </div>
             );
