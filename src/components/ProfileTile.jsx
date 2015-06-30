@@ -14,6 +14,7 @@ class ProfileTile extends React.Component {
 
     render() {
         const profile = this.props.profile;
+        // "Avatar" seems to be causing the page to load slowly since its fetching all the images at once. Is there a better way we can do this where the images will fade in as well?
         return (
             <Paper>
                 <Avatar src={profile.image_url} />

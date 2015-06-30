@@ -79,6 +79,7 @@ class Header extends React.Component {
     }
 
     render() {
+        // XXX the bottom border animation when switching tabs seems to lag when loading the "People" page. Not sure if this is because we're loading more cards, or because we're loading images as well.
         const styles = this._getStyles();
         return (
             <header className="app--header">

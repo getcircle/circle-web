@@ -4,6 +4,7 @@ import React from 'react';
 
 import ProfileTile from './ProfileTile';
 
+// XXX look into addding the PureRenderMixin
 class ProfilesGrid extends React.Component {
 
     static propTypes = {
