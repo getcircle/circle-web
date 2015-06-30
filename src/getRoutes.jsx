@@ -33,6 +33,10 @@ const getRoutes = (flux) => {
                 path="company"
                 onEnter={requireAuth}
                 component={require('./pages/OrganizationFeed')} />
+            <Route
+                path="people"
+                onEnter={requireAuth}
+                component={require('./pages/Profiles')} />
         </Route>
     );
 };

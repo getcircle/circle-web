@@ -12,7 +12,8 @@ const ENVIRONMENTS = keymirror({
 
 class WrappedResponse {
 
-    constructor(httpResponse) {
+    constructor(request, httpResponse) {
+        this.request = request;
         this.httpResponse = httpResponse;
         this.response = protobufs.soa.ServiceResponseV1.decode(this.httpResponse.xhr.response);
         this.result = this._getResult();
@@ -26,18 +27,49 @@ class WrappedResponse {
     }
 
     _getResult() {
-        let action = this.response.actions[0];
+        let action = this._getFirstAction();
         return action.result[this._getResponseExtensionName(action)];
     }
 
     _getErrors() {
-        let action = this.response.actions[0];
+        let action = this._getFirstAction();
         return action.result.errors;
     }
 
     _getErrorDetails() {
-        let action = this.response.actions[0];
+        let action = this._getFirstAction();
         return action.result.error_details;
+    }
+
+    _getFirstAction() {
+        return this.response.actions[0];
+    }
+
+    getNextRequest() {
+        // XXX not sure if there is a better way to do this
+        let nextRequest = this.request.$type.decode(this.request.encode());
+        let currentPaginator = this.getPaginator();
+        let nextAction = nextRequest.actions[0];
+
+        if (currentPaginator.next_page === null) {
+            return null;
+        }
+
+        let paginatorData = _.assign({}, nextAction.control.paginator);
+        /*eslint-disable new-cap*/
+        nextAction.control.paginator = new currentPaginator.$type.clazz(paginatorData);
+        /*eslint-enable new-cap*/
+        nextAction.control.paginator.page = currentPaginator.next_page;
+        /*eslint-disable camelcase*/
+        nextAction.control.paginator.previous_page = currentPaginator.page;
+        /*eslint-enable camelcase*/
+
+        return nextRequest;
+    }
+
+    getPaginator() {
+        let action = this._getFirstAction();
+        return action.control.paginator;
     }
 
 }
@@ -76,14 +108,14 @@ class Transport {
         return `${ this._scheme }://${ this._host }`;
     }
 
-    sendRequest(serializedRequest) {
+    sendRequest(request) {
         return new Promise((resolve, reject) => {
             // TODO set authorization header for authenticated requests
             requests
                 .post(this._endpoint)
                 .set('Authorization', this._token ? `Token ${this._token}` : '')
                 .type('application/x-protobuf')
-                .send(serializedRequest)
+                .send(request.toArrayBuffer())
                 .responseType('arraybuffer')
                 .end((err, res) => {
                     if (err) {
@@ -91,7 +123,7 @@ class Transport {
                     } else {
                         // TODO should reject with failures from the service
                         // TODO should handle any decoding errors
-                        let response = new WrappedResponse(res);
+                        let response = new WrappedResponse(request, res);
                         resolve(response);
                     }
                 });
@@ -124,12 +156,16 @@ class Client {
 
         let actionRequest = new protobufs.soa.ActionRequestV1({control: actionControl, params: actionParams});
         serviceRequest.actions.push(actionRequest);
-        return serviceRequest.toArrayBuffer();
+        return serviceRequest;
     }
 
     sendRequest(protobufRequest) {
-        let serializedRequest = this.buildRequest(protobufRequest.$type.parent.name, protobufRequest);
-        return this.transport.sendRequest(serializedRequest);
+        let request = this.buildRequest(protobufRequest.$type.parent.name, protobufRequest);
+        return this.transport.sendRequest(request);
+    }
+
+    sendNextRequest(nextRequest) {
+        return this.transport.sendRequest(nextRequest);
     }
 
     _getRequestExtensionName(service, action) {

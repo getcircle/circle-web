@@ -25,3 +25,30 @@ export function getProfileWithUserId(userId) {
 	return getProfile({user_id: userId});
 	/*eslint-enable camelcase*/
 }
+
+export function getProfiles(nextRequest=null) {
+    return new Promise((resolve, reject) => {
+        if (nextRequest === null) {
+            let request = new services.profile.actions.get_profiles.RequestV1();
+            client.sendRequest(request)
+                .then((response) => {
+                    let {profiles} = response.result;
+                    resolve({profiles, nextRequest: response.getNextRequest()});
+                })
+                .catch((error) => {
+                    logger.log(`Error fetching profiles: ${error}`);
+                    reject(error);
+                });
+        } else {
+            client.sendNextRequest(nextRequest)
+                .then((response) => {
+                    let {profiles} = response.result;
+                    resolve({profiles, nextRequest: response.getNextRequest()});
+                })
+                .catch((error) => {
+                    logger.log(`Error fetching profiles: ${error}`);
+                });
+        }
+    });
+
+}

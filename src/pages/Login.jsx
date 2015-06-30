@@ -21,10 +21,8 @@ class Login extends React.Component {
         inProgress: React.PropTypes.bool,
     }
 
-    static get childContextTypes() {
-        return {
-            muiTheme: React.PropTypes.object,
-        };
+    static childContextTypes = {
+        muiTheme: React.PropTypes.object,
     }
 
     static getStores(props) {
