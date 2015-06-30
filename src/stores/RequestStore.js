@@ -1,9 +1,9 @@
 'use strict';
 
-class RequestsStore {
+class RequestStore {
 
     constructor() {
-        this.bindActions(this.alt.getActions('RequestsActions'));
+        this.bindActions(this.alt.getActions('RequestActions'));
         this.inProgress = false;
     }
 
@@ -25,4 +25,4 @@ class RequestsStore {
 
 }
 
-export default RequestsStore;
+export default RequestStore;

@@ -28,7 +28,7 @@ class Login extends React.Component {
     static getStores(props) {
         return [
             props.flux.getStore('AuthStore'),
-            props.flux.getStore('RequestsStore'),
+            props.flux.getStore('RequestStore'),
         ];
     }
 
@@ -36,7 +36,7 @@ class Login extends React.Component {
         return _.assign(
             {},
             props.flux.getStore('AuthStore').getState(),
-            props.flux.getStore('RequestsStore').getState(),
+            props.flux.getStore('RequestStore').getState(),
         );
     }
 

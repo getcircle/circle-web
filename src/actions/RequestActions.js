@@ -1,6 +1,6 @@
 'use strict';
 
-class RequestsActions {
+class RequestActions {
 
     constructor() {
         this.generateActions('start', 'success', 'fail');
@@ -8,4 +8,4 @@ class RequestsActions {
 
 }
 
-export default RequestsActions;
+export default RequestActions;
