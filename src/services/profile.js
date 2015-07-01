@@ -27,6 +27,7 @@ export function getProfileWithUserId(userId) {
 }
 
 export function getProfiles(nextRequest=null) {
+    // XXX is there a way to make this more DRY?
     return new Promise((resolve, reject) => {
         if (nextRequest === null) {
             let request = new services.profile.actions.get_profiles.RequestV1();

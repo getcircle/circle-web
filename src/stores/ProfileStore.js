@@ -11,11 +11,12 @@ class ProfileStore {
         this.profiles = [];
         // XXX need to see if this is available to one component or to all components. If it is availlable to all it should be moved to the state
         this.nextRequest = null;
-        // XXX this should be handled by the RequestsStore
+        // XXX this should be handled by the RequestsStore. Although we do want to have some concept of the store is loading vs. any random request is being sent.
         this.loading = false;
     }
 
     onGetProfilesSuccess(state) {
+        // XXX look to using React.addons.update $push
         // XXX not sure how we do setState if we want to append to the array
         this.profiles.push.apply(this.profiles, state.profiles || []);
         this.nextRequest = state.nextRequest;

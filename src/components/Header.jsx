@@ -74,6 +74,10 @@ class Header extends React.Component {
             case '/company':
                 index = 2;
                 break;
+
+            case '/search':
+                index = 3;
+                break;
         }
         return index;
     }
@@ -92,6 +96,7 @@ class Header extends React.Component {
                             <Tab style={styles.tab} label={ t('PEOPLE') } route="people" onActive={this._onActive} />
                             <Tab style={styles.tab} label={ t('FEED') } route="feed" onActive={this._onActive} />
                             <Tab style={styles.tab} label={ t('COMPANY') } route="company" onActive={this._onActive} />
+                            <Tab style={styles.tab} label={ t('SEARCH') } route="search" onActive={this._onActive} />
                         </Tabs>
                     </div>
                 </div>

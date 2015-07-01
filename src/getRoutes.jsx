@@ -37,6 +37,10 @@ const getRoutes = (flux) => {
                 path="people"
                 onEnter={requireAuth}
                 component={require('./pages/Profiles')} />
+            <Route
+                path="search"
+                onEnter={requireAuth}
+                component={require('./pages/Search')} />
         </Route>
     );
 };
