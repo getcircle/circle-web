@@ -15,6 +15,10 @@ class SearchStore {
         this.setState(state);
     }
 
+    onClearResults(state) {
+        this.setState({results: []});
+    }
+
 }
 
 export default SearchStore;

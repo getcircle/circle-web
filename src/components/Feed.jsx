@@ -7,7 +7,7 @@ import Category from './Category';
 class Feed extends React.Component {
 
     static propTypes = {
-        categories: React.PropTypes.array.isRequired
+        categories: React.PropTypes.array.isRequired,
     }
 
     _renderCategories() {
