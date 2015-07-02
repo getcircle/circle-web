@@ -13,7 +13,7 @@ export function search(query, category) {
         } else {
             client.sendRequest(request)
                 .then((response) => {
-                    let {results} = response.result;
+                    let results = response.result ? response.result.results : [];
                     resolve({results});
                 })
                 .catch((error) => {
