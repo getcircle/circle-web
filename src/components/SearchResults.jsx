@@ -3,6 +3,7 @@
 import React from 'react';
 import { services } from 'protobufs';
 
+import GroupSearchResults from '../components/GroupSearchResults';
 import ProfileSearchResults from '../components/ProfileSearchResults';
 import TeamSearchResults from '../components/TeamSearchResults';
 
@@ -22,6 +23,8 @@ class SearchResults extends React.Component {
                 components.push(<ProfileSearchResults key={index} profiles={result.profiles} />);
             } else if (result.category === CategoryV1.TEAMS) {
                 components.push(<TeamSearchResults key={index} teams={result.teams} />);
+            } else if (result.category === CategoryV1.GROUPS) {
+                components.push(<GroupSearchResults key={index} groups={result.groups} />);
             }
         }
         return components;
