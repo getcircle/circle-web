@@ -6,7 +6,7 @@ class SearchResult extends React.Component {
 
     render() {
         return (
-            <div className="row">
+            <div>
                 {this.props.children}
             </div>
         );

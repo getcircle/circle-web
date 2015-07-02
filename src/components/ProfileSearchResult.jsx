@@ -11,13 +11,26 @@ class ProfileSearchResult extends React.Component {
         profile: React.PropTypes.object.isRequired,
     }
 
+    styles = {
+        detailsContainer: {
+            textAlign: 'left',
+        },
+        details: {
+            display: 'block',
+        },
+    }
+
     render() {
         const profile = this.props.profile;
         return (
-            <div>
-                <Avatar src={profile.image_url} />
-                <span>{profile.full_name}</span>
-                <span>{profile.title}</span>
+            <div className="row">
+                <div className="col-xs-1">
+                    <Avatar src={profile.image_url} />
+                </div>
+                <div className="col-xs" style={this.styles.detailsContainer}>
+                    <span style={this.styles.details}>{profile.full_name}</span>
+                    <span style={this.styles.details}>{profile.title}</span>
+                </div>
             </div>
         );
     }

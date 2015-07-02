@@ -64,7 +64,7 @@ class Search extends React.Component {
                     />
                 </div>
                 <div className="row center-xs">
-                    <SearchResults results={this.props.results} />
+                    <SearchResults className="col-xs-8" results={this.props.results} />
                 </div>
             </section>
         );

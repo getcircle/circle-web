@@ -9,10 +9,16 @@ class SearchResultHeader extends React.Component {
         title: React.PropTypes.string,
     }
 
+    styles = {
+        title: {
+            textAlign: 'left',
+        },
+    }
+
     render() {
         return (
             <div>
-                <h2>{this.props.title}</h2>
+                <h2 style={this.styles.title}>{this.props.title}</h2>
             </div>
         );
     }
