@@ -18,7 +18,7 @@ class AuthActions {
     }
 
     authenticate(backend, key, secret) {
-        this.alt.getActions('RequestsActions').start();
+        this.alt.getActions('RequestActions').start();
         authenticateUser(backend, key, secret)
             .then((response) => {
                 let user = response.user;
@@ -29,20 +29,20 @@ class AuthActions {
             .then((user) => getProfileWithUserId(user.id))
             .then((profile) => {
                 this.actions.login(profile);
-                this.alt.getActions('RequestsActions').success();
+                this.alt.getActions('RequestActions').success();
             })
             .catch((error) => {
                 this.actions.authenticateFailed(error);
-                this.alt.getActions('RequestsActions').fail(error);
+                this.alt.getActions('RequestActions').fail(error);
             });
     }
 
     getAuthenticationInstructions(email) {
-        this.alt.getActions('RequestsActions').start();
+        this.alt.getActions('RequestActions').start();
         getAuthenticationInstructions(email)
             .then((instructions) => {
                 this.actions.getAuthenticationInstructionsSuccess(instructions);
-                this.alt.getActions('RequestsActions').success();
+                this.alt.getActions('RequestActions').success();
                 // XXX not sure if this is the best place for this logic.
                 if (instructions.backend === this.alt.getStore('AuthStore').backends.GOOGLE) {
                     this.alt.getActions('GoogleAuthActions').startClient();
@@ -50,20 +50,20 @@ class AuthActions {
             })
             .catch((error) => {
                 this.actions.getAuthenticationInstructionsFailed(error);
-                this.alt.getActions('RequestsActions').fail(error);
+                this.alt.getActions('RequestActions').fail(error);
             });
     }
 
     logout() {
-        this.alt.getActions('RequestsActions').start();
+        this.alt.getActions('RequestActions').start();
         logout()
             .then(() => {
                 this.actions.logoutSuccess();
-                this.alt.getActions('RequestsActions').success();
+                this.alt.getActions('RequestActions').success();
             })
             .catch((error) => {
                 this.actions.logoutFailed(error);
-                this.alt.getActions('RequestsActions').fail(error);
+                this.alt.getActions('RequestActions').fail(error);
             });
     }
 
