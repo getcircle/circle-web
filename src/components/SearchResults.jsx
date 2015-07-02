@@ -4,6 +4,7 @@ import React from 'react';
 import { services } from 'protobufs';
 
 import ProfileSearchResults from '../components/ProfileSearchResults';
+import TeamSearchResults from '../components/TeamSearchResults';
 
 class SearchResults extends React.Component {
 
@@ -19,6 +20,8 @@ class SearchResults extends React.Component {
             let result = this.props.results[index];
             if (result.category === CategoryV1.PROFILES) {
                 components.push(<ProfileSearchResults key={index} profiles={result.profiles} />);
+            } else if (result.category === CategoryV1.TEAMS) {
+                components.push(<TeamSearchResults key={index} teams={result.teams} />);
             }
         }
         return components;
