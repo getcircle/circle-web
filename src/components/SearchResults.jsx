@@ -6,6 +6,7 @@ import { services } from 'protobufs';
 import GroupSearchResults from '../components/GroupSearchResults';
 import LocationSearchResults from '../components/LocationSearchResults';
 import ProfileSearchResults from '../components/ProfileSearchResults';
+import TagSearchResults from '../components/TagSearchResults';
 import TeamSearchResults from '../components/TeamSearchResults';
 
 class SearchResults extends React.Component {
@@ -28,6 +29,10 @@ class SearchResults extends React.Component {
                 components.push(<GroupSearchResults key={index} groups={result.groups} />);
             } else if (result.category === CategoryV1.LOCATIONS) {
                 components.push(<LocationSearchResults key={index} locations={result.locations} />);
+            } else if (result.category === CategoryV1.SKILLS) {
+                components.push(<TagSearchResults key={index} tags={result.tags} title="Skills" />);
+            } else if (result.category === CategoryV1.INTERESTS) {
+                components.push(<TagSearchResults key={index} tags={result.tags} title="Interests" />);
             }
         }
         return components;
