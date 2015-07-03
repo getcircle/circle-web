@@ -93,10 +93,10 @@ class Header extends React.Component {
                     </div>
                     <div className="row">
                         <Tabs tabItemContainerStyle={styles.tabs} initialSelectedIndex={this._getInitialSelectedIndex()}>
-                            <Tab style={styles.tab} label={ t('PEOPLE') } route="people" onActive={this._onActive} />
-                            <Tab style={styles.tab} label={ t('FEED') } route="feed" onActive={this._onActive} />
-                            <Tab style={styles.tab} label={ t('COMPANY') } route="company" onActive={this._onActive} />
-                            <Tab style={styles.tab} label={ t('SEARCH') } route="search" onActive={this._onActive} />
+                            <Tab style={styles.tab} label={ t('PEOPLE') } route="/people" onActive={this._onActive} />
+                            <Tab style={styles.tab} label={ t('FEED') } route="/feed" onActive={this._onActive} />
+                            <Tab style={styles.tab} label={ t('COMPANY') } route="/company" onActive={this._onActive} />
+                            <Tab style={styles.tab} label={ t('SEARCH') } route="/search" onActive={this._onActive} />
                         </Tabs>
                     </div>
                 </div>

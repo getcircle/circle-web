@@ -1,5 +1,6 @@
 'use strict';
 
+import { Link } from 'react-router';
 import mui from 'material-ui';
 import React from 'react';
 
@@ -30,6 +31,7 @@ class ProfileSearchResult extends React.Component {
                 <div className="col-xs" style={this.styles.detailsContainer}>
                     <span style={this.styles.details}>{profile.full_name}</span>
                     <span style={this.styles.details}>{profile.title}</span>
+                    <Link style={this.styles.details} to={`profile/${profile.id}`}>View Profile</Link>
                 </div>
             </div>
         );

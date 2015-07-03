@@ -8,6 +8,7 @@ class SearchStore {
         this.registerAsync(searchSource);
         this.bindActions(this.alt.getActions('SearchActions'));
 
+        // XXX should have this be {'query': [results]} so we can take advantage of local caching
         this.results = [];
     }
 

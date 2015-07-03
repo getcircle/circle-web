@@ -53,3 +53,19 @@ export function getProfiles(nextRequest=null) {
     });
 
 }
+
+export function getExtendedProfile(profileId) {
+    /*eslint-disable camelcase*/
+    let request = new services.profile.actions.get_extended_profile.RequestV1({profile_id: profileId});
+    /*eslint-enable camelcase*/
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let extendedProfile = response.result;
+                resolve(extendedProfile);
+            })
+            .catch((error) => {
+                logger.log(`Error fetching extended profile: ${error}`);
+            });
+    });
+}

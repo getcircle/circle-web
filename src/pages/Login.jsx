@@ -40,6 +40,7 @@ class Login extends React.Component {
         );
     }
 
+    // TODO we shouldn't have to specify this on all the view controllers
     getChildContext() {
         return {
             muiTheme: ThemeManager.getCurrentTheme(),

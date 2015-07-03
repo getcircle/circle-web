@@ -2,7 +2,13 @@
 
 class ProfileActions {
     constructor() {
-        this.generateActions('loading', 'getProfilesSuccess', 'getProfilesError');
+        this.generateActions(
+            'loading',
+            'getProfilesSuccess',
+            'getProfilesError',
+            'fetchExtendedProfileSuccess',
+            'fetchExtendedProfileError',
+        );
     }
 }
 
