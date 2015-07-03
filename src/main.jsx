@@ -5,7 +5,7 @@ require('babel/register');
 import fastclick from 'fastclick';
 import React from 'react';
 import { Router } from 'react-router';
-import BrowserHistory from 'react-router/lib/BrowserHistory';
+import { history } from 'react-router/lib/BrowserHistory';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { services } from 'protobufs';
 
@@ -42,7 +42,7 @@ const UserV1 = services.user.containers.UserV1;
 
     const routes = getRoutes(flux);
     React.render((
-        <Router history={BrowserHistory} routes={routes} createElement={createElement} />
+        <Router history={history} routes={routes} createElement={createElement} />
     ), getBody());
 
 })();
