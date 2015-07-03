@@ -104,8 +104,6 @@ class ExtendedProfile extends React.Component {
                     </div>
                 </div>
                 <hr />
-                <div className="row">
-                </div>
             </div>
         );
     }
