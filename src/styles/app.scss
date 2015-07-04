@@ -26,3 +26,9 @@ h1, h2 {
 body .row {
     margin: 0px;
 }
+
+* {
+    // everyone really just wants this
+    // let's stop thinking about subtracting padding from width
+    box-sizing: border-box;
+}

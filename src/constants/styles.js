@@ -9,6 +9,9 @@ const constants = {
     },
 
     colors: {},
+
+    verticalRhythm: 10,
+    horizontalUnit: 10,
 };
 
 export default constants;
