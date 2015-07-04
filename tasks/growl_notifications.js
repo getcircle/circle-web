@@ -18,7 +18,9 @@ module.exports = function (taskName) {
             gutil.colors.red(error.toString())
         );
 
-        this.emit('end');
+        if (this.emit) {
+            this.emit('end');
+        }
     };
 
 };
