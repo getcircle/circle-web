@@ -57,7 +57,7 @@
     "modularized-normalize-scss": "git://github.com/hail2u/normalize.scss.git",
     "moment": "~2.10.2",
     "morgan": "~1.2.2",
-    "node-notifier": "~4.1.2",
+    "node-notifier": "~4.2.3",
     "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.18.2",
     "q": "~1.2.0",
     "qs": "^3.1.0",
@@ -68,8 +68,15 @@
     "require-dir": "~0.1.0",
     "spin": "0.0.1",
     "superagent": "git+ssh://git@github.com/mhahn/superagent.git",
-    "vinyl-source-stream": "^1.1.0",
-    "warning": "^1.0.2"
+    "vinyl-source-stream": "~1.1.0",
+    "warning": "^1.0.2",
+    "watchify": "~3.2.3",
+    "browser-sync": "~2.7.13",
+    "gulp-sourcemaps": "~1.5.2",
+    "vinyl-buffer": "~1.0.0",
+    "util": "~0.10.3",
+    "reactify": "~1.1.1",
+    "gulp-notify": "~2.2.0"
   },
   "jest": {
     "unmockedModulePathPatterns": [
