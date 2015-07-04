@@ -18,13 +18,13 @@ var util = require('util');
 
 gulp.task('js', function() {
     return browserify({
-            entries: './src/main.jsx',
+            entries: './src/main.js',
             extensions: ['.jsx', '.js',],
         })
         .transform(babelify.configure({stage: 0}))
         .transform(reactify)
         .bundle()
-        .pipe(source('app.js'))
+        .pipe(source('./src/main.js'))
         .pipe(gulp.dest('./dist/'));
 
 });
