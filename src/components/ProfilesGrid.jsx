@@ -14,10 +14,8 @@ class ProfilesGrid extends React.Component {
     _renderProfiles() {
         return this.props.profiles.map((profile, index) => {
             return (
-                <div key={index} className="row">
-                    <div className="col-xs-offset-2 col-xs-8">
-                        <ProfileTile profile={profile} />
-                    </div>
+                <div key={index} className="col-xs-12 col-sm-6 col-md-4">
+                    <ProfileTile profile={profile} />
                 </div>
             );
         });
@@ -25,7 +23,7 @@ class ProfilesGrid extends React.Component {
 
     render() {
         return (
-            <section>
+            <section className="row">
                 {this._renderProfiles()}
             </section>
         );
