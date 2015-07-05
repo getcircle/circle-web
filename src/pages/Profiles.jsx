@@ -4,7 +4,9 @@ import _ from 'lodash';
 import domReady from 'domready';
 import React from 'react';
 
+import bindThis from '../utils/bindThis';
 import connectToStore from '../utils/connectToStore';
+import InfiniteCardGrid from '../components/InfiniteCardGrid';
 import ProfileTile from '../components/ProfileTile';
 import ThemeManager from '../utils/ThemeManager';
 
@@ -34,47 +36,9 @@ class Profiles extends React.Component {
         };
     }
 
-    componentWillMount() {
-        // If we refresh we don't want a bunch of AJAX requests to fire due to scroll position
-        domReady(() => {
-            window.scrollTo(0, 0);
-        });
-
-        this._loadMore = this._loadMore.bind(this);
-        this.setState({
-            elements: []
-        });
-        this._loadMore();
-    }
-
-    componentDidMount() {
-        window.addEventListener('scroll', this._loadMore);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('scroll', this._loadMore);
-    }
-
-    _loadMore(event) {
-        const bottomYScrollPosition = window.innerHeight + document.body.scrollTop;
-        const bodyHeight = document.body.offsetHeight;
-
-        if (this.props.loading) {
-            return
-        }
-
-        if (bottomYScrollPosition + infiniteScrollBoundaryHeight < bodyHeight) {
-            return;
-        }
-
-        this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest).then(() => {
-            this.setState({
-                elements: this.state.elements.concat(
-                    this._renderProfiles(
-                        _.slice(this.props.profiles, this.state.elements.length))
-                ),
-            });
-        });
+    @bindThis
+    getMore(event) {
+        return this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest);
     }
 
     _renderProfiles(profiles) {
@@ -89,9 +53,14 @@ class Profiles extends React.Component {
 
     render() {
         return (
-            <div className="row">
-                {this.state.elements}
-            </div>
+            <InfiniteCardGrid
+                objects={this.props.profiles}
+                loading={this.props.loading}
+                getMore={this.getMore}
+                ComponentClass={ProfileTile}
+                componentAttributeName='profile'
+            >
+            </InfiniteCardGrid>
         );
     }
 
