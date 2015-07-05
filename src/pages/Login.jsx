@@ -7,6 +7,7 @@ import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react/addons';
 
+import colors from '../styles/colors';
 import LoginForm from '../components/LoginForm';
 import ThemeManager from '../utils/ThemeManager';
 
@@ -61,9 +62,15 @@ class Login extends React.Component {
         return true;
     }
 
+    styles = {
+        root: {
+            backgroundColor: colors.backgroundColor,
+        }
+    }
+
     render() {
         return (
-            <div>
+            <div style={this.styles.root}>
                 <AltContainer
                     actions={this.props.flux.getActions('AuthActions')}
                     inject={{

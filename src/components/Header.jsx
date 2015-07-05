@@ -36,7 +36,7 @@ class Header extends React.Component {
                 marginTop: 10,
             },
             tabs: {
-                backgroundColor: colors.headerBackgroundColor,
+                backgroundColor: colors.backgroundColor,
             },
             tab: {
                 marginLeft: 46,

@@ -1,66 +1,27 @@
 'use strict';
 
-import _ from 'lodash';
 import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import React from 'react/addons';
 
 import autoBind from '../utils/autobind';
 import AuthStore from '../stores/AuthStore';
+import colors from '../styles/colors';
 import logger from '../utils/logger';
 import t from '../utils/gettext';
 
 const RaisedButton = mui.RaisedButton;
 const StylePropable = mui.Mixins.StylePropable;
-const TextField = mui.TextField;
 
 @decorate(StylePropable)
 @decorate(autoBind(StylePropable))
-@decorate(React.addons.LinkedStateMixin)
 class LoginForm extends React.Component {
-
-    static propTypes = {
-        authenticate: React.PropTypes.func.isRequired,
-        backend: React.PropTypes.oneOf(_.values(AuthStore.backends)),
-        getAuthenticationInstructions: React.PropTypes.func.isRequired,
-    }
 
     constructor() {
         super();
         this.state = {
-            email: null,
-            emailErrorText: null,
-            password: null,
-            passwordErrorText: null,
             loading: false,
         };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.backend === AuthStore.backends.GOOGLE && !this.state.loading) {
-            this.setState({loading: true});
-            this._startGoogleClient()
-                .then(({googleClient}) => {
-                    this._loginWithGoogle(googleClient);
-                })
-                .catch((error) => {
-                    logger.log(`Error strating google client: ${error}`);
-                });
-        }
-    }
-
-    _validateInputs() {
-        let valid = true;
-        if (
-            this.state.email === null ||
-            this.state.email.trim() === '' ||
-            this.state.password === null ||
-            this.state.password.trim() === ''
-
-        ) {
-            valid = false;
-        }
-        return valid;
     }
 
     _startGoogleClient() {
@@ -94,53 +55,40 @@ class LoginForm extends React.Component {
                     .getAuthResponse()
                         .id_token;
                 this.props.authenticate(AuthStore.backends.GOOGLE, details.code, idToken);
+                this.setState({loading: false});
             });
     }
 
     _handleTouchTap = this._handleTouchTap.bind(this);
     _handleTouchTap(event) {
         event.preventDefault();
-        if (this.props.backend === AuthStore.backends.INTERNAL) {
-            this.props.authenticate(this.props.backend, this.state.email, this.state.password);
-        } else {
-            this.props.getAuthenticationInstructions(this.state.email);
-        }
-    }
-
-    _getPasswordField() {
-        if (this.props.backend === AuthStore.backends.INTERNAL) {
-            return (
-                <div className="row center-xs">
-                    <TextField
-                        key="password"
-                        type="password"
-                        floatingLabelText="Password"
-                        valueLink={this.linkState('password')}
-                        errorText={this.state.passwordErrorText}
-                    />
-                </div>
-            );
-        }
-    }
-
-    _canSubmit() {
-        return !this.props.inProgress;
-        // if (this.props.inProgress) {
-        //     return false;
-        // }
-
-        // if (this.props.shouldUseInternalLogin) {
-        //     return this._validateInputs(false);
-        // } else if (this.state.email !== null && this.state.email !== '') {
-        //     return true;
-        // }
-        // return false;
+        this.setState({loading: true});
+        this._startGoogleClient()
+            .then(({googleClient}) => {
+                this._loginWithGoogle(googleClient);
+            })
+            .catch((error) => {
+                logger.log(`Error starting google client: ${error}`);
+                this.setState({loading: false});
+            });
     }
 
     _getStyles() {
         return {
             button: {
-                width: 256,
+                width: '100%',
+                backgroundColor: colors.tintColor,
+                height: 50,
+            },
+            container: {
+                marginTop: '15%',
+            },
+            label: {
+                lineHeight: '50px',
+                fontSize: 18,
+            },
+            text: {
+                color: colors.lightTextColor,
             },
         };
     }
@@ -148,30 +96,26 @@ class LoginForm extends React.Component {
     render() {
         const styles = this._getStyles();
         return (
-            <section>
-                <div className="row center-xs">
-                    <h1>{ t('Login') }</h1>
-                </div>
-                <div className="row center-xs">
-                    <TextField
-                        className="row center-xs"
-                        floatingLabelText="Work Email Address"
-                        valueLink={this.linkState('email')}
-                        errorText={this.state.emailErrorText}
-                    />
-                </div>
-                {this._getPasswordField()}
-                <div className="row center-xs">
-                    <RaisedButton
-                        label={`${ t('Login') }`}
-                        style={styles.button}
-                        primary={true}
-                        onTouchTap={this._handleTouchTap}
-                        // TODO should be checking if valid email first
-                        disabled={this._canSubmit() ? false : true}
-                    />
-                </div>
-            </section>
+            <div style={styles.container} className="row center-xs">
+                <section>
+                    <div className="row center-xs">
+                        <h1 style={styles.text}>{ t('circle') }</h1>
+                    </div>
+                    <div className="row center-xs">
+                        <h2 style={styles.text}>{ t('know the people you work with.') }</h2>
+                    </div>
+                    <div className="row center-xs">
+                        <RaisedButton
+                            label={`${ t('START USING CIRCLE') }`}
+                            style={styles.button}
+                            labelStyle={styles.label}
+                            primary={true}
+                            onTouchTap={this._handleTouchTap}
+                            disabled={this.state.loading}
+                        />
+                    </div>
+                </section>
+            </div>
         );
     }
 

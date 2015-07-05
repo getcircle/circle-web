@@ -1,5 +1,7 @@
 'use strict';
 
 export default {
-    headerBackgroundColor: 'rgb(31, 37, 50)',
+    backgroundColor: 'rgb(47, 55, 62)',
+    tintColor: 'rgb(0, 201, 255)',
+    lightTextColor: 'white',
 };
