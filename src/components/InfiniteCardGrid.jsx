@@ -10,7 +10,7 @@ import ThemeManager from '../utils/ThemeManager';
 // Selected arbitrarily via experimentation
 const infiniteScrollBoundaryHeight = 300;
 
-class CardGrid extends React.Component {
+class InfiniteCardGrid extends React.Component {
 
     static propTypes = {
         objects: React.PropTypes.array.isRequired,
@@ -96,4 +96,4 @@ class CardGrid extends React.Component {
 
 }
 
-export default CardGrid;
+export default InfiniteCardGrid;
