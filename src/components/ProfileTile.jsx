@@ -56,6 +56,14 @@ class ProfileTile extends React.Component {
                 alignItems: 'center',
                 lineHeight: '1em',
             },
+            footerText: {
+                padding: '.2em',
+                maxHeight: '2.5em',
+                overflowY: 'hidden',
+                background: 'linear-gradient(rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 2.1em, rgba(255, 255, 255, 0))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+            },
         };
     }
 
@@ -68,7 +76,11 @@ class ProfileTile extends React.Component {
             <Paper style={styles.paper}>
                 <Avatar src={profile.image_url} style={styles.avatar} />
                 <p>{profile.full_name}</p>
-                <footer style={styles.footer}>{profile.title}</footer>
+                <footer style={styles.footer}>
+                    <div style={styles.footerText}>
+                        {profile.title}
+                    </div>
+                </footer>
             </Paper>
         );
     }
