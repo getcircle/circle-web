@@ -1,4 +1,4 @@
-@import '../../node_modules/modularized-normalize-scss/normalize';
+@import 'lib/reset';
 @import 'lib/flexboxgrid';
 
 @import 'globals';
@@ -17,12 +17,6 @@ h1, h2 {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-}
-
-.app--header {
-    box-sizing: border-box;
-    padding-top: 80px;
-    background-color: rgb(31, 37, 50);
 }
 
 .wrap {

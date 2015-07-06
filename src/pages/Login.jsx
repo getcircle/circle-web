@@ -7,6 +7,7 @@ import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react/addons';
 
+import colors from '../styles/colors';
 import LoginForm from '../components/LoginForm';
 import ThemeManager from '../utils/ThemeManager';
 
@@ -54,23 +55,32 @@ class Login extends React.Component {
 
         if (loggedIn) {
             // Need to call setTimeout here so it happens on the next tick
-            setTimeout(() => this.transitionTo(this.props.location.nextPathname || 'feed'));
+            setTimeout(() => this.transitionTo(this.props.location.nextPathname || 'people'));
             return false;
         }
 
         return true;
     }
 
+    styles = {
+        root: {
+            backgroundColor: colors.backgroundColor,
+            minHeight: '100vh',
+        }
+    }
+
     render() {
         return (
-            <div>
-                <AltContainer
-                    actions={this.props.flux.getActions('AuthActions')}
-                    inject={{
-                        backend: this.props.authBackend,
-                        inProgress: this.props.inProgress,
-                    }}
-                    component={LoginForm} />
+            <div style={this.styles.root}>
+                <div className="wrap">
+                    <AltContainer
+                        actions={this.props.flux.getActions('AuthActions')}
+                        inject={{
+                            backend: this.props.authBackend,
+                            inProgress: this.props.inProgress,
+                        }}
+                        component={LoginForm} />
+                </div>
             </div>
         );
     }

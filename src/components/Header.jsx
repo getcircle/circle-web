@@ -30,6 +30,11 @@ class Header extends React.Component {
 
     _getStyles() {
         return {
+            root: {
+                backgroundColor: colors.backgroundColor,
+                boxSizing: 'border-box',
+                paddingTop: '80px',
+            },
             link: {
                 color: 'white',
                 display: 'block',
@@ -67,16 +72,9 @@ class Header extends React.Component {
     _getInitialSelectedIndex() {
         let index = 0;
         switch (this.props.location.pathname) {
-            case '/feed':
-                index = 1;
-                break;
-
-            case '/company':
-                index = 2;
-                break;
 
             case '/search':
-                index = 3;
+                index = 1;
                 break;
         }
         return index;
@@ -86,7 +84,7 @@ class Header extends React.Component {
         // XXX the bottom border animation when switching tabs seems to lag when loading the "People" page. Not sure if this is because we're loading more cards, or because we're loading images as well.
         const styles = this._getStyles();
         return (
-            <header className="app--header">
+            <header style={styles.root}>
                 <div className="wrap">
                     <div className="row center-xs">
                         <Link to="login" style={styles.link} onClick={this._handleLogout}>Logout</Link>
@@ -94,8 +92,6 @@ class Header extends React.Component {
                     <div className="row">
                         <Tabs tabItemContainerStyle={styles.tabs} initialSelectedIndex={this._getInitialSelectedIndex()}>
                             <Tab style={styles.tab} label={ t('PEOPLE') } route="/people" onActive={this._onActive} />
-                            <Tab style={styles.tab} label={ t('FEED') } route="/feed" onActive={this._onActive} />
-                            <Tab style={styles.tab} label={ t('COMPANY') } route="/company" onActive={this._onActive} />
                             <Tab style={styles.tab} label={ t('SEARCH') } route="/search" onActive={this._onActive} />
                         </Tabs>
                     </div>

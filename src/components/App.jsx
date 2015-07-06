@@ -15,7 +15,7 @@ const { AppCanvas } = mui;
 class App extends React.Component {
 
     _defaultRoute() {
-        this.replaceWith('feed');
+        this.replaceWith('people');
     }
 
     static childContextTypes = {
@@ -52,9 +52,7 @@ class App extends React.Component {
             <AppCanvas>
                 <div>
                     {header}
-                    <div className="wrap">
-                        {this.props.children}
-                    </div>
+                    {this.props.children}
                 </div>
             </AppCanvas>
         );
