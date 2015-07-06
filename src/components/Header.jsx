@@ -105,7 +105,7 @@ class Header extends React.Component {
                         </div>
                     </div>
                     <div className="row header__nav--secondary">
-                        <img className="header-title" src={this.props.organization.image_url} />
+                        <img className="header-image" src={this.props.organization.image_url} />
                         <h2 className="header-title">People</h2>
                     </div>
                 </div>
