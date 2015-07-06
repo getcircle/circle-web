@@ -65,19 +65,22 @@ class Login extends React.Component {
     styles = {
         root: {
             backgroundColor: colors.backgroundColor,
+            minHeight: '100vh',
         }
     }
 
     render() {
         return (
             <div style={this.styles.root}>
-                <AltContainer
-                    actions={this.props.flux.getActions('AuthActions')}
-                    inject={{
-                        backend: this.props.authBackend,
-                        inProgress: this.props.inProgress,
-                    }}
-                    component={LoginForm} />
+                <div className="wrap">
+                    <AltContainer
+                        actions={this.props.flux.getActions('AuthActions')}
+                        inject={{
+                            backend: this.props.authBackend,
+                            inProgress: this.props.inProgress,
+                        }}
+                        component={LoginForm} />
+                </div>
             </div>
         );
     }

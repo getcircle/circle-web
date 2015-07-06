@@ -42,7 +42,7 @@ class LoginForm extends React.Component {
                 height: 50,
             },
             container: {
-                marginTop: '15%',
+                paddingTop: '15%',
             },
             label: {
                 lineHeight: '50px',
@@ -57,8 +57,8 @@ class LoginForm extends React.Component {
     render() {
         const styles = this._getStyles();
         return (
-            <div style={styles.container} className="row center-xs">
-                <section>
+            <div style={styles.container} className="row">
+                <section className="col-sm-offset-4 col-sm-4">
                     <div className="row center-xs">
                         <h1 style={styles.text}>{ t('circle') }</h1>
                     </div>
