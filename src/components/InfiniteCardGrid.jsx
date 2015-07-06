@@ -1,11 +1,9 @@
 'use strict';
 
-import _ from 'lodash';
 import domReady from 'domready';
 import React from 'react';
 
 import bindThis from '../utils/bindThis';
-import ThemeManager from '../utils/ThemeManager';
 
 // Selected arbitrarily via experimentation
 const infiniteScrollBoundaryHeight = 300;

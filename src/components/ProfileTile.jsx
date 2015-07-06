@@ -1,12 +1,10 @@
 'use strict';
 
-import _ from 'lodash';
 import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
-import styleConstants from '../styles/constants';
 import ThemeManager from '../utils/ThemeManager';
 
 const {Avatar} = mui;
@@ -30,7 +28,6 @@ class ProfileTile extends React.Component {
     }
 
     componentWillMount() {
-        let colors = styleConstants.colors.bright;
         this.styles = {
             avatar: {
                 width: '80px',
@@ -42,7 +39,7 @@ class ProfileTile extends React.Component {
         };
     }
 
-    _handleOnClick = this._handleOnClick.bind(this) 
+    _handleOnClick = this._handleOnClick.bind(this)
     _handleOnClick(event) {
         this.transitionTo(`/profile/${this.props.profile.id}`);
     }

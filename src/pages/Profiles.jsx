@@ -1,6 +1,5 @@
 'use strict';
 
-import mui from 'material-ui';
 import React from 'react';
 
 import bindThis from '../utils/bindThis';
@@ -39,16 +38,6 @@ class Profiles extends React.Component {
     @bindThis
     getMore() {
         this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest);
-    }
-
-    _renderProfiles(profiles) {
-        return profiles.map((profile, index) => {
-            return (
-                <div key={profile.id} className="col-xs-12 col-sm-6 col-md-4">
-                    <ProfileTile profile={profile} />
-                </div>
-            );
-        });
     }
 
     render() {
