@@ -46,7 +46,7 @@ class Profiles extends React.Component {
     _renderProfiles(profiles) {
         return profiles.map((profile, index) => {
             return (
-                <div key={profile.id} className="col-xs-12 col-sm-6 col-md-4">
+                <div key={profile.id} className="col-xs-12 col-sm-6 col-md-3">
                     <ProfileTile profile={profile} />
                 </div>
             );

@@ -1,7 +1,7 @@
 @import 'layout/content';
 
 .profile-tile {
-    height: $vertical-unit * 20;
+    height: $vertical-unit * 12;
     position: relative;
     text-align: center;
 }
@@ -13,6 +13,12 @@
     position: absolute;
     bottom: 0;
     width: 100%;
+}
+
+.profile-title__text--secondary {
+    color: #999;
+    font-size: 16px;
+    margin: 10px 5px 10px 5px;
 }
 
 .profile-tile__footer__text {
