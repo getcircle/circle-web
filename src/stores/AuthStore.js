@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { services } from 'protobufs';
 
 import client from '../services/client';
+import logger from '../utils/logger';
 import { logout } from '../utils/google';
 
 class AuthStore {
@@ -45,8 +46,15 @@ class AuthStore {
     onLogoutSuccess() {
         localStorage.clear();
         client.logout();
-        this.alt.flush();
-        logout();
+        logout()
+            .catch((error) => {
+                logger.log(`Error logging out of google: ${error}`);
+                // XXX .finally doesn't seem to work
+                this.alt.flush();
+            })
+            .then(() => {
+                this.alt.flush();
+            });
     }
 
     onGetAuthenticationInstructionsSuccess(instructions) {

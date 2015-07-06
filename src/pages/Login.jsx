@@ -58,7 +58,6 @@ class Login extends React.Component {
             setTimeout(() => this.transitionTo(this.props.location.nextPathname || 'people'));
             return false;
         }
-
         return true;
     }
 

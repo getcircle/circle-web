@@ -25,9 +25,8 @@ class Header extends React.Component {
 
     static propTypes = {
         flux: React.PropTypes.object.isRequired,
-        // XXX how do we avoid warnings on the /login page for these?
-        organization: React.PropTypes.object.isRequired,
-        profile: React.PropTypes.object.isRequired,
+        organization: React.PropTypes.object,
+        profile: React.PropTypes.object,
     }
 
     static getStores(props) {
@@ -95,6 +94,14 @@ class Header extends React.Component {
         if (!nextProps.active && this.state.query) {
             this.setState({query: null});
         }
+    }
+
+    shouldComponentUpdate(nextProps) {
+        // XXX if we just logged out, we no longer have these properties
+        if (!nextProps.organization || !nextProps.profile) {
+            return false;
+        }
+        return true;
     }
 
     @bindThis
