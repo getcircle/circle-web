@@ -3,12 +3,27 @@
 import mui from 'material-ui';
 import React from 'react';
 
+import bindThis from '../utils/bindThis';
+import ProfileAvatar from './ProfileAvatar';
+
 const { Avatar } = mui;
 
 class ExtendedProfile extends React.Component {
 
     static propTypes = {
         extendedProfile: React.PropTypes.object.isRequired,
+    }
+
+    constructor() {
+        super();
+        this.state = {
+            imageSrc: null,
+        };
+    }
+
+    componentWillMount() {
+        const { profile } = this.props.extendedProfile;
+        this.setState({imageSrc: profile.image_url});
     }
 
     styles = {
@@ -22,8 +37,19 @@ class ExtendedProfile extends React.Component {
         },
     }
 
+    @bindThis
+    _handleImageError() {
+        this.setState({imageSrc: null});
+    }
+
     _renderContactBar() {
 
+    }
+
+    _renderProfileImage(profile) {
+        if (this.state.imageSrc) {
+            return <img className="extended_profile__image" src={profile.image_url} onError={this._handleImageError} />;
+        }
     }
 
     render() {
@@ -49,7 +75,7 @@ class ExtendedProfile extends React.Component {
             <div className="wrap">
                 <div className="row extended_profile">
                     <div className="col-sm-3">
-                        <img className="extended_profile__image" src={profile.image_url} />
+                        {this._renderProfileImage(profile)}
                     </div>
                     <div className="col-sm-9" style={this.styles.detailsContainer}>
                         <div className="row start-xs">
