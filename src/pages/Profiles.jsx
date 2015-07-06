@@ -34,8 +34,12 @@ class Profiles extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this.getMore();
+    }
+
     @bindThis
-    getMore(event) {
+    getMore() {
         this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest);
     }
 

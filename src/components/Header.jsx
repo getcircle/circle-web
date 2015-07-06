@@ -31,7 +31,7 @@ class Header extends React.Component {
     _getStyles() {
         return {
             root: {
-                backgroundColor: colors.backgroundColor,
+                backgroundColor: constants.colors.headerBackground,
                 boxSizing: 'border-box',
                 paddingTop: '80px',
             },

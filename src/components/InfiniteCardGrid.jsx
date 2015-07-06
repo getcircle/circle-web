@@ -23,12 +23,6 @@ class InfiniteCardGrid extends React.Component {
         domReady(() => {
             window.scrollTo(0, 0);
         });
-
-        this.setState({
-            elements: []
-        });
-
-        this._loadMore();
     }
 
     componentDidMount() {
