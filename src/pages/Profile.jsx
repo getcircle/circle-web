@@ -4,6 +4,7 @@ import _ from 'lodash';
 import connectToStores from 'alt/utils/connectToStores';
 import React from 'react';
 
+import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import ExtendedProfile from '../components/ExtendedProfile';
 import ThemeManager from '../utils/ThemeManager';
 
@@ -38,6 +39,12 @@ class Profile extends React.Component {
         this.props.flux.getStore('ProfileStore').fetchExtendedProfile(this.props.params.profileId);
     }
 
+    componentWillReceiveProps(nextProps, nextState) {
+        if (nextProps.params.profileId !== this.props.params.profileId) {
+            this.props.flux.getStore('ProfileStore').fetchExtendedProfile(nextProps.params.profileId);
+        }
+    }
+
     getChildContext() {
         return {
             muiTheme: ThemeManager.getCurrentTheme(),
@@ -49,11 +56,7 @@ class Profile extends React.Component {
         if (extendedProfile) {
             return <ExtendedProfile extendedProfile={extendedProfile} />;
         } else {
-            return (
-                <div>
-                    <span>Loading...</span>
-                </div>
-            );
+            return <CenterLoadingIndicator />;
         }
     }
 

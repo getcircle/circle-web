@@ -1,11 +1,14 @@
 'use strict';
 
+import mui from 'material-ui';
 import React from 'react';
 
 import ProfileSearchResult from './ProfileSearchResult';
 import SearchResult from './SearchResult';
 import SearchResultHeader from './SearchResultHeader';
 import SearchResultsContainer from './SearchResultsContainer';
+
+const { List } = mui;
 
 class ProfileSearchResults extends React.Component {
 
@@ -21,12 +24,9 @@ class ProfileSearchResults extends React.Component {
 
     render() {
         return (
-            <SearchResult>
-                <SearchResultHeader title="Profiles" />
-                <SearchResultsContainer>
-                    {this._renderProfileResults()}
-                </SearchResultsContainer>
-            </SearchResult>
+            <List subheader="Profiles">
+                {this._renderProfileResults()}
+            </List>
         );
     };
 

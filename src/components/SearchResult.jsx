@@ -1,14 +1,17 @@
 'use strict';
 
+import mui from 'material-ui';
 import React from 'react';
+
+const { List } = mui;
 
 class SearchResult extends React.Component {
 
     render() {
         return (
-            <div>
+            <List>
                 {this.props.children}
-            </div>
+            </List>
         );
     }
 }

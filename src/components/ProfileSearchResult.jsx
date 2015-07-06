@@ -1,11 +1,16 @@
 'use strict';
 
-import { Link } from 'react-router';
+import { decorate } from 'react-mixin';
 import mui from 'material-ui';
+import { Navigation } from 'react-router';
 import React from 'react';
 
-const {Avatar} = mui;
+import bindThis from '../utils/bindThis';
 
+const { Avatar } = mui;
+const { ListItem } = mui;
+
+@decorate(Navigation)
 class ProfileSearchResult extends React.Component {
 
     static propTypes = {
@@ -21,19 +26,20 @@ class ProfileSearchResult extends React.Component {
         },
     }
 
+    @bindThis
+    _handleTouchTap() {
+        this.transitionTo(`/profile/${this.props.profile.id}`);
+    }
+
     render() {
         const profile = this.props.profile;
         return (
-            <div className="row">
-                <div className="col-xs-1">
-                    <Avatar src={profile.image_url} />
-                </div>
-                <div className="col-xs" style={this.styles.detailsContainer}>
-                    <span style={this.styles.details}>{profile.full_name}</span>
-                    <span style={this.styles.details}>{profile.title}</span>
-                    <Link style={this.styles.details} to={`profile/${profile.id}`}>View Profile</Link>
-                </div>
-            </div>
+            <ListItem
+                leftAvatar={<Avatar src={profile.small_image_url || profile.image_url} />}
+                onTouchTap={this._handleTouchTap}
+            >
+                {profile.full_name}
+            </ListItem>
         );
     }
 
