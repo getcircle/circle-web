@@ -1,7 +1,5 @@
 'use strict';
 
-import _ from 'lodash';
-import domReady from 'domready';
 import React from 'react';
 
 import bindThis from '../utils/bindThis';
@@ -9,9 +7,6 @@ import connectToStore from '../utils/connectToStore';
 import InfiniteCardGrid from '../components/InfiniteCardGrid';
 import ProfileTile from '../components/ProfileTile';
 import ThemeManager from '../utils/ThemeManager';
-
-// Selected arbitrarily via experimentation
-const infiniteScrollBoundaryHeight = 300;
 
 // XXX look into addding the PureRenderMixin
 @connectToStore
@@ -38,7 +33,7 @@ class Profiles extends React.Component {
 
     @bindThis
     getMore(event) {
-        return this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest);
+        this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest);
     }
 
     _renderProfiles(profiles) {
@@ -55,12 +50,13 @@ class Profiles extends React.Component {
         return (
             <InfiniteCardGrid
                 objects={this.props.profiles}
+
                 loading={this.props.loading}
                 getMore={this.getMore}
+
                 ComponentClass={ProfileTile}
                 componentAttributeName='profile'
-            >
-            </InfiniteCardGrid>
+            />
         );
     }
 

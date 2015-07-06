@@ -18,16 +18,6 @@ class InfiniteCardGrid extends React.Component {
         loading: React.PropTypes.bool.isRequired,
     }
 
-    static childContextTypes = {
-        muiTheme: React.PropTypes.object.isRequired,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
-    }
-
     componentWillMount() {
         // If we refresh we don't want a bunch of AJAX requests to fire due to scroll position
         domReady(() => {
@@ -55,27 +45,19 @@ class InfiniteCardGrid extends React.Component {
         const bodyHeight = document.body.offsetHeight;
 
         if (this.props.loading) {
-            return
+            return;
         }
 
         if (bottomYScrollPosition + infiniteScrollBoundaryHeight < bodyHeight) {
             return;
         }
 
-        this.props.getMore().then(() => {
-            this.setState({
-                elements: this.state.elements.concat(
-                    this._renderCards(
-                        _.slice(this.props.objects, this.state.elements.length)
-                    )
-                ),
-            });
-        });
+        this.props.getMore();
     }
 
     _renderCards(objects) {
         return objects.map((obj, index) => {
-            let args = {}
+            let args = {};
             args[this.props.componentAttributeName] = obj;
 
             return (
@@ -88,8 +70,8 @@ class InfiniteCardGrid extends React.Component {
 
     render() {
         return (
-            <div className="row">
-                {this.state.elements}
+            <div className="row stack__item">
+                {this._renderCards(this.props.objects)}
             </div>
         );
     }

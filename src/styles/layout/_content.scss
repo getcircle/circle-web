@@ -1,0 +1,19 @@
+%content-center-partial {
+    display: flex;
+    line-height: 1em;
+}
+
+.content--center--v {
+    @extend %content-center-partial;
+    justify-content: center;
+}
+
+.content--center--h {
+    @extend %content-center-partial;
+    align-items: center;
+}
+
+.content--center {
+    @extend .content--center--h;
+    @extend .content--center--v;
+}

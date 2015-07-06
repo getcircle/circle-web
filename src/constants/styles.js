@@ -10,7 +10,7 @@ const constants = {
 
     colors: {},
 
-    verticalRhythm: 10,
+    verticalUnit: 10,
     horizontalUnit: 10,
 };
 
