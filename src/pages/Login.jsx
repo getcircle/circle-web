@@ -55,7 +55,7 @@ class Login extends React.Component {
 
         if (loggedIn) {
             // Need to call setTimeout here so it happens on the next tick
-            setTimeout(() => this.transitionTo(this.props.location.nextPathname || 'feed'));
+            setTimeout(() => this.transitionTo(this.props.location.nextPathname || 'people'));
             return false;
         }
 

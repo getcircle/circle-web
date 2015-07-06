@@ -9,7 +9,7 @@ const getRoutes = (flux) => {
 
     const loginOnce = (nextState, transition) => {
         if (flux.getStore('AuthStore').isLoggedIn()) {
-            transition.to('feed');
+            transition.to('people');
         }
     };
 
@@ -25,14 +25,6 @@ const getRoutes = (flux) => {
                 path="login"
                 onEnter={loginOnce}
                 component={require('./pages/Login')} />
-            <Route
-                path="feed"
-                onEnter={requireAuth}
-                component={require('./pages/ProfileFeed')} />
-            <Route
-                path="company"
-                onEnter={requireAuth}
-                component={require('./pages/OrganizationFeed')} />
             <Route
                 path="people"
                 onEnter={requireAuth}

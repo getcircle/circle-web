@@ -72,16 +72,9 @@ class Header extends React.Component {
     _getInitialSelectedIndex() {
         let index = 0;
         switch (this.props.location.pathname) {
-            case '/feed':
-                index = 1;
-                break;
-
-            case '/company':
-                index = 2;
-                break;
 
             case '/search':
-                index = 3;
+                index = 1;
                 break;
         }
         return index;
@@ -99,8 +92,6 @@ class Header extends React.Component {
                     <div className="row">
                         <Tabs tabItemContainerStyle={styles.tabs} initialSelectedIndex={this._getInitialSelectedIndex()}>
                             <Tab style={styles.tab} label={ t('PEOPLE') } route="/people" onActive={this._onActive} />
-                            <Tab style={styles.tab} label={ t('FEED') } route="/feed" onActive={this._onActive} />
-                            <Tab style={styles.tab} label={ t('COMPANY') } route="/company" onActive={this._onActive} />
                             <Tab style={styles.tab} label={ t('SEARCH') } route="/search" onActive={this._onActive} />
                         </Tabs>
                     </div>
