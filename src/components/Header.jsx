@@ -91,6 +91,10 @@ class Header extends React.Component {
         if (!nextProps.flux.getStore('AuthStore').isLoggedIn()) {
             this.transitionTo('login');
         }
+
+        if (!nextProps.active && this.state.query) {
+            this.setState({query: null});
+        }
     }
 
     @bindThis
@@ -114,7 +118,7 @@ class Header extends React.Component {
 
     _renderSearchResults() {
         if (this.props.results) {
-            return <SearchResults style={this.styles.searchResults} results={this.props.results} />;
+            return <SearchResults style={this.styles.searchResults} results={this.props.results} flux={this.props.flux} />;
         }
     }
 

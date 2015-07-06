@@ -10,8 +10,6 @@ import InfiniteCardGrid from '../components/InfiniteCardGrid';
 import ProfileTile from '../components/ProfileTile';
 import ThemeManager from '../utils/ThemeManager';
 
-const { CircularProgress } = mui;
-
 @connectToStore
 class Profiles extends React.Component {
 

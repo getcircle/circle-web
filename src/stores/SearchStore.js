@@ -10,14 +10,19 @@ class SearchStore {
 
         // XXX should have this be {'query': [results]} so we can take advantage of local caching
         this.results = [];
+        this.active = false;
     }
 
     onSearchSuccess(state) {
+        state.active = true;
         this.setState(state);
     }
 
     onClearResults(state) {
-        this.setState({results: []});
+        this.setState({
+            results: [],
+            active: false,
+        });
     }
 
 }

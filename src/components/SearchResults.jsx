@@ -12,6 +12,7 @@ import TeamSearchResults from '../components/TeamSearchResults';
 class SearchResults extends React.Component {
 
     static propTypes = {
+        flux: React.PropTypes.object.isRequired,
         results: React.PropTypes.array.isRequired,
     }
 
@@ -21,7 +22,7 @@ class SearchResults extends React.Component {
         for (let index in this.props.results) {
             let result = this.props.results[index];
             if (result.category === CategoryV1.PROFILES) {
-                components.push(<ProfileSearchResults key={index} profiles={result.profiles} />);
+                components.push(<ProfileSearchResults key={index} profiles={result.profiles} flux={this.props.flux} />);
             }
             //  else if (result.category === CategoryV1.TEAMS) {
             //     components.push(<TeamSearchResults key={index} teams={result.teams} />);

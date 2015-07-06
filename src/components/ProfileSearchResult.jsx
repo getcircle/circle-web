@@ -14,6 +14,7 @@ const { ListItem } = mui;
 class ProfileSearchResult extends React.Component {
 
     static propTypes = {
+        flux: React.PropTypes.object.isRequired,
         profile: React.PropTypes.object.isRequired,
     }
 
@@ -28,6 +29,7 @@ class ProfileSearchResult extends React.Component {
 
     @bindThis
     _handleTouchTap() {
+        this.props.flux.getActions('SearchActions').clearResults();
         this.transitionTo(`/profile/${this.props.profile.id}`);
     }
 
