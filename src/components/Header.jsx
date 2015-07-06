@@ -30,6 +30,11 @@ class Header extends React.Component {
 
     _getStyles() {
         return {
+            root: {
+                backgroundColor: colors.backgroundColor,
+                boxSizing: 'border-box',
+                paddingTop: '80px',
+            },
             link: {
                 color: 'white',
                 display: 'block',
@@ -86,7 +91,7 @@ class Header extends React.Component {
         // XXX the bottom border animation when switching tabs seems to lag when loading the "People" page. Not sure if this is because we're loading more cards, or because we're loading images as well.
         const styles = this._getStyles();
         return (
-            <header className="app--header">
+            <header style={styles.root}>
                 <div className="wrap">
                     <div className="row center-xs">
                         <Link to="login" style={styles.link} onClick={this._handleLogout}>Logout</Link>
