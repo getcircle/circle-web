@@ -1,9 +1,21 @@
 @import 'layout/content';
 
 .profile-tile {
+    box-shadow: 0;
     height: $vertical-unit * 12;
     position: relative;
     text-align: center;
+    transition: box-shadow 0.3s;
+    -moz-box-shadow: 0;
+    -webkit-box-shadow: 0;
+    -webkit-transition: box-shadow 0.3s;
+    -moz-transition: box-shadow 0.3s;
+}
+
+.profile-tile:hover {
+    -webkit-box-shadow: 0 0 18px 0 rgba(50, 50, 50, 0.5) !important;
+    -moz-box-shadow: 0 0 18px 0 rgba(50, 50, 50, 0.5) !important;
+    box-shadow: 0 0 18px 0 rgba(50, 50, 50, 0.5) !important;
 }
 
 .profile-tile__footer {
