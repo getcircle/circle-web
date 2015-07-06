@@ -1,9 +1,10 @@
 'use strict';
 
 import _ from 'lodash';
-import {services} from 'protobufs';
+import { services } from 'protobufs';
 
 import client from '../services/client';
+import { logout } from '../utils/google';
 
 class AuthStore {
 
@@ -41,8 +42,9 @@ class AuthStore {
 
     onLogoutSuccess() {
         localStorage.clear();
-        this.setState(this._getInitialState());
+        this.alt.flush();
         client.logout();
+        logout();
     }
 
     onGetAuthenticationInstructionsSuccess(instructions) {
