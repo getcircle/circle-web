@@ -1,10 +1,14 @@
 'use strict';
 
+import mui from 'material-ui';
 import React from 'react';
 
 import connectToStore from '../utils/connectToStore';
+import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import ProfilesGrid from '../components/ProfilesGrid';
 import ThemeManager from '../utils/ThemeManager';
+
+const { CircularProgress } = mui;
 
 @connectToStore
 class Profiles extends React.Component {
@@ -48,7 +52,11 @@ class Profiles extends React.Component {
     }
 
     render() {
-        return <ProfilesGrid profiles={this.props.profiles} />;
+        if (this.props.profiles && this.props.profiles.length === 0) {
+            return <CenterLoadingIndicator />;
+        } else {
+            return <ProfilesGrid profiles={this.props.profiles} />;
+        }
     }
 
 }
