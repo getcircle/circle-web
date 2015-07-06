@@ -2,7 +2,8 @@
 
 .profile-tile {
     box-shadow: 0;
-    height: $vertical-unit * 12;
+    height: $vertical-unit * 14;
+    margin: 20px 0 0 20px;
     position: relative;
     text-align: center;
     transition: box-shadow 0.3s;

@@ -55,7 +55,7 @@ class InfiniteCardGrid extends React.Component {
             args[this.props.componentAttributeName] = obj;
 
             return (
-                <div key={obj.id} className="col-xs-12 col-sm-6 col-md-3">
+                <div key={obj.id} className="col-xs-12 col-sm-6 col-md-4">
                     <this.props.ComponentClass {...args} />
                 </div>
             );
