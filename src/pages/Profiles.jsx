@@ -58,15 +58,17 @@ class Profiles extends React.Component {
             return <CenterLoadingIndicator />;
         } else {
             return (
-                <InfiniteCardGrid
-                    objects={this.props.profiles}
+                <div className="wrap">
+                    <InfiniteCardGrid
+                        objects={this.props.profiles}
 
-                    loading={this.props.loading}
-                    getMore={this.getMore}
+                        loading={this.props.loading}
+                        getMore={this.getMore}
 
-                    ComponentClass={ProfileTile}
-                    componentAttributeName='profile'
-                />
+                        ComponentClass={ProfileTile}
+                        componentAttributeName='profile'
+                    />
+                </div>
             );
         }
     }
