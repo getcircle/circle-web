@@ -1,0 +1,22 @@
+.header {}
+
+.header-image {
+    padding-left: 6px;  
+}
+
+.header-title {
+    color: #fff;
+    display: table-cell;
+    font-size: 28px;
+    padding-left: 25px;
+    vertical-align: middle;
+}
+
+.header__nav--primary {
+    height: 60px;
+}
+
+.header__nav--secondary {
+    display: table;
+    height: 110px;
+}

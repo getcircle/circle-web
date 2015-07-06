@@ -38,18 +38,19 @@ class Header extends React.Component {
         return {
             root: {
                 backgroundColor: constants.colors.background,
-                boxSizing: 'border-box',
-                paddingTop: '80px',
+                boxSizing: 'border-box',                
             },
             link: {
                 color: 'white',
                 display: 'block',
                 marginTop: 10,
+                paddingRight: 6,
             },
             tabs: {
                 backgroundColor: constants.colors.background,
             },
             tab: {
+                fontSize: '16px',
                 marginLeft: 46,
             },
         };
@@ -92,19 +93,20 @@ class Header extends React.Component {
         return (
             <header style={styles.root}>
                 <div className="wrap">
-                    <div className="row end-xs">
+                    <div className="row header__nav--primary">
                         <div className="col-xs-6 start-xs">
-                            <img src={this.props.organization.image_url} />
+                            <Tabs tabItemContainerStyle={styles.tabs} initialSelectedIndex={this._getInitialSelectedIndex()}>
+                                <Tab style={styles.tab} label={ t('People') } route="/people" onActive={this._onActive} />
+                                <Tab style={styles.tab} label={ t('Search') } route="/search" onActive={this._onActive} />
+                            </Tabs>
                         </div>
                         <div className="col-xs-6 end-xs">
                             <Link to="login" style={styles.link} onClick={this._handleLogout}>Logout</Link>
                         </div>
                     </div>
-                    <div className="row">
-                        <Tabs tabItemContainerStyle={styles.tabs} initialSelectedIndex={this._getInitialSelectedIndex()}>
-                            <Tab style={styles.tab} label={ t('PEOPLE') } route="/people" onActive={this._onActive} />
-                            <Tab style={styles.tab} label={ t('SEARCH') } route="/search" onActive={this._onActive} />
-                        </Tabs>
+                    <div className="row header__nav--secondary">
+                        <img className="header-title" src={this.props.organization.image_url} />
+                        <h2 className="header-title">People</h2>
                     </div>
                 </div>
             </header>
