@@ -29,9 +29,6 @@ class ProfileTile extends React.Component {
     componentWillMount() {
         let colors = styleConstants.colors.bright;
         this.styles = {
-            footer: {
-                backgroundColor: colors[_.random(0, colors.length - 1)]
-            }
         };
     }
 
@@ -43,11 +40,6 @@ class ProfileTile extends React.Component {
             <Paper className="profile-tile stack__item">
                 <Avatar className="stack__item" src={profile.small_image_url || profile.image_url} />
                 <p className="stack__item">{profile.full_name}</p>
-                <footer className="profile-tile__footer" style={this.styles.footer}>
-                    <div className="profile-tile__footer__text">
-                        {profile.title}
-                    </div>
-                </footer>
             </Paper>
         );
     }
