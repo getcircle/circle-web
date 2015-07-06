@@ -33,6 +33,10 @@ export function login() {
 
 export function logout() {
     return getAuthInstance().then(({instance}) => {
-        return instance.signOut();
+        if (instance.isSignedIn.get()) {
+            return instance.signOut();
+        } else {
+            return Promise.resolve();
+        }
     });
 }
