@@ -36,6 +36,9 @@ class ProfileTile extends React.Component {
                 width: '80px',
                 height: '80px',
             },
+            secondaryInfo: {
+                margin: '10px 5px 10px 5px',
+            },
         };
     }
 
@@ -51,8 +54,8 @@ class ProfileTile extends React.Component {
         return (
             <Paper className="profile-tile stack__item" onClick={this._handleOnClick}>
                 <Avatar className="stack__item" src={profile.small_image_url || profile.image_url} style={this.styles.avatar} />
-                <p className="stack__item">{profile.full_name}</p>
-                <p className="profile-title__text--secondary">{profile.title}</p>
+                <p className="content__header--primary stack__item">{profile.full_name}</p>
+                <p className="content__header--secondary" style={this.styles.secondaryInfo}>{profile.title}</p>
             </Paper>
         );
     }
