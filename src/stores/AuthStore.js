@@ -25,6 +25,7 @@ class AuthStore {
             googleClient: null,
             authenticationInstructions: null,
             authBackend: null,
+            organization: null,
         };
     }
 
@@ -35,15 +36,16 @@ class AuthStore {
         client.authenticate(token);
     }
 
-    onLogin(profile) {
-        this.setState({profile});
+    onLogin({profile, organization}) {
+        this.setState({profile, organization});
         localStorage.setItem('profile', profile.toBase64());
+        localStorage.setItem('organization', organization.toBase64());
     }
 
     onLogoutSuccess() {
         localStorage.clear();
-        this.alt.flush();
         client.logout();
+        this.alt.flush();
         logout();
     }
 

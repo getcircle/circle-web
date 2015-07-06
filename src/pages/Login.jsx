@@ -7,7 +7,7 @@ import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react/addons';
 
-import colors from '../styles/colors';
+import constants from '../styles/constants';
 import LoginForm from '../components/LoginForm';
 import ThemeManager from '../utils/ThemeManager';
 
@@ -64,7 +64,7 @@ class Login extends React.Component {
 
     styles = {
         root: {
-            backgroundColor: colors.backgroundColor,
+            backgroundColor: constants.colors.background,
             minHeight: '100vh',
         }
     }

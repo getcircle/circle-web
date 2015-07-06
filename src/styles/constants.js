@@ -17,12 +17,14 @@ const brightColors = [
     baseColors.sienna,
     baseColors.violet,
     baseColors.fuchsia,
-]
+];
 
 const colors = {
     bright: brightColors,
-    headerBackground: baseColors.darkGray,
-}
+    background: 'rgb(47, 55, 62)',
+    tint: 'rgb(0, 201, 255)',
+    lightText: 'white',
+};
 
 export default {
     baseColors: baseColors,

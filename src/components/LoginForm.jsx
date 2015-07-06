@@ -6,7 +6,7 @@ import React from 'react/addons';
 
 import autoBind from '../utils/autobind';
 import AuthStore from '../stores/AuthStore';
-import colors from '../styles/colors';
+import constants from '../styles/constants';
 import { login } from '../utils/google';
 import t from '../utils/gettext';
 
@@ -38,7 +38,7 @@ class LoginForm extends React.Component {
         return {
             button: {
                 width: '100%',
-                backgroundColor: colors.tintColor,
+                backgroundColor: constants.colors.tint,
                 height: 50,
             },
             container: {
@@ -49,7 +49,7 @@ class LoginForm extends React.Component {
                 fontSize: 18,
             },
             text: {
-                color: colors.lightTextColor,
+                color: constants.colors.lightText,
             },
         };
     }

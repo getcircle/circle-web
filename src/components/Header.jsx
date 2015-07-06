@@ -6,11 +6,14 @@ import { Link, Navigation } from 'react-router';
 import mui from 'material-ui';
 import React from 'react';
 
+import bindThis from '../utils/bindThis';
 import constants from '../styles/constants';
 import t from '../utils/gettext';
 
-const Tabs = mui.Tabs;
-const Tab = mui.Tab;
+const { Avatar } = mui;
+const { DropDownIcon } = mui;
+const { Tabs } = mui;
+const { Tab } = mui;
 
 @connectToStores
 @decorate(Navigation)
@@ -18,6 +21,9 @@ class Header extends React.Component {
 
     static propTypes = {
         flux: React.PropTypes.object.isRequired,
+        // XXX how do we avoid warnings on the /login page for these?
+        organization: React.PropTypes.object.isRequired,
+        profile: React.PropTypes.object.isRequired,
     }
 
     static getStores(props) {
@@ -31,7 +37,7 @@ class Header extends React.Component {
     _getStyles() {
         return {
             root: {
-                backgroundColor: constants.colors.headerBackground,
+                backgroundColor: constants.colors.background,
                 boxSizing: 'border-box',
                 paddingTop: '80px',
             },
@@ -41,7 +47,7 @@ class Header extends React.Component {
                 marginTop: 10,
             },
             tabs: {
-                backgroundColor: constants.colors.headerBackground,
+                backgroundColor: constants.colors.background,
             },
             tab: {
                 marginLeft: 46,
@@ -55,7 +61,7 @@ class Header extends React.Component {
         }
     }
 
-    _handleLogout = this._handleLogout.bind(this);
+    @bindThis
     _handleLogout(event) {
         // Prevent the link from resolving, we need to wait for logout to succeed
         event.preventDefault();
@@ -64,7 +70,7 @@ class Header extends React.Component {
             .logout();
     }
 
-    _onActive = this._onActive.bind(this);
+    @bindThis
     _onActive(tab) {
         this.transitionTo(tab.props.route);
     }
@@ -86,8 +92,13 @@ class Header extends React.Component {
         return (
             <header style={styles.root}>
                 <div className="wrap">
-                    <div className="row center-xs">
-                        <Link to="login" style={styles.link} onClick={this._handleLogout}>Logout</Link>
+                    <div className="row end-xs">
+                        <div className="col-xs-6 start-xs">
+                            <img src={this.props.organization.image_url} />
+                        </div>
+                        <div className="col-xs-6 end-xs">
+                            <Link to="login" style={styles.link} onClick={this._handleLogout}>Logout</Link>
+                        </div>
                     </div>
                     <div className="row">
                         <Tabs tabItemContainerStyle={styles.tabs} initialSelectedIndex={this._getInitialSelectedIndex()}>

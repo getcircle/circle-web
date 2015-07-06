@@ -1,6 +1,7 @@
 'use strict';
 
 import { authenticateUser, getAuthenticationInstructions, logout } from '../services/user';
+import { getOrganization } from '../services/organization';
 import { getProfileWithUserId } from '../services/profile';
 
 class AuthActions {
@@ -18,6 +19,7 @@ class AuthActions {
     }
 
     authenticate(backend, key, secret) {
+        let loginData = {};
         this.alt.getActions('RequestActions').start();
         authenticateUser(backend, key, secret)
             .then((response) => {
@@ -28,7 +30,12 @@ class AuthActions {
             })
             .then((user) => getProfileWithUserId(user.id))
             .then((profile) => {
-                this.actions.login(profile);
+                loginData.profile = profile;
+                return getOrganization(profile.organization_id);
+            })
+            .then((organization) => {
+                loginData.organization = organization;
+                this.actions.login(loginData);
                 this.alt.getActions('RequestActions').success();
             })
             .catch((error) => {

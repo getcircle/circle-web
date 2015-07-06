@@ -13,8 +13,9 @@ import { getBody } from './utils/render';
 import getRoutes from './getRoutes';
 import Flux from './utils/Flux';
 
-const ProfileV1 = services.profile.containers.ProfileV1;
-const UserV1 = services.user.containers.UserV1;
+const { OrganizationV1 } = services.organization.containers;
+const { ProfileV1 } = services.profile.containers;
+const { UserV1 } = services.user.containers;
 
 (async () => {
 
@@ -31,9 +32,13 @@ const UserV1 = services.user.containers.UserV1;
     let user = localStorage.getItem('user');
     let token = localStorage.getItem('token');
     let profile = localStorage.getItem('profile');
+    let organization = localStorage.getItem('organization');
     if (user && token && profile) {
         flux.getActions('AuthActions').completeAuthentication({token, user: UserV1.decode64(user)});
-        flux.getActions('AuthActions').login(ProfileV1.decode64(profile));
+        flux.getActions('AuthActions').login({
+            profile: ProfileV1.decode64(profile),
+            organization: OrganizationV1.decode64(organization),
+        });
     }
 
     const createElement = (Component, props) => {
