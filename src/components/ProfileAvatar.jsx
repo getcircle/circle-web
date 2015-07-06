@@ -4,6 +4,7 @@ import _ from 'lodash';
 import mui from 'material-ui';
 import React from 'react';
 
+import { getColorForProfile } from '../utils/avatars';
 import bindThis from '../utils/bindThis';
 
 const { Avatar } = mui;
@@ -38,7 +39,7 @@ class ProfileAvatar extends React.Component {
     }
 
     _renderInitials() {
-        if (this.state.imageSrc === null) {
+        if (!this.state.imageSrc) {
             const profile = this.props.profile;
             return [profile.first_name[0], profile.last_name[0]].map((character, index) => _.capitalize(character));
         }
@@ -46,9 +47,19 @@ class ProfileAvatar extends React.Component {
 
     render() {
         const avatarStyle = _.assign({}, styles.avatar, this.props.style);
+        let backgroundColor;
+        if (!this.state.imageSrc) {
+            backgroundColor = getColorForProfile(this.props.profile);
+        }
         return (
             <div className={this.props.className}>
-                <Avatar className="content--center--h content--center--v" src={this.state.imageSrc} style={avatarStyle} onError={this._handleImageError}>
+                <Avatar
+                    className="content--center--h content--center--v"
+                    src={this.state.imageSrc}
+                    style={avatarStyle}
+                    onError={this._handleImageError}
+                    backgroundColor={backgroundColor}
+                >
                     {this._renderInitials()}
                 </Avatar>
             </div>
