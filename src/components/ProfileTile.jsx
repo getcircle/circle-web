@@ -41,7 +41,7 @@ class ProfileTile extends React.Component {
         // "Avatar" seems to be causing the page to load slowly since its fetching all the images at once. Is there a better way we can do this where the images will fade in as well?
         return (
             <Paper className="profile-tile stack__item">
-                <Avatar className="stack__item" src={profile.image_url} />
+                <Avatar className="stack__item" src={profile.small_image_url || profile.image_url} />
                 <p className="stack__item">{profile.full_name}</p>
                 <footer className="profile-tile__footer" style={this.styles.footer}>
                     <div className="profile-tile__footer__text">
