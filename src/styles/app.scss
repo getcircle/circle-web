@@ -1,4 +1,4 @@
-@import '../../node_modules/modularized-normalize-scss/normalize';
+@import 'lib/reset';
 @import 'lib/flexboxgrid';
 
 h1, h2 {
@@ -25,4 +25,8 @@ h1, h2 {
 
 body .row {
     margin: 0px;
+}
+
+body {
+    font-family: Lato,"Helvetica Neue",Roboto,Helvetica,Arial,sans-serif;
 }
