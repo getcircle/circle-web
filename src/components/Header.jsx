@@ -6,7 +6,7 @@ import { Link, Navigation } from 'react-router';
 import mui from 'material-ui';
 import React from 'react';
 
-import colors from '../styles/colors';
+import constants from '../styles/constants';
 import t from '../utils/gettext';
 
 const Tabs = mui.Tabs;
@@ -31,7 +31,7 @@ class Header extends React.Component {
     _getStyles() {
         return {
             root: {
-                backgroundColor: colors.backgroundColor,
+                backgroundColor: constants.colors.headerBackground,
                 boxSizing: 'border-box',
                 paddingTop: '80px',
             },
@@ -41,7 +41,7 @@ class Header extends React.Component {
                 marginTop: 10,
             },
             tabs: {
-                backgroundColor: colors.backgroundColor,
+                backgroundColor: constants.colors.headerBackground,
             },
             tab: {
                 marginLeft: 46,

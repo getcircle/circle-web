@@ -1,0 +1,25 @@
+@import 'layout/content';
+
+.profile-tile {
+    height: $vertical-unit * 20;
+    position: relative;
+    text-align: center;
+}
+
+.profile-tile__footer {
+    @extend .content--center;
+
+    height: $vertical-unit * 6;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.profile-tile__footer__text {
+    padding: .2em;
+    max-height: 2.5em;
+    overflow-y: hidden;
+    background: linear-gradient(rgba(255, 255, 255, 1) 0, rgba(255, 255, 255, 1) 2.1em, rgba(255, 255, 255, 0));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

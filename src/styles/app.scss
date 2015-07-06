@@ -1,6 +1,14 @@
 @import 'lib/reset';
 @import 'lib/flexboxgrid';
 
+@import 'globals';
+
+@import 'layout/content';
+@import 'layout/stack';
+
+@import 'modules/fonts';
+@import 'modules/profile_tile';
+
 h1, h2 {
     font-weight: 300;
 }
@@ -21,6 +29,8 @@ body .row {
     margin: 0px;
 }
 
-body {
-    font-family: Lato,"Helvetica Neue",Roboto,Helvetica,Arial,sans-serif;
+* {
+    // everyone really just wants this
+    // let's stop thinking about subtracting padding from width
+    box-sizing: border-box;
 }

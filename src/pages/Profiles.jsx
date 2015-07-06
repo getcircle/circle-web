@@ -3,9 +3,11 @@
 import mui from 'material-ui';
 import React from 'react';
 
-import connectToStore from '../utils/connectToStore';
+import bindThis from '../utils/bindThis';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
-import ProfilesGrid from '../components/ProfilesGrid';
+import connectToStore from '../utils/connectToStore';
+import InfiniteCardGrid from '../components/InfiniteCardGrid';
+import ProfileTile from '../components/ProfileTile';
 import ThemeManager from '../utils/ThemeManager';
 
 const { CircularProgress } = mui;
@@ -23,7 +25,7 @@ class Profiles extends React.Component {
     }
 
     static childContextTypes = {
-        muiTheme: React.PropTypes.object,
+        muiTheme: React.PropTypes.object.isRequired,
     }
 
     getChildContext() {
@@ -32,30 +34,40 @@ class Profiles extends React.Component {
         };
     }
 
-    componentWillMount() {
-        this.props.flux.getStore('ProfileStore').getProfiles();
-    }
-
     componentDidMount() {
-        window.addEventListener('scroll', this._handleScroll);
+        this.getMore();
     }
 
-    componentWillUnmount() {
-        window.removeEventListener('scroll', this._handleScroll);
+    @bindThis
+    getMore() {
+        this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest);
     }
 
-    _handleScroll = this._handleScroll.bind(this);
-    _handleScroll(event) {
-        if (!this.props.loading && this.props.nextRequest !== null) {
-            this.props.flux.getStore('ProfileStore').getProfiles(this.props.nextRequest);
-        }
+    _renderProfiles(profiles) {
+        return profiles.map((profile, index) => {
+            return (
+                <div key={profile.id} className="col-xs-12 col-sm-6 col-md-4">
+                    <ProfileTile profile={profile} />
+                </div>
+            );
+        });
     }
 
     render() {
         if (this.props.profiles && this.props.profiles.length === 0) {
             return <CenterLoadingIndicator />;
         } else {
-            return <ProfilesGrid profiles={this.props.profiles} />;
+            return (
+                <InfiniteCardGrid
+                    objects={this.props.profiles}
+
+                    loading={this.props.loading}
+                    getMore={this.getMore}
+
+                    ComponentClass={ProfileTile}
+                    componentAttributeName='profile'
+                />
+            );
         }
     }
 
