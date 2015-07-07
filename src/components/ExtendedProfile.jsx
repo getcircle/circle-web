@@ -66,6 +66,10 @@ class ExtendedProfile extends React.Component {
             fontWeight: 300,
             color: constants.colors.lightText,
         },
+        contactMethodsContainer: {
+            width: '100%',
+            marginTop: 20,
+        },
     }
 
     @bindThis
@@ -73,8 +77,27 @@ class ExtendedProfile extends React.Component {
         this.setState({imageSrc: null});
     }
 
-    _renderContactBar() {
+    _renderContactMethods() {
+        const { profile } = this.props.extendedProfile;
+        let contactMethods = [{id: 'email', label: 'Email', 'value': profile.email}];
+        contactMethods.push.apply(profile.contact_methods);
+        contactMethods = _.filter(contactMethods, (contactMethod) => contactMethod.value !== '');
 
+        const items = contactMethods.map((contactMethod, index) => {
+            return (
+                <ListItem key={index} secondaryText={contactMethod.label}>
+                    {contactMethod.value}
+                </ListItem>
+            );
+        });
+
+        return (
+            <div className="extended_profile__image" style={this.styles.contactMethodsContainer}>
+                <List>
+                    {items}
+                </List>
+            </div>
+        );
     }
 
     _renderProfileImage() {
@@ -199,6 +222,7 @@ class ExtendedProfile extends React.Component {
                 <div className="row extended_profile">
                     <div className="col-sm-3">
                         {this._renderProfileImage()}
+                        {this._renderContactMethods()}
                     </div>
                     <div className="col-sm-9" style={this.styles.detailsContainer}>
                         <div className="row start-xs">
@@ -206,9 +230,6 @@ class ExtendedProfile extends React.Component {
                         </div>
                         <div className="row start-xs">
                             <h2 className="content__header--secondary">{profile.title}</h2>
-                        </div>
-                        <div className="row start-xs">
-                            {this._renderContactBar()}
                         </div>
                         <div className="row start-xs">
                             <p style={this.styles.about}>{profile.about}</p>
