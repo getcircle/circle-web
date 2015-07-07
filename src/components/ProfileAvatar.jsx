@@ -1,19 +1,9 @@
 'use strict';
 
 import _ from 'lodash';
-import mui from 'material-ui';
 import React from 'react';
 
-import { getColorForProfile } from '../utils/avatars';
-import bindThis from '../utils/bindThis';
-
-const { Avatar } = mui;
-
-const styles = {
-    avatar: {
-        display: 'flex',
-    },
-};
+import TextFallbackAvatar from './TextFallbackAvatar';
 
 class ProfileAvatar extends React.Component {
 
@@ -21,49 +11,22 @@ class ProfileAvatar extends React.Component {
         profile: React.PropTypes.object.isRequired,
     }
 
-    constructor() {
-        super();
-        this.state = {
-            imageSrc: null,
-        };
-    }
-
-    componentWillMount() {
-        const { profile } = this.props;
-        this.setState({imageSrc: profile.small_image_url || profile.image_url});
-    }
-
-    @bindThis
-    _handleImageError() {
-        this.setState({imageSrc: null});
-    }
-
-    _renderInitials() {
-        if (!this.state.imageSrc) {
-            const profile = this.props.profile;
-            return [profile.first_name[0], profile.last_name[0]].map((character, index) => _.capitalize(character));
-        }
+    _getInitials() {
+        const profile = this.props.profile;
+        return [profile.first_name[0], profile.last_name[0]].map((character, index) => _.capitalize(character)).join('');
     }
 
     render() {
-        const avatarStyle = _.assign({}, styles.avatar, this.props.style);
-        let backgroundColor;
-        if (!this.state.imageSrc) {
-            backgroundColor = getColorForProfile(this.props.profile);
-        }
-        return (
-            <div className={this.props.className}>
-                <Avatar
-                    className="content--center--h content--center--v"
-                    src={this.state.imageSrc}
-                    style={avatarStyle}
-                    onError={this._handleImageError}
-                    backgroundColor={backgroundColor}
-                >
-                    {this._renderInitials()}
-                </Avatar>
-            </div>
-        );
+        const {
+            profile,
+            ...other
+        } = this.props;
+
+        return <TextFallbackAvatar
+                    src={profile.image_url || profile.small_image_url}
+                    fallbackText={this._getInitials()}
+                    {...other}
+                />;
     }
 }
 
