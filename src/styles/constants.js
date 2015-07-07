@@ -1,13 +1,12 @@
 'use strict';
 
 const baseColors = {
-    olive: '#558920',
-    tumeric: '#CEC248',
-    shakespeare: '#5CA7CF',
-    sienna: '#D88E40',
-    violet: '#972FAD',
-    fuchsia: '#8B4CC7',
-    darkGray: '#1F2532',
+    olive: 'rgb(30, 146, 57)',
+    tumeric: 'rgb(14, 99, 177)',
+    shakespeare: 'rgb(109, 109, 109)',
+    sienna: 'rgb(213, 102, 19)',
+    violet: 'rgb(119, 65, 133)',
+    fuchsia: 'rgb(179, 44, 40)',
 };
 
 const brightColors = [
