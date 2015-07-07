@@ -1,6 +1,7 @@
 'use strict';
 
-import {services} from 'protobufs';
+import _ from 'lodash';
+import { services } from 'protobufs';
 
 import client from './client';
 import logger from '../utils/logger';
@@ -68,4 +69,8 @@ export function getExtendedProfile(profileId) {
                 logger.log(`Error fetching extended profile: ${error}`);
             });
     });
+}
+
+export function getInitialsForProfile(profile) {
+    return [profile.first_name[0], profile.last_name[0]].map((character) => _.capitalize(character)).join('');
 }

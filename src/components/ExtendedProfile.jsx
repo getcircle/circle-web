@@ -5,6 +5,9 @@ import mui from 'material-ui';
 import React from 'react';
 
 import bindThis from '../utils/bindThis';
+import constants from '../styles/constants';
+import { getInitialsForProfile } from '../services/profile';
+import { getRandomColor } from '../utils/avatars';
 import t from '../utils/gettext';
 
 import ProfileAvatar from './ProfileAvatar';
@@ -53,8 +56,15 @@ class ExtendedProfile extends React.Component {
             lineHeight: '30px',
         },
         image: {
-            'maxWidth': 300,
-            'maxHeight': 300,
+            maxWidth: 300,
+            maxHeight: 300,
+        },
+        placeHolderInitials: {
+            height: '100%',
+            width: '100%',
+            fontSize: '100px',
+            fontWeight: 300,
+            color: constants.colors.lightText,
         },
     }
 
@@ -71,6 +81,26 @@ class ExtendedProfile extends React.Component {
         const { profile } = this.props.extendedProfile;
         if (this.state.imageSrc) {
             return <img className="extended_profile__image" style={this.styles.image} src={profile.image_url} onError={this._handleImageError} />;
+        } else {
+            const style = _.assign(
+                {},
+                this.styles.image,
+                {
+                    height: 300,
+                    width: 300,
+                    backgroundColor: getRandomColor(profile.first_name),
+                },
+            );
+            return (
+                <div className="extended_profile__image" style={style}>
+                    <span
+                        className="content--center--h content--center--v"
+                        style={this.styles.placeHolderInitials}
+                    >
+                        {getInitialsForProfile(profile)}
+                    </span>
+                </div>
+            );
         }
     }
 
