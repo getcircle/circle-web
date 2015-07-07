@@ -153,22 +153,24 @@ class ExtendedProfile extends React.Component {
 
     _renderLocation() {
         const { location } = this.props.extendedProfile;
-        return (
-            <List subheader={t('Location')} subheaderStyle={this.styles.sectionTitle}>
-                <ListItem
-                    leftAvatar={
-                        <TextFallbackAvatar
-                            src={location.image_url}
-                            style={this.styles.avatar}
-                            fallbackText={location.name[0]}
-                        />
-                    }
-                    secondaryText={`${location.profile_count} people`}
-                >
-                    {location.name}
-                </ListItem>
-            </List>
-        );
+        if (location) {
+            return (
+                <List subheader={t('Location')} subheaderStyle={this.styles.sectionTitle}>
+                    <ListItem
+                        leftAvatar={
+                            <TextFallbackAvatar
+                                src={location.image_url}
+                                style={this.styles.avatar}
+                                fallbackText={location.name[0]}
+                            />
+                        }
+                        secondaryText={`${location.profile_count} people`}
+                    >
+                        {location.name}
+                    </ListItem>
+                </List>
+            );
+        }
     }
 
     render() {
