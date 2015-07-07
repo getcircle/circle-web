@@ -4,11 +4,11 @@
 @import 'globals';
 
 @import 'layout/content';
-@import 'layout/header';
 @import 'layout/stack';
 
 @import 'modules/extended_profile';
 @import 'modules/fonts';
+@import 'modules/header';
 @import 'modules/profile_tile';
 
 h1, h2 {

@@ -76,13 +76,21 @@ class Header extends React.Component {
             width: 350,
             backgroundColor: 'white',
             boxShadow: '0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)',
+            marginLeft: 235,
+        },
+        searchInput: {
+            width: 350,
         },
         tabs: {
             backgroundColor: constants.colors.background,
+            paddingTop: 20,
+            paddingLeft: 25,
         },
         tab: {
-            fontSize: '16px',
-            marginLeft: 46,
+            fontSize: '13px',
+            display: 'inline',
+            width: 100,
+            marginRight: 45,
         },
     }
 
@@ -125,7 +133,11 @@ class Header extends React.Component {
 
     _renderSearchResults() {
         if (this.props.results) {
-            return <SearchResults style={this.styles.searchResults} results={this.props.results} flux={this.props.flux} />;
+            return (
+                <div className="start-xs">
+                    <SearchResults style={this.styles.searchResults} results={this.props.results} flux={this.props.flux} />
+                </div>
+            );
         }
     }
 
@@ -144,18 +156,20 @@ class Header extends React.Component {
                             <Link to="login" style={this.styles.link} onClick={this._handleLogout}>Logout</Link>
                         </div>
                     </div>
-                    <div className="row header__nav--secondary">
-                        <img className="header-image" src={this.props.organization.image_url} />
-                        <h2 className="header-title">People</h2>
-                        <div className="col-xs-offset-5">
+                    <div className="row bottom-xs">
+                        <div className="col-xs-6 start-xs">
+                            <h2 className="header-title">People</h2>
+                        </div>
+                        <div className="col-xs-6 end-xs">
                             <TextField
+                                style={this.styles.searchInput}
                                 inputStyle={this.styles.text}
                                 floatingLabelStyle={this.styles.text}
                                 floatingLabelText="Search"
                                 valueLink={this.linkState('query')}
                                 onKeyUp={this._handleKeyUp}
                             />
-                            { this._renderSearchResults() }
+                            {this._renderSearchResults()}
                         </div>
                     </div>
                 </div>
