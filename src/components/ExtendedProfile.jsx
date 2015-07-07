@@ -11,6 +11,7 @@ import { getRandomColor } from '../utils/avatars';
 import t from '../utils/gettext';
 
 import ProfileAvatar from './ProfileAvatar';
+import TagButton from './TagButton';
 import TextFallbackAvatar from './TextFallbackAvatar';
 
 const {
@@ -92,7 +93,7 @@ class ExtendedProfile extends React.Component {
         });
 
         return (
-            <div className="extended_profile__image" style={this.styles.contactMethodsContainer}>
+            <div style={this.styles.contactMethodsContainer}>
                 <List>
                     {items}
                 </List>
@@ -196,6 +197,31 @@ class ExtendedProfile extends React.Component {
         }
     }
 
+    _renderTagSection(title, tags) {
+        const items = tags.map((tag, index) => {
+            return <TagButton key={tag.id} tag={tag} />;
+        });
+        return (
+            <List subheader={title} subheaderStyle={this.styles.sectionTitle}>
+                {items}
+            </List>
+        );
+    }
+
+    _renderSkills() {
+        const { skills } = this.props.extendedProfile;
+        if (skills) {
+            return this._renderTagSection(t('Skills'), skills);
+        }
+    }
+
+    _renderInterests() {
+        const { interests } = this.props.extendedProfile;
+        if (interests) {
+            return this._renderTagSection(t('Interests'), interests);
+        }
+    }
+
     render() {
         // profile image
         // name
@@ -215,6 +241,8 @@ class ExtendedProfile extends React.Component {
             manager,
             team,
             location,
+            skills,
+            interests,
         } = this.props.extendedProfile;
 
         return (
@@ -237,6 +265,10 @@ class ExtendedProfile extends React.Component {
                         {this._renderManagerAndTeam()}
                         {manager || team ? <ListDivider /> : null}
                         {this._renderLocation()}
+                        {location ? <ListDivider /> : null}
+                        {this._renderSkills()}
+                        {interests ? <ListDivider /> : null}
+                        {this._renderInterests()}
                     </div>
                 </div>
             </div>
