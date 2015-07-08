@@ -1,7 +1,9 @@
 'use strict';
 
 import _ from 'lodash';
+import { decorate } from 'react-mixin';
 import mui from 'material-ui';
+import { Navigation } from 'react-router';
 import React from 'react';
 
 import bindThis from '../utils/bindThis';
@@ -20,6 +22,7 @@ const {
     ListItem,
 } = mui;
 
+@decorate(Navigation)
 class ExtendedProfile extends React.Component {
 
     static propTypes = {
@@ -78,6 +81,12 @@ class ExtendedProfile extends React.Component {
         this.setState({imageSrc: null});
     }
 
+    @bindThis
+    _routeToManager() {
+        const { manager } = this.props.extendedProfile;
+        this.transitionTo(`/profile/${manager.id}`);
+    }
+
     _renderContactMethods() {
         const { profile } = this.props.extendedProfile;
         let contactMethods = [{id: 'email', label: 'Email', 'value': profile.email}];
@@ -134,6 +143,7 @@ class ExtendedProfile extends React.Component {
                 <ListItem
                     leftAvatar={<ProfileAvatar profile={manager} />}
                     secondaryText={manager.title}
+                    onTouchTap={this._routeToManager}
                 >
                     {manager.full_name}
                 </ListItem>
