@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import connectToStores from 'alt/utils/connectToStores';
 import { decorate } from 'react-mixin';
-import { Link, Navigation } from 'react-router';
+import { Navigation } from 'react-router';
 import mui from 'material-ui';
 import React from 'react/addons';
 
@@ -12,11 +12,16 @@ import constants from '../styles/constants';
 import t from '../utils/gettext';
 import SearchResults from '../components/SearchResults';
 
-const { Avatar } = mui;
-const { DropDownIcon } = mui;
-const { Tabs } = mui;
-const { Tab } = mui;
-const { TextField } = mui;
+const {
+    Avatar,
+    DropDownIcon,
+    Menu,
+    Tabs,
+    Tab,
+    TextField,
+} = mui;
+
+const MenuActions = {logout: 'Logout'};
 
 @connectToStores
 @decorate(Navigation)
@@ -48,27 +53,29 @@ class Header extends React.Component {
         super();
         this.state = {
             query: null,
+            menuVisible: false,
         };
     }
 
     styles = {
-        root: {
-            backgroundColor: constants.colors.background,
-            boxSizing: 'border-box',
+        currentUserName: {
+            fontSize: '13px',
+            color: constants.colors.lightText,
+            cursor: 'pointer',
+        },
+        currentUserNameContainer: {
+            paddingTop: 20,
         },
         // XXX collapse the lightText
-        text: {
-            color: constants.colors.lightText,
-        },
         link: {
             color: constants.colors.lightText,
             display: 'block',
             marginTop: 10,
         },
-        title: {
-            color: constants.colors.lightText,
-            fontSize: '36px',
-            marginTop: '25px',
+        menu: {
+            position: 'relative',
+            float: 'right',
+            marginTop: 5,
         },
         searchResults: {
             zIndex: 10,
@@ -78,19 +85,31 @@ class Header extends React.Component {
             boxShadow: '0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)',
             marginLeft: 235,
         },
+        root: {
+            backgroundColor: constants.colors.background,
+            boxSizing: 'border-box',
+        },
         searchInput: {
             width: 350,
-        },
-        tabs: {
-            backgroundColor: constants.colors.background,
-            paddingTop: 20,
-            paddingLeft: 25,
         },
         tab: {
             fontSize: '13px',
             display: 'inline',
             width: 100,
             marginRight: 45,
+        },
+        tabs: {
+            backgroundColor: constants.colors.background,
+            paddingTop: 20,
+            paddingLeft: 25,
+        },
+        title: {
+            color: constants.colors.lightText,
+            fontSize: '36px',
+            marginTop: '25px',
+        },
+        text: {
+            color: constants.colors.lightText,
         },
     }
 
@@ -113,12 +132,12 @@ class Header extends React.Component {
     }
 
     @bindThis
-    _handleLogout(event) {
-        // Prevent the link from resolving, we need to wait for logout to succeed
-        event.preventDefault();
-        this.props.flux
-            .getActions('AuthActions')
-            .logout();
+    _handleMenuItemTap(event, index, menuItem) {
+        switch (menuItem.text) {
+            case MenuActions.logout:
+                this.props.flux.getActions('AuthActions').logout();
+                break;
+        }
     }
 
     @bindThis
@@ -129,6 +148,11 @@ class Header extends React.Component {
     @bindThis
     _handleKeyUp() {
         this.props.flux.getStore('SearchStore').search(this.state.query);
+    }
+
+    @bindThis
+    _toggleMenuVisibility() {
+        this.setState({menuVisible: !this.state.menuVisible});
     }
 
     _renderSearchResults() {
@@ -142,6 +166,9 @@ class Header extends React.Component {
     }
 
     render() {
+        let menuItems = [
+            {text: MenuActions.logout},
+        ];
         // XXX the bottom border animation when switching tabs seems to lag when loading the "People" page. Not sure if this is because we're loading more cards, or because we're loading images as well.
         return (
             <header style={this.styles.root}>
@@ -153,7 +180,12 @@ class Header extends React.Component {
                             </Tabs>
                         </div>
                         <div className="col-xs-6 end-xs">
-                            <Link to="login" style={this.styles.link} onClick={this._handleLogout}>Logout</Link>
+                            <div style={this.styles.currentUserNameContainer}>
+                                <span style={this.styles.currentUserName} onTouchTap={this._toggleMenuVisibility}>
+                                    {this.props.profile.full_name}
+                                </span>
+                            </div>
+                            <Menu style={this.styles.menu} menuItems={menuItems} hideable={true} visible={this.state.menuVisible} onItemTap={this._handleMenuItemTap} />
                         </div>
                     </div>
                     <div className="row bottom-xs">
