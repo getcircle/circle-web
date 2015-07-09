@@ -24,8 +24,9 @@ class SearchResults extends React.Component {
             if (result.category === CategoryV1.PROFILES) {
                 components.push(<ProfileSearchResults key={index} profiles={result.profiles} flux={this.props.flux} />);
             }
-            //  else if (result.category === CategoryV1.TEAMS) {
-            //     components.push(<TeamSearchResults key={index} teams={result.teams} />);
+             else if (result.category === CategoryV1.TEAMS) {
+                components.push(<TeamSearchResults key={index} teams={result.teams} flux={this.props.flux} />);
+            }
             // } else if (result.category === CategoryV1.GROUPS) {
             //     components.push(<GroupSearchResults key={index} groups={result.groups} />);
             // } else if (result.category === CategoryV1.LOCATIONS) {

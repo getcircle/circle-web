@@ -3,10 +3,9 @@
 import mui from 'material-ui';
 import React from 'react';
 
+import t from '../utils/gettext';
+
 import ProfileSearchResult from './ProfileSearchResult';
-import SearchResult from './SearchResult';
-import SearchResultHeader from './SearchResultHeader';
-import SearchResultsContainer from './SearchResultsContainer';
 
 const { List } = mui;
 
@@ -25,7 +24,7 @@ class ProfileSearchResults extends React.Component {
 
     render() {
         return (
-            <List subheader="Profiles">
+            <List subheader={t('Profiles')}>
                 {this._renderProfileResults()}
             </List>
         );

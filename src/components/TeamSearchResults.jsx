@@ -1,32 +1,32 @@
 'use strict';
 
+import mui from 'material-ui';
 import React from 'react';
 
-import SearchResult from './SearchResult';
-import SearchResultHeader from './SearchResultHeader';
-import SearchResultsContainer from './SearchResultsContainer';
+import t from '../utils/gettext';
+
 import TeamSearchResult from './TeamSearchResult';
+
+const { List } = mui;
 
 class TeamSearchResults extends React.Component {
 
     static propTypes = {
+        flux: React.PropTypes.object.isRequired,
         teams: React.PropTypes.array.isRequired,
     }
 
     _renderTeamResults() {
         return this.props.teams.map((team, index) => {
-            return <TeamSearchResult key={index} team={team} />;
+            return <TeamSearchResult key={index} team={team} flux={this.props.flux} />;
         });
     }
 
     render() {
         return (
-            <SearchResult>
-                <SearchResultHeader title="Teams" />
-                <SearchResultsContainer>
-                    {this._renderTeamResults()}
-                </SearchResultsContainer>
-            </SearchResult>
+            <List subheader={t('Teams')}>
+                {this._renderTeamResults()}
+            </List>
         );
     }
 }

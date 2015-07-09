@@ -7,8 +7,10 @@ import React from 'react';
 
 import bindThis from '../utils/bindThis';
 
-const { Avatar } = mui;
-const { ListItem } = mui;
+const {
+    Avatar,
+    ListItem,
+} = mui;
 
 @decorate(Navigation)
 class ProfileSearchResult extends React.Component {

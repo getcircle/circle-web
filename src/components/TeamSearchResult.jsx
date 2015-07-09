@@ -1,10 +1,23 @@
 'use strict';
 
+import { decorate } from 'react-mixin';
+import mui from 'material-ui';
+import { Navigation } from 'react-router';
 import React from 'react';
 
+import bindThis from '../utils/bindThis';
+
+import TextFallbackAvatar from './TextFallbackAvatar';
+
+const {
+    ListItem,
+} = mui;
+
+@decorate(Navigation)
 class TeamSearchResult extends React.Component {
 
     static propTypes = {
+        flux: React.PropTypes.object.isRequired,
         team: React.PropTypes.object.isRequired,
     }
 
@@ -14,14 +27,21 @@ class TeamSearchResult extends React.Component {
         },
     }
 
+    @bindThis
+    _handleTouchTap() {
+        this.props.flux.getActions('SearchActions').clearResults();
+        this.transitionTo(`/team/${this.props.team.id}`);
+    }
+
     render() {
         const team = this.props.team;
         return (
-            <div className="row">
-                <div className="col-xs" style={this.styles.detailsContainer}>
-                    <span>{team.name}</span>
-                </div>
-            </div>
+            <ListItem
+                leftAvatar={<TextFallbackAvatar fallbackText={team.name[0]} />}
+                onTouchTap={this._handleTouchTap}
+            >
+                {team.name}
+            </ListItem>
         );
     }
 }
