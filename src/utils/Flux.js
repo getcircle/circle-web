@@ -14,6 +14,7 @@ class Flux extends Alt {
         this.addActions('OrganizationFeedActions', require('../actions/OrganizationFeedActions'));
         this.addActions('RequestActions', require('../actions/RequestActions'));
         this.addActions('SearchActions', require('../actions/SearchActions'));
+        this.addActions('TeamActions', require('../actions/TeamActions'));
 
         // Register Stores
         this.addStore('AuthStore', require('../stores/AuthStore'));
@@ -22,6 +23,7 @@ class Flux extends Alt {
         this.addStore('OrganizationFeedStore', require('../stores/OrganizationFeedStore'));
         this.addStore('RequestStore', require('../stores/RequestStore'));
         this.addStore('SearchStore', require('../stores/SearchStore'));
+        this.addStore('TeamStore', require('../stores/TeamStore'));
     }
 }
 

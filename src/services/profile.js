@@ -74,3 +74,29 @@ export function getExtendedProfile(profileId) {
 export function getInitialsForProfile(profile) {
     return [profile.first_name[0], profile.last_name[0]].map((character) => _.capitalize(character)).join('');
 }
+
+export function getProfilesForTeamId(teamId, nextRequest) {
+    /*eslint-disable camelcase*/
+    let parameters = {
+        team_id: teamId,
+    };
+    /*eslint-enable camelcase*/
+
+    // TODO do something with nextRequest
+
+    let request = new services.profile.actions.get_profiles.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let { profiles } = response.result;
+                resolve({
+                    profiles,
+                    nextRequest: response.getNextRequest(),
+                    teamId: teamId,
+                });
+            })
+            .catch((error) => {
+                logger.log(`Error fetching profliles for team: ${error}`);
+            });
+    });
+}

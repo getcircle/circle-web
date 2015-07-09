@@ -51,9 +51,6 @@ class ExtendedProfile extends React.Component {
             textTransform: 'uppercase',
             fontWeight: 'normal',
         },
-        detailsContainer: {
-            padding: '5px 0 30px 30px',
-        },
         about: {
             paddingTop: 15,
             color: '#333',
@@ -85,6 +82,12 @@ class ExtendedProfile extends React.Component {
     _routeToManager() {
         const { manager } = this.props.extendedProfile;
         this.transitionTo(`/profile/${manager.id}`);
+    }
+
+    @bindThis
+    _routeToTeam() {
+        const { team } = this.props.extendedProfile;
+        this.transitionTo(`/team/${team.id}`);
     }
 
     _renderContactMethods() {
@@ -162,6 +165,7 @@ class ExtendedProfile extends React.Component {
                         />
                     }
                     secondaryText={team.department}
+                    onTouchTap={this._routeToTeam}
                 >
                     {team.name}
                 </ListItem>
@@ -257,12 +261,12 @@ class ExtendedProfile extends React.Component {
 
         return (
             <div className="wrap">
-                <div className="row extended_profile">
+                <div className="row item_detail extended_profile">
                     <div className="col-sm-3">
                         {this._renderProfileImage()}
                         {this._renderContactMethods()}
                     </div>
-                    <div className="col-sm-9" style={this.styles.detailsContainer}>
+                    <div className="col-sm-9 item_detail__details">
                         <div className="row start-xs">
                             <h1>{profile.full_name}</h1>
                         </div>

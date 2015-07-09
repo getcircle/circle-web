@@ -37,6 +37,10 @@ const getRoutes = (flux) => {
                 path="profile/:profileId"
                 onEnter={requireAuth}
                 component={require('./pages/Profile')} />
+            <Route
+                path="team/:teamId"
+                onEnter={requireAuth}
+                component={require('./pages/Team')} />
         </Route>
     );
 };
