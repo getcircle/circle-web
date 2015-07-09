@@ -63,6 +63,7 @@ class WrappedResponse {
         /*eslint-disable camelcase*/
         nextAction.control.paginator.previous_page = currentPaginator.page;
         /*eslint-enable camelcase*/
+        nextAction.control.paginator.count = currentPaginator.count;
 
         return nextRequest;
     }

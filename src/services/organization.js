@@ -63,3 +63,45 @@ export function getTeamDescendants(teamId) {
             });
     });
 }
+
+export function getLocation(locationId) {
+    let parameters = {
+        'location_id': locationId,
+    };
+
+    let request = new services.organization.actions.get_location.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let { location } = response.result;
+                resolve(location);
+            })
+            .catch((error) => {
+                logger.error(`Error fetching location: ${error}`);
+            });
+    });
+}
+
+export function getTeamsForLocationId(locationId, nextRequest) {
+    let parameters = {
+        'location_id': locationId,
+    };
+
+    // TODO do something with nextRequest
+
+    let request = new services.organization.actions.get_teams.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let { teams } = response.result;
+                resolve({
+                    locationId,
+                    teams,
+                    nextRequest: response.getNextRequest(),
+                });
+            })
+            .catch((error) => {
+                logger.error(`Error fetching teams for location: ${error}`);
+            });
+    });
+}

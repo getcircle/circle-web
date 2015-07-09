@@ -91,12 +91,35 @@ export function getProfilesForTeamId(teamId, nextRequest) {
                 let { profiles } = response.result;
                 resolve({
                     profiles,
+                    teamId,
                     nextRequest: response.getNextRequest(),
-                    teamId: teamId,
                 });
             })
             .catch((error) => {
                 logger.log(`Error fetching profliles for team: ${error}`);
+            });
+    });
+}
+
+export function getProfilesForLocationId(locationId, nextRequest) {
+    let parameters = {
+        'location_id': locationId,
+    };
+
+    // TODO do something with nextRequest
+    let request = new services.profile.actions.get_profiles.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let { profiles } = response.result;
+                resolve({
+                    profiles,
+                    locationId,
+                    nextRequest: response.getNextRequest(),
+                });
+            })
+            .catch((error) => {
+                logger.error(`Error fetching profiles for location: ${error}`);
             });
     });
 }

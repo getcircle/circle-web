@@ -22,6 +22,10 @@ const getRoutes = (flux) => {
     return (
         <Route path="/" component={require('./components/App')}>
             <Route
+                path="location/:locationId"
+                onEnter={requireAuth}
+                component={require('./pages/Location')} />
+            <Route
                 path="login"
                 onEnter={loginOnce}
                 component={require('./pages/Login')} />
@@ -30,13 +34,13 @@ const getRoutes = (flux) => {
                 onEnter={requireAuth}
                 component={require('./pages/Profiles')} />
             <Route
-                path="search"
-                onEnter={requireAuth}
-                component={require('./pages/Search')} />
-            <Route
                 path="profile/:profileId"
                 onEnter={requireAuth}
                 component={require('./pages/Profile')} />
+            <Route
+                path="search"
+                onEnter={requireAuth}
+                component={require('./pages/Search')} />
             <Route
                 path="team/:teamId"
                 onEnter={requireAuth}

@@ -90,6 +90,10 @@ class ExtendedProfile extends React.Component {
         this.transitionTo(`/team/${team.id}`);
     }
 
+    _routeToLocation(location) {
+        this.transitionTo(`/location/${location.id}`);
+    }
+
     _renderContactMethods() {
         const { profile } = this.props.extendedProfile;
         let contactMethods = [{id: 'email', label: 'Email', 'value': profile.email}];
@@ -203,6 +207,7 @@ class ExtendedProfile extends React.Component {
                             />
                         }
                         secondaryText={`${location.profile_count} people`}
+                        onTouchTap={this._routeToLocation.bind(this, location)}
                     >
                         {location.name}
                     </ListItem>
