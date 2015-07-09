@@ -1,13 +1,21 @@
 'use strict';
 
+import { decorate } from 'react-mixin';
 import mui from 'material-ui';
+import { Navigation } from 'react-router';
 import React from 'react';
 
-const {Avatar} = mui;
+import bindThis from '../utils/bindThis';
 
+import TextFallbackAvatar from './TextFallbackAvatar';
+
+const { ListItem } = mui;
+
+@decorate(Navigation)
 class LocationSearchResult extends React.Component {
 
     static propTypes = {
+        flux: React.PropTypes.object.isRequired,
         location: React.PropTypes.object.isRequired,
     }
 
@@ -17,17 +25,21 @@ class LocationSearchResult extends React.Component {
         },
     }
 
+    @bindThis
+    _handleTouchTap() {
+        this.props.flux.getActions('SearchActions').clearResults();
+        this.transitionTo(`/location/${this.props.location.id}`);
+    }
+
     render() {
         const location = this.props.location;
         return (
-            <div className="row">
-                <div classNmae="col-xs-1">
-                    <Avatar src={location.image_url} />
-                </div>
-                <div className="col-xs" style={this.styles.detailsContainer}>
-                    <span>{location.name}</span>
-                </div>
-            </div>
+            <ListItem
+                leftAvatar={<TextFallbackAvatar src={location.image_url} fallbackText={location.name[0]} />}
+                onTouchTap={this._handleTouchTap}
+            >
+                {location.name}
+            </ListItem>
         );
     }
 }

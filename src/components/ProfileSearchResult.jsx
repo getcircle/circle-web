@@ -7,10 +7,9 @@ import React from 'react';
 
 import bindThis from '../utils/bindThis';
 
-const {
-    Avatar,
-    ListItem,
-} = mui;
+import ProfileAvatar from './ProfileAvatar';
+
+const { ListItem } = mui;
 
 @decorate(Navigation)
 class ProfileSearchResult extends React.Component {
@@ -39,7 +38,7 @@ class ProfileSearchResult extends React.Component {
         const profile = this.props.profile;
         return (
             <ListItem
-                leftAvatar={<Avatar src={profile.small_image_url || profile.image_url} />}
+                leftAvatar={<ProfileAvatar profile={profile} />}
                 onTouchTap={this._handleTouchTap}
             >
                 {profile.full_name}
