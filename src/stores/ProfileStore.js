@@ -8,21 +8,32 @@ class ProfileStore {
         this.registerAsync(profileSource);
         this.bindActions(this.alt.getActions('ProfileActions'));
 
-        this.profiles = [];
         this.extendedProfiles = {};
+        this.profiles = {};
+        this.profilesNextRequests = {};
+        this.tags = {};
 
-        // XXX need to see if this is available to one component or to all components. If it is availlable to all it should be moved to the state
-        this.nextRequest = null;
         // XXX this should be handled by the RequestsStore. Although we do want to have some concept of the store is loading vs. any random request is being sent.
         this.loading = false;
     }
 
-    onGetProfilesSuccess(state) {
-        // XXX look to using React.addons.update $push
-        // XXX not sure how we do setState if we want to append to the array
-        this.profiles.push.apply(this.profiles, state.profiles || []);
-        this.nextRequest = state.nextRequest;
-        this.setState({loading: false});
+    onFetchProfilesSuccess(state) {
+        const tagId = state.parameters.tag_id || null;
+        let {
+            profiles,
+            profilesNextRequests,
+        } = this.getInstance().getState();
+        let items = profiles[tagId];
+        if (items === undefined) {
+            items = [];
+        }
+        profiles[tagId] = items.concat(state.profiles);
+        profilesNextRequests[tagId] = state.nextRequest;
+        this.setState({
+            profiles,
+            profilesNextRequests,
+            loading: false,
+        });
     }
 
     onLoading(state) {
@@ -30,7 +41,7 @@ class ProfileStore {
         this.setState({loading: true});
     }
 
-    getProfilesError(state) {
+    onFetchProfilesError(state) {
         // XXX should be moved to the RequestsStore
         this.setState({loading: false});
     }
@@ -42,8 +53,27 @@ class ProfileStore {
         this.setState({extendedProfiles});
     }
 
+    onFetchTagSuccess(tag) {
+        let { tags } = this.getInstance().getState();
+        tags[tag.id] = tag;
+        this.setState({tags});
+    }
+
     static getExtendedProfile(profileId) {
         return this.getState().extendedProfiles[profileId];
+    }
+
+    static getProfilesForTagId(tagId) {
+        tagId = tagId || null;
+        return this.getState().profiles[tagId];
+    }
+
+    static getNextRequestForTagId(tagId) {
+        return this.getState().profilesNextRequests[tagId];
+    }
+
+    static getTag(tagId) {
+        return this.getState().tags[tagId];
     }
 
 }

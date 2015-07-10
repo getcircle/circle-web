@@ -1,34 +1,34 @@
 'use strict';
 
+import mui from 'material-ui';
 import React from 'react';
 
-import SearchResult from './SearchResult';
-import SearchResultHeader from './SearchResultHeader';
-import SearchResultsContainer from './SearchResultsContainer';
+import t from '../utils/gettext';
+
 import TagSearchResult from './TagSearchResult';
+
+const { List } = mui;
 
 class TagSearchResults extends React.Component {
 
     static propTypes = {
+        flux: React.PropTypes.object.isRequired,
         title: React.PropTypes.string,
         tags: React.PropTypes.array.isRequired,
     }
 
     _renderTagResults() {
         return this.props.tags.map((tag, index) => {
-            return <TagSearchResult key={index} tag={tag} />;
+            return <TagSearchResult key={index} tag={tag} flux={this.props.flux} />;
         });
     }
 
     render() {
-        const title = this.props.title ? this.props.title : 'Tags';
+        const title = this.props.title ? this.props.title : t('Tags');
         return (
-            <SearchResult>
-                <SearchResultHeader title={title} />
-                <SearchResultsContainer>
-                    {this._renderTagResults()}
-                </SearchResultsContainer>
-            </SearchResult>
+            <List subheader={title}>
+                {this._renderTagResults()}
+            </List>
         );
     }
 }

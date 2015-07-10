@@ -94,6 +94,10 @@ class ExtendedProfile extends React.Component {
         this.transitionTo(`/location/${location.id}`);
     }
 
+    _routeToTagOverview(tag) {
+        this.transitionTo(`/people`, {tagId: tag.id});
+    }
+
     _renderContactMethods() {
         const { profile } = this.props.extendedProfile;
         let contactMethods = [{id: 'email', label: 'Email', 'value': profile.email}];
@@ -218,7 +222,7 @@ class ExtendedProfile extends React.Component {
 
     _renderTagSection(title, tags) {
         const items = tags.map((tag, index) => {
-            return <TagButton key={tag.id} tag={tag} />;
+            return <TagButton key={tag.id} tag={tag} onClick={this._routeToTagOverview.bind(this, tag)}/>;
         });
         return (
             <List subheader={title} subheaderStyle={this.styles.sectionTitle}>

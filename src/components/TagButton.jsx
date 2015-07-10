@@ -3,8 +3,6 @@
 import mui from 'material-ui';
 import React from 'react';
 
-import bindThis from '../utils/bindThis';
-
 const { FlatButton } = mui;
 
 const styles = {
@@ -22,13 +20,8 @@ class TagButton extends React.Component {
         tag: React.PropTypes.object.isRequired,
     }
 
-    @bindThis
-    _handleClick() {
-        debugger;
-    }
-
     render() {
-        return <FlatButton style={styles.tag} label={this.props.tag.name} onClick={this._handleClick} />;
+        return <FlatButton style={styles.tag} label={this.props.tag.name} {...this.props} />;
     }
 
 }

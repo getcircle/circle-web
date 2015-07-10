@@ -4,10 +4,12 @@ class ProfileActions {
     constructor() {
         this.generateActions(
             'loading',
-            'getProfilesSuccess',
-            'getProfilesError',
+            'fetchProfilesSuccess',
+            'fetchProfilesError',
             'fetchExtendedProfileSuccess',
             'fetchExtendedProfileError',
+            'fetchTagSuccess',
+            'fetchTagError',
         );
     }
 }

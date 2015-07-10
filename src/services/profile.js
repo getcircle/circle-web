@@ -27,15 +27,20 @@ export function getProfileWithUserId(userId) {
 	/*eslint-enable camelcase*/
 }
 
-export function getProfiles(nextRequest=null) {
+export function getProfiles(parameters, nextRequest=null) {
+    parameters = _.assign({}, parameters);
     // XXX is there a way to make this more DRY?
     return new Promise((resolve, reject) => {
         if (nextRequest === null) {
-            let request = new services.profile.actions.get_profiles.RequestV1();
+            let request = new services.profile.actions.get_profiles.RequestV1(parameters);
             client.sendRequest(request)
                 .then((response) => {
                     let {profiles} = response.result;
-                    resolve({profiles, nextRequest: response.getNextRequest()});
+                    resolve({
+                        parameters,
+                        profiles,
+                        nextRequest: response.getNextRequest(),
+                    });
                 })
                 .catch((error) => {
                     logger.log(`Error fetching profiles: ${error}`);
@@ -45,7 +50,11 @@ export function getProfiles(nextRequest=null) {
             client.sendNextRequest(nextRequest)
                 .then((response) => {
                     let {profiles} = response.result;
-                    resolve({profiles, nextRequest: response.getNextRequest()});
+                    resolve({
+                        parameters,
+                        profiles,
+                        nextRequest: response.getNextRequest(),
+                    });
                 })
                 .catch((error) => {
                     logger.log(`Error fetching profiles: ${error}`);
@@ -123,3 +132,45 @@ export function getProfilesForLocationId(locationId, nextRequest) {
             });
     });
 }
+
+export function getProfilesForTagId(tagId, nextRequest) {
+    let parameters = {
+        'tag_id': tagId,
+    };
+
+    // TODO do something with nextRequest
+    let request = new services.profile.actions.get_profiles.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let { profiles } = response.result;
+                resolve({
+                    profiles,
+                    tagId,
+                    nextRequest: response.getNextRequest(),
+                });
+            })
+            .catch((error) => {
+                logger.error(`Error fetching profiles for tag: ${error}`);
+            });
+    });
+}
+
+export function getTag(tagId) {
+    let parameters = {
+        ids: [tagId],
+    };
+
+    let request = new services.profile.actions.get_tags.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let { tags } = response.result;
+                resolve(tags[0]);
+            })
+            .catch((error) => {
+                logger.error(`Error fetching tag: ${error}`);
+            });
+    });
+}
+

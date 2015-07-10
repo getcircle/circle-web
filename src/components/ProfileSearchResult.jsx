@@ -5,8 +5,6 @@ import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
-import bindThis from '../utils/bindThis';
-
 import ProfileAvatar from './ProfileAvatar';
 
 const { ListItem } = mui;
@@ -19,19 +17,9 @@ class ProfileSearchResult extends React.Component {
         profile: React.PropTypes.object.isRequired,
     }
 
-    styles = {
-        detailsContainer: {
-            textAlign: 'left',
-        },
-        details: {
-            display: 'block',
-        },
-    }
-
-    @bindThis
-    _handleTouchTap() {
+    _handleTouchTap(profile) {
         this.props.flux.getActions('SearchActions').clearResults();
-        this.transitionTo(`/profile/${this.props.profile.id}`);
+        this.transitionTo(`/profile/${profile.id}`);
     }
 
     render() {
@@ -39,7 +27,7 @@ class ProfileSearchResult extends React.Component {
         return (
             <ListItem
                 leftAvatar={<ProfileAvatar profile={profile} />}
-                onTouchTap={this._handleTouchTap}
+                onTouchTap={this._handleTouchTap.bind(this, profile)}
             >
                 {profile.full_name}
             </ListItem>

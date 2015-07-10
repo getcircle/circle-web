@@ -3,6 +3,8 @@
 import React from 'react';
 import { services } from 'protobufs';
 
+import t from '../utils/gettext';
+
 import GroupSearchResults from '../components/GroupSearchResults';
 import LocationSearchResults from '../components/LocationSearchResults';
 import ProfileSearchResults from '../components/ProfileSearchResults';
@@ -28,14 +30,13 @@ class SearchResults extends React.Component {
                 components.push(<TeamSearchResults key={index} teams={result.teams} flux={this.props.flux} />);
             } else if (result.category === CategoryV1.LOCATIONS) {
                 components.push(<LocationSearchResults key={index} locations={result.locations} flux={this.props.flux} />);
+            } else if (result.category === CategoryV1.SKILLS) {
+                components.push(<TagSearchResults key={index} tags={result.tags} title={t('Skills')} flux={this.props.flux} />);
+            } else if (result.category === CategoryV1.INTERESTS) {
+                components.push(<TagSearchResults key={index} tags={result.tags} title={t('Interests')} flux={this.props.flux} />);
             }
             // } else if (result.category === CategoryV1.GROUPS) {
             //     components.push(<GroupSearchResults key={index} groups={result.groups} />);
-            // } else if (result.category === CategoryV1.SKILLS) {
-            //     components.push(<TagSearchResults key={index} tags={result.tags} title="Skills" />);
-            // } else if (result.category === CategoryV1.INTERESTS) {
-            //     components.push(<TagSearchResults key={index} tags={result.tags} title="Interests" />);
-            // }
         }
         return components;
     }
