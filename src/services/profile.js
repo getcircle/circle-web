@@ -11,7 +11,12 @@ export function getProfile(parameters) {
 	return new Promise((resolve, reject) => {
 		client.sendRequest(request)
 			.then((response) => {
-				let {profile} = response.result;
+                if (response.errors) {
+                    let { errors, errorDetails } = response;
+                    return reject({errors, errorDetails});
+                }
+
+				let { profile } = response.result;
 				resolve(profile);
 			})
 			.catch((error) => {

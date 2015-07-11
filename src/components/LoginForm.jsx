@@ -5,33 +5,32 @@ import mui from 'material-ui';
 import React from 'react/addons';
 
 import autoBind from '../utils/autobind';
+import bindThis from '../utils/bindThis';
 import AuthStore from '../stores/AuthStore';
 import constants from '../styles/constants';
 import { login } from '../utils/google';
+import logger from '../utils/logger';
 import t from '../utils/gettext';
 
-const RaisedButton = mui.RaisedButton;
-const StylePropable = mui.Mixins.StylePropable;
+const {
+    RaisedButton,
+    Snackbar,
+} = mui;
+const { StylePropable } = mui.Mixins;
 
 @decorate(StylePropable)
 @decorate(autoBind(StylePropable))
 class LoginForm extends React.Component {
 
-    constructor() {
-        super();
-        this.state = {
-            loading: false,
-        };
-    }
-
-    _handleTouchTap = this._handleTouchTap.bind(this);
-    _handleTouchTap(event) {
-        event.preventDefault();
-        this.setState({loading: true});
-        login().then((details) => {
-            this.props.authenticate(AuthStore.backends.GOOGLE, details.code);
-            this.setState({loading: false});
-        });
+    @bindThis
+    _handleTouchTap() {
+        login()
+            .then((details) => {
+                this.props.authenticate(AuthStore.backends.GOOGLE, details.code);
+            })
+            .catch((error) => {
+                logger.error(`Error logging in: ${error}`);
+            });
     }
 
     _getStyles() {
@@ -54,6 +53,12 @@ class LoginForm extends React.Component {
         };
     }
 
+    componentDidUpdate() {
+        if (this.props.authError) {
+            this.refs.snackbar.show();
+        }
+    }
+
     render() {
         const styles = this._getStyles();
         return (
@@ -72,10 +77,10 @@ class LoginForm extends React.Component {
                             labelStyle={styles.label}
                             primary={true}
                             onTouchTap={this._handleTouchTap}
-                            disabled={this.state.loading}
                         />
                     </div>
                 </section>
+                <Snackbar ref="snackbar" message="Error logging in" />
             </div>
         );
     }

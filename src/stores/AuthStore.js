@@ -27,6 +27,7 @@ class AuthStore {
             authenticationInstructions: null,
             authBackend: null,
             organization: null,
+            authError: null,
         };
     }
 
@@ -62,6 +63,10 @@ class AuthStore {
             authenticationInstructions: instructions,
             authBackend: instructions.backend,
         });
+    }
+
+    onAuthenticateFailed(error) {
+        this.setState({authError: error});
     }
 
     static isAuthenticated() {

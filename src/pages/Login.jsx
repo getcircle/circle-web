@@ -19,7 +19,7 @@ class Login extends React.Component {
     static propTypes = {
         flux: React.PropTypes.object.isRequired,
         authBackend: React.PropTypes.number,
-        inProgress: React.PropTypes.bool,
+        authError: React.PropTypes.object,
     }
 
     static childContextTypes = {
@@ -75,8 +75,7 @@ class Login extends React.Component {
                     <AltContainer
                         actions={this.props.flux.getActions('AuthActions')}
                         inject={{
-                            backend: this.props.authBackend,
-                            inProgress: this.props.inProgress,
+                            authError: this.props.authError,
                         }}
                         component={LoginForm} />
                 </div>
