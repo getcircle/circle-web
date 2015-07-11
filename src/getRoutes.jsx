@@ -45,6 +45,10 @@ const getRoutes = (flux) => {
                 path="team/:teamId"
                 onEnter={requireAuth}
                 component={require('./pages/Team')} />
+            <Route
+                path="*"
+                onEnter={requireAuth}
+                component={require('./pages/NoMatch')} />
         </Route>
     );
 };
