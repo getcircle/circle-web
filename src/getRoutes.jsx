@@ -26,6 +26,10 @@ const getRoutes = (flux) => {
                 onEnter={requireAuth}
                 component={require('./pages/Location')} />
             <Route
+                path="locations"
+                onEnter={requireAuth}
+                component={require('./pages/Locations')} />
+            <Route
                 path="login"
                 onEnter={loginOnce}
                 component={require('./pages/Login')} />

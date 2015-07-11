@@ -64,8 +64,11 @@ class LocationDetail extends React.Component {
     }
 
     _renderTeams() {
+        let count = this.props.teams.length;
         const { teamsNextRequest } = this.props;
-        const { count } = teamsNextRequest.actions[0].control.paginator;
+        if (teamsNextRequest) {
+            count = teamsNextRequest.actions[0].control.paginator.count;
+        }
         return (
             <List subheader={t('Teams')} subheaderStyle={this.styles.sectionTitle}>
                 <ListItem onTouchTap={this._routeToTeams}>

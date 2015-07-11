@@ -42,6 +42,7 @@ export function getTeam(teamId) {
             })
             .catch((error) => {
                 logger.error(`Error fetching team: ${error}`);
+                reject(error);
             });
     });
 }
@@ -60,6 +61,7 @@ export function getTeamDescendants(teamId) {
             })
             .catch((error) => {
                 logger.error(`Error fetching team descendants: ${error}`);
+                reject(error);
             });
     });
 }
@@ -78,6 +80,7 @@ export function getLocation(locationId) {
             })
             .catch((error) => {
                 logger.error(`Error fetching location: ${error}`);
+                reject(error);
             });
     });
 }
@@ -102,6 +105,29 @@ export function getTeamsForLocationId(locationId, nextRequest) {
             })
             .catch((error) => {
                 logger.error(`Error fetching teams for location: ${error}`);
+                reject(error);
+            });
+    });
+}
+
+export function getLocations() {
+    let request = new services.organization.actions.get_locations.RequestV1();
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                if (response.errors.length) {
+                    return reject({
+                        errors: response.errors,
+                        errorDetails: response.errorDetails,
+                    });
+                }
+
+                let { locations } = response.result;
+                resolve(locations);
+            })
+            .catch((error) => {
+                logger.error(`Error fetching organization locations: ${error}`);
+                reject(error);
             });
     });
 }

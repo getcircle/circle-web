@@ -2,6 +2,7 @@
 
 import {
     getLocation,
+    getLocations,
     getTeamsForLocationId,
 } from '../services/organization';
 
@@ -23,6 +24,21 @@ const locationSource = (alt) => {
             loading: alt.actions.LocationActions.loading,
             success: alt.actions.LocationActions.fetchLocationSuccess,
             error: alt.actions.LocationActions.fetchLocationError,
+        },
+
+        fetchLocations: {
+
+            remote(state) {
+                return getLocations();
+            },
+
+            local(state) {
+                return state.organizationLocations.length ? state.organizationLocations : null;
+            },
+
+            loading: alt.actions.LocationActions.loading,
+            success: alt.actions.LocationActions.fetchLocationsSuccess,
+            error: alt.actions.LocationActions.fetchLocationsError,
         },
 
         fetchTeams: {
