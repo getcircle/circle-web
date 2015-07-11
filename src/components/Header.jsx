@@ -115,7 +115,7 @@ class Header extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!nextProps.flux.getStore('AuthStore').isLoggedIn()) {
-            this.transitionTo('login');
+            this.transitionTo('/login');
         }
 
         if (!nextProps.active && this.state.query) {
