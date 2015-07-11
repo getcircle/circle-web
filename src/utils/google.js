@@ -2,6 +2,10 @@
 
 export function getAuthInstance() {
     return new Promise((resolve, reject) => {
+        if (!window.gapi) {
+            return reject(new Error('GAPI_FAILURE'));
+        }
+
         window.gapi.load('auth2', () => {
             let instance = window.gapi.auth2.getAuthInstance();
             if ( instance === null) {

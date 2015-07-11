@@ -71,7 +71,7 @@ class Login extends React.Component {
     render() {
         return (
             <div style={this.styles.root}>
-                <div className="wrap">
+                <div className="wrap" style={{marginBottom: 0}}>
                     <AltContainer
                         actions={this.props.flux.getActions('AuthActions')}
                         inject={{

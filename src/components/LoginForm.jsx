@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'lodash';
 import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import React from 'react/addons';
@@ -30,27 +31,35 @@ class LoginForm extends React.Component {
             })
             .catch((error) => {
                 logger.error(`Error logging in: ${error}`);
+                this.refs.snackbar.show();
             });
     }
 
-    _getStyles() {
-        return {
-            button: {
-                width: '100%',
-                backgroundColor: constants.colors.tint,
-                height: 50,
-            },
-            container: {
-                paddingTop: '15%',
-            },
-            label: {
-                lineHeight: '50px',
-                fontSize: 18,
-            },
-            text: {
-                color: constants.colors.lightText,
-            },
-        };
+    styles = {
+        button: {
+            width: '100%',
+            backgroundColor: constants.colors.tint,
+            height: 50,
+        },
+        container: {
+            paddingTop: '15%',
+        },
+        label: {
+            lineHeight: '50px',
+            fontSize: 18,
+            fontWeight: 300,
+        },
+        text: {
+            color: constants.colors.lightText,
+        },
+        header: {
+            fontSize: 36,
+            paddingBottom: 50,
+        },
+        subHeader: {
+            fontSize: 26,
+            paddingBottom: 20,
+        },
     }
 
     componentDidUpdate() {
@@ -60,26 +69,30 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        const styles = this._getStyles();
+        const headerStyle = _.assign({}, this.styles.text, this.styles.header);
+        const subHeaderStyle = _.assign({}, this.styles.text, this.styles.subHeader);
         return (
-            <div style={styles.container} className="row">
+            <div style={this.styles.container} className="row">
                 <section className="col-sm-offset-4 col-sm-4">
-                    <div className="row center-xs">
-                        <h1 style={styles.text}>{ t('circle') }</h1>
-                    </div>
-                    <div className="row center-xs">
-                        <h2 style={styles.text}>{ t('know the people you work with.') }</h2>
-                    </div>
-                    <div className="row center-xs">
-                        <RaisedButton
-                            label={`${ t('START USING CIRCLE') }`}
-                            style={styles.button}
-                            labelStyle={styles.label}
-                            primary={true}
-                            onTouchTap={this._handleTouchTap}
-                        />
+                    <div>
+                        <div className="row center-xs">
+                            <h1 style={headerStyle}>{ t('circle') }</h1>
+                        </div>
+                        <div className="row center-xs">
+                            <h2 style={subHeaderStyle}>{ t('know the people you work with') }</h2>
+                        </div>
+                        <div className="row center-xs">
+                            <RaisedButton
+                                label={`${ t('START USING CIRCLE') }`}
+                                style={this.styles.button}
+                                labelStyle={this.styles.label}
+                                primary={true}
+                                onTouchTap={this._handleTouchTap}
+                            />
+                        </div>
                     </div>
                 </section>
+
                 <Snackbar ref="snackbar" message="Error logging in" />
             </div>
         );
