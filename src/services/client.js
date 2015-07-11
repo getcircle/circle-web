@@ -79,7 +79,7 @@ class Transport {
 
     constructor() {
         // TODO figure out where to put these configs
-        this._environment = ENVIRONMENTS.local;
+        this._environment = ENVIRONMENTS.production;
         this._token = null;
     }
 
