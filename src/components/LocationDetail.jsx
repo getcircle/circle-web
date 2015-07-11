@@ -7,6 +7,8 @@ import React from 'react';
 
 import t from '../utils/gettext';
 
+import EmbeddedGoogleMap from './EmbeddedGoogleMap';
+
 const {
     List,
     ListDivider,
@@ -37,6 +39,9 @@ class LocationDetail extends React.Component {
             paddingTop: 10,
             textTransform: 'uppercase',
             fontWeight: 'normal',
+        },
+        location: {
+            paddingTop: 20,
         },
     }
 
@@ -84,6 +89,9 @@ class LocationDetail extends React.Component {
                 <div className="col-sm-9 item_detail__details">
                     <div className="row start-xs">
                         <h1>{location.name}</h1>
+                    </div>
+                    <div className="row start-xs">
+                        <EmbeddedGoogleMap style={this.styles.location} location={location} height="450" width="100%" />
                     </div>
                     {this._renderProfiles()}
                     <ListDivider />
