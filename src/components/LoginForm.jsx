@@ -64,7 +64,7 @@ class LoginForm extends React.Component {
 
     componentDidUpdate() {
         if (this.props.authError) {
-            logger.error(`Error logging in: ${this.props.authError}`);
+            logger.error(`Error logging in: ${JSON.stringify(this.props.authError)}`);
             this.refs.snackbar.show();
         }
     }
