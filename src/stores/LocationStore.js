@@ -8,6 +8,8 @@ class LocationStore {
         this.registerAsync(locationSource);
         this.bindActions(this.alt.getActions('LocationActions'));
 
+        this.loading = false;
+        this.organizationLocations = [];
         this.locations = {};
         this.locationProfiles = {};
         this.locationTeams = {};
@@ -20,6 +22,20 @@ class LocationStore {
         let { locations } = this.getInstance().getState();
         locations[location.id] = location;
         this.setState({locations});
+    }
+
+    onFetchLocationsSuccess(items) {
+        let {
+            locations,
+            organizationLocations,
+        } = this.getInstance().getState();
+        // TODO this doesn't handle pagination, but neither does the service endpoint
+        organizationLocations = items;
+        items.forEach((location) => locations[location.id] = location);
+        this.setState({
+            locations,
+            organizationLocations,
+        });
     }
 
     onFetchProfilesSuccess(state) {

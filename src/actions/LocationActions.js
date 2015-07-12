@@ -6,6 +6,8 @@ class LocationActions {
             'loading',
             'fetchLocationSuccess',
             'fetchLocationError',
+            'fetchLocationsSuccess',
+            'fetchLocationsError',
             'fetchTeamsSuccess',
             'fetchTeamsError',
             'fetchProfilesSuccess',

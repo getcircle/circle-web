@@ -233,14 +233,14 @@ class ExtendedProfile extends React.Component {
 
     _renderSkills() {
         const { skills } = this.props.extendedProfile;
-        if (skills) {
+        if (skills.length) {
             return this._renderTagSection(t('Skills'), skills);
         }
     }
 
     _renderInterests() {
         const { interests } = this.props.extendedProfile;
-        if (interests) {
+        if (interests.length) {
             return this._renderTagSection(t('Interests'), interests);
         }
     }

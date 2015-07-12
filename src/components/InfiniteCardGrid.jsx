@@ -33,6 +33,10 @@ class InfiniteCardGrid extends React.Component {
 
     @bindThis
     _loadMore(event) {
+        if (!this.props.getMore) {
+            return;
+        }
+
         const bottomYScrollPosition = window.innerHeight + document.body.scrollTop;
         const bodyHeight = document.body.offsetHeight;
 

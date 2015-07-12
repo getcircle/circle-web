@@ -154,7 +154,8 @@ class Header extends React.Component {
                     <div className="row header__nav--primary">
                         <div className="col-xs-6 start-xs">
                             <Tabs tabItemContainerStyle={this.styles.tabs}>
-                                <Tab style={this.styles.tab} label={ t('People') } route="/people" onActive={this._onActive} />
+                                <Tab style={this.styles.tab} label={t('People')} route="/people" onActive={this._onActive} />
+                                <Tab style={this.styles.tab} label={t('Locations')} route="/locations" onActive={this._onActive} />
                             </Tabs>
                         </div>
                         <div className="col-xs-6 end-xs">

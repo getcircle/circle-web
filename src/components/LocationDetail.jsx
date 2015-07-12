@@ -7,6 +7,8 @@ import React from 'react';
 
 import t from '../utils/gettext';
 
+import EmbeddedGoogleMap from './EmbeddedGoogleMap';
+
 const {
     List,
     ListDivider,
@@ -38,6 +40,9 @@ class LocationDetail extends React.Component {
             textTransform: 'uppercase',
             fontWeight: 'normal',
         },
+        location: {
+            paddingTop: 20,
+        },
     }
 
     _renderLocationImage() {
@@ -59,8 +64,11 @@ class LocationDetail extends React.Component {
     }
 
     _renderTeams() {
+        let count = this.props.teams.length;
         const { teamsNextRequest } = this.props;
-        const { count } = teamsNextRequest.actions[0].control.paginator;
+        if (teamsNextRequest) {
+            count = teamsNextRequest.actions[0].control.paginator.count;
+        }
         return (
             <List subheader={t('Teams')} subheaderStyle={this.styles.sectionTitle}>
                 <ListItem onTouchTap={this._routeToTeams}>
@@ -84,6 +92,9 @@ class LocationDetail extends React.Component {
                 <div className="col-sm-9 item_detail__details">
                     <div className="row start-xs">
                         <h1>{location.name}</h1>
+                    </div>
+                    <div className="row start-xs">
+                        <EmbeddedGoogleMap style={this.styles.location} location={location} height="450" width="100%" />
                     </div>
                     {this._renderProfiles()}
                     <ListDivider />
