@@ -9,8 +9,8 @@ import React from 'react/addons';
 
 import bindThis from '../utils/bindThis';
 import constants from '../styles/constants';
+import Typeahead from '../components/Typeahead';
 import t from '../utils/gettext';
-import SearchResults from '../components/SearchResults';
 
 const {
     Avatar,
@@ -18,7 +18,6 @@ const {
     Menu,
     Tabs,
     Tab,
-    TextField,
 } = mui;
 
 const MenuActions = {logout: 'Logout'};
@@ -77,14 +76,6 @@ class Header extends React.Component {
             float: 'right',
             marginTop: 5,
         },
-        searchResults: {
-            zIndex: 10,
-            position: 'absolute',
-            width: 350,
-            backgroundColor: 'white',
-            boxShadow: '0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)',
-            marginLeft: 235,
-        },
         root: {
             backgroundColor: constants.colors.background,
             boxSizing: 'border-box',
@@ -107,9 +98,6 @@ class Header extends React.Component {
             color: constants.colors.lightText,
             fontSize: '36px',
             marginTop: '25px',
-        },
-        text: {
-            color: constants.colors.lightText,
         },
     }
 
@@ -155,16 +143,6 @@ class Header extends React.Component {
         this.setState({menuVisible: !this.state.menuVisible});
     }
 
-    _renderSearchResults() {
-        if (this.props.results) {
-            return (
-                <div className="start-xs">
-                    <SearchResults style={this.styles.searchResults} results={this.props.results} flux={this.props.flux} />
-                </div>
-            );
-        }
-    }
-
     render() {
         let menuItems = [
             {text: MenuActions.logout},
@@ -194,15 +172,14 @@ class Header extends React.Component {
                             <h2 className="header-title">People</h2>
                         </div>
                         <div className="col-xs-6 end-xs">
-                            <TextField
+                            <Typeahead
                                 style={this.styles.searchInput}
-                                inputStyle={this.styles.text}
-                                floatingLabelStyle={this.styles.text}
-                                floatingLabelText="Search"
+                                floatingLabelText={t('Search')}
                                 valueLink={this.linkState('query')}
                                 onKeyUp={this._handleKeyUp}
+                                results={this.props.results}
+                                flux={this.props.flux}
                             />
-                            {this._renderSearchResults()}
                         </div>
                     </div>
                 </div>
