@@ -17,7 +17,7 @@ class LocationsOverview extends React.Component {
 
     styles = {
         gridContainer: {
-            paddingBottom: 50,
+            paddingTop: 25,
         },
     }
 
@@ -42,7 +42,7 @@ class LocationsOverview extends React.Component {
         const containerProps = {
             style: {
                 width: '100%',
-                height: 600,
+                height: 350,
             },
         };
         const markers = this.props.locations.map((location, index) => {
@@ -75,8 +75,8 @@ class LocationsOverview extends React.Component {
     render() {
         return (
             <div>
-                {this._renderLocations()}
                 {this._renderMap()}
+                {this._renderLocations()}
             </div>
         );
     }
