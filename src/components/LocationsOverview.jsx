@@ -5,7 +5,7 @@ import { GoogleMaps, Marker } from 'react-google-maps';
 import { Navigation } from 'react-router';
 import React from 'react';
 
-import InfiniteCardGrid from '../components/InfiniteCardGrid';
+import InfiniteCardGrid from './InfiniteCardGrid';
 import LocationTile from './LocationTile';
 
 @decorate(Navigation)

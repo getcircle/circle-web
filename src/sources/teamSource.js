@@ -4,6 +4,7 @@ import { getProfilesForTeamId } from '../services/profile';
 
 import {
     getTeam,
+    getTeams,
     getTeamDescendants,
 } from '../services/organization';
 
@@ -55,6 +56,21 @@ const teamSource = (alt) => {
             loading: alt.actions.TeamActions.loading,
             success: alt.actions.TeamActions.fetchTeamDescendantsSuccess,
             error: alt.actions.TeamActions.fetchTeamDescendantsError,
+        },
+
+        fetchDepartments: {
+
+            remote(state) {
+                return getTeams({'top_level_only': true});
+            },
+
+            local(state) {
+                return state.departments.length ? state.departments : null;
+            },
+
+            loading: alt.actions.TeamActions.loading,
+            success: alt.actions.TeamActions.fetchDepartmentsSuccess,
+            error: alt.actions.TeamActions.fetchDepartmentsError,
         },
 
     };

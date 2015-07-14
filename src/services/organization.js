@@ -131,3 +131,25 @@ export function getLocations() {
             });
     });
 }
+
+export function getTeams(parameters) {
+    let request = new services.organization.actions.get_teams.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                if (response.errors.length) {
+                    return reject({
+                        errors: response.errors,
+                        errorDetails: response.errorDetails,
+                    });
+                }
+
+                let { teams } = response.result;
+                resolve(teams);
+            })
+            .catch((error) => {
+                logger.error(`Error fetching teams: ${error}`);
+                reject(error);
+            });
+    });
+}

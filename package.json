@@ -60,7 +60,7 @@
     "moment": "~2.10.2",
     "morgan": "~1.2.2",
     "node-notifier": "~4.2.3",
-    "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.18.4",
+    "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.18.5",
     "q": "~1.2.0",
     "qs": "^3.1.0",
     "react": "~0.13.1",

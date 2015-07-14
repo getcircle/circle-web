@@ -8,9 +8,13 @@ class TeamStore {
         this.registerAsync(teamSource);
         this.bindActions(this.alt.getActions('TeamActions'));
 
+        this.loading = false;
+
         this.teams = {};
         this.teamMembers = {};
         this.teamDescendants = {};
+
+        this.departments = [];
     }
 
     onFetchTeamSuccess(team) {
@@ -40,6 +44,10 @@ class TeamStore {
             teamDescendants[descendant.parent_team_id] = items.concat(descendant.teams);
         });
         this.setState({teamDescendants});
+    }
+
+    onFetchDepartmentsSuccess(departments) {
+        this.setState({departments});
     }
 
     static getTeam(teamId) {

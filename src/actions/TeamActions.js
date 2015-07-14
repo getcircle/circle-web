@@ -10,6 +10,8 @@ class TeamActions {
             'fetchTeamMembersError',
             'fetchTeamDescendantsSuccess',
             'fetchTeamDescendantsError',
+            'fetchDepartmentsSuccess',
+            'fetchDepartmentsError',
         );
     }
 }
