@@ -15,13 +15,24 @@ const {
 class Typeahead extends React.Component {
 
     styles = {
+        container: {
+            backgroundColor: 'white',
+            marginTop: 11,
+        },
+        input: {
+            width: 350,
+            height: '100%',
+            border: 'none',
+            padding: 10,
+            fontSize: 13,
+            outline: 'none',
+        },
         searchResults: {
             zIndex: 10,
             position: 'absolute',
-            width: 350,
+            width: 373,
             backgroundColor: 'white',
             boxShadow: '0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24)',
-            marginLeft: 235,
         },
         text: {
             color: constants.colors.lightText,
@@ -40,18 +51,16 @@ class Typeahead extends React.Component {
 
     render() {
         return (
-            <div>
-                <TextField
-                    style={_.extend({}, this.styles.searchInput, this.props.searchInputStyles)}
-                    inputStyle={this.styles.text}
-                    floatingLabelStyle={this.styles.text}
-                    floatingLabelText={this.props.floatingLabelText || t('Search')}
+            <div style={this.styles.container}>
+                <input
+                    placeholder={this.props.floatingLabelText || t('Search')}
                     valueLink={this.props.valueLink}
                     onKeyUp={this.props.onKeyUp}
+                    style={this.styles.input}
                 />
                 {this._renderSearchResults()}
             </div>
-        )
+        );
     }
 
 }

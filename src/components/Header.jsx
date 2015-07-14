@@ -153,10 +153,23 @@ class Header extends React.Component {
                 <div className="wrap">
                     <div className="row header__nav--primary">
                         <div className="col-xs-6 start-xs">
-                            <Tabs tabItemContainerStyle={this.styles.tabs}>
-                                <Tab style={this.styles.tab} label={t('People')} route="/people" onActive={this._onActive} />
-                                <Tab style={this.styles.tab} label={t('Locations')} route="/locations" onActive={this._onActive} />
-                            </Tabs>
+                            <div className="row">
+                                <div className="col-xs-4">
+                                    <Tabs tabItemContainerStyle={this.styles.tabs}>
+                                        <Tab style={this.styles.tab} label={t('People')} route="/people" onActive={this._onActive} />
+                                        <Tab style={this.styles.tab} label={t('Locations')} route="/locations" onActive={this._onActive} />
+                                    </Tabs>
+                                </div>
+                                <div className="col-xs">
+                                    <Typeahead
+                                        style={this.styles.searchInput}
+                                        valueLink={this.linkState('query')}
+                                        onKeyUp={this._handleKeyUp}
+                                        results={this.props.results}
+                                        flux={this.props.flux}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div className="col-xs-6 end-xs">
                             <div style={this.styles.currentUserNameContainer}>
@@ -165,21 +178,6 @@ class Header extends React.Component {
                                 </span>
                             </div>
                             <Menu style={this.styles.menu} menuItems={menuItems} hideable={true} visible={this.state.menuVisible} onItemTap={this._handleMenuItemTap} />
-                        </div>
-                    </div>
-                    <div className="row bottom-xs">
-                        <div className="col-xs-6 start-xs">
-                            <h2 className="header-title">People</h2>
-                        </div>
-                        <div className="col-xs-6 end-xs">
-                            <Typeahead
-                                style={this.styles.searchInput}
-                                floatingLabelText={t('Search')}
-                                valueLink={this.linkState('query')}
-                                onKeyUp={this._handleKeyUp}
-                                results={this.props.results}
-                                flux={this.props.flux}
-                            />
                         </div>
                     </div>
                 </div>
