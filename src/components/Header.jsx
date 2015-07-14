@@ -53,7 +53,9 @@ class Header extends React.Component {
         this.state = {
             query: null,
             menuVisible: false,
+            currentSearch: null,
         };
+        this.currentSearch = null;
     }
 
     styles = {
@@ -135,7 +137,13 @@ class Header extends React.Component {
 
     @bindThis
     _handleKeyUp() {
-        this.props.flux.getStore('SearchStore').search(this.state.query);
+        if (this.currentSearch !== null) {
+            window.clearTimeout(this.currentSearch);
+        }
+
+        this.currentSearch = window.setTimeout(() => {
+            this.props.flux.getStore('SearchStore').search(this.state.query);
+        }, 100);
     }
 
     @bindThis
