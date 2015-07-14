@@ -33,7 +33,7 @@ class LocationTile extends React.Component {
         return (
             <Card style={this.styles.card} onTouchTap={this._handleOnTouchTap.bind(this, location)}>
                 <CardMedia overlay={<CardTitle title={location.name} />}>
-                    <img src={location.image_url} />
+                    <img className="location-tile__img" src={location.image_url} />
                 </CardMedia>
             </Card>
         );
