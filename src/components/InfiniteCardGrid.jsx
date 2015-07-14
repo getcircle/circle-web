@@ -6,7 +6,7 @@ import React from 'react';
 import bindThis from '../utils/bindThis';
 
 // Selected arbitrarily via experimentation
-const infiniteScrollBoundaryHeight = 300;
+const infiniteScrollBoundaryHeight = 800;
 
 class InfiniteCardGrid extends React.Component {
 
