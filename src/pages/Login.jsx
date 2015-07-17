@@ -65,7 +65,24 @@ class Login extends React.Component {
         root: {
             backgroundColor: constants.colors.background,
             minHeight: '100vh',
-        }
+        },
+        appBadgesTitleContainer: {
+            marginTop: "150px",
+        },
+        appBadgesContainer: {
+            marginTop: "20px",
+        },
+        appBadgesTitle: {
+            color: "white",
+            fontSize: "16px",
+            fontWeight: "500",
+            textTransform: "uppercase",
+            letterSpacing: "3px",
+        },
+        appStoreBadge: {
+            width: '151px',
+            marginRight: '80px',
+        },
     }
 
     render() {
@@ -78,6 +95,17 @@ class Login extends React.Component {
                             authError: this.props.authError,
                         }}
                         component={LoginForm} />
+                    <div className="row center-xs" style={this.styles.appBadgesTitleContainer}>
+                        <h2 style={this.styles.appBadgesTitle}>Get the mobile apps</h2>
+                    </div>
+                    <div className="row center-xs" style={this.styles.appBadgesContainer}>
+                        <a href="https://itunes.apple.com/us/app/circle-connect-your-co-workers/id981648781?ls=1&mt=8" target="_blank">
+                            <img style={this.styles.appStoreBadge} alt="Download on the AppStore" src="/dist/images/AppStoreBadge.svg" />
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.rhlabs.circle" target="_blank">
+                            <img alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
+                        </a>
+                    </div>
                 </div>
             </div>
         );
