@@ -10,4 +10,6 @@ gulp.task('watch', function () {
         gulp.start('sass');
     });
 
+    // If an image is modified, run our images task
+    watch('./src/images/**/*', ['images']);
 });

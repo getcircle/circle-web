@@ -20,7 +20,7 @@ gulp.task('deploy', ['default', 'minifyJS'], function () {
         sys.print(stdout);
         sys.print(stderr);
         if (error !== null) {
-        	/*eslint-disable no-console*/
+            /*eslint-disable no-console*/
             console.log(error);
             /*eslint-enable no-console*/
         }
