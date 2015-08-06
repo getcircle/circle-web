@@ -2,12 +2,14 @@
 
 require('babel/register');
 
-import fastclick from 'fastclick';
+import FastClick from 'fastclick';
 import React from 'react';
 import { Router } from 'react-router';
 import { history } from 'react-router/lib/BrowserHistory';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { services } from 'protobufs';
+
+import './styles/app.scss';
 
 import { getBody } from './utils/render';
 import getRoutes from './getRoutes';
@@ -27,7 +29,7 @@ const { UserV1 } = services.user.containers;
     // Touch related
     injectTapEventPlugin();
     React.initializeTouchEvents(true);
-    fastclick(document.body);
+    FastClick.attach(document.body);
 
     let user = localStorage.getItem('user');
     let token = localStorage.getItem('token');
