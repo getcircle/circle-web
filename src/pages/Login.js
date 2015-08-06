@@ -7,6 +7,7 @@ import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react/addons';
 
+import AppStoreBadge from '../images/AppStoreBadge.svg'
 import constants from '../styles/constants';
 import LoginForm from '../components/LoginForm';
 import ThemeManager from '../utils/ThemeManager';
@@ -100,7 +101,7 @@ class Login extends React.Component {
                     </div>
                     <div className="row center-xs" style={this.styles.appBadgesContainer}>
                         <a href="https://itunes.apple.com/us/app/circle-connect-your-co-workers/id981648781?ls=1&mt=8" target="_blank">
-                            <img style={this.styles.appStoreBadge} alt="Download on the AppStore" src="/dist/images/AppStoreBadge.svg" />
+                            <img style={this.styles.appStoreBadge} alt="Download on the AppStore" src={AppStoreBadge} />
                         </a>
                         <a href="https://play.google.com/store/apps/details?id=com.rhlabs.circle" target="_blank">
                             <img alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
