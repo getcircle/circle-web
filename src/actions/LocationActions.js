@@ -1,5 +1,3 @@
-'use strict';
-
 class LocationActions {
     constructor() {
         this.generateActions(

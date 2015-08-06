@@ -1,5 +1,3 @@
-'use strict';
-
 import locationSource from '../sources/locationSource';
 
 class LocationStore {

@@ -1,5 +1,3 @@
-'use strict';
-
 class OrganizationFeedActions {
 	constructor() {
 		this.generateActions('loading', 'success', 'error');

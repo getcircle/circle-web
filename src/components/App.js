@@ -1,5 +1,3 @@
-'use strict';
-
 import _ from 'lodash';
 import mui from 'material-ui';
 import { decorate } from 'react-mixin';

@@ -1,5 +1,3 @@
-'use strict';
-
 import { decorate } from 'react-mixin';
 import { GoogleMaps, Marker } from 'react-google-maps';
 import { Navigation } from 'react-router';

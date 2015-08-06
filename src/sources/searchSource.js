@@ -1,5 +1,3 @@
-'use strict';
-
 import { search } from '../services/search';
 
 const searchSource = (alt) => {

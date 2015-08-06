@@ -1,5 +1,3 @@
-'use strict';
-
 import organizationFeedSource from '../sources/organizationFeedSource';
 
 class OrganizationFeedStore {

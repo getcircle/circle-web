@@ -1,5 +1,3 @@
-'use strict';
-
 import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import React from 'react/addons';

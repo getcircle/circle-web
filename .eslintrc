@@ -21,7 +21,7 @@
         "react/display-name": 0,
         "no-unused-vars": [2, {"vars": "all", "args": "none"}],
         "no-mixed-spaces-and-tabs": 0,
-        "global-strict": [2, "always"]
+        "strict": 0,
     },
     "ecmaFeatures": {
         "jsx": true,

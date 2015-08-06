@@ -1,5 +1,3 @@
-'use strict';
-
 class TeamActions {
     constructor() {
         this.generateActions(

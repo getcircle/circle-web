@@ -1,5 +1,3 @@
-'use strict';
-
 export function getAuthInstance() {
     return new Promise((resolve, reject) => {
         if (!window.gapi) {

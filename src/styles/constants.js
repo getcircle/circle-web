@@ -1,5 +1,3 @@
-'use strict';
-
 const baseColors = {
     olive: 'rgb(30, 146, 57)',
     tumeric: 'rgb(14, 99, 177)',

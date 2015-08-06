@@ -1,5 +1,3 @@
-'use strict';
-
 import { getProfileFeed } from '../services/feed';
 
 const profileFeedSource = (alt) => {

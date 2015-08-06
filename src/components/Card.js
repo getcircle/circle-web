@@ -1,5 +1,3 @@
-'use strict';
-
 import mui from 'material-ui';
 import React from 'react';
 

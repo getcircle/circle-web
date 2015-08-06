@@ -1,5 +1,3 @@
-'use strict';
-
 import domReady from 'domready';
 import React from 'react';
 

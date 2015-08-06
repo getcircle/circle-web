@@ -1,5 +1,3 @@
-'use strict';
-
 import _ from 'lodash';
 import AltContainer from 'alt/AltContainer';
 import connectToStores from 'alt/utils/connectToStores';

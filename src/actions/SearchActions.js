@@ -1,5 +1,3 @@
-'use strict';
-
 class SearchActions {
     constructor() {
         this.generateActions('loading', 'searchSuccess', 'searchError', 'clearResults');

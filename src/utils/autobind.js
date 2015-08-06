@@ -1,5 +1,3 @@
-'use strict';
-
 const autoBind = (Mixin) => {
 	return {
 		componentWillMount() {

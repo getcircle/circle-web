@@ -1,5 +1,3 @@
-'use strict';
-
 import searchSource from '../sources/searchSource';
 
 class SearchStore {

@@ -1,5 +1,3 @@
-'use strict';
-
 import _ from 'lodash';
 import keymirror from 'keymirror';
 import protobufs from 'protobufs';

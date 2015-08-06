@@ -1,5 +1,3 @@
-'use strict';
-
 import { getOrganizationFeed } from '../services/feed';
 
 const organizationFeedSource = (alt) => {

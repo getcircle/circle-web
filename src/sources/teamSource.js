@@ -1,5 +1,3 @@
-'use strict';
-
 import { getProfilesForTeamId } from '../services/profile';
 
 import {

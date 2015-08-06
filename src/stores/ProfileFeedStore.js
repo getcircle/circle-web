@@ -1,5 +1,3 @@
-'use strict';
-
 import profileFeedSource from '../sources/profileFeedSource';
 
 class ProfileFeedStore {

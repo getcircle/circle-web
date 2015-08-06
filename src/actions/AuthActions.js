@@ -1,5 +1,3 @@
-'use strict';
-
 import { authenticateUser, getAuthenticationInstructions, logout } from '../services/user';
 import { getOrganization } from '../services/organization';
 import { getProfileWithUserId } from '../services/profile';

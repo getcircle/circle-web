@@ -1,5 +1,3 @@
-'use strict';
-
 import profileSource from '../sources/profileSource';
 
 class ProfileStore {

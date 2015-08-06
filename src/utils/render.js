@@ -1,5 +1,3 @@
-'use strict';
-
 var _body = null;
 
 export function getBody() {

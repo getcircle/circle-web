@@ -1,5 +1,3 @@
-'use strict';
-
 import teamSource from '../sources/teamSource';
 
 class TeamStore {

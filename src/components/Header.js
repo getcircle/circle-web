@@ -1,5 +1,3 @@
-'use strict';
-
 import _ from 'lodash';
 import connectToStores from 'alt/utils/connectToStores';
 import { decorate } from 'react-mixin';
