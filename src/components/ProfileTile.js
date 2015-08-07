@@ -2,6 +2,7 @@ import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 import bindThis from '../utils/bindThis';
 import ProfileAvatar from '../components/ProfileAvatar';
@@ -11,6 +12,7 @@ const { Paper } = mui;
 
 @decorate(Navigation)
 class ProfileTile extends React.Component {
+    shouldComponentUpdate = shouldPureComponentUpdate;
 
     static propTypes = {
         profile: React.PropTypes.object.isRequired,

@@ -1,23 +1,35 @@
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import React from 'react';
 
-import bindThis from '../utils/bindThis';
+import { loadProfiles } from '../actions/profiles';
 import ThemeManager from '../utils/ThemeManager';
+import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import InfiniteCardGrid from '../components/InfiniteCardGrid';
 import ProfileTile from '../components/ProfileTile';
 import TagButton from '../components/TagButton';
 
-function _getTagId(props) {
-    return props.location.query && props.location.query.tagId;
-}
+const selector = createSelector(
+    [selectors.profilesSelector],
+    (profilesState) => {
+        return {
+            profiles: profilesState.get('filter'),
+            nextRequest: profilesState.get('nextRequest'),
+            loading: profilesState.get('loading'),
+        }
+    }
+)
 
+@connect(selector)
 class Profiles extends React.Component {
 
     static propTypes = {
-        profiles: React.PropTypes.array,
+        profiles: ImmutablePropTypes.list,
         nextRequest: React.PropTypes.object,
-        tag: React.PropTypes.object,
+        loading: React.PropTypes.bool,
     }
 
     static childContextTypes = {
@@ -25,73 +37,33 @@ class Profiles extends React.Component {
     }
 
     getChildContext() {
-        debugger;
         return {
             muiTheme: ThemeManager.getCurrentTheme(),
         };
     }
 
     componentWillMount() {
-        debugger;
-        this._fetchContent(this.props);
+        this.getMore(this.props);
     }
 
-    componentWillReceiveProps(nextProps) {
-        debugger;
-        // this seems really fragile to me
-        if (!nextProps.loading && this.props.location !== nextProps.location) {
-            this._fetchContent(nextProps);
-        }
-    }
-
-    @bindThis
     getMore(props, nextRequest) {
-        const tagId = _getTagId(props);
-        let parameters = {};
-        if (tagId) {
-            parameters['tag_id'] = tagId;
-        }
-        debugger;
-        props.flux.getStore('ProfileStore').fetchProfiles(parameters, nextRequest);
-    }
-
-    _fetchContent(props) {
-        this.getMore(props);
-        const tagId = _getTagId(props);
-        if (tagId) {
-            props.flux.getStore('ProfileStore').fetchTag(tagId);
-        }
+        props.dispatch(loadProfiles({}, nextRequest));
     }
 
     _isLoading() {
-        return !this.props.profiles || (_getTagId(this.props) && !this.props.tag);
-    }
-
-    _renderFilter() {
-        const { tag } = this.props;
-        if (tag) {
-            return (
-                <div className="row center-xs">
-                    <TagButton tag={tag} disabled={true} />
-                </div>
-            );
-        }
+        return !this.props.profiles;
     }
 
     render() {
-        debugger;
         if (this._isLoading()) {
             return <CenterLoadingIndicator />;
         } else {
             return (
                 <div className="wrap">
-                    {this._renderFilter()}
                     <InfiniteCardGrid
                         objects={this.props.profiles}
-
                         loading={this.props.loading}
                         getMore={this.getMore.bind(this, this.props, this.props.nextRequest)}
-
                         ComponentClass={ProfileTile}
                         componentAttributeName='profile'
                     />

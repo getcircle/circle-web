@@ -1,7 +1,6 @@
 import domReady from 'domready';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import React from 'react';
-
-import bindThis from '../utils/bindThis';
 
 // Selected arbitrarily via experimentation
 const infiniteScrollBoundaryHeight = 800;
@@ -9,7 +8,7 @@ const infiniteScrollBoundaryHeight = 800;
 class InfiniteCardGrid extends React.Component {
 
     static propTypes = {
-        objects: React.PropTypes.array.isRequired,
+        objects: ImmutablePropTypes.list.isRequired,
         nextRequest: React.PropTypes.object,
         loading: React.PropTypes.bool.isRequired,
     }
@@ -22,14 +21,13 @@ class InfiniteCardGrid extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener('scroll', this._loadMore);
+        window.addEventListener('scroll', this._loadMore.bind(this));
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this._loadMore);
+        window.removeEventListener('scroll', this._loadMore.bind(this));
     }
 
-    @bindThis
     _loadMore(event) {
         if (!this.props.getMore) {
             return;

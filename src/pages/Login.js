@@ -17,8 +17,8 @@ const selector = createSelector(
     [selectors.authenticationSelector],
     (authenticationState) => {
         return {
-            authError: authenticationState.get("authError"),
-            authenticated: authenticationState.get("authenticated"),
+            authError: authenticationState.get('authError'),
+            authenticated: authenticationState.get('authenticated'),
         }
     },
 )

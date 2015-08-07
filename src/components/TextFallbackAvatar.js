@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import mui from 'material-ui';
 import React from 'react';
+import shouldPureComponentUpdate from 'react-pure-render/function';
 
 import { getRandomColor } from '../utils/avatars';
-import bindThis from '../utils/bindThis';
 
 const { Avatar } = mui;
 
@@ -14,6 +14,7 @@ const styles = {
 };
 
 class TextFallbackAvatar extends React.Component {
+    shouldComponentUpdate = shouldPureComponentUpdate;
 
     static propTypes = {
         src: React.PropTypes.string,
@@ -31,7 +32,6 @@ class TextFallbackAvatar extends React.Component {
         this.setState({imageSrc: this.props.src});
     }
 
-    @bindThis
     _handleImageError() {
         this.setState({imageSrc: null});
     }
@@ -54,7 +54,7 @@ class TextFallbackAvatar extends React.Component {
                     className="content--center--h content--center--v"
                     src={this.state.imageSrc}
                     style={avatarStyle}
-                    onError={this._handleImageError}
+                    onError={this._handleImageError.bind(this)}
                     backgroundColor={backgroundColor}
                 >
                     {this._renderText()}

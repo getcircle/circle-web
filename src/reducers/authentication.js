@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import { services } from 'protobufs';
 
+import client from '../services/client';
 import { AUTHENTICATION_STATE } from '../constants/localStorageKeys';
 import * as types from '../constants/actionTypes';
 
@@ -22,7 +23,6 @@ const getInitialState = () => {
         authenticated: false,
     });
 
-    debugger;
     const serializedState = localStorage.getItem(AUTHENTICATION_STATE);
     if (serializedState) {
         // XXX catch this error
@@ -48,6 +48,7 @@ const getInitialState = () => {
         }
         if (previousState.__version__ === stateVersion) {
             initialState = Immutable.fromJS(previousState);
+            client.authenticate(initialState.get("token"));
         }
     }
     return initialState;

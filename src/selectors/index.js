@@ -11,3 +11,4 @@ export const authenticatedSelector = createImmutableSelector(
 );
 
 export const searchSelector = state => state.search;
+export const profilesSelector = state => state.profiles;
