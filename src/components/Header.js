@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import connectToStores from 'alt/utils/connectToStores';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import mui from 'material-ui';
@@ -9,6 +10,7 @@ import bindThis from '../utils/bindThis';
 import constants from '../styles/constants';
 import Typeahead from '../components/Typeahead';
 import t from '../utils/gettext';
+import * as selectors from '../selectors';
 
 const {
     Avatar,
@@ -20,30 +22,25 @@ const {
 
 const MenuActions = {logout: 'Logout'};
 
-@connectToStores
+const selector = createSelector(
+    [selectors.authenticationSelector, selectors.searchSelector],
+    (authenticationState, searchState) => {
+        return {
+            organization: authenticationState.get("organization"),
+            profile: authenticationState.get("profile"),
+            active: searchState.get("active"),
+        }
+    }
+)
+
+@connect(selector)
 @decorate(Navigation)
 @decorate(React.addons.LinkedStateMixin)
 class Header extends React.Component {
 
     static propTypes = {
-        flux: React.PropTypes.object.isRequired,
-        organization: React.PropTypes.object,
-        profile: React.PropTypes.object,
-    }
-
-    static getStores(props) {
-        return [
-            props.flux.getStore('AuthStore'),
-            props.flux.getStore('SearchStore'),
-        ];
-    }
-
-    static getPropsFromStores(props) {
-        return _.assign(
-            {},
-            props.flux.getStore('AuthStore').getState(),
-            props.flux.getStore('SearchStore').getState(),
-        );
+        organization: React.PropTypes.object.isRequired,
+        profile: React.PropTypes.object.isRequired,
     }
 
     constructor() {
@@ -102,16 +99,13 @@ class Header extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!nextProps.flux.getStore('AuthStore').isLoggedIn()) {
-            this.transitionTo('/login');
-        }
-
         if (!nextProps.active && this.state.query) {
             this.setState({query: null});
         }
     }
 
     shouldComponentUpdate(nextProps) {
+        debugger;
         // XXX if we just logged out, we no longer have these properties
         if (!nextProps.organization || !nextProps.profile) {
             return false;

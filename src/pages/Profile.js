@@ -1,3 +1,5 @@
+'use strict';
+
 import _ from 'lodash';
 import connectToStores from 'alt/utils/connectToStores';
 import React from 'react';

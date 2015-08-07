@@ -9,7 +9,6 @@ import ThemeManager from '../utils/ThemeManager';
 
 const {TextField} = mui;
 
-@connectToStore
 @decorate(React.addons.LinkedStateMixin)
 class Search extends React.Component {
 

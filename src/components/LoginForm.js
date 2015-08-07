@@ -2,10 +2,9 @@ import _ from 'lodash';
 import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import React from 'react/addons';
+import { services } from 'protobufs';
 
 import autoBind from '../utils/autobind';
-import bindThis from '../utils/bindThis';
-import AuthStore from '../stores/AuthStore';
 import constants from '../styles/constants';
 import { login } from '../utils/google';
 import logger from '../utils/logger';
@@ -21,11 +20,16 @@ const { StylePropable } = mui.Mixins;
 @decorate(autoBind(StylePropable))
 class LoginForm extends React.Component {
 
-    @bindThis
+    backends = services.user.actions.authenticate_user.RequestV1.AuthBackendV1
+
+    static propTypes = {
+        authenticate: React.PropTypes.func.isRequired,
+    }
+
     _handleTouchTap() {
         login()
             .then((details) => {
-                this.props.authenticate(AuthStore.backends.GOOGLE, details.code);
+                this.props.authenticate(this.backends.GOOGLE, details.code);
             })
             .catch((error) => {
                 logger.error(`Error logging in: ${error}`);
@@ -86,7 +90,7 @@ class LoginForm extends React.Component {
                                 style={this.styles.button}
                                 labelStyle={this.styles.label}
                                 primary={true}
-                                onTouchTap={this._handleTouchTap}
+                                onTouchTap={this._handleTouchTap.bind(this)}
                             />
                         </div>
                     </div>

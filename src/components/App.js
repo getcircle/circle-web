@@ -1,14 +1,17 @@
 import _ from 'lodash';
-import mui from 'material-ui';
+import { connect } from 'react-redux';
 import { decorate } from 'react-mixin';
+import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
 import Header from './Header';
 import ThemeManager from '../utils/ThemeManager';
+import * as selectors from '../selectors';
 
 const { AppCanvas } = mui;
 
+@connect(selectors.authenticatedSelector)
 @decorate(Navigation)
 class App extends React.Component {
 
@@ -43,7 +46,7 @@ class App extends React.Component {
     render() {
         const props: Object = _.assign({}, this.state, this.props);
         let header;
-        if (this.props.flux.getStore('AuthStore').isLoggedIn()) {
+        if (this.props.authenticated) {
             header = <Header {...props} />;
         }
         return (

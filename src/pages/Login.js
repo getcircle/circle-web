@@ -1,43 +1,39 @@
 import _ from 'lodash';
-import AltContainer from 'alt/AltContainer';
-import connectToStores from 'alt/utils/connectToStores';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react/addons';
 
 import AppStoreBadge from '../images/AppStoreBadge.svg'
+import { authenticate } from '../actions/authentication';
 import constants from '../styles/constants';
 import LoginForm from '../components/LoginForm';
 import ThemeManager from '../utils/ThemeManager';
+import t from '../utils/gettext';
+import * as selectors from '../selectors';
 
-@connectToStores
+const selector = createSelector(
+    [selectors.authenticationSelector],
+    (authenticationState) => {
+        return {
+            authError: authenticationState.get("authError"),
+            authenticated: authenticationState.get("authenticated"),
+        }
+    },
+)
+
+@connect(selector)
 @decorate(Navigation)
 @decorate(React.addons.LinkedStateMixin)
 class Login extends React.Component {
 
     static propTypes = {
-        flux: React.PropTypes.object.isRequired,
-        authBackend: React.PropTypes.number,
         authError: React.PropTypes.object,
     }
 
     static childContextTypes = {
         muiTheme: React.PropTypes.object,
-    }
-
-    static getStores(props) {
-        return [
-            props.flux.getStore('AuthStore'),
-            props.flux.getStore('RequestStore'),
-        ];
-    }
-
-    static getPropsFromStores(props) {
-        return _.assign(
-            {},
-            props.flux.getStore('AuthStore').getState(),
-            props.flux.getStore('RequestStore').getState(),
-        );
     }
 
     // TODO we shouldn't have to specify this on all the view controllers
@@ -48,13 +44,9 @@ class Login extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const loggedIn = this.props.flux
-            .getStore('AuthStore')
-            .isLoggedIn();
-
-        if (loggedIn) {
+        if (nextProps.authenticated) {
             // Need to call setTimeout here so it happens on the next tick
-            setTimeout(() => this.transitionTo(this.props.location.nextPathname || 'people'));
+            this.transitionTo(this.props.location.nextPathname || 'people');
             return false;
         }
         return true;
@@ -85,17 +77,16 @@ class Login extends React.Component {
     }
 
     render() {
+        const { dispatch } = this.props;
         return (
             <div style={this.styles.root}>
                 <div className="wrap" style={{marginBottom: 0}}>
-                    <AltContainer
-                        actions={this.props.flux.getActions('AuthActions')}
-                        inject={{
-                            authError: this.props.authError,
-                        }}
-                        component={LoginForm} />
+                    <LoginForm
+                        authError={this.props.authError}
+                        authenticate={(...args) => dispatch(authenticate(...args))}
+                    />
                     <div className="row center-xs" style={this.styles.appBadgesTitleContainer}>
-                        <h2 style={this.styles.appBadgesTitle}>Get the mobile apps</h2>
+                        <h2 style={this.styles.appBadgesTitle}>{ t('Get the mobile apps') }</h2>
                     </div>
                     <div className="row center-xs" style={this.styles.appBadgesContainer}>
                         <a href="https://itunes.apple.com/us/app/circle-connect-your-co-workers/id981648781?ls=1&mt=8" target="_blank">
