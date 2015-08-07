@@ -1,22 +1,27 @@
 import { decorate } from 'react-mixin';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React from 'react/addons';
 
-import connectToStore from '../utils/connectToStore';
 import SearchResults from '../components/SearchResults';
 import t from '../utils/gettext';
 import ThemeManager from '../utils/ThemeManager';
+import * as selectors from '../selectors';
 
-const {TextField} = mui;
+const { TextField } = mui;
 
+const selector = createSelector(
+    [selectors.searchSelector],
+    (searchState) => { return {results: searchState.results } },
+)
+
+@connect(selector)
 @decorate(React.addons.LinkedStateMixin)
 class Search extends React.Component {
 
-    static store = 'SearchStore';
-
     static propTypes = {
-        flux: React.PropTypes.object.isRequired,
-        results: React.PropTypes.array.isRequired,
+        results: React.PropTypes.array.isrequired,
     }
 
     static childContextTypes = {
@@ -28,11 +33,6 @@ class Search extends React.Component {
         this.state = {
             query: null,
         };
-    }
-
-    componentWillUnmount() {
-        // XXX we don't want to clear the search results if you're clicking on a search result
-        this.props.flux.getActions('SearchActions').clearResults();
     }
 
     getChildContext() {

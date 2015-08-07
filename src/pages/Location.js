@@ -9,7 +9,6 @@ import * as selectors from '../selectors';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import LocationDetail from '../components/LocationDetail';
 
-@connectToStores
 class Location extends React.Component {
 
     static propTypes = {

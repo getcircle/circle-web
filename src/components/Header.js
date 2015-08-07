@@ -26,9 +26,9 @@ const selector = createSelector(
     [selectors.authenticationSelector, selectors.searchSelector],
     (authenticationState, searchState) => {
         return {
-            organization: authenticationState.get("organization"),
-            profile: authenticationState.get("profile"),
-            active: searchState.get("active"),
+            organization: authenticationState.get('organization'),
+            profile: authenticationState.get('profile'),
+            active: searchState.get('active'),
         }
     }
 )
