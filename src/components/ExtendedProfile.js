@@ -4,7 +4,6 @@ import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
-import bindThis from '../utils/bindThis';
 import constants from '../styles/constants';
 import { getInitialsForProfile } from '../services/profile';
 import { getRandomColor } from '../utils/avatars';
@@ -71,18 +70,15 @@ class ExtendedProfile extends React.Component {
         },
     }
 
-    @bindThis
     _handleImageError() {
         this.setState({imageSrc: null});
     }
 
-    @bindThis
     _routeToManager() {
         const { manager } = this.props.extendedProfile;
         this.transitionTo(`/profile/${manager.id}`);
     }
 
-    @bindThis
     _routeToTeam() {
         const { team } = this.props.extendedProfile;
         this.transitionTo(`/team/${team.id}`);
@@ -90,10 +86,6 @@ class ExtendedProfile extends React.Component {
 
     _routeToLocation(location) {
         this.transitionTo(`/location/${location.id}`);
-    }
-
-    _routeToTagOverview(tag) {
-        this.transitionTo(`/people`, {tagId: tag.id});
     }
 
     _renderContactMethods() {
@@ -122,7 +114,7 @@ class ExtendedProfile extends React.Component {
     _renderProfileImage() {
         const { profile } = this.props.extendedProfile;
         if (this.state.imageSrc) {
-            return <img className="extended_profile__image" style={this.styles.image} src={profile.image_url} onError={this._handleImageError} />;
+            return <img className="extended_profile__image" style={this.styles.image} src={profile.image_url} onError={this._handleImageError.bind(this)} />;
         } else {
             const style = _.assign(
                 {},
@@ -152,7 +144,7 @@ class ExtendedProfile extends React.Component {
                 <ListItem
                     leftAvatar={<ProfileAvatar profile={manager} />}
                     secondaryText={manager.title}
-                    onTouchTap={this._routeToManager}
+                    onTouchTap={this._routeToManager.bind(this)}
                 >
                     {manager.full_name}
                 </ListItem>
@@ -171,7 +163,7 @@ class ExtendedProfile extends React.Component {
                         />
                     }
                     secondaryText={team.department}
-                    onTouchTap={this._routeToTeam}
+                    onTouchTap={this._routeToTeam.bind(this)}
                 >
                     {team.name}
                 </ListItem>
@@ -218,31 +210,6 @@ class ExtendedProfile extends React.Component {
         }
     }
 
-    _renderTagSection(title, tags) {
-        const items = tags.map((tag, index) => {
-            return <TagButton key={tag.id} tag={tag} onClick={this._routeToTagOverview.bind(this, tag)}/>;
-        });
-        return (
-            <List subheader={title} subheaderStyle={this.styles.sectionTitle}>
-                {items}
-            </List>
-        );
-    }
-
-    _renderSkills() {
-        const { skills } = this.props.extendedProfile;
-        if (skills.length) {
-            return this._renderTagSection(t('Skills'), skills);
-        }
-    }
-
-    _renderInterests() {
-        const { interests } = this.props.extendedProfile;
-        if (interests.length) {
-            return this._renderTagSection(t('Interests'), interests);
-        }
-    }
-
     render() {
         // profile image
         // name
@@ -262,8 +229,6 @@ class ExtendedProfile extends React.Component {
             manager,
             team,
             location,
-            skills,
-            interests,
         } = this.props.extendedProfile;
 
         return (
@@ -286,10 +251,6 @@ class ExtendedProfile extends React.Component {
                         {this._renderManagerAndTeam()}
                         {manager || team ? <ListDivider /> : null}
                         {this._renderLocation()}
-                        {location ? <ListDivider /> : null}
-                        {this._renderSkills()}
-                        {interests ? <ListDivider /> : null}
-                        {this._renderInterests()}
                     </div>
                 </div>
             </div>

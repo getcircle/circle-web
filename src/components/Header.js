@@ -105,9 +105,7 @@ class Header extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        debugger;
-        // XXX if we just logged out, we no longer have these properties
-        if (!nextProps.organization || !nextProps.profile) {
+        if (!nextProps.authenticated) {
             return false;
         }
         return true;

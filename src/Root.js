@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { routerStateReducer } from 'redux-react-router';
 import thunk from 'redux-thunk';
 
 import { getBody } from './utils/render';
@@ -8,7 +9,10 @@ import getRoutes from './getRoutes';
 import { logger, serviceRequest} from './middleware';
 import * as reducers from './reducers';
 
-const reducer = combineReducers(reducers);
+const reducer = combineReducers({
+    router: routerStateReducer, 
+    ...reducers,
+});
 // NB: "thunk" middleware should be first
 const createStoreWithMiddleware = applyMiddleware(thunk, logger, serviceRequest)(createStore);
 const store = createStoreWithMiddleware(reducer);

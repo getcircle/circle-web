@@ -26,9 +26,9 @@ export default function profiles(state = initialState, action) {
     case types.LOAD_PROFILES_SUCCESS:
         return handleLoadProfilesSuccess(state, action);
 
-    case types.LOAD_PROFILES_ERROR:
+    case types.LOAD_PROFILES_FAILURE:
         return state.set('loading', false);
-        
+
     defaut:
         return state;
     }

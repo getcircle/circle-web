@@ -32,6 +32,10 @@ class TextFallbackAvatar extends React.Component {
         this.setState({imageSrc: this.props.src});
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({imageSrc: nextProps.src});
+    }
+
     _handleImageError() {
         this.setState({imageSrc: null});
     }

@@ -9,8 +9,10 @@ class InfiniteCardGrid extends React.Component {
 
     static propTypes = {
         objects: ImmutablePropTypes.list.isRequired,
-        nextRequest: React.PropTypes.object,
+        getMore: React.PropTypes.func,
         loading: React.PropTypes.bool.isRequired,
+        ComponentClass: React.PropTypes.func.isRequired,
+        componentAttributeName: React.PropTypes.string.isRequired,
     }
 
     componentWillMount() {
@@ -21,13 +23,17 @@ class InfiniteCardGrid extends React.Component {
     }
 
     componentDidMount() {
-        window.addEventListener('scroll', this._loadMore.bind(this));
+        window.addEventListener('scroll', this._loadMore);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('scroll', this._loadMore.bind(this));
+        window.removeEventListener('scroll', this._loadMore);
     }
 
+    // NB: `bind` generates a new function reference. If we added the event
+    // listeners above with `window.addEventListener('scroll',
+    // this._loadMore.bind(this))` we wouldn't be able to remove it.
+    _loadMore = this._loadMore.bind(this)
     _loadMore(event) {
         if (!this.props.getMore) {
             return;

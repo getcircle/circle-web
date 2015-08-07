@@ -1,18 +1,30 @@
 'use strict';
 
 import _ from 'lodash';
-import connectToStores from 'alt/utils/connectToStores';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import React from 'react';
+
+import { loadExtendedProfile } from '../actions/profiles';
+import ThemeManager from '../utils/ThemeManager';
+import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import ExtendedProfile from '../components/ExtendedProfile';
-import ThemeManager from '../utils/ThemeManager';
 
-@connectToStores
+const selector = createSelector(
+    [selectors.extendedProfilesSelector, selectors.routerSelector],
+    (extendedProfilesState, routerState) => {
+        return {
+            extendedProfile: extendedProfilesState.getIn(['objects', routerState.params.profileId]),
+        }
+    }
+);
+
+@connect(selector)
 class Profile extends React.Component {
 
     static propTypes = {
-        flux: React.PropTypes.object.isRequired,
         extendedProfile: React.PropTypes.object,
     }
 
@@ -20,28 +32,13 @@ class Profile extends React.Component {
         muiTheme: React.PropTypes.object,
     }
 
-    static getStores(props) {
-        return [props.flux.getStore('ProfileStore')];
-    }
-
-    static getPropsFromStores(props) {
-        const profileProps = {
-            extendedProfile: props.flux.getStore('ProfileStore').getExtendedProfile(props.params.profileId),
-        };
-
-        return _.assign(
-            {},
-            profileProps,
-        );
-    }
-
     componentWillMount() {
-        this.props.flux.getStore('ProfileStore').fetchExtendedProfile(this.props.params.profileId);
+        this.props.dispatch(loadExtendedProfile(this.props.params.profileId));
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
-            this.props.flux.getStore('ProfileStore').fetchExtendedProfile(nextProps.params.profileId);
+            this.props.dispatch(loadExtendedProfile(nextProps.params.profileId));
         }
     }
 
@@ -52,7 +49,7 @@ class Profile extends React.Component {
     }
 
     _renderProfile() {
-        const extendedProfile = this.props.extendedProfile;
+        const { extendedProfile } = this.props;
         if (extendedProfile) {
             return <ExtendedProfile extendedProfile={extendedProfile} />;
         } else {

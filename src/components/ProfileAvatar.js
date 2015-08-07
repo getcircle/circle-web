@@ -21,7 +21,6 @@ class ProfileAvatar extends React.Component {
             profile,
             ...other
         } = this.props;
-
         return <TextFallbackAvatar
                     src={profile.image_url || profile.small_image_url}
                     fallbackText={this._getInitials()}
