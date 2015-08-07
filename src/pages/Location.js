@@ -1,8 +1,10 @@
 import _ from 'lodash';
-import connectToStores from 'alt/utils/connectToStores';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import React from 'react';
 
 import ThemeManager from '../utils/ThemeManager';
+import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import LocationDetail from '../components/LocationDetail';

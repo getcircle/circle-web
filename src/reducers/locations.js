@@ -7,16 +7,16 @@ const initialState = Immutable.fromJS({
     objects: {},
 });
 
-export default function extendedProfiles(state = initialState, action) {
+export default function locations(state = initialState, action) {
     switch(action.type) {
-    case types.LOAD_EXTENDED_PROFILE:
+    case types.LOAD_LOCATION:
         return state.set('loading', true);
-    case types.LOAD_EXTENDED_PROFILE_SUCCESS:
+    case types.LOAD_LOCATION_SUCCESS:
         return state.withMutations(map => {
-            map.updateIn(['objects'], map => map.set(action.payload.profile.id, action.payload))
+            map.updateIn(['objects'], map => map.set(action.payload.location.id, action.payload.location))
                 .set('loading', false);
-        });
-    case types.LOAD_EXTENDED_PROFILE_FAILURE:
+        })
+    case types.LOAD_LOCATION_FAILURE:
         return state.set('loading', false);
     default:
         return state;
