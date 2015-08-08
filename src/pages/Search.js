@@ -102,18 +102,21 @@ class Search extends React.Component {
                     leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
                     primaryText={t('Search all People')}
                     secondaryText={t(`${organization.profile_count} people`)}
+                    onTouchTap={this._handleCategorySelection.bind(this, 1)}
                 />
                 <ListDivider inset={true} style={styles.listDivider}/>
                 <ListItem
                     leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
                     primaryText={t('Search all Teams')}
                     secondaryText={t(`${organization.team_count} teams`)}
+                    onTouchTap={this._handleCategorySelection.bind(this, 2)}
                 />
                 <ListDivider inset={true} style={styles.listDivider}/>
                 <ListItem
                     leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
                     primaryText={t('Search all Locations')}
                     secondaryText={t(`${organization.location_count} locations`)}
+                    onTouchTap={this._handleCategorySelection.bind(this, 3)}
                 />
             </List>
         );
