@@ -62,6 +62,7 @@ class Search extends React.Component {
 
     static propTypes = {
         profile: React.PropTypes.object.isRequired,
+        organization: React.PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
@@ -94,24 +95,25 @@ class Search extends React.Component {
     }
 
     _defaultSearchResults() {
+        const { organization } = this.props;
         return (
             <List className="start-xs" subheader={t('EXPLORE')} style={styles.resultsList}>
                 <ListItem
                     leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
                     primaryText={t('Search all People')}
-                    secondaryText={t('193 people')}
+                    secondaryText={t(`${organization.profile_count} people`)}
                 />
                 <ListDivider inset={true} style={styles.listDivider}/>
                 <ListItem
                     leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
                     primaryText={t('Search all Teams')}
-                    secondaryText={t('23 teams')}
+                    secondaryText={t(`${organization.team_count} teams`)}
                 />
                 <ListDivider inset={true} style={styles.listDivider}/>
                 <ListItem
                     leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
                     primaryText={t('Search all Locations')}
-                    secondaryText={t('4 locations')}
+                    secondaryText={t(`${organization.location_count} locations`)}
                 />
             </List>
         );
