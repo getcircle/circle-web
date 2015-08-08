@@ -5,6 +5,9 @@ export const AUTHENTICATE_FAILURE = 'AUTHENTICATE_FAILURE';
 export const LOGOUT = 'LOGOUT';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
+export const REFRESH = 'REFRESH';
+export const REFRESH_SUCCESS = 'REFRESH_SUCCESS';
+export const REFRESH_FAILURE = 'REFRESH_FAILURE';
 
 // Profile Actions
 export const LOAD_PROFILES = 'LOAD_PROFILES';

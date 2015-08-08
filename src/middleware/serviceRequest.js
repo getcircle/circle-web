@@ -38,7 +38,7 @@ export default function serviceRequest({ dispatch, getState }) {
                 payload: payload,
             });
 
-            return fetch().then(
+            return fetch(getState()).then(
                 response => dispatch({
                     type: successType,
                     payload: Object.assign({}, payload, response),

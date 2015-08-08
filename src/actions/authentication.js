@@ -47,3 +47,25 @@ export function logout() {
         fetch: () => logoutUser(),
     }
 }
+
+export function refresh() {
+    return {
+        types: [
+            types.REFRESH,
+            types.REFRESH_SUCCESS,
+            types.REFRESH_FAILURE,
+        ],
+        fetch: (state) => {
+            let payload = {}
+            return getProfileWithUserId(state.authentication.get("user").id)
+                .then((profile) => {
+                    payload.profile = profile;
+                    return getOrganization(profile.organization_id);
+                })
+                .then((organization) => {
+                    payload.organization = organization;
+                    return Promise.resolve(payload);
+                });
+        }
+    }
+}

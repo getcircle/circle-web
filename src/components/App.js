@@ -6,6 +6,7 @@ import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
+import { refresh } from '../actions/authentication';
 import Header from './Header';
 import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
@@ -37,6 +38,13 @@ class App extends React.Component {
         return {
             muiTheme: ThemeManager.getCurrentTheme(),
         };
+    }
+
+    componentWillMount() {
+        // refresh any cached authentication objects
+        if (this.props.authenticated) {
+            this.props.dispatch(refresh());
+        }
     }
 
     componentWillReceiveProps(nextProps) {
