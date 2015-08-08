@@ -11,6 +11,7 @@ import * as selectors from '../selectors';
 
 import HeaderMenu from '../components/HeaderMenu';
 import SearchCategoryButton from '../components/SearchCategoryButton';
+import SearchCategoryToken from '../components/SearchCategoryToken';
 import SearchResults from '../components/SearchResults';
 
 import searchIcon from '../images/icons/search_icon.svg';
@@ -34,6 +35,8 @@ const selector = createSelector(
         }
     },
 )
+
+const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')]; 
 
 const styles = {
     footer: {
@@ -175,6 +178,10 @@ class Search extends React.Component {
         this.setState({selectedCategoryIndex: index});
     }
 
+    _handleClearCategory() {
+        this.setState({selectedCategoryIndex: 0});
+    }
+
     _defaultSearchResults() {
         return (
             <List className="start-xs" subheader={t('EXPLORE')} style={styles.resultsList}>
@@ -216,7 +223,6 @@ class Search extends React.Component {
     }
 
     _renderSearchCategoryButtons() {
-        const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')]; 
         return searchCategories.map((category, index) => {
             return (
                 <SearchCategoryButton
@@ -228,6 +234,20 @@ class Search extends React.Component {
                 />
             );
         });
+    }
+
+    _renderSearchCategoryTokens() {
+        const { selectedCategoryIndex } = this.state;
+        if (selectedCategoryIndex > 0) {
+            return (
+                <div>
+                    <SearchCategoryToken
+                        label={searchCategories[selectedCategoryIndex]}
+                        onTouchTap={this._handleClearCategory.bind(this)}
+                    />
+                </div>
+            );
+        }
     }
 
     render() {
@@ -266,14 +286,19 @@ class Search extends React.Component {
                                         <img style={styles.searchIcon} src={searchIcon} />
                                     </div>
                                     <div className="col-xs" style={styles.searchInputContainer}>
-                                        <input
-                                            style={styles.searchInput}
-                                            type="text"
-                                            valueLink={this.linkState('query')}
-                                            onKeyUp={this._handleKeyUp}
-                                            onFocus={this._handleFocus}
-                                            // onBlur={this._handleBlur}
-                                        />
+                                        <div className="row">
+                                            {this._renderSearchCategoryTokens()}
+                                            <div className="col-xs"> 
+                                                <input
+                                                    style={styles.searchInput}
+                                                    type="text"
+                                                    valueLink={this.linkState('query')}
+                                                    onKeyUp={this._handleKeyUp}
+                                                    onFocus={this._handleFocus}
+                                                    // onBlur={this._handleBlur}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
