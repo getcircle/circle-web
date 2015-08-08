@@ -10,12 +10,14 @@ import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
 import HeaderMenu from '../components/HeaderMenu';
+import SearchCategoryButton from '../components/SearchCategoryButton';
 import SearchResults from '../components/SearchResults';
 
 import searchIcon from '../images/icons/search_icon.svg';
 
 const { 
     Avatar,
+    FlatButton,
     List,
     ListDivider,
     ListItem,
@@ -48,11 +50,8 @@ const styles = {
         marginTop: 15,
     },
     root: {
-        backgroundImage: 'linear-gradient(160deg,#4280c5 13%,#59f0ff 100%)',
+        backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
         minHeight: '100vh',
-    },
-    resultsContainer: {
-        width: 450,
     },
     resultAvatar: {
         height: 40,
@@ -62,12 +61,13 @@ const styles = {
         borderRadius: '0px 0px 5px 5px',
         opacity: '0.9',
         boxShadow: '0px 2px 4px -2px',
+        width: '100%',
     },
     searchSection: {
         paddingTop: 78,
     },
     searchBar: {
-        width: 450,
+        width: '100%',
         height: 50,
         borderStyle: 'solid',
         borderColor: 'white',
@@ -76,18 +76,28 @@ const styles = {
         backgroundColor: 'white',
         boxShadow: '0px 2px 4px -2px',
     },
+    searchContainer: {
+        maxWidth: 600,
+        minWidth: 300,
+    },
+    searchInputContainer: {
+        paddingLeft: 0,
+    },
     searchInput: {
         width: '100%',
         paddingLeft: 0,
-        height: 50,
+        paddingTop: 10,
+        height: 40,
         outline: 'none',
         border: 'none',
         fontSize: '19px',
         backgroundColor: 'transparent',
     },
     searchIcon: {
-        height: 50,
+        height: 40,
         width: 30,
+        paddingTop: 10,
+        marginRight: 5,
     },
 };
 
@@ -110,6 +120,7 @@ class Search extends React.Component {
             query: null,
             results: null,
             focused: false,
+            selectedCategoryIndex: 0,
         };
         this.currentSearch = null;
     }
@@ -160,9 +171,13 @@ class Search extends React.Component {
         this.props.dispatch(clearResults());
     }
 
+    _handleCategorySelection(index) {
+        this.setState({selectedCategoryIndex: index});
+    }
+
     _defaultSearchResults() {
         return (
-            <List subheader={t('EXPLORE')} style={styles.resultsList}>
+            <List className="start-xs" subheader={t('EXPLORE')} style={styles.resultsList}>
                 <ListItem
                     leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
                     primaryText={t('Search all People')}
@@ -189,9 +204,30 @@ class Search extends React.Component {
             if (!this.state.query) {
                 return this._defaultSearchResults();
             } else if (this.state.results && this.state.results.length) {
-                return <SearchResults results={this.state.results.slice(0, 5)} style={styles.resultsList} />;
+                return (
+                    <SearchResults
+                        className="start-xs"
+                        results={this.state.results.slice(0, 5)}
+                        style={styles.resultsList}
+                    />
+                );
             }
         }
+    }
+
+    _renderSearchCategoryButtons() {
+        const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')]; 
+        return searchCategories.map((category, index) => {
+            return (
+                <SearchCategoryButton
+                    key={index}
+                    className="row center-xs end-lg"
+                    label={category}
+                    active={index === this.state.selectedCategoryIndex}
+                    onTouchTap={this._handleCategorySelection.bind(this, index)}
+                />
+            );
+        });
     }
 
     render() {
@@ -211,38 +247,45 @@ class Search extends React.Component {
                 </header>
                 <section style={styles.organizationLogoSection}>
                     <div className="row center-xs">
-                        <img src={this.props.organization.image_url} />
+                        <div className="col-xs-12 col-lg-12">
+                            <img src={this.props.organization.image_url} />
+                        </div>
                     </div>
                 </section>
                 <section style={styles.searchSection}>
-                    <div className="row center-xs">
-                        <div className="row center-xs" style={searchBarStyle}>
-                            <div className="col-xs-1">
-                                <img style={styles.searchIcon} src={searchIcon} />
-                            </div>
-                            <div className="col-xs">
-                                <input
-                                    style={styles.searchInput}
-                                    type="text"
-                                    valueLink={this.linkState('query')}
-                                    onKeyUp={this._handleKeyUp}
-                                    onFocus={this._handleFocus}
-                                    onBlur={this._handleBlur}
-                                />
+                    <div className="row">
+                        <div className="col-xs-12 col-lg-4">
+                            <div>
+                                {this._renderSearchCategoryButtons()}
                             </div>
                         </div>
-                    </div>
-                    <div className="row center-xs">
-                        <div className="start-xs" style={styles.resultsContainer}>
-                            {this._renderSearchResults()}
+                        <div className="col-xs-12 col-lg-4" style={styles.searchContainer}>
+                            <div className="row center-xs">
+                                <div className="row center-xs" style={searchBarStyle}>
+                                    <div className="col-xs-1">
+                                        <img style={styles.searchIcon} src={searchIcon} />
+                                    </div>
+                                    <div className="col-xs" style={styles.searchInputContainer}>
+                                        <input
+                                            style={styles.searchInput}
+                                            type="text"
+                                            valueLink={this.linkState('query')}
+                                            onKeyUp={this._handleKeyUp}
+                                            onFocus={this._handleFocus}
+                                            // onBlur={this._handleBlur}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row center-xs">
+                                {this._renderSearchResults()}
+                            </div>
+                            <div className="row center-xs" style={styles.footer}>
+                                <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
+                            </div>
                         </div>
                     </div>
                 </section>
-                <footer style={styles.footer}>
-                    <div className="row center-xs">
-                        <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
-                    </div>
-                </footer>
             </div>
         );
     }
