@@ -145,7 +145,7 @@ class SearchContainer extends React.Component {
         let label;
         switch(searchCategory) {
         case CategoryV1.PROFILES:
-            label = t('Profiles');
+            label = t('People');
             break;
         case CategoryV1.TEAMS:
             label = t('Teams');
