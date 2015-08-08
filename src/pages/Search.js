@@ -80,8 +80,7 @@ const styles = {
         boxShadow: '0px 2px 4px -2px',
     },
     searchContainer: {
-        maxWidth: 600,
-        minWidth: 300,
+        maxWidth: 500,
     },
     searchInputContainer: {
         paddingLeft: 0,
@@ -265,51 +264,51 @@ class Search extends React.Component {
                         <HeaderMenu profile={this.props.profile} dispatch={this.props.dispatch} />
                     </div>
                 </header>
-                <section style={styles.organizationLogoSection}>
-                    <div className="row center-xs">
-                        <div className="col-xs-12 col-lg-12">
-                            <img src={this.props.organization.image_url} />
-                        </div>
-                    </div>
-                </section>
-                <section style={styles.searchSection}>
-                    <div className="row">
-                        <div className="col-xs-12 col-lg-4">
-                            <div>
-                                {this._renderSearchCategoryButtons()}
+                <section className="wrap">
+                    <section style={styles.organizationLogoSection}>
+                        <div className="row center-xs">
+                            <div className="col-xs-12 col-lg-12">
+                                <img src={this.props.organization.image_url} />
                             </div>
                         </div>
-                        <div className="col-xs-12 col-lg-4" style={styles.searchContainer}>
-                            <div className="row center-xs">
-                                <div className="row center-xs" style={searchBarStyle}>
-                                    <div className="col-xs-1">
-                                        <img style={styles.searchIcon} src={searchIcon} />
-                                    </div>
-                                    <div className="col-xs" style={styles.searchInputContainer}>
-                                        <div className="row">
-                                            {this._renderSearchCategoryTokens()}
-                                            <div className="col-xs"> 
-                                                <input
-                                                    style={styles.searchInput}
-                                                    type="text"
-                                                    valueLink={this.linkState('query')}
-                                                    onKeyUp={this._handleKeyUp}
-                                                    onFocus={this._handleFocus}
-                                                    // onBlur={this._handleBlur}
-                                                />
+                    </section>
+                    <section style={styles.searchSection}>
+                        <div className="row">
+                            <div className="col-xs-offset-1 col-xs-3">
+                                {this._renderSearchCategoryButtons()}
+                            </div>
+                            <div className="col-xs-5" style={styles.searchContainer}>
+                                <div className="row center-xs">
+                                    <div className="row center-xs" style={searchBarStyle}>
+                                        <div className="col-xs-1">
+                                            <img style={styles.searchIcon} src={searchIcon} />
+                                        </div>
+                                        <div className="col-xs" style={styles.searchInputContainer}>
+                                            <div className="row">
+                                                {this._renderSearchCategoryTokens()}
+                                                <div className="col-xs"> 
+                                                    <input
+                                                        style={styles.searchInput}
+                                                        type="text"
+                                                        valueLink={this.linkState('query')}
+                                                        onKeyUp={this._handleKeyUp}
+                                                        onFocus={this._handleFocus}
+                                                        // onBlur={this._handleBlur}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="row center-xs">
-                                {this._renderSearchResults()}
-                            </div>
-                            <div className="row center-xs" style={styles.footer}>
-                                <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
+                                <div className="row center-xs">
+                                    {this._renderSearchResults()}
+                                </div>
+                                <div className="row center-xs" style={styles.footer}>
+                                    <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </section>
             </div>
         );
