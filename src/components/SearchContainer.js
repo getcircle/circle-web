@@ -88,6 +88,7 @@ class SearchContainer extends React.Component {
         defaultResults: React.PropTypes.object,
         searchCategory: React.PropTypes.number,
         onClearCategory: React.PropTypes.func,
+        focused: React.PropTypes.bool,
     }
 
     state = {
@@ -97,6 +98,12 @@ class SearchContainer extends React.Component {
     }
 
     currentSearch = null;
+
+    componentDidMount() {
+        if (this.props.focused) {
+            React.findDOMNode(this.refs.searchInput).focus();
+        }
+    }
 
     componentWillReceiveProps(nextProps) {
         this._loadResults(nextProps);
@@ -195,6 +202,7 @@ class SearchContainer extends React.Component {
                                 {this._renderSearchCategoryTokens()}
                                 <div className="col-xs"> 
                                     <input
+                                        ref="searchInput"
                                         style={styles.searchInput}
                                         type="text"
                                         valueLink={this.linkState('query')}

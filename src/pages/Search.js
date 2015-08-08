@@ -169,6 +169,7 @@ class Search extends React.Component {
                                     defaultResults={this._defaultSearchResults()}
                                     searchCategory={this._getSearchCategory()}
                                     onClearCategory={this._handleClearCategory.bind(this)}
+                                    focused={true}
                                 />
                             </div>
                         </div>
