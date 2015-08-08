@@ -32,7 +32,6 @@ const getRoutes = (history, store) => {
                 return;
             }
 
-            store.dispatch(toggleHeader(true));
             next(nextState, transition);
         };
     };
@@ -44,6 +43,15 @@ const getRoutes = (history, store) => {
         }
     }
 
+    const displayHeader = (next) => {
+        return (nextState, transition) => {
+            store.dispatch(toggleHeader(true));
+            next(nextState, transition);
+        }
+    }
+
+    const defaultMiddleware = [requireAuth, displayHeader];
+
     return (
         <Router history={history}>
             <Route component={reduxRouteComponent(store)}>
@@ -54,15 +62,15 @@ const getRoutes = (history, store) => {
                         component={require('./pages/Search')} />
                     <Route
                         path="/departments"
-                        onEnter={applyMiddleware(requireAuth)}
+                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./pages/Departments')} />
                     <Route
                         path="/location/:locationId"
-                        onEnter={applyMiddleware(requireAuth)}
+                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./pages/Location')} />
                     <Route
                         path="/locations"
-                        onEnter={applyMiddleware(requireAuth)}
+                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./pages/Locations')} />
                     <Route
                         path="/login"
@@ -70,19 +78,19 @@ const getRoutes = (history, store) => {
                         component={require('./pages/Login')} />
                     <Route
                         path="/people"
-                        onEnter={applyMiddleware(requireAuth)}
+                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./pages/Profiles')} />
                     <Route
                         path="/profile/:profileId"
-                        onEnter={applyMiddleware(requireAuth)}
+                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./pages/Profile')} />
                     <Route
                         path="/team/:teamId"
-                        onEnter={applyMiddleware(requireAuth)}
+                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./pages/Team')} />
                     <Route
                         path="*"
-                        onEnter={applyMiddleware(requireAuth)}
+                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./pages/NoMatch')} />
                 </Route>
             </Route>
