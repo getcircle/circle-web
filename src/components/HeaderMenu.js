@@ -72,6 +72,11 @@ class HeaderMenu extends React.Component {
         this.props.dispatch(logout());
     }
 
+    _hideMenu = this._hideMenu.bind(this)
+    _hideMenu(event) {
+        this.setState({menuDisplayed: false});
+    }
+
     _renderMenu() {
         if (this.state.menuDisplayed) {
             return (
@@ -81,6 +86,7 @@ class HeaderMenu extends React.Component {
                     style={styles.menu}
                     desktop={true}
                     listStyle={styles.menuListStyle}
+                    onEscKeyDown={this._hideMenu}
                 >
                     <MenuItem
                         primaryText={t('Logout')}
