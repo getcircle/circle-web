@@ -66,10 +66,6 @@ const styles = {
     },
 };
 
-// should take a category that we're currently searching against
-//      - if this category is present, should render a token for it
-//      - should take a callback if the token is deselected
-
 const selector = createSelector(
     [selectors.searchSelector],
     (searchState) => {
@@ -100,18 +96,30 @@ class SearchContainer extends React.Component {
     currentSearch = null;
 
     componentDidMount() {
-        if (this.props.focused) {
-            React.findDOMNode(this.refs.searchInput).focus();
-        }
+        this._focusInput();
     }
 
     componentWillReceiveProps(nextProps) {
         this._loadResults(nextProps);
+        if (nextProps.searchCategory !== this.props.searchCategory) {
+            this.props.dispatch(clearResults());
+            this.props.dispatch(loadResults(this.state.query, nextProps.searchCategory));
+        }
+    }
+
+    componentDidUpdate() {
+        this._focusInput();
     }
 
     _loadResults(props) {
         if (props.results.has(this.state.query)) {
             this.setState({results: props.results.get(this.state.query)});
+        }
+    }
+
+    _focusInput() {
+        if (this.props.focused) {
+            React.findDOMNode(this.refs.searchInput).focus();
         }
     }
 
@@ -127,15 +135,9 @@ class SearchContainer extends React.Component {
         }
 
         this.currentSearch = window.setTimeout(() => {
-            this.props.dispatch(loadResults(this.state.query));
+            this.props.dispatch(loadResults(this.state.query, this.props.searchCategory));
         }, 100);
         this._loadResults(this.props);
-    }
-
-    _handleBlur = this._handleBlur.bind(this)
-    _handleBlur(event) {
-        this.setState({focused: false, results: null, query: ''});
-        this.props.dispatch(clearResults());
     }
 
     _renderSearchCategoryTokens() {
@@ -191,7 +193,7 @@ class SearchContainer extends React.Component {
             searchBarStyle = {borderRadius: '5px 5px 0px 0px'};
         }
         return (
-            <div style={styles.root}>
+            <div style={styles.root} onFocus={this._handleFocus}>
                 <div className="row center-xs">
                     <div className="row center-xs" style={[styles.searchBar, searchBarStyle]}>
                         <div className="col-xs-1">
@@ -208,7 +210,6 @@ class SearchContainer extends React.Component {
                                         valueLink={this.linkState('query')}
                                         onKeyUp={this._handleKeyUp}
                                         onFocus={this._handleFocus}
-                                        // onBlur={this._handleBlur}
                                     />
                                 </div>
                             </div>
