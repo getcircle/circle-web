@@ -51,7 +51,7 @@ const styles = {
         minHeight: '100vh',
     },
     searchSection: {
-        paddingTop: 78,
+        paddingTop: 52,
     },
 };
 
