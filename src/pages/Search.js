@@ -4,7 +4,7 @@ import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React from 'react/addons';
 
-import { loadResults } from '../actions/search';
+import { clearResults, loadResults } from '../actions/search';
 import t from '../utils/gettext';
 import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
@@ -19,9 +19,6 @@ const {
     List,
     ListDivider,
     ListItem,
-    Menu,
-    SvgIcon,
-    TextField,
 } = mui;
 
 const selector = createSelector(
@@ -30,21 +27,25 @@ const selector = createSelector(
         return {
             results: searchState.get('results'),
             profile: authenticationState.get('profile'),
+            organization: authenticationState.get('organization'),
+            authenticated: authenticationState.get('authenticated'),
         }
     },
 )
 
-const MenuActions = {logout: 'Logout'};
-
 const styles = {
-    menu: {
-        position: 'relative',
-        float: 'right',
-        marginTop: 5,
+    footer: {
+        paddingTop: 50,
+        fontSize: 11,
     },
-
+    footerText: {
+        color: 'white',
+    },
     listDivider: {
         marginRight: 20,
+    },
+    organizationLogoSection: {
+        marginTop: 15,
     },
     root: {
         backgroundImage: 'linear-gradient(160deg,#4280c5 13%,#59f0ff 100%)',
@@ -59,9 +60,11 @@ const styles = {
     },
     resultsList: {
         borderRadius: '0px 0px 5px 5px',
+        opacity: '0.9',
+        boxShadow: '0px 2px 4px -2px',
     },
     searchSection: {
-        paddingTop: 152,
+        paddingTop: 78,
     },
     searchBar: {
         width: 450,
@@ -71,6 +74,7 @@ const styles = {
         borderWidth: '1px',
         borderRadius: '5px',
         backgroundColor: 'white',
+        boxShadow: '0px 2px 4px -2px',
     },
     searchInput: {
         width: '100%',
@@ -107,6 +111,7 @@ class Search extends React.Component {
             results: null,
             focused: false,
         };
+        this.currentSearch = null;
     }
 
     getChildContext() {
@@ -119,13 +124,28 @@ class Search extends React.Component {
         this._loadResults(nextProps);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if (!nextProps.authenticated) {
+            return false;
+        }
+        return true;
+    }
+
     _loadResults(props) {
-        this.setState({results: props.results.get(this.state.query)});
+        if (props.results.has(this.state.query)) {
+            this.setState({results: props.results.get(this.state.query)});
+        }
     }
 
     _handleKeyUp = this._handleKeyUp.bind(this)
     _handleKeyUp(event) {
-        this.props.dispatch(loadResults(this.state.query));
+        if (this.currentSearch !== null) {
+            window.clearTimeout(this.currentSearch);
+        }
+
+        this.currentSearch = window.setTimeout(() => {
+            this.props.dispatch(loadResults(this.state.query));
+        }, 100);
         this._loadResults(this.props);
     }
 
@@ -136,7 +156,8 @@ class Search extends React.Component {
 
     _handleBlur = this._handleBlur.bind(this)
     _handleBlur(event) {
-        this.setState({focused: false});
+        this.setState({focused: false, results: null, query: ''});
+        this.props.dispatch(clearResults());
     }
 
     _defaultSearchResults() {
@@ -168,19 +189,19 @@ class Search extends React.Component {
             if (!this.state.query) {
                 return this._defaultSearchResults();
             } else if (this.state.results && this.state.results.length) {
-                return <SearchResults results={this.state.results} style={styles.resultsList} />;
+                return <SearchResults results={this.state.results.slice(0, 5)} style={styles.resultsList} />;
             }
         }
     }
 
     render() {
         let searchBarStyle = Object.assign({}, styles.searchBar);
-        if (this.state.focused) {
+        if (
+            (this.state.focused && !this.state.query) ||
+            (this.state.query && this.state.results && this.state.results.length)
+        ) {
             searchBarStyle['borderRadius'] = '5px 5px 0px 0px';
         }
-        let menuItems = [
-            {text: MenuActions.logout},
-        ];
         return (
             <div style={styles.root}>
                 <header>
@@ -188,6 +209,11 @@ class Search extends React.Component {
                         <HeaderMenu profile={this.props.profile} dispatch={this.props.dispatch} />
                     </div>
                 </header>
+                <section style={styles.organizationLogoSection}>
+                    <div className="row center-xs">
+                        <img src={this.props.organization.image_url} />
+                    </div>
+                </section>
                 <section style={styles.searchSection}>
                     <div className="row center-xs">
                         <div className="row center-xs" style={searchBarStyle}>
@@ -212,6 +238,11 @@ class Search extends React.Component {
                         </div>
                     </div>
                 </section>
+                <footer style={styles.footer}>
+                    <div className="row center-xs">
+                        <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
+                    </div>
+                </footer>
             </div>
         );
     }

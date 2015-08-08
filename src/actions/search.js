@@ -14,3 +14,9 @@ export function loadResults(query, category) {
         payload: {query, category},
     }
 }
+
+export function clearResults() {
+    return {
+        type: types.CLEAR_RESULTS,
+    }
+}
