@@ -3,17 +3,18 @@ import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
-import bindThis from '../utils/bindThis';
+import t from '../utils/gettext';
+import officeIcon from '../images/icons/office_icon.svg';
 
-import TextFallbackAvatar from './TextFallbackAvatar';
-
-const { ListItem } = mui;
+const { 
+    Avatar,
+    ListItem,
+} = mui;
 
 @decorate(Navigation)
 class LocationSearchResult extends React.Component {
 
     static propTypes = {
-        flux: React.PropTypes.object.isRequired,
         location: React.PropTypes.object.isRequired,
     }
 
@@ -23,21 +24,21 @@ class LocationSearchResult extends React.Component {
         },
     }
 
-    @bindThis
+    _handleTouchTap = this._handleTouchTap.bind(this)
     _handleTouchTap() {
         this.props.flux.getActions('SearchActions').clearResults();
         this.transitionTo(`/location/${this.props.location.id}`);
     }
 
     render() {
-        const location = this.props.location;
+        const { location } = this.props;
         return (
             <ListItem
-                leftAvatar={<TextFallbackAvatar src={location.image_url} fallbackText={location.name[0]} />}
+                leftAvatar={<Avatar src={officeIcon} />}
                 onTouchTap={this._handleTouchTap}
-            >
-                {location.name}
-            </ListItem>
+                primaryText={location.name}
+                secondaryText={t(`${location.profile_count} people`)}
+            />
         );
     }
 }

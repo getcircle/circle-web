@@ -3,11 +3,11 @@ import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
-import bindThis from '../utils/bindThis';
-
-import TextFallbackAvatar from './TextFallbackAvatar';
+import t from '../utils/gettext';
+import teamIcon from '../images/icons/group_icon.svg';
 
 const {
+    Avatar,
     ListItem,
 } = mui;
 
@@ -25,21 +25,21 @@ class TeamSearchResult extends React.Component {
         },
     }
 
-    @bindThis
+    _handleTouchTap = this._handleTouchTap.bind(this)
     _handleTouchTap() {
         this.props.flux.getActions('SearchActions').clearResults();
         this.transitionTo(`/team/${this.props.team.id}`);
     }
 
     render() {
-        const team = this.props.team;
+        const { team } = this.props;
         return (
             <ListItem
-                leftAvatar={<TextFallbackAvatar fallbackText={team.name[0]} />}
+                leftAvatar={<Avatar src={teamIcon} />}
                 onTouchTap={this._handleTouchTap}
-            >
-                {team.name}
-            </ListItem>
+                primaryText={team.name}
+                secondaryText={t(`${team.profile_count} members`)}
+            />
         );
     }
 }

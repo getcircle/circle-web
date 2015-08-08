@@ -11,7 +11,6 @@ const { ListItem } = mui;
 class ProfileSearchResult extends React.Component {
 
     static propTypes = {
-        flux: React.PropTypes.object.isRequired,
         profile: React.PropTypes.object.isRequired,
     }
 
@@ -26,9 +25,9 @@ class ProfileSearchResult extends React.Component {
             <ListItem
                 leftAvatar={<ProfileAvatar profile={profile} />}
                 onTouchTap={this._handleTouchTap.bind(this, profile)}
-            >
-                {profile.full_name}
-            </ListItem>
+                primaryText={profile.full_name}
+                secondaryText={profile.title}
+            />
         );
     }
 

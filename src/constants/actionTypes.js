@@ -21,3 +21,8 @@ export const LOAD_LOCATION_FAILURE = 'LOAD_LOCATION_FAILURE';
 
 // Header Actions
 export const TOGGLE_DISPLAY_HEADER = 'TOGGLE_DISPLAY_HEADER';
+
+// Search Actions
+export const SEARCH = 'SEARCH';
+export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
+export const SEARCH_FAILURE = 'SEARCH_FAILURE';
