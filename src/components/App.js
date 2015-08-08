@@ -24,6 +24,11 @@ const selector = createSelector(
 @decorate(Navigation)
 class App extends React.Component {
 
+    static propTypes = {
+        displayHeader: React.PropTypes.bool.isRequired,
+        authenticated: React.PropTypes.bool.isRequired,
+    }
+
     static childContextTypes = {
         muiTheme: React.PropTypes.object,
     }
@@ -32,6 +37,13 @@ class App extends React.Component {
         return {
             muiTheme: ThemeManager.getCurrentTheme(),
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        debugger;
+        if (!nextProps.authenticated && nextProps.location.pathname != 'login') {
+            this.transitionTo('login');
+        }
     }
 
     render() {

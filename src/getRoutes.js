@@ -18,7 +18,7 @@ const getRoutes = (history, store) => {
     const loginOnce = (next) => {
         return (nextState, transition) => {
             if (store.getState().authentication.get('authenticated')) {
-                transition.to('people');
+                transition.to('/');
                 return;
             }
             next(nextState, transition);

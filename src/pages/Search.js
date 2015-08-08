@@ -5,10 +5,12 @@ import mui from 'material-ui';
 import React from 'react/addons';
 
 import { loadResults } from '../actions/search';
-import SearchResults from '../components/SearchResults';
 import t from '../utils/gettext';
 import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
+
+import HeaderMenu from '../components/HeaderMenu';
+import SearchResults from '../components/SearchResults';
 
 import searchIcon from '../images/icons/search_icon.svg';
 
@@ -17,21 +19,35 @@ const {
     List,
     ListDivider,
     ListItem,
+    Menu,
     SvgIcon,
     TextField,
 } = mui;
 
 const selector = createSelector(
-    [selectors.searchSelector],
-    (searchState) => { return {results: searchState.get('results') } },
+    [selectors.searchSelector, selectors.authenticationSelector],
+    (searchState, authenticationState) => {
+        return {
+            results: searchState.get('results'),
+            profile: authenticationState.get('profile'),
+        }
+    },
 )
 
+const MenuActions = {logout: 'Logout'};
+
 const styles = {
+    menu: {
+        position: 'relative',
+        float: 'right',
+        marginTop: 5,
+    },
+
     listDivider: {
         marginRight: 20,
     },
     root: {
-        backgroundColor: 'black',
+        backgroundImage: 'linear-gradient(160deg,#4280c5 13%,#59f0ff 100%)',
         minHeight: '100vh',
     },
     resultsContainer: {
@@ -69,7 +85,7 @@ const styles = {
         height: 50,
         width: 30,
     },
-}
+};
 
 @connect(selector)
 @decorate(React.addons.LinkedStateMixin)
@@ -77,6 +93,7 @@ class Search extends React.Component {
 
     static propTypes = {
         results: React.PropTypes.object.isrequired,
+        profile: React.PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
@@ -161,8 +178,16 @@ class Search extends React.Component {
         if (this.state.focused) {
             searchBarStyle['borderRadius'] = '5px 5px 0px 0px';
         }
+        let menuItems = [
+            {text: MenuActions.logout},
+        ];
         return (
             <div style={styles.root}>
+                <header>
+                    <div className="row end-xs">
+                        <HeaderMenu profile={this.props.profile} dispatch={this.props.dispatch} />
+                    </div>
+                </header>
                 <section style={styles.searchSection}>
                     <div className="row center-xs">
                         <div className="row center-xs" style={searchBarStyle}>

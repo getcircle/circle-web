@@ -12,7 +12,7 @@ const { UserV1 } = services.user.containers;
 const stateVersion = 1;
 const protobufKeys = ['user', 'profile', 'organization'];
 
-const getInitialState = () => {
+const getInitialState = (checkCache = true) => {
     let initialState = Immutable.fromJS({
         __version__: stateVersion,
         user: null,
@@ -23,7 +23,10 @@ const getInitialState = () => {
         authenticated: false,
     });
 
-    const serializedState = localStorage.getItem(AUTHENTICATION_STATE);
+    let serializedState;
+    if (checkCache) {
+        serializedState = localStorage.getItem(AUTHENTICATION_STATE);
+    }
     if (serializedState) {
         // XXX catch this error
         let previousState = JSON.parse(serializedState);
@@ -41,7 +44,7 @@ const getInitialState = () => {
                 break;
             default:
                 // Conservatively clear state and return blank initial state
-                localStorage.clear();
+                clearState();
                 return initialState;
             }
             previousState[key] = ProtobufClass.decode64(previousState[key]);
@@ -56,12 +59,18 @@ const getInitialState = () => {
 
 // XXX clearState on LOGOUT
 const storeState = (state) => {
-    debugger;
     let nextState = state.toJS();
     for (let key of protobufKeys) {
         nextState[key] = nextState[key].encode64();
     }
     localStorage.setItem(AUTHENTICATION_STATE, JSON.stringify(nextState));
+}
+
+const clearState = () => {
+    localStorage.clear();
+    client.logout();
+    let state = getInitialState(false);
+    return state;
 }
 
 const initialState = getInitialState();
@@ -73,6 +82,8 @@ export default function authentication(state = initialState, action) {
         const nextState = state.merge({user, token, profile, organization, authenticated: true});
         storeState(nextState);
         return nextState;
+    case types.LOGOUT_SUCCESS:
+        return clearState();
     default:
         return state;
     }

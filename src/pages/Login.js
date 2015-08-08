@@ -45,8 +45,7 @@ class Login extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
-            // Need to call setTimeout here so it happens on the next tick
-            this.transitionTo(this.props.location.nextPathname || 'people');
+            this.transitionTo(this.props.location.nextPathname || '/');
             return false;
         }
         return true;

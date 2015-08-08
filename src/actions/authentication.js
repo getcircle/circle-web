@@ -1,5 +1,8 @@
 import * as types from '../constants/actionTypes';
-import { authenticateUser } from '../services/user';
+import {
+    authenticateUser,
+    logout as logoutUser,
+} from '../services/user';
 import client from '../services/client';
 import { getOrganization } from '../services/organization';
 import { getProfileWithUserId } from '../services/profile';
@@ -9,7 +12,7 @@ export function authenticate(backend, key, secret) {
         types: [
             types.AUTHENTICATE,
             types.AUTHENTICATE_SUCCESS,
-            types.AUTHENTICATE_FAILED,
+            types.AUTHENTICATE_FAILURE,
         ],
         fetch: () => {
             let payload = {};
@@ -31,5 +34,16 @@ export function authenticate(backend, key, secret) {
                     return Promise.resolve(payload);
                 })
         },
+    }
+}
+
+export function logout() {
+    return {
+        types: [
+            types.LOGOUT,
+            types.LOGOUT_SUCCESS,
+            types.LOGOUT_FAILURE,
+        ],
+        fetch: () => logoutUser(),
     }
 }
