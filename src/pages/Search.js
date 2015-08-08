@@ -1,18 +1,16 @@
-import { decorate } from 'react-mixin';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import mui from 'material-ui';
-import React from 'react/addons';
+import React from 'react';
+import { services } from 'protobufs';
 
-import { clearResults, loadResults } from '../actions/search';
 import t from '../utils/gettext';
 import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
 import HeaderMenu from '../components/HeaderMenu';
 import SearchCategoryButton from '../components/SearchCategoryButton';
-import SearchCategoryToken from '../components/SearchCategoryToken';
-import SearchResults from '../components/SearchResults';
+import SearchContainer from '../components/SearchContainer';
 
 import searchIcon from '../images/icons/search_icon.svg';
 
@@ -25,10 +23,9 @@ const {
 } = mui;
 
 const selector = createSelector(
-    [selectors.searchSelector, selectors.authenticationSelector],
-    (searchState, authenticationState) => {
+    [selectors.authenticationSelector],
+    (authenticationState) => {
         return {
-            results: searchState.get('results'),
             profile: authenticationState.get('profile'),
             organization: authenticationState.get('organization'),
             authenticated: authenticationState.get('authenticated'),
@@ -36,29 +33,12 @@ const selector = createSelector(
     },
 )
 
-const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')]; 
-
 const styles = {
-    footer: {
-        paddingTop: 50,
-        fontSize: 11,
-    },
-    footerText: {
-        color: 'white',
-    },
     listDivider: {
         marginRight: 20,
     },
     organizationLogoSection: {
         marginTop: 15,
-    },
-    root: {
-        backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
-        minHeight: '100vh',
-    },
-    resultAvatar: {
-        height: 40,
-        width: 40,
     },
     resultsList: {
         borderRadius: '0px 0px 5px 5px',
@@ -66,49 +46,21 @@ const styles = {
         boxShadow: '0px 2px 4px -2px',
         width: '100%',
     },
+    root: {
+        backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
+        minHeight: '100vh',
+    },
     searchSection: {
         paddingTop: 78,
     },
-    searchBar: {
-        width: '100%',
-        height: 50,
-        borderStyle: 'solid',
-        borderColor: 'white',
-        borderWidth: '1px',
-        borderRadius: '5px',
-        backgroundColor: 'white',
-        boxShadow: '0px 2px 4px -2px',
-    },
-    searchContainer: {
-        maxWidth: 500,
-    },
-    searchInputContainer: {
-        paddingLeft: 0,
-    },
-    searchInput: {
-        width: '100%',
-        paddingLeft: 0,
-        paddingTop: 10,
-        height: 40,
-        outline: 'none',
-        border: 'none',
-        fontSize: '19px',
-        backgroundColor: 'transparent',
-    },
-    searchIcon: {
-        height: 40,
-        width: 30,
-        paddingTop: 10,
-        marginRight: 5,
-    },
 };
 
+const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')]; 
+
 @connect(selector)
-@decorate(React.addons.LinkedStateMixin)
 class Search extends React.Component {
 
     static propTypes = {
-        results: React.PropTypes.object.isrequired,
         profile: React.PropTypes.object.isRequired,
     }
 
@@ -116,15 +68,8 @@ class Search extends React.Component {
         muiTheme: React.PropTypes.object,
     }
 
-    constructor() {
-        super();
-        this.state = {
-            query: null,
-            results: null,
-            focused: false,
-            selectedCategoryIndex: 0,
-        };
-        this.currentSearch = null;
+    state = {
+        selectedCategoryIndex: 0,
     }
 
     getChildContext() {
@@ -133,44 +78,11 @@ class Search extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this._loadResults(nextProps);
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
         if (!nextProps.authenticated) {
             return false;
         }
         return true;
-    }
-
-    _loadResults(props) {
-        if (props.results.has(this.state.query)) {
-            this.setState({results: props.results.get(this.state.query)});
-        }
-    }
-
-    _handleKeyUp = this._handleKeyUp.bind(this)
-    _handleKeyUp(event) {
-        if (this.currentSearch !== null) {
-            window.clearTimeout(this.currentSearch);
-        }
-
-        this.currentSearch = window.setTimeout(() => {
-            this.props.dispatch(loadResults(this.state.query));
-        }, 100);
-        this._loadResults(this.props);
-    }
-
-    _handleFocus = this._handleFocus.bind(this)
-    _handleFocus(event) {
-        this.setState({focused: true})
-    }
-
-    _handleBlur = this._handleBlur.bind(this)
-    _handleBlur(event) {
-        this.setState({focused: false, results: null, query: ''});
-        this.props.dispatch(clearResults());
     }
 
     _handleCategorySelection(index) {
@@ -205,22 +117,6 @@ class Search extends React.Component {
         );
     }
 
-    _renderSearchResults() {
-        if (this.state.focused) {
-            if (!this.state.query) {
-                return this._defaultSearchResults();
-            } else if (this.state.results && this.state.results.length) {
-                return (
-                    <SearchResults
-                        className="start-xs"
-                        results={this.state.results.slice(0, 5)}
-                        style={styles.resultsList}
-                    />
-                );
-            }
-        }
-    }
-
     _renderSearchCategoryButtons() {
         return searchCategories.map((category, index) => {
             return (
@@ -235,28 +131,19 @@ class Search extends React.Component {
         });
     }
 
-    _renderSearchCategoryTokens() {
-        const { selectedCategoryIndex } = this.state;
-        if (selectedCategoryIndex > 0) {
-            return (
-                <div>
-                    <SearchCategoryToken
-                        label={searchCategories[selectedCategoryIndex]}
-                        onTouchTap={this._handleClearCategory.bind(this)}
-                    />
-                </div>
-            );
+    _getSearchCategory() {
+        const { CategoryV1 } = services.search.containers.search;
+        switch(this.state.selectedCategoryIndex) {
+        case 1:
+            return CategoryV1.PROFILES;
+        case 2:
+            return CategoryV1.TEAMS;
+        case 3:
+            return CategoryV1.LOCATIONS;
         }
     }
 
     render() {
-        let searchBarStyle = Object.assign({}, styles.searchBar);
-        if (
-            (this.state.focused && !this.state.query) ||
-            (this.state.query && this.state.results && this.state.results.length)
-        ) {
-            searchBarStyle['borderRadius'] = '5px 5px 0px 0px';
-        }
         return (
             <div style={styles.root}>
                 <header>
@@ -266,8 +153,8 @@ class Search extends React.Component {
                 </header>
                 <section className="wrap">
                     <section style={styles.organizationLogoSection}>
-                        <div className="row center-xs">
-                            <div className="col-xs-12 col-lg-12">
+                        <div className="row">
+                            <div className="col-xs-offset-4 col-xs-5 center-xs">
                                 <img src={this.props.organization.image_url} />
                             </div>
                         </div>
@@ -277,35 +164,12 @@ class Search extends React.Component {
                             <div className="col-xs-offset-1 col-xs-3">
                                 {this._renderSearchCategoryButtons()}
                             </div>
-                            <div className="col-xs-5" style={styles.searchContainer}>
-                                <div className="row center-xs">
-                                    <div className="row center-xs" style={searchBarStyle}>
-                                        <div className="col-xs-1">
-                                            <img style={styles.searchIcon} src={searchIcon} />
-                                        </div>
-                                        <div className="col-xs" style={styles.searchInputContainer}>
-                                            <div className="row">
-                                                {this._renderSearchCategoryTokens()}
-                                                <div className="col-xs"> 
-                                                    <input
-                                                        style={styles.searchInput}
-                                                        type="text"
-                                                        valueLink={this.linkState('query')}
-                                                        onKeyUp={this._handleKeyUp}
-                                                        onFocus={this._handleFocus}
-                                                        // onBlur={this._handleBlur}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row center-xs">
-                                    {this._renderSearchResults()}
-                                </div>
-                                <div className="row center-xs" style={styles.footer}>
-                                    <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
-                                </div>
+                            <div className="col-xs-5">
+                                <SearchContainer
+                                    defaultResults={this._defaultSearchResults()}
+                                    searchCategory={this._getSearchCategory()}
+                                    onClearCategory={this._handleClearCategory.bind(this)}
+                                />
                             </div>
                         </div>
                     </section>
