@@ -2,7 +2,7 @@ import * as types from '../constants/actionTypes';
 
 import { search } from '../services/search';
 
-export function loadResults(query, category) {
+export function loadSearchResults(query, category) {
     return {
         types: [
             types.SEARCH,
@@ -15,8 +15,8 @@ export function loadResults(query, category) {
     }
 }
 
-export function clearResults() {
+export function clearSearchResults() {
     return {
-        type: types.CLEAR_RESULTS,
+        type: types.CLEAR_SEARCH_RESULTS,
     }
 }

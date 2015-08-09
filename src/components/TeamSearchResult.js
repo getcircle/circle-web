@@ -15,7 +15,6 @@ const {
 class TeamSearchResult extends React.Component {
 
     static propTypes = {
-        flux: React.PropTypes.object.isRequired,
         team: React.PropTypes.object.isRequired,
     }
 
@@ -27,7 +26,6 @@ class TeamSearchResult extends React.Component {
 
     _handleTouchTap = this._handleTouchTap.bind(this)
     _handleTouchTap() {
-        this.props.flux.getActions('SearchActions').clearResults();
         this.transitionTo(`/team/${this.props.team.id}`);
     }
 

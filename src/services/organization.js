@@ -108,8 +108,14 @@ export function getTeamsForLocationId(locationId, nextRequest) {
     });
 }
 
-export function getLocations() {
-    let request = new services.organization.actions.get_locations.RequestV1();
+export function getLocations(parameters, nextRequest=null) {
+    parameters = Object.assign({}, parameters);
+    let request;
+    if (nextRequest === null) {
+        request = new services.organization.actions.get_locations.RequestV1(parameters);
+    } else {
+        request = nextRequest;
+    }
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then((response) => {
@@ -121,7 +127,11 @@ export function getLocations() {
                 }
 
                 let { locations } = response.result;
-                resolve(locations);
+                resolve({
+                    parameters,
+                    locations,
+                    nextRequest: response.getNextRequest(),
+                });
             })
             .catch((error) => {
                 logger.error(`Error fetching organization locations: ${error}`);
@@ -130,8 +140,14 @@ export function getLocations() {
     });
 }
 
-export function getTeams(parameters) {
-    let request = new services.organization.actions.get_teams.RequestV1(parameters);
+export function getTeams(parameters, nextRequest=null) {
+    parameters = parameters || {};
+    let request;
+    if (nextRequest === null) {
+        request = new services.organization.actions.get_teams.RequestV1(parameters);
+    } else {
+        request = nextRequest;
+    }
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then((response) => {
@@ -143,7 +159,11 @@ export function getTeams(parameters) {
                 }
 
                 let { teams } = response.result;
-                resolve(teams);
+                resolve({
+                    parameters,
+                    teams,
+                    nextRequest: response.getNextRequest(),
+                });
             })
             .catch((error) => {
                 logger.error(`Error fetching teams: ${error}`);

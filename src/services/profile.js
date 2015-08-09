@@ -31,40 +31,28 @@ export function getProfileWithUserId(userId) {
 }
 
 export function getProfiles(parameters, nextRequest=null) {
-    parameters = _.assign({}, parameters);
-    // XXX is there a way to make this more DRY?
+    parameters = Object.assign({}, parameters);
     return new Promise((resolve, reject) => {
+        let request;
         if (nextRequest === null) {
-            let request = new services.profile.actions.get_profiles.RequestV1(parameters);
-            client.sendRequest(request)
-                .then((response) => {
-                    let {profiles} = response.result;
-                    resolve({
-                        parameters,
-                        profiles,
-                        nextRequest: response.getNextRequest(),
-                    });
-                })
-                .catch((error) => {
-                    logger.log(`Error fetching profiles: ${error}`);
-                    reject(error);
-                });
+            request = new services.profile.actions.get_profiles.RequestV1(parameters);
         } else {
-            client.sendNextRequest(nextRequest)
-                .then((response) => {
-                    let {profiles} = response.result;
-                    resolve({
-                        parameters,
-                        profiles,
-                        nextRequest: response.getNextRequest(),
-                    });
-                })
-                .catch((error) => {
-                    logger.log(`Error fetching profiles: ${error}`);
-                });
+            request = nextRequest;
         }
+        client.sendRequest(request)
+            .then((response) => {
+                let { profiles } = response.result;
+                resolve({
+                    parameters,
+                    profiles,
+                    nextRequest: response.getNextRequest(),
+                });
+            })
+            .catch((error) => {
+                logger.log(`Error fetching profiles: ${error}`);
+                reject(error);
+            });
     });
-
 }
 
 export function getExtendedProfile(profileId) {

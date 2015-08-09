@@ -5,7 +5,8 @@ import Radium from 'radium';
 import React from 'react/addons';
 import { services } from 'protobufs';
 
-import { clearResults, loadResults } from '../actions/search';
+import { clearSearchResults, loadSearchResults } from '../actions/search';
+import * as exploreActions from '../actions/explore';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
@@ -67,10 +68,11 @@ const styles = {
 };
 
 const selector = createSelector(
-    [selectors.searchSelector],
-    (searchState) => {
+    [selectors.searchSelector, selectors.exploreSelector],
+    (searchState, exploreState) => {
         return {
-            results: searchState.get('results'),
+            searchResults: searchState.get('results'),
+            exploreResults: exploreState.get('results'),
         }
     },
 );
@@ -85,11 +87,17 @@ class SearchContainer extends React.Component {
         searchCategory: React.PropTypes.number,
         onClearCategory: React.PropTypes.func,
         focused: React.PropTypes.bool,
+        searchResults: React.PropTypes.object,
+        exploreResults: React.PropTypes.array,
+    }
+
+    static defaultProps = {
+        searchCategory: null,
     }
 
     state = {
         query: null,
-        results: null,
+        results: [],
         focused: false,
     }
 
@@ -99,11 +107,16 @@ class SearchContainer extends React.Component {
         this._focusInput();
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps, nextState) {
         this._loadResults(nextProps);
         if (nextProps.searchCategory !== this.props.searchCategory) {
-            this.props.dispatch(clearResults());
-            this.props.dispatch(loadResults(this.state.query, nextProps.searchCategory));
+            this.props.dispatch(clearSearchResults());
+            this.props.dispatch(exploreActions.clearExploreResults());
+            if (this.state.query) {
+                this.props.dispatch(loadSearchResults(this.state.query, nextProps.searchCategory));
+            } else {
+                this._exploreSearchCategory(nextProps);
+            }
         }
     }
 
@@ -112,14 +125,35 @@ class SearchContainer extends React.Component {
     }
 
     _loadResults(props) {
-        if (props.results.has(this.state.query)) {
-            this.setState({results: props.results.get(this.state.query)});
+        if (this.state.query && props.searchResults.has(this.state.query)) {
+            this.setState({results: props.searchResults.get(this.state.query)});
+        } else if (!this.state.query) {
+            this.setState({results: props.exploreResults.toJS()});
         }
     }
 
     _focusInput() {
         if (this.props.focused) {
             React.findDOMNode(this.refs.searchInput).focus();
+        }
+    }
+
+    _exploreSearchCategory(props) {
+        const { CategoryV1 } = services.search.containers.search;
+        let action;
+        switch(props.searchCategory) {
+        case CategoryV1.PROFILES:
+            action = exploreActions.exploreProfiles;
+            break;
+        case CategoryV1.TEAMS:
+            action = exploreActions.exploreTeams;
+            break;
+        case CategoryV1.LOCATIONS:
+            action = exploreActions.exploreLocations;
+            break;
+        }
+        if (action) {
+            props.dispatch(action());
         }
     }
 
@@ -135,7 +169,7 @@ class SearchContainer extends React.Component {
         }
 
         this.currentSearch = window.setTimeout(() => {
-            this.props.dispatch(loadResults(this.state.query, this.props.searchCategory));
+            this.props.dispatch(loadSearchResults(this.state.query, this.props.searchCategory));
         }, 100);
         this._loadResults(this.props);
     }
@@ -170,7 +204,7 @@ class SearchContainer extends React.Component {
 
     _renderSearchResults() {
         if (this.state.focused) {
-            if (!this.state.query) {
+            if (!this.state.query && this.props.searchCategory === null) {
                 return this.props.defaultResults;
             } else if (this.state.results && this.state.results.length) {
                 return (

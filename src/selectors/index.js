@@ -16,3 +16,4 @@ export const locationsSelector = state => state.locations;
 export const profilesSelector = state => state.profiles;
 export const routerSelector = state => state.router;
 export const searchSelector = state => state.search;
+export const exploreSelector = state => state.explore;
