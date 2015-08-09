@@ -37,6 +37,7 @@ const styles = {
     searchBar: {
         width: '100%',
         maxWidth: 500,
+        minWidth: 500,
         height: 50,
         borderStyle: 'solid',
         borderColor: 'white',
@@ -225,9 +226,12 @@ class SearchContainer extends React.Component {
                 let resultsStyle = Object.assign({}, styles.resultsList);
                 if (this.props.inHeader) {
                     resultsStyle.position = 'absolute';
-                    resultsStyle.width = 500;
+                    resultsStyle.minWidth = 500;
                     resultsStyle.opacity = 1;
-                    resultsStyle.marginLeft = 21;
+                    resultsStyle.marginLeft = 'auto';
+                    resultsStyle.marginRight = 'auto';
+                    resultsStyle.left = 0,
+                    resultsStyle.right = 0,
                     resultsStyle.zIndex = 100;
                 }
                 return (
@@ -298,7 +302,7 @@ class SearchContainer extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="row">
+                <div className="row center-xs">
                     {this._renderSearchResults()}
                 </div>
                 {this._renderPoweredBy()}
