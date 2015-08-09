@@ -15,7 +15,6 @@ class ProfileSearchResult extends React.Component {
     }
 
     _handleTouchTap(profile) {
-        this.props.flux.getActions('SearchActions').clearResults();
         this.transitionTo(`/profile/${profile.id}`);
     }
 

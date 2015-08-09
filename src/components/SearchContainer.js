@@ -31,13 +31,16 @@ const styles = {
         borderRadius: '0px 0px 5px 5px',
         opacity: '0.9',
         boxShadow: '0px 2px 4px -2px',
+        maxWidth: 500,
         width: '100%',
     },
-    root: {
-        maxWidth: 500,
+    resultsListInHeader: {
+        position: 'absolute',
+        marginLeft: 20,
     },
     searchBar: {
         width: '100%',
+        maxWidth: 500,
         height: 50,
         borderStyle: 'solid',
         borderColor: 'white',
@@ -45,6 +48,13 @@ const styles = {
         borderRadius: '5px',
         backgroundColor: 'white',
         boxShadow: '0px 2px 4px -2px',
+    },
+    searchBarInHeader: {
+        boxShadow: '0px',
+        borderColor: 'rgba(0, 0, 0, .1)',
+        backgroundClip: 'padding-box',
+        height: 44,
+        marginTop: 10,
     },
     searchInputContainer: {
         paddingLeft: 0,
@@ -59,11 +69,17 @@ const styles = {
         fontSize: '19px',
         backgroundColor: 'transparent',
     },
+    searchInputInHeader: {
+        paddingTop: 0,
+    },
     searchIcon: {
         height: 40,
         width: 30,
         paddingTop: 10,
         marginRight: 5,
+    },
+    searchIconInHeader: {
+        paddingTop: 0,
     },
 };
 
@@ -89,10 +105,13 @@ class SearchContainer extends React.Component {
         focused: React.PropTypes.bool,
         searchResults: React.PropTypes.object,
         exploreResults: React.PropTypes.array,
+        inHeader: React.PropTypes.bool,
     }
 
     static defaultProps = {
+        focused: false,
         searchCategory: null,
+        inHeader: false,
     }
 
     state = {
@@ -207,31 +226,60 @@ class SearchContainer extends React.Component {
             if (!this.state.query && this.props.searchCategory === null) {
                 return this.props.defaultResults;
             } else if (this.state.results && this.state.results.length) {
+                let resultsStyle = Object.assign({}, styles.resultsList);
+                if (this.props.inHeader) {
+                    resultsStyle.position = 'absolute';
+                    resultsStyle.width = 500;
+                    resultsStyle.opacity = 1;
+                    resultsStyle.marginLeft = 21;
+                }
                 return (
                     <SearchResults
                         className="start-xs"
                         results={this.state.results.slice(0, 5)}
-                        style={styles.resultsList}
+                        style={resultsStyle}
                     />
                 );
             }
         }
     }
 
+    _renderPoweredBy() {
+        if (!this.props.inHeader) {
+            return (
+                <div className="row center-xs" style={styles.footer}>
+                    <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
+                </div>
+            );
+        }
+    }
+
     render() {
-        let searchBarStyle;
+        let searchBarStyle = {};
         if (
             (this.state.focused && !this.state.query) ||
             (this.state.query && this.state.results && this.state.results.length)
         ) {
-            searchBarStyle = {borderRadius: '5px 5px 0px 0px'};
+            searchBarStyle.borderRadius = '5px 5px 0px 0px';
         }
         return (
-            <div style={styles.root} onFocus={this._handleFocus}>
+            <div onFocus={this._handleFocus}>
                 <div className="row center-xs">
-                    <div className="row center-xs" style={[styles.searchBar, searchBarStyle]}>
+                    <div
+                        className="row center-xs"
+                        style={[
+                            styles.searchBar,
+                            searchBarStyle,
+                            this.props.inHeader && styles.searchBarInHeader,
+                        ]}
+                    >
                         <div className="col-xs-1">
-                            <img style={styles.searchIcon} src={searchIcon} />
+                            <img style={[
+                                    styles.searchIcon,
+                                    this.props.inHeader && styles.searchIconInHeader,
+                                ]}
+                                src={searchIcon}
+                            />
                         </div>
                         <div className="col-xs" style={styles.searchInputContainer}>
                             <div className="row">
@@ -239,7 +287,10 @@ class SearchContainer extends React.Component {
                                 <div className="col-xs"> 
                                     <input
                                         ref="searchInput"
-                                        style={styles.searchInput}
+                                        style={[
+                                            styles.searchInput,
+                                            this.props.inHeader && styles.searchInputInHeader,
+                                        ]}
                                         type="text"
                                         valueLink={this.linkState('query')}
                                         onKeyUp={this._handleKeyUp}
@@ -250,12 +301,10 @@ class SearchContainer extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className="row center-xs">
+                <div className="row">
                     {this._renderSearchResults()}
                 </div>
-                <div className="row center-xs" style={styles.footer}>
-                    <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
-                </div>
+                {this._renderPoweredBy()}
             </div>
         );
     }
