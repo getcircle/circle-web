@@ -34,10 +34,6 @@ const styles = {
         maxWidth: 500,
         width: '100%',
     },
-    resultsListInHeader: {
-        position: 'absolute',
-        marginLeft: 20,
-    },
     searchBar: {
         width: '100%',
         maxWidth: 500,
@@ -232,6 +228,7 @@ class SearchContainer extends React.Component {
                     resultsStyle.width = 500;
                     resultsStyle.opacity = 1;
                     resultsStyle.marginLeft = 21;
+                    resultsStyle.zIndex = 100;
                 }
                 return (
                     <SearchResults
