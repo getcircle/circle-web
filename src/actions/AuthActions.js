@@ -1,6 +1,6 @@
 import { authenticateUser, getAuthenticationInstructions, logout } from '../services/user';
 import { getOrganization } from '../services/organization';
-import { getProfileWithUserId } from '../services/profile';
+import { getProfile } from '../services/profile';
 
 class AuthActions {
 
@@ -26,7 +26,7 @@ class AuthActions {
                 this.actions.completeAuthentication({user, token});
                 return Promise.resolve(user);
             })
-            .then((user) => getProfileWithUserId(user.id))
+            .then(() => getProfile())
             .then((profile) => {
                 loginData.profile = profile;
                 return getOrganization(profile.organization_id);

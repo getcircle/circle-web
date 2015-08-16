@@ -5,7 +5,7 @@ import {
 } from '../services/user';
 import client from '../services/client';
 import { getOrganization } from '../services/organization';
-import { getProfileWithUserId } from '../services/profile';
+import { getProfile } from '../services/profile';
 
 export function authenticate(backend, key, secret) {
     return {
@@ -24,10 +24,10 @@ export function authenticate(backend, key, secret) {
                     client.authenticate(token);
                     return Promise.resolve(user);
                 })
-                .then((user) => getProfileWithUserId(user.id))
+                .then(() => getProfile())
                 .then((profile) => {
                     payload.profile = profile;
-                    return getOrganization(profile.organization_id);
+                    return getOrganization();
                 })
                 .then((organization) => {
                     payload.organization = organization;
@@ -57,7 +57,7 @@ export function refresh() {
         ],
         fetch: (state) => {
             let payload = {}
-            return getProfileWithUserId(state.authentication.get("user").id)
+            return getProfile()
                 .then((profile) => {
                     payload.profile = profile;
                     return getOrganization(profile.organization_id);
