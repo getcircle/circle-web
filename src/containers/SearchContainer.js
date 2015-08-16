@@ -10,7 +10,7 @@ import * as selectors from '../selectors';
 
 import HeaderMenu from '../components/HeaderMenu';
 import SearchCategoryButton from '../components/SearchCategoryButton';
-import SearchContainer from '../components/SearchContainer';
+import Search from '../components/Search';
 
 import searchIcon from '../images/icons/search_icon.svg';
 
@@ -59,7 +59,7 @@ const styles = {
 const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')]; 
 
 @connect(selector)
-class Search extends React.Component {
+class SearchContainer extends React.Component {
 
     static propTypes = {
         profile: React.PropTypes.object.isRequired,
@@ -171,7 +171,7 @@ class Search extends React.Component {
                                 {this._renderSearchCategoryButtons()}
                             </div>
                             <div className="col-xs-5">
-                                <SearchContainer
+                                <Search
                                     defaultResults={this._defaultSearchResults()}
                                     searchCategory={this._getSearchCategory()}
                                     onClearCategory={this._handleClearCategory.bind(this)}
@@ -186,4 +186,4 @@ class Search extends React.Component {
     }
 }
 
-export default Search;
+export default SearchContainer;

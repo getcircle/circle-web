@@ -11,7 +11,7 @@ import t from '../utils/gettext';
 import * as selectors from '../selectors';
 
 import HeaderMenu from '../components/HeaderMenu';
-import SearchContainer from '../components/SearchContainer';
+import Search from '../components/Search';
 
 const {
     AppBar,
@@ -62,7 +62,7 @@ class Header extends React.Component {
                     <div className="col-xs-offset-2 col-xs-2">
                     </div>
                     <div className="col-xs-4">
-                        <SearchContainer inHeader={true} />
+                        <Search inHeader={true} />
                     </div>
                     <div className="col-xs-offset-2 col-xs-2 end-xs">
                         <HeaderMenu

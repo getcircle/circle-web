@@ -32,7 +32,7 @@ const styles = {
         opacity: '0.9',
         boxShadow: '0px 2px 4px -2px',
         maxWidth: 500,
-        width: '100%',
+        minWidth: 500,
     },
     searchBar: {
         width: '100%',
@@ -90,10 +90,20 @@ const selector = createSelector(
     },
 );
 
+// - Take a query and run a generic search
+// - Take a search category and run the search against that category
+// - Take a search category and display paginated results for the category
+// - Display recent search results
+// - Display "Explore" links for exploring the various search categories
+// - Take a list of objects and support filtering them
+// - Support filtering against a given category and attribute
+// - Optionally support hitting escape key clears the results
+// - Support keying through the results
+
 @connect(selector)
 @decorate(React.addons.LinkedStateMixin)
 @Radium
-class SearchContainer extends React.Component {
+class Search extends React.Component {
 
     static propTypes = {
         defaultResults: React.PropTypes.object,
@@ -224,6 +234,7 @@ class SearchContainer extends React.Component {
                 return this.props.defaultResults;
             } else if (this.state.results && this.state.results.length) {
                 let resultsStyle = Object.assign({}, styles.resultsList);
+                // XXX this should be passed in via style properties
                 if (this.props.inHeader) {
                     resultsStyle.position = 'absolute';
                     resultsStyle.minWidth = 500;
@@ -312,4 +323,4 @@ class SearchContainer extends React.Component {
 
 }
 
-export default SearchContainer;
+export default Search;
