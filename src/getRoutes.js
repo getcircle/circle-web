@@ -59,39 +59,39 @@ const getRoutes = (history, store) => {
                     <Route
                         path="/"
                         onEnter={applyMiddleware(requireAuth, hideHeader)}
-                        component={require('./pages/Search')} />
+                        component={require('./containers/Search')} />
                     <Route
                         path="/departments"
                         onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./pages/Departments')} />
+                        component={require('./containers/Departments')} />
                     <Route
                         path="/location/:locationId"
                         onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./pages/Location')} />
+                        component={require('./containers/Location')} />
                     <Route
                         path="/locations"
                         onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./pages/Locations')} />
+                        component={require('./containers/Locations')} />
                     <Route
                         path="/login"
                         onEnter={applyMiddleware(loginOnce)}
-                        component={require('./pages/Login')} />
+                        component={require('./containers/Login')} />
                     <Route
                         path="/people"
                         onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./pages/Profiles')} />
+                        component={require('./containers/Profiles')} />
                     <Route
                         path="/profile/:profileId"
                         onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./pages/Profile')} />
+                        component={require('./containers/Profile')} />
                     <Route
                         path="/team/:teamId"
                         onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./pages/Team')} />
+                        component={require('./containers/Team')} />
                     <Route
                         path="*"
                         onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./pages/NoMatch')} />
+                        component={require('./containers/NoMatch')} />
                 </Route>
             </Route>
         </Router>

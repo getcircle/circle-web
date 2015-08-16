@@ -10,7 +10,7 @@ import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
-import ExtendedProfile from '../components/ExtendedProfile';
+import ExtendedProfile from '../components/NewExtendedProfile';
 
 const selector = createSelector(
     [selectors.extendedProfilesSelector, selectors.routerSelector],

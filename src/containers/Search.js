@@ -45,6 +45,7 @@ const styles = {
         opacity: '0.9',
         boxShadow: '0px 2px 4px -2px',
         width: '100%',
+        minWidth: 500,
     },
     root: {
         backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
