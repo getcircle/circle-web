@@ -13,10 +13,11 @@ import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import ExtendedProfile from '../components/NewExtendedProfile';
 
 const selector = createSelector(
-    [selectors.extendedProfilesSelector, selectors.routerSelector],
-    (extendedProfilesState, routerState) => {
+    [selectors.extendedProfilesSelector, selectors.routerSelector, selectors.authenticationSelector],
+    (extendedProfilesState, routerState, authenticationState) => {
         return {
             extendedProfile: extendedProfilesState.getIn(['objects', routerState.params.profileId]),
+            organization: authenticationState.get('organization'),
         }
     }
 );
@@ -49,9 +50,12 @@ class Profile extends React.Component {
     }
 
     _renderProfile() {
-        const { extendedProfile } = this.props;
+        const {
+            extendedProfile,
+            organization,
+        } = this.props;
         if (extendedProfile) {
-            return <ExtendedProfile extendedProfile={extendedProfile} />;
+            return <ExtendedProfile extendedProfile={extendedProfile} organization={organization}/>;
         } else {
             return <CenterLoadingIndicator />;
         }

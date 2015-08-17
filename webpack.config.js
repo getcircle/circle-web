@@ -36,7 +36,8 @@ module.exports = {
                 ]
             },
             { test: /\.js$/, loaders: ['react-hot', 'babel?stage=0'], exclude: /node_modules/ },
-            { test: /\.scss$/, loaders: ['style', 'css', 'sass'] }
+            { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
+            { test: /\.json$/, loaders: ['json-loader']}
         ]
     },
     node: {
