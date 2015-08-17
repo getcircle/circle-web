@@ -1,6 +1,9 @@
+import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import React from 'react';
 import { services } from 'protobufs';
+
+import autoBind from '../utils/autoBind';
 
 import Card from './Card';
 import ExtendedProfileHeader from './ExtendedProfileHeader';
@@ -10,6 +13,7 @@ const {
     Avatar,
     Paper,
 } = mui;
+const { StylePropable } = mui.Mixins;
 
 const styles = {
     content: {
@@ -23,11 +27,10 @@ const styles = {
         backgroundColor: '#F7F9FA',
         minHeight: '100vh',
     },
-    status: {
-        height: 112,
-    },
 };
 
+@decorate(StylePropable)
+@decorate(autoBind(StylePropable))
 class ExtendedProfile extends React.Component {
 
     static propTypes = {
@@ -39,6 +42,10 @@ class ExtendedProfile extends React.Component {
         return <ExtendedProfileStatus />;
     }
 
+    _renderContactInfo() {
+        return <ExtendedProfileContactInfo />;
+    }
+
     render() {
         const {
             locations,
@@ -47,15 +54,16 @@ class ExtendedProfile extends React.Component {
         } = this.props.extendedProfile;
         const { organization } = this.props;
         return (
-            <div style={styles.root}>
+            <div style={this.mergeAndPrefix(styles.root)}>
                 <ExtendedProfileHeader
                     location={locations[0]}
                     organization={organization}
                     profile={profile}
                     team={team}
                 />
-                <section className="wrap" style={styles.content}>
+                <section className="wrap" style={this.mergeAndPrefix(styles.content)}>
                     {this._renderStatus()}
+                    {this._renderContactInfo()}
                 </section>
             </div>
         );

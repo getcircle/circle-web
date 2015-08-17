@@ -1,6 +1,12 @@
-import React from 'react';
+import { decorate } from 'react-mixin';
+import mui from 'material-ui';
+import React, { Component } from 'react';
+
+import autoBind from '../utils/autoBind';
 
 import Card from './Card';
+
+const { StylePropable } = mui.Mixins;
 
 const statusStyles = {
     card: {
@@ -45,29 +51,29 @@ const statusStyles = {
     },
 }
 
-class ExtendedProfileStatus extends React.Component {
+@decorate(StylePropable)
+@decorate(autoBind(StylePropable))
+class ExtendedProfileStatus extends Component {
 
     render() {
         return (
-            <Card style={statusStyles.card}>
+            <Card style={this.mergeAndPrefix(statusStyles.card)}>
                 <div style={statusStyles.dateBox}>
-                    <span style={Object.assign(
-                        {},
+                    <span style={this.mergeAndPrefix(
                         statusStyles.text,
                         statusStyles.date1,
                     )}>
                         28
                     </span>
-                    <span style={Object.assign(
-                        {},
+                    <span style={this.mergeAndPrefix(
                         statusStyles.text,
                         statusStyles.date2,
                     )}>
                         MAR
                     </span>
                 </div>
-                <div style={statusStyles.statusContainer}>
-                    <span style={statusStyles.statusText}>“I’m currently working on refinements to search, detail pages, and asset creation.”</span>
+                <div style={this.mergeAndPrefix(statusStyles.statusContainer)}>
+                    <span style={this.mergeAndPrefix(statusStyles.statusText)}>“I’m currently working on refinements to search, detail pages, and asset creation.”</span>
                 </div>
             </Card>
         );
