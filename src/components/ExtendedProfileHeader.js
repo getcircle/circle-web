@@ -57,7 +57,6 @@ const styles = {
     },
     root: {
         backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
-        height: 360,
     },
     tenureContainer: {
         justifyContent: 'flex-end',
@@ -74,6 +73,7 @@ const styles = {
     },
     titleSection: {
         paddingTop: 10,
+        paddingBottom: 65,
     },
 };
 
