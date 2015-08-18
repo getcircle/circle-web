@@ -1,5 +1,4 @@
 import { decorate } from 'react-mixin';
-import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 import { services } from 'protobufs';
@@ -11,10 +10,6 @@ import ExtendedProfileStatus from './ExtendedProfileStatus';
 import ExtendedProfileTeam from './ExtendedProfileTeam';
 import StyleableComponent from './StyleableComponent';
 
-const {
-    Avatar,
-    Paper,
-} = mui;
 const { ContactMethodV1 } = services.profile.containers;
 
 const styles = {
