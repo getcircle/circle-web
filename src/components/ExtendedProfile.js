@@ -34,7 +34,6 @@ const styles = {
 class ExtendedProfile extends StyleableComponent {
 
     static propTypes = {
-        dispatch: React.PropTypes.func.isRequired,
         extendedProfile: React.PropTypes.object.isRequired,
         organization: React.PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
     }

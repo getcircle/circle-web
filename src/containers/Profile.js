@@ -1,6 +1,3 @@
-'use strict';
-
-import _ from 'lodash';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React from 'react';
@@ -52,16 +49,16 @@ class Profile extends PureComponent {
 
     _renderProfile() {
         const {
-            dispatch,
             extendedProfile,
             organization,
         } = this.props;
         if (extendedProfile) {
-            return <ExtendedProfile
-                dispatch={dispatch}
-                extendedProfile={extendedProfile}
-                organization={organization}
-            />;
+            return (
+                <ExtendedProfile
+                    extendedProfile={extendedProfile}
+                    organization={organization}
+                />
+            );
         } else {
             return <CenterLoadingIndicator />;
         }
