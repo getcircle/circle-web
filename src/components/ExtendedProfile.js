@@ -1,21 +1,20 @@
 import { decorate } from 'react-mixin';
 import mui from 'material-ui';
+import { Navigation } from 'react-router';
 import React from 'react';
 import { services } from 'protobufs';
-
-import autoBind from '../utils/autoBind';
 
 import ExtendedProfileContactInfo from './ExtendedProfileContactInfo';
 import ExtendedProfileHeader from './ExtendedProfileHeader';
 import ExtendedProfileManages from './ExtendedProfileManages';
 import ExtendedProfileStatus from './ExtendedProfileStatus';
 import ExtendedProfileTeam from './ExtendedProfileTeam';
+import StyleableComponent from './StyleableComponent';
 
 const {
     Avatar,
     Paper,
 } = mui;
-const { StylePropable } = mui.Mixins;
 const { ContactMethodV1 } = services.profile.containers;
 
 const styles = {
@@ -36,13 +35,21 @@ const styles = {
     },
 };
 
-@decorate(StylePropable)
-@decorate(autoBind(StylePropable))
-class ExtendedProfile extends React.Component {
+@decorate(Navigation)
+class ExtendedProfile extends StyleableComponent {
 
     static propTypes = {
+        dispatch: React.PropTypes.func.isRequired,
         extendedProfile: React.PropTypes.object.isRequired,
         organization: React.PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
+    }
+
+    _routeToProfile(profile) {
+        this.transitionTo(`/profile/${profile.id}`);
+    }
+
+    _routeToTeam(team) {
+        this.transitionTo(`/team/${team.id}`);
     }
 
     _renderStatus() {
@@ -60,14 +67,18 @@ class ExtendedProfile extends React.Component {
     }
 
     _renderTeam(manager, peers, team) {
-        return (
-            <ExtendedProfileTeam
-                style={this.mergeAndPrefix(styles.section)}
-                manager={manager}
-                peers={peers}
-                team={team}
-            />
-        );
+        if (team) {
+            return (
+                <ExtendedProfileTeam
+                    style={this.mergeAndPrefix(styles.section)}
+                    manager={manager}
+                    peers={peers}
+                    team={team}
+                    onClickManager={this._routeToProfile.bind(this, manager)}
+                    onClickTeam={this._routeToTeam.bind(this, team)}
+                />
+            );
+        }
     }
 
     _renderManages(team, directReports) {

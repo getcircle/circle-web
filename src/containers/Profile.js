@@ -11,6 +11,7 @@ import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import ExtendedProfile from '../components/ExtendedProfile';
+import PureComponent from '../components/PureComponent';
 
 const selector = createSelector(
     [selectors.extendedProfilesSelector, selectors.routerSelector, selectors.authenticationSelector],
@@ -23,7 +24,7 @@ const selector = createSelector(
 );
 
 @connect(selector)
-class Profile extends React.Component {
+class Profile extends PureComponent {
 
     static propTypes = {
         extendedProfile: React.PropTypes.object,
@@ -51,11 +52,16 @@ class Profile extends React.Component {
 
     _renderProfile() {
         const {
+            dispatch,
             extendedProfile,
             organization,
         } = this.props;
         if (extendedProfile) {
-            return <ExtendedProfile extendedProfile={extendedProfile} organization={organization}/>;
+            return <ExtendedProfile
+                dispatch={dispatch}
+                extendedProfile={extendedProfile}
+                organization={organization}
+            />;
         } else {
             return <CenterLoadingIndicator />;
         }

@@ -33,6 +33,8 @@ class ExtendedProfileTeam extends Component {
 
     static propTypes = {
         manager: React.PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        onClickManager: React.PropTypes.func,
+        onClickTeam: React.PropTypes.func,
         peers: React.PropTypes.arrayOf(services.profile.containers.ProfileV1),
         team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
@@ -50,6 +52,7 @@ class ExtendedProfileTeam extends Component {
                     primaryText={team.name}
                     secondaryText={getTeamLabel(team)}
                     leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
+                    onTouchTap={this.props.onClickTeam}
                 />
             </CardList>
         );
@@ -63,6 +66,7 @@ class ExtendedProfileTeam extends Component {
                     primaryText="Reports to"
                     secondaryText={this._getManagerSecondaryText(manager)}
                     leftAvatar={<ProfileAvatar profile={manager} />}
+                    onTouchTap={this.props.onClickManager}
                 />
             </CardList>
         );

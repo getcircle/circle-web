@@ -85,7 +85,7 @@ class ExtendedProfileHeader extends Component {
         location: React.PropTypes.instanceOf(services.organization.containers.LocationV1),
         organization: React.PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
         profile: React.PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
-        team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
+        team: React.PropTypes.instanceOf(services.organization.containers.TeamV1),
     }
 
     state = {
@@ -150,7 +150,9 @@ class ExtendedProfileHeader extends Component {
                     <span style={this.mergeAndPrefix(styles.name)}>{profile.full_name}</span>
                 </div>
                 <div className="row center-xs" style={styles.titleSection}>
-                    <span style={this.mergeAndPrefix(styles.title)}>{profile.title} | {team.name}</span>
+                    <span style={this.mergeAndPrefix(styles.title)}>
+                        {profile.title} {team ? `| {team.name}` : '' }
+                    </span>
                 </div>
             </header>
         );
