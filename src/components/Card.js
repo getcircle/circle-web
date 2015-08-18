@@ -22,6 +22,7 @@ const styles = {
         color: 'rgba(0, 0, 0, .4)',
         alignSelf: 'center',
         paddingLeft: 12,
+        textTransform: 'uppercase',
     },
     root: {
         boxShadow: '1px 1px 3px -2px',
@@ -61,7 +62,7 @@ class Card extends Component {
         return (
             <div style={this.mergeAndPrefix(styles.root, style)} {...other}>
                 {this._renderHeader()}
-                <div style={this.mergeAndPrefix(styles.contentContainer, contentStyle)}>
+                <div style={this.mergeAndPrefix(contentStyle)}>
                     {this.props.children}
                 </div>
             </div>

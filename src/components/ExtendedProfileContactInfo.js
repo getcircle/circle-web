@@ -7,6 +7,9 @@ import { services } from 'protobufs';
 import autoBind from '../utils/autoBind';
 
 import Card from './Card';
+import CardListItem from './CardListItem';
+import CardVerticalDivider from './CardVerticalDivider';
+import IconContainer from './IconContainer';
 import OfficeIcon from './OfficeIcon';
 import MailIcon from './MailIcon';
 import PhoneIcon from './PhoneIcon';
@@ -20,14 +23,12 @@ const { StylePropable } = mui.Mixins;
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 const styles = {
-    cardDivider: {
-        width: 1,
-        backgroundColor: 'rgba(0, 0, 0, .1)',
-        marginTop: 20,
-        marginBottom: 20,
-    },
     icon: {
         color: 'rgba(0, 0, 0, .4)',
+    },
+    list: {
+        paddingTop: 0,
+        paddingBottom: 0,
     },
     row: {
         width: '100%',
@@ -58,13 +59,28 @@ class ExtendedProfileContactInfo extends Component {
         const methods = this.props.contactMethods.map((item, index) => {
             switch (item.contact_method_type) {
             case ContactMethodTypeV1.EMAIL:
-                return <ListItem key={index} primaryText="Email" secondaryText={item.value} leftAvatar={<MailIcon stroke={styles.icon.color}/>}/>
+                return (
+                    <CardListItem
+                        key={index}
+                        primaryText="Email"
+                        secondaryText={item.value}
+                        leftAvatar={<IconContainer IconClass={MailIcon} stroke={styles.icon.color}/>}
+                    />
+                );
             case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
-                return <ListItem key={index} primaryText="Phone" secondaryText={item.value} leftAvatar={<PhoneIcon stroke={styles.icon.color}/>}/>
+                return (
+                    <CardListItem
+                        key={index}
+                        primaryText="Phone"
+                        secondaryText={item.value}
+                        leftAvatar={<IconContainer IconClass={PhoneIcon} stroke={styles.icon.color}/>}
+                        disabled={true}
+                    />
+                );
             }
         })
         return (
-            <List className="col-xs">
+            <List className="col-xs" style={styles.list}>
                 {methods}
             </List>
         );
@@ -73,16 +89,16 @@ class ExtendedProfileContactInfo extends Component {
     _renderLocations() {
         const locations = this.props.locations.map((item, index) => {
             return (
-                <ListItem
+                <CardListItem
                     key={index}
                     primaryText={item.name}
                     secondaryText={this._getAddress(item)}
-                    leftAvatar={<OfficeIcon stroke={styles.icon.color} />}
+                    leftAvatar={<IconContainer IconClass={OfficeIcon} stroke={styles.icon.color} />}
                 />
             );
         })
         return (
-            <List className="col-xs">
+            <List className="col-xs" style={styles.list}>
                 {locations}
             </List>
         );
@@ -94,7 +110,7 @@ class ExtendedProfileContactInfo extends Component {
             <Card {...this.props} title="Contact">
                 <div className="row" style={this.mergeAndPrefix(styles.row)}>
                     {this._renderContactInfo()}
-                    <div style={styles.cardDivider} />
+                    <CardVerticalDivider />
                     {this._renderLocations()}
                 </div>
             </Card>

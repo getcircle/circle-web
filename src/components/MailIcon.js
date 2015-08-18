@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import mui from 'material-ui';
 
-const { SvgIcon } = mui;
-
 class MailIcon extends Component {
 
     static propTypes = {

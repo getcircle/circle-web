@@ -12,6 +12,10 @@ const styles = {
     card: {
         padding: 20,
     },
+    contentStyle: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
     dateBox: {
         borderRadius: 2,
         border: '1px solid rgba(0, 0, 0, 0.1)',
@@ -54,8 +58,16 @@ const styles = {
 class ExtendedProfileStatus extends Component {
 
     render() {
+        const {
+            style,
+            ...other
+        } = this.props;
         return (
-            <Card {...this.props} style={this.mergeAndPrefix(styles.card)}>
+            <Card
+                {...other}
+                style={this.mergeAndPrefix(styles.card, style)}
+                contentStyle={styles.contentStyle}
+            >
                 <div style={styles.dateBox}>
                     <span style={this.mergeAndPrefix(
                         styles.text,

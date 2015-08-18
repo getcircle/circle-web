@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import { services } from 'protobufs';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 
 import TextFallbackAvatar from './TextFallbackAvatar';
@@ -8,7 +9,9 @@ class ProfileAvatar extends React.Component {
     shouldComponentUpdate = shouldPureComponentUpdate;
 
     static propTypes = {
-        profile: React.PropTypes.object.isRequired,
+        profile: React.PropTypes.instanceOf(
+            services.profile.containers.ProfileV1,
+        ).isRequired,
     }
 
     _getInitials() {

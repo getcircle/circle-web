@@ -8,6 +8,7 @@ import autoBind from '../utils/autoBind';
 import ExtendedProfileContactInfo from './ExtendedProfileContactInfo';
 import ExtendedProfileHeader from './ExtendedProfileHeader';
 import ExtendedProfileStatus from './ExtendedProfileStatus';
+import ExtendedProfileTeam from './ExtendedProfileTeam';
 
 const {
     Avatar,
@@ -17,11 +18,11 @@ const { StylePropable } = mui.Mixins;
 const { ContactMethodV1 } = services.profile.containers;
 
 const styles = {
-    contactInfoSection: {
+    section: {
         marginTop: 20,
     },
     content: {
-        paddingTop: 60,
+        paddingTop: 40,
         boxSizing: 'border-box',
         maxWidth: 800,
         margin: '0px auto',
@@ -30,6 +31,7 @@ const styles = {
     root: {
         backgroundColor: '#F7F9FA',
         minHeight: '100vh',
+        paddingBottom: 100,
     },
 };
 
@@ -43,17 +45,29 @@ class ExtendedProfile extends React.Component {
     }
 
     _renderStatus() {
-        return <ExtendedProfileStatus />;
+        return <ExtendedProfileStatus style={this.mergeAndPrefix(styles.section)}/>;
     }
 
     _renderContactInfo(contactMethods=[], locations=[]) {
         return (
             <ExtendedProfileContactInfo
-                style={this.mergeAndPrefix(styles.contactInfoSection)}
+                style={this.mergeAndPrefix(styles.section)}
                 contactMethods={contactMethods}
                 locations={locations}
             />
         );
+    }
+
+    _renderTeam(manager, peers, team) {
+        return (
+            <ExtendedProfileTeam
+                style={this.mergeAndPrefix(styles.section)}
+                manager={manager}
+                peers={peers}
+                team={team}
+            />
+        );
+
     }
 
     _getContactMethods() {
@@ -68,7 +82,10 @@ class ExtendedProfile extends React.Component {
 
     render() {
         const {
+            direct_reports,
             locations,
+            manager,
+            peers,
             profile,
             team,
         } = this.props.extendedProfile;
@@ -84,6 +101,7 @@ class ExtendedProfile extends React.Component {
                 <section className="wrap" style={this.mergeAndPrefix(styles.content)}>
                     {this._renderStatus()}
                     {this._renderContactInfo(this._getContactMethods(), locations)}
+                    {this._renderTeam(manager, peers, team)}
                 </section>
             </div>
         );
