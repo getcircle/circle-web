@@ -1,16 +1,14 @@
-import { decorate } from 'react-mixin';
-import mui from 'material-ui';
-import React, { Component } from 'react';
+import React from 'react';
 import { services } from 'protobufs';
 
 import autoBind from '../utils/autoBind';
 import moment from '../utils/moment';
 
+import DetailHeader from './DetailHeader';
 import LocationIcon from './LocationIcon';
+import ProfileAvatar from './ProfileAvatar';
+import StyleableComponent from './StyleableComponent';
 import TimeIcon from './TimeIcon';
-
-const { Avatar } = mui;
-const { StylePropable } = mui.Mixins;
 
 const styles = {
     avatar: {
@@ -55,9 +53,6 @@ const styles = {
     nameSection: {
         paddingTop: 20,
     },
-    root: {
-        backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
-    },
     tenureContainer: {
         justifyContent: 'flex-end',
         paddingRight: 20,
@@ -77,9 +72,7 @@ const styles = {
     },
 };
 
-@decorate(StylePropable)
-@decorate(autoBind(StylePropable))
-class ExtendedProfileHeader extends Component {
+class ExtendedProfileHeader extends StyleableComponent {
 
     static propTypes = {
         location: React.PropTypes.instanceOf(services.organization.containers.LocationV1),
@@ -130,7 +123,7 @@ class ExtendedProfileHeader extends Component {
             team,
         } = this.props;
         return (
-            <header style={this.mergeAndPrefix(styles.root)}>
+            <DetailHeader>
                 <div className="row" style={this.mergeAndPrefix(styles.infoSection)}>
                     {this._renderLocationInfo()}
                     <div
@@ -144,7 +137,7 @@ class ExtendedProfileHeader extends Component {
                     </div>
                 </div>
                 <div className="row center-xs" style={this.mergeAndPrefix(styles.avatarSection)}>
-                    <Avatar src={profile.image_url} style={this.mergeAndPrefix(styles.avatar)} />
+                    <ProfileAvatar style={this.mergeAndPrefix(styles.avatar)} profile={profile} />
                 </div>
                 <div className="row center-xs" style={this.mergeAndPrefix(styles.nameSection)}>
                     <span style={this.mergeAndPrefix(styles.name)}>{profile.full_name}</span>
@@ -154,7 +147,7 @@ class ExtendedProfileHeader extends Component {
                         {profile.title} {team ? `| {team.name}` : '' }
                     </span>
                 </div>
-            </header>
+            </DetailHeader>
         );
     }
 

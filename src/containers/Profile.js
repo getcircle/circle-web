@@ -7,6 +7,7 @@ import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
+import Container from '../components/Container';
 import ExtendedProfile from '../components/ExtendedProfile';
 import PureComponent from '../components/PureComponent';
 
@@ -66,9 +67,9 @@ class Profile extends PureComponent {
 
     render() {
         return (
-            <section>
+            <Container>
                 {this._renderProfile()}
-            </section>
+            </Container>
         );
     }
 

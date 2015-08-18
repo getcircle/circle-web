@@ -26,6 +26,7 @@ class ExtendedProfileManages extends StyleableComponent {
     static propTypes = {
         team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
         directReports: React.PropTypes.arrayOf(services.profile.containers.ProfileV1),
+        onClickTeam: React.PropTypes.func,
     }
 
     _renderTeam() {
@@ -36,6 +37,7 @@ class ExtendedProfileManages extends StyleableComponent {
                     primaryText={team.name}
                     secondaryText={getTeamLabel(team)}
                     leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
+                    onTouchTap={this.props.onClickTeam}
                 />
             </CardList>
         );

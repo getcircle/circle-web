@@ -3,6 +3,9 @@ import { Navigation } from 'react-router';
 import React from 'react';
 import { services } from 'protobufs';
 
+import { routeToProfile, routeToTeam } from '../utils/routes';
+
+import DetailContent from './DetailContent';
 import ExtendedProfileContactInfo from './ExtendedProfileContactInfo';
 import ExtendedProfileHeader from './ExtendedProfileHeader';
 import ExtendedProfileManages from './ExtendedProfileManages';
@@ -16,18 +19,6 @@ const styles = {
     section: {
         marginTop: 20,
     },
-    content: {
-        paddingTop: 40,
-        boxSizing: 'border-box',
-        maxWidth: 800,
-        margin: '0px auto',
-        backgroundColor: 'rgba(247, 249, 250)',
-    },
-    root: {
-        backgroundColor: '#F7F9FA',
-        minHeight: '100vh',
-        paddingBottom: 100,
-    },
 };
 
 @decorate(Navigation)
@@ -36,14 +27,6 @@ class ExtendedProfile extends StyleableComponent {
     static propTypes = {
         extendedProfile: React.PropTypes.object.isRequired,
         organization: React.PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
-    }
-
-    _routeToProfile(profile) {
-        this.transitionTo(`/profile/${profile.id}`);
-    }
-
-    _routeToTeam(team) {
-        this.transitionTo(`/team/${team.id}`);
     }
 
     _renderStatus() {
@@ -68,8 +51,8 @@ class ExtendedProfile extends StyleableComponent {
                     manager={manager}
                     peers={peers}
                     team={team}
-                    onClickManager={this._routeToProfile.bind(this, manager)}
-                    onClickTeam={this._routeToTeam.bind(this, team)}
+                    onClickManager={routeToProfile.bind(this, manager)}
+                    onClickTeam={routeToTeam.bind(this, team)}
                 />
             );
         }
@@ -82,6 +65,7 @@ class ExtendedProfile extends StyleableComponent {
                     style={this.mergeAndPrefix(styles.section)}
                     team={team}
                     directReports={directReports}
+                    onClickTeam={routeToTeam.bind(this, team)}
                 />
             );
         }
@@ -109,19 +93,19 @@ class ExtendedProfile extends StyleableComponent {
         } = this.props.extendedProfile;
         const { organization } = this.props;
         return (
-            <div style={this.mergeAndPrefix(styles.root)}>
+            <div>
                 <ExtendedProfileHeader
                     location={locations[0]}
                     organization={organization}
                     profile={profile}
                     team={team}
                 />
-                <section className="wrap" style={this.mergeAndPrefix(styles.content)}>
+                <DetailContent>
                     {this._renderStatus()}
                     {this._renderContactInfo(this._getContactMethods(), locations)}
                     {this._renderTeam(manager, peers, team)}
                     {this._renderManages(manages_team, direct_reports)}
-                </section>
+                </DetailContent>
             </div>
         );
     }
