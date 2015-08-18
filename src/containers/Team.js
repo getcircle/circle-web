@@ -1,55 +1,48 @@
-'use strict';
-
-import _ from 'lodash';
-import connectToStores from 'alt/utils/connectToStores';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import React from 'react';
+import { services } from 'protobufs';
 
+import { loadExtendedTeam } from '../actions/teams';
 import ThemeManager from '../utils/ThemeManager';
+import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
+import Container from '../components/Container';
+import PureComponent from '../components/PureComponent'; 
 import TeamDetail from '../components/TeamDetail';
 
-@connectToStores
+const selector = createSelector(
+    [selectors.extendedTeamsSelector, selectors.routerSelector],
+    (extendedTeamsState, routerState) => {
+        return {
+            extendedTeam: extendedTeamsState.getIn(['objects', routerState.params.teamId]),
+        }
+    }
+);
+
+@connect(selector)
 class Team extends React.Component {
 
     static propTypes = {
-        descendants: React.PropTypes.array,
-        flux: React.PropTypes.object.isRequired,
-        team: React.PropTypes.object,
-        teamMembers: React.PropTypes.array,
+        extendedTeam: React.PropTypes.object,
     }
 
     static childContextTypes = {
         muiTheme: React.PropTypes.object,
     }
 
-    static getStores(props) {
-        return [props.flux.getStore('TeamStore')];
-    }
-
-    static getPropsFromStores(props) {
-        const store = props.flux.getStore('TeamStore');
-        const { teamId } = props.params;
-        const teamProps = {
-            team: store.getTeam(teamId),
-            teamMembers: store.getTeamMembers(teamId),
-            descendants: store.getTeamDescendants(teamId),
-        };
-
-        return _.assign(
-            {},
-            teamProps,
-        );
+    _loadTeam(props) {
+        props.dispatch(loadExtendedTeam(props.params.teamId));
     }
 
     componentWillMount() {
-        this._fetchTeam(this.props);
+        this._loadTeam(this.props);
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.teamId !== this.props.params.teamId) {
-            const props = _.assign({}, this.props, nextProps);
-            this._fetchTeam(props);
+            this._loadTeam(nextProps);
         }
     }
 
@@ -59,37 +52,12 @@ class Team extends React.Component {
         };
     }
 
-    _fetchTeam(props) {
-        const store = props.flux.getStore('TeamStore');
-        const teamId = props.params.teamId;
-        store.fetchTeam(teamId);
-        store.fetchTeamMembers(teamId);
-        store.fetchTeamDescendants(teamId);
-    }
-
     _renderTeam() {
         const {
-            descendants,
-            team,
-            teamMembers,
+            extendedTeam,
         } = this.props;
-        if (team && teamMembers && descendants) {
-            let owner;
-            let members = [];
-
-            teamMembers.forEach((member, index) => {
-                if (member.user_id === team.owner_id) {
-                    owner = member;
-                } else {
-                    members.push(member);
-                }
-            });
-            return <TeamDetail
-                        team={team}
-                        owner={owner}
-                        members={members}
-                        descendants={descendants}
-                    />;
+        if (extendedTeam) {
+            return <TeamDetail extendedTeam={extendedTeam} />;
         } else {
             return <CenterLoadingIndicator />;
         }
@@ -97,9 +65,9 @@ class Team extends React.Component {
 
     render() {
         return (
-            <section className="wrap">
+            <Container>
                 {this._renderTeam()}
-            </section>
+            </Container>
         );
     }
 

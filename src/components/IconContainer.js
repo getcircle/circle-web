@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PureComponent from './PureComponent';
+import StyleableComponent from './StyleableComponent';
 
 const styles = {
     icon: {
@@ -24,21 +24,30 @@ const styles = {
     },
 }
 
-class IconContainer extends PureComponent {
+class IconContainer extends StyleableComponent {
 
     static propTypes = {
         IconClass: React.PropTypes.func.isRequired,
         stroke: React.PropTypes.string,
+        strokeWidth: React.PropTypes.number,
+        iconStyle: React.PropTypes.object,
     }
 
     render() {
         const {
+            iconStyle,
+            style,
             stroke,
+            strokeWidth,
             ...other,
         } = this.props;
         return (
-            <div {...other} style={styles.root}>
-                <this.props.IconClass style={styles.icon} stroke={stroke}/>
+            <div {...other} style={this.mergeAndPrefix(styles.root, style)}>
+                <this.props.IconClass
+                    style={this.mergeAndPrefix(styles.icon, iconStyle)}
+                    stroke={stroke}
+                    strokeWidth={strokeWidth}
+                />
             </div>
         );
     }

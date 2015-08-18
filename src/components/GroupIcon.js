@@ -4,15 +4,18 @@ class GroupIcon extends Component {
 
     static propTypes = {
         stroke: React.PropTypes.string,
+        strokeWidth: React.PropTypes.number,
     }
 
     static defaultProps = {
         stroke: '#000000',
+        strokeWidth: 2,
     }
 
     render() {
         const {
             stroke,
+            strokeWidth,
             ...other,
         } = this.props;
         return (
@@ -21,7 +24,7 @@ class GroupIcon extends Component {
                 <desc>Created with Sketch.</desc>
                 <defs></defs>
                 <g id="v1-Final" stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
-                    <g id="Group-Copy-17" transform="translate(8.000000, 11.000000)" stroke={stroke} strokeWidth="2">
+                    <g id="Group-Copy-17" transform="translate(8.000000, 11.000000)" stroke={stroke} strokeWidth={strokeWidth}>
                         <circle id="Oval-66-Copy-4" cx="8" cy="4" r="4"></circle>
                         <circle id="Oval-66-Copy-6" cx="18.5" cy="5.5" r="3.5"></circle>
                         <path d="M5.33333333,6 C2.15934735,7.36641593 0,10.8835072 0,17 C0,17 3.55555556,18 8,18 C12.4444444,18 16,17 16,17 C16,10.8927278 13.8502996,7.3821492 10.6666667,6" id="Oval-66-Copy-5" strokeLinejoin="round"></path>

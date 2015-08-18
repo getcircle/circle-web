@@ -10,10 +10,11 @@ export const authenticatedSelector = createImmutableSelector(
     (authenticationState) => { return { authenticated: authenticationState.get("authenticated") } },
 );
 
+export const exploreSelector = state => state.explore;
 export const extendedProfilesSelector = state => state.extendedProfiles;
+export const extendedTeamsSelector = state => state.extendedTeams;
 export const headerSelector = state => state.header;
 export const locationsSelector = state => state.locations;
 export const profilesSelector = state => state.profiles;
 export const routerSelector = state => state.router;
 export const searchSelector = state => state.search;
-export const exploreSelector = state => state.explore;

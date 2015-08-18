@@ -18,6 +18,42 @@ export function getOrganization() {
     });
 }
 
+export function getExtendedTeam(teamId) {
+    const reportingDetails = getTeamReportingDetails(teamId);
+    const team = getTeam(teamId);
+    return new Promise((resolve, reject) => {
+            Promise.all([reportingDetails, team])
+                .then((values) => {
+                    let [reportingDetails, team] = values;
+                    resolve({reportingDetails, team});
+                })
+                .catch((error) => {
+                    logger.error(`Error fetching extended team: ${error}`);
+                    reject(error);
+                });
+    });
+}
+
+export function getTeamReportingDetails(teamId) {
+    let parameters = {team_id: teamId};
+    let request = new services.organization.actions.get_team_reporting_details.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let {
+                    manager,
+                    members,
+                    child_teams,
+                } = response.result;
+                resolve({manager, members, childTeams: child_teams});
+            })
+            .catch((error) => {
+                logger.error(`Error fetching team reporting details: ${error}`);
+                reject(error);
+            });
+    });
+}
+
 export function getTeam(teamId) {
     /*eslint-disable camelcase*/
     let parameters = {
