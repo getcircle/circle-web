@@ -8,11 +8,9 @@ import Card from './Card';
 
 const { StylePropable } = mui.Mixins;
 
-const statusStyles = {
+const styles = {
     card: {
-        display: 'flex',
-        flexFlow: 'row',
-        justifyContent: 'center',
+        padding: 20,
     },
     dateBox: {
         borderRadius: 2,
@@ -57,23 +55,23 @@ class ExtendedProfileStatus extends Component {
 
     render() {
         return (
-            <Card style={this.mergeAndPrefix(statusStyles.card)}>
-                <div style={statusStyles.dateBox}>
+            <Card {...this.props} style={this.mergeAndPrefix(styles.card)}>
+                <div style={styles.dateBox}>
                     <span style={this.mergeAndPrefix(
-                        statusStyles.text,
-                        statusStyles.date1,
+                        styles.text,
+                        styles.date1,
                     )}>
                         28
                     </span>
                     <span style={this.mergeAndPrefix(
-                        statusStyles.text,
-                        statusStyles.date2,
+                        styles.text,
+                        styles.date2,
                     )}>
                         MAR
                     </span>
                 </div>
-                <div style={this.mergeAndPrefix(statusStyles.statusContainer)}>
-                    <span style={this.mergeAndPrefix(statusStyles.statusText)}>“I’m currently working on refinements to search, detail pages, and asset creation.”</span>
+                <div style={this.mergeAndPrefix(styles.statusContainer)}>
+                    <span style={this.mergeAndPrefix(styles.statusText)}>“I’m currently working on refinements to search, detail pages, and asset creation.”</span>
                 </div>
             </Card>
         );

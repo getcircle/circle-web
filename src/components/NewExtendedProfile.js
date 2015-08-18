@@ -5,7 +5,7 @@ import { services } from 'protobufs';
 
 import autoBind from '../utils/autoBind';
 
-import Card from './Card';
+import ExtendedProfileContactInfo from './ExtendedProfileContactInfo';
 import ExtendedProfileHeader from './ExtendedProfileHeader';
 import ExtendedProfileStatus from './ExtendedProfileStatus';
 
@@ -14,8 +14,12 @@ const {
     Paper,
 } = mui;
 const { StylePropable } = mui.Mixins;
+const { ContactMethodV1 } = services.profile.containers;
 
 const styles = {
+    contactInfoSection: {
+        marginTop: 20,
+    },
     content: {
         paddingTop: 60,
         boxSizing: 'border-box',
@@ -42,8 +46,24 @@ class ExtendedProfile extends React.Component {
         return <ExtendedProfileStatus />;
     }
 
-    _renderContactInfo() {
-        return <ExtendedProfileContactInfo />;
+    _renderContactInfo(contactMethods=[], locations=[]) {
+        return (
+            <ExtendedProfileContactInfo
+                style={this.mergeAndPrefix(styles.contactInfoSection)}
+                contactMethods={contactMethods}
+                locations={locations}
+            />
+        );
+    }
+
+    _getContactMethods() {
+        const { profile } = this.props.extendedProfile;
+        let contactMethods = [new ContactMethodV1({
+            label: "Email",
+            value: profile.email,
+            contact_method_type: ContactMethodV1.ContactMethodTypeV1.EMAIL,
+        })];
+        return contactMethods.concat(profile.contact_methods);
     }
 
     render() {
@@ -63,7 +83,7 @@ class ExtendedProfile extends React.Component {
                 />
                 <section className="wrap" style={this.mergeAndPrefix(styles.content)}>
                     {this._renderStatus()}
-                    {this._renderContactInfo()}
+                    {this._renderContactInfo(this._getContactMethods(), locations)}
                 </section>
             </div>
         );
