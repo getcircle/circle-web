@@ -165,3 +165,19 @@ export function getTeams(parameters, nextRequest=null) {
             });
     });
 }
+
+export function getTeamLabel(team) {
+    let parts = [];
+    if (team.child_team_count > 1) {
+        parts.push(`${team.child_team_count} teams`);
+    } else if (team.child_team_count === 1) {
+        parts.push(`${team.child_team_count} team`);
+    }
+
+    if (team.profile_count > 1) {
+        parts.push(`${team.profile_count} people`);
+    } else if (team.profile_count === 1) {
+        parts.push(`${team.profile_count} person`);
+    }
+    return parts.join(', ');
+}

@@ -1,12 +1,9 @@
-import { decorate } from 'react-mixin';
 import mui from 'material-ui';
-import React, { Component } from 'react';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import React from 'react';
 
-import autoBind from '../utils/autoBind';
+import StyleableComponent from './StyleableComponent';
 
 const { ListItem } = mui;
-const { StylePropable } = mui.Mixins;
 
 const styles = {
     avatar: {
@@ -20,10 +17,7 @@ const styles = {
     },
 }
 
-@decorate(StylePropable)
-@decorate(autoBind(StylePropable))
-class CardListItem extends Component {
-    shouldComponentUpdate = shouldPureComponentUpdate;
+class CardListItem extends StyleableComponent {
 
     static propTypes = {
         leftAvatar: React.PropTypes.element,

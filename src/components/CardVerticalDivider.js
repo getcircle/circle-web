@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
+
+import PureComponent from './PureComponent';
 
 const styles = {
     root: {
@@ -9,7 +11,7 @@ const styles = {
     },
 };
 
-class CardVerticalDivider extends Component {
+class CardVerticalDivider extends PureComponent {
 
     render() {
         return <div style={styles.root} />

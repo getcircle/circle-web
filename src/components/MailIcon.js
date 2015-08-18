@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import mui from 'material-ui';
+import React from 'react';
 
-class MailIcon extends Component {
+import PureComponent from './PureComponent';
+
+class MailIcon extends PureComponent {
 
     static propTypes = {
         stroke: React.PropTypes.string,

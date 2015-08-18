@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import mui from 'material-ui';
+import React from 'react';
+
+import PureComponent from './PureComponent';
 
 const styles = {
     icon: {
@@ -23,7 +24,7 @@ const styles = {
     },
 }
 
-class IconContainer extends Component {
+class IconContainer extends PureComponent {
 
     static propTypes = {
         IconClass: React.PropTypes.func.isRequired,

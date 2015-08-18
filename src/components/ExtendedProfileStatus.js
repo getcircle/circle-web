@@ -1,12 +1,7 @@
-import { decorate } from 'react-mixin';
-import mui from 'material-ui';
-import React, { Component } from 'react';
-
-import autoBind from '../utils/autoBind';
+import React from 'react';
 
 import Card from './Card';
-
-const { StylePropable } = mui.Mixins;
+import StyleableComponent from './StyleableComponent';
 
 const styles = {
     card: {
@@ -53,9 +48,7 @@ const styles = {
     },
 }
 
-@decorate(StylePropable)
-@decorate(autoBind(StylePropable))
-class ExtendedProfileStatus extends Component {
+class ExtendedProfileStatus extends StyleableComponent {
 
     render() {
         const {

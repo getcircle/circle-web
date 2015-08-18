@@ -7,6 +7,7 @@ import autoBind from '../utils/autoBind';
 
 import ExtendedProfileContactInfo from './ExtendedProfileContactInfo';
 import ExtendedProfileHeader from './ExtendedProfileHeader';
+import ExtendedProfileManages from './ExtendedProfileManages';
 import ExtendedProfileStatus from './ExtendedProfileStatus';
 import ExtendedProfileTeam from './ExtendedProfileTeam';
 
@@ -67,7 +68,18 @@ class ExtendedProfile extends React.Component {
                 team={team}
             />
         );
+    }
 
+    _renderManages(team, directReports) {
+        if (team) {
+            return (
+                <ExtendedProfileManages
+                    style={this.mergeAndPrefix(styles.section)}
+                    team={team}
+                    directReports={directReports}
+                />
+            );
+        }
     }
 
     _getContactMethods() {
@@ -85,6 +97,7 @@ class ExtendedProfile extends React.Component {
             direct_reports,
             locations,
             manager,
+            manages_team,
             peers,
             profile,
             team,
@@ -102,6 +115,7 @@ class ExtendedProfile extends React.Component {
                     {this._renderStatus()}
                     {this._renderContactInfo(this._getContactMethods(), locations)}
                     {this._renderTeam(manager, peers, team)}
+                    {this._renderManages(manages_team, direct_reports)}
                 </section>
             </div>
         );

@@ -1,11 +1,9 @@
-import { decorate } from 'react-mixin';
 import mui from 'material-ui';
-import React, { Component } from 'react';
+import React from 'react';
 
-import autoBind from '../utils/autoBind';
+import StyleableComponent from './StyleableComponent';
 
 const { FlatButton } = mui;
-const { StylePropable } = mui.Mixins;
 
 const styles = {
     footerButton: {
@@ -28,9 +26,7 @@ const styles = {
     },
 };
 
-@decorate(StylePropable)
-@decorate(autoBind(StylePropable))
-class CardFooter extends Component {
+class CardFooter extends StyleableComponent {
 
     static propTypes = {
         actionText: React.PropTypes.string,
@@ -43,7 +39,7 @@ class CardFooter extends Component {
             onClick,
         } = this.props;
         return (
-            <footer {...this.props} style={this.mergeAndPrefix(styles.root)}>
+            <footer {...this.props} className="row" style={this.mergeAndPrefix(styles.root)}>
                 {this.props.children}
                 <div style={this.mergeAndPrefix(styles.footerButton)}>
                     <FlatButton labelStyle={styles.footerButtonLabel} label={actionText} />

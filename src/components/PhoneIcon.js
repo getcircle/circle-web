@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class PhoneIcon extends Component {
+import PureComponent from './PureComponent';
+
+class PhoneIcon extends PureComponent {
 
     static propTypes = {
         stroke: React.PropTypes.string,

@@ -1,43 +1,27 @@
 import _ from 'lodash';
-import { decorate } from 'react-mixin';
-import mui from 'material-ui';
-import React, { Component } from 'react';
+import React from 'react';
 import { services } from 'protobufs';
 
-import autoBind from '../utils/autoBind';
-
 import Card from './Card';
+import CardList from './CardList';
 import CardListItem from './CardListItem';
+import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
 import IconContainer from './IconContainer';
 import OfficeIcon from './OfficeIcon';
 import MailIcon from './MailIcon';
 import PhoneIcon from './PhoneIcon';
+import StyleableComponent from './StyleableComponent';
 
-const {
-    List,
-    ListItem,
-} = mui;
-
-const { StylePropable } = mui.Mixins;
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 const styles = {
     icon: {
         color: 'rgba(0, 0, 0, .4)',
     },
-    list: {
-        paddingTop: 0,
-        paddingBottom: 0,
-    },
-    row: {
-        width: '100%',
-    },
 };
 
-@decorate(StylePropable)
-@decorate(autoBind(StylePropable))
-class ExtendedProfileContactInfo extends Component {
+class ExtendedProfileContactInfo extends StyleableComponent {
 
     static propTypes = {
         locations: React.PropTypes.arrayOf(
@@ -80,9 +64,9 @@ class ExtendedProfileContactInfo extends Component {
             }
         })
         return (
-            <List className="col-xs" style={styles.list}>
+            <CardList>
                 {methods}
-            </List>
+            </CardList>
         );
     }
 
@@ -98,9 +82,9 @@ class ExtendedProfileContactInfo extends Component {
             );
         })
         return (
-            <List className="col-xs" style={styles.list}>
+            <CardList>
                 {locations}
-            </List>
+            </CardList>
         );
 
     }
@@ -108,11 +92,11 @@ class ExtendedProfileContactInfo extends Component {
     render() {
         return (
             <Card {...this.props} title="Contact">
-                <div className="row" style={this.mergeAndPrefix(styles.row)}>
+                <CardRow>
                     {this._renderContactInfo()}
                     <CardVerticalDivider />
                     {this._renderLocations()}
-                </div>
+                </CardRow>
             </Card>
         );
     }

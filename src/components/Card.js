@@ -1,10 +1,6 @@
-import { decorate } from 'react-mixin';
-import mui from 'material-ui';
-import React, { Component } from 'react';
+import React from 'react';
 
-import autoBind from '../utils/autoBind';
-
-const { StylePropable } = mui.Mixins;
+import StyleableComponent from './StyleableComponent';
 
 const styles = {
     contentContainer: {
@@ -31,9 +27,7 @@ const styles = {
     },
 };
 
-@decorate(StylePropable)
-@decorate(autoBind(StylePropable))
-class Card extends Component {
+class Card extends StyleableComponent {
 
     static propTypes = {
         title: React.PropTypes.string,

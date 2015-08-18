@@ -10,6 +10,8 @@ const { Avatar } = mui;
 const styles = {
     avatar: {
         display: 'flex',
+        height: 40,
+        width: 40,
     },
 };
 

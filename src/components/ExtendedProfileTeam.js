@@ -1,4 +1,3 @@
-
 import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import React, { Component } from 'react';
@@ -6,41 +5,24 @@ import { services } from 'protobufs';
 import shouldPureComponentUpdate from 'react-pure-render/function';
 
 import autoBind from '../utils/autoBind';
+import { getTeamLabel } from '../services/organization';
 
 import Card from './Card';
 import CardFooter from './CardFooter';
+import CardFooterProfiles from './CardFooterProfiles';
+import CardList from './CardList';
 import CardListItem from './CardListItem';
+import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
-
-const {
-    FlatButton,
-    List,
-} = mui;
 
 const { StylePropable } = mui.Mixins;
 
 const styles = {
     icon: {
         color: 'rgba(0, 0, 0, .4)',
-    },
-    footerAvatar: {
-        display: 'inline-block',
-        paddingLeft: 10,
-    },
-    footerAvatars: {
-        paddingLeft: 10,
-    },
-    list: {
-        paddingTop: 0,
-        paddingBottom: 0,
-    },
-    managerInnerDiv: {
-    },
-    row: {
-        width: '100%',
     },
 };
 
@@ -55,22 +37,6 @@ class ExtendedProfileTeam extends Component {
         team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
 
-    _getTeamSecondaryText(team) {
-        let parts = [];
-        if (team.child_team_count > 1) {
-            parts.push(`${team.child_team_count} teams`);
-        } else if (team.child_team_count === 1) {
-            parts.push(`${team.child_team_count} team`);
-        }
-
-        if (team.profile_count > 1) {
-            parts.push(`${team.profile_count} people`);
-        } else if (team.profile_count === 1) {
-            parts.push(`${team.profile_count} person`);
-        }
-        return parts.join(', ');
-    }
-
     _getManagerSecondaryText(manager) {
         const parts = [manager.full_name, manager.title];
         return parts.join(', ');
@@ -79,44 +45,35 @@ class ExtendedProfileTeam extends Component {
     _renderTeam() {
         const { team } = this.props;
         return (
-            <List className="col-xs" style={styles.list}>
+            <CardList>
                 <CardListItem
                     primaryText={team.name}
-                    secondaryText={this._getTeamSecondaryText(team)}
+                    secondaryText={getTeamLabel(team)}
                     leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
                 />
-            </List>
+            </CardList>
         );
     }
 
     _renderManager() {
         const { manager } = this.props;
         return (
-            <List className="col-xs" style={styles.list}>
+            <CardList>
                 <CardListItem
                     primaryText="Reports to"
                     secondaryText={this._getManagerSecondaryText(manager)}
                     leftAvatar={<ProfileAvatar profile={manager} />}
                 />
-            </List>
+            </CardList>
         );
     }
 
     _renderFooter() {
         const { peers } = this.props;
         if (peers) {
-            const containers = peers.slice(0, 5).map((item, index) => {
-                return (
-                    <div key={index} style={styles.footerAvatar}>
-                        <ProfileAvatar profile={item} />
-                    </div>
-                );
-            });
             return (
-                <CardFooter className="row" actionText="view all team members">
-                    <div style={this.mergeAndPrefix(styles.footerAvatars)}>
-                        {containers}
-                    </div>
+                <CardFooter actionText="view all team members">
+                    <CardFooterProfiles profiles={peers} />
                 </CardFooter>
             );
         }
@@ -125,11 +82,11 @@ class ExtendedProfileTeam extends Component {
     render() {
         return (
             <Card {...this.props} title="Team">
-                <div className="row" style={styles.row}>
+                <CardRow>
                     {this._renderTeam()}
                     <CardVerticalDivider />
                     {this._renderManager()}
-                </div>
+                </CardRow>
                 {this._renderFooter()}
             </Card>
         );
