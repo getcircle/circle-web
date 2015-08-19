@@ -48,7 +48,7 @@ class LocationDetail extends React.Component {
                 <Card title="Description" style={styles.section}>
                     <CardRow>
                         <span style={styles.description}>
-                            {office.description}
+                            {office.description.value}
                         </span>
                     </CardRow>
                 </Card>

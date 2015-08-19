@@ -42,7 +42,7 @@ class TeamDetail extends StyleableComponent {
                 <Card title="Description" style={styles.section}>
                     <CardRow>
                         <span style={styles.description}>
-                            {team.description}
+                            {team.description.value}
                         </span>
                     </CardRow>
                 </Card>
