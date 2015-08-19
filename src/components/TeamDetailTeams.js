@@ -33,6 +33,7 @@ class TeamDetailTeams extends StyleableComponent {
         teams: React.PropTypes.arrayOf(
             React.PropTypes.instanceOf(services.organization.containers.TeamV1),
         ).isRequired,
+        onClickTeam: React.PropTypes.func.isRequired,
     }
 
     _renderColumn(teams) {
@@ -43,6 +44,7 @@ class TeamDetailTeams extends StyleableComponent {
                     primaryText={item.name}
                     secondaryText={getTeamLabel(item)}
                     leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
+                    onTouchTap={this.props.onClickTeam.bind(null, item)}
                 />
             );
         })

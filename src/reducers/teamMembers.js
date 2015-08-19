@@ -16,12 +16,7 @@ const handleLoadTeamMembersSuccess = (state, action) => {
     } = action.payload;
     return state.withMutations(map => {
         map.update('members', map => {
-            const teamId = parameters.team_id;
-            if (map.has(teamId)) {
-                return map.update(teamId, list => list.concat(profiles));
-            } else {
-                return map.set(teamId, profiles);
-            }
+            return map.set(parameters.team_id, profiles);
         })
             .set('loading', false)
             .set('nextRequest', nextRequest);

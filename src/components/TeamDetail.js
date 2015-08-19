@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
 import React from 'react';
@@ -68,14 +69,21 @@ class TeamDetail extends StyleableComponent {
     }
 
     _renderChildTeams(childTeams) {
-        if (childTeams) {
-            return <TeamDetailTeams style={styles.section} teams={childTeams}/>;
+        if (childTeams && childTeams.length) {
+            return <TeamDetailTeams style={styles.section} teams={childTeams} onClickTeam={routeToTeam.bind(this)}/>;
         }
     }
 
-    _renderTeamMembers(members) {
+    _renderTeamMembers(manager, members) {
         if (members && members.length) {
-            return <TeamDetailTeamMembers style={styles.section} members={members}/>;
+            members = _.filter(members, (profile) => profile.id !== manager.id);
+            return (
+                <TeamDetailTeamMembers
+                    style={styles.section}
+                    members={members}
+                    onClickMember={routeToProfile.bind(this)}
+                />
+            );
         }
     }
 
@@ -90,7 +98,7 @@ class TeamDetail extends StyleableComponent {
                     {this._renderDescription(team)}
                     {this._renderManager(manager)}
                     {this._renderChildTeams(childTeams)}
-                    {this._renderTeamMembers(members)}
+                    {this._renderTeamMembers(manager, members)}
                 </DetailContent>
             </div>
         );

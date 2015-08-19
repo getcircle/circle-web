@@ -17,31 +17,36 @@ const styles = {}
 class TeamDetailTeamMembers extends StyleableComponent {
 
     static propTypes = {
+        managerId: React.PropTypes.string,
         members: React.PropTypes.arrayOf(
             React.PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
+        onClickMember: React.PropTypes.func,
     }
 
     _renderColumn(members) {
-        const children = members.map((item, index) => {
+        if (members.length) {
+            const children = members.map((item, index) => {
+                return (
+                    <CardListItem
+                        key={index}
+                        primaryText={item.full_name}
+                        secondaryText={item.title}
+                        leftAvatar={<ProfileAvatar profile={item} />}
+                        onTouchTap={this.props.onClickMember.bind(null, item)}
+                    />
+                );
+            });
             return (
-                <CardListItem
-                    key={index}
-                    primaryText={item.full_name}
-                    secondaryText={item.title}
-                    leftAvatar={<ProfileAvatar profile={item} />}
-                />
+                <CardList>
+                    {children}
+                </CardList>
             );
-        });
-        return (
-            <CardList>
-                {children}
-            </CardList>
-        );
+        }
     }
 
     _renderFooter(members) {
-        if (members) {
+        if (members.length) {
             return (
                 <CardFooter actionText="view all team members">
                     <CardFooterProfiles profiles={members} />
@@ -59,7 +64,11 @@ class TeamDetailTeamMembers extends StyleableComponent {
             <Card {...this.props} title="Team Members">
                 <CardRow>
                     {this._renderColumn(firstColumn)}
-                    <CardVerticalDivider />
+                    {() => {
+                        if (secondColumn.length) {
+                            return <CardVerticalDivider />;
+                        }
+                    }}
                     {this._renderColumn(secondColumn)}
                 </CardRow>
                 {this._renderFooter(members.slice(6))}

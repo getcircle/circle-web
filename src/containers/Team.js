@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import Immutable from 'immutable';
 import React from 'react';
 import { services } from 'protobufs';
 
@@ -33,7 +34,7 @@ class Team extends React.Component {
     static propTypes = {
         extendedTeam: React.PropTypes.object,
         members: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.profile.containers.ProfileV1)
+            React.PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
     }
 
