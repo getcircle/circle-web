@@ -55,6 +55,7 @@ const styles = {
         // backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
         minHeight: '100vh',
         backgroundColor: '#222',
+        paddingBottom: 20,
     },
     searchSection: {
         paddingTop: 52,
