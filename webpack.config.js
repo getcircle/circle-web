@@ -3,17 +3,22 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+function getMainCodeSources(entryFile){
+    var sources = [entryFile];
+
+    if(process.env.NODE_ENV !== 'production'){
+        sources.unshift('webpack-dev-server/client?http://localhost:9110', 'webpack/hot/only-dev-server');
+    }
+    return sources;
+}
+
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
-    entry: [
-        'webpack-dev-server/client?http://localhost:9110',
-        'webpack/hot/only-dev-server',
-        './src'
-    ],
+    entry: getMainCodeSources('./src'),
     output: {
         filename: 'app.js',
         path: path.join(__dirname, 'dist'),
-        publicPath: '/static/'
+        publicPath: '/dist/'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
