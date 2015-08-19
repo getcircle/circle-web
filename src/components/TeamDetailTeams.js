@@ -9,7 +9,7 @@ import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
-import GroupIcon from './OfficeIcon';
+import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 import StyleableComponent from './StyleableComponent';
 
