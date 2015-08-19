@@ -14,6 +14,7 @@ const styles = {
     avatar: {
         height: 120,
         width: 120,
+        fontSize: '48px',
     },
     avatarSection: {
         paddingTop: 17,
