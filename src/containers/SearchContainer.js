@@ -37,6 +37,9 @@ const styles = {
     listDivider: {
         marginRight: 20,
     },
+    organizationLogo: {
+        maxHeight: 200,
+    },
     organizationLogoSection: {
         marginTop: 15,
     },
@@ -48,8 +51,10 @@ const styles = {
         minWidth: 500,
     },
     root: {
-        backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
+        // slack's color
+        // backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
         minHeight: '100vh',
+        backgroundColor: '#222',
     },
     searchSection: {
         paddingTop: 52,
@@ -150,6 +155,7 @@ class SearchContainer extends React.Component {
     }
 
     render() {
+        // <img style={styles.organizationLogo} src={this.props.organization.image_url} />
         return (
             <div style={styles.root}>
                 <header>
@@ -161,7 +167,7 @@ class SearchContainer extends React.Component {
                     <section style={styles.organizationLogoSection}>
                         <div className="row">
                             <div className="col-xs-offset-4 col-xs-5 center-xs">
-                                <img src={this.props.organization.image_url} />
+                                <img style={styles.organizationLogo} src="https://scontent.fsnc1-1.fna.fbcdn.net/hphotos-xtf1/v/t1.0-9/11259121_10153814212864008_6881369548961207517_n.jpg?oh=b5bf7dd4fe8b5783f7a8b097873de9de&oe=56803EF1" />
                             </div>
                         </div>
                     </section>
