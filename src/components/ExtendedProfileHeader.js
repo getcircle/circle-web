@@ -89,6 +89,7 @@ class ExtendedProfileHeader extends StyleableComponent {
     componentWillMount() {
         // update the current time every 60 seconds
         this._updateCurrentTime();
+        // TODO we keep getting a warning about this I believe because "setState" isn't being called with a mounted component?
         setInterval(this._updateCurrentTime, 60000);
     }
 

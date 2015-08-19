@@ -37,13 +37,12 @@ class TeamDetail extends StyleableComponent {
     }
 
     _renderDescription(team) {
-        // if (team.description) {
-        if (true) {
+        if (team.description) {
             return (
                 <Card title="Description" style={styles.section}>
                     <CardRow>
                         <span style={styles.description}>
-                            Some description about the team
+                            {team.description}
                         </span>
                     </CardRow>
                 </Card>
