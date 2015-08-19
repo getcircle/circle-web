@@ -61,7 +61,7 @@ class TeamDetailTeamMembers extends StyleableComponent {
                         ref="modal"
                         title="Team Members"
                         onClickItem={this.props.onClickMember}
-                        items={members}
+                        items={this.props.members}
                     />
                 </div>
             );
