@@ -13,12 +13,10 @@ import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
 import DetailContent from './DetailContent';
-import EmbeddedGoogleMap from './EmbeddedGoogleMap';
 import LocationDetailHeader from './LocationDetailHeader';
+import LocationDetailLocation from './LocationDetailLocation';
 import ProfileAvatar from './ProfileAvatar';
 import StyleableComponent from './StyleableComponent';
-
-// <EmbeddedGoogleMap style={this.styles.location} location={location} height="450" width="100%" />
 
 const styles = {};
 
@@ -35,6 +33,9 @@ class LocationDetail extends React.Component {
         return (
             <div>
                 <LocationDetailHeader office={office} />
+                <DetailContent>
+                    <LocationDetailLocation office={office} />
+                </DetailContent>
             </div>
         );
     }
