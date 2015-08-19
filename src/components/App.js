@@ -48,7 +48,7 @@ class App extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!nextProps.authenticated && nextProps.location.pathname != 'login') {
+        if (!nextProps.authenticated && nextProps.location.pathname != '/login') {
             this.transitionTo('/login');
         }
     }
