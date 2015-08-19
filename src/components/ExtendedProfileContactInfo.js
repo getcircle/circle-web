@@ -24,12 +24,13 @@ const styles = {
 class ExtendedProfileContactInfo extends StyleableComponent {
 
     static propTypes = {
-        locations: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.organization.containers.LocationV1),
-        ),
         contactMethods: React.PropTypes.arrayOf(
             React.PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
+        locations: React.PropTypes.arrayOf(
+            React.PropTypes.instanceOf(services.organization.containers.LocationV1),
+        ),
+        onClickLocation: React.PropTypes.func,
     }
 
     _getAddress(location) {
@@ -49,6 +50,7 @@ class ExtendedProfileContactInfo extends StyleableComponent {
                         primaryText="Email"
                         secondaryText={item.value}
                         leftAvatar={<IconContainer IconClass={MailIcon} stroke={styles.icon.color}/>}
+                        disabled={true}
                     />
                 );
             case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
@@ -78,6 +80,7 @@ class ExtendedProfileContactInfo extends StyleableComponent {
                     primaryText={item.name}
                     secondaryText={this._getAddress(item)}
                     leftAvatar={<IconContainer IconClass={OfficeIcon} stroke={styles.icon.color} />}
+                    onTouchTap={this.props.onClickLocation.bind(null, item)}
                 />
             );
         })

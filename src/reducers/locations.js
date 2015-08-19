@@ -7,13 +7,13 @@ const initialState = Immutable.fromJS({
     objects: {},
 });
 
-export default function locations(state = initialState, action) {
+export default function locations(state=initialState, action) {
     switch(action.type) {
     case types.LOAD_LOCATION:
         return state.set('loading', true);
     case types.LOAD_LOCATION_SUCCESS:
         return state.withMutations(map => {
-            map.updateIn(['objects'], map => map.set(action.payload.location.id, action.payload.location))
+            map.updateIn(['objects'], map => map.set(action.payload.id, action.payload))
                 .set('loading', false);
         })
     case types.LOAD_LOCATION_FAILURE:

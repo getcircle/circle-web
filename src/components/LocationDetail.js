@@ -1,106 +1,44 @@
 import { decorate } from 'react-mixin';
-import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
+import { services } from 'protobufs';
 
+import moment from '../utils/moment';
+import { routeToProfile, routeToTeam } from '../utils/routes';
 import t from '../utils/gettext';
 
+import Card from './Card';
+import CardList from './CardList';
+import CardListItem from './CardListItem';
+import CardRow from './CardRow';
+import CardVerticalDivider from './CardVerticalDivider';
+import DetailContent from './DetailContent';
 import EmbeddedGoogleMap from './EmbeddedGoogleMap';
+import LocationDetailHeader from './LocationDetailHeader';
+import ProfileAvatar from './ProfileAvatar';
+import StyleableComponent from './StyleableComponent';
 
-const {
-    List,
-    ListDivider,
-    ListItem,
-} = mui;
+// <EmbeddedGoogleMap style={this.styles.location} location={location} height="450" width="100%" />
+
+const styles = {};
 
 @decorate(Navigation)
 class LocationDetail extends React.Component {
 
     static propTypes = {
-        location: React.PropTypes.object.isRequired,
-        profiles: React.PropTypes.array.isRequired,
-        teams: React.PropTypes.array.isRequired,
-        profilesNextRequest: React.PropTypes.object,
-        teamsNextRequest: React.PropTypes.object,
-    }
-
-    styles = {
-        image: {
-            maxWidth: 300,
-            maxHeight: 300,
-        },
-        sectionTitle: {
-            color: '#666',
-            fontSize: '16px',
-            letterSpacing: '1px',
-            paddingLeft: 0,
-            paddingTop: 10,
-            textTransform: 'uppercase',
-            fontWeight: 'normal',
-        },
-        location: {
-            paddingTop: 20,
-        },
-    }
-
-    _renderLocationImage() {
-        const { location } = this.props;
-        if (location.image_url) {
-            return <img className="extended_profile__image" src={location.image_url} />;
-        }
-    }
-
-    _renderProfiles() {
-        const { location } = this.props;
-        return (
-            <List subheader={t('People')} subheaderStyle={this.styles.sectionTitle}>
-                <ListItem onTouchTap={this._routeToProfiles}>
-                    {`${location.profile_count} people`}
-                </ListItem>
-            </List>
-        );
-    }
-
-    _renderTeams() {
-        let count = this.props.teams.length;
-        const { teamsNextRequest } = this.props;
-        if (teamsNextRequest) {
-            count = teamsNextRequest.actions[0].control.paginator.count;
-        }
-        return (
-            <List subheader={t('Teams')} subheaderStyle={this.styles.sectionTitle}>
-                <ListItem onTouchTap={this._routeToTeams}>
-                    {`${count} teams`}
-                </ListItem>
-            </List>
-        );
+        office: React.PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
+        members: React.PropTypes.arrayOf(React.PropTypes.instanceOf(services.profile.containers.ProfileV1)),
     }
 
     render() {
-        const {
-            location,
-            profiles,
-        } = this.props;
-
+        const { office } = this.props;
         return (
-            <div className="row item_detail">
-                <div className="col-sm-3">
-                    {this._renderLocationImage()}
-                </div>
-                <div className="col-sm-9 item_detail__details">
-                    <div className="row start-xs">
-                        <h1>{location.name}</h1>
-                    </div>
-                    <div className="row start-xs">
-                        <EmbeddedGoogleMap style={this.styles.location} location={location} height="450" width="100%" />
-                    </div>
-                    {this._renderProfiles()}
-                    <ListDivider />
-                    {this._renderTeams()}
-                </div>
+            <div>
+                <LocationDetailHeader office={office} />
             </div>
         );
     }
+
 }
 
 export default LocationDetail;

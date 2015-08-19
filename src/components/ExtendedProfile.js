@@ -3,7 +3,11 @@ import { Navigation } from 'react-router';
 import React from 'react';
 import { services } from 'protobufs';
 
-import { routeToProfile, routeToTeam } from '../utils/routes';
+import {
+    routeToProfile,
+    routeToLocation,
+    routeToTeam,
+} from '../utils/routes';
 
 import DetailContent from './DetailContent';
 import ExtendedProfileContactInfo from './ExtendedProfileContactInfo';
@@ -41,6 +45,7 @@ class ExtendedProfile extends StyleableComponent {
                 style={this.mergeAndPrefix(styles.section)}
                 contactMethods={contactMethods}
                 locations={locations}
+                onClickLocation={routeToLocation.bind(this)}
             />
         );
     }

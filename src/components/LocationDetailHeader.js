@@ -2,8 +2,8 @@ import React from 'react';
 import { services } from 'protobufs';
 
 import DetailHeader from './DetailHeader';
-import GroupIcon from './GroupIcon'
 import IconContainer from './IconContainer';
+import OfficeIcon from './OfficeIcon';
 import StyleableComponent from './StyleableComponent';
 
 const styles = {
@@ -31,6 +31,10 @@ const styles = {
         fontWeight: 600,
         lineHeight: '17px',
     },
+    locationIconSection: {
+        position: 'relative',
+        paddingTop: 60,
+    },
     name: {
         color: 'white',
         fontSize: '36px',
@@ -39,53 +43,42 @@ const styles = {
     nameSection: {
         paddingTop: 20,
     },
-    teamIconSection: {
-        position: 'relative',
-        paddingTop: 60,
-    },
 };
 
-class TeamDetailHeader extends StyleableComponent {
+class LocationDetailHeader extends StyleableComponent {
 
     static propTypes = {
-        team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
+        office: React.PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
     }
 
-    _getTeamInfo(team) {
+    _getLocationInfo(location) {
         let parts = [];
-        if (team.child_team_count > 1) {
-            parts.push(`${team.child_team_count} teams`);
-        } else if (team.child_team_count === 1) {
-            parts.push(`${team.child_team_count} team`);
+        if (location.profile_count > 1) {
+            parts.push(`${location.profile_count} people`);
+        } else if (location.profile_count === 1) {
+            parts.push(`${location.profile_count} person`);
         }
-
-        if (team.profile_count > 1) {
-            parts.push(`${team.profile_count} people`);
-        } else if (team.profile_count === 1) {
-            parts.push(`${team.profile_count} person`);
-        }
-
-        return parts.join(' | ');
+        return parts.join(',');
     }
 
     render() {
-        const { team } = this.props;
+        const { office } = this.props;
         return (
             <DetailHeader>
-                <div className="row center-xs" style={styles.teamIconSection}>
+                <div className="row center-xs" style={styles.locationIconSection}>
                     <IconContainer
                         style={styles.iconContainer}
-                        IconClass={GroupIcon}
+                        IconClass={OfficeIcon}
                         iconStyle={styles.icon}
                         stroke={styles.icon.color}
                         strokeWidth={styles.icon.strokeWidth}
                     />
                 </div>
                 <div className="row center-xs" style={styles.nameSection}>
-                    <span style={styles.name}>{team.name}</span>
+                    <span style={styles.name}>{office.name}</span>
                 </div>
                 <div className="row center-xs" style={styles.infoSection}>
-                    <span style={styles.info}>{this._getTeamInfo(team)}</span>
+                    <span style={styles.info}>{this._getLocationInfo(office)}</span>
                 </div>
             </DetailHeader>
         );
@@ -93,4 +86,4 @@ class TeamDetailHeader extends StyleableComponent {
 
 }
 
-export default TeamDetailHeader;
+export default LocationDetailHeader;
