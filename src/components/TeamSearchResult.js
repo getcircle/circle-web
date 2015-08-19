@@ -40,7 +40,7 @@ class TeamSearchResult extends React.Component {
             <ListItem
                 leftAvatar={<Avatar src={teamIcon} />}
                 onTouchTap={this._handleTouchTap}
-                primaryText={team.name}
+                primaryText={team.display_name}
                 secondaryText={t(`${team.profile_count} members`)}
             />
         );

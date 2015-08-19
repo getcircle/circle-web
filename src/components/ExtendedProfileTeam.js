@@ -49,7 +49,7 @@ class ExtendedProfileTeam extends Component {
         return (
             <CardList>
                 <CardListItem
-                    primaryText={team.name}
+                    primaryText={team.display_name}
                     secondaryText={getTeamLabel(team)}
                     leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
                     onTouchTap={this.props.onClickTeam}

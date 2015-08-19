@@ -82,7 +82,7 @@ class TeamDetailHeader extends StyleableComponent {
                     />
                 </div>
                 <div className="row center-xs" style={styles.nameSection}>
-                    <span style={styles.name}>{team.name}</span>
+                    <span style={styles.name}>{team.display_name}</span>
                 </div>
                 <div className="row center-xs" style={styles.infoSection}>
                     <span style={styles.info}>{this._getTeamInfo(team)}</span>

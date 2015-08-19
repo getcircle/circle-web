@@ -41,7 +41,7 @@ class TeamDetailTeams extends StyleableComponent {
             return (
                 <CardListItem
                     key={index}
-                    primaryText={item.name}
+                    primaryText={item.display_name}
                     secondaryText={getTeamLabel(item)}
                     leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
                     onTouchTap={this.props.onClickTeam.bind(null, item)}
