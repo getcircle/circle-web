@@ -7,12 +7,10 @@ import Card from './Card';
 import StyleableComponent from './StyleableComponent';
 
 const styles = {
-    card: {
-        padding: 20,
-    },
     contentStyle: {
         display: 'flex',
         flexDirection: 'row',
+        padding: 20,
     },
     dateBox: {
         borderRadius: 2,
@@ -58,18 +56,27 @@ class ExtendedProfileStatus extends StyleableComponent {
         status: React.PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
     }
 
+    _renderStatusText(status) {
+        if (status && status.value) {
+            return status.value;
+        } else {
+            return "Ask me!";
+        }
+    }
+
     render() {
         const {
             status,
             style,
             ...other
         } = this.props;
-        const created = moment(status.created);
+        let created = status ? moment(status.created) : moment();
         return (
             <Card
                 {...other}
-                style={this.mergeAndPrefix(styles.card, style)}
+                style={this.mergeAndPrefix(style)}
                 contentStyle={styles.contentStyle}
+                title="Currently Working On"
             >
                 <div style={styles.dateBox}>
                     <span style={this.mergeAndPrefix(
@@ -86,7 +93,7 @@ class ExtendedProfileStatus extends StyleableComponent {
                     </span>
                 </div>
                 <div style={this.mergeAndPrefix(styles.statusContainer)}>
-                    <span style={this.mergeAndPrefix(styles.statusText)}>{status.value}</span>
+                    <span style={this.mergeAndPrefix(styles.statusText)}>{this._renderStatusText(status)}</span>
                 </div>
             </Card>
         );

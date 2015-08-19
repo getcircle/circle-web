@@ -34,9 +34,7 @@ class ExtendedProfile extends StyleableComponent {
     }
 
     _renderStatus(status) {
-        if (status) {
-            return <ExtendedProfileStatus style={this.mergeAndPrefix(styles.section)} status={status}/>;
-        }
+        return <ExtendedProfileStatus style={this.mergeAndPrefix(styles.section)} status={status}/>;
     }
 
     _renderContactInfo(contactMethods=[], locations=[]) {
@@ -108,7 +106,7 @@ class ExtendedProfile extends StyleableComponent {
                     team={team}
                 />
                 <DetailContent>
-                    {this._renderStatus()}
+                    {this._renderStatus(profile.status)}
                     {this._renderContactInfo(this._getContactMethods(), locations)}
                     {this._renderTeam(manager, peers, team)}
                     {this._renderManages(manages_team, direct_reports)}
