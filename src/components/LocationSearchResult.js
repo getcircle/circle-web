@@ -3,6 +3,7 @@ import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
+import { routeToLocation } from '../utils/routes';
 import t from '../utils/gettext';
 import officeIcon from '../images/icons/office_icon.svg';
 
@@ -16,19 +17,16 @@ class LocationSearchResult extends React.Component {
 
     static propTypes = {
         location: React.PropTypes.object.isRequired,
-    }
-
-    styles = {
-        detailsContainer: {
-            textAlign: 'left',
-        },
+        onClick: React.PropTypes.func,
     }
 
     _handleTouchTap = this._handleTouchTap.bind(this)
     _handleTouchTap() {
-        // TODO fix this
-        this.props.flux.getActions('SearchActions').clearResults();
-        this.transitionTo(`/location/${this.props.location.id}`);
+        if (this.props.onClick) {
+            this.props.onClick();
+        }
+
+        routeToLocation.apply(this, [this.props.location]);
     }
 
     render() {

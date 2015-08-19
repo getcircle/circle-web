@@ -49,6 +49,12 @@ class Location extends PureComponent {
         this._fetchLocation(this.props);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.params.locationId !== this.props.params.locationId) {
+            this._fetchLocation(nextProps);
+        }
+    }
+
     _fetchLocation(props) {
         props.dispatch(loadLocation(props.params.locationId));
         props.dispatch(loadLocationMembers(props.params.locationId));

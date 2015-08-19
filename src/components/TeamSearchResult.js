@@ -3,6 +3,7 @@ import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
+import { routeToTeam } from '../utils/routes';
 import t from '../utils/gettext';
 import teamIcon from '../images/icons/group_icon.svg';
 
@@ -16,6 +17,7 @@ class TeamSearchResult extends React.Component {
 
     static propTypes = {
         team: React.PropTypes.object.isRequired,
+        onClick: React.PropTypes.func,
     }
 
     styles = {
@@ -26,7 +28,10 @@ class TeamSearchResult extends React.Component {
 
     _handleTouchTap = this._handleTouchTap.bind(this)
     _handleTouchTap() {
-        this.transitionTo(`/team/${this.props.team.id}`);
+        if (this.props.onClick) {
+            this.props.onClick();
+        }
+        routeToTeam.apply(this, [this.props.team]);
     }
 
     render() {

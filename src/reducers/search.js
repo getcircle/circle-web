@@ -10,9 +10,15 @@ const initialState = Immutable.fromJS({
 export default function search(state = initialState, action) {
     switch(action.type) {
     case types.SEARCH_SUCCESS:
-        return state.setIn(['results', action.payload.query], action.payload.results);
+        return state.withMutations(map => {
+            map.setIn(['results', action.payload.query], action.payload.results)
+                .set('active', true);
+        });
     case types.CLEAR_SEARCH_RESULTS:
-        return state.update('results', map => map.clear());
+        return state.withMutations(map => {
+            map.update('results', map => map.clear())
+                .set('active', false);
+        });
     }
     return state;
 }

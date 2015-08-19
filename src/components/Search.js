@@ -86,6 +86,7 @@ const selector = createSelector(
         return {
             searchResults: searchState.get('results'),
             exploreResults: exploreState.get('results'),
+            active: searchState.get('active'),
         }
     },
 );
@@ -106,6 +107,7 @@ const selector = createSelector(
 class Search extends React.Component {
 
     static propTypes = {
+        active: React.PropTypes.bool,
         defaultResults: React.PropTypes.object,
         searchCategory: React.PropTypes.number,
         onClearCategory: React.PropTypes.func,
@@ -116,6 +118,7 @@ class Search extends React.Component {
     }
 
     static defaultProps = {
+        active: false,
         focused: false,
         searchCategory: null,
         inHeader: false,
@@ -144,10 +147,18 @@ class Search extends React.Component {
                 this._exploreSearchCategory(nextProps);
             }
         }
+
+        if (!nextProps.active && this.props.active) {
+            this._clear();
+        }
     }
 
     componentDidUpdate() {
         this._focusInput();
+    }
+
+    _clear() {
+        this.setState({focused: false, results: [], query: null});
     }
 
     _loadResults(props) {
@@ -250,6 +261,7 @@ class Search extends React.Component {
                         className="start-xs"
                         results={this.state.results.slice(0, 5)}
                         style={resultsStyle}
+                        onClickResult={this.props.dispatch.bind(this, clearSearchResults())}
                     />
                 );
             }

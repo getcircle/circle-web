@@ -17,26 +17,28 @@ class SearchResults extends React.Component {
 
     static propTypes = {
         results: React.PropTypes.array.isRequired,
+        onClickResult: React.PropTypes.func,
     }
 
     _renderSearchResults() {
         let components = [];
         let key = 0;
+        const { onClickResult } = this.props;
         for (let index in this.props.results) {
             key += index;
             let result = this.props.results[index];
             if (result.profile) {
-                components.push(<ProfileSearchResult key={key} profile={result.profile} />);
+                components.push(<ProfileSearchResult onClick={onClickResult} key={key} profile={result.profile} />);
             } else if (result.team) {
-                components.push(<TeamSearchResult key={key} team={result.team} />);
+                components.push(<TeamSearchResult onClick={onClickResult} key={key} team={result.team} />);
             } else if (result.location) {
-                components.push(<LocationSearchResult key={key} location={result.location} />);
+                components.push(<LocationSearchResult onClick={onClickResult} key={key} location={result.location} />);
             } else if (result instanceof services.profile.containers.ProfileV1) {
-                components.push(<ProfileSearchResult key={key} profile={result} />);
+                components.push(<ProfileSearchResult onClick={onClickResult} key={key} profile={result} />);
             } else if (result instanceof services.organization.containers.TeamV1) {
-                components.push(<TeamSearchResult key={key} team={result} />);
+                components.push(<TeamSearchResult onClick={onClickResult} key={key} team={result} />);
             } else if (result instanceof services.organization.containers.LocationV1) {
-                components.push(<LocationSearchResult key={key} location={result} />);
+                components.push(<LocationSearchResult onClick={onClickResult} key={key} location={result} />);
             }
             if (parseInt(index) + 1 != this.props.results.length) {
                 key += 1

@@ -3,6 +3,8 @@ import mui from 'material-ui';
 import { Navigation } from 'react-router';
 import React from 'react';
 
+import { routeToProfile } from '../utils/routes';
+
 import ProfileAvatar from './ProfileAvatar';
 
 const { ListItem } = mui;
@@ -12,10 +14,14 @@ class ProfileSearchResult extends React.Component {
 
     static propTypes = {
         profile: React.PropTypes.object.isRequired,
+        onClick: React.PropTypes.func,
     }
 
     _handleTouchTap(profile) {
-        this.transitionTo(`/profile/${profile.id}`);
+        if (this.props.onClick) {
+            this.props.onClick();
+        }
+        routeToProfile.apply(this, [profile]);
     }
 
     render() {
