@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import React from 'react';
 import { services } from 'protobufs';
 
-import { loadExtendedTeam } from '../actions/teams';
+import { loadExtendedTeam, loadTeamMembers } from '../actions/teams';
 import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
@@ -13,10 +13,16 @@ import PureComponent from '../components/PureComponent';
 import TeamDetail from '../components/TeamDetail';
 
 const selector = createSelector(
-    [selectors.extendedTeamsSelector, selectors.routerSelector],
-    (extendedTeamsState, routerState) => {
+    [
+        selectors.extendedTeamsSelector,
+        selectors.routerSelector,
+        selectors.teamMembersSelector,
+    ],
+    (extendedTeamsState, routerState, membersState) => {
         return {
+            loading: extendedTeamsState.get('loading') || membersState.get('loading'),
             extendedTeam: extendedTeamsState.getIn(['objects', routerState.params.teamId]),
+            members: membersState.getIn(['members', routerState.params.teamId]),
         }
     }
 );
@@ -26,6 +32,9 @@ class Team extends React.Component {
 
     static propTypes = {
         extendedTeam: React.PropTypes.object,
+        members: React.PropTypes.arrayOf(
+            React.PropTypes.instanceOf(services.profile.containers.ProfileV1)
+        ),
     }
 
     static childContextTypes = {
@@ -34,6 +43,7 @@ class Team extends React.Component {
 
     _loadTeam(props) {
         props.dispatch(loadExtendedTeam(props.params.teamId));
+        props.dispatch(loadTeamMembers(props.params.teamId));
     }
 
     componentWillMount() {
@@ -55,9 +65,10 @@ class Team extends React.Component {
     _renderTeam() {
         const {
             extendedTeam,
+            members,
         } = this.props;
-        if (extendedTeam) {
-            return <TeamDetail extendedTeam={extendedTeam} />;
+        if (extendedTeam && members) {
+            return <TeamDetail extendedTeam={extendedTeam} members={members} />;
         } else {
             return <CenterLoadingIndicator />;
         }

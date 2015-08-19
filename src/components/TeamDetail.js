@@ -14,6 +14,7 @@ import DetailContent from './DetailContent';
 import ProfileAvatar from './ProfileAvatar';
 import StyleableComponent from './StyleableComponent';
 import TeamDetailHeader from './TeamDetailHeader';
+import TeamDetailTeamMembers from './TeamDetailTeamMembers';
 import TeamDetailTeams from './TeamDetailTeams';
 
 const styles = {
@@ -72,10 +73,16 @@ class TeamDetail extends StyleableComponent {
         }
     }
 
+    _renderTeamMembers(members) {
+        if (members && members.length) {
+            return <TeamDetailTeamMembers style={styles.section} members={members}/>;
+        }
+    }
+
     render() {
-        const { extendedTeam } = this.props;
+        const { extendedTeam, members } = this.props;
         const { team, reportingDetails } = extendedTeam;
-        const { manager, members, childTeams } = reportingDetails;
+        const { manager, childTeams } = reportingDetails;
         return (
             <div>
                 <TeamDetailHeader team={team} />
@@ -83,6 +90,7 @@ class TeamDetail extends StyleableComponent {
                     {this._renderDescription(team)}
                     {this._renderManager(manager)}
                     {this._renderChildTeams(childTeams)}
+                    {this._renderTeamMembers(members)}
                 </DetailContent>
             </div>
         );

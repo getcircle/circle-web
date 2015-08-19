@@ -6,3 +6,4 @@ export { default as header } from './header';
 export { default as locations } from './locations';
 export { default as profiles } from './profiles';
 export { default as search } from './search';
+export { default as teamMembers } from './teamMembers';

@@ -16,7 +16,7 @@ class ProfileAvatar extends React.Component {
 
     _getInitials() {
         const profile = this.props.profile;
-        return [profile.first_name[0], profile.last_name[0]].map((character, index) => _.capitalize(character)).join('');
+        return [profile.first_name[0]].map((character, index) => _.capitalize(character)).join('');
     }
 
     render() {

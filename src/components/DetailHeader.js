@@ -4,7 +4,7 @@ import StyleableComponent from './StyleableComponent';
 
 const styles = {
     root: {
-        backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
+        backgroundColor: '#333',
         height: 320,
     },
 };

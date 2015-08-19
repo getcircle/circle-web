@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Immutable from 'immutable';
 
 import * as types from '../constants/actionTypes';
@@ -28,9 +27,6 @@ export default function profiles(state = initialState, action) {
 
     case types.LOAD_PROFILES_FAILURE:
         return state.set('loading', false);
-
-    defaut:
-        return state;
     }
     return state;
 }

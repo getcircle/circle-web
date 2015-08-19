@@ -17,8 +17,9 @@ const styles = {
         position: 'relative',
         height: 120,
         width: 120,
-        backgroundColor: '#377FC0',
-        border: '1px solid #377FC0',
+        border: '1px solid white',
+        top: 0,
+        left: 0,
     },
     infoSection: {
         paddingTop: 8,

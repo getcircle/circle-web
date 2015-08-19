@@ -6,6 +6,9 @@ import StyleableComponent from './StyleableComponent';
 
 const styles = {
     avatar: {
+        fontSize: '16px',
+    },
+    avatarContainer: {
         paddingLeft: 10,
         alignSelf: 'center',
     },
@@ -34,8 +37,8 @@ class CardFooterProfiles extends StyleableComponent {
         } = this.props;
         const containers = profiles.slice(0, MAX_PROFILES).map((item, index) => {
             return (
-                <div key={index} style={styles.avatar}>
-                    <ProfileAvatar profile={item} />
+                <div key={index} style={styles.avatarContainer}>
+                    <ProfileAvatar profile={item} style={styles.avatar}/>
                 </div>
             );
         })

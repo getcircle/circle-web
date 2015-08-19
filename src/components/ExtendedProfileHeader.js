@@ -144,7 +144,7 @@ class ExtendedProfileHeader extends StyleableComponent {
                 </div>
                 <div className="row center-xs" style={styles.titleSection}>
                     <span style={this.mergeAndPrefix(styles.title)}>
-                        {profile.title} {team ? `| {team.name}` : '' }
+                        {profile.title} {team && team.name ? `| ${team.name}` : '' }
                     </span>
                 </div>
             </DetailHeader>
