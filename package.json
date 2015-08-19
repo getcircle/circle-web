@@ -5,6 +5,7 @@
   "scripts": {
     "build": "npm run clean && webpack --progress",
     "clean": "rm -rf dist",
+    "deploy": "NODE_ENV=production npm run build && divshot deploy production",
     "lint": "eslint src",
     "start": "npm run build && node server.js",
     "setup-dns": "echo '127.0.0.1 local.circlehq.co' >> /etc/hosts && dscacheutil -flushcache",
