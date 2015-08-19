@@ -57,12 +57,11 @@ class LocationDetail extends React.Component {
     }
 
     _renderPointsOfContact(office) {
-        // if (office.points_of_contact && office.points_of_contact.length) {
-        if (true) {
+        if (office.points_of_contact && office.points_of_contact.length) {
             return (
                 <DetailMembers
                     title="Points of Contact"
-                    members={this.props.members} 
+                    members={office.points_of_contact} 
                     actionText="View all Points of Contact"
                     perColumn={1}
                     onClickMember={routeToProfile.bind(this)}

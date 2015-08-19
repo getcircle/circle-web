@@ -26,6 +26,7 @@ class LocationSearchResult extends React.Component {
 
     _handleTouchTap = this._handleTouchTap.bind(this)
     _handleTouchTap() {
+        // TODO fix this
         this.props.flux.getActions('SearchActions').clearResults();
         this.transitionTo(`/location/${this.props.location.id}`);
     }
