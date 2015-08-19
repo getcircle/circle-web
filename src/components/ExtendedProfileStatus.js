@@ -1,4 +1,7 @@
 import React from 'react';
+import { services } from 'protobufs';
+
+import moment from '../utils/moment';
 
 import Card from './Card';
 import StyleableComponent from './StyleableComponent';
@@ -45,16 +48,23 @@ const styles = {
     text: {
         color: 'rgba(0, 0, 0, 0.4)',
         textAlign: 'center',
+        textTransform: 'uppercase',
     },
 }
 
 class ExtendedProfileStatus extends StyleableComponent {
 
+    static propTypes = {
+        status: React.PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
+    }
+
     render() {
         const {
+            status,
             style,
             ...other
         } = this.props;
+        const created = moment(status.created);
         return (
             <Card
                 {...other}
@@ -66,17 +76,17 @@ class ExtendedProfileStatus extends StyleableComponent {
                         styles.text,
                         styles.date1,
                     )}>
-                        28
+                        {created.format("D")}
                     </span>
                     <span style={this.mergeAndPrefix(
                         styles.text,
                         styles.date2,
                     )}>
-                        MAR
+                        {created.format("MMM")}
                     </span>
                 </div>
                 <div style={this.mergeAndPrefix(styles.statusContainer)}>
-                    <span style={this.mergeAndPrefix(styles.statusText)}>“I’m currently working on refinements to search, detail pages, and asset creation.”</span>
+                    <span style={this.mergeAndPrefix(styles.statusText)}>{status.value}</span>
                 </div>
             </Card>
         );

@@ -29,8 +29,10 @@ class ExtendedProfile extends StyleableComponent {
         organization: React.PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
     }
 
-    _renderStatus() {
-        return <ExtendedProfileStatus style={this.mergeAndPrefix(styles.section)}/>;
+    _renderStatus(status) {
+        if (status) {
+            return <ExtendedProfileStatus style={this.mergeAndPrefix(styles.section)} status={status}/>;
+        }
     }
 
     _renderContactInfo(contactMethods=[], locations=[]) {
