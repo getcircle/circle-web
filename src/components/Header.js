@@ -31,6 +31,10 @@ const selector = createSelector(
 )
 
 const styles = {
+    image: {
+        height: 60,
+        cursor: 'pointer',
+    },
     root: {
         // TODO this should be moved to the app theme
         backgroundColor: 'white',
@@ -59,7 +63,8 @@ class Header extends React.Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-xs-offset-2 col-xs-2">
+                    <div className="col-xs-4">
+                        <img style={styles.image} src="https://s3.amazonaws.com/otterbots-media/organizations/RV_Main_Logo.png" onTouchTap={() => this.transitionTo('/')}/>
                     </div>
                     <div className="col-xs-4">
                         <Search inHeader={true} />
