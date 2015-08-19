@@ -21,6 +21,7 @@ class DetailMembers extends StyleableComponent {
         ),
         perColumn: React.PropTypes.number,
         onClickMember: React.PropTypes.func,
+        onClickActionText: React.PropTypes.func,
     }
 
     static defaultProps = {
@@ -51,7 +52,7 @@ class DetailMembers extends StyleableComponent {
     _renderFooter(members) {
         if (members.length) {
             return (
-                <CardFooter actionText={this.props.actionText}>
+                <CardFooter actionText={this.props.actionText} onClick={this.props.onClickActionText}>
                     <CardFooterProfiles profiles={members} />
                 </CardFooter>
             );

@@ -14,6 +14,7 @@ import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
 import DetailContent from './DetailContent';
 import DetailMembers from './DetailMembers';
+import DetailViewAll from './DetailViewAll';
 import LocationDetailHeader from './LocationDetailHeader';
 import LocationDetailLocation from './LocationDetailLocation';
 import ProfileAvatar from './ProfileAvatar';
@@ -71,6 +72,10 @@ class LocationDetail extends React.Component {
         }
     }
 
+    _handleClickAction() {
+        this.refs.modal.show();
+    }
+
     _renderMembers(members) {
         if (members.length) {
             return (
@@ -80,6 +85,7 @@ class LocationDetail extends React.Component {
                     actionText="View all People"
                     onClickMember={routeToProfile.bind(this)}
                     style={styles.section}
+                    onClickActionText={this._handleClickAction.bind(this)}
                 />
             );
         }
@@ -96,6 +102,12 @@ class LocationDetail extends React.Component {
                     {this._renderPointsOfContact(office)}
                     {this._renderMembers(members)}
                 </DetailContent>
+                <DetailViewAll
+                    ref="modal"
+                    title={`Working at ${this.props.office.name}`}
+                    onClickItem={routeToProfile.bind(this)}
+                    items={members}
+                />
             </div>
         );
     }

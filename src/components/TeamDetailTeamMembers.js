@@ -8,6 +8,7 @@ import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
+import DetailViewAll from './DetailViewAll';
 import StyleableComponent from './StyleableComponent';
 
 import ProfileAvatar from './ProfileAvatar';
@@ -45,12 +46,24 @@ class TeamDetailTeamMembers extends StyleableComponent {
         }
     }
 
+    _handleClickAction() {
+        this.refs.modal.show();
+    }
+
     _renderFooter(members) {
         if (members.length) {
             return (
-                <CardFooter actionText="view all team members">
-                    <CardFooterProfiles profiles={members} />
-                </CardFooter>
+                <div>
+                    <CardFooter actionText="view all team members" onClick={this._handleClickAction.bind(this)}>
+                        <CardFooterProfiles profiles={members} />
+                    </CardFooter>
+                    <DetailViewAll
+                        ref="modal"
+                        title="Team Members"
+                        onClickItem={this.props.onClickMember}
+                        items={members}
+                    />
+                </div>
             );
         }
     }

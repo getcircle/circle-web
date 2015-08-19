@@ -9,6 +9,7 @@ import CardFooterProfiles from './CardFooterProfiles';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
+import DetailViewAll from './DetailViewAll';
 import StyleableComponent from './StyleableComponent';
 
 import GroupIcon from './GroupIcon';
@@ -27,6 +28,7 @@ class ExtendedProfileManages extends StyleableComponent {
         team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
         directReports: React.PropTypes.arrayOf(services.profile.containers.ProfileV1),
         onClickTeam: React.PropTypes.func,
+        onClickDirectReport: React.PropTypes.func,
     }
 
     _renderTeam() {
@@ -43,13 +45,25 @@ class ExtendedProfileManages extends StyleableComponent {
         );
     }
 
+    _handleClickAction() {
+        this.refs.modal.show();
+    }
+
     _renderFooter() {
         const { directReports } = this.props;
-        if (directReports) {
+        if (directReports && directReports.length) {
             return (
-                <CardFooter actionText="view all direct reports">
-                    <CardFooterProfiles profiles={directReports} />
-                </CardFooter>
+                <div>
+                    <CardFooter actionText="view all direct reports" onClick={this._handleClickAction.bind(this)}>
+                        <CardFooterProfiles profiles={directReports} />
+                    </CardFooter>
+                    <DetailViewAll
+                        ref="modal"
+                        title="Direct Reports"
+                        onClickItem={this.props.onClickDirectReport}
+                        items={directReports}
+                    />
+                </div>
             );
         }
     }

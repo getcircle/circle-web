@@ -42,7 +42,7 @@ class CardFooter extends StyleableComponent {
             <footer {...this.props} className="row" style={this.mergeAndPrefix(styles.root)}>
                 {this.props.children}
                 <div style={this.mergeAndPrefix(styles.footerButton)}>
-                    <FlatButton labelStyle={styles.footerButtonLabel} label={actionText} />
+                    <FlatButton labelStyle={styles.footerButtonLabel} label={actionText} onTouchTap={onClick} />
                 </div>
             </footer>
         );

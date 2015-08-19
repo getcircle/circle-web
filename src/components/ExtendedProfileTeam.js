@@ -1,11 +1,10 @@
-import { decorate } from 'react-mixin';
 import mui from 'material-ui';
-import React, { Component } from 'react';
+import React from 'react';
 import { services } from 'protobufs';
-import shouldPureComponentUpdate from 'react-pure-render/function';
 
-import autoBind from '../utils/autoBind';
 import { getTeamLabel } from '../services/organization';
+
+import StyleableComponent from './StyleableComponent';
 
 import Card from './Card';
 import CardFooter from './CardFooter';
@@ -14,11 +13,14 @@ import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
+import DetailViewAll from './DetailViewAll';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
+import ProfileSearchResult from './ProfileSearchResult';
+import Search from '../components/Search';
 
-const { StylePropable } = mui.Mixins;
+const { Dialog, List } = mui;
 
 const styles = {
     icon: {
@@ -26,15 +28,13 @@ const styles = {
     },
 };
 
-@decorate(StylePropable)
-@decorate(autoBind(StylePropable))
-class ExtendedProfileTeam extends Component {
-    shouldComponentUpdate = shouldPureComponentUpdate;
+class ExtendedProfileTeam extends StyleableComponent {
 
     static propTypes = {
         manager: React.PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         onClickManager: React.PropTypes.func,
         onClickTeam: React.PropTypes.func,
+        onClickPeer: React.PropTypes.func,
         peers: React.PropTypes.arrayOf(services.profile.containers.ProfileV1),
         team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
@@ -72,13 +72,28 @@ class ExtendedProfileTeam extends Component {
         );
     }
 
+    _handleClickAction() {
+        this.refs.modal.show();
+    }
+
     _renderFooter() {
         const { peers } = this.props;
-        if (peers) {
+        if (peers && peers.length) {
             return (
-                <CardFooter actionText="view all team members">
-                    <CardFooterProfiles profiles={peers} />
-                </CardFooter>
+                <div>
+                    <CardFooter
+                        actionText="view all team members"
+                        onClick={this._handleClickAction.bind(this)}
+                    >
+                        <CardFooterProfiles profiles={peers} />
+                    </CardFooter>
+                    <DetailViewAll
+                        ref="modal"
+                        title="Team Members"
+                        onClickItem={this.props.onClickPeer}
+                        items={peers}
+                    />
+                </div>
             );
         }
     }

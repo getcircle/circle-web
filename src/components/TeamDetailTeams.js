@@ -9,6 +9,7 @@ import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
+import DetailViewAll from './DetailViewAll';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 import StyleableComponent from './StyleableComponent';
@@ -55,12 +56,24 @@ class TeamDetailTeams extends StyleableComponent {
         );
     }
 
+    _handleClickAction() {
+        this.refs.modal.show();
+    }
+
     _renderCardFooter(teams) {
         if (teams.length > 4) {
             return (
-                <CardFooter actionText="view all teams">
-                    <span style={styles.teamsFooterText}>{`${teams.length} teams`}</span>
-                </CardFooter>
+                <div>
+                    <CardFooter actionText="view all teams" onClick={this._handleClickAction.bind(this)}>
+                        <span style={styles.teamsFooterText}>{`${teams.length} teams`}</span>
+                    </CardFooter>
+                    <DetailViewAll
+                        ref="modal"
+                        title="Teams"
+                        onClickItem={this.props.onClickTeam}
+                        items={teams}
+                    />
+                </div>
             );
         }
     }

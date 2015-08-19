@@ -58,6 +58,7 @@ class ExtendedProfile extends StyleableComponent {
                     team={team}
                     onClickManager={routeToProfile.bind(this, manager)}
                     onClickTeam={routeToTeam.bind(this, team)}
+                    onClickPeer={routeToProfile.bind(this)}
                 />
             );
         }
@@ -71,6 +72,7 @@ class ExtendedProfile extends StyleableComponent {
                     team={team}
                     directReports={directReports}
                     onClickTeam={routeToTeam.bind(this, team)}
+                    onClickDirectReport={routeToProfile.bind(this)}
                 />
             );
         }

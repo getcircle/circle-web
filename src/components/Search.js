@@ -115,6 +115,9 @@ class Search extends React.Component {
         searchResults: React.PropTypes.object,
         exploreResults: React.PropTypes.array,
         inHeader: React.PropTypes.bool,
+        searchBarStyle: React.PropTypes.object,
+        resultsListStyle: React.PropTypes.object,
+        renderPoweredBy: React.PropTypes.bool,
     }
 
     static defaultProps = {
@@ -122,6 +125,7 @@ class Search extends React.Component {
         focused: false,
         searchCategory: null,
         inHeader: false,
+        renderPoweredBy: true,
     }
 
     state = {
@@ -134,6 +138,7 @@ class Search extends React.Component {
 
     componentDidMount() {
         this._focusInput();
+        this.setState({focused: this.props.focused});
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -172,6 +177,7 @@ class Search extends React.Component {
     _focusInput() {
         if (this.props.focused) {
             React.findDOMNode(this.refs.searchInput).focus();
+            React.findDOMNode(this.refs.search).focus();
         }
     }
 
@@ -244,7 +250,7 @@ class Search extends React.Component {
             if (!this.state.query && this.props.searchCategory === null) {
                 return this.props.defaultResults;
             } else if (this.state.results && this.state.results.length) {
-                let resultsStyle = Object.assign({}, styles.resultsList);
+                let resultsStyle = Object.assign({}, styles.resultsList, this.props.resultsListStyle);
                 // XXX this should be passed in via style properties
                 if (this.props.inHeader) {
                     resultsStyle.position = 'absolute';
@@ -269,7 +275,7 @@ class Search extends React.Component {
     }
 
     _renderPoweredBy() {
-        if (!this.props.inHeader) {
+        if (!this.props.inHeader && this.props.renderPoweredBy) {
             return (
                 <div className="row center-xs" style={styles.footer}>
                     <span style={styles.footerText}>{t('POWERED BY CIRCLE')}</span>
@@ -286,8 +292,9 @@ class Search extends React.Component {
         ) {
             searchBarStyle.borderRadius = '5px 5px 0px 0px';
         }
+
         return (
-            <div onFocus={this._handleFocus}>
+            <div ref="search" onFocus={this._handleFocus}>
                 <div className="row center-xs">
                     <div
                         className="row center-xs"
@@ -295,6 +302,7 @@ class Search extends React.Component {
                             styles.searchBar,
                             searchBarStyle,
                             this.props.inHeader && styles.searchBarInHeader,
+                            this.props.searchBarStyle,
                         ]}
                     >
                         <div className="col-xs-1">
