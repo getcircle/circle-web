@@ -1,6 +1,10 @@
 import React, { PropTypes } from 'react';
+import mui from 'material-ui';
 
 import StyleableComponent from './StyleableComponent';
+import t from '../utils/gettext';
+
+const { FlatButton } = mui;
 
 const styles = {
     contentContainer: {
@@ -20,6 +24,17 @@ const styles = {
         paddingLeft: 12,
         textTransform: 'uppercase',
     },
+    editButton: {
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginRight: 20,
+    },
+    editButtonLabel: {
+        color: '#8598FF',
+        fontSize: 16,
+        fontWeight: 600,
+    },    
     root: {
         boxShadow: '1px 1px 3px -2px',
         backgroundColor: 'white',
@@ -32,6 +47,8 @@ class Card extends StyleableComponent {
     static propTypes = {
         title: PropTypes.string,
         contentStyle: PropTypes.object,
+        editable: PropTypes.bool,
+        onEditClick: PropTypes.func,
     }
 
     _renderHeader() {
@@ -42,7 +59,23 @@ class Card extends StyleableComponent {
                     <span style={this.mergeAndPrefix(styles.headerText)}>
                         {title}
                     </span>
+                    {this._renderEditButton()}
                 </header>
+            );
+        }
+    }
+
+    _renderEditButton() {
+        const {
+            editable,
+            onEditClick,
+        } = this.props;
+
+        if (editable) {
+            return (
+                <div style={this.mergeAndPrefix(styles.editButton)}>
+                    <FlatButton labelStyle={styles.editButtonLabel} label={t('Edit')} onTouchTap={onEditClick} />
+                </div>
             );
         }
     }
