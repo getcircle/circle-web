@@ -1,14 +1,10 @@
-import _ from 'lodash';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { decorate } from 'react-mixin';
 import mui from 'material-ui';
-import { Navigation } from 'react-router';
 import React from 'react';
 
 import { refresh } from '../actions/authentication';
-import Header from './Header';
-import ThemeManager from '../utils/ThemeManager';
+import Header from '../components/Header';
 import * as selectors from '../selectors';
 
 const { AppCanvas } = mui;
@@ -30,16 +26,6 @@ class App extends React.Component {
         authenticated: React.PropTypes.bool.isRequired,
     }
 
-    static childContextTypes = {
-        muiTheme: React.PropTypes.object,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
-    }
-
     componentWillMount() {
         // refresh any cached authentication objects
         if (this.props.authenticated) {
@@ -54,10 +40,9 @@ class App extends React.Component {
     }
 
     render() {
-        const props: Object = _.assign({}, this.state, this.props);
         let header;
         if (this.props.authenticated && this.props.displayHeader) {
-            header = <Header {...props} />;
+            header = <Header {...this.props} />;
         }
         return (
             <AppCanvas>

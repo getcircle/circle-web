@@ -55,7 +55,7 @@ const getRoutes = (history, store) => {
     return (
         <Router history={history}>
             <Route component={reduxRouteComponent(store)}>
-                <Route component={require('./components/App')}>
+                <Route component={require('./containers/App')}>
                     <Route
                         path="/"
                         onEnter={applyMiddleware(requireAuth, hideHeader)}
