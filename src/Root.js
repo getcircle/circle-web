@@ -5,7 +5,7 @@ import logger from 'redux-logger';
 import { routerStateReducer } from 'redux-react-router';
 import thunk from 'redux-thunk';
 
-import { getBody } from './utils/render';
+import PureComponent from './components/PureComponent';
 import getRoutes from './getRoutes';
 import { serviceRequest} from './middleware';
 import * as reducers from './reducers';
@@ -18,7 +18,7 @@ const reducer = combineReducers({
 const createStoreWithMiddleware = applyMiddleware(thunk, logger, serviceRequest)(createStore);
 const store = createStoreWithMiddleware(reducer);
 
-export default class Root extends React.Component {
+export default class Root extends PureComponent {
 
     static propTypes = {
         history: PropTypes.object.isRequired,
