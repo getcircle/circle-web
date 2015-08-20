@@ -1,7 +1,6 @@
 import React from 'react';
 import { services } from 'protobufs';
 
-import autoBind from '../utils/autoBind';
 import moment from '../utils/moment';
 
 import DetailHeader from './DetailHeader';

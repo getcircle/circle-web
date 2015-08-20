@@ -61,25 +61,13 @@ const getRoutes = (history, store) => {
                         onEnter={applyMiddleware(requireAuth, hideHeader)}
                         component={require('./containers/SearchContainer')} />
                     <Route
-                        path="/departments"
-                        onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./containers/Departments')} />
-                    <Route
                         path="/location/:locationId"
                         onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./containers/Location')} />
                     <Route
-                        path="/locations"
-                        onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./containers/Locations')} />
-                    <Route
                         path="/login"
                         onEnter={applyMiddleware(loginOnce)}
                         component={require('./containers/Login')} />
-                    <Route
-                        path="/people"
-                        onEnter={applyMiddleware(...defaultMiddleware)}
-                        component={require('./containers/Profiles')} />
                     <Route
                         path="/profile/:profileId"
                         onEnter={applyMiddleware(...defaultMiddleware)}
