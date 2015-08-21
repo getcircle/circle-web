@@ -81,15 +81,15 @@ class ProfileDetailHeader extends StyleableComponent {
         team: PropTypes.instanceOf(services.organization.containers.TeamV1),
     }
 
-    state = {
-        currentTime: null,
-    }
-
-    componentWillMount() {
+    componentDidMount() {
         // update the current time every 60 seconds
         this._updateCurrentTime();
         // TODO we keep getting a warning about this I believe because "setState" isn't being called with a mounted component?
         setInterval(this._updateCurrentTime, 60000);
+    }
+
+    state = {
+        currentTime: null,
     }
 
     _updateCurrentTime = this._updateCurrentTime.bind(this)
