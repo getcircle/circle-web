@@ -1,5 +1,3 @@
-import { decorate } from 'react-mixin';
-import { Navigation } from 'react-router';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -25,7 +23,6 @@ const styles = {
     },
 };
 
-@decorate(Navigation)
 class ExtendedProfile extends StyleableComponent {
 
     static propTypes = {
@@ -34,7 +31,9 @@ class ExtendedProfile extends StyleableComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.object.isRequired,
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     _renderStatus(status) {
@@ -47,7 +46,7 @@ class ExtendedProfile extends StyleableComponent {
                 style={this.mergeAndPrefix(styles.section)}
                 contactMethods={contactMethods}
                 locations={locations}
-                onClickLocation={routeToLocation.bind(this)}
+                onClickLocation={routeToLocation.bind(null, this.context.router)}
             />
         );
     }
@@ -60,9 +59,9 @@ class ExtendedProfile extends StyleableComponent {
                     manager={manager}
                     peers={peers}
                     team={team}
-                    onClickManager={routeToProfile.bind(this, manager)}
-                    onClickTeam={routeToTeam.bind(this, team)}
-                    onClickPeer={routeToProfile.bind(this)}
+                    onClickManager={routeToProfile.bind(null, this.context.router, manager)}
+                    onClickTeam={routeToTeam.bind(null, this.context.router, team)}
+                    onClickPeer={routeToProfile.bind(null, this.context.router)}
                 />
             );
         }
@@ -75,8 +74,8 @@ class ExtendedProfile extends StyleableComponent {
                     style={this.mergeAndPrefix(styles.section)}
                     team={team}
                     directReports={directReports}
-                    onClickTeam={routeToTeam.bind(this, team)}
-                    onClickDirectReport={routeToProfile.bind(this)}
+                    onClickTeam={routeToTeam.bind(null, this.context.router, team)}
+                    onClickDirectReport={routeToProfile.bind(null, this.context.router)}
                 />
             );
         }
@@ -85,7 +84,7 @@ class ExtendedProfile extends StyleableComponent {
     _getContactMethods() {
         const { profile } = this.props.extendedProfile;
         let contactMethods = [new ContactMethodV1({
-            label: "Email",
+            label: 'Email',
             value: profile.email,
             contact_method_type: ContactMethodV1.ContactMethodTypeV1.EMAIL,
         })];

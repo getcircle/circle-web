@@ -1,6 +1,4 @@
-import { decorate } from 'react-mixin';
 import { Avatar, ListItem } from 'material-ui';
-import { Navigation } from 'react-router';
 import React, { PropTypes } from 'react';
 
 import { routeToTeam } from '../utils/routes';
@@ -9,12 +7,17 @@ import teamIcon from '../images/icons/group_icon.svg';
 
 import StyleableComponent from './StyleableComponent';
 
-@decorate(Navigation)
 class TeamSearchResult extends StyleableComponent {
 
     static propTypes = {
         onClick: PropTypes.func,
         team: PropTypes.object.isRequired,
+    }
+
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     _handleTouchTap = this._handleTouchTap.bind(this)

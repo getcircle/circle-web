@@ -1,9 +1,6 @@
-import _ from 'lodash';
+import { AppBar } from 'material-ui';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { decorate } from 'react-mixin';
-import { Navigation } from 'react-router';
-import { AppBar } from 'material-ui';
 import React, { PropTypes } from 'react/addons';
 
 import constants from '../styles/constants';
@@ -41,12 +38,17 @@ const styles = {
 }
 
 @connect(selector)
-@decorate(Navigation)
 class Header extends PureComponent {
 
     static propTypes = {
         organization: PropTypes.object.isRequired,
         profile: PropTypes.object.isRequired,
+    }
+
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     shouldComponentUpdate(nextProps) {
@@ -57,11 +59,12 @@ class Header extends PureComponent {
     }
 
     _renderHeader() {
+        const { router } = this.context;
         return (
             <div>
                 <div className="row">
                     <div className="col-xs-4">
-                        <img style={styles.image} src="https://s3.amazonaws.com/otterbots-media/organizations/RV_Main_Logo.png" onTouchTap={() => this.transitionTo('/')}/>
+                        <img style={styles.image} src="https://s3.amazonaws.com/otterbots-media/organizations/RV_Main_Logo.png" onTouchTap={() => router.transitionTo('/')}/>
                     </div>
                     <div className="col-xs-4">
                         <Search inHeader={true} />

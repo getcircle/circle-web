@@ -1,6 +1,4 @@
-import { decorate } from 'react-mixin';
 import { ListItem } from 'material-ui';
-import { Navigation } from 'react-router';
 import React, { PropTypes } from 'react';
 
 import { routeToProfile } from '../utils/routes';
@@ -8,7 +6,6 @@ import { routeToProfile } from '../utils/routes';
 import ProfileAvatar from './ProfileAvatar';
 import StyleableComponent from './StyleableComponent';
 
-@decorate(Navigation)
 class ProfileSearchResult extends StyleableComponent {
 
     static propTypes = {
@@ -16,11 +13,17 @@ class ProfileSearchResult extends StyleableComponent {
         profile: PropTypes.object.isRequired,
     }
 
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
+    }
+
     _handleTouchTap(profile) {
         if (this.props.onClick) {
             this.props.onClick();
         }
-        routeToProfile.apply(this, [profile]);
+        routeToProfile(this.context.router, profile);
     }
 
     render() {

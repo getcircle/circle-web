@@ -1,8 +1,6 @@
-import { decorate } from 'react-mixin';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import { Avatar } from 'material-ui';
-import { Navigation } from 'react-router';
 import React, { PropTypes } from 'react/addons';
 
 import { logout } from '../actions/authentication';
@@ -43,7 +41,6 @@ const styles = {
     },
 };
 
-@decorate(Navigation)
 class HeaderMenu extends StyleableComponent {
 
     static propTypes = {

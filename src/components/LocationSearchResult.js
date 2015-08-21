@@ -1,6 +1,4 @@
-import { decorate } from 'react-mixin';
 import { Avatar, ListItem } from 'material-ui';
-import { Navigation } from 'react-router';
 import React, { PropTypes } from 'react';
 
 import { routeToLocation } from '../utils/routes';
@@ -9,7 +7,6 @@ import officeIcon from '../images/icons/office_icon.svg';
 
 import PureComponent from './PureComponent';
 
-@decorate(Navigation)
 class LocationSearchResult extends PureComponent {
 
     static propTypes = {
@@ -17,13 +14,18 @@ class LocationSearchResult extends PureComponent {
         onClick: PropTypes.func,
     }
 
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
+    }
+
     _handleTouchTap = this._handleTouchTap.bind(this)
     _handleTouchTap() {
         if (this.props.onClick) {
             this.props.onClick();
         }
-
-        routeToLocation.apply(this, [this.props.location]);
+        routeToLocation(this.context.router, this.props.location);
     }
 
     render() {

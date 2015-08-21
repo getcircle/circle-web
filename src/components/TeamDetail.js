@@ -1,6 +1,4 @@
 import _ from 'lodash';
-import { decorate } from 'react-mixin';
-import { Navigation } from 'react-router';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -28,12 +26,17 @@ const styles = {
     },
 };
 
-@decorate(Navigation)
 class TeamDetail extends StyleableComponent {
 
     static propTypes = {
         extendedTeam: PropTypes.object.isRequired,
         members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
+    }
+
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     _renderDescription(team) {
@@ -57,7 +60,7 @@ class TeamDetail extends StyleableComponent {
                     <CardList>
                         <CardListItem
                             leftAvatar={<ProfileAvatar profile={manager} />}
-                            onTouchTap={routeToProfile.bind(this, manager)}
+                            onTouchTap={routeToProfile.bind(null, this.context.router, manager)}
                             primaryText={manager.full_name}
                             secondaryText={manager.title}
                         />
@@ -69,7 +72,13 @@ class TeamDetail extends StyleableComponent {
 
     _renderChildTeams(childTeams) {
         if (childTeams && childTeams.length) {
-            return <TeamDetailTeams onClickTeam={routeToTeam.bind(this)} style={styles.section} teams={childTeams} />;
+            return (
+                <TeamDetailTeams
+                    onClickTeam={routeToTeam.bind(null, this.context.router)}
+                    style={styles.section}
+                    teams={childTeams} 
+                />
+            );
         }
     }
 
@@ -79,7 +88,7 @@ class TeamDetail extends StyleableComponent {
             return (
                 <TeamDetailTeamMembers
                     members={members}
-                    onClickMember={routeToProfile.bind(this)}
+                    onClickMember={routeToProfile.bind(null, this.context.router)}
                     style={styles.section}
                 />
             );

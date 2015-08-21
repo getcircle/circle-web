@@ -1,11 +1,11 @@
-export function routeToProfile(profile) {
-    this.transitionTo(`/profile/${profile.id}`);
+export function routeToProfile(router, profile) {
+    router.transitionTo(`/profile/${profile.id}`);
 }
 
-export function routeToTeam(team) {
-    this.transitionTo(`/team/${team.id}`);
+export function routeToTeam(router, team) {
+    router.transitionTo(`/team/${team.id}`);
 }
 
-export function routeToLocation(location) {
-    this.transitionTo(`/location/${location.id}`);
+export function routeToLocation(router, location) {
+    router.transitionTo(`/location/${location.id}`);
 }

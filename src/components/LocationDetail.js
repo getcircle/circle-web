@@ -1,10 +1,8 @@
-import { decorate } from 'react-mixin';
-import { Navigation } from 'react-router';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import moment from '../utils/moment';
-import { routeToProfile, routeToTeam } from '../utils/routes';
+import { routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
 
 import Card from './Card';
@@ -31,12 +29,17 @@ const styles = {
     },
 };
 
-@decorate(Navigation)
 class LocationDetail extends StyleableComponent {
 
     static propTypes = {
         office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
+    }
+
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     static defaultProps = {
@@ -65,7 +68,7 @@ class LocationDetail extends StyleableComponent {
                     members={office.points_of_contact} 
                     actionText="View all Points of Contact"
                     perColumn={1}
-                    onClickMember={routeToProfile.bind(this)}
+                    onClickMember={routeToProfile.bind(null, this.context.router)}
                     style={styles.section}
                 />
             );
@@ -83,7 +86,7 @@ class LocationDetail extends StyleableComponent {
                     title="Works Here"
                     members={members}
                     actionText="View all People"
-                    onClickMember={routeToProfile.bind(this)}
+                    onClickMember={routeToProfile.bind(null, this.context.router)}
                     style={styles.section}
                     onClickActionText={this._handleClickAction.bind(this)}
                 />
@@ -105,7 +108,7 @@ class LocationDetail extends StyleableComponent {
                 <DetailViewAll
                     ref="modal"
                     title={`Working at ${this.props.office.name}`}
-                    onClickItem={routeToProfile.bind(this)}
+                    onClickItem={routeToProfile.bind(null, this.context.router)}
                     items={members}
                 />
             </div>
