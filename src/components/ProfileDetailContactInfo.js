@@ -21,7 +21,7 @@ const styles = {
     },
 };
 
-class ExtendedProfileContactInfo extends StyleableComponent {
+class ProfileDetailContactInfo extends StyleableComponent {
 
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
@@ -106,4 +106,4 @@ class ExtendedProfileContactInfo extends StyleableComponent {
 
 }
 
-export default ExtendedProfileContactInfo;
+export default ProfileDetailContactInfo;

@@ -26,7 +26,7 @@ const styles = {
     },
 };
 
-class ExtendedProfileTeam extends StyleableComponent {
+class ProfileDetailTeam extends StyleableComponent {
 
     static propTypes = {
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -111,4 +111,4 @@ class ExtendedProfileTeam extends StyleableComponent {
 
 }
 
-export default ExtendedProfileTeam;
+export default ProfileDetailTeam;

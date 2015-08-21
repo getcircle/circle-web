@@ -50,7 +50,7 @@ const styles = {
     },
 }
 
-class ExtendedProfileStatus extends StyleableComponent {
+class ProfileDetailStatus extends StyleableComponent {
 
     static propTypes = {
         status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
@@ -100,4 +100,4 @@ class ExtendedProfileStatus extends StyleableComponent {
     }
 }
 
-export default ExtendedProfileStatus;
+export default ProfileDetailStatus;

@@ -22,7 +22,7 @@ const styles = {
     },
 };
 
-class ExtendedProfileManages extends StyleableComponent {
+class ProfileDetailManages extends StyleableComponent {
 
     static propTypes = {
         team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
@@ -81,4 +81,4 @@ class ExtendedProfileManages extends StyleableComponent {
 
 }
 
-export default ExtendedProfileManages;
+export default ProfileDetailManages;

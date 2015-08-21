@@ -8,11 +8,11 @@ import {
 } from '../utils/routes';
 
 import DetailContent from './DetailContent';
-import ExtendedProfileContactInfo from './ExtendedProfileContactInfo';
-import ExtendedProfileHeader from './ExtendedProfileHeader';
-import ExtendedProfileManages from './ExtendedProfileManages';
-import ExtendedProfileStatus from './ExtendedProfileStatus';
-import ExtendedProfileTeam from './ExtendedProfileTeam';
+import ProfileDetailContactInfo from './ProfileDetailContactInfo';
+import ProfileDetailHeader from './ProfileDetailHeader';
+import ProfileDetailManages from './ProfileDetailManages';
+import ProfileDetailStatus from './ProfileDetailStatus';
+import ProfileDetailTeam from './ProfileDetailTeam';
 import StyleableComponent from './StyleableComponent';
 
 const { ContactMethodV1 } = services.profile.containers;
@@ -23,7 +23,7 @@ const styles = {
     },
 };
 
-class ExtendedProfile extends StyleableComponent {
+class ProfileDetail extends StyleableComponent {
 
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
@@ -37,12 +37,12 @@ class ExtendedProfile extends StyleableComponent {
     }
 
     _renderStatus(status) {
-        return <ExtendedProfileStatus style={this.mergeAndPrefix(styles.section)} status={status}/>;
+        return <ProfileDetailStatus style={this.mergeAndPrefix(styles.section)} status={status}/>;
     }
 
     _renderContactInfo(contactMethods=[], locations=[]) {
         return (
-            <ExtendedProfileContactInfo
+            <ProfileDetailContactInfo
                 style={this.mergeAndPrefix(styles.section)}
                 contactMethods={contactMethods}
                 locations={locations}
@@ -54,7 +54,7 @@ class ExtendedProfile extends StyleableComponent {
     _renderTeam(manager, peers, team) {
         if (team) {
             return (
-                <ExtendedProfileTeam
+                <ProfileDetailTeam
                     style={this.mergeAndPrefix(styles.section)}
                     manager={manager}
                     peers={peers}
@@ -70,7 +70,7 @@ class ExtendedProfile extends StyleableComponent {
     _renderManages(team, directReports) {
         if (team) {
             return (
-                <ExtendedProfileManages
+                <ProfileDetailManages
                     style={this.mergeAndPrefix(styles.section)}
                     team={team}
                     directReports={directReports}
@@ -104,7 +104,7 @@ class ExtendedProfile extends StyleableComponent {
         const { organization } = this.props;
         return (
             <div>
-                <ExtendedProfileHeader
+                <ProfileDetailHeader
                     location={locations[0]}
                     organization={organization}
                     profile={profile}
@@ -122,4 +122,4 @@ class ExtendedProfile extends StyleableComponent {
 
 }
 
-export default ExtendedProfile;
+export default ProfileDetail;

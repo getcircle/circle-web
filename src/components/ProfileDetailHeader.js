@@ -72,7 +72,7 @@ const styles = {
     },
 };
 
-class ExtendedProfileHeader extends StyleableComponent {
+class ProfileDetailHeader extends StyleableComponent {
 
     static propTypes = {
         location: PropTypes.instanceOf(services.organization.containers.LocationV1),
@@ -154,4 +154,4 @@ class ExtendedProfileHeader extends StyleableComponent {
 
 }
 
-export default ExtendedProfileHeader;
+export default ProfileDetailHeader;

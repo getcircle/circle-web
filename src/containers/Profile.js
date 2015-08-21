@@ -7,7 +7,7 @@ import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
-import ExtendedProfile from '../components/ExtendedProfile';
+import ProfileDetail from '../components/ProfileDetail';
 import PureComponent from '../components/PureComponent';
 
 const selector = createSelector(
@@ -24,11 +24,7 @@ const selector = createSelector(
 class Profile extends PureComponent {
 
     static propTypes = {
-        extendedProfile: React.PropTypes.object,
-    }
-
-    static contextTypes = {
-        muiTheme: React.PropTypes.object.isRequired,
+        extendedProfile: PropTypes.object,
     }
 
     componentWillMount() {
@@ -48,7 +44,7 @@ class Profile extends PureComponent {
         } = this.props;
         if (extendedProfile) {
             return (
-                <ExtendedProfile
+                <ProfileDetail
                     extendedProfile={extendedProfile}
                     organization={organization}
                 />
