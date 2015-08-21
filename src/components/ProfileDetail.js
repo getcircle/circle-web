@@ -37,7 +37,9 @@ class ProfileDetail extends StyleableComponent {
     }
 
     _renderStatus(status) {
-        return <ProfileDetailStatus style={this.mergeAndPrefix(styles.section)} status={status}/>;
+        if (status) {
+            return <ProfileDetailStatus status={status} style={this.mergeAndPrefix(styles.section)}/>;
+        }
     }
 
     _renderContactInfo(contactMethods=[], locations=[]) {
