@@ -2,7 +2,7 @@ import { decorate } from 'react-mixin';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import Radium from 'radium';
-import React from 'react/addons';
+import React, { PropTypes } from 'react/addons';
 import { services } from 'protobufs';
 
 import { clearSearchResults, loadSearchResults } from '../actions/search';
@@ -12,6 +12,7 @@ import t from '../utils/gettext';
 
 import SearchCategoryToken from '../components/SearchCategoryToken';
 import SearchResults from '../components/SearchResults';
+import StyleableComponent from './StyleableComponent';
 
 import searchIcon from '../images/icons/search_icon.svg';
 
@@ -104,20 +105,20 @@ const selector = createSelector(
 @connect(selector)
 @decorate(React.addons.LinkedStateMixin)
 @Radium
-class Search extends React.Component {
+class Search extends StyleableComponent {
 
     static propTypes = {
-        active: React.PropTypes.bool,
-        defaultResults: React.PropTypes.object,
-        searchCategory: React.PropTypes.number,
-        onClearCategory: React.PropTypes.func,
-        focused: React.PropTypes.bool,
-        searchResults: React.PropTypes.object,
-        exploreResults: React.PropTypes.array,
-        inHeader: React.PropTypes.bool,
-        searchBarStyle: React.PropTypes.object,
-        resultsListStyle: React.PropTypes.object,
-        renderPoweredBy: React.PropTypes.bool,
+        active: PropTypes.bool,
+        defaultResults: PropTypes.object,
+        searchCategory: PropTypes.number,
+        onClearCategory: PropTypes.func,
+        focused: PropTypes.bool,
+        searchResults: PropTypes.object,
+        exploreResults: PropTypes.array,
+        inHeader: PropTypes.bool,
+        searchBarStyle: PropTypes.object,
+        resultsListStyle: PropTypes.object,
+        renderPoweredBy: PropTypes.bool,
     }
 
     static defaultProps = {

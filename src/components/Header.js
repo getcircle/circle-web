@@ -3,19 +3,16 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
-import mui from 'material-ui';
-import React from 'react/addons';
+import { AppBar } from 'material-ui';
+import React, { PropTypes } from 'react/addons';
 
 import constants from '../styles/constants';
 import t from '../utils/gettext';
 import * as selectors from '../selectors';
 
 import HeaderMenu from '../components/HeaderMenu';
+import PureComponent from '../components/PureComponent';
 import Search from '../components/Search';
-
-const {
-    AppBar,
-} = mui;
 
 const MenuActions = {logout: 'Logout'};
 
@@ -45,11 +42,11 @@ const styles = {
 
 @connect(selector)
 @decorate(Navigation)
-class Header extends React.Component {
+class Header extends PureComponent {
 
     static propTypes = {
-        organization: React.PropTypes.object.isRequired,
-        profile: React.PropTypes.object.isRequired,
+        organization: PropTypes.object.isRequired,
+        profile: PropTypes.object.isRequired,
     }
 
     shouldComponentUpdate(nextProps) {

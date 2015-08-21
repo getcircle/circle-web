@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getTeamLabel } from '../services/organization';
@@ -31,10 +31,10 @@ const styles = {
 class TeamDetailTeams extends StyleableComponent {
 
     static propTypes = {
-        teams: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.organization.containers.TeamV1),
+        onClickTeam: PropTypes.func.isRequired,
+        teams: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.organization.containers.TeamV1),
         ).isRequired,
-        onClickTeam: React.PropTypes.func.isRequired,
     }
 
     _renderColumn(teams) {
@@ -42,10 +42,10 @@ class TeamDetailTeams extends StyleableComponent {
             return (
                 <CardListItem
                     key={index}
-                    primaryText={item.display_name}
-                    secondaryText={getTeamLabel(item)}
                     leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
                     onTouchTap={this.props.onClickTeam.bind(null, item)}
+                    primaryText={item.display_name}
+                    secondaryText={getTeamLabel(item)}
                 />
             );
         })
@@ -68,10 +68,10 @@ class TeamDetailTeams extends StyleableComponent {
                         <span style={styles.teamsFooterText}>{`${teams.length} teams`}</span>
                     </CardFooter>
                     <DetailViewAll
+                        items={teams}
+                        onClickItem={this.props.onClickTeam}
                         ref="modal"
                         title="Teams"
-                        onClickItem={this.props.onClickTeam}
-                        items={teams}
                     />
                 </div>
             );

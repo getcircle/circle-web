@@ -1,23 +1,20 @@
 import { decorate } from 'react-mixin';
-import mui from 'material-ui';
+import { Avatar, ListItem } from 'material-ui';
 import { Navigation } from 'react-router';
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { routeToLocation } from '../utils/routes';
 import t from '../utils/gettext';
 import officeIcon from '../images/icons/office_icon.svg';
 
-const { 
-    Avatar,
-    ListItem,
-} = mui;
+import PureComponent from './PureComponent';
 
 @decorate(Navigation)
-class LocationSearchResult extends React.Component {
+class LocationSearchResult extends PureComponent {
 
     static propTypes = {
-        location: React.PropTypes.object.isRequired,
-        onClick: React.PropTypes.func,
+        location: PropTypes.object.isRequired,
+        onClick: PropTypes.func,
     }
 
     _handleTouchTap = this._handleTouchTap.bind(this)

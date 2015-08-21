@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import DetailHeader from './DetailHeader';
@@ -48,7 +48,7 @@ const styles = {
 class TeamDetailHeader extends StyleableComponent {
 
     static propTypes = {
-        team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
+        team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
 
     _getTeamInfo(team) {
@@ -74,11 +74,11 @@ class TeamDetailHeader extends StyleableComponent {
             <DetailHeader>
                 <div className="row center-xs" style={styles.teamIconSection}>
                     <IconContainer
-                        style={styles.iconContainer}
                         IconClass={GroupIcon}
                         iconStyle={styles.icon}
                         stroke={styles.icon.color}
                         strokeWidth={styles.icon.strokeWidth}
+                        style={styles.iconContainer}
                     />
                 </div>
                 <div className="row center-xs" style={styles.nameSection}>

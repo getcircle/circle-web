@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-class EmbeddedGoogleMap extends React.Component {
+import PureComponent from './PureComponent';
+
+class EmbeddedGoogleMap extends PureComponent {
 
     apiKey = 'AIzaSyBQVQT7k1w8m-qEkBY7hsg5vQERN1R7zx8'
 
     static propTypes = {
-        office: React.PropTypes.object.isRequired,
+        office: PropTypes.object.isRequired,
     }
 
     _getGoogleMapsEndpoint(office) {

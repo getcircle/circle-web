@@ -1,5 +1,5 @@
-import mui from 'material-ui';
-import React from 'react';
+import { Dialog, List } from 'material-ui';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getTeamLabel } from '../services/organization';
@@ -20,8 +20,6 @@ import ProfileAvatar from './ProfileAvatar';
 import ProfileSearchResult from './ProfileSearchResult';
 import Search from '../components/Search';
 
-const { Dialog, List } = mui;
-
 const styles = {
     icon: {
         color: 'rgba(0, 0, 0, .4)',
@@ -31,12 +29,12 @@ const styles = {
 class ExtendedProfileTeam extends StyleableComponent {
 
     static propTypes = {
-        manager: React.PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
-        onClickManager: React.PropTypes.func,
-        onClickTeam: React.PropTypes.func,
-        onClickPeer: React.PropTypes.func,
-        peers: React.PropTypes.arrayOf(services.profile.containers.ProfileV1),
-        team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
+        manager: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        onClickManager: PropTypes.func,
+        onClickTeam: PropTypes.func,
+        onClickPeer: PropTypes.func,
+        peers: PropTypes.arrayOf(services.profile.containers.ProfileV1),
+        team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
 
     _getManagerSecondaryText(manager) {

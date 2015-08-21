@@ -1,9 +1,8 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { loadExtendedProfile } from '../actions/profiles';
-import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -28,8 +27,8 @@ class Profile extends PureComponent {
         extendedProfile: React.PropTypes.object,
     }
 
-    static childContextTypes = {
-        muiTheme: React.PropTypes.object,
+    static contextTypes = {
+        muiTheme: React.PropTypes.object.isRequired,
     }
 
     componentWillMount() {
@@ -40,12 +39,6 @@ class Profile extends PureComponent {
         if (nextProps.params.profileId !== this.props.params.profileId) {
             this.props.dispatch(loadExtendedProfile(nextProps.params.profileId));
         }
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
     }
 
     _renderProfile() {

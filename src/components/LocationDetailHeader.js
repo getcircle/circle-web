@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import DetailHeader from './DetailHeader';
@@ -48,7 +48,7 @@ const styles = {
 class LocationDetailHeader extends StyleableComponent {
 
     static propTypes = {
-        office: React.PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
+        office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
     }
 
     _getLocationInfo(location) {

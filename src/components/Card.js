@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import StyleableComponent from './StyleableComponent';
 
@@ -30,8 +30,8 @@ const styles = {
 class Card extends StyleableComponent {
 
     static propTypes = {
-        title: React.PropTypes.string,
-        contentStyle: React.PropTypes.object,
+        title: PropTypes.string,
+        contentStyle: PropTypes.object,
     }
 
     _renderHeader() {

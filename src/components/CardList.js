@@ -1,9 +1,7 @@
-import mui from 'material-ui';
+import { List } from 'material-ui';
 import React from 'react';
 
 import StyleableComponent from './StyleableComponent';
-
-const { List } = mui;
 
 const styles = {
     root: {

@@ -1,17 +1,17 @@
 import { decorate } from 'react-mixin';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import mui from 'material-ui';
+import { Avatar } from 'material-ui';
 import { Navigation } from 'react-router';
-import Radium from 'radium';
-import React from 'react/addons';
+import React, { PropTypes } from 'react/addons';
 
 import { logout } from '../actions/authentication';
 import t from '../utils/gettext';
 
+import StyleableComponent from './StyleableComponent';
+
 import rectangleIcon from '../images/icons/down_arrow_icon.svg';
 
-const { Avatar } = mui;
 const { TransitionGroup } = React.addons;
 
 const styles = {
@@ -44,18 +44,12 @@ const styles = {
 };
 
 @decorate(Navigation)
-@Radium
-class HeaderMenu extends React.Component {
+class HeaderMenu extends StyleableComponent {
 
     static propTypes = {
-        dispatch: React.PropTypes.func.isRequired,
-        profile: React.PropTypes.object,
-        inHeader: React.PropTypes.bool,
-    }
-
-    state = {
-        menuDisplayed: false,
-        inHeader: false,
+        dispatch: PropTypes.func.isRequired,
+        inHeader:PropTypes.bool,
+        profile: PropTypes.object,
     }
 
     shouldComponentUpdate(nextProps) {
@@ -63,6 +57,11 @@ class HeaderMenu extends React.Component {
             return false;
         }
         return true;
+    }
+
+    state = {
+        menuDisplayed: false,
+        inHeader: false,
     }
 
     _handleTouchTap = this._handleTouchTap.bind(this)
@@ -85,16 +84,16 @@ class HeaderMenu extends React.Component {
             return (
                 <Menu
                     animated={true}
-                    width={110}
-                    style={styles.menu}
                     desktop={true}
                     listStyle={styles.menuListStyle}
                     onEscKeyDown={this._hideMenu}
+                    style={styles.menu}
+                    width={110}
                 >
                     <MenuItem
-                        primaryText={t('Logout')}
                         desktop={true}
                         onTouchTap={this._handleLogout}
+                        primaryText={t('Logout')}
                     />
                 </Menu>
             );
@@ -130,11 +129,11 @@ class HeaderMenu extends React.Component {
             <div>
                 <div
                     className="row"
-                    style={[
+                    onTouchTap={this._handleTouchTap}
+                    style={this.mergeAndPrefix(
                         styles.container,
                         this.props.inHeader && containerStyle,
-                    ]}
-                    onTouchTap={this._handleTouchTap}
+                    )}
                 >
                     <div className="col-xs">
                         <Avatar src={this.props.profile.image_url} />

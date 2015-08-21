@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { loadLocation, loadLocationMembers } from '../actions/locations';
-import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -30,19 +29,14 @@ const selector = createSelector(
 class Location extends PureComponent {
 
     static propTypes = {
+        members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         // NB: This is named "office" bc "location" is used by react-router >.<
-        office: React.PropTypes.instanceOf(services.organization.containers.LocationV1),
-        members: React.PropTypes.arrayOf(React.PropTypes.instanceOf(services.profile.containers.ProfileV1)),
+        office: PropTypes.instanceOf(services.organization.containers.LocationV1),
+        params: PropTypes.object.isRequired,
     }
 
-    static childContextTypes = {
-        muiTheme: React.PropTypes.object,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
+    static contextTypes = {
+        muiTheme: PropTypes.object.isRequired,
     }
 
     componentWillMount() {
@@ -66,7 +60,12 @@ class Location extends PureComponent {
             members,
         } = this.props;
         if (office && members) {
-            return <LocationDetail office={office} members={members} />;
+            return (
+                <LocationDetail
+                    members={members}
+                    office={office}
+                />
+            );
         } else {
             return <CenterLoadingIndicator />;
         }

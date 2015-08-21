@@ -1,11 +1,9 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import Immutable from 'immutable';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { loadExtendedTeam, loadTeamMembers } from '../actions/teams';
-import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -29,22 +27,17 @@ const selector = createSelector(
 );
 
 @connect(selector)
-class Team extends React.Component {
+class Team extends PureComponent {
 
     static propTypes = {
-        extendedTeam: React.PropTypes.object,
-        members: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.profile.containers.ProfileV1),
+        dispatch: PropTypes.func.isRequired,
+        extendedTeam: PropTypes.object,
+        members: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
-    }
-
-    static childContextTypes = {
-        muiTheme: React.PropTypes.object,
-    }
-
-    _loadTeam(props) {
-        props.dispatch(loadExtendedTeam(props.params.teamId));
-        props.dispatch(loadTeamMembers(props.params.teamId));
+        params: PropTypes.shape({
+            teamId: PropTypes.string,
+        }),
     }
 
     componentWillMount() {
@@ -57,10 +50,9 @@ class Team extends React.Component {
         }
     }
 
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
+    _loadTeam(props) {
+        props.dispatch(loadExtendedTeam(props.params.teamId));
+        props.dispatch(loadTeamMembers(props.params.teamId));
     }
 
     _renderTeam() {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import moment from '../utils/moment';
@@ -31,7 +31,7 @@ const styles = {
 class LocationDetailLocation extends StyleableComponent {
 
     static propTypes = {
-        office: React.PropTypes.instanceOf(services.organization.containers.LocationV1),
+        office: PropTypes.instanceOf(services.organization.containers.LocationV1),
     }
 
     _getAddress(office) {

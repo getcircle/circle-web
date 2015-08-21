@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import PureComponent from './PureComponent';
 
 class OfficeIcon extends PureComponent {
 
     static propTypes = {
-        stroke: React.PropTypes.string,
+        stroke: PropTypes.string,
     }
 
     static defaultProps = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import StyleableComponent from './StyleableComponent';
 
@@ -27,10 +27,10 @@ const styles = {
 class IconContainer extends StyleableComponent {
 
     static propTypes = {
-        IconClass: React.PropTypes.func.isRequired,
-        stroke: React.PropTypes.string,
-        strokeWidth: React.PropTypes.number,
-        iconStyle: React.PropTypes.object,
+        IconClass: PropTypes.func.isRequired,
+        stroke: PropTypes.string,
+        strokeWidth: PropTypes.number,
+        iconStyle: PropTypes.object,
     }
 
     render() {

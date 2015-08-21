@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import moment from '../utils/moment';
@@ -75,10 +75,10 @@ const styles = {
 class ExtendedProfileHeader extends StyleableComponent {
 
     static propTypes = {
-        location: React.PropTypes.instanceOf(services.organization.containers.LocationV1),
-        organization: React.PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
-        profile: React.PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
-        team: React.PropTypes.instanceOf(services.organization.containers.TeamV1),
+        location: PropTypes.instanceOf(services.organization.containers.LocationV1),
+        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
+        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        team: PropTypes.instanceOf(services.organization.containers.TeamV1),
     }
 
     state = {

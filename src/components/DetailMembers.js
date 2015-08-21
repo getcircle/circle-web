@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import Card from './Card';
@@ -15,13 +15,13 @@ import ProfileAvatar from './ProfileAvatar';
 class DetailMembers extends StyleableComponent {
 
     static propTypes = {
-        actionText: React.PropTypes.string,
-        members: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.profile.containers.ProfileV1),
+        actionText: PropTypes.string,
+        members: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
-        perColumn: React.PropTypes.number,
-        onClickMember: React.PropTypes.func,
-        onClickActionText: React.PropTypes.func,
+        perColumn: PropTypes.number,
+        onClickMember: PropTypes.func,
+        onClickActionText: PropTypes.func,
     }
 
     static defaultProps = {

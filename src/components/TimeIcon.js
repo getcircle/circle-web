@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 
-class TimeIcon extends Component {
+import StyleableComponent from './StyleableComponent';
+
+class TimeIcon extends StyleableComponent {
 
     static propTypes = {
-        stroke: React.PropTypes.string,
+        stroke: PropTypes.string,
     }
 
     static defaultProps = {
-        stroke: "#000000",
+        stroke: '#000000',
     }
 
     render() {

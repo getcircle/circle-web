@@ -1,7 +1,7 @@
-import mui from 'material-ui';
-import React from 'react';
+import { FlatButton } from 'material-ui';
+import React, { PropTypes } from 'react';
 
-const { FlatButton } = mui;
+import StyleableComponent from './StyleableComponent';
 
 const styles = {
     button: {
@@ -20,11 +20,12 @@ const styles = {
     },
 };
 
-class SearchCategoryButton extends React.Component {
+class SearchCategoryButton extends StyleableComponent {
 
     static propTypes = {
-        label: React.PropTypes.string.isRequired,
-        active: React.PropTypes.bool,
+        active: PropTypes.bool,
+        className: PropTypes.string,
+        label: PropTypes.string.isRequired,
     }
 
     render() {
@@ -41,9 +42,9 @@ class SearchCategoryButton extends React.Component {
         return (
             <div className={className} style={styles.container}>
                 <FlatButton
-                    style={buttonStyle}
                     labelStyle={styles.labelStyle}
                     rippleColor='white'
+                    style={buttonStyle}
                     {...other}
                 />
             </div>

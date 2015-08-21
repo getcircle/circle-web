@@ -1,9 +1,7 @@
-import mui from 'material-ui';
-import React from 'react';
+import { ListItem } from 'material-ui';
+import React, { PropTypes } from 'react';
 
 import StyleableComponent from './StyleableComponent';
-
-const { ListItem } = mui;
 
 const styles = {
     avatar: {
@@ -20,9 +18,9 @@ const styles = {
 class CardListItem extends StyleableComponent {
 
     static propTypes = {
-        leftAvatar: React.PropTypes.element,
-        primaryText: React.PropTypes.string,
-        secondaryText: React.PropTypes.string,
+        leftAvatar: PropTypes.element,
+        primaryText: PropTypes.string,
+        secondaryText: PropTypes.string,
     }
 
     _mergeElementStyles(element, baseStyles) {

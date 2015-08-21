@@ -1,12 +1,10 @@
-import mui from 'material-ui';
-import React from 'react';
+import { Dialog, List } from 'material-ui';
+import React, { PropTypes } from 'react';
 import StyleableComponent from './StyleableComponent';
 
 import ProfileSearchResult from './ProfileSearchResult';
 import Search from './Search';
 import TeamSearchResult from './TeamSearchResult';
-
-const { Dialog, List } = mui;
 
 const styles = {
     dialog: {
@@ -46,9 +44,9 @@ const styles = {
 class DetailViewAll extends StyleableComponent {
 
     static propTypes = {
-        title: React.PropTypes.string.isRequired,
-        items: React.PropTypes.array.isRequired,
-        onClickItem: React.PropTypes.func.isRequired,
+        title: PropTypes.string.isRequired,
+        items: PropTypes.array.isRequired,
+        onClickItem: PropTypes.func.isRequired,
     }
 
     show() {

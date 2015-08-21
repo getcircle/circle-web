@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import moment from '../utils/moment';
@@ -53,7 +53,7 @@ const styles = {
 class ExtendedProfileStatus extends StyleableComponent {
 
     static propTypes = {
-        status: React.PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
+        status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
     }
 
     _renderStatusText(status) {

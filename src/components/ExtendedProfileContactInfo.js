@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import Card from './Card';
@@ -24,13 +24,13 @@ const styles = {
 class ExtendedProfileContactInfo extends StyleableComponent {
 
     static propTypes = {
-        contactMethods: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
+        contactMethods: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
-        locations: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.organization.containers.LocationV1),
+        locations: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.organization.containers.LocationV1),
         ),
-        onClickLocation: React.PropTypes.func,
+        onClickLocation: PropTypes.func,
     }
 
     _getAddress(location) {

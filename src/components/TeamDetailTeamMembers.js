@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import Card from './Card';
@@ -13,16 +13,14 @@ import StyleableComponent from './StyleableComponent';
 
 import ProfileAvatar from './ProfileAvatar';
 
-const styles = {}
-
 class TeamDetailTeamMembers extends StyleableComponent {
 
     static propTypes = {
-        managerId: React.PropTypes.string,
-        members: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.profile.containers.ProfileV1),
+        managerId: PropTypes.string,
+        members: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
-        onClickMember: React.PropTypes.func,
+        onClickMember: PropTypes.func,
     }
 
     _renderColumn(members) {
@@ -31,10 +29,10 @@ class TeamDetailTeamMembers extends StyleableComponent {
                 return (
                     <CardListItem
                         key={index}
-                        primaryText={item.full_name}
-                        secondaryText={item.title}
                         leftAvatar={<ProfileAvatar profile={item} />}
                         onTouchTap={this.props.onClickMember.bind(null, item)}
+                        primaryText={item.full_name}
+                        secondaryText={item.title}
                     />
                 );
             });
@@ -58,10 +56,10 @@ class TeamDetailTeamMembers extends StyleableComponent {
                         <CardFooterProfiles profiles={members} />
                     </CardFooter>
                     <DetailViewAll
+                        items={this.props.members}
+                        onClickItem={this.props.onClickMember}
                         ref="modal"
                         title="Team Members"
-                        onClickItem={this.props.onClickMember}
-                        items={this.props.members}
                     />
                 </div>
             );

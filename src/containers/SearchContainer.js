@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import mui from 'material-ui';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import t from '../utils/gettext';
-import ThemeManager from '../utils/ThemeManager';
 import * as selectors from '../selectors';
 
 import HeaderMenu from '../components/HeaderMenu';
+import PureComponent from '../components/PureComponent';
 import SearchCategoryButton from '../components/SearchCategoryButton';
 import Search from '../components/Search';
 
@@ -65,25 +65,16 @@ const styles = {
 const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')]; 
 
 @connect(selector)
-class SearchContainer extends React.Component {
+class SearchContainer extends PureComponent {
 
     static propTypes = {
-        profile: React.PropTypes.object.isRequired,
-        organization: React.PropTypes.object.isRequired,
+        organization: PropTypes.object.isRequired,
+        profile: PropTypes.object.isRequired,
     }
 
-    static childContextTypes = {
-        muiTheme: React.PropTypes.object,
-    }
-
-    state = {
-        selectedCategoryIndex: 0,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
+    static contextTypes = {
+        muiTheme: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired,
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -91,6 +82,10 @@ class SearchContainer extends React.Component {
             return false;
         }
         return true;
+    }
+
+    state = {
+        selectedCategoryIndex: 0,
     }
 
     _handleCategorySelection(index) {
@@ -156,7 +151,7 @@ class SearchContainer extends React.Component {
     }
 
     render() {
-        // <img style={styles.organizationLogo} src={this.props.organization.image_url} />
+    // <img style={styles.organizationLogo} src={this.props.organization.image_url} />
         return (
             <div style={styles.root}>
                 <header>

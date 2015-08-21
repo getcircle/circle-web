@@ -1,20 +1,19 @@
 import { decorate } from 'react-mixin';
-import mui from 'material-ui';
+import { ListItem } from 'material-ui';
 import { Navigation } from 'react-router';
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { routeToProfile } from '../utils/routes';
 
 import ProfileAvatar from './ProfileAvatar';
-
-const { ListItem } = mui;
+import StyleableComponent from './StyleableComponent';
 
 @decorate(Navigation)
-class ProfileSearchResult extends React.Component {
+class ProfileSearchResult extends StyleableComponent {
 
     static propTypes = {
-        profile: React.PropTypes.object.isRequired,
-        onClick: React.PropTypes.func,
+        onClick: PropTypes.func,
+        profile: PropTypes.object.isRequired,
     }
 
     _handleTouchTap(profile) {

@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import mui from 'material-ui';
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { refresh } from '../actions/authentication';
-import Header from '../components/Header';
 import * as selectors from '../selectors';
+
+import Header from '../components/Header';
+import PureComponent from '../components/PureComponent';
 
 const { AppCanvas } = mui;
 
@@ -18,12 +20,17 @@ const selector = createSelector(
 );
 
 @connect(selector)
-@decorate(Navigation)
-class App extends React.Component {
+class App extends PureComponent {
 
     static propTypes = {
-        displayHeader: React.PropTypes.bool.isRequired,
-        authenticated: React.PropTypes.bool.isRequired,
+        authenticated: PropTypes.bool.isRequired,
+        children: PropTypes.element.isRequired,
+        dispatch: PropTypes.func.isRequired,
+        displayHeader: PropTypes.bool.isRequired,
+    }
+
+    static contextTypes = {
+        muiTheme: PropTypes.object.isRequired,
     }
 
     componentWillMount() {
@@ -35,7 +42,7 @@ class App extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (!nextProps.authenticated && nextProps.location.pathname != '/login') {
-            this.transitionTo('/login');
+            this.context.router.transitionTo('/login');
         }
     }
 

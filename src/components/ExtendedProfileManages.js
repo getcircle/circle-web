@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getTeamLabel } from '../services/organization';
@@ -25,10 +25,10 @@ const styles = {
 class ExtendedProfileManages extends StyleableComponent {
 
     static propTypes = {
-        team: React.PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
-        directReports: React.PropTypes.arrayOf(services.profile.containers.ProfileV1),
-        onClickTeam: React.PropTypes.func,
-        onClickDirectReport: React.PropTypes.func,
+        team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
+        directReports: PropTypes.arrayOf(services.profile.containers.ProfileV1),
+        onClickTeam: PropTypes.func,
+        onClickDirectReport: PropTypes.func,
     }
 
     _renderTeam() {

@@ -9,6 +9,4 @@ const { StylePropable } = mui.Mixins;
 
 @decorate(StylePropable)
 @decorate(autoBind(StylePropable))
-class StyleableComponent extends PureComponent {}
-
-export default StyleableComponent;
+export default class StyleableComponent extends PureComponent {}

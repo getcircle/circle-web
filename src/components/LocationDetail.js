@@ -1,6 +1,6 @@
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import moment from '../utils/moment';
@@ -32,11 +32,11 @@ const styles = {
 };
 
 @decorate(Navigation)
-class LocationDetail extends React.Component {
+class LocationDetail extends StyleableComponent {
 
     static propTypes = {
-        office: React.PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
-        members: React.PropTypes.arrayOf(React.PropTypes.instanceOf(services.profile.containers.ProfileV1)),
+        office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
+        members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
     }
 
     static defaultProps = {

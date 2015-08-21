@@ -1,6 +1,6 @@
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import {
@@ -29,8 +29,12 @@ const styles = {
 class ExtendedProfile extends StyleableComponent {
 
     static propTypes = {
-        extendedProfile: React.PropTypes.object.isRequired,
-        organization: React.PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
+        extendedProfile: PropTypes.object.isRequired,
+        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
+    }
+
+    static contextTypes = {
+        router: PropTypes.object.isRequired,
     }
 
     _renderStatus(status) {

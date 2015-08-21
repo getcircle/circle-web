@@ -1,15 +1,14 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
-import shouldPureComponentUpdate from 'react-pure-render/function';
 
+import StyleableComponent from './StyleableComponent';
 import TextFallbackAvatar from './TextFallbackAvatar';
 
-class ProfileAvatar extends React.Component {
-    shouldComponentUpdate = shouldPureComponentUpdate;
+class ProfileAvatar extends StyleableComponent {
 
     static propTypes = {
-        profile: React.PropTypes.instanceOf(
+        profile: PropTypes.instanceOf(
             services.profile.containers.ProfileV1,
         ).isRequired,
     }
@@ -24,11 +23,13 @@ class ProfileAvatar extends React.Component {
             profile,
             ...other
         } = this.props;
-        return <TextFallbackAvatar
-                    src={profile.image_url || profile.small_image_url}
-                    fallbackText={this._getInitials()}
-                    {...other}
-                />;
+        return (
+            <TextFallbackAvatar
+                {...other}
+                fallbackText={this._getInitials()}
+                src={profile.image_url || profile.small_image_url}
+            />
+        );
     }
 }
 

@@ -1,7 +1,7 @@
-import mui from 'material-ui';
-import React from 'react';
+import { FlatButton } from 'material-ui';
+import React, { PropTypes } from 'react';
 
-const { FlatButton } = mui;
+import StyleableComponent from './StyleableComponent';
 
 const styles = {
     button: {
@@ -14,17 +14,17 @@ const styles = {
     },
 };
 
-class SearchCategoryToken extends React.Component {
+class SearchCategoryToken extends StyleableComponent {
 
     static propTypes = {
-        label: React.PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
     }
 
     render() {
         return (
             <FlatButton
-                style={styles.button}
                 labelStyle={styles.labelStyle}
+                style={styles.button}
                 {...this.props}
             />
         );

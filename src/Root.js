@@ -1,14 +1,16 @@
-import React, { PropTypes } from 'react';
-import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import logger from 'redux-logger';
+import { Provider } from 'react-redux';
+import React, { PropTypes } from 'react';
 import { routerStateReducer } from 'redux-react-router';
 import thunk from 'redux-thunk';
 
-import PureComponent from './components/PureComponent';
 import getRoutes from './getRoutes';
-import { serviceRequest} from './middleware';
 import * as reducers from './reducers';
+import ThemeManager from './utils/ThemeManager';
+import { serviceRequest} from './middleware';
+
+import PureComponent from './components/PureComponent';
 
 const reducer = combineReducers({
     router: routerStateReducer, 
@@ -22,6 +24,16 @@ export default class Root extends PureComponent {
 
     static propTypes = {
         history: PropTypes.object.isRequired,
+    }
+
+    static childContextTypes = {
+        muiTheme: React.PropTypes.object,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: ThemeManager.getCurrentTheme(),
+        };
     }
 
     render() {

@@ -1,7 +1,5 @@
-import mui from 'material-ui';
+import { CircularProgress } from 'material-ui';
 import React from 'react';
-
-const { CircularProgress } = mui;
 
 class CenterLoadingIndicator extends React.Component {
 

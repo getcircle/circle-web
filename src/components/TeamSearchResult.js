@@ -1,29 +1,20 @@
 import { decorate } from 'react-mixin';
-import mui from 'material-ui';
+import { Avatar, ListItem } from 'material-ui';
 import { Navigation } from 'react-router';
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import { routeToTeam } from '../utils/routes';
 import t from '../utils/gettext';
 import teamIcon from '../images/icons/group_icon.svg';
 
-const {
-    Avatar,
-    ListItem,
-} = mui;
+import StyleableComponent from './StyleableComponent';
 
 @decorate(Navigation)
-class TeamSearchResult extends React.Component {
+class TeamSearchResult extends StyleableComponent {
 
     static propTypes = {
-        team: React.PropTypes.object.isRequired,
-        onClick: React.PropTypes.func,
-    }
-
-    styles = {
-        detailsContainer: {
-            textAlign: 'left',
-        },
+        onClick: PropTypes.func,
+        team: PropTypes.object.isRequired,
     }
 
     _handleTouchTap = this._handleTouchTap.bind(this)

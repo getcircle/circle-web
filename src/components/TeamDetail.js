@@ -1,16 +1,15 @@
 import _ from 'lodash';
 import { decorate } from 'react-mixin';
 import { Navigation } from 'react-router';
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
 import { routeToProfile, routeToTeam } from '../utils/routes';
-import t from '../utils/gettext';
 
 import Card from './Card';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
-import CardVerticalDivider from './CardVerticalDivider';
 import DetailContent from './DetailContent';
 import ProfileAvatar from './ProfileAvatar';
 import StyleableComponent from './StyleableComponent';
@@ -33,13 +32,14 @@ const styles = {
 class TeamDetail extends StyleableComponent {
 
     static propTypes = {
-        extendedTeam: React.PropTypes.object.isRequired,
+        extendedTeam: PropTypes.object.isRequired,
+        members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
     }
 
     _renderDescription(team) {
         if (team.description) {
             return (
-                <Card title="Description" style={styles.section}>
+                <Card style={styles.section} title="Description">
                     <CardRow>
                         <span style={styles.description}>
                             {team.description.value}
@@ -52,14 +52,14 @@ class TeamDetail extends StyleableComponent {
 
     _renderManager(manager) {
         return (
-            <Card title="Manager" style={styles.section}>
+            <Card style={styles.section} title="Manager">
                 <CardRow>
                     <CardList>
                         <CardListItem
-                            primaryText={manager.full_name}
-                            secondaryText={manager.title}
                             leftAvatar={<ProfileAvatar profile={manager} />}
                             onTouchTap={routeToProfile.bind(this, manager)}
+                            primaryText={manager.full_name}
+                            secondaryText={manager.title}
                         />
                     </CardList>
                 </CardRow>
@@ -69,7 +69,7 @@ class TeamDetail extends StyleableComponent {
 
     _renderChildTeams(childTeams) {
         if (childTeams && childTeams.length) {
-            return <TeamDetailTeams style={styles.section} teams={childTeams} onClickTeam={routeToTeam.bind(this)}/>;
+            return <TeamDetailTeams onClickTeam={routeToTeam.bind(this)} style={styles.section} teams={childTeams} />;
         }
     }
 
@@ -78,9 +78,9 @@ class TeamDetail extends StyleableComponent {
             members = _.filter(members, (profile) => profile.id !== manager.id);
             return (
                 <TeamDetailTeamMembers
-                    style={styles.section}
                     members={members}
                     onClickMember={routeToProfile.bind(this)}
+                    style={styles.section}
                 />
             );
         }

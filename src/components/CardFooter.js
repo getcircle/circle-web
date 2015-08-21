@@ -1,9 +1,7 @@
-import mui from 'material-ui';
-import React from 'react';
+import { FlatButton } from 'material-ui';
+import React, { PropTypes } from 'react';
 
 import StyleableComponent from './StyleableComponent';
-
-const { FlatButton } = mui;
 
 const styles = {
     footerButton: {
@@ -29,8 +27,8 @@ const styles = {
 class CardFooter extends StyleableComponent {
 
     static propTypes = {
-        actionText: React.PropTypes.string,
-        onClick: React.PropTypes.func,
+        actionText: PropTypes.string,
+        onClick: PropTypes.func,
     }
 
     render() {

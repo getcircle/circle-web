@@ -1,23 +1,17 @@
-import mui from 'material-ui';
-import React from 'react';
+import { List, ListDivider } from 'material-ui';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import t from '../utils/gettext';
+import LocationSearchResult from './LocationSearchResult';
+import ProfileSearchResult from './ProfileSearchResult';
+import StyleableComponent from './StyleableComponent';
+import TeamSearchResult from './TeamSearchResult';
 
-import LocationSearchResult from '../components/LocationSearchResult';
-import ProfileSearchResult from '../components/ProfileSearchResult';
-import TeamSearchResult from '../components/TeamSearchResult';
-
-const { 
-    List,
-    ListDivider,
-} = mui;
-
-class SearchResults extends React.Component {
+class SearchResults extends StyleableComponent {
 
     static propTypes = {
-        results: React.PropTypes.array.isRequired,
-        onClickResult: React.PropTypes.func,
+        onClickResult: PropTypes.func,
+        results: PropTypes.array.isRequired,
     }
 
     _renderSearchResults() {
@@ -28,29 +22,34 @@ class SearchResults extends React.Component {
             key += index;
             let result = this.props.results[index];
             if (result.profile) {
-                components.push(<ProfileSearchResult onClick={onClickResult} key={key} profile={result.profile} />);
+                components.push(<ProfileSearchResult key={key} onClick={onClickResult} profile={result.profile} />);
             } else if (result.team) {
-                components.push(<TeamSearchResult onClick={onClickResult} key={key} team={result.team} />);
+                components.push(<TeamSearchResult key={key} onClick={onClickResult} team={result.team} />);
             } else if (result.location) {
-                components.push(<LocationSearchResult onClick={onClickResult} key={key} location={result.location} />);
+                components.push(<LocationSearchResult key={key} location={result.location} onClick={onClickResult} />);
             } else if (result instanceof services.profile.containers.ProfileV1) {
-                components.push(<ProfileSearchResult onClick={onClickResult} key={key} profile={result} />);
+                components.push(<ProfileSearchResult key={key} onClick={onClickResult} profile={result} />);
             } else if (result instanceof services.organization.containers.TeamV1) {
-                components.push(<TeamSearchResult onClick={onClickResult} key={key} team={result} />);
+                components.push(<TeamSearchResult key={key} onClick={onClickResult} team={result} />);
             } else if (result instanceof services.organization.containers.LocationV1) {
-                components.push(<LocationSearchResult onClick={onClickResult} key={key} location={result} />);
+                components.push(<LocationSearchResult key={key} location={result} onClick={onClickResult} />);
             }
             if (parseInt(index) + 1 != this.props.results.length) {
                 key += 1
-                components.push(<ListDivider key={key} inset={true} />);
+                components.push(<ListDivider inset={true} key={key} />);
             }
         }
         return components;
     }
 
     render() {
+        const { 
+            onClickResult, 
+            results,
+            ...other
+        } = this.props;
         return (
-            <List className={this.props.className} style={this.props.style}>
+            <List {...other}>
                 {this._renderSearchResults()}
             </List>
         );

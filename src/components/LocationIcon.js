@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 
-class LocationIcon extends Component {
+import PureComponent from './PureComponent';
+
+class LocationIcon extends PureComponent {
 
     static propTypes = {
-        stroke: React.PropTypes.string,
+        stroke: PropTypes.string,
     }
 
     static defaultProps = {

@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 
-class GroupIcon extends Component {
+import PureComponent from './PureComponent';
+
+class GroupIcon extends PureComponent {
 
     static propTypes = {
-        stroke: React.PropTypes.string,
-        strokeWidth: React.PropTypes.number,
+        stroke: PropTypes.string,
+        strokeWidth: PropTypes.number,
     }
 
     static defaultProps = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import ProfileAvatar from './ProfileAvatar';
@@ -24,8 +24,8 @@ const MAX_PROFILES = 6;
 class CardFooterProfiles extends StyleableComponent {
 
     static propTypes = {
-        profiles: React.PropTypes.arrayOf(
-            React.PropTypes.instanceOf(services.profile.containers.ProfileV1)
+        profiles: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ).isRequired,
     }
 

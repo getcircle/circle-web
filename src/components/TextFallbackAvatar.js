@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import mui from 'material-ui';
-import React from 'react';
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import { Avatar } from 'material-ui';
+import React, { PropTypes } from 'react';
 
 import { getRandomColor } from '../utils/avatars';
 
-const { Avatar } = mui;
+import StyleableComponent from './StyleableComponent';
 
 const styles = {
     avatar: {
@@ -15,12 +14,13 @@ const styles = {
     },
 };
 
-class TextFallbackAvatar extends React.Component {
-    shouldComponentUpdate = shouldPureComponentUpdate;
+class TextFallbackAvatar extends StyleableComponent {
 
     static propTypes = {
-        src: React.PropTypes.string,
-        fallbackText: React.PropTypes.string,
+        className: PropTypes.string,
+        fallbackText: PropTypes.string,
+        src: PropTypes.string,
+        style: PropTypes.object,
     }
 
     constructor() {
@@ -57,11 +57,12 @@ class TextFallbackAvatar extends React.Component {
         return (
             <div className={this.props.className}>
                 <Avatar
+                    backgroundColor={backgroundColor}
+                    // XXX remove these classes, we should standardize on inline style
                     className="content--center--h content--center--v"
+                    onError={this._handleImageError.bind(this)}
                     src={this.state.imageSrc}
                     style={avatarStyle}
-                    onError={this._handleImageError.bind(this)}
-                    backgroundColor={backgroundColor}
                 >
                     {this._renderText()}
                 </Avatar>
