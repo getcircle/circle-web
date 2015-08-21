@@ -51,7 +51,7 @@ const getInitialState = (checkCache = true) => {
         }
         if (previousState.__version__ === stateVersion) {
             initialState = Immutable.fromJS(previousState);
-            client.authenticate(initialState.get("token"));
+            client.authenticate(initialState.get('token'));
         }
     }
     return initialState;
