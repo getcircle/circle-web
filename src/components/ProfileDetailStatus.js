@@ -5,6 +5,7 @@ import moment from '../utils/moment';
 
 import Card from './Card';
 import StyleableComponent from './StyleableComponent';
+import t from '../utils/gettext';
 
 const styles = {
     contentStyle: {
@@ -38,6 +39,25 @@ const styles = {
         justifyContent: 'center',
         flexDirection: 'column',
     },
+    statusTextarea: {
+        borderColor: 'rgba(0, 0, 0, 0.2)',
+        borderRadius: '4px',
+        boxSizing: 'border-box',
+        color: 'rgba(0, 0, 0, 0.7)',
+        display: 'flex',
+        fontSize: 16,
+        height: 100,
+        lineHeight: '20px',
+        padding: '10px',
+        resize: 'none',
+        width: '100%',
+    },
+    statusTextareaContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        width: '100%',
+    },
     statusText: {
         fontSize: 21,
         color: 'rgba(0, 0, 0, 0.7)',
@@ -50,51 +70,130 @@ const styles = {
     },
 }
 
+const STATES = {
+    INIT: 'INIT',
+    EDITING: 'EDITING',
+    SAVING: 'SAVING',
+    DONE: 'DONE',
+}
+
 class ProfileDetailStatus extends StyleableComponent {
 
     static propTypes = {
         status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
+        editable: React.PropTypes.bool,
     }
 
-    _renderStatusText(status) {
-        if (status && status.value) {
-            return status.value;
-        } else {
-            return "Ask me!";
+    constructor(props) {
+        super(props);
+        this.state = {
+            state: STATES.INIT,
+            value: '',
+        };
+    }
+
+    componentWillMount() {
+        this._setInitialState();
+    }
+
+    _setInitialState() {
+        const {
+            status,
+        } = this.props;
+
+        this.setState({
+            state: STATES.INIT,
+            value: status ? status.value : '',
+        });
+    }
+
+    _handleEditClick() {
+        const {
+            status,
+        } = this.props;
+
+        this.setState({
+            state: STATES.EDITING,
+            value: status ? status.value : '',
+        });
+    }
+
+    _handleSaveClick() {
+        let finalStatusValue = this.state.value;
+
+        this.setState({
+            state: STATES.DONE,
+            value: finalStatusValue,
+        });
+    }
+
+    _handleCancelClick() {
+        this._setInitialState();
+    }
+
+    _handleChange(event) {
+        this.setState({
+            state: STATES.EDITING,
+            value: event.target.value
+        });
+    }
+
+    _renderContent() {
+        var statusValue = this.state.value;
+        if (statusValue == '' || statusValue.length == 0) {
+            statusValue = t("Ask me!");
         }
+
+
+        return (
+            <div style={this.mergeAndPrefix(styles.statusContainer)}>
+                <span style={this.mergeAndPrefix(styles.statusText)}>{statusValue}</span>
+            </div>
+        );
+    }
+
+    _renderEditableContent() {
+        const {
+            status,
+        } = this.props;
+
+        let value = this.state.value
+        return (
+            <div style={this.mergeAndPrefix(styles.statusTextareaContainer)}>
+                <textarea
+                    placeholder={t('I\'m working on #project with @mypeer!')}
+                    style={this.mergeAndPrefix(styles.statusTextarea)}
+                    value={value}
+                    onChange={this._handleChange.bind(this)} />
+            </div>
+        );
     }
 
     render() {
         const {
             status,
             style,
+            editable,
             ...other
         } = this.props;
+
+        // TODO: Convert this to duration and display below status
         let created = status ? moment(status.created) : moment();
+        let state = this.state.state;
+
         return (
             <Card
                 {...other}
                 style={this.mergeAndPrefix(style)}
                 contentStyle={styles.contentStyle}
-                title="Currently Working On"
+                title={t("Currently Working On")}
+                editable={editable}
+                editing={state == STATES.EDITING ? true : false}
+                onEditClick={this._handleEditClick.bind(this)}
+                onSaveClick={this._handleSaveClick.bind(this)}
+                onCancelClick={this._handleCancelClick.bind(this)}
             >
-                <div style={styles.dateBox}>
-                    <span style={this.mergeAndPrefix(
-                        styles.text,
-                        styles.date1,
-                    )}>
-                        {created.format("D")}
-                    </span>
-                    <span style={this.mergeAndPrefix(
-                        styles.text,
-                        styles.date2,
-                    )}>
-                        {created.format("MMM")}
-                    </span>
-                </div>
-                <div style={this.mergeAndPrefix(styles.statusContainer)}>
-                    <span style={this.mergeAndPrefix(styles.statusText)}>{this._renderStatusText(status)}</span>
-                </div>
+                {state == STATES.EDITING ? this._renderEditableContent() : this._renderContent()}
             </Card>
         );
     }
