@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react';
-import mui from 'material-ui';
 
 import StyleableComponent from './StyleableComponent';
 import t from '../utils/gettext';
 
-const { FlatButton } = mui;
+import { FlatButton } from 'material-ui';
 
 const styles = {
     contentContainer: {
@@ -24,17 +23,17 @@ const styles = {
         paddingLeft: 12,
         textTransform: 'uppercase',
     },
-    editButton: {
+    headerActionButton: {
         flex: 1,
         display: 'flex',
         justifyContent: 'flex-end',
         marginRight: 20,
     },
-    editButtonLabel: {
+    headerActionButtonLabel: {
         color: '#8598FF',
         fontSize: 16,
         fontWeight: 600,
-    },    
+    },
     root: {
         boxShadow: '1px 1px 3px -2px',
         backgroundColor: 'white',
@@ -44,11 +43,15 @@ const styles = {
 
 class Card extends StyleableComponent {
 
+    // TODO: Add custom validator for editing related props
     static propTypes = {
         title: PropTypes.string,
         contentStyle: PropTypes.object,
         editable: PropTypes.bool,
+        editing: PropTypes.bool,
         onEditClick: PropTypes.func,
+        onSaveClick: PropTypes.func,
+        onCancelClick: PropTypes.func,
     }
 
     _renderHeader() {
@@ -68,15 +71,28 @@ class Card extends StyleableComponent {
     _renderEditButton() {
         const {
             editable,
+            editing,
             onEditClick,
+            onSaveClick,
+            onCancelClick,
         } = this.props;
 
         if (editable) {
-            return (
-                <div style={this.mergeAndPrefix(styles.editButton)}>
-                    <FlatButton labelStyle={styles.editButtonLabel} label={t('Edit')} onTouchTap={onEditClick} />
-                </div>
-            );
+            if (!editing) {
+                return (
+                    <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+                        <FlatButton labelStyle={styles.headerActionButtonLabel} label={t('Cancel')} onTouchTap={onCancelClick} />
+                        <FlatButton labelStyle={styles.headerActionButtonLabel} label={t('Save')} onTouchTap={onSaveClick} />
+                    </div>
+                );
+            }
+            else {
+                return (
+                    <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+                        <FlatButton labelStyle={styles.headerActionButtonLabel} label={t('Edit')} onTouchTap={onEditClick} />
+                    </div>
+                );
+            }
         }
     }
 
