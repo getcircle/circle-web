@@ -78,7 +78,7 @@ class Card extends StyleableComponent {
         } = this.props;
 
         if (editable) {
-            if (!editing) {
+            if (editing) {
                 return (
                     <div style={this.mergeAndPrefix(styles.headerActionButton)}>
                         <FlatButton labelStyle={styles.headerActionButtonLabel} label={t('Cancel')} onTouchTap={onCancelClick} />
