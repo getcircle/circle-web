@@ -81,13 +81,14 @@ class ProfileDetailStatus extends StyleableComponent {
 
     static propTypes = {
         status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
-        editable: React.PropTypes.bool,
+        editable: PropTypes.bool,
+        onSaveCallback: PropTypes.func,
     }
 
     constructor(props) {
         super(props);
         this.state = {
-            state: STATES.INIT,
+            type: STATES.INIT,
             value: '',
         };
     }
@@ -102,7 +103,7 @@ class ProfileDetailStatus extends StyleableComponent {
         } = this.props;
 
         this.setState({
-            state: STATES.INIT,
+            type: STATES.INIT,
             value: status ? status.value : '',
         });
     }
@@ -113,7 +114,7 @@ class ProfileDetailStatus extends StyleableComponent {
         } = this.props;
 
         this.setState({
-            state: STATES.EDITING,
+            type: STATES.EDITING,
             value: status ? status.value : '',
         });
     }
@@ -121,10 +122,18 @@ class ProfileDetailStatus extends StyleableComponent {
     _handleSaveClick() {
         let finalStatusValue = this.state.value;
 
-        this.setState({
-            state: STATES.DONE,
-            value: finalStatusValue,
-        });
+        const {
+            onSaveCallback
+        } = this.props;
+
+        if (typeof onSaveCallback != 'undefined') {
+            onSaveCallback(finalStatusValue);
+        }
+
+        // this.setState({
+        //     type: STATES.DONE,
+        //     value: finalStatusValue,
+        // });
     }
 
     _handleCancelClick() {
@@ -133,7 +142,7 @@ class ProfileDetailStatus extends StyleableComponent {
 
     _handleChange(event) {
         this.setState({
-            state: STATES.EDITING,
+            type: STATES.EDITING,
             value: event.target.value
         });
     }
@@ -179,7 +188,7 @@ class ProfileDetailStatus extends StyleableComponent {
 
         // TODO: Convert this to duration and display below status
         let created = status ? moment(status.created) : moment();
-        let state = this.state.state;
+        let state = this.state.type;
 
         return (
             <Card

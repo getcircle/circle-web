@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -15,7 +16,7 @@ import ProfileDetailStatus from './ProfileDetailStatus';
 import ProfileDetailTeam from './ProfileDetailTeam';
 import StyleableComponent from './StyleableComponent';
 
-const { ContactMethodV1 } = services.profile.containers;
+const { ContactMethodV1, ProfileStatusV1 } = services.profile.containers;
 
 const styles = {
     section: {
@@ -28,6 +29,7 @@ class ProfileDetail extends StyleableComponent {
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
+        onUpdateProfile: PropTypes.func.isRequired,
     }
 
     static contextTypes = {
@@ -36,10 +38,36 @@ class ProfileDetail extends StyleableComponent {
         }).isRequired,
     }
 
+    // Update Methods
+
+    _onUpdateStatus(statusText) {
+        const {
+            extendedProfile,
+            onUpdateProfile,
+        } = this.props;
+
+        let profileStatusV1 = new ProfileStatusV1({
+            value: statusText,
+        });
+
+        let updatedProfile = Object.assign({}, extendedProfile.profile, {
+            status:  profileStatusV1,
+        });
+
+        onUpdateProfile(updatedProfile);
+    }
+
+    // Render Methods
+
     _renderStatus(status) {
-        if (status) {
-            return <ProfileDetailStatus status={status} style={this.mergeAndPrefix(styles.section)}/>;
-        }
+        return (
+            <ProfileDetailStatus
+                status={status}
+                style={this.mergeAndPrefix(styles.section)}
+                editable={true}
+                onSaveCallback={this._onUpdateStatus.bind(this)}
+            />
+        );
     }
 
     _renderContactInfo(contactMethods=[], locations=[]) {

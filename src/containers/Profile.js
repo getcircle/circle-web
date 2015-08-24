@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { loadExtendedProfile, retrieveExtendedProfile } from '../actions/profiles';
+import { loadExtendedProfile, retrieveExtendedProfile, updateProfileActionCreator } from '../actions/profiles';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -53,6 +53,10 @@ class Profile extends PureComponent {
         }
     }
 
+    _onUpdateProfile(profile) {
+        this.props.dispatch(updateProfileActionCreator(profile))
+    }
+
     _renderProfile() {
         const {
             extendedProfile,
@@ -63,6 +67,7 @@ class Profile extends PureComponent {
                 <ProfileDetail
                     extendedProfile={extendedProfile}
                     organization={organization}
+                    onUpdateProfile={this._onUpdateProfile.bind(this)}
                 />
             );
         } else {
