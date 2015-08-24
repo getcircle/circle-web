@@ -1,12 +1,14 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import { TextField } from 'material-ui';
 
 import moment from '../utils/moment';
+import t from '../utils/gettext';
 
 import Card from './Card';
 import CharacterCounter from './CharacterCounter';
 import StyleableComponent from './StyleableComponent';
-import t from '../utils/gettext';
+
 
 const characterLimit = 140
 
@@ -41,19 +43,6 @@ const styles = {
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-    },
-    statusTextarea: {
-        borderColor: 'rgba(0, 0, 0, 0.2)',
-        borderRadius: '4px',
-        boxSizing: 'border-box',
-        color: 'rgba(0, 0, 0, 0.7)',
-        display: 'flex',
-        fontSize: 16,
-        height: 100,
-        lineHeight: '20px',
-        padding: '10px',
-        resize: 'none',
-        width: '100%',
     },
     statusTextareaContainer: {
         display: 'flex',
@@ -136,10 +125,22 @@ class ProfileDetailStatus extends StyleableComponent {
             type: STATES.EDITING,
             value: status ? status.value : '',
         });
+
+        if (this.refs.statusTextField) {
+            this.refs.statusTextField.focus();
+        }
     }
 
     _handleSaveClick() {
         let finalStatusValue = this.state.value;
+
+        if (finalStatusValue.length > characterLimit && this.refs.statusTextField) {
+            this.refs.statusTextField.setErrorText(t('Status can only be up to ' + characterLimit + ' characters'));
+            return;
+        }
+        else {
+            this.refs.statusTextField.setErrorText('');
+        }
 
         const {
             onSaveCallback
@@ -184,10 +185,12 @@ class ProfileDetailStatus extends StyleableComponent {
         let value = this.state.value
         return (
             <div style={this.mergeAndPrefix(styles.statusTextareaContainer)}>
-                <textarea
+                <TextField
+                    fullWidth={true}
+                    hintText={t('I\'m working on #project with @mypeer!')}
+                    multiLine={true}
                     onChange={this._handleChange.bind(this)}
-                    placeholder={t('I\'m working on #project with @mypeer!')}
-                    style={this.mergeAndPrefix(styles.statusTextarea)}
+                    ref='statusTextField'
                     value={value}
                  />
                  <CharacterCounter
