@@ -4,8 +4,11 @@ import { services } from 'protobufs';
 import moment from '../utils/moment';
 
 import Card from './Card';
+import CharacterCounter from './CharacterCounter';
 import StyleableComponent from './StyleableComponent';
 import t from '../utils/gettext';
+
+const characterLimit = 140
 
 const styles = {
     contentStyle: {
@@ -63,6 +66,11 @@ const styles = {
         color: 'rgba(0, 0, 0, 0.7)',
         lineHeight: '29px',
     },
+    statusTimestamp: {
+        fontSize: 15,
+        color: 'rgba(0, 0, 0, 0.5)',
+        lineHeight: '29px',
+    },
     text: {
         color: 'rgba(0, 0, 0, 0.4)',
         textAlign: 'center',
@@ -80,9 +88,9 @@ const STATES = {
 class ProfileDetailStatus extends StyleableComponent {
 
     static propTypes = {
-        status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
         editable: PropTypes.bool,
         onSaveCallback: PropTypes.func,
+        status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
     }
 
     constructor(props) {
@@ -154,32 +162,38 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     _renderContent() {
-        var statusValue = this.state.value;
-        if (statusValue == '' || statusValue.length == 0) {
-            statusValue = t("Ask me!");
-        }
+        const {
+            status
+        } = this.props;
 
+        let created = status ? moment(status.created).fromNow() : '';
+        let statusValue = this.state.value;
+        if (statusValue == '' || statusValue.length == 0) {
+            statusValue = t('Ask me!');
+        }
 
         return (
             <div style={this.mergeAndPrefix(styles.statusContainer)}>
-                <span style={this.mergeAndPrefix(styles.statusText)}>{statusValue}</span>
+                <span style={this.mergeAndPrefix(styles.statusText)}>&ldquo;{statusValue}&rdquo;</span>
+                <span style={this.mergeAndPrefix(styles.statusTimestamp)}>&nbsp;&ndash;&nbsp;{created}</span>
             </div>
         );
     }
 
     _renderEditableContent() {
-        const {
-            status,
-        } = this.props;
-
         let value = this.state.value
         return (
             <div style={this.mergeAndPrefix(styles.statusTextareaContainer)}>
                 <textarea
+                    onChange={this._handleChange.bind(this)}
                     placeholder={t('I\'m working on #project with @mypeer!')}
                     style={this.mergeAndPrefix(styles.statusTextarea)}
                     value={value}
-                    onChange={this._handleChange.bind(this)} />
+                 />
+                 <CharacterCounter
+                    counterLimit={characterLimit}
+                    counterValue={characterLimit - value.length}
+                 />
             </div>
         );
     }
@@ -192,21 +206,18 @@ class ProfileDetailStatus extends StyleableComponent {
             ...other
         } = this.props;
 
-        // TODO: Convert this to duration and display below status
-        let created = status ? moment(status.created) : moment();
         let state = this.state.type;
-
         return (
             <Card
                 {...other}
-                style={this.mergeAndPrefix(style)}
                 contentStyle={styles.contentStyle}
-                title={t("Currently Working On")}
                 editable={editable}
                 editing={state === STATES.EDITING ? true : false}
+                onCancelClick={this._handleCancelClick.bind(this)}
                 onEditClick={this._handleEditClick.bind(this)}
                 onSaveClick={this._handleSaveClick.bind(this)}
-                onCancelClick={this._handleCancelClick.bind(this)}
+                style={this.mergeAndPrefix(style)}
+                title={t('Currently Working On')}
             >
                 {state == STATES.EDITING ? this._renderEditableContent() : this._renderContent()}
             </Card>
