@@ -6,6 +6,7 @@ import * as types from '../constants/actionTypes';
 import {
     getProfiles,
     getExtendedProfile,
+    updateProfile,
 } from '../services/profile';
 
 export function loadProfiles(parameters, nextRequest) {
@@ -37,4 +38,15 @@ export function loadExtendedProfile(profileId) {
 
 export function retrieveExtendedProfile(profileId, cache) {
     return denormalize(profileId, services.profile.actions.get_extended_profile.ResponseV1, cache);
+}
+
+export function updateProfileActionCreator(profile) {
+    return {
+        types: [
+            types.UPDATE_PROFILE,
+            types.UPDATE_PROFILE_SUCCESS,
+            types.UPDATE_PROFILE_FAILURE,
+        ],
+        update: () => updateProfile(profile),
+    }
 }
