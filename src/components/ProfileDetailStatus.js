@@ -18,27 +18,6 @@ const styles = {
         flexDirection: 'row',
         padding: 20,
     },
-    dateBox: {
-        borderRadius: 2,
-        border: '1px solid rgba(0, 0, 0, 0.1)',
-        height: 72,
-        width: 72,
-        marginRight: 20,
-    },
-    date1: {
-        display: 'block',
-        fontSize: 24,
-        paddingTop: 15,
-        lineHeight: '29px',
-        letterSpacing: '1px',
-        fontWeight: 300,
-    },
-    date2: {
-        display: 'block',
-        fontSize: 10,
-        lineHeight: '12px',
-        letterSpacing: '2px',
-    },
     statusContainer: {
         display: 'flex',
         justifyContent: 'center',
@@ -59,11 +38,6 @@ const styles = {
         fontSize: 15,
         color: 'rgba(0, 0, 0, 0.5)',
         lineHeight: '29px',
-    },
-    text: {
-        color: 'rgba(0, 0, 0, 0.4)',
-        textAlign: 'center',
-        textTransform: 'uppercase',
     },
 }
 
