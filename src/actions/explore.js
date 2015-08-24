@@ -1,3 +1,4 @@
+import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 
 import { getProfiles } from '../services/profile';
@@ -21,15 +22,17 @@ export const exploreTypes = {
 export function exploreProfiles(nextRequest) {
     // TODO add shouldFetch
     return {
-        types: exploreActionTypes,
-        fetch: () => {
-            return getProfiles(null, nextRequest)
-                .then((response) => {
-                    return Promise.resolve({
-                        results: response.profiles,
-                        nextRequest: response.nextRequest,
+        [SERVICE_REQUEST]: {
+            types: exploreActionTypes,
+            remote: () => {
+                return getProfiles(null, nextRequest)
+                    .then((response) => {
+                        return Promise.resolve({
+                            results: response.profiles,
+                            nextRequest: response.nextRequest,
+                        });
                     });
-                });
+            },
         },
         payload: {
             type: exploreTypes.PROFILES,
@@ -41,15 +44,17 @@ export function exploreProfiles(nextRequest) {
 export function exploreTeams(nextRequest) {
     // TODO add shouldFetch
     return {
-        types: exploreActionTypes,
-        fetch: () => {
-            return getTeams(null, nextRequest)
-                .then((response) => {
-                    return Promise.resolve({
-                        results: response.teams,
-                        nextRequest: response.nextRequest,
-                    });
-                })
+        [SERVICE_REQUEST]: {
+            types: exploreActionTypes,
+            remote: () => {
+                return getTeams(null, nextRequest)
+                    .then((response) => {
+                        return Promise.resolve({
+                            results: response.teams,
+                            nextRequest: response.nextRequest,
+                        });
+                    })
+            },
         },
         payload: {
             type: exploreTypes.TEAMS,
@@ -61,15 +66,17 @@ export function exploreTeams(nextRequest) {
 export function exploreLocations(nextRequest) {
     // TODO add shouldFetch
     return {
-        types: exploreActionTypes,
-        fetch: () => {
-            return getLocations(null, nextRequest)
-                .then((response) => {
-                    return Promise.resolve({
-                        results: response.locations,
-                        nextRequest: response.nextRequest,
+        [SERVICE_REQUEST]: {
+            types: exploreActionTypes,
+            remote: () => {
+                return getLocations(null, nextRequest)
+                    .then((response) => {
+                        return Promise.resolve({
+                            results: response.locations,
+                            nextRequest: response.nextRequest,
+                        });
                     });
-                });
+            },
         },
         payload: {
             type: exploreTypes.LOCATIONS,

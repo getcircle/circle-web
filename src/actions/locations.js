@@ -1,3 +1,4 @@
+import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import {
     getLocation,
@@ -6,23 +7,29 @@ import { getProfiles } from '../services/profile';
 
 export function loadLocation(locationId) {
     return {
-        types: [
-            types.LOAD_LOCATION,
-            types.LOAD_LOCATION_SUCCESS,
-            types.LOAD_LOCATION_FAILURE,
-        ],
-        fetch: () => getLocation(locationId),
-        shouldFetch: state => !state.locations.getIn(['objects', locationId]),
-    }
+        [SERVICE_REQUEST]: {
+            types: [
+                types.LOAD_LOCATION,
+                types.LOAD_LOCATION_SUCCESS,
+                types.LOAD_LOCATION_FAILURE,
+            ],
+            remote: () => getLocation(locationId),
+            bailout: state => state.locations.getIn(['objects', locationId]),
+        },
+    };
 }
 
 export function loadLocationMembers(locationId) {
     return {
-        types: [
-            types.LOAD_LOCATION_MEMBERS,
-            types.LOAD_LOCATION_MEMBERS_SUCCESS,
-            types.LOAD_LOCATION_MEMBERS_FAILURE,
-        ],
-        fetch: () => getProfiles({location_id: locationId}),
-    }
+        [SERVICE_REQUEST]: {
+            types: [
+                types.LOAD_LOCATION_MEMBERS,
+                types.LOAD_LOCATION_MEMBERS_SUCCESS,
+                types.LOAD_LOCATION_MEMBERS_FAILURE,
+            ],
+            /*eslint-disable camelcase */
+            remote: () => getProfiles({location_id: locationId}),
+            /*eslint-enable camelcase */
+        },
+    };
 }

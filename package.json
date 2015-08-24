@@ -10,7 +10,7 @@
     "start": "npm run build && node server.js",
     "setup-dns": "echo '127.0.0.1 local.circlehq.co' >> /etc/hosts && dscacheutil -flushcache",
     "open": "open http://local.circlehq.co:9110/",
-    "test": "jest"
+    "test": "mocha --compilers js:babel/register --recursive 'src/**/*spec.js'"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
     "domready": "~1.0.7",
     "eslint": "^1.2.1",
     "eslint-plugin-react": "^3.2.3",
+    "expect.js": "^0.3.1",
     "express": "~4.7.2",
     "extract-text-webpack-plugin": "^0.8.2",
     "fastclick": "~1.0.3",
@@ -60,7 +61,6 @@
     "imagemin": "^3.2.0",
     "immutable": "^3.7.4",
     "invariant": "^2.1.0",
-    "jest-cli": "^0.4.18",
     "jsdom": "~4.4.0",
     "json-loader": "^0.5.2",
     "keymirror": "^0.1.1",
@@ -92,6 +92,7 @@
     "require-dir": "~0.1.0",
     "reselect": "0.0.2",
     "sass-loader": "^2.0.0",
+    "sinon": "^1.16.1",
     "spin": "0.0.1",
     "style-loader": "^0.12.3",
     "superagent": "git+ssh://git@github.com/mhahn/superagent.git",
@@ -102,21 +103,6 @@
     "watchify": "~3.2.3",
     "webpack": "^1.11.0",
     "webpack-dev-server": "^1.10.1"
-  },
-  "jest": {
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react"
-    ],
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "testFileExtensions": [
-      "spec.js"
-    ],
-    "moduleFileExtensions": [
-      "js"
-    ],
-    "testPathDirs": [
-      "src"
-    ]
   },
   "dependencies": {
     "redux-thunk": "^0.1.0"
