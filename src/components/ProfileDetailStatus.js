@@ -77,9 +77,10 @@ const STATES = {
 class ProfileDetailStatus extends StyleableComponent {
 
     static propTypes = {
-        editable: PropTypes.bool,
+        isEditable: PropTypes.bool,
         onSaveCallback: PropTypes.func,
         status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
+        style: PropTypes.object,
     }
 
     constructor(props) {
@@ -116,7 +117,7 @@ class ProfileDetailStatus extends StyleableComponent {
         });
     }
 
-    _handleEditClick() {
+    _handleEditTapped() {
         const {
             status,
         } = this.props;
@@ -131,7 +132,7 @@ class ProfileDetailStatus extends StyleableComponent {
         }
     }
 
-    _handleSaveClick() {
+    _handleSaveTapped() {
         let finalStatusValue = this.state.value;
 
         if (finalStatusValue.length > characterLimit && this.refs.statusTextField) {
@@ -151,7 +152,7 @@ class ProfileDetailStatus extends StyleableComponent {
         }
     }
 
-    _handleCancelClick() {
+    _handleCancelTapped() {
         this._setInitialState();
     }
 
@@ -205,7 +206,7 @@ class ProfileDetailStatus extends StyleableComponent {
         const {
             status,
             style,
-            editable,
+            isEditable,
             ...other
         } = this.props;
 
@@ -214,11 +215,11 @@ class ProfileDetailStatus extends StyleableComponent {
             <Card
                 {...other}
                 contentStyle={styles.contentStyle}
-                editable={editable}
-                editing={state === STATES.EDITING ? true : false}
-                onCancelClick={this._handleCancelClick.bind(this)}
-                onEditClick={this._handleEditClick.bind(this)}
-                onSaveClick={this._handleSaveClick.bind(this)}
+                isEditable={isEditable}
+                isEditing={state === STATES.EDITING ? true : false}
+                onCancelTapped={this._handleCancelTapped.bind(this)}
+                onEditTapped={this._handleEditTapped.bind(this)}
+                onSaveTapped={this._handleSaveTapped.bind(this)}
                 style={this.mergeAndPrefix(style)}
                 title={t('Currently Working On')}
             >

@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -28,8 +27,8 @@ class ProfileDetail extends StyleableComponent {
 
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
+        onUpdateProfileCallback: PropTypes.func.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
-        onUpdateProfile: PropTypes.func.isRequired,
     }
 
     static contextTypes = {
@@ -43,7 +42,7 @@ class ProfileDetail extends StyleableComponent {
     _onUpdateStatus(statusText) {
         const {
             extendedProfile,
-            onUpdateProfile,
+            onUpdateProfileCallback,
         } = this.props;
 
         let profileStatusV1 = new ProfileStatusV1({
@@ -54,7 +53,7 @@ class ProfileDetail extends StyleableComponent {
             status:  profileStatusV1,
         });
 
-        onUpdateProfile(updatedProfile);
+        onUpdateProfileCallback(updatedProfile);
     }
 
     // Render Methods
@@ -62,10 +61,10 @@ class ProfileDetail extends StyleableComponent {
     _renderStatus(status) {
         return (
             <ProfileDetailStatus
+                isEditable={true}
+                onSaveCallback={this._onUpdateStatus.bind(this)}
                 status={status}
                 style={this.mergeAndPrefix(styles.section)}
-                editable={true}
-                onSaveCallback={this._onUpdateStatus.bind(this)}
             />
         );
     }
@@ -73,10 +72,10 @@ class ProfileDetail extends StyleableComponent {
     _renderContactInfo(contactMethods=[], locations=[]) {
         return (
             <ProfileDetailContactInfo
-                style={this.mergeAndPrefix(styles.section)}
                 contactMethods={contactMethods}
                 locations={locations}
                 onClickLocation={routeToLocation.bind(null, this.context.router)}
+                style={this.mergeAndPrefix(styles.section)}
             />
         );
     }
