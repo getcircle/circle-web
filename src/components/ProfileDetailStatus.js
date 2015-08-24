@@ -163,21 +163,30 @@ class ProfileDetailStatus extends StyleableComponent {
         });
     }
 
+    _renderStatusTimestamp(createdString) {
+        if (createdString !== '') {
+            return (
+                <span style={this.mergeAndPrefix(styles.statusTimestamp)}>&nbsp;&ndash;&nbsp;{createdString}</span>
+            );
+        }
+    }
+
     _renderContent() {
         const {
-            status
+            isEditable,
+            status,
         } = this.props;
 
         let created = status ? moment(status.created).fromNow() : '';
-        let statusValue = this.state.value;
+        let statusValue = status ? '"' + this.state.value + '"' : '';
         if (statusValue == '' || statusValue.length == 0) {
-            statusValue = t('Ask me!');
+            statusValue = isEditable ? t('Add details') : t('Ask me!');
         }
 
         return (
             <div style={this.mergeAndPrefix(styles.statusContainer)}>
-                <span style={this.mergeAndPrefix(styles.statusText)}>&ldquo;{statusValue}&rdquo;</span>
-                <span style={this.mergeAndPrefix(styles.statusTimestamp)}>&nbsp;&ndash;&nbsp;{created}</span>
+                <span style={this.mergeAndPrefix(styles.statusText)}>{statusValue}</span>
+                {this._renderStatusTimestamp(created)}
             </div>
         );
     }

@@ -27,6 +27,7 @@ class ProfileDetail extends StyleableComponent {
 
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
+        isLoggedInUser: PropTypes.bool.isRequired,
         onUpdateProfileCallback: PropTypes.func.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
     }
@@ -58,10 +59,10 @@ class ProfileDetail extends StyleableComponent {
 
     // Render Methods
 
-    _renderStatus(status) {
+    _renderStatus(status, isEditable) {
         return (
             <ProfileDetailStatus
-                isEditable={true}
+                isEditable={isEditable}
                 onSaveCallback={this._onUpdateStatus.bind(this)}
                 status={status}
                 style={this.mergeAndPrefix(styles.section)}
@@ -130,7 +131,12 @@ class ProfileDetail extends StyleableComponent {
             profile,
             team,
         } = this.props.extendedProfile;
-        const { organization } = this.props;
+
+        const {
+            organization,
+            isLoggedInUser,
+        } = this.props;
+
         return (
             <div>
                 <ProfileDetailHeader
@@ -140,7 +146,7 @@ class ProfileDetail extends StyleableComponent {
                     team={team}
                 />
                 <DetailContent>
-                    {this._renderStatus(profile.status)}
+                    {this._renderStatus(profile.status, isLoggedInUser)}
                     {this._renderContactInfo(this._getContactMethods(), locations)}
                     {this._renderTeam(manager, peers, team)}
                     {this._renderManages(manages_team, direct_reports)}

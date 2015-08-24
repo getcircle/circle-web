@@ -26,6 +26,7 @@ const selector = createSelector(
         }
         return {
             extendedProfile: extendedProfile,
+            isLoggedInUser: authenticationState.get('profile').id === profileId,
             organization: authenticationState.get('organization'),
         }
     }
@@ -37,6 +38,7 @@ class Profile extends PureComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object,
+        isLoggedInUser: PropTypes.bool.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         params: PropTypes.shape({
             profileId: PropTypes.string.isRequired,
@@ -60,14 +62,16 @@ class Profile extends PureComponent {
     _renderProfile() {
         const {
             extendedProfile,
+            isLoggedInUser,
             organization,
         } = this.props;
         if (extendedProfile) {
             return (
                 <ProfileDetail
                     extendedProfile={extendedProfile}
+                    isLoggedInUser={isLoggedInUser}
+                    onUpdateProfileCallback={this._onUpdateProfile.bind(this)}
                     organization={organization}
-                    onUpdateProfile={this._onUpdateProfile.bind(this)}
                 />
             );
         } else {
