@@ -97,6 +97,17 @@ class ProfileDetailStatus extends StyleableComponent {
         this._setInitialState();
     }
 
+    componentWillReceiveProps(nextProps, nextState) {
+        let currentStatusValue = this.props.status ? this.props.status.value : '';
+        let newStatusValue = nextProps.status ? nextProps.status.value : '';
+        if (currentStatusValue != newStatusValue && this.state.type === STATES.EDITING) {
+            this.setState({
+                type: STATES.DONE,
+                value: newStatusValue,
+            });
+        }
+    }
+
     _setInitialState() {
         const {
             status,
@@ -129,11 +140,6 @@ class ProfileDetailStatus extends StyleableComponent {
         if (typeof onSaveCallback != 'undefined') {
             onSaveCallback(finalStatusValue);
         }
-
-        // this.setState({
-        //     type: STATES.DONE,
-        //     value: finalStatusValue,
-        // });
     }
 
     _handleCancelClick() {
@@ -197,7 +203,7 @@ class ProfileDetailStatus extends StyleableComponent {
                 contentStyle={styles.contentStyle}
                 title={t("Currently Working On")}
                 editable={editable}
-                editing={state == STATES.EDITING ? true : false}
+                editing={state === STATES.EDITING ? true : false}
                 onEditClick={this._handleEditClick.bind(this)}
                 onSaveClick={this._handleSaveClick.bind(this)}
                 onCancelClick={this._handleCancelClick.bind(this)}
