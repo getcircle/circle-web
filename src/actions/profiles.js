@@ -38,11 +38,13 @@ export function retrieveExtendedProfile(profileId, cache) {
 
 export function updateProfile(profile) {
     return {
-        types: [
-            types.UPDATE_PROFILE,
-            types.UPDATE_PROFILE_SUCCESS,
-            types.UPDATE_PROFILE_FAILURE,
-        ],
-        remote: () => requests.updateProfile(profile),
-    }
+        [SERVICE_REQUEST]: {
+            types: [
+                types.UPDATE_PROFILE,
+                types.UPDATE_PROFILE_SUCCESS,
+                types.UPDATE_PROFILE_FAILURE,
+            ],
+            remote: () => requests.updateProfile(profile),
+        },
+    };
 }
