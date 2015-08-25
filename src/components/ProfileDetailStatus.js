@@ -120,7 +120,6 @@ class ProfileDetailStatus extends StyleableComponent {
 
         const {
             onSaveCallback,
-            status,
         } = this.props;
 
         if (typeof onSaveCallback != 'undefined') {
@@ -164,7 +163,7 @@ class ProfileDetailStatus extends StyleableComponent {
 
         let created = status ? moment(status.created).fromNow() : '';
         let statusValue = status ? '"' + this.state.value + '"' : '';
-        if (statusValue == '' || statusValue.length == 0) {
+        if (statusValue === '' || statusValue.length === 0) {
             statusValue = isEditable ? t('Add details') : t('Ask me!');
         }
 
