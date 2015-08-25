@@ -145,3 +145,12 @@ export function getTag(tagId) {
     });
 }
 
+export function updateProfile(profile) {
+    let request = new services.profile.actions.update_profile.RequestV1({profile: profile});
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.finish(resolve, reject, profileId))
+            .catch(error => reject(error));
+    });
+}
+

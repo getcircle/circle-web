@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { loadExtendedProfile, retrieveExtendedProfile } from '../actions/profiles';
+import { getExtendedProfile, retrieveExtendedProfile, updateProfile } from '../actions/profiles';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -26,6 +26,7 @@ const selector = createSelector(
         }
         return {
             extendedProfile: extendedProfile,
+            isLoggedInUser: authenticationState.get('profile').id === profileId,
             organization: authenticationState.get('organization'),
         }
     }
@@ -37,6 +38,7 @@ class Profile extends PureComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object,
+        isLoggedInUser: PropTypes.bool.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         params: PropTypes.shape({
             profileId: PropTypes.string.isRequired,
@@ -44,24 +46,31 @@ class Profile extends PureComponent {
     }
 
     componentWillMount() {
-        this.props.dispatch(loadExtendedProfile(this.props.params.profileId));
+        this.props.dispatch(getExtendedProfile(this.props.params.profileId));
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
-            this.props.dispatch(loadExtendedProfile(nextProps.params.profileId));
+            this.props.dispatch(getExtendedProfile(nextProps.params.profileId));
         }
     }
 
-    _renderProfile() {
+    onUpdateProfile(profile) {
+        this.props.dispatch(updateProfile(profile))
+    }
+
+    renderProfile() {
         const {
             extendedProfile,
+            isLoggedInUser,
             organization,
         } = this.props;
         if (extendedProfile) {
             return (
                 <ProfileDetail
                     extendedProfile={extendedProfile}
+                    isLoggedInUser={isLoggedInUser}
+                    onUpdateProfileCallback={this.onUpdateProfile.bind(this)}
                     organization={organization}
                 />
             );
@@ -73,7 +82,7 @@ class Profile extends PureComponent {
     render() {
         return (
             <Container>
-                {this._renderProfile()}
+                {this.renderProfile()}
             </Container>
         );
     }

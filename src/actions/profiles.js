@@ -3,12 +3,9 @@ import { services } from 'protobufs';
 
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
-import {
-    getProfiles,
-    getExtendedProfile,
-} from '../services/profile';
+import * as requests from '../services/profile';
 
-export function loadProfiles(parameters, nextRequest) {
+export function getProfiles(parameters, nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -16,12 +13,12 @@ export function loadProfiles(parameters, nextRequest) {
                 types.LOAD_PROFILES_SUCCESS,
                 types.LOAD_PROFILES_FAILURE,
             ],
-            remote: () => getProfiles(parameters, nextRequest),
+            remote: () => requests.getProfiles(parameters, nextRequest),
         },
     };
 }
 
-export function loadExtendedProfile(profileId) {
+export function getExtendedProfile(profileId) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -37,4 +34,17 @@ export function loadExtendedProfile(profileId) {
 
 export function retrieveExtendedProfile(profileId, cache) {
     return denormalize(profileId, services.profile.actions.get_extended_profile.ResponseV1, cache);
+}
+
+export function updateProfile(profile) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.UPDATE_PROFILE,
+                types.UPDATE_PROFILE_SUCCESS,
+                types.UPDATE_PROFILE_FAILURE,
+            ],
+            remote: () => requests.updateProfile(profile),
+        },
+    };
 }

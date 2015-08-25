@@ -1,4 +1,7 @@
+import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
+
+import t from '../utils/gettext';
 
 import StyleableComponent from './StyleableComponent';
 
@@ -20,6 +23,27 @@ const styles = {
         paddingLeft: 12,
         textTransform: 'uppercase',
     },
+    headerActionButton: {
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginRight: 20,
+    },
+    headerActionButtonLabel: {
+        color: '#8598FF',
+        fontSize: 16,
+        fontWeight: 600,
+    },
+    progressIndicator: {
+        alignSelf: 'center',
+        marginTop: -2,
+    },
+    progressText: {
+        alignSelf: 'center',
+        color: 'rgba(0, 0, 0, 0.5)',
+        fontSize: 14,
+        textTransform: 'uppercase',
+    },
     root: {
         boxShadow: '1px 1px 3px -2px',
         backgroundColor: 'white',
@@ -29,12 +53,20 @@ const styles = {
 
 class Card extends StyleableComponent {
 
+    // TODO: Add custom validator for editing related props
     static propTypes = {
-        title: PropTypes.string,
+        children: PropTypes.object,
         contentStyle: PropTypes.object,
+        isEditable: PropTypes.bool,
+        isEditing: PropTypes.bool,
+        onCancelTapped: PropTypes.func,
+        onEditTapped: PropTypes.func,
+        onSaveTapped: PropTypes.func,
+        style: PropTypes.object,
+        title: PropTypes.string,
     }
 
-    _renderHeader() {
+    renderHeader() {
         const { title } = this.props;
         if (title) {
             return (
@@ -42,8 +74,64 @@ class Card extends StyleableComponent {
                     <span style={this.mergeAndPrefix(styles.headerText)}>
                         {title}
                     </span>
+                    {this.renderEditButton()}
                 </header>
             );
+        }
+    }
+
+    renderButtonEditing() {
+        const {
+            onSaveTapped,
+            onCancelTapped,
+        } = this.props;
+
+        return (
+            <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+                <FlatButton
+                    label={t('Cancel')}
+                    labelStyle={styles.headerActionButtonLabel}
+                    onTouchTap={onCancelTapped}
+                />
+                <FlatButton
+                    label={t('Save')}
+                    labelStyle={styles.headerActionButtonLabel}
+                    onTouchTap={onSaveTapped}
+                />
+            </div>
+        );
+    }
+
+    renderButton() {
+        const {
+            onEditTapped,
+        } = this.props;
+
+        return (
+            <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+                <FlatButton
+                    label={t('Edit')}
+                    labelStyle={styles.headerActionButtonLabel}
+                    onTouchTap={onEditTapped}
+                />
+            </div>
+        );
+    }
+
+    renderEditButton() {
+        const {
+            isEditable,
+            isEditing,
+        } = this.props;
+
+        if (!isEditable) {
+            return;
+        }
+
+        if (isEditing) {
+            return this.renderButtonEditing();
+        } else {
+            return this.renderButton();
         }
     }
 
@@ -55,7 +143,7 @@ class Card extends StyleableComponent {
         } = this.props;
         return (
             <div style={this.mergeAndPrefix(styles.root, style)} {...other}>
-                {this._renderHeader()}
+                {this.renderHeader()}
                 <div style={this.mergeAndPrefix(contentStyle)}>
                     {this.props.children}
                 </div>

@@ -15,7 +15,7 @@ import ProfileDetailStatus from './ProfileDetailStatus';
 import ProfileDetailTeam from './ProfileDetailTeam';
 import StyleableComponent from './StyleableComponent';
 
-const { ContactMethodV1 } = services.profile.containers;
+const { ContactMethodV1, ProfileStatusV1 } = services.profile.containers;
 
 const styles = {
     section: {
@@ -27,6 +27,8 @@ class ProfileDetail extends StyleableComponent {
 
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
+        isLoggedInUser: PropTypes.bool.isRequired,
+        onUpdateProfileCallback: PropTypes.func.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
     }
 
@@ -36,24 +38,50 @@ class ProfileDetail extends StyleableComponent {
         }).isRequired,
     }
 
-    _renderStatus(status) {
-        if (status) {
-            return <ProfileDetailStatus status={status} style={this.mergeAndPrefix(styles.section)}/>;
-        }
+    // Update Methods
+
+    onUpdateStatus(statusText) {
+        const {
+            extendedProfile,
+            onUpdateProfileCallback,
+        } = this.props;
+
+        let profileStatusV1 = new ProfileStatusV1({
+            value: statusText,
+        });
+
+        let updatedProfile = Object.assign({}, extendedProfile.profile, {
+            status:  profileStatusV1,
+        });
+
+        onUpdateProfileCallback(updatedProfile);
     }
 
-    _renderContactInfo(contactMethods=[], locations=[]) {
+    // Render Methods
+
+    renderStatus(status, isEditable) {
         return (
-            <ProfileDetailContactInfo
+            <ProfileDetailStatus
+                isEditable={isEditable}
+                onSaveCallback={this.onUpdateStatus.bind(this)}
+                status={status}
                 style={this.mergeAndPrefix(styles.section)}
-                contactMethods={contactMethods}
-                locations={locations}
-                onClickLocation={routeToLocation.bind(null, this.context.router)}
             />
         );
     }
 
-    _renderTeam(manager, peers, team) {
+    renderContactInfo(contactMethods=[], locations=[]) {
+        return (
+            <ProfileDetailContactInfo
+                contactMethods={contactMethods}
+                locations={locations}
+                onClickLocation={routeToLocation.bind(null, this.context.router)}
+                style={this.mergeAndPrefix(styles.section)}
+            />
+        );
+    }
+
+    renderTeam(manager, peers, team) {
         if (team) {
             return (
                 <ProfileDetailTeam
@@ -69,7 +97,7 @@ class ProfileDetail extends StyleableComponent {
         }
     }
 
-    _renderManages(team, directReports) {
+    renderManages(team, directReports) {
         if (team) {
             return (
                 <ProfileDetailManages
@@ -83,7 +111,7 @@ class ProfileDetail extends StyleableComponent {
         }
     }
 
-    _getContactMethods() {
+    getContactMethods() {
         const { profile } = this.props.extendedProfile;
         let contactMethods = [new ContactMethodV1({
             label: 'Email',
@@ -103,7 +131,12 @@ class ProfileDetail extends StyleableComponent {
             profile,
             team,
         } = this.props.extendedProfile;
-        const { organization } = this.props;
+
+        const {
+            organization,
+            isLoggedInUser,
+        } = this.props;
+
         return (
             <div>
                 <ProfileDetailHeader
@@ -113,10 +146,10 @@ class ProfileDetail extends StyleableComponent {
                     team={team}
                 />
                 <DetailContent>
-                    {this._renderStatus(profile.status)}
-                    {this._renderContactInfo(this._getContactMethods(), locations)}
-                    {this._renderTeam(manager, peers, team)}
-                    {this._renderManages(manages_team, direct_reports)}
+                    {this.renderStatus(profile.status, isLoggedInUser)}
+                    {this.renderContactInfo(this.getContactMethods(), locations)}
+                    {this.renderTeam(manager, peers, team)}
+                    {this.renderManages(manages_team, direct_reports)}
                 </DetailContent>
             </div>
         );
