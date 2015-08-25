@@ -65,19 +65,12 @@ const styles = {
     },
 }
 
-const STATES = {
-    INIT: 'INIT',
-    EDITING: 'EDITING',
-    SAVING: 'SAVING',
-    DONE: 'DONE',
-}
-
 class ProfileDetailStatus extends StyleableComponent {
 
     static propTypes = {
         isEditable: PropTypes.bool,
-        onSaveCallback: PropTypes.func,
-        status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
+        onSaveCallback: PropTypes.func.isRequired,
+        status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1),
         style: PropTypes.object,
     }
 
@@ -86,74 +79,69 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        let currentStatusValue = this.props.status ? this.props.status.value : '';
-        let newStatusValue = nextProps.status ? nextProps.status.value : '';
-        if (currentStatusValue != newStatusValue && this.state.type === STATES.SAVING) {
-            this.setState({
-                type: STATES.DONE,
-                value: newStatusValue,
-                error: '',
-            });
-        }
+        let statusValue = this.props.status ? this.props.status.value : '';
+        let createdValueTimestamp = this.props.status ? this.props.status.created : '';
+        this.setState({
+            editing: false,
+            error: '',
+            value: statusValue,
+            valueTimestamp: createdValueTimestamp,
+        });
     }
 
     state = {
-        type: STATES.INIT,
-        value: '',
+        editing: false,
         error: '',
+        value: '',
+        valueTimestamp: '',
     }
 
     setInitialState() {
-        const {
-            status,
-        } = this.props;
+        let statusValue = this.props.status ? this.props.status.value : '';
+        let createdValueTimestamp = this.props.status ? this.props.status.created : '';
 
         this.setState({
-            type: STATES.INIT,
-            value: status ? status.value : '',
+            editing: false,
             error: '',
+            value: statusValue,
+            valueTimestamp: createdValueTimestamp,
         });
     }
 
     handleEditTapped() {
-        const {
-            status,
-        } = this.props;
-
         this.setState({
-            type: STATES.EDITING,
-            value: status ? status.value : '',
+            editing: true,
             error: '',
+            value: this.state.value,
+            valueTimestamp: this.state.valueTimestamp
         });
     }
 
     handleSaveTapped() {
         let finalStatusValue = this.state.value;
-        let currentState = this.state.type;
 
         if (finalStatusValue.length > CHARACTER_LIMIT) {
             this.setState({
-                type: currentState,
-                value: finalStatusValue,
+                editing: true,
                 error: t('Status can only be up to ' + CHARACTER_LIMIT + ' characters'),
+                value: this.state.value,
+                valueTimestamp: this.state.valueTimestamp
             });
 
             return;
         }
 
         this.setState({
-            type: STATES.SAVING,
-            value: finalStatusValue,
+            editing: false,
             error: '',
+            value: this.state.value,
+            valueTimestamp: this.state.valueTimestamp
         });
 
         const {
             onSaveCallback,
         } = this.props;
-
-        if (typeof onSaveCallback != 'undefined') {
-            onSaveCallback(finalStatusValue);
-        }
+        onSaveCallback(finalStatusValue);
     }
 
     handleCancelTapped() {
@@ -162,9 +150,10 @@ class ProfileDetailStatus extends StyleableComponent {
 
     handleChange(event) {
         this.setState({
-            type: STATES.EDITING,
-            value: event.target.value,
+            editing: true,
             error: '',
+            value: event.target.value,
+            valueTimestamp: this.state.valueTimestamp
         });
     }
 
@@ -177,8 +166,7 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     renderContent() {
-        let state = this.state.type;
-        if (state === STATES.EDITING || state === STATES.SAVING) {
+        if (this.state.editing) {
             return this.renderEditableContent();
         } else {
             return this.renderDefaultContent();
@@ -188,11 +176,10 @@ class ProfileDetailStatus extends StyleableComponent {
     renderDefaultContent() {
         const {
             isEditable,
-            status,
         } = this.props;
 
-        let created = status ? moment(status.created).fromNow() : '';
-        let statusValue = status ? '"' + this.state.value + '"' : '';
+        let created = this.state.valueTimestamp ? moment(this.state.valueTimestamp).fromNow() : '';
+        let statusValue = this.state.value !== '' ? '"' + this.state.value + '"' : '';
         if (statusValue === '' || statusValue.length === 0) {
             statusValue = isEditable ? t('Add details') : t('Ask me!');
         }
@@ -206,7 +193,6 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     renderEditableContent() {
-        let state = this.state.type;
         let value = this.state.value;
         let error = this.state.error ? this.state.error : '';
 
@@ -214,7 +200,6 @@ class ProfileDetailStatus extends StyleableComponent {
             <div style={this.mergeAndPrefix(styles.statusTextareaContainer)}>
                 <textarea
                     autoFocus={true}
-                    disabled={state === STATES.SAVING}
                     onChange={this.handleChange.bind(this)}
                     placeholder={t('I\'m working on #project with @mypeer!')}
                     ref='statusTextField'
@@ -236,20 +221,17 @@ class ProfileDetailStatus extends StyleableComponent {
 
     render() {
         const {
-            status,
             style,
             isEditable,
             ...other
         } = this.props;
 
-        let state = this.state.type;
         return (
             <Card
                 {...other}
                 contentStyle={styles.contentStyle}
                 isEditable={isEditable}
-                isEditing={state === STATES.EDITING}
-                isSaving={state === STATES.SAVING}
+                isEditing={this.state.editing}
                 onCancelTapped={this.handleCancelTapped.bind(this)}
                 onEditTapped={this.handleEditTapped.bind(this)}
                 onSaveTapped={this.handleSaveTapped.bind(this)}

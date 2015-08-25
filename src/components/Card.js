@@ -1,4 +1,4 @@
-import { CircularProgress, FlatButton } from 'material-ui';
+import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
@@ -59,7 +59,6 @@ class Card extends StyleableComponent {
         contentStyle: PropTypes.object,
         isEditable: PropTypes.bool,
         isEditing: PropTypes.bool,
-        isSaving: PropTypes.bool,
         onCancelTapped: PropTypes.func,
         onEditTapped: PropTypes.func,
         onSaveTapped: PropTypes.func,
@@ -103,17 +102,6 @@ class Card extends StyleableComponent {
         );
     }
 
-    renderButtonSaving() {
-        return (
-            <div style={this.mergeAndPrefix(styles.headerActionButton)}>
-                <span style={this.mergeAndPrefix(styles.progressText)}>{t('Saving')}&hellip;</span>
-                <div style={this.mergeAndPrefix(styles.progressIndicator)}>
-                    <CircularProgress mode="indeterminate" size={0.3} />
-                </div>
-            </div>
-        );
-    }
-
     renderButton() {
         const {
             onEditTapped,
@@ -134,7 +122,6 @@ class Card extends StyleableComponent {
         const {
             isEditable,
             isEditing,
-            isSaving,
         } = this.props;
 
         if (!isEditable) {
@@ -143,8 +130,6 @@ class Card extends StyleableComponent {
 
         if (isEditing) {
             return this.renderButtonEditing();
-        } else if (isSaving) {
-            return this.renderButtonSaving();
         } else {
             return this.renderButton();
         }
