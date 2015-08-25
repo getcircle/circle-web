@@ -103,7 +103,7 @@
     "watchify": "~3.2.3",
     "webpack": "^1.11.0",
     "webpack-dev-server": "^1.10.1",
-    "protobuf-normalizr": "git+ssh://git@github.com/mhahn/protobuf-normalizr.git#v0.0.10"
+    "protobuf-normalizr": "git+ssh://git@github.com/mhahn/protobuf-normalizr.git#v0.0.12"
   },
   "dependencies": {
     "redux-thunk": "^0.1.0"

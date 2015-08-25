@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { loadLocation, loadLocationMembers } from '../actions/locations';
+import { loadLocation, loadLocationMembers, retrieveLocation, retrieveLocationMembers } from '../actions/locations';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -13,15 +13,23 @@ import LocationDetail from '../components/LocationDetail';
 
 const selector = createSelector(
     [
+        selectors.cacheSelector,
         selectors.locationsSelector,
         selectors.routerSelector,
         selectors.locationMembersSelector,
     ],
-    (locationsState, routerState, membersState) => {
-        return {
-            office: locationsState.getIn(['objects', routerState.params.locationId]),
-            members: membersState.getIn(['members', routerState.params.locationId]),
+    (cacheState, locationsState, routerState, membersState) => {
+        let office, members;
+        const locationId = routerState.params.locationId;
+        const cache = cacheState.toJS();
+        if (locationsState.get('ids').has(locationId)) {
+            office = retrieveLocation(locationId, cache);
         }
+        if (membersState.has(locationId) && !membersState.get(locationId).get('loading')) {
+            const ids = membersState.get(locationId).get('ids').toJS();
+            members = retrieveLocationMembers(ids, cache);
+        }
+        return {office: office, members: members};
     }
 ) ;
 

@@ -102,14 +102,8 @@ export function getLocation(locationId) {
     let request = new services.organization.actions.get_location.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then((response) => {
-                let { location } = response.result;
-                resolve(location);
-            })
-            .catch((error) => {
-                logger.error(`Error fetching location: ${error}`);
-                reject(error);
-            });
+            .then(response => response.finish(resolve, reject, locationId))
+            .catch(error => reject(error));
     });
 }
 

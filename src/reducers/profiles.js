@@ -1,32 +1,25 @@
-import Immutable from 'immutable';
+import { getNormalizations } from 'protobuf-normalizr';
+import { services } from 'protobufs';
 
 import * as types from '../constants/actionTypes';
+import paginate from './paginate';
 
-const initialState = Immutable.fromJS({
-    filter: [],
-    nextRequest: null,
-    loading: false,
+function getProfileNormalizations(action) {
+    return getNormalizations(
+        'profiles',
+        action.meta.paginateBy,
+        services.profile.actions.get_profiles.ResponseV1,
+        action.payload
+    );
+}
+
+const profiles = paginate({
+    mapActionToKey: action => action.meta.paginateBy,
+    mapActionToResults: getProfileNormalizations,
+    types: [
+        types.LOAD_PROFILES,
+        types.LOAD_PROFILES_SUCCESS,
+        types.LOAD_PROFILES_FAILURE,
+    ],
 });
-
-const handleLoadProfilesSuccess = (state, action) => {
-    const { profiles, nextRequest } = action.payload;
-    return state.withMutations(map => {
-        map.updateIn(['filter'], list => list.concat(profiles))
-            .set('nextRequest', nextRequest)
-            .set('loading', false);
-    })
-}
-
-export default function profiles(state = initialState, action) {
-    switch(action.type) {
-    case types.LOAD_PROFILES:
-        return state.set('loading', true);
-
-    case types.LOAD_PROFILES_SUCCESS:
-        return handleLoadProfilesSuccess(state, action);
-
-    case types.LOAD_PROFILES_FAILURE:
-        return state.set('loading', false);
-    }
-    return state;
-}
+export default profiles;

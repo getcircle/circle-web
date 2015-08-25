@@ -1,8 +1,9 @@
+import { denormalize } from 'protobuf-normalizr';
+import { services } from 'protobufs';
+
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
-import {
-    getLocation,
-} from '../services/organization';
+import { getLocation } from '../services/organization';
 import { getProfiles } from '../services/profile';
 
 export function loadLocation(locationId) {
@@ -31,5 +32,16 @@ export function loadLocationMembers(locationId) {
             remote: () => getProfiles({location_id: locationId}),
             /*eslint-enable camelcase */
         },
+        meta: {
+            paginateBy: locationId,
+        },
     };
+}
+
+export function retrieveLocation(locationId, cache) {
+    return denormalize(locationId, services.organization.containers.LocationV1, cache);
+}
+
+export function retrieveLocationMembers(profileIds, cache) {
+    return denormalize(profileIds, services.profile.containers.ProfileV1, cache);
 }

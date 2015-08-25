@@ -26,26 +26,17 @@ export function getProfile(parameters={}) {
 
 export function getProfiles(parameters, nextRequest=null) {
     parameters = Object.assign({}, parameters);
+    let request;
+    if (nextRequest === null) {
+        request = new services.profile.actions.get_profiles.RequestV1(parameters);
+    } else {
+        request = nextRequest;
+    }
+    const key = Object.values(parameters)[0];
     return new Promise((resolve, reject) => {
-        let request;
-        if (nextRequest === null) {
-            request = new services.profile.actions.get_profiles.RequestV1(parameters);
-        } else {
-            request = nextRequest;
-        }
         client.sendRequest(request)
-            .then((response) => {
-                let { profiles } = response.result;
-                resolve({
-                    parameters,
-                    profiles,
-                    nextRequest: response.getNextRequest(),
-                });
-            })
-            .catch((error) => {
-                logger.log(`Error fetching profiles: ${error}`);
-                reject(error);
-            });
+            .then(response => response.finish(resolve, reject, key))
+            .catch(error => reject(error));
     });
 }
 

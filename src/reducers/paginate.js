@@ -3,7 +3,11 @@ import Immutable from 'immutable';
 // ttl interval in milliseconds
 const TTL_INTERVAL = 300000
 
-export default function paginate({ types, mapActionToKey }) {
+export default function paginate({
+        types,
+        mapActionToKey,
+        mapActionToResults = action => action.payload.result,
+    }) {
     if (!Array.isArray(types) || types.length !== 3) {
         throw new Error('Expected types to be an array of three elements');
     }
@@ -14,6 +18,10 @@ export default function paginate({ types, mapActionToKey }) {
 
     if (typeof mapActionToKey !== 'function') {
         throw new Error('Expected mapActionToKey to be a function');
+    }
+
+    if (typeof mapActionToResults !== 'function') {
+        throw new Error('Expected mapActionToResults to be a function');
     }
 
     const [requestType, successType, failureType] = types;
@@ -30,7 +38,8 @@ export default function paginate({ types, mapActionToKey }) {
             return state.set('loading', true);
         case successType:
             return state.withMutations(map => {
-                return map.updateIn(['ids'], set => set.union(payload.result))
+                const results = mapActionToResults(action);
+                return map.updateIn(['ids'], set => set.union(results))
                     .set('loading', false)
                     .set('ttl', Date.now() + TTL_INTERVAL)
                     .set('nextRequest', payload.nextRequest);

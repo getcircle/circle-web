@@ -1,38 +1,25 @@
-import Immutable from 'immutable';
+import { getNormalizations } from 'protobuf-normalizr';
+import { services } from 'protobufs';
 
 import * as types from '../constants/actionTypes';
+import paginate from './paginate';
 
-const initialState = Immutable.fromJS({
-    loading: false,
-    nextRequest: Immutable.Map(),
-    members: Immutable.Map(),
-}) 
-
-const handleLoadLocationMembersSuccess = (state, action) => {
-    const {
-        parameters,
-        profiles,
-        nextRequest,
-    } = action.payload;
-    return state.withMutations(map => {
-        map.update('members', map => {
-            return map.set(parameters.location_id, profiles);
-        })
-            .set('loading', false)
-            .set('nextRequest', nextRequest);
-    });
+function getProfileNormalizations(action) {
+    return getNormalizations(
+        'profiles',
+        action.meta.paginateBy,
+        services.profile.actions.get_profiles.ResponseV1,
+        action.payload
+    );
 }
 
-export default function locationMembers(state=initialState, action) {
-    switch (action.type) {
-    case types.LOAD_LOCATION_MEMBERS:
-        return state.set('loading', true);
-
-    case types.LOAD_LOCATION_MEMBERS_SUCCESS:
-        return handleLoadLocationMembersSuccess(state, action);
-
-    case types.LOAD_LOCATION_MEMBERS_FAILURE:
-        return state.set('loading', false);
-    }
-    return state;
-}
+const locationMembers = paginate({
+    mapActionToKey: action => action.meta.paginateBy,
+    mapActionToResults: getProfileNormalizations,
+    types: [
+        types.LOAD_LOCATION_MEMBERS,
+        types.LOAD_LOCATION_MEMBERS_SUCCESS,
+        types.LOAD_LOCATION_MEMBERS_FAILURE,
+    ],
+});
+export default locationMembers;

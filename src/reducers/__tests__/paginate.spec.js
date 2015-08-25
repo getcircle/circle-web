@@ -32,6 +32,11 @@ describe('paginate', function () {
             .to.throwException(/to be a function/);
     });
 
+    it('throws an error if mapActionToResults is not a function', function () {
+        expect(paginate).withArgs({types: ['requestType', 'successType', 'failureType'], mapActionToKey: action => action.meta.key, mapActionToResults: 'invalid'})
+            .to.throwException(/to be a function/);
+    })
+
     it('returns the correct initial state', function () {
         const state = this.paginatedReducer(undefined, {});
         expect(state).to.be.an(Immutable.Map);
@@ -91,11 +96,11 @@ describe('paginate', function () {
     });
 
     it('correctly dedupes ids that are added for a value', function () {
-        const ids = Immutable.OrderedSet(['id-1', 'id-2', 'id-3'])
+        const ids = ['id-1', 'id-2', 'id-3']
         const action = {
             type: 'successType',
             payload: {
-                result: ids.toJS(),
+                result: ids,
                 nextRequest: new soa.ServiceRequestV1(),
             },
             meta: {
@@ -106,13 +111,39 @@ describe('paginate', function () {
         // pass the same action and verify that we didn't add duplicate ids
         state = this.paginatedReducer(state, action);
         let keyState = state.get('key');
-        expect(keyState.get('ids').toJS()).to.eql(ids.toJS());
+        expect(keyState.get('ids').toJS()).to.eql(ids);
 
         // simulate new action with new ids
         action.payload.result = ['id-4', 'id-5', 'id-6'];
         state = this.paginatedReducer(state, action);
         keyState = state.get('key');
         expect(keyState.get('ids').size).to.be(6);
+    });
+
+    it('supports a custom method for pulling results out of the payload', function () {
+        const ids = ['id-1', 'id-2', 'id-3']
+        const action = {
+            type: 'successType',
+            payload: {
+                profileIds: ids,
+                nextRequest: new soa.ServiceRequestV1(),
+            },
+            meta: {
+                key: 'key',
+            }
+        }
+        const reducer = paginate({
+            mapActionToKey: action => action.meta.key,
+            mapActionToResults: action => action.payload.profileIds,
+            types: [
+                'requestType',
+                'successType',
+                'failureType',
+            ],
+        });
+        const state = reducer(undefined, action);
+        const keyState = state.get('key');
+        expect(keyState.get('ids').toJS()).to.eql(ids);
     });
 
 });

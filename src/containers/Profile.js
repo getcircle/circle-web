@@ -19,7 +19,7 @@ const selector = createSelector(
         selectors.authenticationSelector,
     ],
     (cacheState, extendedProfilesState, routerState, authenticationState) => {
-        let extendedProfile = null;
+        let extendedProfile;
         const profileId = routerState.params.profileId;
         if (extendedProfilesState.get('ids').has(profileId)) {
             extendedProfile = retrieveExtendedProfile(profileId, cacheState.toJS());
