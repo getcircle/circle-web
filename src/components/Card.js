@@ -1,9 +1,9 @@
+import { CircularProgress, FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import StyleableComponent from './StyleableComponent';
 import t from '../utils/gettext';
 
-import { FlatButton } from 'material-ui';
+import StyleableComponent from './StyleableComponent';
 
 const styles = {
     contentContainer: {
@@ -34,6 +34,16 @@ const styles = {
         fontSize: 16,
         fontWeight: 600,
     },
+    progressIndicator: {
+        alignSelf: 'center',
+        marginTop: -2,
+    },
+    progressText: {
+        alignSelf: 'center',
+        color: 'rgba(0, 0, 0, 0.5)',
+        fontSize: 14,
+        textTransform: 'uppercase',
+    },
     root: {
         boxShadow: '1px 1px 3px -2px',
         backgroundColor: 'white',
@@ -49,6 +59,7 @@ class Card extends StyleableComponent {
         contentStyle: PropTypes.object,
         isEditable: PropTypes.bool,
         isEditing: PropTypes.bool,
+        isSaving: PropTypes.bool,
         onCancelTapped: PropTypes.func,
         onEditTapped: PropTypes.func,
         onSaveTapped: PropTypes.func,
@@ -74,6 +85,7 @@ class Card extends StyleableComponent {
         const {
             isEditable,
             isEditing,
+            isSaving,
             onEditTapped,
             onSaveTapped,
             onCancelTapped,
@@ -93,6 +105,16 @@ class Card extends StyleableComponent {
                             labelStyle={styles.headerActionButtonLabel}
                             onTouchTap={onSaveTapped}
                         />
+                    </div>
+                );
+            }
+            else if (isSaving) {
+                return (
+                    <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+                        <span style={this.mergeAndPrefix(styles.progressText)}>{t('Saving')}&hellip;</span>
+                        <div style={this.mergeAndPrefix(styles.progressIndicator)}>
+                            <CircularProgress mode="indeterminate" size={0.3} />
+                        </div>
                     </div>
                 );
             }

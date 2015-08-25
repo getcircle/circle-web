@@ -72,7 +72,7 @@ class ProfileDetailStatus extends StyleableComponent {
     componentWillReceiveProps(nextProps, nextState) {
         let currentStatusValue = this.props.status ? this.props.status.value : '';
         let newStatusValue = nextProps.status ? nextProps.status.value : '';
-        if (currentStatusValue != newStatusValue && this.state.type === STATES.EDITING) {
+        if (currentStatusValue != newStatusValue && this.state.type === STATES.SAVING) {
             this.setState({
                 type: STATES.DONE,
                 value: newStatusValue,
@@ -117,9 +117,20 @@ class ProfileDetailStatus extends StyleableComponent {
             this.refs.statusTextField.setErrorText('');
         }
 
+        this.setState({
+            type: STATES.SAVING,
+            value: finalStatusValue,
+        });
+
         const {
-            onSaveCallback
+            onSaveCallback,
+            status,
         } = this.props;
+
+        if (status && status.value === finalStatusValue) {
+            this._handleCancelTapped();
+            return;
+        }
 
         if (typeof onSaveCallback != 'undefined') {
             onSaveCallback(finalStatusValue);
@@ -146,6 +157,16 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     _renderContent() {
+        let state = this.state.type;
+        if (state === STATES.EDITING || state === STATES.SAVING) {
+            return this._renderEditableContent();
+        }
+        else {
+            return this._renderDefaultContent();
+        }
+    }
+
+    _renderDefaultContent() {
         const {
             isEditable,
             status,
@@ -166,10 +187,13 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     _renderEditableContent() {
+        let state = this.state.type
         let value = this.state.value
+
         return (
             <div style={this.mergeAndPrefix(styles.statusTextareaContainer)}>
                 <TextField
+                    disabled={state === STATES.SAVING}
                     fullWidth={true}
                     hintText={t('I\'m working on #project with @mypeer!')}
                     multiLine={true}
@@ -199,14 +223,15 @@ class ProfileDetailStatus extends StyleableComponent {
                 {...other}
                 contentStyle={styles.contentStyle}
                 isEditable={isEditable}
-                isEditing={state === STATES.EDITING ? true : false}
+                isEditing={state === STATES.EDITING}
+                isSaving={state === STATES.SAVING}
                 onCancelTapped={this._handleCancelTapped.bind(this)}
                 onEditTapped={this._handleEditTapped.bind(this)}
                 onSaveTapped={this._handleSaveTapped.bind(this)}
                 style={this.mergeAndPrefix(style)}
                 title={t('Currently Working On')}
             >
-                {state == STATES.EDITING ? this._renderEditableContent() : this._renderContent()}
+                {this._renderContent()}
             </Card>
         );
     }
