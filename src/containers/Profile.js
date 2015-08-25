@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { loadExtendedProfile, retrieveExtendedProfile, updateProfileActionCreator } from '../actions/profiles';
+import { getExtendedProfile, retrieveExtendedProfile, updateProfile } from '../actions/profiles';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -46,17 +46,17 @@ class Profile extends PureComponent {
     }
 
     componentWillMount() {
-        this.props.dispatch(loadExtendedProfile(this.props.params.profileId));
+        this.props.dispatch(getExtendedProfile(this.props.params.profileId));
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
-            this.props.dispatch(loadExtendedProfile(nextProps.params.profileId));
+            this.props.dispatch(getExtendedProfile(nextProps.params.profileId));
         }
     }
 
     _onUpdateProfile(profile) {
-        this.props.dispatch(updateProfileActionCreator(profile))
+        this.props.dispatch(updateProfile(profile))
     }
 
     _renderProfile() {
