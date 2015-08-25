@@ -8,16 +8,16 @@ import thunk from 'redux-thunk';
 import getRoutes from './getRoutes';
 import * as reducers from './reducers';
 import ThemeManager from './utils/ThemeManager';
-import { serviceRequest} from './middleware';
+import servicesMiddleware from './middleware/services';
 
 import PureComponent from './components/PureComponent';
 
 const reducer = combineReducers({
-    router: routerStateReducer, 
+    router: routerStateReducer,
     ...reducers,
 });
 // NB: "thunk" middleware should be first
-const createStoreWithMiddleware = applyMiddleware(thunk, logger, serviceRequest)(createStore);
+const createStoreWithMiddleware = applyMiddleware(thunk, servicesMiddleware, logger)(createStore);
 const store = createStoreWithMiddleware(reducer);
 
 export default class Root extends PureComponent {

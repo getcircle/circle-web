@@ -55,13 +55,8 @@ export function getExtendedProfile(profileId) {
     /*eslint-enable camelcase*/
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then((response) => {
-                let extendedProfile = response.result;
-                resolve(extendedProfile);
-            })
-            .catch((error) => {
-                logger.log(`Error fetching extended profile: ${error}`);
-            });
+            .then(response => response.finish(resolve, reject, profileId))
+            .catch(error => reject(error));
     });
 }
 

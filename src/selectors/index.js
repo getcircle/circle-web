@@ -7,9 +7,10 @@ export const authenticationSelector = state => state.authentication;
 
 export const authenticatedSelector = createImmutableSelector(
     [authenticationSelector],
-    (authenticationState) => { return { authenticated: authenticationState.get("authenticated") } },
+    (authenticationState) => { return { authenticated: authenticationState.get('authenticated') } },
 );
 
+export const cacheSelector = state => state.cache;
 export const exploreSelector = state => state.explore;
 export const extendedProfilesSelector = state => state.extendedProfiles;
 export const extendedTeamsSelector = state => state.extendedTeams;
