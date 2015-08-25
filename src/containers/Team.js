@@ -3,26 +3,33 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { loadExtendedTeam, loadTeamMembers } from '../actions/teams';
+import { loadExtendedTeam, loadTeamMembers, retrieveExtendedTeam, retrieveTeamMembers } from '../actions/teams';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
-import PureComponent from '../components/PureComponent'; 
+import PureComponent from '../components/PureComponent';
 import TeamDetail from '../components/TeamDetail';
 
 const selector = createSelector(
     [
+        selectors.cacheSelector,
         selectors.extendedTeamsSelector,
         selectors.routerSelector,
         selectors.teamMembersSelector,
     ],
-    (extendedTeamsState, routerState, membersState) => {
-        return {
-            loading: extendedTeamsState.get('loading') || membersState.get('loading'),
-            extendedTeam: extendedTeamsState.getIn(['objects', routerState.params.teamId]),
-            members: membersState.getIn(['members', routerState.params.teamId]),
+    (cacheState, extendedTeamsState, routerState, membersState) => {
+        let extendedTeam, members;
+        const teamId = routerState.params.teamId;
+        const cache = cacheState.toJS();
+        if (extendedTeamsState.get('ids').has(teamId)) {
+            extendedTeam = retrieveExtendedTeam(teamId, cache);
         }
+        if (membersState.has(teamId) && !membersState.get(teamId).get('loading')) {
+            const ids = membersState.get(teamId).get('ids').toJS();
+            members = retrieveTeamMembers(ids, cache);
+        }
+        return {extendedTeam: extendedTeam, members: members};
     }
 );
 
@@ -31,7 +38,10 @@ class Team extends PureComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
-        extendedTeam: PropTypes.object,
+        extendedTeam: PropTypes.shape({
+            reportingDetails: PropTypes.object.isRequired,
+            team: PropTypes.object.isRequired,
+        }),
         members: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),

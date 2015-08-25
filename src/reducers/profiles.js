@@ -1,17 +1,6 @@
-import { getNormalizations } from 'protobuf-normalizr';
-import { services } from 'protobufs';
-
-import * as types from '../constants/actionTypes';
+import { getProfileNormalizations } from './normalizations';
 import paginate from './paginate';
-
-function getProfileNormalizations(action) {
-    return getNormalizations(
-        'profiles',
-        action.meta.paginateBy,
-        services.profile.actions.get_profiles.ResponseV1,
-        action.payload
-    );
-}
+import * as types from '../constants/actionTypes';
 
 const profiles = paginate({
     mapActionToKey: action => action.meta.paginateBy,

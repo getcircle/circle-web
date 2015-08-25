@@ -15,7 +15,7 @@ export function loadLocation(locationId) {
                 types.LOAD_LOCATION_FAILURE,
             ],
             remote: () => getLocation(locationId),
-            bailout: state => state.locations.getIn(['objects', locationId]),
+            bailout: state => state.locations.get('ids').has(locationId),
         },
     };
 }
@@ -31,6 +31,11 @@ export function loadLocationMembers(locationId) {
             /*eslint-disable camelcase */
             remote: () => getProfiles({location_id: locationId}),
             /*eslint-enable camelcase */
+            bailout: (state) => {
+                if (state.locationMembers.has(locationId)) {
+                    return state.locationMembers.get(locationId).get('ids').size > 0;
+                }
+            },
         },
         meta: {
             paginateBy: locationId,

@@ -1,3 +1,4 @@
+import merge from 'lodash/object/merge';
 import { services } from 'protobufs';
 
 import client from './client';
@@ -22,56 +23,34 @@ export function getExtendedTeam(teamId) {
     const reportingDetails = getTeamReportingDetails(teamId);
     const team = getTeam(teamId);
     return new Promise((resolve, reject) => {
-            Promise.all([reportingDetails, team])
-                .then((values) => {
-                    let [reportingDetails, team] = values;
-                    resolve({reportingDetails, team});
-                })
-                .catch((error) => {
-                    logger.error(`Error fetching extended team: ${error}`);
-                    reject(error);
-                });
+        // we merge the two responses, preferring the team objects. merge will do a deep merge on the entities and
+        // normalizations
+        Promise.all([reportingDetails, team])
+            .then(values => resolve(merge(...values)))
+            .catch(error => reject(error));
     });
 }
 
 export function getTeamReportingDetails(teamId) {
-    let parameters = {team_id: teamId};
-    let request = new services.organization.actions.get_team_reporting_details.RequestV1(parameters);
+    /*eslint-disable camelcase*/
+    let request = new services.organization.actions.get_team_reporting_details.RequestV1({team_id: teamId});
+    /*eslint-enable camelcase*/
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then((response) => {
-                let {
-                    manager,
-                    members,
-                    child_teams,
-                } = response.result;
-                resolve({manager, members, childTeams: child_teams});
-            })
-            .catch((error) => {
-                logger.error(`Error fetching team reporting details: ${error}`);
-                reject(error);
-            });
+            .then(response => response.finish(resolve, reject, teamId))
+            .catch(error => reject(error));
     });
 }
 
 export function getTeam(teamId) {
     /*eslint-disable camelcase*/
-    let parameters = {
-        team_id: teamId,
-    };
+    let parameters = {team_id: teamId};
     /*eslint-enable camelcase*/
-
     let request = new services.organization.actions.get_team.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then((response) => {
-                let { team } = response.result;
-                resolve(team);
-            })
-            .catch((error) => {
-                logger.error(`Error fetching team: ${error}`);
-                reject(error);
-            });
+            .then(response => response.finish(resolve, reject, teamId))
+            .catch(error => reject(error));
     });
 }
 

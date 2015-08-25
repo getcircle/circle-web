@@ -1,3 +1,6 @@
+import { denormalize } from 'protobuf-normalizr';
+import { services } from 'protobufs';
+
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import { getExtendedTeam } from '../services/organization';
@@ -12,7 +15,7 @@ export function loadExtendedTeam(teamId) {
                 types.LOAD_EXTENDED_TEAM_FAILURE,
             ],
             remote: () => getExtendedTeam(teamId),
-            bailout: (state) => state.extendedTeams.getIn(['objects', teamId]),
+            bailout: (state) => state.extendedTeams.getIn(['ids', teamId]),
         },
     };
 }
@@ -28,6 +31,28 @@ export function loadTeamMembers(teamId) {
             /*eslint-disable camelcase */
             remote: () => getProfiles({team_id: teamId}),
             /*eslint-enable camelcase */
+            bailout: (state) => {
+                if (state.teamMembers.has(teamId)) {
+                    return state.teamMembers.get(teamId).get('ids').size > 0;
+                }
+            },
+        },
+        meta: {
+            paginateBy: teamId,
         },
     };
+}
+
+export function retrieveExtendedTeam(teamId, cache) {
+    const team = denormalize(teamId, services.organization.actions.get_team.ResponseV1, cache);
+    const reportingDetails = denormalize(
+        teamId,
+        services.organization.actions.get_team_reporting_details.ResponseV1,
+        cache
+    );
+    return {reportingDetails, team: team.team};
+}
+
+export function retrieveTeamMembers(profileIds, cache) {
+    return denormalize(profileIds, services.profile.containers.ProfileV1, cache);
 }

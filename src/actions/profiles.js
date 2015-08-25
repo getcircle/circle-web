@@ -30,7 +30,7 @@ export function loadExtendedProfile(profileId) {
                 types.LOAD_EXTENDED_PROFILE_FAILURE,
             ],
             remote: () => getExtendedProfile(profileId),
-            bailout: (state) => state.extendedProfiles.getIn(['objects', profileId]),
+            bailout: (state) => state.extendedProfiles.getIn(['ids', profileId]),
         },
     };
 }

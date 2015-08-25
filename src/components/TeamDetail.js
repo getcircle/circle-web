@@ -29,7 +29,10 @@ const styles = {
 class TeamDetail extends StyleableComponent {
 
     static propTypes = {
-        extendedTeam: PropTypes.object.isRequired,
+        extendedTeam: PropTypes.shape({
+            reportingDetails: PropTypes.object.isRequired,
+            team: PropTypes.object.isRequired,
+        }),
         members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
     }
 
@@ -76,7 +79,7 @@ class TeamDetail extends StyleableComponent {
                 <TeamDetailTeams
                     onClickTeam={routeToTeam.bind(null, this.context.router)}
                     style={styles.section}
-                    teams={childTeams} 
+                    teams={childTeams}
                 />
             );
         }
@@ -98,7 +101,8 @@ class TeamDetail extends StyleableComponent {
     render() {
         const { extendedTeam, members } = this.props;
         const { team, reportingDetails } = extendedTeam;
-        const { manager, childTeams } = reportingDetails;
+        const { manager } = reportingDetails;
+        const childTeams = reportingDetails.child_teams;
         return (
             <div>
                 <TeamDetailHeader team={team} />
