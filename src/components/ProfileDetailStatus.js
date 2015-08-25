@@ -10,7 +10,7 @@ import CharacterCounter from './CharacterCounter';
 import StyleableComponent from './StyleableComponent';
 
 
-const characterLimit = 140
+const CHARACTER_LIMIT = 140
 
 const styles = {
     contentStyle: {
@@ -66,7 +66,7 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     componentWillMount() {
-        this._setInitialState();
+        this.setInitialState();
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -80,7 +80,7 @@ class ProfileDetailStatus extends StyleableComponent {
         }
     }
 
-    _setInitialState() {
+    setInitialState() {
         const {
             status,
         } = this.props;
@@ -91,7 +91,7 @@ class ProfileDetailStatus extends StyleableComponent {
         });
     }
 
-    _handleEditTapped() {
+    handleEditTapped() {
         const {
             status,
         } = this.props;
@@ -106,11 +106,11 @@ class ProfileDetailStatus extends StyleableComponent {
         }
     }
 
-    _handleSaveTapped() {
+    handleSaveTapped() {
         let finalStatusValue = this.state.value;
 
-        if (finalStatusValue.length > characterLimit && this.refs.statusTextField) {
-            this.refs.statusTextField.setErrorText(t('Status can only be up to ' + characterLimit + ' characters'));
+        if (finalStatusValue.length > CHARACTER_LIMIT && this.refs.statusTextField) {
+            this.refs.statusTextField.setErrorText(t('Status can only be up to ' + CHARACTER_LIMIT + ' characters'));
             return;
         } else {
             this.refs.statusTextField.setErrorText('');
@@ -127,7 +127,7 @@ class ProfileDetailStatus extends StyleableComponent {
         } = this.props;
 
         if (status && status.value === finalStatusValue) {
-            this._handleCancelTapped();
+            this.handleCancelTapped();
             return;
         }
 
@@ -136,18 +136,18 @@ class ProfileDetailStatus extends StyleableComponent {
         }
     }
 
-    _handleCancelTapped() {
-        this._setInitialState();
+    handleCancelTapped() {
+        this.setInitialState();
     }
 
-    _handleChange(event) {
+    handleChange(event) {
         this.setState({
             type: STATES.EDITING,
             value: event.target.value
         });
     }
 
-    _renderStatusTimestamp(createdString) {
+    renderStatusTimestamp(createdString) {
         if (createdString !== '') {
             return (
                 <span style={this.mergeAndPrefix(styles.statusTimestamp)}>&nbsp;&ndash;&nbsp;{createdString}</span>
@@ -155,16 +155,16 @@ class ProfileDetailStatus extends StyleableComponent {
         }
     }
 
-    _renderContent() {
+    renderContent() {
         let state = this.state.type;
         if (state === STATES.EDITING || state === STATES.SAVING) {
-            return this._renderEditableContent();
+            return this.renderEditableContent();
         } else {
-            return this._renderDefaultContent();
+            return this.renderDefaultContent();
         }
     }
 
-    _renderDefaultContent() {
+    renderDefaultContent() {
         const {
             isEditable,
             status,
@@ -179,12 +179,12 @@ class ProfileDetailStatus extends StyleableComponent {
         return (
             <div style={this.mergeAndPrefix(styles.statusContainer)}>
                 <span style={this.mergeAndPrefix(styles.statusText)}>{statusValue}</span>
-                {this._renderStatusTimestamp(created)}
+                {this.renderStatusTimestamp(created)}
             </div>
         );
     }
 
-    _renderEditableContent() {
+    renderEditableContent() {
         let state = this.state.type
         let value = this.state.value
 
@@ -195,13 +195,13 @@ class ProfileDetailStatus extends StyleableComponent {
                     fullWidth={true}
                     hintText={t('I\'m working on #project with @mypeer!')}
                     multiLine={true}
-                    onChange={this._handleChange.bind(this)}
+                    onChange={this.handleChange.bind(this)}
                     ref='statusTextField'
                     value={value}
                  />
                  <CharacterCounter
-                    counterLimit={characterLimit}
-                    counterValue={characterLimit - value.length}
+                    counterLimit={CHARACTER_LIMIT}
+                    counterValue={CHARACTER_LIMIT - value.length}
                  />
             </div>
         );
@@ -223,13 +223,13 @@ class ProfileDetailStatus extends StyleableComponent {
                 isEditable={isEditable}
                 isEditing={state === STATES.EDITING}
                 isSaving={state === STATES.SAVING}
-                onCancelTapped={this._handleCancelTapped.bind(this)}
-                onEditTapped={this._handleEditTapped.bind(this)}
-                onSaveTapped={this._handleSaveTapped.bind(this)}
+                onCancelTapped={this.handleCancelTapped.bind(this)}
+                onEditTapped={this.handleEditTapped.bind(this)}
+                onSaveTapped={this.handleSaveTapped.bind(this)}
                 style={this.mergeAndPrefix(style)}
                 title={t('Currently Working On')}
             >
-                {this._renderContent()}
+                {this.renderContent()}
             </Card>
         );
     }

@@ -67,7 +67,7 @@ class Card extends StyleableComponent {
         title: PropTypes.string,
     }
 
-    _renderHeader() {
+    renderHeader() {
         const { title } = this.props;
         if (title) {
             return (
@@ -75,13 +75,13 @@ class Card extends StyleableComponent {
                     <span style={this.mergeAndPrefix(styles.headerText)}>
                         {title}
                     </span>
-                    {this._renderEditButton()}
+                    {this.renderEditButton()}
                 </header>
             );
         }
     }
 
-    _renderButtonEditing() {
+    renderButtonEditing() {
         const {
             onSaveTapped,
             onCancelTapped,
@@ -103,7 +103,7 @@ class Card extends StyleableComponent {
         );
     }
 
-    _renderButtonSaving() {
+    renderButtonSaving() {
         return (
             <div style={this.mergeAndPrefix(styles.headerActionButton)}>
                 <span style={this.mergeAndPrefix(styles.progressText)}>{t('Saving')}&hellip;</span>
@@ -114,7 +114,7 @@ class Card extends StyleableComponent {
         );
     }
 
-    _renderButton() {
+    renderButton() {
         const {
             onEditTapped,
         } = this.props;
@@ -130,7 +130,7 @@ class Card extends StyleableComponent {
         );
     }
 
-    _renderEditButton() {
+    renderEditButton() {
         const {
             isEditable,
             isEditing,
@@ -142,11 +142,11 @@ class Card extends StyleableComponent {
         }
 
         if (isEditing) {
-            return this._renderButtonEditing();
+            return this.renderButtonEditing();
         } else if (isSaving) {
-            return this._renderButtonSaving();
+            return this.renderButtonSaving();
         } else {
-            return this._renderButton();
+            return this.renderButton();
         }
     }
 
@@ -158,7 +158,7 @@ class Card extends StyleableComponent {
         } = this.props;
         return (
             <div style={this.mergeAndPrefix(styles.root, style)} {...other}>
-                {this._renderHeader()}
+                {this.renderHeader()}
                 <div style={this.mergeAndPrefix(contentStyle)}>
                     {this.props.children}
                 </div>
