@@ -79,8 +79,9 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        let statusValue = this.props.status ? this.props.status.value : '';
-        let createdValueTimestamp = this.props.status ? this.props.status.created : '';
+        let statusValue = nextProps.status ? nextProps.status.value : '';
+        let createdValueTimestamp = nextProps.status ? nextProps.status.created : '';
+
         this.setState({
             editing: false,
             error: '',
@@ -203,7 +204,7 @@ class ProfileDetailStatus extends StyleableComponent {
                     onChange={this.handleChange.bind(this)}
                     placeholder={t('I\'m working on #project with @mypeer!')}
                     ref='statusTextField'
-                    style={this.mergeAndPrefix(styles.statusTextarea, error == '' ? {} : styles.statusTextareaError)}
+                    style={this.mergeAndPrefix(styles.statusTextarea, error === '' ? {} : styles.statusTextareaError)}
                     value={value}
                  />
                  <div style={this.mergeAndPrefix(styles.errorAndCounterContainer)}>
