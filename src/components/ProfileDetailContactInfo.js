@@ -42,6 +42,9 @@ class ProfileDetailContactInfo extends StyleableComponent {
 
     _renderContactInfo() {
         const methods = this.props.contactMethods.map((item, index) => {
+            if (!item) {
+                return;
+            }
             switch (item.contact_method_type) {
             case ContactMethodTypeV1.EMAIL:
                 return (

@@ -5,9 +5,6 @@ import StyleableComponent from './StyleableComponent';
 const styles = {
     container: {
         color: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        padding: '10px',
         fontSize: 13,
     },
     negativeValue: {
@@ -29,9 +26,9 @@ class CharacterCounter extends StyleableComponent {
         } = this.props;
 
         return (
-            <div style={this.mergeAndPrefix(styles.container, counterValue < 0 ? styles.negativeValue : {})}>
+            <span style={this.mergeAndPrefix(styles.container, counterValue < 0 ? styles.negativeValue : {})}>
                 {counterValue}&nbsp;/&nbsp;{counterLimit}
-            </div>
+            </span>
         );
     }
 }
