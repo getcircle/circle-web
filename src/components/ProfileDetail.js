@@ -40,7 +40,7 @@ class ProfileDetail extends StyleableComponent {
 
     // Update Methods
 
-    _onUpdateStatus(statusText) {
+    onUpdateStatus(statusText) {
         const {
             extendedProfile,
             onUpdateProfileCallback,
@@ -59,18 +59,18 @@ class ProfileDetail extends StyleableComponent {
 
     // Render Methods
 
-    _renderStatus(status, isEditable) {
+    renderStatus(status, isEditable) {
         return (
             <ProfileDetailStatus
                 isEditable={isEditable}
-                onSaveCallback={this._onUpdateStatus.bind(this)}
+                onSaveCallback={this.onUpdateStatus.bind(this)}
                 status={status}
                 style={this.mergeAndPrefix(styles.section)}
             />
         );
     }
 
-    _renderContactInfo(contactMethods=[], locations=[]) {
+    renderContactInfo(contactMethods=[], locations=[]) {
         return (
             <ProfileDetailContactInfo
                 contactMethods={contactMethods}
@@ -81,7 +81,7 @@ class ProfileDetail extends StyleableComponent {
         );
     }
 
-    _renderTeam(manager, peers, team) {
+    renderTeam(manager, peers, team) {
         if (team) {
             return (
                 <ProfileDetailTeam
@@ -97,7 +97,7 @@ class ProfileDetail extends StyleableComponent {
         }
     }
 
-    _renderManages(team, directReports) {
+    renderManages(team, directReports) {
         if (team) {
             return (
                 <ProfileDetailManages
@@ -111,7 +111,7 @@ class ProfileDetail extends StyleableComponent {
         }
     }
 
-    _getContactMethods() {
+    getContactMethods() {
         const { profile } = this.props.extendedProfile;
         let contactMethods = [new ContactMethodV1({
             label: 'Email',
@@ -146,10 +146,10 @@ class ProfileDetail extends StyleableComponent {
                     team={team}
                 />
                 <DetailContent>
-                    {this._renderStatus(profile.status, isLoggedInUser)}
-                    {this._renderContactInfo(this._getContactMethods(), locations)}
-                    {this._renderTeam(manager, peers, team)}
-                    {this._renderManages(manages_team, direct_reports)}
+                    {this.renderStatus(profile.status, isLoggedInUser)}
+                    {this.renderContactInfo(this.getContactMethods(), locations)}
+                    {this.renderTeam(manager, peers, team)}
+                    {this.renderManages(manages_team, direct_reports)}
                 </DetailContent>
             </div>
         );

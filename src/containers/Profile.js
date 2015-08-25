@@ -55,11 +55,11 @@ class Profile extends PureComponent {
         }
     }
 
-    _onUpdateProfile(profile) {
+    onUpdateProfile(profile) {
         this.props.dispatch(updateProfile(profile))
     }
 
-    _renderProfile() {
+    renderProfile() {
         const {
             extendedProfile,
             isLoggedInUser,
@@ -70,7 +70,7 @@ class Profile extends PureComponent {
                 <ProfileDetail
                     extendedProfile={extendedProfile}
                     isLoggedInUser={isLoggedInUser}
-                    onUpdateProfileCallback={this._onUpdateProfile.bind(this)}
+                    onUpdateProfileCallback={this.onUpdateProfile.bind(this)}
                     organization={organization}
                 />
             );
@@ -82,7 +82,7 @@ class Profile extends PureComponent {
     render() {
         return (
             <Container>
-                {this._renderProfile()}
+                {this.renderProfile()}
             </Container>
         );
     }
