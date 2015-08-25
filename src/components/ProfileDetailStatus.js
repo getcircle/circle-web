@@ -57,14 +57,6 @@ class ProfileDetailStatus extends StyleableComponent {
         style: PropTypes.object,
     }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            type: STATES.INIT,
-            value: '',
-        };
-    }
-
     componentWillMount() {
         this.setInitialState();
     }
@@ -78,6 +70,11 @@ class ProfileDetailStatus extends StyleableComponent {
                 value: newStatusValue,
             });
         }
+    }
+
+    state = {
+        type: STATES.INIT,
+        value: '',
     }
 
     setInitialState() {
