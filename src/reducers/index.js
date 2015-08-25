@@ -1,4 +1,5 @@
 export { default as authentication } from './authentication';
+export { default as cache } from './cache';
 export { default as explore } from './explore';
 export { default as extendedProfiles } from './extendedProfiles';
 export { default as extendedTeams } from './extendedTeams';

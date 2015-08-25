@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
-import { loadExtendedProfile } from '../actions/profiles';
+import { loadExtendedProfile, retrieveExtendedProfile } from '../actions/profiles';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -11,10 +12,20 @@ import ProfileDetail from '../components/ProfileDetail';
 import PureComponent from '../components/PureComponent';
 
 const selector = createSelector(
-    [selectors.extendedProfilesSelector, selectors.routerSelector, selectors.authenticationSelector],
-    (extendedProfilesState, routerState, authenticationState) => {
+    [
+        selectors.cacheSelector,
+        selectors.extendedProfilesSelector,
+        selectors.routerSelector,
+        selectors.authenticationSelector,
+    ],
+    (cacheState, extendedProfilesState, routerState, authenticationState) => {
+        let extendedProfile = null;
+        const profileId = routerState.params.profileId;
+        if (extendedProfilesState.get('ids').has(profileId)) {
+            extendedProfile = retrieveExtendedProfile(profileId, cacheState.toJS());
+        }
         return {
-            extendedProfile: extendedProfilesState.getIn(['objects', routerState.params.profileId]),
+            extendedProfile: extendedProfile,
             organization: authenticationState.get('organization'),
         }
     }
@@ -24,7 +35,12 @@ const selector = createSelector(
 class Profile extends PureComponent {
 
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object,
+        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
+        params: PropTypes.shape({
+            profileId: PropTypes.string.isRequired,
+        }).isRequired,
     }
 
     componentWillMount() {
