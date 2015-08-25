@@ -81,54 +81,72 @@ class Card extends StyleableComponent {
         }
     }
 
+    _renderButtonEditing() {
+        const {
+            onSaveTapped,
+            onCancelTapped,
+        } = this.props;
+
+        return (
+            <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+                <FlatButton
+                    label={t('Cancel')}
+                    labelStyle={styles.headerActionButtonLabel}
+                    onTouchTap={onCancelTapped}
+                />
+                <FlatButton
+                    label={t('Save')}
+                    labelStyle={styles.headerActionButtonLabel}
+                    onTouchTap={onSaveTapped}
+                />
+            </div>
+        );
+    }
+
+    _renderButtonSaving() {
+        return (
+            <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+                <span style={this.mergeAndPrefix(styles.progressText)}>{t('Saving')}&hellip;</span>
+                <div style={this.mergeAndPrefix(styles.progressIndicator)}>
+                    <CircularProgress mode="indeterminate" size={0.3} />
+                </div>
+            </div>
+        );
+    }
+
+    _renderButton() {
+        const {
+            onEditTapped,
+        } = this.props;
+
+        return (
+            <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+                <FlatButton
+                    label={t('Edit')}
+                    labelStyle={styles.headerActionButtonLabel}
+                    onTouchTap={onEditTapped}
+                />
+            </div>
+        );
+    }
+
     _renderEditButton() {
         const {
             isEditable,
             isEditing,
             isSaving,
-            onEditTapped,
-            onSaveTapped,
-            onCancelTapped,
         } = this.props;
 
-        if (isEditable) {
-            if (isEditing) {
-                return (
-                    <div style={this.mergeAndPrefix(styles.headerActionButton)}>
-                        <FlatButton
-                            label={t('Cancel')}
-                            labelStyle={styles.headerActionButtonLabel}
-                            onTouchTap={onCancelTapped}
-                        />
-                        <FlatButton
-                            label={t('Save')}
-                            labelStyle={styles.headerActionButtonLabel}
-                            onTouchTap={onSaveTapped}
-                        />
-                    </div>
-                );
-            }
-            else if (isSaving) {
-                return (
-                    <div style={this.mergeAndPrefix(styles.headerActionButton)}>
-                        <span style={this.mergeAndPrefix(styles.progressText)}>{t('Saving')}&hellip;</span>
-                        <div style={this.mergeAndPrefix(styles.progressIndicator)}>
-                            <CircularProgress mode="indeterminate" size={0.3} />
-                        </div>
-                    </div>
-                );
-            }
-            else {
-                return (
-                    <div style={this.mergeAndPrefix(styles.headerActionButton)}>
-                        <FlatButton
-                            label={t('Edit')}
-                            labelStyle={styles.headerActionButtonLabel}
-                            onTouchTap={onEditTapped}
-                        />
-                    </div>
-                );
-            }
+        if (!isEditable) {
+            return;
+        }
+
+        if (isEditing) {
+            return this._renderButtonEditing();
+        } else if (isSaving) {
+            return this._renderButtonSaving();
+        } else {
+            return this._renderButton();
         }
     }
 
