@@ -75,19 +75,11 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 
     componentWillMount() {
-        this.setInitialState();
+        this.setInitialState(this.props);
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        let statusValue = nextProps.status ? nextProps.status.value : '';
-        let createdValueTimestamp = nextProps.status ? nextProps.status.created : '';
-
-        this.setState({
-            editing: false,
-            error: '',
-            value: statusValue,
-            valueTimestamp: createdValueTimestamp,
-        });
+        this.setInitialState(nextProps);
     }
 
     state = {
@@ -97,9 +89,9 @@ class ProfileDetailStatus extends StyleableComponent {
         valueTimestamp: '',
     }
 
-    setInitialState() {
-        let statusValue = this.props.status ? this.props.status.value : '';
-        let createdValueTimestamp = this.props.status ? this.props.status.created : '';
+    setInitialState(props) {
+        let statusValue = props.status ? props.status.value : '';
+        let createdValueTimestamp = props.status ? props.status.created : '';
 
         this.setState({
             editing: false,
