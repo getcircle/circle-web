@@ -123,11 +123,6 @@ class ProfileDetailStatus extends StyleableComponent {
             status,
         } = this.props;
 
-        if (status && status.value === finalStatusValue) {
-            this.handleCancelTapped();
-            return;
-        }
-
         if (typeof onSaveCallback != 'undefined') {
             onSaveCallback(finalStatusValue);
         }
