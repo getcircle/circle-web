@@ -78,7 +78,7 @@ export default class WrappedResponse {
     }
 
     reject() {
-        return new ServiceError(this.errors, this.errorDetails);
+        return new ServiceError(this.errors, this.errorDetails, this.request);
     }
 
     finish(resolve, reject, key=null) {

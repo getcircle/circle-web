@@ -5,8 +5,8 @@ import protobufs from 'protobufs';
 import ServiceError from '../ServiceError';
 import WrappedResponse, { getResponseExtensionName } from '../WrappedResponse';
 
-function mockWrappedResponse(serviceResponse) {
-    return new WrappedResponse(new protobufs.soa.ServiceRequestV1(), mockHttpResponse(serviceResponse));
+function mockWrappedResponse(serviceResponse, request = new protobufs.soa.ServiceRequestV1()) {
+    return new WrappedResponse(request, mockHttpResponse(serviceResponse));
 }
 
 function mockHttpResponse(serviceResponse) {
@@ -58,8 +58,7 @@ describe('WrappedResponse', function () {
             'get_profile',
             new protobufs.services.profile.actions.get_profile.ResponseV1()
         );
-        const httpResponse = mockHttpResponse(serviceResponse);
-        this.response = new WrappedResponse(new protobufs.soa.ServiceRequestV1(), httpResponse);
+        this.response = mockWrappedResponse(serviceResponse);
     })
 
     describe('resolve', function () {
@@ -86,9 +85,10 @@ describe('WrappedResponse', function () {
                 }),
             ];
             const serviceResponse = mockServiceResponseError('profile', 'get_profile', errors, errorDetails)
-            const response = mockWrappedResponse(serviceResponse);
+            const request = new protobufs.soa.ServiceRequestV1();
+            const response = mockWrappedResponse(serviceResponse, request);
             const rejected = response.reject();
-            const expected = new ServiceError(errors, errorDetails);
+            const expected = new ServiceError(errors, errorDetails, request);
             expect(rejected).to.eql(expected);
         });
     });
@@ -121,6 +121,7 @@ describe('WrappedResponse', function () {
                 }),
             ];
             const serviceResponse = mockServiceResponseError('profile', 'get_profile', errors, errorDetails)
+            const request = new protobufs.soa.ServiceRequestV1();
             const response = mockWrappedResponse(serviceResponse);
             new Promise((resolve, reject) => {
                 return response.finish(resolve, reject, 'identifier');
@@ -130,10 +131,11 @@ describe('WrappedResponse', function () {
                     done();
                 })
                 .catch((error) => {
-                    const expected = new ServiceError(errors, errorDetails);
+                    const expected = new ServiceError(errors, errorDetails, request);
                     expect(error).to.eql(expected);
                     done();
-                });
+                })
+                .catch(error => done(error));
         });
     });
 
