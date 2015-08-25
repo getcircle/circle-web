@@ -96,17 +96,17 @@ class ProfileDetailStatus extends StyleableComponent {
         this.setState({
             type: STATES.EDITING,
             value: status ? status.value : '',
+        }, () => {
+            if (this.refs.statusTextField) {
+                this.refs.statusTextField.focus();
+            }
         });
-
-        if (this.refs.statusTextField) {
-            this.refs.statusTextField.focus();
-        }
     }
 
     handleSaveTapped() {
         let finalStatusValue = this.state.value;
 
-        if (finalStatusValue.length > CHARACTER_LIMIT && this.refs.statusTextField) {
+        if (finalStatusValue.length > CHARACTER_LIMIT) {
             this.refs.statusTextField.setErrorText(t('Status can only be up to ' + CHARACTER_LIMIT + ' characters'));
             return;
         } else {
