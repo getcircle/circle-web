@@ -112,8 +112,7 @@ class ProfileDetailStatus extends StyleableComponent {
         if (finalStatusValue.length > characterLimit && this.refs.statusTextField) {
             this.refs.statusTextField.setErrorText(t('Status can only be up to ' + characterLimit + ' characters'));
             return;
-        }
-        else {
+        } else {
             this.refs.statusTextField.setErrorText('');
         }
 
@@ -160,8 +159,7 @@ class ProfileDetailStatus extends StyleableComponent {
         let state = this.state.type;
         if (state === STATES.EDITING || state === STATES.SAVING) {
             return this._renderEditableContent();
-        }
-        else {
+        } else {
             return this._renderDefaultContent();
         }
     }
