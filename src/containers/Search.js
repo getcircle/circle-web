@@ -10,11 +10,11 @@ import * as selectors from '../selectors';
 import HeaderMenu from '../components/HeaderMenu';
 import PureComponent from '../components/PureComponent';
 import SearchCategoryButton from '../components/SearchCategoryButton';
-import Search from '../components/Search';
+import { default as SearchComponent } from '../components/Search';
 
 import searchIcon from '../images/icons/search_icon.svg';
 
-const { 
+const {
     Avatar,
     FlatButton,
     List,
@@ -62,10 +62,10 @@ const styles = {
     },
 };
 
-const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')]; 
+const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')];
 
 @connect(selector)
-class SearchContainer extends PureComponent {
+class Search extends PureComponent {
 
     static propTypes = {
         organization: PropTypes.object.isRequired,
@@ -173,7 +173,7 @@ class SearchContainer extends PureComponent {
                                 {this._renderSearchCategoryButtons()}
                             </div>
                             <div className="col-xs-5">
-                                <Search
+                                <SearchComponent
                                     defaultResults={this._defaultSearchResults()}
                                     searchCategory={this._getSearchCategory()}
                                     onClearCategory={this._handleClearCategory.bind(this)}
@@ -188,4 +188,4 @@ class SearchContainer extends PureComponent {
     }
 }
 
-export default SearchContainer;
+export default Search;

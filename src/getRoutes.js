@@ -59,7 +59,7 @@ const getRoutes = (history, store) => {
                     <Route
                         path="/"
                         onEnter={applyMiddleware(requireAuth, hideHeader)}
-                        component={require('./containers/SearchContainer')} />
+                        component={require('./containers/Search')} />
                     <Route
                         path="/location/:locationId"
                         onEnter={applyMiddleware(...defaultMiddleware)}
