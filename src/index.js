@@ -12,8 +12,10 @@ import Root from './Root';
 
 (async () => {
 
-    // export for http://fb.me/react-devtools
-    window.React = React;
+    if (__DEVELOPMENT__) {
+        // export for http://fb.me/react-devtools
+        window.React = React;
+    }
 
     // Touch related
     injectTapEventPlugin();

@@ -30,7 +30,7 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             __DEVELOPMENT__: true,
-            __DEVTOOLS__: true
+            __DEVTOOLS__: false
         })
     ],
     module: {
