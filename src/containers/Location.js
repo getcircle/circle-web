@@ -15,12 +15,12 @@ const selector = createSelector(
     [
         selectors.cacheSelector,
         selectors.locationsSelector,
-        selectors.routerSelector,
+        selectors.routerParametersSelector,
         selectors.locationMembersSelector,
     ],
-    (cacheState, locationsState, routerState, membersState) => {
+    (cacheState, locationsState, paramsState, membersState) => {
         let office, members;
-        const locationId = routerState.params.locationId;
+        const locationId = paramsState.locationId;
         const cache = cacheState.toJS();
         if (locationsState.get('ids').has(locationId)) {
             office = retrieveLocation(locationId, cache);

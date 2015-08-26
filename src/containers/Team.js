@@ -15,12 +15,12 @@ const selector = createSelector(
     [
         selectors.cacheSelector,
         selectors.extendedTeamsSelector,
-        selectors.routerSelector,
+        selectors.routerParametersSelector,
         selectors.teamMembersSelector,
     ],
-    (cacheState, extendedTeamsState, routerState, membersState) => {
+    (cacheState, extendedTeamsState, parametersSelector, membersState) => {
         let extendedTeam, members;
-        const teamId = routerState.params.teamId;
+        const teamId = parametersSelector.teamId;
         const cache = cacheState.toJS();
         if (extendedTeamsState.get('ids').has(teamId)) {
             extendedTeam = retrieveExtendedTeam(teamId, cache);
