@@ -58,7 +58,7 @@ module.exports = {
                     'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
                 ]
             },
-            { test: /\.js$/, loaders: [strip.loader('debug'), 'babel?stage=0&optional=runtime'], exclude: /node_modules/ },
+            { test: /\.js$/, loaders: [strip.loader('debug'), 'babel?stage=0&optional=runtime', 'react-map-styles'], exclude: /node_modules/ },
             { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
             { test: /\.json$/, loaders: ['json-loader']}
         ]

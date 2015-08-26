@@ -4,7 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    devtool: 'inline-source-map',
+    devtool: 'cheap-eval-source-map',
     context: path.resolve(__dirname, '..'),
     entry: {
         'main': [
@@ -14,7 +14,8 @@ module.exports = {
         ]
     },
     output: {
-        filename: 'app.js',
+        filename: '[name]-[hash].js',
+        chunkFilename: '[name]-[chunkhash].js',
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/dist/'
     },
@@ -42,7 +43,8 @@ module.exports = {
                     'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
                 ]
             },
-            { test: /\.js$/, loaders: ['react-hot', 'babel?stage=0'], exclude: /node_modules/ },
+            { test: /\.js$/, loaders: ['react-hot', 'babel?stage=0&optional=runtime&cacheDirectory'], exclude: /node_modules/ },
+            { test: /(components|containers).*\.js$/, loaders: ['react-map-styles'], exclude: /node_modules/ },
             { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
             { test: /\.json$/, loaders: ['json-loader']}
         ]
@@ -50,5 +52,4 @@ module.exports = {
     node: {
       fs: "empty"
     },
-    progress: true
 };
