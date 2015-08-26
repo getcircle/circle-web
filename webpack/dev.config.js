@@ -3,21 +3,19 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-function getMainCodeSources(entryFile){
-    var sources = [entryFile];
-
-    if(process.env.NODE_ENV !== 'production'){
-        sources.unshift('webpack-dev-server/client?http://localhost:9110', 'webpack/hot/only-dev-server');
-    }
-    return sources;
-}
-
 module.exports = {
-    devtool: 'cheap-module-eval-source-map',
-    entry: getMainCodeSources('./src'),
+    devtool: 'inline-source-map',
+    context: path.resolve(__dirname, '..'),
+    entry: {
+        'main': [
+            'webpack-dev-server/client?http://localhost:9110',
+            'webpack/hot/only-dev-server',
+            './src'
+        ]
+    },
     output: {
         filename: 'app.js',
-        path: path.join(__dirname, 'dist'),
+        path: path.resolve(__dirname, '../dist'),
         publicPath: '/dist/'
     },
     plugins: [
@@ -28,7 +26,11 @@ module.exports = {
             title: 'Circle',
             filename: 'index.html',
             template: 'index.template.html',
-            favicon: path.join(__dirname, 'static', 'images', 'favicon.ico')
+            favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico')
+        }),
+        new webpack.DefinePlugin({
+            __DEVELOPMENT__: true,
+            __DEVTOOLS__: true
         })
     ],
     module: {
@@ -47,5 +49,6 @@ module.exports = {
     },
     node: {
       fs: "empty"
-    }
+    },
+    progress: true
 };
