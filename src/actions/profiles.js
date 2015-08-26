@@ -26,7 +26,7 @@ export function getExtendedProfile(profileId) {
                 types.LOAD_EXTENDED_PROFILE_SUCCESS,
                 types.LOAD_EXTENDED_PROFILE_FAILURE,
             ],
-            remote: () => getExtendedProfile(profileId),
+            remote: () => requests.getExtendedProfile(profileId),
             bailout: (state) => state.extendedProfiles.getIn(['ids', profileId]),
         },
     };
