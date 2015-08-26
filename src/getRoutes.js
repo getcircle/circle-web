@@ -1,7 +1,5 @@
 import _ from 'lodash';
-/*eslint-disable no-unused-vars*/
 import React from 'react';
-/*eslint-enable no-unused-vars*/
 import { Route, Router } from 'react-router';
 import { reduxRouteComponent } from 'redux-react-router';
 
@@ -57,29 +55,29 @@ const getRoutes = (history, store) => {
             <Route component={reduxRouteComponent(store)}>
                 <Route component={require('./containers/App')}>
                     <Route
-                        path="/"
-                        onEnter={applyMiddleware(requireAuth, hideHeader)}
                         component={require('./containers/Search')} />
+                        onEnter={applyMiddleware(requireAuth, hideHeader)}
+                        path="/"
                     <Route
-                        path="/location/:locationId"
-                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./containers/Location')} />
+                        onEnter={applyMiddleware(...defaultMiddleware)}
+                        path="/location/:locationId"
                     <Route
-                        path="/login"
-                        onEnter={applyMiddleware(loginOnce)}
                         component={require('./containers/Login')} />
+                        onEnter={applyMiddleware(loginOnce)}
+                        path="/login"
                     <Route
-                        path="/profile/:profileId"
-                        onEnter={applyMiddleware(...defaultMiddleware)}
                         component={require('./containers/Profile')} />
-                    <Route
-                        path="/team/:teamId"
                         onEnter={applyMiddleware(...defaultMiddleware)}
+                        path="/profile/:profileId"
+                    <Route
                         component={require('./containers/Team')} />
-                    <Route
-                        path="*"
                         onEnter={applyMiddleware(...defaultMiddleware)}
+                        path="/team/:teamId"
+                    <Route
                         component={require('./containers/NoMatch')} />
+                        onEnter={applyMiddleware(...defaultMiddleware)}
+                        path="*"
                 </Route>
             </Route>
         </Router>
