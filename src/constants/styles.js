@@ -14,6 +14,8 @@ const constants = {
     horizontalUnit: 10,
 };
 
+export const tintColor = '#7A8EFF';
+
 export const iconColors = {
     dark: {
         stroke: 'rgba(0, 0, 0, 0.6)',
@@ -39,9 +41,15 @@ export const fontColors = {
     light: {
         color: 'rgba(0, 0, 0, 0.5)',
     },
+    white: {
+        color: 'white',
+    },
 }
 
 export const fontWeights = {
+    bold: {
+        fontWeight: 'bold',
+    },
     semiBold: {
         fontWeight: 600,
     },

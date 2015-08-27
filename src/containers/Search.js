@@ -176,6 +176,26 @@ class Search extends Component {
             return CategoryV1.TEAMS;
         case 3:
             return CategoryV1.LOCATIONS;
+        default:
+            return null;
+        }
+    }
+
+    getSearchTokens() {
+        let token;
+        switch(this.state.selectedCategoryIndex) {
+        case 1:
+            token = t('People');
+            break;
+        case 2:
+            token = t('Teams');
+            break;
+        case 3:
+            token = t('Locations');
+            break;
+        }
+        if (token) {
+            return [{value: token}];
         }
     }
 
@@ -185,6 +205,7 @@ class Search extends Component {
                 innerDivStyle={this.styles().searchResult}
                 leftAvatar={<SearchIcon />}
                 leftAvatarStyle={this.styles().SearchIcon.style}
+                onTouchTap={item.onTouchTap}
                 primaryText={item.primaryText}
                 primaryTextStyle={this.styles().searchResultText}
                 ref={(component) => {
@@ -243,9 +264,11 @@ class Search extends Component {
                                     focused={true}
                                     is="AutoComplete"
                                     items={this.getDefaultSearchResults()}
+                                    onClearToken={this.handleClearCategory.bind(this)}
                                     placeholderText={t('Search People, Teams & Locations')}
                                     renderItem={this.renderItem.bind(this)}
                                     renderMenu={this.renderMenu.bind(this)}
+                                    tokens={this.getSearchTokens()}
                                 />
                             </div>
                         </div>

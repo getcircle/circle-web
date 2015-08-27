@@ -10,7 +10,6 @@ import * as exploreActions from '../actions/explore';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
-import SearchCategoryToken from '../components/SearchCategoryToken';
 import SearchResults from '../components/SearchResults';
 import StyleableComponent from './StyleableComponent';
 
@@ -218,34 +217,6 @@ class Search extends StyleableComponent {
         this._loadResults(this.props);
     }
 
-    _renderSearchCategoryTokens() {
-        const { searchCategory } = this.props;
-        const { CategoryV1 } = services.search.containers.search;
-
-        let label;
-        switch(searchCategory) {
-        case CategoryV1.PROFILES:
-            label = t('People');
-            break;
-        case CategoryV1.TEAMS:
-            label = t('Teams');
-            break;
-        case CategoryV1.LOCATIONS:
-            label = t('Locations');
-            break;
-        }
-        if (label) {
-            return (
-                <div>
-                    <SearchCategoryToken
-                        label={label}
-                        onTouchTap={this.props.onClearCategory ? this.props.onClearCategory : null}
-                    />
-                </div>
-            );
-        }
-    }
-
     _renderSearchResults() {
         if (this.state.focused) {
             if (!this.state.query && this.props.searchCategory === null) {
@@ -317,7 +288,7 @@ class Search extends StyleableComponent {
                         <div className="col-xs" style={styles.searchInputContainer}>
                             <div className="row">
                                 {this._renderSearchCategoryTokens()}
-                                <div className="col-xs"> 
+                                <div className="col-xs">
                                     <input
                                         ref="searchInput"
                                         style={[

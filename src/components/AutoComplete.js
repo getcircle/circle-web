@@ -4,19 +4,34 @@ import { backgroundColors, fontColors, iconColors } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
 import SearchIcon from './SearchIcon';
+import AutoCompleteToken from './AutoCompleteToken'
 
 class AutoComplete extends CSSComponent {
 
     static propTypes = {
         alwaysActive: PropTypes.bool,
         focused: PropTypes.bool,
-        getItemValue: PropTypes.func.isRequired,
         initialValue: PropTypes.any,
         items: PropTypes.array,
+        onClearToken: PropTypes.func,
         onSelect: PropTypes.func,
         placeholderText: PropTypes.string,
         renderItem: PropTypes.func.isRequired,
         renderMenu: PropTypes.func,
+        tokens: PropTypes.arrayOf(PropTypes.shape({
+            value: PropTypes.string.isRequired,
+        })),
+    }
+
+    static defaultProps = {
+        alwaysActive: false,
+        focused: false,
+        getItemValue: item => item,
+        onSelect: () => true,
+        placeholderText: '',
+        renderMenu: (items, value, style) => {
+            return <div children={items} style={style} />
+        },
     }
 
     componentDidMount() {
@@ -32,24 +47,12 @@ class AutoComplete extends CSSComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // We hit escape -- refocus the input
         if (
-            prevState.highlightedIndex !== null &&
             this.state.highlightedIndex === null &&
             this.props.alwaysActive
         ) {
             this.focusInput();
         }
-    }
-
-    static defaultPropTypes = {
-        alwaysActive: false,
-        focused: false,
-        onSelect: () => true,
-        placeholderText: '',
-        renderMenu: (items, value, style) => {
-            return <div children={items} style={style} />
-        },
     }
 
     state = {
@@ -68,11 +71,11 @@ class AutoComplete extends CSSComponent {
                 input: {
                     border: 'none',
                     borderRadius: common.borderRadius,
+                    flex: 1,
                     fontSize: '14px',
                     lineHeight: '19px',
                     outline: 'none',
                     paddingLeft: 5,
-                    width: '100%',
                     height: '100%',
                     ...fontColors.light,
                 },
@@ -171,7 +174,6 @@ class AutoComplete extends CSSComponent {
             } else {
                 const item = this.getItems()[this.state.highlightedIndex];
                 this.setState({
-                    value: this.props.getItemValue(item),
                     isActive: this.props.alwaysActive ? true : false,
                     highlightedIndex: null,
                 }, () => {
@@ -203,6 +205,20 @@ class AutoComplete extends CSSComponent {
         return React.cloneElement(menu, {ref: 'menu'});
     }
 
+    renderTokens() {
+        if (this.props.tokens) {
+            return this.props.tokens.map((token, index) => {
+                return (
+                    <AutoCompleteToken
+                        key={`token-index`}
+                        label={token.value}
+                        onTouchTap={this.props.onClearToken}
+                    />
+                );
+            });
+        }
+    }
+
     render() {
         const {
             focused,
@@ -213,9 +229,10 @@ class AutoComplete extends CSSComponent {
             <div {...other} is="root" onKeyDown={this.handleKeyDown.bind(this)}>
                 <div is="searchBar">
                     <SearchIcon is="SearchIcon" />
+                    {this.renderTokens()}
                     <input
                         is="input"
-                        placeholder={placeholderText}
+                        placeholder={!this.props.tokens ? placeholderText : ''}
                         ref="input"
                         type="text"
                     />
