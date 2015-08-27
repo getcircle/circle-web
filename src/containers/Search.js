@@ -1,6 +1,7 @@
+import { Component } from 'reactcss';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import mui from 'material-ui';
+import { Avatar, List, ListDivider, ListItem } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -8,19 +9,9 @@ import t from '../utils/gettext';
 import * as selectors from '../selectors';
 
 import HeaderMenu from '../components/HeaderMenu';
-import PureComponent from '../components/PureComponent';
-import SearchCategoryButton from '../components/SearchCategoryButton';
 import { default as SearchComponent } from '../components/Search';
 
 import searchIcon from '../images/icons/search_icon.svg';
-
-const {
-    Avatar,
-    FlatButton,
-    List,
-    ListDivider,
-    ListItem,
-} = mui;
 
 const selector = createSelector(
     [selectors.authenticationSelector],
@@ -33,39 +24,8 @@ const selector = createSelector(
     },
 )
 
-const styles = {
-    listDivider: {
-        marginRight: 20,
-    },
-    organizationLogo: {
-        maxHeight: 200,
-    },
-    organizationLogoSection: {
-        marginTop: 15,
-    },
-    resultsList: {
-        borderRadius: '0px 0px 5px 5px',
-        opacity: '0.9',
-        boxShadow: '0px 2px 4px -2px',
-        width: '100%',
-        minWidth: 500,
-    },
-    root: {
-        // slack's color
-        // backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
-        minHeight: '100vh',
-        backgroundColor: '#222',
-        paddingBottom: 20,
-    },
-    searchSection: {
-        paddingTop: 52,
-    },
-};
-
-const searchCategories = [t('All'), t('People'), t('Teams'), t('Locations')];
-
 @connect(selector)
-class Search extends PureComponent {
+class Search extends Component {
 
     static propTypes = {
         organization: PropTypes.object.isRequired,
@@ -88,57 +48,81 @@ class Search extends PureComponent {
         selectedCategoryIndex: 0,
     }
 
-    _handleCategorySelection(index) {
+    classes() {
+        const common = {
+            searchContainerWidth: 460,
+        };
+
+        return {
+            'default': {
+                listDivider: {
+                    marginRight: 20,
+                },
+                organizationLogo: {
+                    maxHeight: 200,
+                    maxWidth: common.searchContainerWidth,
+                },
+                organizationLogoSection: {
+                    marginTop: 15,
+                },
+                resultsList: {
+                    borderRadius: '0px 0px 5px 5px',
+                    opacity: '0.9',
+                    boxShadow: '0px 2px 4px -2px',
+                    width: '100%',
+                    maxWidth: common.searchContainerWidth,
+                },
+                root: {
+                    // slack's color
+                    // backgroundImage: 'linear-gradient(160deg,#4280c5 30%,#59f0ff 120%)',
+                    minHeight: '100vh',
+                    backgroundColor: '#222',
+                    paddingBottom: 20,
+                },
+                searchSection: {
+                    paddingTop: 52,
+                },
+            },
+        };
+    }
+
+    handleCategorySelection(index) {
         this.setState({selectedCategoryIndex: index});
     }
 
-    _handleClearCategory() {
+    handleClearCategory() {
         this.setState({selectedCategoryIndex: 0});
     }
 
-    _defaultSearchResults() {
+    defaultSearchResults() {
         const { organization } = this.props;
         return (
-            <List className="start-xs" subheader={t('EXPLORE')} style={styles.resultsList}>
+            <List className="start-xs" is="resultsList" subheader={t('EXPLORE')}>
                 <ListItem
-                    leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
+                    leftAvatar={<Avatar src={searchIcon} />}
+                    onTouchTap={this.handleCategorySelection.bind(this, 1)}
                     primaryText={t('Search all People')}
                     secondaryText={t(`${organization.profile_count} people`)}
-                    onTouchTap={this._handleCategorySelection.bind(this, 1)}
                 />
-                <ListDivider inset={true} style={styles.listDivider}/>
+                <ListDivider inset={true} is="listDivider"/>
                 <ListItem
-                    leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
+                    leftAvatar={<Avatar src={searchIcon} />}
+                    onTouchTap={this.handleCategorySelection.bind(this, 2)}
                     primaryText={t('Search all Teams')}
                     secondaryText={t(`${organization.team_count} teams`)}
-                    onTouchTap={this._handleCategorySelection.bind(this, 2)}
                 />
-                <ListDivider inset={true} style={styles.listDivider}/>
+                <ListDivider inset={true} is="listDivider"/>
                 <ListItem
-                    leftAvatar={<Avatar src={searchIcon} style={styles.resultAvatar} />}
+                    leftAvatar={<Avatar src={searchIcon} />}
+                    onTouchTap={this.handleCategorySelection.bind(this, 3)}
                     primaryText={t('Search all Locations')}
                     secondaryText={t(`${organization.location_count} locations`)}
-                    onTouchTap={this._handleCategorySelection.bind(this, 3)}
                 />
             </List>
         );
     }
 
-    _renderSearchCategoryButtons() {
-        return searchCategories.map((category, index) => {
-            return (
-                <SearchCategoryButton
-                    key={index}
-                    className="row center-xs end-lg"
-                    label={category}
-                    active={index === this.state.selectedCategoryIndex}
-                    onTouchTap={this._handleCategorySelection.bind(this, index)}
-                />
-            );
-        });
-    }
-
-    _getSearchCategory() {
+    getSearchCategory() {
         const { CategoryV1 } = services.search.containers.search;
         switch(this.state.selectedCategoryIndex) {
         case 1:
@@ -151,33 +135,29 @@ class Search extends PureComponent {
     }
 
     render() {
-    // <img style={styles.organizationLogo} src={this.props.organization.image_url} />
         return (
-            <div style={styles.root}>
+            <div is="root">
                 <header>
                     <div className="row end-xs">
-                        <HeaderMenu profile={this.props.profile} dispatch={this.props.dispatch} />
+                        <HeaderMenu dispatch={this.props.dispatch} profile={this.props.profile}/>
                     </div>
                 </header>
                 <section className="wrap">
-                    <section style={styles.organizationLogoSection}>
+                    <section is="organizationLogoSection">
                         <div className="row">
-                            <div className="col-xs-offset-4 col-xs-5 center-xs">
-                                <img style={styles.organizationLogo} src="https://scontent.fsnc1-1.fna.fbcdn.net/hphotos-xtf1/v/t1.0-9/11259121_10153814212864008_6881369548961207517_n.jpg?oh=b5bf7dd4fe8b5783f7a8b097873de9de&oe=56803EF1" />
+                            <div className="col-xs center-xs">
+                                <img is="organizationLogo" src={this.props.organization.image_url} />
                             </div>
                         </div>
                     </section>
-                    <section style={styles.searchSection}>
+                    <section is="searchSection">
                         <div className="row">
-                            <div className="col-xs-offset-1 col-xs-3">
-                                {this._renderSearchCategoryButtons()}
-                            </div>
-                            <div className="col-xs-5">
+                            <div className="col-xs center-xs">
                                 <SearchComponent
-                                    defaultResults={this._defaultSearchResults()}
-                                    searchCategory={this._getSearchCategory()}
-                                    onClearCategory={this._handleClearCategory.bind(this)}
+                                    defaultResults={this.defaultSearchResults()}
                                     focused={true}
+                                    onClearCategory={this.handleClearCategory.bind(this)}
+                                    searchCategory={this.getSearchCategory()}
                                 />
                             </div>
                         </div>
