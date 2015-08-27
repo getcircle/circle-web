@@ -28,7 +28,7 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             __DEVELOPMENT__: true,
-            __DEVTOOLS__: false
+            __DEVTOOLS__: process.env.DEVTOOLS ? true : false,
         })
     ],
     module: {
