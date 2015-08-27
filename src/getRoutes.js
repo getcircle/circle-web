@@ -55,29 +55,35 @@ const getRoutes = (history, store) => {
             <Route component={reduxRouteComponent(store)}>
                 <Route component={require('./containers/App')}>
                     <Route
-                        component={require('./containers/Search')} />
+                        component={require('./containers/Search')}
                         onEnter={applyMiddleware(requireAuth, hideHeader)}
                         path="/"
+                    />
                     <Route
-                        component={require('./containers/Location')} />
+                        component={require('./containers/Location')}
                         onEnter={applyMiddleware(...defaultMiddleware)}
                         path="/location/:locationId"
+                    />
                     <Route
-                        component={require('./containers/Login')} />
+                        component={require('./containers/Login')}
                         onEnter={applyMiddleware(loginOnce)}
                         path="/login"
+                    />
                     <Route
-                        component={require('./containers/Profile')} />
+                        component={require('./containers/Profile')}
                         onEnter={applyMiddleware(...defaultMiddleware)}
                         path="/profile/:profileId"
+                    />
                     <Route
-                        component={require('./containers/Team')} />
+                        component={require('./containers/Team')}
                         onEnter={applyMiddleware(...defaultMiddleware)}
                         path="/team/:teamId"
+                    />
                     <Route
-                        component={require('./containers/NoMatch')} />
+                        component={require('./containers/NoMatch')}
                         onEnter={applyMiddleware(...defaultMiddleware)}
                         path="*"
+                    />
                 </Route>
             </Route>
         </Router>
