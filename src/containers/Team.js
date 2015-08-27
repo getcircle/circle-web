@@ -3,7 +3,13 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { loadExtendedTeam, loadTeamMembers, retrieveExtendedTeam, retrieveTeamMembers } from '../actions/teams';
+import {
+    loadExtendedTeam,
+    loadTeamMembers,
+    retrieveExtendedTeam,
+    retrieveTeamMembers,
+    updateTeam,
+} from '../actions/teams';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -65,13 +71,23 @@ class Team extends PureComponent {
         props.dispatch(loadTeamMembers(props.params.teamId));
     }
 
+    onUpdateTeam(team) {
+        this.props.dispatch(updateTeam(team))
+    }
+
     _renderTeam() {
         const {
             extendedTeam,
             members,
         } = this.props;
         if (extendedTeam && members) {
-            return <TeamDetail extendedTeam={extendedTeam} members={members} />;
+            return (
+                <TeamDetail
+                    extendedTeam={extendedTeam}
+                    members={members}
+                    onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
+                />
+            );
         } else {
             return <CenterLoadingIndicator />;
         }

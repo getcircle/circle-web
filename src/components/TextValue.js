@@ -94,6 +94,7 @@ class TextValue extends StyleableComponent {
     }
 
     state = {
+        authorName: '',
         editing: false,
         error: '',
         value: '',
@@ -101,19 +102,18 @@ class TextValue extends StyleableComponent {
     }
 
     setInitialState(props) {
-        let value = props.text;
-        let createdValueTimestamp = props.editedTimestamp;
-
         this.setState({
+            authorName: props.authorName ? props.authorName : '',
             editing: false,
             error: '',
-            value: value,
-            valueTimestamp: createdValueTimestamp,
+            value: props.text,
+            valueTimestamp: props.editedTimestamp,
         });
     }
 
     handleEditTapped() {
         this.setState({
+            authorName: this.state.authorName,
             editing: true,
             error: '',
             value: this.state.value,
@@ -129,6 +129,7 @@ class TextValue extends StyleableComponent {
         let finalStatusValue = this.state.value;
         if (shouldLimitCharacters && finalStatusValue.length > CHARACTER_LIMIT) {
             this.setState({
+                authorName: this.state.authorName,
                 editing: true,
                 error: t('Status can only be up to ' + CHARACTER_LIMIT + ' characters'),
                 value: this.state.value,
@@ -139,6 +140,7 @@ class TextValue extends StyleableComponent {
         }
 
         this.setState({
+            authorName: this.state.authorName,
             editing: false,
             error: '',
             value: this.state.value,
@@ -152,11 +154,12 @@ class TextValue extends StyleableComponent {
     }
 
     handleCancelTapped() {
-        this.setInitialState();
+        this.setInitialState(this.props);
     }
 
     handleChange(event) {
         this.setState({
+            authorName: this.state.authorName,
             editing: true,
             error: '',
             value: event.target.value,
@@ -164,10 +167,14 @@ class TextValue extends StyleableComponent {
         });
     }
 
-    renderStatusTimestamp(createdString) {
+    renderStatusTimestamp() {
+        let createdString = this.state.valueTimestamp ? moment(this.state.valueTimestamp).fromNow() : '';
+        let authorName = this.state.authorName ? ' by ' + this.state.authorName : '';
         if (createdString !== '') {
             return (
-                <span style={this.mergeAndPrefix(styles.statusTimestamp)}>&nbsp;&ndash;&nbsp;{createdString}</span>
+                <span style={this.mergeAndPrefix(styles.statusTimestamp)}>
+                    &nbsp;&ndash;&nbsp;{createdString}{authorName}
+                </span>
             );
         }
     }
@@ -185,7 +192,6 @@ class TextValue extends StyleableComponent {
             isEditable,
         } = this.props;
 
-        let created = this.state.valueTimestamp ? moment(this.state.valueTimestamp).fromNow() : '';
         let statusValue = this.state.value !== '' ? '"' + this.state.value + '"' : '';
         if (statusValue === '' || statusValue.length === 0) {
             statusValue = isEditable ? t('Add details') : t('Ask me!');
@@ -194,7 +200,7 @@ class TextValue extends StyleableComponent {
         return (
             <div style={this.mergeAndPrefix(styles.statusContainer)}>
                 <span style={this.mergeAndPrefix(styles.statusText)}>{statusValue}</span>
-                {this.renderStatusTimestamp(created)}
+                {this.renderStatusTimestamp()}
             </div>
         );
     }

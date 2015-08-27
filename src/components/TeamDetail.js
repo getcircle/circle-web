@@ -12,8 +12,11 @@ import DetailContent from './DetailContent';
 import ProfileAvatar from './ProfileAvatar';
 import StyleableComponent from './StyleableComponent';
 import TeamDetailHeader from './TeamDetailHeader';
+import TeamDetailStatus from './TeamDetailStatus';
 import TeamDetailTeamMembers from './TeamDetailTeamMembers';
 import TeamDetailTeams from './TeamDetailTeams';
+
+const { TeamStatusV1 } = services.organization.containers;
 
 const styles = {
     description: {
@@ -34,12 +37,45 @@ class TeamDetail extends StyleableComponent {
             team: PropTypes.object.isRequired,
         }),
         members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
+        onUpdateTeamCallback: PropTypes.func.isRequired,
     }
 
     static contextTypes = {
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
         }).isRequired,
+    }
+
+    // Update Methods
+
+    onUpdateStatus(statusText) {
+        const {
+            extendedTeam,
+            onUpdateTeamCallback,
+        } = this.props;
+
+        let teamStatusV1 = new TeamStatusV1({
+            value: statusText,
+        });
+
+        let updatedTeam = Object.assign({}, extendedTeam.team, {
+            status:  teamStatusV1,
+        });
+
+        onUpdateTeamCallback(updatedTeam);
+    }
+
+    // Render Methods
+
+    renderStatus(status, isEditable) {
+        return (
+            <TeamDetailStatus
+                isEditable={isEditable}
+                onSaveCallback={this.onUpdateStatus.bind(this)}
+                status={status}
+                style={this.mergeAndPrefix(styles.section)}
+            />
+        );
     }
 
     renderDescription(team) {
@@ -107,6 +143,7 @@ class TeamDetail extends StyleableComponent {
             <div>
                 <TeamDetailHeader team={team} />
                 <DetailContent>
+                    {this.renderStatus(team.status, true)}
                     {this.renderDescription(team)}
                     {this.renderManager(manager)}
                     {this.renderChildTeams(childTeams)}
