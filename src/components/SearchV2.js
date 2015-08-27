@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
+import Immutable from 'immutable';
 import keymirror from 'keymirror';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import { services, soa } from 'protobufs';
+import Waypoint from 'react-waypoint';
 
 import * as exploreActions from '../actions/explore';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
@@ -27,21 +28,34 @@ const RESULT_TYPES = keymirror({
 });
 
 export const SEARCH_CONTAINER_WIDTH = 460;
+export const SEARCH_RESULTS_MAX_HEIGHT = 600;
 
-const selector = createSelector(
-    [selectors.cacheSelector, selectors.exploreSelector],
-    (cacheState, exploreState) => {
-        let profiles, loading;
+const cacheSelector = selectors.createImmutableSelector(
+    [selectors.cacheSelector, selectors.exploreProfilesIdsSelector],
+    (cacheState, profilesState) => {
+        let profiles, profilesNextRequest;
         const cache = cacheState.toJS();
-        const exploreProfiles = exploreState.get(exploreActions.EXPLORE_TYPES.PROFILES);
-        if (exploreProfiles) {
-            if (!exploreProfiles.get('loading')) {
-                const ids = exploreProfiles.get('ids').toJS();
+        if (profilesState) {
+            const ids = profilesState.get('ids').toJS();
+            if (ids.length) {
                 profiles = retrieveProfiles(ids, cache);
             }
-            loading = exploreProfiles.get('loading');
+            profilesNextRequest = profilesState.get('nextRequest');
         }
-        return { loading, profiles };
+        return Immutable.fromJS({
+            profiles,
+            profilesNextRequest,
+        });
+    },
+);
+
+const selector = selectors.createImmutableSelector(
+    [cacheSelector, selectors.exploreProfilesLoadingSelector],
+    (cacheState, profilesLoadingState) => {
+        return {
+            loading: profilesLoadingState,
+            ...cacheState.toJS(),
+        };
     }
 );
 
@@ -55,6 +69,7 @@ class Search extends CSSComponent {
         profiles: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
+        profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -90,7 +105,11 @@ class Search extends CSSComponent {
                     boxShadow: '0px 2px 4px -2px',
                     justifyContent: 'flex-start',
                     maxWidth: SEARCH_CONTAINER_WIDTH,
+                    maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                     opacity: '0.9',
+                    overflowY: 'auto',
+                    // NB: position: relative is required for waypoint
+                    position: 'relative',
                     textAlign: 'start',
                     width: '100%',
                 },
@@ -143,12 +162,23 @@ class Search extends CSSComponent {
         this.setState({category: null});
     }
 
-    getCategoryResults() {
+    getCategoryNextRequest() {
         const { CategoryV1 } = services.search.containers.search;
         switch(this.state.category) {
         case CategoryV1.PROFILES:
-            return this.getCategoryResultsProfiles();
+            return this.props.profilesNextRequest;
         }
+    }
+
+    getCategoryResults() {
+        let results;
+        const { CategoryV1 } = services.search.containers.search;
+        switch(this.state.category) {
+        case CategoryV1.PROFILES:
+            results = this.getCategoryResultsProfiles();
+            break;
+        }
+        return results ? results : [];
     }
 
     getCategoryResultsProfiles() {
@@ -200,7 +230,7 @@ class Search extends CSSComponent {
         }
     }
 
-    explore(category) {
+    explore(category, nextRequest=null) {
         let action;
         const { CategoryV1 } = services.search.containers.search;
 
@@ -216,7 +246,7 @@ class Search extends CSSComponent {
             break;
         }
         if (action) {
-            this.props.dispatch(action());
+            this.props.dispatch(action(nextRequest));
         }
     }
 
@@ -237,6 +267,23 @@ class Search extends CSSComponent {
         }
         if (token) {
             return [{value: token}];
+        }
+    }
+
+    handleEnterWaypoint(nextRequest) {
+        this.explore(this.state.category, nextRequest);
+    }
+
+    getWaypoint() {
+        const nextRequest = this.getCategoryNextRequest();
+        if (nextRequest) {
+            return (
+                <Waypoint
+                    key="waypoint"
+                    onEnter={this.handleEnterWaypoint.bind(this, nextRequest)}
+                    threshold={0.5}
+                />
+            );
         }
     }
 
@@ -266,6 +313,10 @@ class Search extends CSSComponent {
             }
             return item;
         })
+        const waypoint = this.getWaypoint();
+        if (waypoint) {
+            itemsWithDividers.push(waypoint);
+        }
         return (
             <List
                 key="results"

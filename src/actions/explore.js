@@ -22,10 +22,17 @@ export const EXPLORE_TYPES = keymirror({
 });
 
 export function exploreProfiles(nextRequest) {
+    const { PROFILES } = EXPLORE_TYPES;
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: () => getProfiles(null, nextRequest, EXPLORE_TYPES.PROFILES),
+            remote: () => getProfiles(null, nextRequest, PROFILES),
+            bailout: (state) => {
+                const profilesState = state.explore.get(PROFILES);
+                if (profilesState && nextRequest === null && profilesState.get('ids').size) {
+                    return true;
+                }
+            }
         },
         meta: {
             paginateBy: EXPLORE_TYPES.PROFILES,

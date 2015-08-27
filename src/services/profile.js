@@ -26,17 +26,9 @@ export function getProfile(parameters={}) {
 
 export function getProfiles(parameters, nextRequest=null, key=null) {
     parameters = Object.assign({}, parameters);
-    let request;
-    if (nextRequest === null) {
-        request = new services.profile.actions.get_profiles.RequestV1(parameters);
-    } else {
-        request = nextRequest;
-    }
-    if (key === null) {
-        key = Object.values(parameters)[0];
-    }
+    const request = nextRequest ? nextRequest : new services.profile.actions.get_profiles.RequestV1(parameters);
     return new Promise((resolve, reject) => {
-        client.sendRequest(request)
+        client.send(request)
             .then(response => response.finish(resolve, reject, key))
             .catch(error => reject(error));
     });

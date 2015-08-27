@@ -90,6 +90,7 @@
     "react-redux": "^1.0.0",
     "react-router": "^1.0.0-beta1",
     "react-tap-event-plugin": "^0.1.7",
+    "react-waypoint": "^1.0.2",
     "reactcss": "^0.3.2",
     "reactify": "~1.1.1",
     "redux": "^1.0.1",

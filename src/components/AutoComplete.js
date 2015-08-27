@@ -115,11 +115,6 @@ class AutoComplete extends CSSComponent {
                     borderRadius: `${common.borderRadius}px ${common.borderRadius}px 0 0`
                 },
             },
-            'loading-true': {
-                searchBar: {
-                    borderRadius: common.borderRadius,
-                }
-            }
         };
     }
 
@@ -200,20 +195,18 @@ class AutoComplete extends CSSComponent {
     }
 
     renderMenu() {
-        if (!this.props.loading) {
-            const items = this.getItems().map((item, index) => {
-                const element = this.props.renderItem(
-                    item,
-                    this.state.highlightedIndex === index,
-                    {cursor: 'default'}
-                );
-                return React.cloneElement(element, {
-                    key: `item-${index}`,
-                });
+        const items = this.getItems().map((item, index) => {
+            const element = this.props.renderItem(
+                item,
+                this.state.highlightedIndex === index,
+                {cursor: 'default'}
+            );
+            return React.cloneElement(element, {
+                key: `item-${index}`,
             });
-            const menu = this.props.renderMenu(items, this.state.value, this.styles().menu);
-            return React.cloneElement(menu, {ref: 'menu'});
-        }
+        });
+        const menu = this.props.renderMenu(items, this.state.value, this.styles().menu);
+        return React.cloneElement(menu, {ref: 'menu'});
     }
 
     renderTokens() {

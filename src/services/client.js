@@ -29,8 +29,18 @@ class Client {
         return serviceRequest;
     }
 
+    send(partialOrFullRequest) {
+        let request;
+        if (partialOrFullRequest instanceof protobufs.soa.ServiceRequestV1) {
+            request = partialOrFullRequest;
+        } else {
+            request = this.buildRequest(partialOrFullRequest.$type.parent.name, partialOrFullRequest);
+        }
+        return this.transport.sendRequest(request);
+    }
+
     sendRequest(protobufRequest) {
-        let request = this.buildRequest(protobufRequest.$type.parent.name, protobufRequest);
+        const request = this.buildRequest(protobufRequest.$type.parent.name, protobufRequest);
         return this.transport.sendRequest(request);
     }
 
