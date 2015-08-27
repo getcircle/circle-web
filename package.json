@@ -110,7 +110,8 @@
     "warning": "^1.0.2",
     "watchify": "~3.2.3",
     "webpack": "^1.11.0",
-    "webpack-dev-server": "^1.10.1"
+    "webpack-dev-server": "^1.10.1",
+    "webpack-notifier": "^1.2.1"
   },
   "dependencies": {
     "redux-thunk": "^0.1.0"

@@ -2,6 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
     devtool: 'cheap-eval-source-map',
@@ -18,6 +19,7 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
+        new WebpackNotifierPlugin(),
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin('app.css', { allChunks: true }),
         new HtmlWebpackPlugin({
