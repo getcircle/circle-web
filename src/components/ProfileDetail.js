@@ -85,13 +85,13 @@ class ProfileDetail extends StyleableComponent {
         if (team) {
             return (
                 <ProfileDetailTeam
-                    style={this.mergeAndPrefix(styles.section)}
                     manager={manager}
-                    peers={peers}
-                    team={team}
                     onClickManager={routeToProfile.bind(null, this.context.router, manager)}
-                    onClickTeam={routeToTeam.bind(null, this.context.router, team)}
                     onClickPeer={routeToProfile.bind(null, this.context.router)}
+                    onClickTeam={routeToTeam.bind(null, this.context.router, team)}
+                    peers={peers}
+                    style={this.mergeAndPrefix(styles.section)}
+                    team={team}
                 />
             );
         }
@@ -101,11 +101,11 @@ class ProfileDetail extends StyleableComponent {
         if (team) {
             return (
                 <ProfileDetailManages
+                    directReports={directReports}
+                    onClickDirectReport={routeToProfile.bind(null, this.context.router)}
+                    onClickTeam={routeToTeam.bind(null, this.context.router, team)}
                     style={this.mergeAndPrefix(styles.section)}
                     team={team}
-                    directReports={directReports}
-                    onClickTeam={routeToTeam.bind(null, this.context.router, team)}
-                    onClickDirectReport={routeToProfile.bind(null, this.context.router)}
                 />
             );
         }
@@ -116,13 +116,16 @@ class ProfileDetail extends StyleableComponent {
         let contactMethods = [new ContactMethodV1({
             label: 'Email',
             value: profile.email,
+            /*eslint-disable camelcase*/
             contact_method_type: ContactMethodV1.ContactMethodTypeV1.EMAIL,
+            /*eslint-enable camelcase*/
         })];
         return contactMethods.concat(profile.contact_methods);
     }
 
     render() {
         const {
+            /*eslint-disable camelcase*/
             direct_reports,
             locations,
             manager,
@@ -130,6 +133,7 @@ class ProfileDetail extends StyleableComponent {
             peers,
             profile,
             team,
+            /*eslint-enable camelcase*/
         } = this.props.extendedProfile;
 
         const {
