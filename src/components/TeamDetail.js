@@ -42,7 +42,7 @@ class TeamDetail extends StyleableComponent {
         }).isRequired,
     }
 
-    _renderDescription(team) {
+    renderDescription(team) {
         if (team.description) {
             return (
                 <Card style={styles.section} title="Description">
@@ -56,7 +56,7 @@ class TeamDetail extends StyleableComponent {
         }
     }
 
-    _renderManager(manager) {
+    renderManager(manager) {
         return (
             <Card style={styles.section} title="Manager">
                 <CardRow>
@@ -73,7 +73,7 @@ class TeamDetail extends StyleableComponent {
         );
     }
 
-    _renderChildTeams(childTeams) {
+    renderChildTeams(childTeams) {
         if (childTeams && childTeams.length) {
             return (
                 <TeamDetailTeams
@@ -85,7 +85,7 @@ class TeamDetail extends StyleableComponent {
         }
     }
 
-    _renderTeamMembers(manager, members) {
+    renderTeamMembers(manager, members) {
         if (members && members.length) {
             members = _.filter(members, (profile) => profile.id !== manager.id);
             return (
@@ -107,10 +107,10 @@ class TeamDetail extends StyleableComponent {
             <div>
                 <TeamDetailHeader team={team} />
                 <DetailContent>
-                    {this._renderDescription(team)}
-                    {this._renderManager(manager)}
-                    {this._renderChildTeams(childTeams)}
-                    {this._renderTeamMembers(manager, members)}
+                    {this.renderDescription(team)}
+                    {this.renderManager(manager)}
+                    {this.renderChildTeams(childTeams)}
+                    {this.renderTeamMembers(manager, members)}
                 </DetailContent>
             </div>
         );
