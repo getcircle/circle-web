@@ -24,7 +24,7 @@ export function getProfile(parameters={}) {
 	});
 }
 
-export function getProfiles(parameters, nextRequest=null) {
+export function getProfiles(parameters, nextRequest=null, key=null) {
     parameters = Object.assign({}, parameters);
     let request;
     if (nextRequest === null) {
@@ -32,7 +32,9 @@ export function getProfiles(parameters, nextRequest=null) {
     } else {
         request = nextRequest;
     }
-    const key = Object.values(parameters)[0];
+    if (key === null) {
+        key = Object.values(parameters)[0];
+    }
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => response.finish(resolve, reject, key))

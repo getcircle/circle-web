@@ -1,3 +1,5 @@
+import keymirror from 'keymirror';
+
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 
@@ -13,30 +15,20 @@ const exploreActionTypes = [
     types.EXPLORE_FAILURE,
 ];
 
-export const exploreTypes = {
-    PROFILES: 'PROFILES',
-    TEAMS: 'TEAMS',
-    LOCATIONS: 'LOCATIONS',
-}
+export const EXPLORE_TYPES = keymirror({
+    PROFILES: null,
+    TEAMS: null,
+    LOCATIONS: null,
+});
 
 export function exploreProfiles(nextRequest) {
-    // TODO add shouldFetch
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: () => {
-                return getProfiles(null, nextRequest)
-                    .then((response) => {
-                        return Promise.resolve({
-                            results: response.profiles,
-                            nextRequest: response.nextRequest,
-                        });
-                    });
-            },
+            remote: () => getProfiles(null, nextRequest, EXPLORE_TYPES.PROFILES),
         },
-        payload: {
-            type: exploreTypes.PROFILES,
-            append: nextRequest && true,
+        meta: {
+            paginateBy: EXPLORE_TYPES.PROFILES,
         },
     }
 }
@@ -57,7 +49,7 @@ export function exploreTeams(nextRequest) {
             },
         },
         payload: {
-            type: exploreTypes.TEAMS,
+            type: EXPLORE_TYPES.TEAMS,
             append: nextRequest && true,
         },
     }
@@ -79,7 +71,7 @@ export function exploreLocations(nextRequest) {
             },
         },
         payload: {
-            type: exploreTypes.LOCATIONS,
+            type: EXPLORE_TYPES.LOCATIONS,
             append: nextRequest && true,
         },
     }

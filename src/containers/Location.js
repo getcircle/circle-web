@@ -6,10 +6,9 @@ import { services } from 'protobufs';
 import {
     loadLocation,
     loadLocationMembers,
-    retrieveLocation,
-    retrieveLocationMembers,
     updateLocation,
 } from '../actions/locations';
+import { retrieveLocation, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -33,7 +32,7 @@ const selector = createSelector(
         }
         if (membersState.has(locationId) && !membersState.get(locationId).get('loading')) {
             const ids = membersState.get(locationId).get('ids').toJS();
-            members = retrieveLocationMembers(ids, cache);
+            members = retrieveProfiles(ids, cache);
         }
         return {office: office, members: members};
     }

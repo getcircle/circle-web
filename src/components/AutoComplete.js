@@ -1,3 +1,4 @@
+import { CircularProgress } from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { backgroundColors, fontColors, iconColors } from '../constants/styles';
@@ -13,6 +14,7 @@ class AutoComplete extends CSSComponent {
         focused: PropTypes.bool,
         initialValue: PropTypes.any,
         items: PropTypes.array,
+        loading: PropTypes.bool,
         onClearToken: PropTypes.func,
         onSelect: PropTypes.func,
         placeholderText: PropTypes.string,
@@ -27,6 +29,7 @@ class AutoComplete extends CSSComponent {
         alwaysActive: false,
         focused: false,
         getItemValue: item => item,
+        loading: false,
         onSelect: () => true,
         placeholderText: '',
         renderMenu: (items, value, style) => {
@@ -79,8 +82,9 @@ class AutoComplete extends CSSComponent {
                     height: '100%',
                     ...fontColors.light,
                 },
-                menu: {
-
+                loadingIndicator: {
+                    marginRight: 10,
+                    bottom: 5,
                 },
                 root: {
                     display: 'flex',
@@ -111,6 +115,11 @@ class AutoComplete extends CSSComponent {
                     borderRadius: `${common.borderRadius}px ${common.borderRadius}px 0 0`
                 },
             },
+            'loading-true': {
+                searchBar: {
+                    borderRadius: common.borderRadius,
+                }
+            }
         };
     }
 
@@ -191,18 +200,20 @@ class AutoComplete extends CSSComponent {
     }
 
     renderMenu() {
-        const items = this.getItems().map((item, index) => {
-            const element = this.props.renderItem(
-                item,
-                this.state.highlightedIndex === index,
-                {cursor: 'default'}
-            );
-            return React.cloneElement(element, {
-                key: `item-${index}`,
+        if (!this.props.loading) {
+            const items = this.getItems().map((item, index) => {
+                const element = this.props.renderItem(
+                    item,
+                    this.state.highlightedIndex === index,
+                    {cursor: 'default'}
+                );
+                return React.cloneElement(element, {
+                    key: `item-${index}`,
+                });
             });
-        });
-        const menu = this.props.renderMenu(items, this.state.value, this.styles().menu);
-        return React.cloneElement(menu, {ref: 'menu'});
+            const menu = this.props.renderMenu(items, this.state.value, this.styles().menu);
+            return React.cloneElement(menu, {ref: 'menu'});
+        }
     }
 
     renderTokens() {
@@ -236,8 +247,13 @@ class AutoComplete extends CSSComponent {
                         ref="input"
                         type="text"
                     />
+                    {(() => {
+                        if (this.props.loading) {
+                            return <CircularProgress is="loadingIndicator" mode="indeterminate" size={0.5} />;
+                        }
+                    })()}
                 </div>
-                <div is="menu">
+                <div>
                     {this.renderMenu()}
                 </div>
             </div>

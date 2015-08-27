@@ -1,6 +1,3 @@
-import { denormalize } from 'protobuf-normalizr';
-import { services } from 'protobufs';
-
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/profile';
@@ -30,10 +27,6 @@ export function getExtendedProfile(profileId) {
             bailout: (state) => state.extendedProfiles.getIn(['ids', profileId]),
         },
     };
-}
-
-export function retrieveExtendedProfile(profileId, cache) {
-    return denormalize(profileId, services.profile.actions.get_extended_profile.ResponseV1, cache);
 }
 
 export function updateProfile(profile) {

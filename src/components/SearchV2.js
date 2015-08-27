@@ -1,14 +1,26 @@
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import keymirror from 'keymirror';
-import { List, ListItem, ListDivider } from 'material-ui';
+import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import * as exploreActions from '../actions/explore';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
+import * as selectors from '../selectors';
+import { retrieveProfiles } from '../reducers/denormalizations';
 import t from '../utils/gettext';
 
 import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
+import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
+
+const {
+    List,
+    ListItem,
+    ListDivider,
+} = mui;
 
 const RESULT_TYPES = keymirror({
     EXPLORE: null,
@@ -16,14 +28,47 @@ const RESULT_TYPES = keymirror({
 
 export const SEARCH_CONTAINER_WIDTH = 460;
 
+const selector = createSelector(
+    [selectors.cacheSelector, selectors.exploreSelector],
+    (cacheState, exploreState) => {
+        let profiles, loading;
+        const cache = cacheState.toJS();
+        const exploreProfiles = exploreState.get(exploreActions.EXPLORE_TYPES.PROFILES);
+        if (exploreProfiles) {
+            if (!exploreProfiles.get('loading')) {
+                const ids = exploreProfiles.get('ids').toJS();
+                profiles = retrieveProfiles(ids, cache);
+            }
+            loading = exploreProfiles.get('loading');
+        }
+        return { loading, profiles };
+    }
+);
+
+@connect(selector)
 class Search extends CSSComponent {
 
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
+        loading: PropTypes.bool,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
+        profiles: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.profile.containers.ProfileV1)
+        ),
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+        if (this.state.category && !nextState.category) {
+            this.props.dispatch(exploreActions.clearExploreResults());
+        }
+    }
+
+    static defualtProps = {
+        loading: false,
     }
 
     state = {
-        selectedCategoryIndex: 0,
+        category: null,
     }
 
     classes() {
@@ -89,59 +134,104 @@ class Search extends CSSComponent {
         };
     }
 
-    handleCategorySelection(index) {
-        this.setState({selectedCategoryIndex: index});
+    handleCategorySelection(category) {
+        this.setState({category: category});
+        this.explore(category);
     }
 
     handleClearCategory() {
-        this.setState({selectedCategoryIndex: 0});
+        this.setState({category: null});
     }
 
-    getDefaultSearchResults() {
+    getCategoryResults() {
+        const { CategoryV1 } = services.search.containers.search;
+        switch(this.state.category) {
+        case CategoryV1.PROFILES:
+            return this.getCategoryResultsProfiles();
+        }
+    }
+
+    getCategoryResultsProfiles() {
+        const { profiles } = this.props;
+        if (profiles) {
+            return profiles.map((profile) => ({
+                    leftAvatar: <ProfileAvatar profile={profile} />,
+                    primaryText: profile.full_name,
+                    secondaryText: `${profile.title} (TODO)`,
+                })
+            );
+        }
+    }
+
+    getDefaultResults() {
         const { organization } = this.props;
-        return [
+        const { CategoryV1 } = services.search.containers.search;
+        const items = [
             {
-                onTouchTap: this.handleCategorySelection.bind(this, 1),
+                onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.PROFILES),
                 primaryText: t(`People (${organization.profile_count})`),
-                type: RESULT_TYPES.EXPLORE,
             },
             {
-                onTouchTap: this.handleCategorySelection.bind(this, 2),
+                onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.TEAMS),
                 primaryText: t(`Teams (${organization.team_count})`),
-                type: RESULT_TYPES.EXPLORE,
             },
             {
-                onTouchTap: this.handleCategorySelection.bind(this, 3),
+                onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.LOCATIONS),
                 primaryText: t(`Locations (${organization.location_count})`),
-                type: RESULT_TYPES.EXPLORE,
             },
         ];
+        return items.map((item) => {
+            return {
+                innerDivStyle: this.styles().searchResult,
+                leftAvatar: <SearchIcon />,
+                leftAvatarStyle: this.styles().SearchIcon.style,
+                primaryTextStyle: this.styles().searchResultText,
+                type: RESULT_TYPES.EXPLORE,
+                ...item,
+            };
+        });
     }
 
-    getSearchCategory() {
+    getResults() {
+        if (this.state.category !== null) {
+            return this.getCategoryResults();
+        } else {
+            return this.getDefaultResults();
+        }
+    }
+
+    explore(category) {
+        let action;
         const { CategoryV1 } = services.search.containers.search;
-        switch(this.state.selectedCategoryIndex) {
-        case 1:
-            return CategoryV1.PROFILES;
-        case 2:
-            return CategoryV1.TEAMS;
-        case 3:
-            return CategoryV1.LOCATIONS;
-        default:
-            return null;
+
+        switch(category) {
+        case CategoryV1.PROFILES:
+            action = exploreActions.exploreProfiles;
+            break;
+        case CategoryV1.TEAMS:
+            action = exploreActions.exploreTeams;
+            break;
+        case CategoryV1.LOCATIONS:
+            action = exploreActions.exploreLocations;
+            break;
+        }
+        if (action) {
+            this.props.dispatch(action());
         }
     }
 
     getSearchTokens() {
         let token;
-        switch(this.state.selectedCategoryIndex) {
-        case 1:
+        const { CategoryV1 } = services.search.containers.search;
+
+        switch(this.state.category) {
+        case CategoryV1.PROFILES:
             token = t('People');
             break;
-        case 2:
+        case CategoryV1.TEAMS:
             token = t('Teams');
             break;
-        case 3:
+        case CategoryV1.LOCATIONS:
             token = t('Locations');
             break;
         }
@@ -153,12 +243,9 @@ class Search extends CSSComponent {
     renderItem(item, highlighted, style) {
         const element = (
             <ListItem
-                innerDivStyle={this.styles().searchResult}
-                leftAvatar={<SearchIcon />}
-                leftAvatarStyle={this.styles().SearchIcon.style}
+                {...item}
                 onTouchTap={item.onTouchTap}
                 primaryText={item.primaryText}
-                primaryTextStyle={this.styles().searchResultText}
                 ref={(component) => {
                     ((highlighted) =>  {
                         // NB: Component will be null in some cases (unmounting and on change)
@@ -198,7 +285,8 @@ class Search extends CSSComponent {
                     alwaysActive={true}
                     focused={true}
                     is="AutoComplete"
-                    items={this.getDefaultSearchResults()}
+                    items={this.getResults()}
+                    loading={this.props.loading}
                     onClearToken={this.handleClearCategory.bind(this)}
                     placeholderText={t('Search People, Teams & Locations')}
                     renderItem={this.renderItem.bind(this)}

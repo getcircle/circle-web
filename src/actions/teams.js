@@ -1,6 +1,3 @@
-import { denormalize } from 'protobuf-normalizr';
-import { services } from 'protobufs';
-
 import * as organizationRequests from '../services/organization';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
@@ -41,20 +38,6 @@ export function loadTeamMembers(teamId) {
             paginateBy: teamId,
         },
     };
-}
-
-export function retrieveExtendedTeam(teamId, cache) {
-    const team = denormalize(teamId, services.organization.actions.get_team.ResponseV1, cache);
-    const reportingDetails = denormalize(
-        teamId,
-        services.organization.actions.get_team_reporting_details.ResponseV1,
-        cache
-    );
-    return {reportingDetails, team: team.team};
-}
-
-export function retrieveTeamMembers(profileIds, cache) {
-    return denormalize(profileIds, services.profile.containers.ProfileV1, cache);
 }
 
 export function updateTeam(team) {

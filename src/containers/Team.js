@@ -6,10 +6,9 @@ import { services } from 'protobufs';
 import {
     loadExtendedTeam,
     loadTeamMembers,
-    retrieveExtendedTeam,
-    retrieveTeamMembers,
     updateTeam,
 } from '../actions/teams';
+import { retrieveExtendedTeam, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -33,7 +32,7 @@ const selector = createSelector(
         }
         if (membersState.has(teamId) && !membersState.get(teamId).get('loading')) {
             const ids = membersState.get(teamId).get('ids').toJS();
-            members = retrieveTeamMembers(ids, cache);
+            members = retrieveProfiles(ids, cache);
         }
         return {extendedTeam: extendedTeam, members: members};
     }

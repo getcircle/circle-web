@@ -17,7 +17,7 @@ const selector = createSelector(
             authenticated: authenticationState.get('authenticated'),
         }
     },
-)
+);
 
 @connect(selector)
 class Search extends CSSComponent {
@@ -81,7 +81,7 @@ class Search extends CSSComponent {
                     </section>
                     <section is="searchSection">
                         <div className="row">
-                            <SearchComponent className="col-xs center-xs" organization={this.props.organization} />
+                            <SearchComponent className="col-xs center-xs" dispatch={this.props.dispatch} organization={this.props.organization} />
                         </div>
                     </section>
                 </section>

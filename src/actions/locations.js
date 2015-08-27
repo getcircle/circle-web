@@ -1,6 +1,3 @@
-import { denormalize } from 'protobuf-normalizr';
-import { services } from 'protobufs';
-
 import * as organizationRequests from '../services/organization';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
@@ -41,14 +38,6 @@ export function loadLocationMembers(locationId) {
             paginateBy: locationId,
         },
     };
-}
-
-export function retrieveLocation(locationId, cache) {
-    return denormalize(locationId, services.organization.containers.LocationV1, cache);
-}
-
-export function retrieveLocationMembers(profileIds, cache) {
-    return denormalize(profileIds, services.profile.containers.ProfileV1, cache);
 }
 
 export function updateLocation(location) {

@@ -2,7 +2,8 @@ import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { getExtendedProfile, retrieveExtendedProfile, updateProfile } from '../actions/profiles';
+import { getExtendedProfile, updateProfile } from '../actions/profiles';
+import { retrieveExtendedProfile } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
