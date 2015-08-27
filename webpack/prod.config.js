@@ -8,9 +8,7 @@ var strip = require('strip-loader');
 module.exports = {
     devtool: 'source-map',
     context: path.resolve(__dirname, '..'),
-    entry: {
-        'main': './src'
-    },
+    entry: ['./src'],
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, '../dist'),

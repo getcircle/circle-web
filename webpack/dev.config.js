@@ -6,16 +6,13 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     devtool: 'cheap-eval-source-map',
     context: path.resolve(__dirname, '..'),
-    entry: {
-        'main': [
-            'webpack-dev-server/client?http://localhost:9110',
-            'webpack/hot/only-dev-server',
-            './src'
-        ]
-    },
+    entry: [
+        'webpack-dev-server/client?http://localhost:9110',
+        'webpack/hot/only-dev-server',
+        './src'
+    ],
     output: {
-        filename: '[name]-[hash].js',
-        chunkFilename: '[name]-[chunkhash].js',
+        filename: 'app.js',
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/dist/'
     },
