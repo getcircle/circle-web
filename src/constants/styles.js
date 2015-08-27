@@ -14,4 +14,37 @@ const constants = {
     horizontalUnit: 10,
 };
 
+export const iconColors = {
+    dark: {
+        stroke: 'rgba(0, 0, 0, 0.6)',
+    },
+    light: {
+        stroke: 'white',
+    },
+    medium: {
+        stroke: 'rgba(0, 0, 0, 0.4)',
+    },
+}
+
+export const backgroundColors = {
+    light: {
+        backgroundColor: 'white',
+    }
+}
+
+export const fontColors = {
+    extraLight: {
+        color: 'rgba(0, 0, 0, 0.4)',
+    },
+    light: {
+        color: 'rgba(0, 0, 0, 0.5)',
+    },
+}
+
+export const fontWeights = {
+    semiBold: {
+        fontWeight: 600,
+    },
+}
+
 export default constants;
