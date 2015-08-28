@@ -27,7 +27,7 @@ class LocationDetailDescription extends StyleableComponent {
             style,
         } = this.props;
 
-        let authorName = description ? description.by_profile.full_name : ''
+        let authorName = description && description.by_profile ? description.by_profile.full_name : ''
         return (
             <TextValue
                 authorName={authorName}

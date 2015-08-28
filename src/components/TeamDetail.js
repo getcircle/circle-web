@@ -155,12 +155,14 @@ class TeamDetail extends StyleableComponent {
         const { team, reportingDetails } = extendedTeam;
         const { manager } = reportingDetails;
         const childTeams = reportingDetails.child_teams;
+
+        let canEdit = team.permissions ? team.permissions.can_edit : false;
         return (
             <div>
                 <TeamDetailHeader team={team} />
                 <DetailContent>
-                    {this.renderStatus(team.status, true)}
-                    {this.renderDescription(team, true)}
+                    {this.renderStatus(team.status, canEdit)}
+                    {this.renderDescription(team, canEdit)}
                     {this.renderManager(manager)}
                     {this.renderChildTeams(childTeams)}
                     {this.renderTeamMembers(manager, members)}

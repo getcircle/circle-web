@@ -110,12 +110,14 @@ class LocationDetail extends StyleableComponent {
 
     render() {
         const { office, members } = this.props;
+        let canEdit = office.permissions ? office.permissions.can_edit : false;
+
         return (
             <div>
                 <LocationDetailHeader office={office} />
                 <DetailContent>
                     <LocationDetailLocation office={office} />
-                    {this.renderDescription(office, true)}
+                    {this.renderDescription(office, canEdit)}
                     {this.renderPointsOfContact(office)}
                     {this.renderMembers(members)}
                 </DetailContent>

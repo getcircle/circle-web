@@ -64,13 +64,6 @@ const styles = {
     },
 }
 
-export const TextValueType = {
-    LOCATION_DESCRIPTION: 'LOCATION_DESCRIPTION',
-    PROFILE_STATUS: 'PROFILE_STATUS',
-    TEAM_DESCRIPTION: 'TEAM_DESCRIPTION',
-    TEAM_STATUS: 'TEAM_STATUS',
-}
-
 class TextValue extends StyleableComponent {
 
     static propTypes = {
@@ -83,7 +76,6 @@ class TextValue extends StyleableComponent {
         style: PropTypes.object,
         text: PropTypes.string,
         title: PropTypes.string,
-        type: PropTypes.instanceOf(TextValueType),
     }
 
     componentWillMount() {
