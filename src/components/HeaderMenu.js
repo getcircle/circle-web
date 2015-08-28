@@ -5,6 +5,7 @@ import React, { PropTypes } from 'react/addons';
 
 import { logout } from '../actions/authentication';
 import t from '../utils/gettext';
+import { tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
 
@@ -54,7 +55,7 @@ class HeaderMenu extends CSSComponent {
                     paddingBottom: 10,
                 },
                 text: {
-                    color: 'white',
+                    color: tintColor,
                     lineHeight: 2,
                 },
             },
