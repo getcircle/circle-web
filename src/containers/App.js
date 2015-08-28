@@ -41,7 +41,7 @@ class App extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!nextProps.authenticated && nextProps.location.pathname != '/login') {
+        if (!nextProps.authenticated && nextProps.location.pathname !== '/login') {
             this.context.router.transitionTo('/login');
         }
     }
