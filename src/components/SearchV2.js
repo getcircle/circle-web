@@ -428,7 +428,7 @@ class Search extends CSSComponent {
 
         containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
         return (
-            <Paper style={{...style, ...this.styles().resultsList}}>
+            <Paper key="menu" style={{...style, ...this.styles().resultsList}}>
                 <Infinite
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}
