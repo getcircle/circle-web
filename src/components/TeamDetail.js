@@ -11,11 +11,13 @@ import CardRow from './CardRow';
 import DetailContent from './DetailContent';
 import ProfileAvatar from './ProfileAvatar';
 import StyleableComponent from './StyleableComponent';
+import TeamDetailDescription from './TeamDetailDescription';
 import TeamDetailHeader from './TeamDetailHeader';
 import TeamDetailStatus from './TeamDetailStatus';
 import TeamDetailTeamMembers from './TeamDetailTeamMembers';
 import TeamDetailTeams from './TeamDetailTeams';
 
+const { DescriptionV1 } = services.common.containers;
 const { TeamStatusV1 } = services.organization.containers;
 
 const styles = {
@@ -48,6 +50,23 @@ class TeamDetail extends StyleableComponent {
 
     // Update Methods
 
+    onUpdateDescription(descriptionText) {
+        const {
+            extendedTeam,
+            onUpdateTeamCallback,
+        } = this.props;
+
+        let teamDescriptionV1 = new DescriptionV1({
+            value: descriptionText,
+        });
+
+        let updatedTeam = Object.assign({}, extendedTeam.team, {
+            description: teamDescriptionV1,
+        });
+
+        onUpdateTeamCallback(updatedTeam);
+    }
+
     onUpdateStatus(statusText) {
         const {
             extendedTeam,
@@ -78,18 +97,15 @@ class TeamDetail extends StyleableComponent {
         );
     }
 
-    renderDescription(team) {
-        if (team.description) {
-            return (
-                <Card style={styles.section} title="Description">
-                    <CardRow>
-                        <span style={styles.description}>
-                            {team.description.value}
-                        </span>
-                    </CardRow>
-                </Card>
-            );
-        }
+    renderDescription(team, isEditable) {
+        return (
+            <TeamDetailDescription
+                description={team.description}
+                isEditable={isEditable}
+                onSaveCallback={this.onUpdateDescription.bind(this)}
+                style={this.mergeAndPrefix(styles.section)}
+            />
+        );
     }
 
     renderManager(manager) {
@@ -144,7 +160,7 @@ class TeamDetail extends StyleableComponent {
                 <TeamDetailHeader team={team} />
                 <DetailContent>
                     {this.renderStatus(team.status, true)}
-                    {this.renderDescription(team)}
+                    {this.renderDescription(team, true)}
                     {this.renderManager(manager)}
                     {this.renderChildTeams(childTeams)}
                     {this.renderTeamMembers(manager, members)}

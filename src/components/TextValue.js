@@ -205,6 +205,21 @@ class TextValue extends StyleableComponent {
         );
     }
 
+    renderCharacterCounter(value) {
+        const {
+            shouldLimitCharacters,
+        } = this.props;
+
+        if (shouldLimitCharacters) {
+            return (
+                <CharacterCounter
+                    counterLimit={CHARACTER_LIMIT}
+                    counterValue={CHARACTER_LIMIT - value.length}
+                />
+            );
+        }
+    }
+
     renderEditableContent() {
         let value = this.state.value;
         let error = this.state.error ? this.state.error : '';
@@ -222,10 +237,7 @@ class TextValue extends StyleableComponent {
                     <span style={this.mergeAndPrefix(styles.errorContent)}>
                         {error}
                     </span>
-                    <CharacterCounter
-                        counterLimit={CHARACTER_LIMIT}
-                        counterValue={CHARACTER_LIMIT - value.length}
-                    />
+                    {this.renderCharacterCounter(value)}
                 </div>
             </div>
         );
