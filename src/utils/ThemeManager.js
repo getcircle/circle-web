@@ -7,6 +7,7 @@ const ThemeManager = new mui.Styles.ThemeManager();
 ThemeManager.contentFontFamily = '"Open Sans", Arial, sans-serif';
 ThemeManager.setPalette({
     accent1Color: constants.colors.tintColor,
+    canvasColor: 'rgba(255, 255, 255, .9)',
 });
 
 export default ThemeManager;

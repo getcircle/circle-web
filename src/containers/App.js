@@ -6,8 +6,8 @@ import React, { PropTypes } from 'react';
 import { refresh } from '../actions/authentication';
 import * as selectors from '../selectors';
 
+import CSSComponent from '../components/CSSComponent';
 import Header from '../components/Header';
-import PureComponent from '../components/PureComponent';
 
 const { AppCanvas } = mui;
 
@@ -20,7 +20,7 @@ const selector = createSelector(
 );
 
 @connect(selector)
-class App extends PureComponent {
+class App extends CSSComponent {
 
     static propTypes = {
         authenticated: PropTypes.bool.isRequired,
@@ -46,18 +46,31 @@ class App extends PureComponent {
         }
     }
 
+    classes() {
+        return {
+            default: {
+                root: {
+                    height: '100vh',
+                    width: '100vw',
+                },
+            },
+        };
+    }
+
     render() {
         let header;
         if (this.props.authenticated && this.props.displayHeader) {
             header = <Header {...this.props} />;
         }
         return (
-            <AppCanvas>
-                <div>
-                    {header}
-                    {this.props.children}
-                </div>
-            </AppCanvas>
+            <div is="root">
+                <AppCanvas>
+                    <div>
+                        {header}
+                        {this.props.children}
+                    </div>
+                </AppCanvas>
+            </div>
         );
     }
 }
