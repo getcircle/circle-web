@@ -143,35 +143,18 @@ export function getLocations(parameters, nextRequest=null) {
     });
 }
 
-export function getTeams(parameters, nextRequest=null) {
-    parameters = parameters || {};
-    let request;
-    if (nextRequest === null) {
-        request = new services.organization.actions.get_teams.RequestV1(parameters);
-    } else {
-        request = nextRequest;
+export function getTeams(parameters, nextRequest=null, key=null) {
+    parameters = Object.assign({}, parameters);
+    const request = nextRequest ? nextRequest : new services.organization.actions.get_teams.RequestV1(parameters);
+    if (key === null) {
+        key = Object.values(parameters)[0];
     }
     return new Promise((resolve, reject) => {
-        client.sendRequest(request)
+        client.send(request)
             .then((response) => {
-                if (response.errors.length) {
-                    return reject({
-                        errors: response.errors,
-                        errorDetails: response.errorDetails,
-                    });
-                }
-
-                let { teams } = response.result;
-                resolve({
-                    parameters,
-                    teams,
-                    nextRequest: response.getNextRequest(),
-                });
+                return response.finish(resolve, reject, key);
             })
-            .catch((error) => {
-                logger.error(`Error fetching teams: ${error}`);
-                reject(error);
-            });
+            .catch(error => reject(error));
     });
 }
 

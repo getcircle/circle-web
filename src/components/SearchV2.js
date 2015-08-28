@@ -9,11 +9,13 @@ import { services, soa } from 'protobufs';
 import * as exploreActions from '../actions/explore';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import * as selectors from '../selectors';
-import { retrieveProfiles } from '../reducers/denormalizations';
+import { retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import t from '../utils/gettext';
 
 import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
+import GroupIcon from './GroupIcon';
+import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
 
@@ -34,9 +36,13 @@ export const SEARCH_CONTAINER_WIDTH = 460;
 export const SEARCH_RESULTS_MAX_HEIGHT = 600;
 
 const cacheSelector = selectors.createImmutableSelector(
-    [selectors.cacheSelector, selectors.exploreProfilesIdsSelector],
-    (cacheState, profilesState) => {
-        let profiles, profilesNextRequest;
+    [
+        selectors.cacheSelector,
+        selectors.exploreProfilesIdsSelector,
+        selectors.exploreTeamsIdsSelector,
+    ],
+    (cacheState, profilesState, teamsState) => {
+        let profiles, profilesNextRequest, teams, teamsNextRequest;
         const cache = cacheState.toJS();
         if (profilesState) {
             const ids = profilesState.get('ids').toJS();
@@ -45,18 +51,31 @@ const cacheSelector = selectors.createImmutableSelector(
             }
             profilesNextRequest = profilesState.get('nextRequest');
         }
+        if (teamsState) {
+            const ids = teamsState.get('ids').toJS();
+            if (ids.length) {
+                teams = retrieveTeams(ids, cache);
+            }
+            teamsNextRequest = teamsState.get('nextRequest');
+        }
         return Immutable.fromJS({
             profiles,
             profilesNextRequest,
+            teams,
+            teamsNextRequest,
         });
     },
 );
 
 const selector = selectors.createImmutableSelector(
-    [cacheSelector, selectors.exploreProfilesLoadingSelector],
-    (cacheState, profilesLoadingState) => {
+    [
+        cacheSelector,
+        selectors.exploreProfilesLoadingSelector,
+        selectors.exploreTeamsLoadingSelector,
+    ],
+    (cacheState, profilesLoadingState, teamsLoadingState) => {
         return {
-            loading: profilesLoadingState,
+            loading: profilesLoadingState || teamsLoadingState,
             ...cacheState.toJS(),
         };
     }
@@ -73,6 +92,10 @@ class Search extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        teams: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.profile.containers.ProfileV1)
+        ),
+        teamsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -96,6 +119,17 @@ class Search extends CSSComponent {
                     style: {
                         width: '100%',
                     },
+                },
+                TeamIcon: {
+                    style: {
+                        height: 40,
+                        width: 40,
+                    },
+                    iconStyle: {
+                        height: 30,
+                        width: 30,
+                    },
+                    strokeWidth: 1,
                 },
                 ListDivider: {
                     style: {
@@ -176,6 +210,8 @@ class Search extends CSSComponent {
         switch(this.state.category) {
         case CategoryV1.PROFILES:
             return this.props.profilesNextRequest;
+        case CategoryV1.TEAMS:
+            return this.props.teamsNextRequest;
         }
     }
 
@@ -185,6 +221,9 @@ class Search extends CSSComponent {
         switch(this.state.category) {
         case CategoryV1.PROFILES:
             results = this.getCategoryResultsProfiles();
+            break;
+        case CategoryV1.TEAMS:
+            results = this.getCategoryResultsTeams();
             break;
         }
         return results ? results : [];
@@ -197,6 +236,18 @@ class Search extends CSSComponent {
                     leftAvatar: <ProfileAvatar profile={profile} />,
                     primaryText: profile.full_name,
                     secondaryText: `${profile.title} (TODO)`,
+                })
+            );
+        }
+    }
+
+    getCategoryResultsTeams() {
+        const { teams } = this.props;
+        if (teams) {
+            return teams.map((team) => ({
+                    leftAvatar: <IconContainer IconClass={GroupIcon} is="TeamIcon" />,
+                    primaryText: team.display_name,
+                    secondaryText: `${team.child_team_count} Teams, ${team.profile_count} People`,
                 })
             );
         }

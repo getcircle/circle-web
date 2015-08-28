@@ -9,3 +9,12 @@ export function getProfileNormalizations(action) {
         action.payload
     );
 }
+
+export function getTeamNormalizations(action) {
+    return getNormalizations(
+        'teams',
+        action.meta.paginateBy,
+        services.organization.actions.get_teams.ResponseV1,
+        action.payload
+    );
+}

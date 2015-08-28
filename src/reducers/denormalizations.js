@@ -22,3 +22,7 @@ export function retrieveExtendedTeam(teamId, cache) {
 export function retrieveProfiles(profileIds, cache) {
     return denormalize(profileIds, services.profile.containers.ProfileV1, cache);
 }
+
+export function retrieveTeams(teamIds, cache) {
+    return denormalize(teamIds, services.organization.containers.TeamV1, cache);
+}

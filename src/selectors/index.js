@@ -22,20 +22,31 @@ export const exploreSelectorFactory = exploreType => {
     );
 }
 
-export const exploreProfilesSelector = exploreSelectorFactory(EXPLORE_TYPES.PROFILES);
-export const exploreProfilesLoadingSelector = createImmutableSelector(
-    [exploreProfilesSelector],
-    profilesState => profilesState ? profilesState.get('loading') : false,
-);
-export const exploreProfilesIdsSelector = createImmutableSelector(
-    [exploreProfilesSelector],
-    (profilesState) => {
-        return Immutable.fromJS({
-            ids: profilesState ? profilesState.get('ids') : Immutable.List(),
-            nextRequest: profilesState ? profilesState.get('nextRequest') : null,
+export const exploreTypeLoadingSelectorFactory = exploreTypeSelector => {
+    return createImmutableSelector(
+        [exploreTypeSelector],
+        exploreTypeState => exploreTypeState ? exploreTypeState.get('loading') : false,
+    );
+}
+
+export const exploreTypeIdsSelectorFactory = exploreTypeSelector => {
+    return createImmutableSelector(
+        [exploreTypeSelector],
+        (exploreTypeState) => {
+            return Immutable.fromJS({
+                ids: exploreTypeState ? exploreTypeState.get('ids') : Immutable.List(),
+                nextRequest: exploreTypeState ? exploreTypeState.get('nextRequest') : null,
+            });
         });
-    }
-);
+}
+
+export const exploreProfilesSelector = exploreSelectorFactory(EXPLORE_TYPES.PROFILES);
+export const exploreProfilesLoadingSelector = exploreTypeLoadingSelectorFactory(exploreProfilesSelector);
+export const exploreProfilesIdsSelector = exploreTypeIdsSelectorFactory(exploreProfilesSelector);
+
+export const exploreTeamsSelector = exploreSelectorFactory(EXPLORE_TYPES.TEAMS);
+export const exploreTeamsLoadingSelector = exploreTypeLoadingSelectorFactory(exploreTeamsSelector);
+export const exploreTeamsIdsSelector = exploreTypeIdsSelectorFactory(exploreTeamsSelector);
 
 export const extendedProfilesSelector = state => state.extendedProfiles;
 export const extendedTeamsSelector = state => state.extendedTeams;

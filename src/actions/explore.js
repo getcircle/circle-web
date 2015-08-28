@@ -21,6 +21,12 @@ export const EXPLORE_TYPES = keymirror({
     LOCATIONS: null,
 });
 
+function shouldBail(exploreState, nextRequest) {
+    if (exploreState && nextRequest === null && exploreState.get('ids').size) {
+        return true;
+    }
+}
+
 export function exploreProfiles(nextRequest) {
     const { PROFILES } = EXPLORE_TYPES;
     return {
@@ -29,36 +35,29 @@ export function exploreProfiles(nextRequest) {
             remote: () => getProfiles(null, nextRequest, PROFILES),
             bailout: (state) => {
                 const profilesState = state.explore.get(PROFILES);
-                if (profilesState && nextRequest === null && profilesState.get('ids').size) {
-                    return true;
-                }
+                return shouldBail(profilesState, nextRequest);
             }
         },
         meta: {
-            paginateBy: EXPLORE_TYPES.PROFILES,
+            paginateBy: PROFILES,
         },
     }
 }
 
 export function exploreTeams(nextRequest) {
-    // TODO add shouldFetch
+    const { TEAMS } = EXPLORE_TYPES;
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: () => {
-                return getTeams(null, nextRequest)
-                    .then((response) => {
-                        return Promise.resolve({
-                            results: response.teams,
-                            nextRequest: response.nextRequest,
-                        });
-                    })
+            remote: () => getTeams(null, nextRequest, TEAMS),
+            bailout: (state) => {
+                const teamsState = state.explore.get(TEAMS);
+                return shouldBail(teamsState, nextRequest);
             },
         },
-        payload: {
-            type: EXPLORE_TYPES.TEAMS,
-            append: nextRequest && true,
-        },
+        meta: {
+            paginateBy: TEAMS,
+        }
     }
 }
 
