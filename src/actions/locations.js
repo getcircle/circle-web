@@ -1,9 +1,9 @@
 import { denormalize } from 'protobuf-normalizr';
 import { services } from 'protobufs';
 
+import * as orgRequests from '../services/organization';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
-import { getLocation } from '../services/organization';
 import { getProfiles } from '../services/profile';
 
 export function loadLocation(locationId) {
@@ -14,7 +14,7 @@ export function loadLocation(locationId) {
                 types.LOAD_LOCATION_SUCCESS,
                 types.LOAD_LOCATION_FAILURE,
             ],
-            remote: () => getLocation(locationId),
+            remote: () => orgRequests.getLocation(locationId),
             bailout: state => state.locations.get('ids').has(locationId),
         },
     };
@@ -49,4 +49,17 @@ export function retrieveLocation(locationId, cache) {
 
 export function retrieveLocationMembers(profileIds, cache) {
     return denormalize(profileIds, services.profile.containers.ProfileV1, cache);
+}
+
+export function updateLocation(location) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.UPDATE_LOCATION,
+                types.UPDATE_LOCATION_SUCCESS,
+                types.UPDATE_LOCATION_FAILURE,
+            ],
+            remote: () => orgRequests.updateLocation(location),
+        },
+    };
 }

@@ -3,7 +3,13 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { loadLocation, loadLocationMembers, retrieveLocation, retrieveLocationMembers } from '../actions/locations';
+import {
+    loadLocation,
+    loadLocationMembers,
+    retrieveLocation,
+    retrieveLocationMembers,
+    updateLocation,
+} from '../actions/locations';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -37,6 +43,7 @@ const selector = createSelector(
 class Location extends PureComponent {
 
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         // NB: This is named "office" bc "location" is used by react-router >.<
         office: PropTypes.instanceOf(services.organization.containers.LocationV1),
@@ -62,6 +69,10 @@ class Location extends PureComponent {
         props.dispatch(loadLocationMembers(props.params.locationId));
     }
 
+    onUpdateLocation(location) {
+        this.props.dispatch(updateLocation(location))
+    }
+
     _renderLocation() {
         const {
             office,
@@ -72,6 +83,7 @@ class Location extends PureComponent {
                 <LocationDetail
                     members={members}
                     office={office}
+                    onUpdateLocationCallback={this.onUpdateLocation.bind(this)}
                 />
             );
         } else {

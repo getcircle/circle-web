@@ -3,14 +3,15 @@ import { services } from 'protobufs';
 
 import { routeToProfile } from '../utils/routes';
 
-import Card from './Card';
-import CardRow from './CardRow';
 import DetailContent from './DetailContent';
 import DetailMembers from './DetailMembers';
 import DetailViewAll from './DetailViewAll';
+import LocationDetailDescription from './LocationDetailDescription';
 import LocationDetailHeader from './LocationDetailHeader';
 import LocationDetailLocation from './LocationDetailLocation';
 import StyleableComponent from './StyleableComponent';
+
+const { DescriptionV1 } = services.common.containers;
 
 const styles = {
     description: {
@@ -28,6 +29,7 @@ class LocationDetail extends StyleableComponent {
     static propTypes = {
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
+        onUpdateLocationCallback: PropTypes.func.isRequired,
     }
 
     static contextTypes = {
@@ -40,21 +42,39 @@ class LocationDetail extends StyleableComponent {
         members: [],
     }
 
-    _renderDescription(office) {
-        if (office.description) {
-            return (
-                <Card style={styles.section} title="Description">
-                    <CardRow>
-                        <span style={styles.description}>
-                            {office.description.value}
-                        </span>
-                    </CardRow>
-                </Card>
-            );
-        }
+    // Update Methods
+
+    onUpdateDescription(descriptionText) {
+        const {
+            office,
+            onUpdateLocationCallback,
+        } = this.props;
+
+        let locationDescriptionV1 = new DescriptionV1({
+            value: descriptionText,
+        });
+
+        let updatedLocation = Object.assign({}, office, {
+            description: locationDescriptionV1,
+        });
+
+        onUpdateLocationCallback(updatedLocation);
     }
 
-    _renderPointsOfContact(office) {
+    // Render Methods
+
+    renderDescription(office, isEditable) {
+        return (
+            <LocationDetailDescription
+                description={office.description}
+                isEditable={isEditable}
+                onSaveCallback={this.onUpdateDescription.bind(this)}
+                style={this.mergeAndPrefix(styles.section)}
+            />
+        );
+    }
+
+    renderPointsOfContact(office) {
         if (office.points_of_contact && office.points_of_contact.length) {
             return (
                 <DetailMembers
@@ -69,17 +89,17 @@ class LocationDetail extends StyleableComponent {
         }
     }
 
-    _handleClickAction() {
+    handleClickAction() {
         this.refs.modal.show();
     }
 
-    _renderMembers(members) {
+    renderMembers(members) {
         if (members.length) {
             return (
                 <DetailMembers
                     actionText="View all People"
                     members={members}
-                    onClickActionText={this._handleClickAction.bind(this)}
+                    onClickActionText={this.handleClickAction.bind(this)}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
                     style={styles.section}
                     title="Works Here"
@@ -95,9 +115,9 @@ class LocationDetail extends StyleableComponent {
                 <LocationDetailHeader office={office} />
                 <DetailContent>
                     <LocationDetailLocation office={office} />
-                    {this._renderDescription(office)}
-                    {this._renderPointsOfContact(office)}
-                    {this._renderMembers(members)}
+                    {this.renderDescription(office, true)}
+                    {this.renderPointsOfContact(office)}
+                    {this.renderMembers(members)}
                 </DetailContent>
                 <DetailViewAll
                     items={members}

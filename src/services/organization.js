@@ -199,3 +199,12 @@ export function updateTeam(team) {
             .catch(error => reject(error));
     });
 }
+
+export function updateLocation(location) {
+    let request = new services.organization.actions.update_location.RequestV1({location: location});
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.finish(resolve, reject, location))
+            .catch(error => reject(error));
+    });
+}
