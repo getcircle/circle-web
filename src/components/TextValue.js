@@ -78,6 +78,7 @@ class TextValue extends StyleableComponent {
         editedTimestamp: PropTypes.string,
         isEditable: PropTypes.bool,
         onSaveCallback: PropTypes.func.isRequired,
+        placeholder: PropTypes.string.isRequired,
         shouldLimitCharacters: PropTypes.bool,
         style: PropTypes.object,
         text: PropTypes.string,
@@ -224,12 +225,16 @@ class TextValue extends StyleableComponent {
         let value = this.state.value;
         let error = this.state.error ? this.state.error : '';
 
+        const {
+            placeholder,
+        } = this.props;
+
         return (
             <div style={this.mergeAndPrefix(styles.statusTextareaContainer)}>
                 <textarea
                     autoFocus={true}
                     onChange={this.handleChange.bind(this)}
-                    placeholder={t('I\'m working on #project with @mypeer!')}
+                    placeholder={placeholder}
                     style={this.mergeAndPrefix(styles.statusTextarea, error === '' ? {} : styles.statusTextareaError)}
                     value={value}
                  />

@@ -32,6 +32,7 @@ class ProfileDetailStatus extends StyleableComponent {
                 editedTimestamp={status ? status.created : ''}
                 isEditable={isEditable}
                 onSaveCallback={onSaveCallback}
+                placeholder={t('I\'m working on #project with @mypeer!')}
                 shouldLimitCharacters={true}
                 style={this.mergeAndPrefix(styles, style)}
                 text={status ? status.value : ''}

@@ -34,6 +34,7 @@ class TeamDetailDescription extends StyleableComponent {
                 editedTimestamp={description ? description.changed : ''}
                 isEditable={isEditable}
                 onSaveCallback={onSaveCallback}
+                placeholder={t('Add your team description here. Its best to add your team\'s mission statement or high level goals, and how your team impacts the business.')}
                 shouldLimitCharacters={false}
                 style={this.mergeAndPrefix(styles, style)}
                 text={description ? description.value : ''}

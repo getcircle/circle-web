@@ -34,6 +34,7 @@ class LocationDetailDescription extends StyleableComponent {
                 editedTimestamp={description ? description.changed : ''}
                 isEditable={isEditable}
                 onSaveCallback={onSaveCallback}
+                placeholder={t('Add a description on your location. You can add unique things about the office, what teams work there, and local info about the office.')}
                 shouldLimitCharacters={false}
                 style={this.mergeAndPrefix(styles, style)}
                 text={description ? description.value : ''}
