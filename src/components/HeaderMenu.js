@@ -6,42 +6,13 @@ import React, { PropTypes } from 'react/addons';
 import { logout } from '../actions/authentication';
 import t from '../utils/gettext';
 
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
 import rectangleIcon from '../images/icons/down_arrow_icon.svg';
 
 const { TransitionGroup } = React.addons;
 
-const styles = {
-    arrow: {
-        paddingTop: 12,
-        paddingLeft: 10,
-    },
-    avatar: {
-        height: 36,
-        width: 36,
-    },
-    container: {
-        paddingTop: 22,
-        paddingRight: 22,
-        cursor: 'pointer',
-    },
-    menu: {
-        backgroundColor: 'transparent',
-        top: 65,
-        right: 10,
-    },
-    menuListStyle: {
-        paddingTop: 10,
-        paddingBottom: 10,
-    },
-    text: {
-        color: 'white',
-        lineHeight: 2,
-    },
-};
-
-class HeaderMenu extends StyleableComponent {
+class HeaderMenu extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
@@ -61,35 +32,61 @@ class HeaderMenu extends StyleableComponent {
         inHeader: false,
     }
 
-    _handleTouchTap = this._handleTouchTap.bind(this)
-    _handleTouchTap(event) {
+    classes() {
+        return {
+            default: {
+                arrow: {
+                    paddingTop: 12,
+                    paddingLeft: 10,
+                },
+                container: {
+                    paddingTop: 22,
+                    paddingRight: 22,
+                    cursor: 'pointer',
+                },
+                menu: {
+                    backgroundColor: 'transparent',
+                    top: 65,
+                    right: 10,
+                },
+                menuListStyle: {
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                },
+                text: {
+                    color: 'white',
+                    lineHeight: 2,
+                },
+            },
+        };
+    }
+
+    handleTouchTap(event) {
         this.setState({menuDisplayed: !this.state.menuDisplayed});
     }
 
-    _handleLogout = this._handleLogout.bind(this)
-    _handleLogout(event) {
+    handleLogout(event) {
         this.props.dispatch(logout());
     }
 
-    _hideMenu = this._hideMenu.bind(this)
-    _hideMenu(event) {
+    hideMenu(event) {
         this.setState({menuDisplayed: false});
     }
 
-    _renderMenu() {
+    renderMenu() {
         if (this.state.menuDisplayed) {
             return (
                 <Menu
                     animated={true}
                     desktop={true}
-                    listStyle={styles.menuListStyle}
-                    onEscKeyDown={this._hideMenu}
-                    style={styles.menu}
+                    is="menu"
+                    listStyle={this.styles().menuListStyle}
+                    onEscKeyDown={::this.hideMenu}
                     width={110}
                 >
                     <MenuItem
                         desktop={true}
-                        onTouchTap={this._handleLogout}
+                        onTouchTap={::this.handleLogout}
                         primaryText={t('Logout')}
                     />
                 </Menu>
@@ -97,50 +94,43 @@ class HeaderMenu extends StyleableComponent {
         }
     }
 
-    _renderProfileName() {
+    renderProfileName() {
         if (!this.props.inHeader) {
             return (
                 <div className="col-xs">
-                    <span style={styles.text}>{this.props.profile.first_name}</span>
+                    <span is="text">{this.props.profile.first_name}</span>
                 </div>
             );
         }
     }
 
-    _renderDownArrow() {
+    renderDownArrow() {
         if (!this.props.inHeader) {
             return (
                 <div>
-                    <img src={rectangleIcon} style={styles.arrow} />
+                    <img is="arrow" src={rectangleIcon} />
                 </div>
             );
         }
     }
 
     render() {
-        let containerStyle = {
-            paddingTop: 15,
-            paddingRight: 0,
-        }
         return (
             <div>
                 <div
                     className="row"
-                    onTouchTap={this._handleTouchTap}
-                    style={this.mergeAndPrefix(
-                        styles.container,
-                        this.props.inHeader && containerStyle,
-                    )}
+                    is="container"
+                    onTouchTap={::this.handleTouchTap}
                 >
                     <div className="col-xs">
                         <Avatar src={this.props.profile.image_url} />
                     </div>
-                    {this._renderProfileName()}
-                    {this._renderDownArrow()}
+                    {this.renderProfileName()}
+                    {this.renderDownArrow()}
                 </div>
                 <div className="row start-xs">
                     <TransitionGroup>
-                        {this._renderMenu()}
+                        {this.renderMenu()}
                     </TransitionGroup>
                 </div>
             </div>
