@@ -1,21 +1,15 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import moment from '../utils/moment';
 import { routeToProfile } from '../utils/routes';
-import t from '../utils/gettext';
 
 import Card from './Card';
-import CardList from './CardList';
-import CardListItem from './CardListItem';
 import CardRow from './CardRow';
-import CardVerticalDivider from './CardVerticalDivider';
 import DetailContent from './DetailContent';
 import DetailMembers from './DetailMembers';
 import DetailViewAll from './DetailViewAll';
 import LocationDetailHeader from './LocationDetailHeader';
 import LocationDetailLocation from './LocationDetailLocation';
-import ProfileAvatar from './ProfileAvatar';
 import StyleableComponent from './StyleableComponent';
 
 const styles = {
@@ -32,8 +26,8 @@ const styles = {
 class LocationDetail extends StyleableComponent {
 
     static propTypes = {
-        office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
+        office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
     }
 
     static contextTypes = {
@@ -49,7 +43,7 @@ class LocationDetail extends StyleableComponent {
     _renderDescription(office) {
         if (office.description) {
             return (
-                <Card title="Description" style={styles.section}>
+                <Card style={styles.section} title="Description">
                     <CardRow>
                         <span style={styles.description}>
                             {office.description.value}
@@ -64,12 +58,12 @@ class LocationDetail extends StyleableComponent {
         if (office.points_of_contact && office.points_of_contact.length) {
             return (
                 <DetailMembers
-                    title="Points of Contact"
-                    members={office.points_of_contact} 
                     actionText="View all Points of Contact"
-                    perColumn={1}
+                    members={office.points_of_contact}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
+                    perColumn={1}
                     style={styles.section}
+                    title="Points of Contact"
                 />
             );
         }
@@ -83,12 +77,12 @@ class LocationDetail extends StyleableComponent {
         if (members.length) {
             return (
                 <DetailMembers
-                    title="Works Here"
-                    members={members}
                     actionText="View all People"
+                    members={members}
+                    onClickActionText={this._handleClickAction.bind(this)}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
                     style={styles.section}
-                    onClickActionText={this._handleClickAction.bind(this)}
+                    title="Works Here"
                 />
             );
         }
@@ -106,10 +100,10 @@ class LocationDetail extends StyleableComponent {
                     {this._renderMembers(members)}
                 </DetailContent>
                 <DetailViewAll
+                    items={members}
+                    onClickItem={routeToProfile.bind(null, this.context.router)}
                     ref="modal"
                     title={`Working at ${this.props.office.name}`}
-                    onClickItem={routeToProfile.bind(null, this.context.router)}
-                    items={members}
                 />
             </div>
         );
