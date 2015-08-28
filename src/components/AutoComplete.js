@@ -14,7 +14,6 @@ class AutoComplete extends CSSComponent {
         focused: PropTypes.bool,
         initialValue: PropTypes.any,
         items: PropTypes.array,
-        loading: PropTypes.bool,
         onClearToken: PropTypes.func,
         onSelect: PropTypes.func,
         placeholderText: PropTypes.string,
@@ -29,7 +28,6 @@ class AutoComplete extends CSSComponent {
         alwaysActive: false,
         focused: false,
         getItemValue: item => item,
-        loading: false,
         onSelect: () => true,
         placeholderText: '',
         renderMenu: (items, value, style) => {
@@ -81,10 +79,6 @@ class AutoComplete extends CSSComponent {
                     paddingLeft: 5,
                     height: '100%',
                     ...fontColors.light,
-                },
-                loadingIndicator: {
-                    marginRight: 10,
-                    bottom: 5,
                 },
                 root: {
                     display: 'flex',
@@ -240,11 +234,6 @@ class AutoComplete extends CSSComponent {
                         ref="input"
                         type="text"
                     />
-                    {(() => {
-                        if (this.props.loading) {
-                            return <CircularProgress is="loadingIndicator" mode="indeterminate" size={0.5} />;
-                        }
-                    })()}
                 </div>
                 <div>
                     {this.renderMenu()}

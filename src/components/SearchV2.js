@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
+import Infinite from 'react-infinite';
 import keymirror from 'keymirror';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
-import Waypoint from 'react-waypoint';
 
 import * as exploreActions from '../actions/explore';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
@@ -18,15 +18,18 @@ import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
 
 const {
+    CircularProgress,
     List,
     ListItem,
     ListDivider,
+    Paper,
 } = mui;
 
 const RESULT_TYPES = keymirror({
     EXPLORE: null,
 });
 
+export const SEARCH_RESULT_HEIGHT = 72;
 export const SEARCH_CONTAINER_WIDTH = 460;
 export const SEARCH_RESULTS_MAX_HEIGHT = 600;
 
@@ -100,6 +103,14 @@ class Search extends CSSComponent {
                         marginLeft: 58,
                     },
                 },
+                loadingIndicatorContainer: {
+                    display: 'flex',
+                    justifyContent: 'center',
+                },
+                loadingIndicator: {
+                    display: 'flex',
+                    alignSelf: 'center',
+                },
                 resultsList: {
                     borderRadius: '0px 0px 5px 5px',
                     boxShadow: '0px 2px 4px -2px',
@@ -108,8 +119,6 @@ class Search extends CSSComponent {
                     maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                     opacity: '0.9',
                     overflowY: 'auto',
-                    // NB: position: relative is required for waypoint
-                    position: 'relative',
                     textAlign: 'start',
                     width: '100%',
                 },
@@ -212,6 +221,7 @@ class Search extends CSSComponent {
         ];
         return items.map((item) => {
             return {
+                estimatedHeight: 64,
                 innerDivStyle: this.styles().searchResult,
                 leftAvatar: <SearchIcon />,
                 leftAvatarStyle: this.styles().SearchIcon.style,
@@ -270,20 +280,10 @@ class Search extends CSSComponent {
         }
     }
 
-    handleEnterWaypoint(nextRequest) {
-        this.explore(this.state.category, nextRequest);
-    }
-
-    getWaypoint() {
+    handleInfiniteLoad() {
         const nextRequest = this.getCategoryNextRequest();
         if (nextRequest) {
-            return (
-                <Waypoint
-                    key="waypoint"
-                    onEnter={this.handleEnterWaypoint.bind(this, nextRequest)}
-                    threshold={0.5}
-                />
-            );
+            this.explore(this.state.category, nextRequest);
         }
     }
 
@@ -306,21 +306,53 @@ class Search extends CSSComponent {
         return element;
     }
 
+    renderLoadingIndicator() {
+        // TODO: look into why infinite isn't catching this for us
+        if (this.props.loading) {
+            return (
+                <div is="loadingIndicatorContainer">
+                    <CircularProgress mode="indeterminate" size={0.5} />
+                </div>
+            );
+        }
+    }
+
     renderMenu(items, value, style) {
+        let containerHeight = 0;
+        const elementHeights = [];
         const itemsWithDividers = items.map((item, index) => {
+            const height = item.props.estimatedHeight || SEARCH_RESULT_HEIGHT;
+            containerHeight += height;
+            elementHeights.push(height);
             if (index !== 0) {
-                return [<ListDivider inset={true} is="ListDivider" key={`item-divider-${index}`} />, item];
+                return (
+                    <div>
+                        <ListDivider inset={true} is="ListDivider" key={`item-divider-${index}`} />
+                        {item}
+                    </div>
+                );
             }
             return item;
-        })
-        const waypoint = this.getWaypoint();
-        if (waypoint) {
-            itemsWithDividers.push(waypoint);
-        }
+        });
+
+        containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
+        return (
+            <Paper style={{...style, ...this.styles().resultsList}}>
+                <Infinite
+                    containerHeight={containerHeight}
+                    elementHeight={elementHeights}
+                    infiniteLoadBeginBottomOffset={200}
+                    isInfiniteLoading={this.props.loading}
+                    loadingSpinnerDelegate={::this.renderLoadingIndicator()}
+                    onInfiniteLoad={::this.handleInfiniteLoad}
+                >
+                    {itemsWithDividers}
+                </Infinite>
+            </Paper>
+        );
         return (
             <List
                 key="results"
-                style={{...style, ...this.styles().resultsList}}
                 subheader="Explore"
                 subheaderStyle={this.styles().resultsListSubHeader}
             >
@@ -337,7 +369,6 @@ class Search extends CSSComponent {
                     focused={true}
                     is="AutoComplete"
                     items={this.getResults()}
-                    loading={this.props.loading}
                     onClearToken={this.handleClearCategory.bind(this)}
                     placeholderText={t('Search People, Teams & Locations')}
                     renderItem={this.renderItem.bind(this)}
