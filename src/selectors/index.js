@@ -48,6 +48,10 @@ export const exploreTeamsSelector = exploreSelectorFactory(EXPLORE_TYPES.TEAMS);
 export const exploreTeamsLoadingSelector = exploreTypeLoadingSelectorFactory(exploreTeamsSelector);
 export const exploreTeamsIdsSelector = exploreTypeIdsSelectorFactory(exploreTeamsSelector);
 
+export const exploreLocationsSelector = exploreSelectorFactory(EXPLORE_TYPES.LOCATIONS);
+export const exploreLocationsLoadingSelector = exploreTypeLoadingSelectorFactory(exploreLocationsSelector);
+export const exploreLocationsIdsSelector = exploreTypeIdsSelectorFactory(exploreLocationsSelector);
+
 export const extendedProfilesSelector = state => state.extendedProfiles;
 export const extendedTeamsSelector = state => state.extendedTeams;
 export const headerSelector = state => state.header;

@@ -111,35 +111,16 @@ export function getTeamsForLocationId(locationId, nextRequest) {
     });
 }
 
-export function getLocations(parameters, nextRequest=null) {
+export function getLocations(parameters, nextRequest=null, key=null) {
     parameters = Object.assign({}, parameters);
-    let request;
-    if (nextRequest === null) {
-        request = new services.organization.actions.get_locations.RequestV1(parameters);
-    } else {
-        request = nextRequest;
+    let request = nextRequest ? nextRequest : new services.organization.actions.get_locations.RequestV1(parameters);
+    if (key === null) {
+        key = Object.values(parameters)[0];
     }
     return new Promise((resolve, reject) => {
-        client.sendRequest(request)
-            .then((response) => {
-                if (response.errors.length) {
-                    return reject({
-                        errors: response.errors,
-                        errorDetails: response.errorDetails,
-                    });
-                }
-
-                let { locations } = response.result;
-                resolve({
-                    parameters,
-                    locations,
-                    nextRequest: response.getNextRequest(),
-                });
-            })
-            .catch((error) => {
-                logger.error(`Error fetching organization locations: ${error}`);
-                reject(error);
-            });
+        client.send(request)
+            .then(response => response.finish(resolve, reject, key))
+            .catch(error => reject(error));
     });
 }
 
@@ -151,9 +132,7 @@ export function getTeams(parameters, nextRequest=null, key=null) {
     }
     return new Promise((resolve, reject) => {
         client.send(request)
-            .then((response) => {
-                return response.finish(resolve, reject, key);
-            })
+            .then(response => response.finish(resolve, reject, key))
             .catch(error => reject(error));
     });
 }

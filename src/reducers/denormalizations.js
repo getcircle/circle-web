@@ -5,6 +5,10 @@ export function retrieveLocation(locationId, cache) {
     return denormalize(locationId, services.organization.containers.LocationV1, cache);
 }
 
+export function retrieveLocations(locationIds, cache) {
+    return denormalize(locationIds, services.organization.containers.LocationV1, cache);
+}
+
 export function retrieveExtendedProfile(profileId, cache) {
     return denormalize(profileId, services.profile.actions.get_extended_profile.ResponseV1, cache);
 }

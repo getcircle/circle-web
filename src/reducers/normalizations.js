@@ -1,6 +1,15 @@
 import { getNormalizations } from 'protobuf-normalizr';
 import { services } from 'protobufs';
 
+export function getLocationNormalizations(action) {
+    return getNormalizations(
+        'locations',
+        action.meta.paginateBy,
+        services.organization.actions.get_locations.ResponseV1,
+        action.payload,
+    );
+}
+
 export function getProfileNormalizations(action) {
     return getNormalizations(
         'profiles',

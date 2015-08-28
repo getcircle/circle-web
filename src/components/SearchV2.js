@@ -8,20 +8,21 @@ import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
+import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
+import * as routes from '../utils/routes';
 import * as selectors from '../selectors';
-import { retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import t from '../utils/gettext';
 
 import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
+import OfficeIcon from './OfficeIcon';
 import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
 
 const {
     CircularProgress,
-    List,
     ListItem,
     ListDivider,
     Paper,
@@ -33,16 +34,17 @@ const RESULT_TYPES = keymirror({
 
 export const SEARCH_RESULT_HEIGHT = 72;
 export const SEARCH_CONTAINER_WIDTH = 460;
-export const SEARCH_RESULTS_MAX_HEIGHT = 600;
+export const SEARCH_RESULTS_MAX_HEIGHT = 420;
 
 const cacheSelector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
         selectors.exploreProfilesIdsSelector,
         selectors.exploreTeamsIdsSelector,
+        selectors.exploreLocationsIdsSelector,
     ],
-    (cacheState, profilesState, teamsState) => {
-        let profiles, profilesNextRequest, teams, teamsNextRequest;
+    (cacheState, profilesState, teamsState, locationsState) => {
+        let profiles, profilesNextRequest, teams, teamsNextRequest, locations, locationsNextRequest;
         const cache = cacheState.toJS();
         if (profilesState) {
             const ids = profilesState.get('ids').toJS();
@@ -58,7 +60,16 @@ const cacheSelector = selectors.createImmutableSelector(
             }
             teamsNextRequest = teamsState.get('nextRequest');
         }
+        if (locationsState) {
+            const ids = locationsState.get('ids').toJS();
+            if (ids.length) {
+                locations = retrieveLocations(ids, cache);
+            }
+            locationsNextRequest = locationsState.get('nextRequest');
+        }
         return Immutable.fromJS({
+            locations,
+            locationsNextRequest,
             profiles,
             profilesNextRequest,
             teams,
@@ -72,10 +83,11 @@ const selector = selectors.createImmutableSelector(
         cacheSelector,
         selectors.exploreProfilesLoadingSelector,
         selectors.exploreTeamsLoadingSelector,
+        selectors.exploreLocationsLoadingSelector,
     ],
-    (cacheState, profilesLoadingState, teamsLoadingState) => {
+    (cacheState, profilesLoadingState, teamsLoadingState, locationsLoadingState) => {
         return {
-            loading: profilesLoadingState || teamsLoadingState,
+            loading: profilesLoadingState || teamsLoadingState || locationsLoadingState,
             ...cacheState.toJS(),
         };
     }
@@ -87,6 +99,10 @@ class Search extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         loading: PropTypes.bool,
+        locations: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.organization.containers.LocationV1)
+        ),
+        locationsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         profiles: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
@@ -96,6 +112,12 @@ class Search extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         teamsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+    }
+
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -120,7 +142,7 @@ class Search extends CSSComponent {
                         width: '100%',
                     },
                 },
-                TeamIcon: {
+                ResultIcon: {
                     style: {
                         height: 40,
                         width: 40,
@@ -212,6 +234,8 @@ class Search extends CSSComponent {
             return this.props.profilesNextRequest;
         case CategoryV1.TEAMS:
             return this.props.teamsNextRequest;
+        case CategoryV1.LOCATIONS:
+            return this.props.locationsNextRequest;
         }
     }
 
@@ -225,6 +249,9 @@ class Search extends CSSComponent {
         case CategoryV1.TEAMS:
             results = this.getCategoryResultsTeams();
             break;
+        case CategoryV1.LOCATIONS:
+            results = this.getCategoryResultsLocations();
+            break;
         }
         return results ? results : [];
     }
@@ -236,6 +263,7 @@ class Search extends CSSComponent {
                     leftAvatar: <ProfileAvatar profile={profile} />,
                     primaryText: profile.full_name,
                     secondaryText: `${profile.title} (TODO)`,
+                    onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
                 })
             );
         }
@@ -245,11 +273,23 @@ class Search extends CSSComponent {
         const { teams } = this.props;
         if (teams) {
             return teams.map((team) => ({
-                    leftAvatar: <IconContainer IconClass={GroupIcon} is="TeamIcon" />,
-                    primaryText: team.display_name,
-                    secondaryText: `${team.child_team_count} Teams, ${team.profile_count} People`,
-                })
-            );
+                leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
+                primaryText: team.display_name,
+                secondaryText: `${team.child_team_count} Teams, ${team.profile_count} People`,
+                onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
+            }));
+        }
+    }
+
+    getCategoryResultsLocations() {
+        const { locations } = this.props;
+        if (locations) {
+            return locations.map((location) => ({
+                leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
+                primaryText: location.name,
+                secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
+                onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
+            }));
         }
     }
 
@@ -400,15 +440,6 @@ class Search extends CSSComponent {
                     {itemsWithDividers}
                 </Infinite>
             </Paper>
-        );
-        return (
-            <List
-                key="results"
-                subheader="Explore"
-                subheaderStyle={this.styles().resultsListSubHeader}
-            >
-                {itemsWithDividers}
-            </List>
         );
     }
 

@@ -62,23 +62,18 @@ export function exploreTeams(nextRequest) {
 }
 
 export function exploreLocations(nextRequest) {
-    // TODO add shouldFetch
+    const { LOCATIONS } = EXPLORE_TYPES;
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: () => {
-                return getLocations(null, nextRequest)
-                    .then((response) => {
-                        return Promise.resolve({
-                            results: response.locations,
-                            nextRequest: response.nextRequest,
-                        });
-                    });
+            remote: () => getLocations(null, nextRequest, LOCATIONS),
+            bailout: (state) => {
+                const locationsState = state.explore.get(LOCATIONS);
+                return shouldBail(locationsState, nextRequest);
             },
         },
-        payload: {
-            type: EXPLORE_TYPES.LOCATIONS,
-            append: nextRequest && true,
+        meta: {
+            paginateBy: LOCATIONS,
         },
     }
 }
