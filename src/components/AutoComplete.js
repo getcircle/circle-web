@@ -51,12 +51,6 @@ class AutoComplete extends CSSComponent {
         showCancel: false,
     }
 
-    componentDidMount() {
-        if (this.props.focused) {
-            this.focusInput();
-        }
-    }
-
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.alwaysActive && !nextState.isActive) {
             this.setState({isActive: true});
@@ -66,7 +60,8 @@ class AutoComplete extends CSSComponent {
     componentDidUpdate(prevProps, prevState) {
         if (
             this.state.highlightedIndex === null &&
-            this.props.alwaysActive
+            this.props.alwaysActive &&
+            !prevProps.alwaysActive
         ) {
             this.focusInput();
         }

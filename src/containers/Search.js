@@ -159,6 +159,9 @@ class Search extends CSSComponent {
                 organizationLogoSection: {
                     paddingTop: '5vh',
                 },
+                SearchComponent: {
+                    alwaysActive: true,
+                },
                 TabBar: {
                     style: {
                         display: 'none',

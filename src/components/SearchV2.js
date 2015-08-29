@@ -112,6 +112,7 @@ const selector = selectors.createImmutableSelector(
 class Search extends CSSComponent {
 
     static propTypes = {
+        alwaysActive: PropTypes.bool,
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
@@ -148,6 +149,7 @@ class Search extends CSSComponent {
     }
 
     static defaultProps = {
+        alwaysActive: false,
         focused: false,
         largerDevice: false,
         loading: false,
@@ -603,6 +605,7 @@ class Search extends CSSComponent {
 
     render() {
         const {
+            alwaysActive,
             inputContainerStyle,
             focused,
             onBlur,
@@ -615,6 +618,7 @@ class Search extends CSSComponent {
         return (
             <div {...other} style={{...this.styles().searchContainer, ...style}}>
                 <AutoComplete
+                    alwaysActive={alwaysActive}
                     focused={focused}
                     inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
                     is="AutoComplete"
