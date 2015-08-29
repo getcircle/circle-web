@@ -10,12 +10,12 @@ const styles = {
 
 }
 
-class ProfileDetailStatus extends StyleableComponent {
+class TeamDetailStatus extends StyleableComponent {
 
     static propTypes = {
         isEditable: PropTypes.bool,
         onSaveCallback: PropTypes.func.isRequired,
-        status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1),
+        status: PropTypes.instanceOf(services.organization.containers.TeamStatusV1),
         style: PropTypes.object,
     }
 
@@ -27,13 +27,15 @@ class ProfileDetailStatus extends StyleableComponent {
             style,
         } = this.props;
 
+        let authorName = status ? status.by_profile.full_name : ''
         return (
             <TextValue
+                authorName={authorName}
                 editedTimestamp={status ? status.created : ''}
                 isEditable={isEditable}
                 isQuoted={true}
                 onSaveCallback={onSaveCallback}
-                placeholder={t('I\'m working on #project with @mypeer!')}
+                placeholder={t('What projects is your team working on?')}
                 shouldLimitCharacters={true}
                 style={this.mergeAndPrefix(styles, style)}
                 text={status ? status.value : ''}
@@ -43,4 +45,4 @@ class ProfileDetailStatus extends StyleableComponent {
     }
 }
 
-export default ProfileDetailStatus;
+export default TeamDetailStatus;

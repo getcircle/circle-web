@@ -190,3 +190,21 @@ export function getTeamLabel(team) {
     }
     return parts.join(', ');
 }
+
+export function updateTeam(team) {
+    let request = new services.organization.actions.update_team.RequestV1({team: team});
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.finish(resolve, reject, team))
+            .catch(error => reject(error));
+    });
+}
+
+export function updateLocation(location) {
+    let request = new services.organization.actions.update_location.RequestV1({location: location});
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.finish(resolve, reject, location))
+            .catch(error => reject(error));
+    });
+}

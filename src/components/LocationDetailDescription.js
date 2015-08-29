@@ -10,12 +10,12 @@ const styles = {
 
 }
 
-class ProfileDetailStatus extends StyleableComponent {
+class LocationDetailDescription extends StyleableComponent {
 
     static propTypes = {
+        description: PropTypes.instanceOf(services.common.containers.DescriptionV1),
         isEditable: PropTypes.bool,
         onSaveCallback: PropTypes.func.isRequired,
-        status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1),
         style: PropTypes.object,
     }
 
@@ -23,24 +23,22 @@ class ProfileDetailStatus extends StyleableComponent {
         const {
             isEditable,
             onSaveCallback,
-            status,
+            description,
             style,
         } = this.props;
 
         return (
             <TextValue
-                editedTimestamp={status ? status.created : ''}
                 isEditable={isEditable}
-                isQuoted={true}
                 onSaveCallback={onSaveCallback}
-                placeholder={t('I\'m working on #project with @mypeer!')}
-                shouldLimitCharacters={true}
+                placeholder={t('Add a description on your location. You can add unique things about the office, what teams work there, and local info about the office.')}
+                shouldLimitCharacters={false}
                 style={this.mergeAndPrefix(styles, style)}
-                text={status ? status.value : ''}
-                title={t('Currently Working On')}
+                text={description ? description.value : ''}
+                title={t('Description')}
             />
         );
     }
 }
 
-export default ProfileDetailStatus;
+export default LocationDetailDescription;
