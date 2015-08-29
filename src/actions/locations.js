@@ -1,7 +1,7 @@
 import { denormalize } from 'protobuf-normalizr';
 import { services } from 'protobufs';
 
-import * as orgRequests from '../services/organization';
+import * as organizationRequests from '../services/organization';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import { getProfiles } from '../services/profile';
@@ -14,7 +14,7 @@ export function loadLocation(locationId) {
                 types.LOAD_LOCATION_SUCCESS,
                 types.LOAD_LOCATION_FAILURE,
             ],
-            remote: () => orgRequests.getLocation(locationId),
+            remote: () => organizationRequests.getLocation(locationId),
             bailout: state => state.locations.get('ids').has(locationId),
         },
     };
@@ -59,7 +59,7 @@ export function updateLocation(location) {
                 types.UPDATE_LOCATION_SUCCESS,
                 types.UPDATE_LOCATION_FAILURE,
             ],
-            remote: () => orgRequests.updateLocation(location),
+            remote: () => organizationRequests.updateLocation(location),
         },
     };
 }
