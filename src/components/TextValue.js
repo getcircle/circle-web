@@ -24,11 +24,11 @@ class TextValue extends CSSComponent {
     }
 
     componentWillMount() {
-        this.setInitialState(this.props);
+        this.mergeStateAndProps(this.props);
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        this.setInitialState(nextProps);
+        this.mergeStateAndProps(nextProps);
     }
 
     state = {
@@ -87,13 +87,14 @@ class TextValue extends CSSComponent {
                     width: '100%',
                 },
                 text: {
-                    fontSize: 21,
-                    color: 'rgba(0, 0, 0, 0.7)',
+                    fontSize: 16,
+                    fontStyle: 'italic',
+                    color: 'rgb(0, 0, 0)',
                     lineHeight: '29px',
                 },
                 timestamp: {
-                    fontSize: 15,
-                    color: 'rgba(0, 0, 0, 0.5)',
+                    fontSize: 10,
+                    color: 'rgb(127, 127, 127)',
                     lineHeight: '29px',
                 },
             },
@@ -105,7 +106,17 @@ class TextValue extends CSSComponent {
         };
     }
 
-    setInitialState(props) {
+    /**
+     * Merges editable or dynamic properties into state.
+     *
+     * This is primarily done to support editing.
+     * All initial and updated values are captured in the state and these are read by elements for rendering.
+     * This also makes the values in props a reliable restore point for cancellation.
+     *
+     * @param {Object} props
+     * @return {Void}
+     */
+    mergeStateAndProps(props) {
         this.setState({
             authorName: props.authorName ? props.authorName : '',
             editing: false,
@@ -158,7 +169,7 @@ class TextValue extends CSSComponent {
     }
 
     handleCancelTapped() {
-        this.setInitialState(this.props);
+        this.mergeStateAndProps(this.props);
     }
 
     handleChange(event) {
@@ -196,7 +207,7 @@ class TextValue extends CSSComponent {
             isEditable,
         } = this.props;
 
-        let statusValue = this.state.value !== '' ? '"' + this.state.value + '"' : '';
+        let statusValue = this.state.value !== '' ? `"${this.state.value}"` : '';
         if (statusValue === '' || statusValue.length === 0) {
             statusValue = isEditable ? t('Add details') : t('Ask me!');
         }
