@@ -14,8 +14,6 @@ import CSSComponent from '../components/CSSComponent';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/SearchV2';
 import TabBar from '../components/TabBar';
 
-const { FlatButton } = mui;
-
 const selector = createSelector(
     [selectors.authenticationSelector],
     (authenticationState) => {
@@ -57,7 +55,8 @@ class Search extends CSSComponent {
 
     styles() {
         return this.css({
-            focused: this.state.focused,
+            focused: this.state.focused || this.props.largerDevice,
+            smallerDeviceFocused: this.state.focused && !this.props.largerDevice,
         });
     }
 
@@ -92,7 +91,7 @@ class Search extends CSSComponent {
                     paddingBottom: 20,
                 },
                 searchSection: {
-                    paddingTop: 85,
+                    paddingTop: '5vh',
                     paddingLeft: 20,
                     paddingRight: 20,
                     transition: 'all 0.3s ease',
@@ -106,7 +105,20 @@ class Search extends CSSComponent {
                     position: 'relative',
                 },
             },
-            'focused': {
+            focused: {
+                SearchComponent: {
+                    inputContainerStyle: {
+                        borderRadius: '0px',
+                    },
+                    focused: true,
+                    resultsListStyle: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        borderRadius: 0,
+                        boxShadow: 'none',
+                    },
+                },
+            },
+            'smallerDeviceFocused': {
                 organizationLogoSection: {
                     display: 'none',
                 },
@@ -123,16 +135,10 @@ class Search extends CSSComponent {
                 },
                 SearchComponent: {
                     inputContainerStyle: {
-                        borderRadius: '0px',
                         boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
                     },
-                    focused: true,
                     resultsHeight: document.body.offsetHeight - 50,
-                    resultsListStyle: {
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        borderRadius: 0,
-                        boxShadow: 'none',
-                    },
+                    showCancel: true,
                     style: {
                         paddingLeft: 0,
                         paddingRight: 0,
@@ -147,12 +153,12 @@ class Search extends CSSComponent {
                     marginBottom: 0,
                 },
             },
-            'largerDevice': {
+            'largerDevice-true': {
                 header: {
                     display: 'initial',
                 },
                 organizationLogoSection: {
-                    marginTop: 15,
+                    paddingTop: '5vh',
                 },
                 TabBar: {
                     style: {
@@ -196,7 +202,6 @@ class Search extends CSSComponent {
                                 onBlur={::this.handleBlurSearch}
                                 onFocus={::this.handleFocusSearch}
                                 organization={this.props.organization}
-                                showCancel={this.state.focused}
                             />
                         </div>
                     </section>

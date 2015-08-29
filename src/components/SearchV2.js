@@ -229,12 +229,16 @@ class Search extends CSSComponent {
                     paddingLeft: 18,
                 },
             },
-            largerDevice: {
+            'largerDevice-true': {
+                AutoComplete: {
+                    style: {
+                        maxWidth: SEARCH_CONTAINER_WIDTH,
+                    },
+                },
                 resultsList: {
                     maxWidth: SEARCH_CONTAINER_WIDTH,
                     maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                 },
-
             },
         };
     }
@@ -501,6 +505,7 @@ class Search extends CSSComponent {
                     alwaysActive={alwaysActive}
                     focused={focused}
                     inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
+                    is="AutoComplete"
                     items={this.getResults()}
                     onBlur={onBlur}
                     onCancel={::this.handleCancel}

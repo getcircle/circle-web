@@ -28,6 +28,7 @@ class AutoComplete extends CSSComponent {
         renderItem: PropTypes.func.isRequired,
         renderMenu: PropTypes.func,
         showCancel: PropTypes.bool,
+        style: PropTypes.object,
         tokens: PropTypes.arrayOf(PropTypes.shape({
             value: PropTypes.string.isRequired,
         })),
@@ -251,11 +252,17 @@ class AutoComplete extends CSSComponent {
             onClearToken,
             placeholderText,
             showCancel,
+            style,
             tokens,
             ...other
         } = this.props;
         return (
-            <div {...other} is="root" onKeyDown={this.handleKeyDown.bind(this)}>
+            <div
+                {...other}
+                onBlur={onBlur}
+                onKeyDown={this.handleKeyDown.bind(this)}
+                style={{...this.styles().root, ...style}}
+            >
                 <div style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <SearchIcon is="SearchIcon" />
                     {this.renderTokens(tokens, onClearToken)}
