@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
@@ -94,7 +93,6 @@ class Search extends CSSComponent {
                     paddingTop: '5vh',
                     paddingLeft: 20,
                     paddingRight: 20,
-                    transition: 'all 0.3s ease',
                 },
                 SearchComponent: {
                     inputContainerStyle: {
