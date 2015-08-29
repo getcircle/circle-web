@@ -77,9 +77,3 @@ export function exploreLocations(nextRequest) {
         },
     }
 }
-
-export function clearExploreResults() {
-    return {
-        type: types.CLEAR_EXPLORE_RESULTS,
-    }
-}

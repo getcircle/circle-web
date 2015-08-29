@@ -7,7 +7,7 @@ import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
-import { loadSearchResults } from '../actions/search';
+import { loadSearchResults, clearSearchResults } from '../actions/search';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
@@ -159,12 +159,6 @@ class Search extends CSSComponent {
         showCancel: false,
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
-        if (this.state.category && !nextState.category) {
-            this.props.dispatch(exploreActions.clearExploreResults());
-        }
-    }
-
     state = {
         category: null,
         query: null,
@@ -266,17 +260,24 @@ class Search extends CSSComponent {
         };
     }
 
-    handleCategorySelection(category) {
+    selectCategory(category) {
         this.setState({category: category});
-        this.explore(category);
+        this.props.dispatch(clearSearchResults());
+        if (category !== null && category !== undefined) {
+            this.loadSearchResults(undefined, category);
+        }
+    }
+
+    handleCategorySelection(category) {
+        this.selectCategory(category);
     }
 
     handleClearCategory() {
-        this.setState({category: null});
+        this.selectCategory(null);
     }
 
     handleCancel() {
-        this.setState({category: null})
+        this.selectCategory(null);
         this.props.onCancel();
     }
 
@@ -483,9 +484,21 @@ class Search extends CSSComponent {
         }
         this.currentSearch = window.setTimeout(() => {
             this.setState({typing: false});
-            this.props.dispatch(loadSearchResults(value, this.state.category));
+            this.loadSearchResults(value);
         }, 300);
         this.setState({query: value, typing: true});
+    }
+
+    handleBlur(event) {
+        this.props.onBlur();
+    }
+
+    loadSearchResults(value = this.state.query, category = this.state.category) {
+        if ((!value || value === '') && category !== null) {
+            this.explore(category);
+        } else {
+            this.props.dispatch(loadSearchResults(value, category));
+        }
     }
 
     getLoadingIndicator() {
@@ -623,7 +636,7 @@ class Search extends CSSComponent {
                     inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
                     is="AutoComplete"
                     items={this.getResults()}
-                    onBlur={onBlur}
+                    onBlur={::this.handleBlur}
                     onCancel={::this.handleCancel}
                     onChange={::this.handleChange}
                     onClearToken={::this.handleClearCategory}
