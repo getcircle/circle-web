@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
