@@ -97,17 +97,24 @@ const selector = selectors.createImmutableSelector(
 class Search extends CSSComponent {
 
     static propTypes = {
+        alwaysActive: PropTypes.bool,
         dispatch: PropTypes.func.isRequired,
+        focused: PropTypes.bool,
+        inputContainerStyle: PropTypes.object,
+        largerDevice: PropTypes.bool,
         loading: PropTypes.bool,
         locations: PropTypes.arrayOf(
             PropTypes.instanceOf(services.organization.containers.LocationV1)
         ),
         locationsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        onBlur: PropTypes.func,
+        onFocus: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         profiles: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        style: PropTypes.object,
         teams: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
@@ -120,14 +127,19 @@ class Search extends CSSComponent {
         }).isRequired,
     }
 
+    static defaultProps = {
+        alwaysActive: false,
+        focused: false,
+        largerDevice: false,
+        loading: false,
+        onBlur: () => true,
+        onFocus: () => true,
+    }
+
     componentWillReceiveProps(nextProps, nextState) {
         if (this.state.category && !nextState.category) {
             this.props.dispatch(exploreActions.clearExploreResults());
         }
-    }
-
-    static defualtProps = {
-        loading: false,
     }
 
     state = {
@@ -137,10 +149,8 @@ class Search extends CSSComponent {
     classes() {
         return {
             'default': {
-                AutoComplete: {
-                    style: {
-                        width: '100%',
-                    },
+                inputContainerStyle: {
+                    width: '100%',
                 },
                 ResultIcon: {
                     style: {
@@ -171,12 +181,11 @@ class Search extends CSSComponent {
                     borderRadius: '0px 0px 5px 5px',
                     boxShadow: '0px 2px 4px -2px',
                     justifyContent: 'flex-start',
-                    maxWidth: SEARCH_CONTAINER_WIDTH,
-                    maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                     opacity: '0.9',
                     overflowY: 'auto',
                     textAlign: 'start',
                     width: '100%',
+                    height: '100%',
                 },
                 resultsListSubHeader: {
                     fontSize: '11px',
@@ -214,6 +223,13 @@ class Search extends CSSComponent {
                     display: 'flex',
                     paddingLeft: 18,
                 },
+            },
+            largerDevice: {
+                resultsList: {
+                    maxWidth: SEARCH_CONTAINER_WIDTH,
+                    maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
+                },
+
             },
         };
     }
@@ -324,10 +340,12 @@ class Search extends CSSComponent {
     }
 
     getResults() {
-        if (this.state.category !== null) {
-            return this.getCategoryResults();
-        } else {
-            return this.getDefaultResults();
+        if (this.props.focused) {
+            if (this.state.category !== null) {
+                return this.getCategoryResults();
+            } else {
+                return this.getDefaultResults();
+            }
         }
     }
 
@@ -401,7 +419,7 @@ class Search extends CSSComponent {
         // TODO: look into why infinite isn't catching this for us
         if (this.props.loading) {
             return (
-                <div is="loadingIndicatorContainer">
+                <div is="loadingIndicatorContainer" key="loading-indicator">
                     <CircularProgress mode="indeterminate" size={0.5} />
                 </div>
             );
@@ -417,8 +435,8 @@ class Search extends CSSComponent {
             elementHeights.push(height);
             if (index !== 0) {
                 return (
-                    <div>
-                        <ListDivider inset={true} is="ListDivider" key={`item-divider-${index}`} />
+                    <div key={`item-with-divider-${index}`}>
+                        <ListDivider inset={true} is="ListDivider" />
                         {item}
                     </div>
                 );
@@ -434,6 +452,7 @@ class Search extends CSSComponent {
                     elementHeight={elementHeights}
                     infiniteLoadBeginBottomOffset={200}
                     isInfiniteLoading={this.props.loading}
+                    key="infinite-results"
                     loadingSpinnerDelegate={::this.renderLoadingIndicator()}
                     onInfiniteLoad={::this.handleInfiniteLoad}
                 >
@@ -444,17 +463,26 @@ class Search extends CSSComponent {
     }
 
     render() {
+        const {
+            alwaysActive,
+            inputContainerStyle,
+            focused,
+            style,
+            ...other,
+        } = this.props;
         return (
-            <div {...this.props} is="searchContainer">
+            <div {...other} style={{...this.styles().searchContainer, ...style}}>
                 <AutoComplete
-                    alwaysActive={true}
-                    focused={true}
-                    is="AutoComplete"
+                    alwaysActive={alwaysActive}
+                    focused={focused}
+                    inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
                     items={this.getResults()}
-                    onClearToken={this.handleClearCategory.bind(this)}
+                    onBlur={this.props.onBlur}
+                    onClearToken={::this.handleClearCategory}
+                    onFocus={this.props.onFocus}
                     placeholderText={t('Search People, Teams & Locations')}
-                    renderItem={this.renderItem.bind(this)}
-                    renderMenu={this.renderMenu.bind(this)}
+                    renderItem={::this.renderItem}
+                    renderMenu={::this.renderMenu}
                     tokens={this.getSearchTokens()}
                 />
             </div>

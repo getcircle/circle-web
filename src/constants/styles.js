@@ -36,7 +36,7 @@ export const backgroundColors = {
 
 export const fontColors = {
     extraLight: {
-        color: 'rgba(0, 0, 0, 0.4)',
+        color: 'rgba(0, 0, 0, 0.3)',
     },
     light: {
         color: 'rgba(0, 0, 0, 0.5)',
@@ -54,5 +54,7 @@ export const fontWeights = {
         fontWeight: 600,
     },
 }
+
+export const backgroundImage = 'https://s3.amazonaws.com/otterbots-media/locations/san-franc.jpg';
 
 export default constants;

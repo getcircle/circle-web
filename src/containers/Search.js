@@ -2,11 +2,16 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 
+import { fontColors, fontWeights, } from '../constants/styles';
+import resizable from '../decorators/resizable';
 import * as selectors from '../selectors';
+import t from '../utils/getText';
 
+import Blur from '../components/Blur';
 import HeaderMenu from '../components/HeaderMenu';
 import CSSComponent from '../components/CSSComponent';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/SearchV2';
+import TabBar from '../components/TabBar';
 
 const selector = createSelector(
     [selectors.authenticationSelector],
@@ -20,10 +25,12 @@ const selector = createSelector(
 );
 
 @connect(selector)
+@resizable
 class Search extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         organization: PropTypes.object.isRequired,
         profile: PropTypes.object.isRequired,
     }
@@ -40,33 +47,107 @@ class Search extends CSSComponent {
         return true;
     }
 
+    state = {
+        focused: false,
+    }
+
+    styles() {
+        return this.css({
+            focused: this.state.focused,
+        });
+    }
+
     classes() {
         return {
             'default': {
+                header: {
+                    display: 'none',
+                },
                 organizationLogo: {
                     maxHeight: 200,
                     maxWidth: SEARCH_CONTAINER_WIDTH,
                     width: '100%',
                 },
                 organizationLogoSection: {
-                    marginTop: 15,
+                    paddingTop: '20vh',
+                },
+                poweredBy: {
+                    fontSize: '10px',
+                    lineHeight: '14px',
+                    textTransform: 'uppercase',
+                    ...fontColors.extraLight,
+                    ...fontWeights.semiBold,
+                },
+                poweredBySection: {
+                    paddingTop: 20,
                 },
                 root: {
-                    minHeight: '100vh',
-                    backgroundColor: '#222',
+                    backgroundColor: '#333',
+                    height: '100%',
+                    width: '100%',
                     paddingBottom: 20,
                 },
                 searchSection: {
-                    paddingTop: 52,
+                    paddingTop: 85,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                },
+                SearchComponent: {
+                    inputContainerStyle: {
+                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, .09)',
+                    },
+                },
+            },
+            'focused': {
+                organizationLogoSection: {
+                    display: 'none',
+                },
+                'searchSection': {
+                    paddingRight: 0,
+                    paddingLeft: 0,
+                    paddingTop: 0,
+                },
+                SearchComponent: {
+                    style: {
+                        paddingLeft: 0,
+                        paddingRight: 0,
+                    },
+                    focused: true,
+                },
+                TabBar: {
+                    style: {
+                        display: 'none',
+                    },
+                },
+            },
+            'largerDevice': {
+                header: {
+                    display: 'initial',
+                },
+                organizationLogoSection: {
+                    marginTop: 15,
+                },
+                TabBar: {
+                    style: {
+                        display: 'none',
+                    },
                 },
             },
         };
     }
 
+    handleFocusSearch() {
+        this.setState({focused: true});
+    }
+
+    handleBlurSearch() {
+        // this.setState({focused: false});
+    }
+
     render() {
         return (
-            <div is="root">
-                <header>
+            <Blur blurRadius={30} is="root">
+                <header is="header">
                     <div className="row end-xs">
                         <HeaderMenu dispatch={this.props.dispatch} profile={this.props.profile}/>
                     </div>
@@ -81,11 +162,24 @@ class Search extends CSSComponent {
                     </section>
                     <section is="searchSection">
                         <div className="row">
-                            <SearchComponent className="col-xs center-xs" dispatch={this.props.dispatch} organization={this.props.organization} />
+                            <SearchComponent
+                                className="col-xs center-xs"
+                                is="SearchComponent"
+                                largerDevice={this.props.largerDevice}
+                                onBlur={::this.handleBlurSearch}
+                                onFocus={::this.handleFocusSearch}
+                                organization={this.props.organization}
+                            />
+                        </div>
+                    </section>
+                    <section is="poweredBySection">
+                        <div className="row center-xs">
+                            <span is="poweredBy">{t('Powered by Circle')}</span>
                         </div>
                     </section>
                 </section>
-            </div>
+                <TabBar is="TabBar" />
+            </Blur>
         );
     }
 }

@@ -1,4 +1,3 @@
-import { CircularProgress } from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { backgroundColors, fontColors, iconColors } from '../constants/styles';
@@ -13,8 +12,11 @@ class AutoComplete extends CSSComponent {
         alwaysActive: PropTypes.bool,
         focused: PropTypes.bool,
         initialValue: PropTypes.any,
+        inputContainerStyle: PropTypes.object,
         items: PropTypes.array,
+        onBlur: PropTypes.func,
         onClearToken: PropTypes.func,
+        onFocus: PropTypes.func,
         onSelect: PropTypes.func,
         placeholderText: PropTypes.string,
         renderItem: PropTypes.func.isRequired,
@@ -28,6 +30,8 @@ class AutoComplete extends CSSComponent {
         alwaysActive: false,
         focused: false,
         getItemValue: item => item,
+        onBlur: () => true,
+        onFocus: () => true,
         onSelect: () => true,
         placeholderText: '',
         renderMenu: (items, value, style) => {
@@ -83,10 +87,9 @@ class AutoComplete extends CSSComponent {
                 root: {
                     display: 'flex',
                     flexDirection: 'column',
-                    maxWidth: 460,
                     width: '100%',
                 },
-                searchBar: {
+                inputContainer: {
                     borderRadius: common.borderRadius,
                     display: 'flex',
                     height: 50,
@@ -105,7 +108,7 @@ class AutoComplete extends CSSComponent {
                 },
             },
             'alwaysActive-true': {
-                searchBar: {
+                inputContainer: {
                     borderRadius: `${common.borderRadius}px ${common.borderRadius}px 0 0`
                 },
             },
@@ -113,12 +116,13 @@ class AutoComplete extends CSSComponent {
     }
 
     focusInput() {
+        // XXX is there a way to dedupe these?
         React.findDOMNode(this.refs.input).select();
     }
 
     getItems() {
         // this is wrapped in a function so in the future we could add `shouldItemRender` or `sortItems`
-        return this.props.items;
+        return this.props.items || [];
     }
 
     handleKeyDown(event) {
@@ -208,7 +212,7 @@ class AutoComplete extends CSSComponent {
             return this.props.tokens.map((token, index) => {
                 return (
                     <AutoCompleteToken
-                        key={`token-index`}
+                        key={`token-${index}`}
                         label={token.value}
                         onTouchTap={this.props.onClearToken}
                     />
@@ -220,16 +224,19 @@ class AutoComplete extends CSSComponent {
     render() {
         const {
             focused,
+            inputContainerStyle,
             placeholderText,
             ...other
         } = this.props;
         return (
             <div {...other} is="root" onKeyDown={this.handleKeyDown.bind(this)}>
-                <div is="searchBar">
+                <div style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <SearchIcon is="SearchIcon" />
                     {this.renderTokens()}
                     <input
                         is="input"
+                        onBlur={this.props.onBlur}
+                        onFocus={this.props.onFocus}
                         placeholder={!this.props.tokens ? placeholderText : ''}
                         ref="input"
                         type="text"
