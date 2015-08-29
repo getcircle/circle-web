@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { getExtendedProfile, retrieveExtendedProfile } from '../actions/profiles';
+import { getExtendedProfile, retrieveExtendedProfile, updateProfile } from '../actions/profiles';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -18,14 +18,22 @@ const profileSelector = selectors.createImmutableSelector(
         if (extendedProfilesState.get('ids').has(profileId)) {
             extendedProfile = retrieveExtendedProfile(profileId, cacheState.toJS());
         }
-        return {extendedProfile: extendedProfile};
+
+        // Profile ID is passed because extended profile might not have been fetched
+        // ID is used to check whether this user is the logged in user or not
+        return {
+            extendedProfile: extendedProfile,
+            profileId: profileId,
+        };
     }
 );
 
 const selector = selectors.createImmutableSelector(
     [profileSelector, selectors.authenticationSelector],
     (profileState, authenticationState) => {
+        console.log(profileState);
         return {
+            isLoggedInUser: authenticationState.get('profile').id === profileState.profileId,
             organization: authenticationState.get('organization'),
             ...profileState
         }
@@ -38,6 +46,7 @@ class Profile extends PureComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object,
+        isLoggedInUser: PropTypes.bool.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         params: PropTypes.shape({
             profileId: PropTypes.string.isRequired,
@@ -54,15 +63,21 @@ class Profile extends PureComponent {
         }
     }
 
-    _renderProfile() {
+    onUpdateProfile(profile) {
+        this.props.dispatch(updateProfile(profile))
+    }
+
+    renderProfile() {
         const {
             extendedProfile,
+            isLoggedInUser,
             organization,
         } = this.props;
         if (extendedProfile) {
             return (
                 <ProfileDetail
                     extendedProfile={extendedProfile}
+                    isLoggedInUser={isLoggedInUser}
                     organization={organization}
                 />
             );
@@ -74,7 +89,7 @@ class Profile extends PureComponent {
     render() {
         return (
             <Container>
-                {this._renderProfile()}
+                {this.renderProfile()}
             </Container>
         );
     }
