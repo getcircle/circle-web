@@ -4,6 +4,7 @@ import React, { PropTypes } from 'react';
 import { routerStateReducer } from 'redux-react-router';
 
 import createStore from './createStore';
+import CSSMixins from './CSSMixins';
 import getRoutes from './getRoutes';
 import * as reducers from './reducers';
 import ThemeManager from './utils/ThemeManager';
@@ -23,11 +24,13 @@ export default class Root extends PureComponent {
     }
 
     static childContextTypes = {
-        muiTheme: React.PropTypes.object,
+        mixins: PropTypes.object,
+        muiTheme: PropTypes.object,
     }
 
     getChildContext() {
         return {
+            mixins: CSSMixins,
             muiTheme: ThemeManager.getCurrentTheme(),
         };
     }

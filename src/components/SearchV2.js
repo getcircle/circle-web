@@ -126,6 +126,7 @@ class Search extends CSSComponent {
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
         }).isRequired,
+        mixins: PropTypes.object.isRequired,
     }
 
     static defaultProps = {
