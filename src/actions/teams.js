@@ -1,7 +1,7 @@
 import { denormalize } from 'protobuf-normalizr';
 import { services } from 'protobufs';
 
-import * as orgRequests from '../services/organization';
+import * as organizationRequests from '../services/organization';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import { getProfiles } from '../services/profile';
@@ -14,7 +14,7 @@ export function loadExtendedTeam(teamId) {
                 types.LOAD_EXTENDED_TEAM_SUCCESS,
                 types.LOAD_EXTENDED_TEAM_FAILURE,
             ],
-            remote: () => orgRequests.getExtendedTeam(teamId),
+            remote: () => organizationRequests.getExtendedTeam(teamId),
             bailout: (state) => state.extendedTeams.getIn(['ids', teamId]),
         },
     };
@@ -65,7 +65,7 @@ export function updateTeam(team) {
                 types.UPDATE_TEAM_SUCCESS,
                 types.UPDATE_TEAM_FAILURE,
             ],
-            remote: () => orgRequests.updateTeam(team),
+            remote: () => organizationRequests.updateTeam(team),
         },
     };
 }
