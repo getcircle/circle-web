@@ -214,6 +214,7 @@ class Search extends CSSComponent {
                     fontSize: '11px',
                     lineHeight: '20px',
                     paddingTop: 14,
+                    paddingLeft: 20,
                     textTransform: 'uppercase',
                     ...fontColors.extraLight,
                     ...fontWeights.semiBold,
@@ -377,6 +378,7 @@ class Search extends CSSComponent {
                 leftAvatarStyle: this.styles().SearchIcon.style,
                 primaryTextStyle: this.styles().searchResultText,
                 type: RESULT_TYPES.EXPLORE,
+                subheader: 'explore',
                 ...item,
             };
         });
@@ -504,22 +506,46 @@ class Search extends CSSComponent {
         }
     }
 
+    renderItemInMenu(item, index, addSubHeader) {
+        let element;
+        if (index !== 0 && !addSubHeader) {
+            element = (
+                <div key={`item-with-divider-${index}`}>
+                    <ListDivider inset={true} is="ListDivider" />
+                    {item}
+                </div>
+            );
+        } else if (addSubHeader) {
+            element = (
+                <div key={`item-with-subheader-${index}`}>
+                    <div is="resultsListSubHeader">
+                        <span>{item.props.subheader}</span>
+                    </div>
+                    {item}
+                </div>
+            );
+        } else {
+            element = item;
+        }
+
+        return element;
+    }
+
     renderMenu(items, value, style) {
         let containerHeight = 0;
+        let currentSubHeader = null;
         const elementHeights = [];
-        const itemsWithDividers = items.map((item, index) => {
-            const height = item.props.estimatedHeight || SEARCH_RESULT_HEIGHT;
+        const elements = items.map((item, index) => {
+            let addSubHeader = false;
+            let height = item.props.estimatedHeight || SEARCH_RESULT_HEIGHT;
+            if (item.props.subheader && item.props.subheader !== currentSubHeader) {
+                currentSubHeader = item.props.subheader;
+                addSubHeader = true;
+                height += 34;
+            }
             containerHeight += height;
             elementHeights.push(height);
-            if (index !== 0) {
-                return (
-                    <div key={`item-with-divider-${index}`}>
-                        <ListDivider inset={true} is="ListDivider" />
-                        {item}
-                    </div>
-                );
-            }
-            return item;
+            return this.renderItemInMenu(item, index, addSubHeader);
         });
 
         const { resultsListStyle, resultsHeight } = this.props;
@@ -546,7 +572,7 @@ class Search extends CSSComponent {
                     loadingSpinnerDelegate={::this.renderLoadingIndicator()}
                     onInfiniteLoad={::this.handleInfiniteLoad}
                 >
-                    {itemsWithDividers}
+                    {elements}
                 </Infinite>
             </Paper>
         );
