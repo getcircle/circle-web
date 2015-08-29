@@ -31,6 +31,7 @@ const {
 
 const RESULT_TYPES = keymirror({
     EXPLORE: null,
+    LOADING: null,
 });
 
 export const SEARCH_RESULT_HEIGHT = 72;
@@ -165,6 +166,7 @@ class Search extends CSSComponent {
     state = {
         category: null,
         query: null,
+        typing: false,
     }
 
     currentSearch = null;
@@ -401,9 +403,16 @@ class Search extends CSSComponent {
         const results = this.props.results[this.state.query];
         if (results && results.length) {
             return this.getSearchResultItems(results);
+        } else if (!this.props.loading && !this.state.typing) {
+            let defaults = this.getDefaultResults();
+            defaults.unshift({
+                primaryText: t(`No results for "${this.state.query}"!`),
+                primaryTextStyle: this.styles().searchResultText,
+                disabled: true,
+            })
+            return defaults;
         } else {
-            // TODO insert "No results found!"
-            return this.getDefaultResults();
+            return [{type: RESULT_TYPES.LOADING}];
         }
     }
 
@@ -471,27 +480,41 @@ class Search extends CSSComponent {
             window.clearTimeout(this.currentSearch);
         }
         this.currentSearch = window.setTimeout(() => {
+            this.setState({typing: false});
             this.props.dispatch(loadSearchResults(value, this.state.category));
-        }, 100);
-        this.setState({query: value});
+        }, 300);
+        this.setState({query: value, typing: true});
+    }
+
+    getLoadingIndicator() {
+        return (
+            <div is="loadingIndicatorContainer" key="loading-indicator">
+                <CircularProgress mode="indeterminate" size={0.5} />
+            </div>
+        );
     }
 
     renderItem(item, highlighted, style) {
-        const element = (
-            <ListItem
-                {...item}
-                onTouchTap={item.onTouchTap}
-                primaryText={item.primaryText}
-                ref={(component) => {
-                    ((highlighted) =>  {
-                        // NB: Component will be null in some cases (unmounting and on change)
-                        if (component) {
-                            component.applyFocusState(highlighted ? 'keyboard-focused' : 'none');
-                        }
-                    })(highlighted);
-                }}
-            />
-        );
+        let element;
+        if (item.type === RESULT_TYPES.LOADING) {
+            element = this.getLoadingIndicator();
+        } else {
+            element = (
+                <ListItem
+                    {...item}
+                    onTouchTap={item.onTouchTap}
+                    primaryText={item.primaryText}
+                    ref={(component) => {
+                        ((highlighted) =>  {
+                            // NB: Component will be null in some cases (unmounting and on change)
+                            if (component) {
+                                component.applyFocusState(highlighted ? 'keyboard-focused' : 'none');
+                            }
+                        })(highlighted);
+                    }}
+                />
+            );
+        }
         return element;
     }
 
