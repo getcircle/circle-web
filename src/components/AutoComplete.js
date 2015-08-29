@@ -1,3 +1,4 @@
+import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { backgroundColors, fontColors, iconColors } from '../constants/styles';
@@ -5,6 +6,10 @@ import { backgroundColors, fontColors, iconColors } from '../constants/styles';
 import CSSComponent from './CSSComponent';
 import SearchIcon from './SearchIcon';
 import AutoCompleteToken from './AutoCompleteToken'
+
+const {
+    FlatButton,
+} = mui;
 
 class AutoComplete extends CSSComponent {
 
@@ -15,12 +20,14 @@ class AutoComplete extends CSSComponent {
         inputContainerStyle: PropTypes.object,
         items: PropTypes.array,
         onBlur: PropTypes.func,
+        onCancel: PropTypes.func,
         onClearToken: PropTypes.func,
         onFocus: PropTypes.func,
         onSelect: PropTypes.func,
         placeholderText: PropTypes.string,
         renderItem: PropTypes.func.isRequired,
         renderMenu: PropTypes.func,
+        showCancel: PropTypes.bool,
         tokens: PropTypes.arrayOf(PropTypes.shape({
             value: PropTypes.string.isRequired,
         })),
@@ -31,12 +38,14 @@ class AutoComplete extends CSSComponent {
         focused: false,
         getItemValue: item => item,
         onBlur: () => true,
+        onCancel: () => true,
         onFocus: () => true,
         onSelect: () => true,
         placeholderText: '',
         renderMenu: (items, value, style) => {
             return <div children={items} style={style} />
         },
+        showCancel: false,
     }
 
     componentDidMount() {
@@ -207,14 +216,27 @@ class AutoComplete extends CSSComponent {
         return React.cloneElement(menu, {ref: 'menu'});
     }
 
-    renderTokens() {
-        if (this.props.tokens) {
-            return this.props.tokens.map((token, index) => {
+    renderCancelButton(showCancel) {
+        if (showCancel) {
+            return (
+                <FlatButton
+                    is="cancelButton"
+                    label="Cancel"
+                    onTouchTap={this.props.onCancel}
+                    primary={true}
+                />
+            );
+        }
+    }
+
+    renderTokens(tokens, onClearToken) {
+        if (tokens) {
+            return tokens.map((token, index) => {
                 return (
                     <AutoCompleteToken
                         key={`token-${index}`}
                         label={token.value}
-                        onTouchTap={this.props.onClearToken}
+                        onTouchTap={onClearToken}
                     />
                 );
             });
@@ -225,22 +247,26 @@ class AutoComplete extends CSSComponent {
         const {
             focused,
             inputContainerStyle,
+            onBlur,
+            onClearToken,
             placeholderText,
+            showCancel,
+            tokens,
             ...other
         } = this.props;
         return (
             <div {...other} is="root" onKeyDown={this.handleKeyDown.bind(this)}>
                 <div style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <SearchIcon is="SearchIcon" />
-                    {this.renderTokens()}
+                    {this.renderTokens(tokens, onClearToken)}
                     <input
                         is="input"
-                        onBlur={this.props.onBlur}
                         onFocus={this.props.onFocus}
                         placeholder={!this.props.tokens ? placeholderText : ''}
                         ref="input"
                         type="text"
                     />
+                    {this.renderCancelButton(showCancel)}
                 </div>
                 <div>
                     {this.renderMenu()}

@@ -1,17 +1,20 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
 import resizable from '../decorators/resizable';
 import * as selectors from '../selectors';
-import t from '../utils/getText';
+import t from '../utils/gettext';
 
 import Blur from '../components/Blur';
 import HeaderMenu from '../components/HeaderMenu';
 import CSSComponent from '../components/CSSComponent';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/SearchV2';
 import TabBar from '../components/TabBar';
+
+const { FlatButton } = mui;
 
 const selector = createSelector(
     [selectors.authenticationSelector],
@@ -92,6 +95,7 @@ class Search extends CSSComponent {
                     paddingTop: 85,
                     paddingLeft: 20,
                     paddingRight: 20,
+                    transition: 'all 0.3s ease',
                 },
                 SearchComponent: {
                     inputContainerStyle: {
@@ -109,11 +113,13 @@ class Search extends CSSComponent {
                 poweredBySection: {
                     display: 'none',
                 },
+                'root': {
+                    paddingBottom: 0,
+                },
                 'searchSection': {
                     paddingTop: 0,
                     paddingLeft: 0,
                     paddingRight: 0,
-                    transition: 'all 0.3s ease',
                 },
                 SearchComponent: {
                     inputContainerStyle: {
@@ -121,6 +127,7 @@ class Search extends CSSComponent {
                         boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
                     },
                     focused: true,
+                    resultsHeight: document.body.offsetHeight - 50,
                     resultsListStyle: {
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
                         borderRadius: 0,
@@ -135,6 +142,9 @@ class Search extends CSSComponent {
                     style: {
                         display: 'none',
                     },
+                },
+                wrap: {
+                    marginBottom: 0,
                 },
             },
             'largerDevice': {
@@ -158,7 +168,7 @@ class Search extends CSSComponent {
     }
 
     handleBlurSearch() {
-        // this.setState({focused: false});
+        this.setState({focused: false});
     }
 
     render() {
@@ -186,6 +196,7 @@ class Search extends CSSComponent {
                                 onBlur={::this.handleBlurSearch}
                                 onFocus={::this.handleFocusSearch}
                                 organization={this.props.organization}
+                                showCancel={this.state.focused}
                             />
                         </div>
                     </section>

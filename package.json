@@ -94,7 +94,7 @@
     "react-redux": "^1.0.0",
     "react-router": "^1.0.0-beta1",
     "react-tap-event-plugin": "^0.1.7",
-    "reactcss": "^0.3.2",
+    "reactcss": "mhahn/reactcss",
     "reactify": "~1.1.1",
     "redux": "^1.0.1",
     "redux-devtools": "^1.1.2",

@@ -114,7 +114,9 @@ class Search extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        resultsHeight: PropTypes.number,
         resultsListStyle: PropTypes.object,
+        showCancel: PropTypes.bool,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
@@ -136,6 +138,7 @@ class Search extends CSSComponent {
         loading: false,
         onBlur: () => true,
         onFocus: () => true,
+        showCancel: false,
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -243,6 +246,11 @@ class Search extends CSSComponent {
 
     handleClearCategory() {
         this.setState({category: null});
+    }
+
+    handleCancel() {
+        this.setState({category: null})
+        this.props.onBlur();
     }
 
     getCategoryNextRequest() {
@@ -446,8 +454,12 @@ class Search extends CSSComponent {
             return item;
         });
 
-        const { resultsListStyle } = this.props;
-        containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
+        const { resultsListStyle, resultsHeight } = this.props;
+        if (resultsHeight !== null && resultsHeight !== undefined) {
+            containerHeight = resultsHeight;
+        } else {
+            containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
+        }
         return (
             <Paper
                 key="menu"
@@ -477,6 +489,9 @@ class Search extends CSSComponent {
             alwaysActive,
             inputContainerStyle,
             focused,
+            onBlur,
+            onFocus,
+            showCancel,
             style,
             ...other,
         } = this.props;
@@ -487,12 +502,14 @@ class Search extends CSSComponent {
                     focused={focused}
                     inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
                     items={this.getResults()}
-                    onBlur={this.props.onBlur}
+                    onBlur={onBlur}
+                    onCancel={::this.handleCancel}
                     onClearToken={::this.handleClearCategory}
-                    onFocus={this.props.onFocus}
+                    onFocus={onFocus}
                     placeholderText={t('Search People, Teams & Locations')}
                     renderItem={::this.renderItem}
                     renderMenu={::this.renderMenu}
+                    showCancel={showCancel}
                     tokens={this.getSearchTokens()}
                 />
             </div>
