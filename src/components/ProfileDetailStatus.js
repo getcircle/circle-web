@@ -31,6 +31,7 @@ class ProfileDetailStatus extends StyleableComponent {
             <TextValue
                 editedTimestamp={status ? status.created : ''}
                 isEditable={isEditable}
+                isQuoted={true}
                 onSaveCallback={onSaveCallback}
                 placeholder={t('I\'m working on #project with @mypeer!')}
                 shouldLimitCharacters={true}

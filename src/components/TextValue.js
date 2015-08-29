@@ -15,6 +15,7 @@ class TextValue extends CSSComponent {
         authorName: PropTypes.string,
         editedTimestamp: PropTypes.string,
         isEditable: PropTypes.bool,
+        isQuoted: PropTypes.bool,
         onSaveCallback: PropTypes.func.isRequired,
         placeholder: PropTypes.string.isRequired,
         shouldLimitCharacters: PropTypes.bool,
@@ -41,7 +42,8 @@ class TextValue extends CSSComponent {
 
     styles() {
         return this.css({
-          'error': !!this.state.error
+          'error': !!this.state.error,
+          'quoted': this.props.isQuoted,
         });
     }
 
@@ -88,7 +90,6 @@ class TextValue extends CSSComponent {
                 },
                 text: {
                     fontSize: 16,
-                    fontStyle: 'italic',
                     color: 'rgb(0, 0, 0)',
                     lineHeight: '29px',
                 },
@@ -101,6 +102,11 @@ class TextValue extends CSSComponent {
             'error': {
                 textarea: {
                     borderColor: 'rgba(255, 0, 0, 0.7)',
+                },
+            },
+            'quoted': {
+                text: {
+                    fontStyle: 'italic',
                 },
             },
         };
@@ -205,9 +211,10 @@ class TextValue extends CSSComponent {
     renderDefaultContent() {
         const {
             isEditable,
+            isQuoted,
         } = this.props;
 
-        let statusValue = this.state.value !== '' ? `"${this.state.value}"` : '';
+        let statusValue = this.state.value !== '' ? isQuoted ? `"${this.state.value}"` : this.state.value : '';
         if (statusValue === '' || statusValue.length === 0) {
             statusValue = isEditable ? t('Add details') : t('Ask me!');
         }

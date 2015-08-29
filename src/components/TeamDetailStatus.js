@@ -33,6 +33,7 @@ class TeamDetailStatus extends StyleableComponent {
                 authorName={authorName}
                 editedTimestamp={status ? status.created : ''}
                 isEditable={isEditable}
+                isQuoted={true}
                 onSaveCallback={onSaveCallback}
                 placeholder={t('What projects is your team working on?')}
                 shouldLimitCharacters={true}
