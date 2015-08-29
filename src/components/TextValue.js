@@ -5,66 +5,11 @@ import t from '../utils/gettext';
 
 import Card from './Card';
 import CharacterCounter from './CharacterCounter';
-import StyleableComponent from './StyleableComponent';
-
+import CSSComponent from  './CSSComponent';
 
 const CHARACTER_LIMIT = 140
 
-const styles = {
-    contentStyle: {
-        display: 'flex',
-        flexDirection: 'row',
-        padding: 20,
-    },
-    errorAndCounterContainer: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        padding: '10px 10px 10px 0',
-    },
-    errorContent: {
-        color: 'rgba(255, 0, 0, 0.7)',
-        fontSize: 13,
-    },
-    statusContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-    },
-    statusTextarea: {
-        borderColor: 'rgba(0, 0, 0, 0.2)',
-        borderRadius: '4px',
-        boxSizing: 'border-box',
-        color: 'rgba(0, 0, 0, 0.7)',
-        display: 'flex',
-        fontSize: 16,
-        height: 100,
-        lineHeight: '20px',
-        padding: '10px',
-        resize: 'none',
-        width: '100%',
-    },
-    statusTextareaError: {
-        borderColor: 'rgba(255, 0, 0, 0.7)',
-    },
-    statusTextareaContainer: {
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        width: '100%',
-    },
-    statusText: {
-        fontSize: 21,
-        color: 'rgba(0, 0, 0, 0.7)',
-        lineHeight: '29px',
-    },
-    statusTimestamp: {
-        fontSize: 15,
-        color: 'rgba(0, 0, 0, 0.5)',
-        lineHeight: '29px',
-    },
-}
-
-class TextValue extends StyleableComponent {
+class TextValue extends CSSComponent {
 
     static propTypes = {
         authorName: PropTypes.string,
@@ -92,6 +37,72 @@ class TextValue extends StyleableComponent {
         error: '',
         value: '',
         valueTimestamp: '',
+    }
+
+    styles() {
+        return this.css({
+          'error': !!this.state.error
+        });
+    }
+
+    classes() {
+        return {
+            'default': {
+                contentStyle: {
+                    display: 'flex',
+                    flexDirection: 'row',
+                    padding: 20,
+                },
+                errorContainer: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '10px 10px 10px 0',
+                },
+                errorMessage: {
+                    color: 'rgba(255, 0, 0, 0.7)',
+                    fontSize: 13,
+                },
+                textContainer: {
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                },
+                textarea: {
+                    borderColor: 'rgba(0, 0, 0, 0.2)',
+                    borderRadius: '4px',
+                    boxSizing: 'border-box',
+                    color: 'rgba(0, 0, 0, 0.7)',
+                    display: 'flex',
+                    fontSize: 16,
+                    height: 100,
+                    lineHeight: '20px',
+                    padding: '10px',
+                    resize: 'none',
+                    width: '100%',
+                },
+                textareaContainer: {
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    width: '100%',
+                },
+                text: {
+                    fontSize: 21,
+                    color: 'rgba(0, 0, 0, 0.7)',
+                    lineHeight: '29px',
+                },
+                timestamp: {
+                    fontSize: 15,
+                    color: 'rgba(0, 0, 0, 0.5)',
+                    lineHeight: '29px',
+                },
+            },
+            'error': {
+                textarea: {
+                    borderColor: 'rgba(255, 0, 0, 0.7)',
+                },
+            },
+        };
     }
 
     setInitialState(props) {
@@ -165,7 +176,7 @@ class TextValue extends StyleableComponent {
         let authorName = this.state.authorName ? ' by ' + this.state.authorName : '';
         if (createdString !== '') {
             return (
-                <span style={this.mergeAndPrefix(styles.statusTimestamp)}>
+                <span is="timestamp">
                     &nbsp;&ndash;&nbsp;{createdString}{authorName}
                 </span>
             );
@@ -191,8 +202,8 @@ class TextValue extends StyleableComponent {
         }
 
         return (
-            <div style={this.mergeAndPrefix(styles.statusContainer)}>
-                <span style={this.mergeAndPrefix(styles.statusText)}>{statusValue}</span>
+            <div is="textContainer">
+                <span is="text">{statusValue}</span>
                 {this.renderStatusTimestamp()}
             </div>
         );
@@ -222,16 +233,16 @@ class TextValue extends StyleableComponent {
         } = this.props;
 
         return (
-            <div style={this.mergeAndPrefix(styles.statusTextareaContainer)}>
+            <div is="textareaContainer">
                 <textarea
                     autoFocus={true}
+                    is="textarea"
                     onChange={this.handleChange.bind(this)}
                     placeholder={placeholder}
-                    style={this.mergeAndPrefix(styles.statusTextarea, error === '' ? {} : styles.statusTextareaError)}
                     value={value}
                  />
-                 <div style={this.mergeAndPrefix(styles.errorAndCounterContainer)}>
-                    <span style={this.mergeAndPrefix(styles.errorContent)}>
+                 <div is="errorContainer">
+                    <span is="errorMessage">
                         {error}
                     </span>
                     {this.renderCharacterCounter(value)}
@@ -251,13 +262,13 @@ class TextValue extends StyleableComponent {
         return (
             <Card
                 {...other}
-                contentStyle={styles.contentStyle}
+                contentStyle={this.styles().contentStyle}
                 isEditable={isEditable}
                 isEditing={this.state.editing}
                 onCancelTapped={this.handleCancelTapped.bind(this)}
                 onEditTapped={this.handleEditTapped.bind(this)}
                 onSaveTapped={this.handleSaveTapped.bind(this)}
-                style={this.mergeAndPrefix(style)}
+                style={{...this.styles().defaultStyle, ...style}}
                 title={title}
             >
                 {this.renderContent()}
