@@ -161,6 +161,11 @@ class AutoComplete extends CSSComponent {
         }
     }
 
+    handleCancel() {
+        this.setState({value: ''});
+        this.props.onCancel();
+    }
+
     handleSelectItem(cb) {
         this.focusInput();
         if (cb && typeof cb === 'function') {
@@ -246,7 +251,7 @@ class AutoComplete extends CSSComponent {
                 <FlatButton
                     is="cancelButton"
                     label="Cancel"
-                    onTouchTap={this.props.onCancel}
+                    onTouchTap={::this.handleCancel}
                     primary={true}
                 />
             );
@@ -296,6 +301,7 @@ class AutoComplete extends CSSComponent {
                         placeholder={!this.props.tokens ? placeholderText : ''}
                         ref="input"
                         type="text"
+                        value={this.state.value}
                     />
                     {this.renderCancelButton(showCancel)}
                 </div>

@@ -278,6 +278,7 @@ class Search extends CSSComponent {
 
     handleCancel() {
         this.selectCategory(null);
+        this.setState({query: '', typing: false});
         this.props.onCancel();
     }
 
