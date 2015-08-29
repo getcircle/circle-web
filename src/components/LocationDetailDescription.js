@@ -27,11 +27,8 @@ class LocationDetailDescription extends StyleableComponent {
             style,
         } = this.props;
 
-        let authorName = description && description.by_profile ? description.by_profile.full_name : ''
         return (
             <TextValue
-                authorName={authorName}
-                editedTimestamp={description ? description.changed : ''}
                 isEditable={isEditable}
                 onSaveCallback={onSaveCallback}
                 placeholder={t('Add a description on your location. You can add unique things about the office, what teams work there, and local info about the office.')}

@@ -27,11 +27,8 @@ class TeamDetailDescription extends StyleableComponent {
             style,
         } = this.props;
 
-        let authorName = description && description.by_profile ? description.by_profile.full_name : ''
         return (
             <TextValue
-                authorName={authorName}
-                editedTimestamp={description ? description.changed : ''}
                 isEditable={isEditable}
                 onSaveCallback={onSaveCallback}
                 placeholder={t('Add your team description here. Its best to add your team\'s mission statement or high level goals, and how your team impacts the business.')}
