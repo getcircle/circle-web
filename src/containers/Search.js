@@ -86,8 +86,8 @@ class Search extends CSSComponent {
                 root: {
                     backgroundColor: '#333',
                     height: '100%',
-                    width: '100%',
                     paddingBottom: 20,
+                    width: '100%',
                 },
                 searchSection: {
                     paddingTop: '5vh',
@@ -167,11 +167,11 @@ class Search extends CSSComponent {
         };
     }
 
-    handleFocusSearch() {
+    handleFocusSearch(event) {
         this.setState({focused: true});
     }
 
-    handleBlurSearch() {
+    handleCancelSearch() {
         this.setState({focused: false});
     }
 
@@ -197,7 +197,7 @@ class Search extends CSSComponent {
                                 className="col-xs center-xs"
                                 is="SearchComponent"
                                 largerDevice={this.props.largerDevice}
-                                onBlur={::this.handleBlurSearch}
+                                onCancel={::this.handleCancelSearch}
                                 onFocus={::this.handleFocusSearch}
                                 organization={this.props.organization}
                             />

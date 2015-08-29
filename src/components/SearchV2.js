@@ -108,6 +108,7 @@ class Search extends CSSComponent {
         ),
         locationsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         onBlur: PropTypes.func,
+        onCancel: PropTypes.func,
         onFocus: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         profiles: PropTypes.arrayOf(
@@ -137,6 +138,7 @@ class Search extends CSSComponent {
         largerDevice: false,
         loading: false,
         onBlur: () => true,
+        onCancel: () => true,
         onFocus: () => true,
         showCancel: false,
     }
@@ -254,7 +256,7 @@ class Search extends CSSComponent {
 
     handleCancel() {
         this.setState({category: null})
-        this.props.onBlur();
+        this.props.onCancel();
     }
 
     getCategoryNextRequest() {
@@ -494,6 +496,7 @@ class Search extends CSSComponent {
             inputContainerStyle,
             focused,
             onBlur,
+            onCancel,
             onFocus,
             showCancel,
             style,
