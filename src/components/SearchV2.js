@@ -171,7 +171,7 @@ class Search extends CSSComponent {
         typing: false,
     }
 
-    currentSearch = null;
+    currentSearch = null
 
     classes() {
         return {

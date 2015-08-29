@@ -24,7 +24,6 @@ class AutoComplete extends CSSComponent {
         onChange: PropTypes.func,
         onClearToken: PropTypes.func,
         onFocus: PropTypes.func,
-        onSelect: PropTypes.func,
         placeholderText: PropTypes.string,
         renderItem: PropTypes.func.isRequired,
         renderMenu: PropTypes.func,
@@ -43,7 +42,6 @@ class AutoComplete extends CSSComponent {
         onCancel() {},
         onChange() {},
         onFocus() {},
-        onSelect() {},
         placeholderText: '',
         renderMenu: (items, value, style) => {
             return <div children={items} style={style} />
@@ -73,6 +71,8 @@ class AutoComplete extends CSSComponent {
         performAutoCompleteOnKeyUp: false,
         value: this.props.initialValue || '',
     }
+
+    ignoreBlur = false
 
     classes() {
         const common = {
@@ -127,6 +127,10 @@ class AutoComplete extends CSSComponent {
         React.findDOMNode(this.refs.input).select();
     }
 
+    setIgnoreBlur(ignoreBlur) {
+        this.ignoreBlur = ignoreBlur;
+    }
+
     getItems() {
         // this is wrapped in a function so in the future we could add `shouldItemRender` or `sortItems`
         return this.props.items || [];
@@ -138,6 +142,14 @@ class AutoComplete extends CSSComponent {
         });
     }
 
+    handleBlur(event) {
+        if (this.ignoreBlur) {
+            event.preventDefault();
+            return;
+        }
+        this.props.onBlur(event);
+    }
+
     handleKeyDown(event) {
         if (this.keyDownHandlers[event.key]) {
             this.keyDownHandlers[event.key].call(this, event);
@@ -146,6 +158,13 @@ class AutoComplete extends CSSComponent {
                 highlightedIndex: null,
                 isActive: true,
             });
+        }
+    }
+
+    handleSelectItem(cb) {
+        this.focusInput();
+        if (cb && typeof cb === 'function') {
+            cb();
         }
     }
 
@@ -184,15 +203,14 @@ class AutoComplete extends CSSComponent {
             } else if (this.state.highlightedIndex === null) {
                 // hit enter after focus but before typing anything
                 this.setState({isActive: false}, () => {
-                    React.findDOMNode(this.refs.input).focus();
+                    this.focusINput();
                 });
             } else {
-                const item = this.getItems()[this.state.highlightedIndex];
                 this.setState({
                     isActive: this.props.alwaysActive ? true : false,
                     highlightedIndex: null,
                 }, () => {
-                    this.props.onSelect(this.state.value, item);
+                    this.focusInput();
                 });
             }
         },
@@ -214,6 +232,8 @@ class AutoComplete extends CSSComponent {
             );
             return React.cloneElement(element, {
                 key: `item-${index}`,
+                onMouseEnter: () => this.setIgnoreBlur(true),
+                onTouchTap: () => this.handleSelectItem(element.props.onTouchTap),
             });
         });
         const menu = this.props.renderMenu(items, this.state.value, this.styles().menu);
@@ -262,6 +282,7 @@ class AutoComplete extends CSSComponent {
         return (
             <div
                 {...other}
+                onBlur={::this.handleBlur}
                 onKeyDown={this.handleKeyDown.bind(this)}
                 style={{...this.styles().root, ...style}}
             >
@@ -270,7 +291,6 @@ class AutoComplete extends CSSComponent {
                     {this.renderTokens(tokens, onClearToken)}
                     <input
                         is="input"
-                        onBlur={onBlur}
                         onChange={::this.handleChange}
                         onFocus={this.props.onFocus}
                         placeholder={!this.props.tokens ? placeholderText : ''}
