@@ -114,6 +114,7 @@ class Search extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        resultsListStyle: PropTypes.object,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
@@ -179,7 +180,7 @@ class Search extends CSSComponent {
                 },
                 resultsList: {
                     borderRadius: '0px 0px 5px 5px',
-                    boxShadow: '0px 2px 4px -2px',
+                    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
                     justifyContent: 'flex-start',
                     opacity: '0.9',
                     overflowY: 'auto',
@@ -444,9 +445,17 @@ class Search extends CSSComponent {
             return item;
         });
 
+        const { resultsListStyle } = this.props;
         containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
         return (
-            <Paper key="menu" style={{...style, ...this.styles().resultsList}}>
+            <Paper
+                key="menu"
+                style={{
+                    ...style,
+                    ...this.styles().resultsList,
+                    ...resultsListStyle,
+                }}
+            >
                 <Infinite
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}

@@ -97,22 +97,38 @@ class Search extends CSSComponent {
                         boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, .09)',
                     },
                 },
+                wrap: {
+                    position: 'relative',
+                },
             },
             'focused': {
                 organizationLogoSection: {
                     display: 'none',
                 },
+                poweredBySection: {
+                    display: 'none',
+                },
                 'searchSection': {
-                    paddingRight: 0,
-                    paddingLeft: 0,
                     paddingTop: 0,
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                    transition: 'all 0.3s ease',
                 },
                 SearchComponent: {
+                    inputContainerStyle: {
+                        borderRadius: '0px',
+                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
+                    },
+                    focused: true,
+                    resultsListStyle: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        borderRadius: 0,
+                        boxShadow: 'none',
+                    },
                     style: {
                         paddingLeft: 0,
                         paddingRight: 0,
                     },
-                    focused: true,
                 },
                 TabBar: {
                     style: {
@@ -152,7 +168,7 @@ class Search extends CSSComponent {
                         <HeaderMenu dispatch={this.props.dispatch} profile={this.props.profile}/>
                     </div>
                 </header>
-                <section className="wrap">
+                <section className="wrap" is="wrap">
                     <section is="organizationLogoSection">
                         <div className="row">
                             <div className="col-xs center-xs">
