@@ -21,6 +21,7 @@ class AutoComplete extends CSSComponent {
         items: PropTypes.array,
         onBlur: PropTypes.func,
         onCancel: PropTypes.func,
+        onChange: PropTypes.func,
         onClearToken: PropTypes.func,
         onFocus: PropTypes.func,
         onSelect: PropTypes.func,
@@ -38,10 +39,11 @@ class AutoComplete extends CSSComponent {
         alwaysActive: false,
         focused: false,
         getItemValue: item => item,
-        onBlur: () => true,
-        onCancel: () => true,
-        onFocus: () => true,
-        onSelect: () => true,
+        onBlur() {},
+        onCancel() {},
+        onChange() {},
+        onFocus() {},
+        onSelect() {},
         placeholderText: '',
         renderMenu: (items, value, style) => {
             return <div children={items} style={style} />
@@ -133,6 +135,12 @@ class AutoComplete extends CSSComponent {
     getItems() {
         // this is wrapped in a function so in the future we could add `shouldItemRender` or `sortItems`
         return this.props.items || [];
+    }
+
+    handleChange(event) {
+        this.setState({value: event.target.value}, () => {
+            this.props.onChange(event, this.state.value);
+        });
     }
 
     handleKeyDown(event) {
@@ -259,7 +267,6 @@ class AutoComplete extends CSSComponent {
         return (
             <div
                 {...other}
-                onBlur={onBlur}
                 onKeyDown={this.handleKeyDown.bind(this)}
                 style={{...this.styles().root, ...style}}
             >
@@ -268,6 +275,8 @@ class AutoComplete extends CSSComponent {
                     {this.renderTokens(tokens, onClearToken)}
                     <input
                         is="input"
+                        onBlur={onBlur}
+                        onChange={::this.handleChange}
                         onFocus={this.props.onFocus}
                         placeholder={!this.props.tokens ? placeholderText : ''}
                         ref="input"

@@ -7,6 +7,7 @@ import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
+import { loadSearchResults } from '../actions/search';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
@@ -84,10 +85,23 @@ const selector = selectors.createImmutableSelector(
         selectors.exploreProfilesLoadingSelector,
         selectors.exploreTeamsLoadingSelector,
         selectors.exploreLocationsLoadingSelector,
+        selectors.searchSelector,
     ],
-    (cacheState, profilesLoadingState, teamsLoadingState, locationsLoadingState) => {
+    (
+        cacheState,
+        profilesLoadingState,
+        teamsLoadingState,
+        locationsLoadingState,
+        searchState,
+    ) => {
         return {
-            loading: profilesLoadingState || teamsLoadingState || locationsLoadingState,
+            loading: (
+                profilesLoadingState ||
+                teamsLoadingState ||
+                locationsLoadingState ||
+                searchState.get('loading')
+            ),
+            ...searchState.toJS(),
             ...cacheState.toJS(),
         };
     }
@@ -97,7 +111,6 @@ const selector = selectors.createImmutableSelector(
 class Search extends CSSComponent {
 
     static propTypes = {
-        alwaysActive: PropTypes.bool,
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
@@ -115,6 +128,7 @@ class Search extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
         resultsHeight: PropTypes.number,
         resultsListStyle: PropTypes.object,
         showCancel: PropTypes.bool,
@@ -133,13 +147,12 @@ class Search extends CSSComponent {
     }
 
     static defaultProps = {
-        alwaysActive: false,
         focused: false,
         largerDevice: false,
         loading: false,
-        onBlur: () => true,
-        onCancel: () => true,
-        onFocus: () => true,
+        onBlur() {},
+        onCancel() {},
+        onFocus() {},
         showCancel: false,
     }
 
@@ -151,7 +164,10 @@ class Search extends CSSComponent {
 
     state = {
         category: null,
+        query: null,
     }
+
+    currentSearch = null;
 
     classes() {
         return {
@@ -288,40 +304,51 @@ class Search extends CSSComponent {
         return results ? results : [];
     }
 
+    getProfileResult(profile) {
+        return {
+            leftAvatar: <ProfileAvatar profile={profile} />,
+            primaryText: profile.full_name,
+            secondaryText: `${profile.title} (TODO)`,
+            onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
+        };
+    }
+
+    getTeamResult(team) {
+        return {
+            leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
+            primaryText: team.display_name,
+            secondaryText: `${team.child_team_count} Teams, ${team.profile_count} People`,
+            onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
+        };
+    }
+
+    getLocationResult(location) {
+        return {
+            leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
+            primaryText: location.name,
+            secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
+            onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
+        };
+    }
+
     getCategoryResultsProfiles() {
         const { profiles } = this.props;
         if (profiles) {
-            return profiles.map((profile) => ({
-                    leftAvatar: <ProfileAvatar profile={profile} />,
-                    primaryText: profile.full_name,
-                    secondaryText: `${profile.title} (TODO)`,
-                    onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
-                })
-            );
+            return profiles.map(profile => this.getProfileResult(profile));
         }
     }
 
     getCategoryResultsTeams() {
         const { teams } = this.props;
         if (teams) {
-            return teams.map((team) => ({
-                leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
-                primaryText: team.display_name,
-                secondaryText: `${team.child_team_count} Teams, ${team.profile_count} People`,
-                onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
-            }));
+            return teams.map(team => this.getTeamResult(team));
         }
     }
 
     getCategoryResultsLocations() {
         const { locations } = this.props;
         if (locations) {
-            return locations.map((location) => ({
-                leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
-                primaryText: location.name,
-                secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
-                onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
-            }));
+            return locations.map(location => this.getLocationResult(location));
         }
     }
 
@@ -355,9 +382,34 @@ class Search extends CSSComponent {
         });
     }
 
+    getSearchResultItems(results) {
+        return results.map((result) => {
+            if (result.profile) {
+                return this.getProfileResult(result.profile);
+            } else if (result.team) {
+                return this.getTeamResult(result.team);
+            } else if (result.location) {
+                return this.getLocationResult(result.location);
+            }
+        });
+    }
+
+    getSearchResults() {
+        // TODO handle loading as well
+        const results = this.props.results[this.state.query];
+        if (results && results.length) {
+            return this.getSearchResultItems(results);
+        } else {
+            // TODO insert "No results found!"
+            return this.getDefaultResults();
+        }
+    }
+
     getResults() {
         if (this.props.focused) {
-            if (this.state.category !== null) {
+            if (this.state.query) {
+                return this.getSearchResults();
+            } else if (this.state.category !== null) {
                 return this.getCategoryResults();
             } else {
                 return this.getDefaultResults();
@@ -410,6 +462,16 @@ class Search extends CSSComponent {
         if (nextRequest) {
             this.explore(this.state.category, nextRequest);
         }
+    }
+
+    handleChange(event, value) {
+        if (this.currentSearch !== null) {
+            window.clearTimeout(this.currentSearch);
+        }
+        this.currentSearch = window.setTimeout(() => {
+            this.props.dispatch(loadSearchResults(value, this.state.category));
+        }, 100);
+        this.setState({query: value});
     }
 
     renderItem(item, highlighted, style) {
@@ -492,7 +554,6 @@ class Search extends CSSComponent {
 
     render() {
         const {
-            alwaysActive,
             inputContainerStyle,
             focused,
             onBlur,
@@ -505,13 +566,13 @@ class Search extends CSSComponent {
         return (
             <div {...other} style={{...this.styles().searchContainer, ...style}}>
                 <AutoComplete
-                    alwaysActive={alwaysActive}
                     focused={focused}
                     inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
                     is="AutoComplete"
                     items={this.getResults()}
                     onBlur={onBlur}
                     onCancel={::this.handleCancel}
+                    onChange={::this.handleChange}
                     onClearToken={::this.handleClearCategory}
                     onFocus={onFocus}
                     placeholderText={t('Search People, Teams & Locations')}

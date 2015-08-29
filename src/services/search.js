@@ -1,7 +1,6 @@
 import {services} from 'protobufs';
 
 import client from './client';
-import logger from '../utils/logger';
 
 export function search(query, category) {
     let request = new services.search.actions.search.RequestV1({query, category});
@@ -11,13 +10,14 @@ export function search(query, category) {
         } else {
             client.sendRequest(request)
                 .then((response) => {
-                    let results = response.result ? response.result.results : [];
-                    resolve({results});
+                    if (response.action.result.success) {
+                        let results = response.result ? response.result.results : [];
+                        return resolve({results});
+                    } else {
+                        return reject(response.reject());
+                    }
                 })
-                .catch((error) => {
-                    logger.log(`Error fetching search results: ${error}`);
-                    reject(error);
-                });
+                .catch(error => reject(error));
         }
     });
 }
