@@ -11,7 +11,6 @@ import Blur from '../components/Blur';
 import HeaderMenu from '../components/HeaderMenu';
 import CSSComponent from '../components/CSSComponent';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/SearchV2';
-import TabBar from '../components/TabBar';
 
 const selector = createSelector(
     [selectors.authenticationSelector],
@@ -143,11 +142,6 @@ class Search extends CSSComponent {
                         paddingRight: 0,
                     },
                 },
-                TabBar: {
-                    style: {
-                        display: 'none',
-                    },
-                },
                 wrap: {
                     marginBottom: 0,
                 },
@@ -167,11 +161,6 @@ class Search extends CSSComponent {
                 },
                 SearchComponent: {
                     alwaysActive: true,
-                },
-                TabBar: {
-                    style: {
-                        display: 'none',
-                    },
                 },
             },
         };
@@ -223,7 +212,6 @@ class Search extends CSSComponent {
                         </div>
                     </section>
                 </section>
-                <TabBar is="TabBar" />
             </Blur>
         );
     }

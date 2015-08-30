@@ -3,6 +3,7 @@ export { default as cache } from './cache';
 export { default as explore } from './explore';
 export { default as extendedProfiles } from './extendedProfiles';
 export { default as extendedTeams } from './extendedTeams';
+export { default as footer } from './footer';
 export { default as header } from './header';
 export { default as locationMembers } from './locationMembers';
 export { default as locations } from './locations';
