@@ -33,6 +33,12 @@ const getRoutes = (history, store) => {
             next(nextState, transition);
         };
     };
+    const displayHeader = (next) => {
+        return (nextState, transition) => {
+            store.dispatch(toggleHeader(true));
+            next(nextState, transition);
+        }
+    }
 
     const hideHeader = (next) => {
         return (nextState, transition) => {
@@ -41,7 +47,7 @@ const getRoutes = (history, store) => {
         }
     }
 
-    const defaultMiddleware = [requireAuth];
+    const defaultMiddleware = [requireAuth, displayHeader];
 
     return (
         <Router history={history}>

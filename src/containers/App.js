@@ -19,16 +19,15 @@ const { StyleResizable } = mui.Mixins;
 const selector = createSelector(
     [
         selectors.authenticatedSelector,
-        selectors.headerSelector,
-        selectors.footerSelector,
+        selectors.responsiveSelector,
     ],
     (
         authenticatedState,
-        headerState,
+        responsiveState,
         footerState,
     ) => { return {
-        displayFooter: footerState.get('display'),
-        displayHeader: headerState.get('display'),
+        displayFooter: responsiveState.get('displayFooter'),
+        displayHeader: responsiveState.get('displayHeader'),
         ...authenticatedState,
     } }
 );
@@ -71,7 +70,7 @@ class App extends CSSComponent {
 
     componentWillUpdate(nextProps, nextState) {
         if (nextState.deviceSize !== this.state.deviceSize) {
-            this.props.dispatch(deviceResized(nextState.deviceSize));
+            this.props.dispatch(deviceResized(nextState.deviceSize, this.props.location.pathname));
         }
     }
 

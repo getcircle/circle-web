@@ -54,11 +54,10 @@ export const exploreLocationsIdsSelector = exploreTypeIdsSelectorFactory(explore
 
 export const extendedProfilesSelector = state => state.extendedProfiles;
 export const extendedTeamsSelector = state => state.extendedTeams;
-export const footerSelector = state => state.footer;
-export const headerSelector = state => state.header;
 export const locationMembersSelector = state => state.locationMembers;
 export const locationsSelector = state => state.locations;
 export const profilesSelector = state => state.profiles;
+export const responsiveSelector = state => state.responsive;
 export const routerSelector = state => state.router;
 export const routerParametersSelector = state => state.router.params;
 export const searchSelector = state => state.search;
