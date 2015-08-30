@@ -8,9 +8,9 @@ import Card from './Card';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
+import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import ProfileAvatar from './ProfileAvatar';
-import StyleableComponent from './StyleableComponent';
 import TeamDetailDescription from './TeamDetailDescription';
 import TeamDetailHeader from './TeamDetailHeader';
 import TeamDetailStatus from './TeamDetailStatus';
@@ -20,18 +20,7 @@ import TeamDetailTeams from './TeamDetailTeams';
 const { DescriptionV1 } = services.common.containers;
 const { TeamStatusV1 } = services.organization.containers;
 
-const styles = {
-    description: {
-        padding: 20,
-        lineHeight: '24px',
-        fontSize: '14px',
-    },
-    section: {
-        marginTop: 20,
-    },
-};
-
-class TeamDetail extends StyleableComponent {
+class TeamDetail extends CSSComponent {
 
     static propTypes = {
         extendedTeam: PropTypes.shape({
@@ -46,6 +35,21 @@ class TeamDetail extends StyleableComponent {
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
         }).isRequired,
+    }
+
+    classes() {
+        return {
+            default: {
+                description: {
+                    padding: 20,
+                    lineHeight: '24px',
+                    fontSize: '14px',
+                },
+                section: {
+                    marginTop: 20,
+                },
+            },
+        };
     }
 
     // Update Methods
@@ -89,10 +93,10 @@ class TeamDetail extends StyleableComponent {
     renderStatus(status, isEditable) {
         return (
             <TeamDetailStatus
+                is="section"
                 isEditable={isEditable}
                 onSaveCallback={this.onUpdateStatus.bind(this)}
                 status={status}
-                style={this.mergeAndPrefix(styles.section)}
             />
         );
     }
@@ -101,16 +105,16 @@ class TeamDetail extends StyleableComponent {
         return (
             <TeamDetailDescription
                 description={team.description}
+                is="section"
                 isEditable={isEditable}
                 onSaveCallback={this.onUpdateDescription.bind(this)}
-                style={this.mergeAndPrefix(styles.section)}
             />
         );
     }
 
     renderManager(manager) {
         return (
-            <Card style={styles.section} title="Manager">
+            <Card is="section" title="Manager">
                 <CardRow>
                     <CardList>
                         <CardListItem
@@ -129,8 +133,8 @@ class TeamDetail extends StyleableComponent {
         if (childTeams && childTeams.length) {
             return (
                 <TeamDetailTeams
+                    is="section"
                     onClickTeam={routeToTeam.bind(null, this.context.router)}
-                    style={styles.section}
                     teams={childTeams}
                 />
             );
@@ -142,9 +146,9 @@ class TeamDetail extends StyleableComponent {
             members = _.filter(members, (profile) => profile.id !== manager.id);
             return (
                 <TeamDetailTeamMembers
+                    is="section"
                     members={members}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
-                    style={styles.section}
                 />
             );
         }
