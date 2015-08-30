@@ -156,6 +156,12 @@ class Search extends CSSComponent {
                 header: {
                     display: 'initial',
                 },
+                HeaderMenu: {
+                    style: {
+                        paddingTop: 22,
+                        paddingRight: 22,
+                    },
+                },
                 organizationLogoSection: {
                     paddingTop: '5vh',
                 },
@@ -184,7 +190,11 @@ class Search extends CSSComponent {
             <Blur blurRadius={30} is="root">
                 <header is="header">
                     <div className="row end-xs">
-                        <HeaderMenu dispatch={this.props.dispatch} profile={this.props.profile}/>
+                        <HeaderMenu
+                            dispatch={this.props.dispatch}
+                            is="HeaderMenu"
+                            profile={this.props.profile}
+                        />
                     </div>
                 </header>
                 <section className="wrap" is="wrap">

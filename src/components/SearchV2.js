@@ -113,6 +113,7 @@ class Search extends CSSComponent {
 
     static propTypes = {
         alwaysActive: PropTypes.bool,
+        canExplore: PropTypes.bool,
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
@@ -150,6 +151,7 @@ class Search extends CSSComponent {
 
     static defaultProps = {
         alwaysActive: false,
+        canExplore: true,
         focused: false,
         largerDevice: false,
         loading: false,
@@ -161,7 +163,7 @@ class Search extends CSSComponent {
 
     state = {
         category: null,
-        query: null,
+        query: '',
         typing: false,
     }
 
@@ -408,13 +410,15 @@ class Search extends CSSComponent {
         if (results && results.length) {
             return this.getSearchResultItems(results);
         } else if (!this.props.loading && !this.state.typing) {
-            let defaults = this.getDefaultResults();
-            defaults.unshift({
+            const noResults = [{
                 primaryText: t(`No results for "${this.state.query}"!`),
                 primaryTextStyle: this.styles().searchResultText,
                 disabled: true,
-            })
-            return defaults;
+            }];
+            if (this.props.canExplore) {
+                noResults.push(this.getDefaultResults());
+            }
+            return noResults;
         } else {
             return [{type: RESULT_TYPES.LOADING}];
         }
@@ -426,7 +430,7 @@ class Search extends CSSComponent {
                 return this.getSearchResults();
             } else if (this.state.category !== null) {
                 return this.getCategoryResults();
-            } else {
+            } else if (this.props.canExplore) {
                 return this.getDefaultResults();
             }
         }
@@ -492,6 +496,14 @@ class Search extends CSSComponent {
 
     handleBlur(event) {
         this.props.onBlur();
+    }
+
+    handleSelection(event, item) {
+        if (!this.props.canExplore) {
+            this.setState({query: ''});
+            this.props.dispatch(clearSearchResults());
+            this.props.onBlur();
+        }
     }
 
     loadSearchResults(value = this.state.query, category = this.state.category) {
@@ -620,6 +632,7 @@ class Search extends CSSComponent {
     render() {
         const {
             alwaysActive,
+            canExplore,
             inputContainerStyle,
             focused,
             onBlur,
@@ -633,6 +646,8 @@ class Search extends CSSComponent {
             <div {...other} style={{...this.styles().searchContainer, ...style}}>
                 <AutoComplete
                     alwaysActive={alwaysActive}
+                    clearValueOnSelection={!canExplore}
+                    focusOnSelect={canExplore}
                     focused={focused}
                     inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
                     is="AutoComplete"
@@ -642,6 +657,7 @@ class Search extends CSSComponent {
                     onChange={::this.handleChange}
                     onClearToken={::this.handleClearCategory}
                     onFocus={onFocus}
+                    onSelect={::this.handleSelection}
                     placeholderText={t('Search People, Teams & Locations')}
                     renderItem={::this.renderItem}
                     renderMenu={::this.renderMenu}

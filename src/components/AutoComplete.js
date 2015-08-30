@@ -15,6 +15,8 @@ class AutoComplete extends CSSComponent {
 
     static propTypes = {
         alwaysActive: PropTypes.bool,
+        clearValueOnSelection: PropTypes.bool,
+        focusOnSelect: PropTypes.bool,
         focused: PropTypes.bool,
         initialValue: PropTypes.any,
         inputContainerStyle: PropTypes.object,
@@ -24,6 +26,7 @@ class AutoComplete extends CSSComponent {
         onChange: PropTypes.func,
         onClearToken: PropTypes.func,
         onFocus: PropTypes.func,
+        onSelect: PropTypes.func,
         placeholderText: PropTypes.string,
         renderItem: PropTypes.func.isRequired,
         renderMenu: PropTypes.func,
@@ -36,12 +39,15 @@ class AutoComplete extends CSSComponent {
 
     static defaultProps = {
         alwaysActive: false,
+        clearValueOnSelection: false,
+        focusOnSelect: true,
         focused: false,
         getItemValue: item => item,
         onBlur() {},
         onCancel() {},
         onChange() {},
         onFocus() {},
+        onSelect() {},
         placeholderText: '',
         renderMenu: (items, value, style) => {
             return <div children={items} style={style} />
@@ -123,8 +129,11 @@ class AutoComplete extends CSSComponent {
     }
 
     focusInput() {
-        // XXX is there a way to dedupe these?
         React.findDOMNode(this.refs.input).select();
+    }
+
+    blurInput() {
+        React.findDOMNode(this.refs.input).blur();
     }
 
     setIgnoreBlur(ignoreBlur) {
@@ -166,8 +175,14 @@ class AutoComplete extends CSSComponent {
         this.props.onCancel();
     }
 
-    handleSelectItem(cb) {
-        this.focusInput();
+    handleSelectItem(item, cb) {
+        if (this.props.focusOnSelect) {
+            this.focusInput();
+        }
+        if (this.props.clearValueOnSelection) {
+            this.setState({value: ''});
+        }
+        this.props.onSelect(item);
         if (cb && typeof cb === 'function') {
             cb();
         }
@@ -208,14 +223,12 @@ class AutoComplete extends CSSComponent {
             } else if (this.state.highlightedIndex === null) {
                 // hit enter after focus but before typing anything
                 this.setState({isActive: false}, () => {
-                    this.focusINput();
+                    this.focusInput();
                 });
             } else {
                 this.setState({
                     isActive: this.props.alwaysActive ? true : false,
                     highlightedIndex: null,
-                }, () => {
-                    this.focusInput();
                 });
             }
         },
@@ -238,7 +251,7 @@ class AutoComplete extends CSSComponent {
             return React.cloneElement(element, {
                 key: `item-${index}`,
                 onMouseEnter: () => this.setIgnoreBlur(true),
-                onTouchTap: () => this.handleSelectItem(element.props.onTouchTap),
+                onTouchTap: () => this.handleSelectItem(item, element.props.onTouchTap),
             });
         });
         const menu = this.props.renderMenu(items, this.state.value, this.styles().menu);
@@ -278,6 +291,7 @@ class AutoComplete extends CSSComponent {
             inputContainerStyle,
             onBlur,
             onClearToken,
+            onSelect,
             placeholderText,
             showCancel,
             style,

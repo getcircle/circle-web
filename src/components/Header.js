@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react/addons';
 
+import { backgroundColors } from '../constants/styles';
 import * as selectors from '../selectors';
 
 import CSSComponent from '../components/CSSComponent';
@@ -41,6 +42,16 @@ class Header extends CSSComponent {
             return false;
         }
         return true;
+    }
+
+    state = {
+        focused: false,
+    }
+
+    styles() {
+        return this.css({
+            focused: this.state.focused,
+        });
     }
 
     classes() {
@@ -94,7 +105,30 @@ class Header extends CSSComponent {
                     display: 'flex',
                 },
             },
+            focused: {
+                Search: {
+                    inputContainerStyle: {
+                        borderRadius: '0px',
+                    },
+                    focused: true,
+                    resultsListStyle: {
+                        height: 'initial',
+                        marginTop: 1,
+                        opacity: 1,
+                        position: 'absolute',
+                        ...backgroundColors.light,
+                    },
+                },
+            },
         };
+    }
+
+    handleFocusSearch() {
+        this.setState({focused: true});
+    }
+
+    handleBlurSearch() {
+        this.setState({focused: false});
     }
 
     renderHeader() {
@@ -110,8 +144,11 @@ class Header extends CSSComponent {
                 </div>
                 <div className="col-xs-8 center-xs" is="searchContainer">
                     <Search
+                        canExplore={false}
                         is="Search"
                         largerDevice={true}
+                        onBlur={::this.handleBlurSearch}
+                        onFocus={::this.handleFocusSearch}
                         organization={this.props.organization}
                     />
                 </div>
