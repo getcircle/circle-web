@@ -1,5 +1,5 @@
 import mui from 'material-ui';
-import { tintColor } from '../constants/styles';
+import { canvasColor, tintColor } from '../constants/styles';
 
 const ThemeManager = new mui.Styles.ThemeManager();
 
@@ -7,9 +7,12 @@ const ThemeManager = new mui.Styles.ThemeManager();
 ThemeManager.contentFontFamily = '"Open Sans", Arial, sans-serif';
 ThemeManager.setPalette({
     accent1Color: tintColor,
-    canvasColor: 'rgba(255, 255, 255, 0.9)',
+    canvasColor: canvasColor,
 });
 ThemeManager.setComponentThemes({
+    appBar: {
+        color: '#F7F9FA',
+    },
     tab: {
         textColor: 'rgba(0, 0, 0, 0.3)',
         selectedTextColor: tintColor,

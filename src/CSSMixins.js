@@ -22,4 +22,5 @@ export default {
         return {display: value};
     },
     flexDirection: memoizedAutoprefix('flexDirection'),
+    flexWrap: memoizedAutoprefix('flexWrap'),
 }

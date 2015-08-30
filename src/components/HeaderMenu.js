@@ -17,8 +17,13 @@ class HeaderMenu extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
-        inHeader:PropTypes.bool,
+        expandedView: PropTypes.bool,
         profile: PropTypes.object,
+        shouldDisplayName: PropTypes.bool,
+    }
+
+    static defaultProps = {
+        expandedView: true,
     }
 
     shouldComponentUpdate(nextProps) {
@@ -41,8 +46,6 @@ class HeaderMenu extends CSSComponent {
                     paddingLeft: 10,
                 },
                 container: {
-                    paddingTop: 22,
-                    paddingRight: 22,
                     cursor: 'pointer',
                 },
                 menu: {
@@ -96,7 +99,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     renderProfileName() {
-        if (!this.props.inHeader) {
+        if (this.props.expandedView) {
             return (
                 <div className="col-xs">
                     <span is="text">{this.props.profile.first_name}</span>
@@ -106,7 +109,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     renderDownArrow() {
-        if (!this.props.inHeader) {
+        if (this.props.expandedView) {
             return (
                 <div>
                     <img is="arrow" src={rectangleIcon} />
@@ -116,15 +119,19 @@ class HeaderMenu extends CSSComponent {
     }
 
     render() {
+        const {
+            profile,
+            ...other,
+        } = this.props;
         return (
-            <div>
+            <div {...other}>
                 <div
                     className="row"
                     is="container"
                     onTouchTap={::this.handleTouchTap}
                 >
                     <div className="col-xs">
-                        <Avatar src={this.props.profile.image_url} />
+                        <Avatar src={profile.image_url} />
                     </div>
                     {this.renderProfileName()}
                     {this.renderDownArrow()}

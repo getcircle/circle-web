@@ -3,15 +3,11 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react/addons';
 
-import constants from '../styles/constants';
-import t from '../utils/gettext';
 import * as selectors from '../selectors';
 
+import CSSComponent from '../components/CSSComponent';
 import HeaderMenu from '../components/HeaderMenu';
-import PureComponent from '../components/PureComponent';
-import Search from '../components/Search';
-
-const MenuActions = {logout: 'Logout'};
+import Search from '../components/SearchV2';
 
 const selector = createSelector(
     [selectors.authenticationSelector, selectors.searchSelector],
@@ -24,28 +20,17 @@ const selector = createSelector(
     }
 )
 
-const styles = {
-    image: {
-        height: 60,
-        cursor: 'pointer',
-    },
-    root: {
-        // TODO this should be moved to the app theme
-        backgroundColor: 'white',
-        paddingLeft: 0,
-        paddingRight: 0,
-    },
-}
-
 @connect(selector)
-class Header extends PureComponent {
+class Header extends CSSComponent {
 
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
         organization: PropTypes.object.isRequired,
         profile: PropTypes.object.isRequired,
     }
 
     static contextTypes = {
+        mixins: PropTypes.object.isRequired,
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
         }).isRequired,
@@ -58,24 +43,81 @@ class Header extends PureComponent {
         return true;
     }
 
-    _renderHeader() {
+    classes() {
+        return {
+            default: {
+                AppBar: {
+                    style: {
+                        paddingLeft: 0,
+                        paddingRight: 0,
+                    },
+                    titleStyle: {
+                        display: 'flex',
+                    },
+                },
+                HeaderMenu: {
+                    style: {
+                        'display': 'flex',
+                        'alignSelf': 'center',
+                    },
+                },
+                image: {
+                    alignSelf: 'center',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    height: '100%',
+                    width: '100%',
+                    maxHeight: 64,
+                },
+                logoContainer: {
+                    display: 'flex',
+                },
+                menuContainer: {
+                    'display': 'flex',
+                },
+                root: {
+                    display: 'flex',
+                    flexWrap: 'nowrap',
+                },
+                Search: {
+                    style: {
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        flex: 1,
+                    },
+                },
+                searchContainer: {
+                    display: 'flex',
+                },
+            },
+        };
+    }
+
+    renderHeader() {
         const { router } = this.context;
         return (
-            <div>
-                <div className="row">
-                    <div className="col-xs-4">
-                        <img style={styles.image} src="https://s3.amazonaws.com/otterbots-media/organizations/RV_Main_Logo.png" onTouchTap={() => router.transitionTo('/')}/>
-                    </div>
-                    <div className="col-xs-4">
-                        <Search inHeader={true} />
-                    </div>
-                    <div className="col-xs-offset-2 col-xs-2 end-xs">
-                        <HeaderMenu
-                            profile={this.props.profile}
-                            dispatch={this.props.dispatch}
-                            inHeader={true}
-                        />
-                    </div>
+            <div className="row" is="root">
+                <div className="col-xs-2" is="logoContainer">
+                    <img
+                        is="image"
+                        onTouchTap={() => router.transitionTo('/')}
+                        src={this.props.organization.image_url}
+                    />
+                </div>
+                <div className="col-xs-8 center-xs" is="searchContainer">
+                    <Search
+                        is="Search"
+                        largerDevice={true}
+                        organization={this.props.organization}
+                    />
+                </div>
+                <div className="col-xs-2 end-xs" is="menuContainer">
+                    <HeaderMenu
+                        dispatch={this.props.dispatch}
+                        expandedView={false}
+                        is="HeaderMenu"
+                        profile={this.props.profile}
+                    />
                 </div>
             </div>
         );
@@ -84,9 +126,9 @@ class Header extends PureComponent {
     render() {
         return (
             <AppBar
-                style={styles.root}
-                title={this._renderHeader()}
+                is="AppBar"
                 showMenuIconButton={false}
+                title={this.renderHeader()}
             />
         );
     }
