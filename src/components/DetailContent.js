@@ -1,18 +1,29 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
-const styles = {
-    root: {
-        paddingTop: 40,
-        boxSizing: 'border-box',
-        maxWidth: 800,
-        margin: '0px auto',
-        backgroundColor: 'rgba(247, 249, 250)',
-    },
-};
+class DetailContent extends CSSComponent {
 
-class DetailContent extends StyleableComponent {
+    static propTypes = {
+        children: PropTypes.arrayOf(PropTypes.element),
+        style: PropTypes.object,
+    }
+
+    classes() {
+        return {
+            default: {
+                root: {
+                    backgroundColor: 'rgba(247, 249, 250)',
+                    boxSizing: 'border-box',
+                    paddingTop: 40,
+                    maxWidth: 800,
+                    margin: '0px auto',
+                    paddingRight: 10,
+                    paddingLeft: 10,
+                },
+            },
+        };
+    }
 
     render() {
         const {
@@ -20,7 +31,7 @@ class DetailContent extends StyleableComponent {
             ...other,
         } = this.props;
         return (
-            <section {...other} className="wrap" style={this.mergeAndPrefix(styles.root, style)} >
+            <section {...other} className="wrap" style={{...this.styles().root, ...style}}>
                 {this.props.children}
             </section>
         );

@@ -1,16 +1,25 @@
 import { List } from 'material-ui';
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
-const styles = {
-    root: {
-        paddingTop: 0,
-        paddingBottom: 0,
-    },
-}
+class CardList extends CSSComponent {
 
-class CardList extends StyleableComponent {
+    static propTypes = {
+        children: PropTypes.arrayOf(PropTypes.element),
+        style: PropTypes.object,
+    }
+
+    classes() {
+        return {
+            default: {
+                root: {
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                },
+            },
+        };
+    }
 
     render() {
         const {
@@ -18,11 +27,7 @@ class CardList extends StyleableComponent {
             ...other,
         } = this.props;
         return (
-            <List
-                {...other}
-                className="col-xs"
-                style={this.mergeAndPrefix(styles.root, style)}
-            >
+            <List {...other} is="root">
                 {this.props.children}
             </List>
         );

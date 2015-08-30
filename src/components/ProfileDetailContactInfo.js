@@ -6,22 +6,15 @@ import Card from './Card';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
-import CardVerticalDivider from './CardVerticalDivider';
+import CSSComponent from './CSSComponent';
 import IconContainer from './IconContainer';
 import OfficeIcon from './OfficeIcon';
 import MailIcon from './MailIcon';
 import PhoneIcon from './PhoneIcon';
-import StyleableComponent from './StyleableComponent';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
-const styles = {
-    icon: {
-        color: 'rgba(0, 0, 0, .4)',
-    },
-};
-
-class ProfileDetailContactInfo extends StyleableComponent {
+class ProfileDetailContactInfo extends CSSComponent {
 
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
@@ -33,14 +26,32 @@ class ProfileDetailContactInfo extends StyleableComponent {
         onClickLocation: PropTypes.func,
     }
 
-    _getAddress(location) {
+    classes() {
+        return {
+            default: {
+                Card: {
+                    className: 'col-xs-12 col-sm-6 col-md-6 col-lg-6',
+                    style: {
+                        paddingLeft: 0,
+                        paddingRight: 0,
+                    },
+                },
+                IconContainer: {
+                    stroke: 'rgba(0, 0, 0, .4)',
+                },
+            },
+        };
+    }
+
+    // TODO move this to display_address on location
+    getAddress(location) {
         return _.filter(
             [location.address_1, location.address_2, location.city, location.region],
             (item) => item !== null,
         ).join(', ');
     }
 
-    _renderContactInfo() {
+    renderContactInfo() {
         const methods = this.props.contactMethods.map((item, index) => {
             if (!item) {
                 return;
@@ -49,21 +60,21 @@ class ProfileDetailContactInfo extends StyleableComponent {
             case ContactMethodTypeV1.EMAIL:
                 return (
                     <CardListItem
+                        disabled={true}
                         key={index}
+                        leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
                         primaryText="Email"
                         secondaryText={item.value}
-                        leftAvatar={<IconContainer IconClass={MailIcon} stroke={styles.icon.color}/>}
-                        disabled={true}
                     />
                 );
             case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
                 return (
                     <CardListItem
+                        disabled={true}
                         key={index}
+                        leftAvatar={<IconContainer IconClass={PhoneIcon} is="IconContainer" />}
                         primaryText="Phone"
                         secondaryText={item.value}
-                        leftAvatar={<IconContainer IconClass={PhoneIcon} stroke={styles.icon.color}/>}
-                        disabled={true}
                     />
                 );
             }
@@ -75,15 +86,15 @@ class ProfileDetailContactInfo extends StyleableComponent {
         );
     }
 
-    _renderLocations() {
+    renderLocations() {
         const locations = this.props.locations.map((item, index) => {
             return (
                 <CardListItem
                     key={index}
-                    primaryText={item.name}
-                    secondaryText={this._getAddress(item)}
-                    leftAvatar={<IconContainer IconClass={OfficeIcon} stroke={styles.icon.color} />}
+                    leftAvatar={<IconContainer IconClass={OfficeIcon} is="IconContainer" />}
                     onTouchTap={this.props.onClickLocation.bind(null, item)}
+                    primaryText={item.name}
+                    secondaryText={this.getAddress(item)}
                 />
             );
         })
@@ -97,13 +108,16 @@ class ProfileDetailContactInfo extends StyleableComponent {
 
     render() {
         return (
-            <Card {...this.props} title="Contact">
+            <section {...this.props} >
                 <CardRow>
-                    {this._renderContactInfo()}
-                    <CardVerticalDivider />
-                    {this._renderLocations()}
+                    <Card is="Card" title="Contact">
+                        {this.renderContactInfo()}
+                    </Card>
+                    <Card is="Card" title="Works At">
+                        {this.renderLocations()}
+                    </Card>
                 </CardRow>
-            </Card>
+            </section>
         );
     }
 

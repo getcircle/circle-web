@@ -3,55 +3,9 @@ import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
 
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
-const styles = {
-    contentContainer: {
-        display: 'flex',
-        flexFlow: 'row',
-    },
-    header: {
-        borderBottom: '1px solid rgba(0, 0, 0, .1)',
-        height: 40,
-        display: 'flex',
-    },
-    headerText: {
-        fontSize: '14px',
-        fontWeight: 600,
-        color: 'rgba(0, 0, 0, .4)',
-        alignSelf: 'center',
-        paddingLeft: 12,
-        textTransform: 'uppercase',
-    },
-    headerActionButton: {
-        flex: 1,
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginRight: 20,
-    },
-    headerActionButtonLabel: {
-        color: '#8598FF',
-        fontSize: 16,
-        fontWeight: 600,
-    },
-    progressIndicator: {
-        alignSelf: 'center',
-        marginTop: -2,
-    },
-    progressText: {
-        alignSelf: 'center',
-        color: 'rgba(0, 0, 0, 0.5)',
-        fontSize: 14,
-        textTransform: 'uppercase',
-    },
-    root: {
-        boxShadow: '1px 1px 3px -2px',
-        backgroundColor: 'white',
-        borderRadius: 3,
-    },
-};
-
-class Card extends StyleableComponent {
+class Card extends CSSComponent {
 
     // TODO: Add custom validator for editing related props
     static propTypes = {
@@ -66,12 +20,52 @@ class Card extends StyleableComponent {
         title: PropTypes.string,
     }
 
+    classes() {
+        return {
+            default: {
+                contentContainer: {
+                    display: 'flex',
+                    flexFlow: 'row',
+                },
+                header: {
+                    borderBottom: '1px solid rgba(0, 0, 0, .1)',
+                    height: 40,
+                    display: 'flex',
+                },
+                headerText: {
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: 'rgba(0, 0, 0, .4)',
+                    alignSelf: 'center',
+                    paddingLeft: 12,
+                    textTransform: 'uppercase',
+                },
+                headerActionButton: {
+                    flex: 1,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginRight: 20,
+                },
+                headerActionButtonLabel: {
+                    color: '#8598FF',
+                    fontSize: 16,
+                    fontWeight: 600,
+                },
+                root: {
+                    boxShadow: '1px 1px 2px 0 rgba(0, 0, 0, 0.1)',
+                    backgroundColor: 'white',
+                    borderRadius: 3,
+                },
+            }
+        }
+    }
+
     renderHeader() {
         const { title } = this.props;
         if (title) {
             return (
-                <header style={this.mergeAndPrefix(styles.header)}>
-                    <span style={this.mergeAndPrefix(styles.headerText)}>
+                <header is="header">
+                    <span is="headerText">
                         {title}
                     </span>
                     {this.renderEditButton()}
@@ -87,15 +81,15 @@ class Card extends StyleableComponent {
         } = this.props;
 
         return (
-            <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+            <div is="headerActionButton">
                 <FlatButton
                     label={t('Cancel')}
-                    labelStyle={styles.headerActionButtonLabel}
+                    labelStyle={this.styles().headerActionButtonLabel}
                     onTouchTap={onCancelTapped}
                 />
                 <FlatButton
                     label={t('Save')}
-                    labelStyle={styles.headerActionButtonLabel}
+                    labelStyle={this.styles().headerActionButtonLabel}
                     onTouchTap={onSaveTapped}
                 />
             </div>
@@ -108,10 +102,10 @@ class Card extends StyleableComponent {
         } = this.props;
 
         return (
-            <div style={this.mergeAndPrefix(styles.headerActionButton)}>
+            <div is="headerActionButton">
                 <FlatButton
                     label={t('Edit')}
-                    labelStyle={styles.headerActionButtonLabel}
+                    labelStyle={this.styles().headerActionButtonLabel}
                     onTouchTap={onEditTapped}
                 />
             </div>
@@ -142,9 +136,9 @@ class Card extends StyleableComponent {
             ...other,
         } = this.props;
         return (
-            <div style={this.mergeAndPrefix(styles.root, style)} {...other}>
+            <div {...other} style={{...this.styles().root, ...style}}>
                 {this.renderHeader()}
-                <div style={this.mergeAndPrefix(contentStyle)}>
+                <div style={contentStyle}>
                     {this.props.children}
                 </div>
             </div>
