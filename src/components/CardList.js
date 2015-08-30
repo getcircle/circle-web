@@ -16,6 +16,7 @@ class CardList extends CSSComponent {
                 root: {
                     paddingTop: 0,
                     paddingBottom: 0,
+                    width: '100%',
                 },
             },
         };

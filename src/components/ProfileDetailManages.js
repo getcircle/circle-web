@@ -5,63 +5,59 @@ import { getTeamLabel } from '../services/organization';
 
 import Card from './Card';
 import CardFooter from './CardFooter';
-import CardFooterProfiles from './CardFooterProfiles';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
-import DetailViewAll from './DetailViewAll';
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
-import ProfileAvatar from './ProfileAvatar';
 
-const styles = {
-    icon: {
-        color: 'rgba(0, 0, 0, .4)',
-    },
-};
-
-class ProfileDetailManages extends StyleableComponent {
+class ProfileDetailManages extends CSSComponent {
 
     static propTypes = {
-        team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
         directReports: PropTypes.arrayOf(services.profile.containers.ProfileV1),
-        onClickTeam: PropTypes.func,
         onClickDirectReport: PropTypes.func,
+        onClickTeam: PropTypes.func,
+        team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
 
-    _renderTeam() {
+    classes() {
+        return {
+            default: {
+                IconContainer: {
+                    stroke: 'rgba(0, 0, 0, .4)',
+                },
+            },
+        };
+    }
+
+    renderTeam() {
         const { team } = this.props;
         return (
             <CardList>
                 <CardListItem
+                    leftAvatar={<IconContainer IconClass={GroupIcon} is="IconContainer" />}
+                    onTouchTap={this.props.onClickTeam}
                     primaryText={team.display_name}
                     secondaryText={getTeamLabel(team)}
-                    leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
-                    onTouchTap={this.props.onClickTeam}
                 />
             </CardList>
         );
     }
 
-    _handleClickAction() {
+    handleClickAction() {
         this.refs.modal.show();
     }
 
-    _renderFooter() {
+    renderFooter() {
         const { directReports } = this.props;
         if (directReports && directReports.length) {
             return (
                 <div>
-                    <CardFooter actionText="view all direct reports" onClick={this._handleClickAction.bind(this)}>
-                        <CardFooterProfiles profiles={directReports} />
-                    </CardFooter>
-                    <DetailViewAll
-                        ref="modal"
-                        title="Direct Reports"
-                        onClickItem={this.props.onClickDirectReport}
-                        items={directReports}
+                    <CardFooter
+                        actionText="view all direct reports"
+                        onClick={::this.handleClickAction}
                     />
                 </div>
             );
@@ -72,9 +68,9 @@ class ProfileDetailManages extends StyleableComponent {
         return (
             <Card {...this.props} title="Manages">
                 <CardRow>
-                    {this._renderTeam()}
+                    {this.renderTeam()}
                 </CardRow>
-                {this._renderFooter()}
+                {this.renderFooter()}
             </Card>
         );
     }
