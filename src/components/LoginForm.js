@@ -2,41 +2,14 @@ import { RaisedButton, Snackbar } from 'material-ui';
 import React, { PropTypes } from 'react/addons';
 import { services } from 'protobufs';
 
-import constants from '../styles/constants';
+import { fontColors, fontWeights } from '../constants/styles';
 import { login } from '../utils/google';
 import logger from '../utils/logger';
 import t from '../utils/gettext';
 
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
-const styles = {
-    button: {
-        width: '100%',
-        backgroundColor: constants.colors.tint,
-        height: 50,
-    },
-    container: {
-        paddingTop: '15%',
-    },
-    label: {
-        lineHeight: '50px',
-        fontSize: 18,
-        fontWeight: 300,
-    },
-    text: {
-        color: constants.colors.lightText,
-    },
-    header: {
-        fontSize: 36,
-        paddingBottom: 50,
-    },
-    subHeader: {
-        fontSize: 26,
-        paddingBottom: 20,
-    },
-}
-
-class LoginForm extends StyleableComponent {
+class LoginForm extends CSSComponent {
 
     static propTypes = {
         authError: PropTypes.string,
@@ -52,7 +25,42 @@ class LoginForm extends StyleableComponent {
 
     backends = services.user.actions.authenticate_user.RequestV1.AuthBackendV1
 
-    _handleTouchTap() {
+    classes() {
+        return {
+            default: {
+                button: {
+                    width: '100%',
+                    backgroundColor: 'rgb(0, 201, 255)',
+                    height: 50,
+                    maxWidth: 400,
+                },
+                container: {
+                    paddingTop: '15%',
+                },
+                label: {
+                    lineHeight: '50px',
+                    fontSize: 18,
+                    ...fontWeights.light,
+                },
+                header: {
+                    fontSize: 36,
+                    paddingBottom: 50,
+                    ...fontColors.white,
+                },
+                section: {
+                    marginLeft: 20,
+                    marginRight: 20,
+                },
+                subHeader: {
+                    fontSize: 26,
+                    paddingBottom: 20,
+                    ...fontColors.white,
+                },
+            }
+        }
+    }
+
+    handleTouchTap() {
         login()
             .then((details) => {
                 this.props.authenticate(this.backends.GOOGLE, details.code);
@@ -65,25 +73,23 @@ class LoginForm extends StyleableComponent {
 
 
     render() {
-        const headerStyle = this.mergeAndPrefix(styles.text, styles.header);
-        const subHeaderStyle = this.mergeAndPrefix(styles.text, styles.subHeader);
         return (
-            <div className="row" style={styles.container}>
-                <section className="col-sm-offset-4 col-sm-4">
+            <div className="row" is="container">
+                <section className="col-xs" is="section">
                     <div>
                         <div className="row center-xs">
-                            <h1 style={headerStyle}>{t('circle')}</h1>
+                            <h1 is="header">{t('circle')}</h1>
                         </div>
                         <div className="row center-xs">
-                            <h2 style={subHeaderStyle}>{t('know the people you work with')}</h2>
+                            <h2 is="subHeader">{t('know the people you work with')}</h2>
                         </div>
                         <div className="row center-xs">
                             <RaisedButton
+                                is="button"
                                 label={`${ t('START USING CIRCLE') }`}
-                                labelStyle={styles.label}
-                                onTouchTap={this._handleTouchTap.bind(this)}
+                                labelStyle={this.styles().label}
+                                onTouchTap={this.handleTouchTap.bind(this)}
                                 primary={true}
-                                style={styles.button}
                             />
                         </div>
                     </div>
