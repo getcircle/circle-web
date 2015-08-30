@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 
 import resizable from '../decorators/resizable';
 
-import CardVerticalDivider from './CardVerticalDivider';
 import CSSComponent from './CSSComponent';
 
 @resizable
@@ -10,6 +9,7 @@ class DetailSection extends CSSComponent {
 
     static propTypes = {
         firstCard: PropTypes.element,
+        footer: PropTypes.element,
         largerDevice: PropTypes.bool.isRequired,
         secondCard: PropTypes.element,
     }
@@ -55,6 +55,7 @@ class DetailSection extends CSSComponent {
     render() {
         const {
             firstCard,
+            footer,
             secondCard,
             ...other,
         } = this.props;
@@ -64,6 +65,7 @@ class DetailSection extends CSSComponent {
             <section {...this.props} className="row">
                 {first}
                 {second}
+                {footer}
             </section>
         );
     }

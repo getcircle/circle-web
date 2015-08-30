@@ -1,34 +1,44 @@
 import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import StyleableComponent from './StyleableComponent';
+import { tintColor, fontWeights } from '../constants/styles';
 
-const styles = {
-    footerButton: {
-        flex: 1,
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginRight: 20,
-    },
-    footerButtonLabel: {
-        color: '#8598FF',
-        fontSize: 16,
-        fontWeight: 600,
-    },
-    root: {
-        borderTop: '1px solid rgba(0, 0, 0, .1)',
-        height: 70,
-        paddingTop: 15,
-        paddingBottom: 15,
-        display: 'flex',
-    },
-};
+import CSSComponent from './CSSComponent';
 
-class CardFooter extends StyleableComponent {
+class CardFooter extends CSSComponent {
 
     static propTypes = {
         actionText: PropTypes.string,
+        children: PropTypes.arrayOf(PropTypes.element),
         onClick: PropTypes.func,
+    }
+
+    classes() {
+        return {
+            default: {
+                button: {
+                    width: '100%',
+                },
+                buttonContainer: {
+                    flex: 1,
+                    display: 'flex',
+                    justifyContent: 'center',
+                },
+                footerButtonLabel: {
+                    color: tintColor,
+                    fontSize: 16,
+                    ...fontWeights.semiBold,
+                },
+                root: {
+                    backgroundColor: 'white',
+                    borderTop: '1px solid rgba(0, 0, 0, .1)',
+                    boxShadow: '1px 1px 2px 0 rgba(0, 0, 0, 0.1)',
+                    height: 60,
+                    display: 'flex',
+                    width: '100%',
+                },
+            },
+        };
     }
 
     render() {
@@ -37,10 +47,14 @@ class CardFooter extends StyleableComponent {
             onClick,
         } = this.props;
         return (
-            <footer {...this.props} className="row" style={this.mergeAndPrefix(styles.root)}>
-                {this.props.children}
-                <div style={this.mergeAndPrefix(styles.footerButton)}>
-                    <FlatButton labelStyle={styles.footerButtonLabel} label={actionText} onTouchTap={onClick} />
+            <footer {...this.props} className="row" is="root">
+                <div is="buttonContainer">
+                    <FlatButton
+                        is="button"
+                        label={actionText}
+                        labelStyle={this.styles().footerButtonLabel}
+                        onTouchTap={onClick}
+                    />
                 </div>
             </footer>
         );

@@ -1,95 +1,94 @@
-import { Dialog, List } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getTeamLabel } from '../services/organization';
-
-import StyleableComponent from './StyleableComponent';
 
 import Card from './Card';
 import CardFooter from './CardFooter';
 import CardFooterProfiles from './CardFooterProfiles';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
-import CardRow from './CardRow';
-import CardVerticalDivider from './CardVerticalDivider';
+import CSSComponent from './CSSComponent';
+import DetailSection from './DetailSection';
 import DetailViewAll from './DetailViewAll';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
-import ProfileSearchResult from './ProfileSearchResult';
-import Search from '../components/Search';
 
-const styles = {
-    icon: {
-        color: 'rgba(0, 0, 0, .4)',
-    },
-};
-
-class ProfileDetailTeam extends StyleableComponent {
+class ProfileDetailTeam extends CSSComponent {
 
     static propTypes = {
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         onClickManager: PropTypes.func,
-        onClickTeam: PropTypes.func,
         onClickPeer: PropTypes.func,
+        onClickTeam: PropTypes.func,
         peers: PropTypes.arrayOf(services.profile.containers.ProfileV1),
         team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
 
-    _getManagerSecondaryText(manager) {
+    classes() {
+        return {
+            default: {
+                IconContainer: {
+                    stroke: 'rgba(0, 0, 0, .4)',
+                },
+            },
+        };
+    }
+
+    getManagerSecondaryText(manager) {
         const parts = [manager.full_name, manager.title];
         return parts.join(', ');
     }
 
-    _renderTeam() {
+    renderTeam() {
         const { team } = this.props;
         return (
             <CardList>
                 <CardListItem
+                    leftAvatar={<IconContainer IconClass={GroupIcon} is="IconContainer" />}
+                    onTouchTap={this.props.onClickTeam}
                     primaryText={team.display_name}
                     secondaryText={getTeamLabel(team)}
-                    leftAvatar={<IconContainer IconClass={GroupIcon} stroke={styles.icon.color} />}
-                    onTouchTap={this.props.onClickTeam}
                 />
             </CardList>
         );
     }
 
-    _renderManager() {
+    renderManager() {
         const { manager } = this.props;
         return (
             <CardList>
                 <CardListItem
-                    primaryText="Reports to"
-                    secondaryText={this._getManagerSecondaryText(manager)}
                     leftAvatar={<ProfileAvatar profile={manager} />}
                     onTouchTap={this.props.onClickManager}
+                    primaryText="Reports to"
+                    secondaryText={this.getManagerSecondaryText(manager)}
                 />
             </CardList>
         );
     }
 
-    _handleClickAction() {
+    handleClickAction() {
         this.refs.modal.show();
     }
 
-    _renderFooter() {
+    renderFooter() {
         const { peers } = this.props;
         if (peers && peers.length) {
             return (
                 <div>
                     <CardFooter
                         actionText="view all team members"
-                        onClick={this._handleClickAction.bind(this)}
+                        onClick={this.handleClickAction.bind(this)}
                     >
                         <CardFooterProfiles profiles={peers} />
                     </CardFooter>
                     <DetailViewAll
+                        items={peers}
+                        onClickItem={this.props.onClickPeer}
                         ref="modal"
                         title="Team Members"
-                        onClickItem={this.props.onClickPeer}
-                        items={peers}
                     />
                 </div>
             );
@@ -97,15 +96,27 @@ class ProfileDetailTeam extends StyleableComponent {
     }
 
     render() {
+        // TODO fix the peer count down below
         return (
-            <Card {...this.props} title="Team">
-                <CardRow>
-                    {this._renderTeam()}
-                    <CardVerticalDivider />
-                    {this._renderManager()}
-                </CardRow>
-                {this._renderFooter()}
-            </Card>
+            <DetailSection
+                {...this.props}
+                firstCard={(
+                    <Card title="Reports To">
+                        {this.renderManager()}
+                    </Card>
+                )}
+                footer={(
+                    <CardFooter
+                        actionText={`Works with ${this.props.team.profile_count} peers`}
+                        onClick={::this.handleClickAction}
+                    />
+                )}
+                secondCard={(
+                    <Card title="Team">
+                        {this.renderTeam()}
+                    </Card>
+                )}
+            />
         );
     }
 
