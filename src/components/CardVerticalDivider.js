@@ -1,20 +1,32 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import PureComponent from './PureComponent';
+import CSSComponent from './CSSComponent';
 
-const styles = {
-    root: {
-        width: 1,
-        backgroundColor: 'rgba(0, 0, 0, .1)',
-        marginTop: 20,
-        marginBottom: 20,
-    },
-};
+class CardVerticalDivider extends CSSComponent {
 
-class CardVerticalDivider extends PureComponent {
+    static propTypes = {
+        style: PropTypes.object,
+    }
+
+    classes() {
+        return {
+            default: {
+                root: {
+                    width: 1,
+                    backgroundColor: 'rgba(0, 0, 0, .1)',
+                    marginTop: 20,
+                    marginBottom: 20,
+                },
+            },
+        };
+    }
 
     render() {
-        return <div style={styles.root} />
+        const {
+            style,
+            ...other,
+        } = this.props;
+        return <div {...other} style={{...this.styles().root, ...style}} />
     }
 
 }

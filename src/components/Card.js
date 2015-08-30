@@ -1,6 +1,7 @@
 import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
+import { fontColors } from '../constants/styles';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -17,6 +18,7 @@ class Card extends CSSComponent {
         onEditTapped: PropTypes.func,
         onSaveTapped: PropTypes.func,
         style: PropTypes.object,
+        subTitle: PropTypes.string,
         title: PropTypes.string,
     }
 
@@ -56,17 +58,30 @@ class Card extends CSSComponent {
                     backgroundColor: 'white',
                     borderRadius: 3,
                 },
+                subTitleText: {
+                    alignSelf: 'center',
+                    display: 'flex',
+                    flex: 1,
+                    fontSize: '12px',
+                    justifyContent: 'flex-end',
+                    lineHeight: '17px',
+                    paddingRight: 12,
+                    ...fontColors.light,
+                },
             }
         }
     }
 
     renderHeader() {
-        const { title } = this.props;
+        const { title, subTitle } = this.props;
         if (title) {
             return (
                 <header is="header">
                     <span is="headerText">
                         {title}
+                    </span>
+                    <span is="subTitleText">
+                        {subTitle}
                     </span>
                     {this.renderEditButton()}
                 </header>

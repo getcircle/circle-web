@@ -1,12 +1,13 @@
 import _ from 'lodash';
+import moment from '../utils/moment';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import Card from './Card';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
-import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
+import DetailSection from './DetailSection';
 import IconContainer from './IconContainer';
 import OfficeIcon from './OfficeIcon';
 import MailIcon from './MailIcon';
@@ -26,6 +27,22 @@ class ProfileDetailContactInfo extends CSSComponent {
         onClickLocation: PropTypes.func,
     }
 
+    componentWillMount() {
+        this.interval = null;
+    }
+
+    componentDidMount() {
+        this.interval = setInterval(::this.updateCurrentTime, 60000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    state = {
+        currentTime: this.getCurrentTime(this.props),
+    }
+
     classes() {
         return {
             default: {
@@ -41,6 +58,14 @@ class ProfileDetailContactInfo extends CSSComponent {
                 },
             },
         };
+    }
+
+    updateCurrentTime() {
+        this.setState({currentTime: this.getCurrentTime(this.props)});
+    }
+
+    getCurrentTime(props) {
+        return moment().tz(props.locations[0].timezone).calendar();
     }
 
     // TODO move this to display_address on location
@@ -63,8 +88,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                         disabled={true}
                         key={index}
                         leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
-                        primaryText="Email"
-                        secondaryText={item.value}
+                        primaryText={item.value}
                     />
                 );
             case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
@@ -108,16 +132,19 @@ class ProfileDetailContactInfo extends CSSComponent {
 
     render() {
         return (
-            <section {...this.props} >
-                <CardRow>
-                    <Card is="Card" title="Contact">
+            <DetailSection
+                {...this.props}
+                firstCard={(
+                    <Card subTitle={this.state.currentTime} title="Contact">
                         {this.renderContactInfo()}
                     </Card>
-                    <Card is="Card" title="Works At">
+                )}
+                secondCard={(
+                    <Card title="Works At">
                         {this.renderLocations()}
                     </Card>
-                </CardRow>
-            </section>
+                )}
+            />
         );
     }
 

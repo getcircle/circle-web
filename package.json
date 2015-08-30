@@ -71,6 +71,7 @@
     "keymirror": "^0.1.1",
     "lodash": "^3.9.3",
     "material-ui": "git+ssh://git@github.com/mhahn/material-ui.git",
+    "merge": "^1.2.0",
     "method-override": "~2.1.2",
     "moment": "^2.10.6",
     "moment-timezone": "^0.4.0",
