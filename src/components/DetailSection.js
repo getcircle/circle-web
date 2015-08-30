@@ -14,6 +14,12 @@ class DetailSection extends CSSComponent {
         secondCard: PropTypes.element,
     }
 
+    styles() {
+        return this.css({
+            missingCard: !this.props.firstCard || !this.props.secondCard,
+        });
+    }
+
     classes() {
         const common = {
             Card: {
@@ -49,6 +55,14 @@ class DetailSection extends CSSComponent {
                     },
                 }, common.Card),
             },
+            'missingCard': {
+                FirstCard: {
+                    className: 'col-xs',
+                },
+                SecondCard: {
+                    className: 'col-xs',
+                },
+            },
         };
     }
 
@@ -59,8 +73,13 @@ class DetailSection extends CSSComponent {
             secondCard,
             ...other,
         } = this.props;
-        const first = React.cloneElement(firstCard, this.styles().FirstCard);
-        const second = React.cloneElement(secondCard, this.styles().SecondCard);
+        let first, second;
+        if (firstCard) {
+            first = React.cloneElement(firstCard, this.styles().FirstCard);
+        }
+        if (secondCard) {
+            second = React.cloneElement(secondCard, this.styles().SecondCard);
+        }
         return (
             <section {...this.props} className="row">
                 {first}

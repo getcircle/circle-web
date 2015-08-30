@@ -61,11 +61,16 @@ class ProfileDetailContactInfo extends CSSComponent {
     }
 
     updateCurrentTime() {
-        this.setState({currentTime: this.getCurrentTime(this.props)});
+        const currentTime = this.getCurrentTime(this.props);
+        if (currentTime) {
+            this.setState({currentTime: this.getCurrentTime(this.props)});
+        }
     }
 
     getCurrentTime(props) {
-        return moment().tz(props.locations[0].timezone).calendar();
+        if (props.locations && props.locations.length) {
+            return moment().tz(props.locations[0].timezone).calendar();
+        }
     }
 
     // TODO move this to display_address on location
@@ -104,29 +109,35 @@ class ProfileDetailContactInfo extends CSSComponent {
             }
         })
         return (
-            <CardList>
-                {methods}
-            </CardList>
+            <Card subTitle={this.state.currentTime} title="Contact">
+                <CardList>
+                    {methods}
+                </CardList>
+            </Card>
         );
     }
 
     renderLocations() {
-        const locations = this.props.locations.map((item, index) => {
+        if (this.props.locations && this.props.locations.length) {
+            const locations = this.props.locations.map((item, index) => {
+                return (
+                    <CardListItem
+                        key={index}
+                        leftAvatar={<IconContainer IconClass={OfficeIcon} is="IconContainer" />}
+                        onTouchTap={this.props.onClickLocation.bind(null, item)}
+                        primaryText={item.name}
+                        secondaryText={this.getAddress(item)}
+                    />
+                );
+            })
             return (
-                <CardListItem
-                    key={index}
-                    leftAvatar={<IconContainer IconClass={OfficeIcon} is="IconContainer" />}
-                    onTouchTap={this.props.onClickLocation.bind(null, item)}
-                    primaryText={item.name}
-                    secondaryText={this.getAddress(item)}
-                />
+                <Card title="Works At">
+                    <CardList>
+                        {locations}
+                    </CardList>
+                </Card>
             );
-        })
-        return (
-            <CardList>
-                {locations}
-            </CardList>
-        );
+        }
 
     }
 
@@ -134,16 +145,8 @@ class ProfileDetailContactInfo extends CSSComponent {
         return (
             <DetailSection
                 {...this.props}
-                firstCard={(
-                    <Card subTitle={this.state.currentTime} title="Contact">
-                        {this.renderContactInfo()}
-                    </Card>
-                )}
-                secondCard={(
-                    <Card title="Works At">
-                        {this.renderLocations()}
-                    </Card>
-                )}
+                firstCard={this.renderContactInfo()}
+                secondCard={this.renderLocations()}
             />
         );
     }
