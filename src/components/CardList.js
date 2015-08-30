@@ -28,7 +28,7 @@ class CardList extends CSSComponent {
             ...other,
         } = this.props;
         return (
-            <List {...other} is="root">
+            <List {...other} className="col-xs" is="root">
                 {this.props.children}
             </List>
         );

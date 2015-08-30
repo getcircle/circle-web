@@ -5,11 +5,10 @@ import { fontWeights, fontColors, iconColors } from '../constants/styles';
 import { getTeamLabel } from '../services/organization';
 
 import Card from './Card';
+import CardColumns from './CardColumns';
 import CardFooter from './CardFooter';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
-import CardRow from './CardRow';
-import CardVerticalDivider from './CardVerticalDivider';
 import CSSComponent from './CSSComponent';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
@@ -26,9 +25,6 @@ class TeamDetailTeams extends CSSComponent {
     classes() {
         return {
             default: {
-                CardList: {
-                    className: 'col-xs',
-                },
                 IconContainer: {
                     ...iconColors.medium,
                 },
@@ -45,7 +41,7 @@ class TeamDetailTeams extends CSSComponent {
         };
     }
 
-    renderColumn(teams) {
+    renderColumn(teams, index) {
         const children = teams.map((item, index) => {
             return (
                 <CardListItem
@@ -58,7 +54,7 @@ class TeamDetailTeams extends CSSComponent {
             );
         })
         return (
-            <CardList is="CardList">
+            <CardList>
                 {children}
             </CardList>
         );
@@ -81,16 +77,14 @@ class TeamDetailTeams extends CSSComponent {
 
     render() {
         const { teams } = this.props;
-        // break out teams into two columns with a max of two teams each
-        const firstColumn = teams.slice(0, 2);
-        const secondColumn = teams.slice(2, 4);
         return (
             <Card {...this.props} title="Teams">
-                <CardRow>
-                    {this.renderColumn(firstColumn)}
-                    <CardVerticalDivider />
-                    {this.renderColumn(secondColumn)}
-                </CardRow>
+                <CardColumns
+                    items={teams}
+                    itemsPerColumn={2}
+                    numberOfColumns={2}
+                    renderColumn={::this.renderColumn}
+                />
                 {this.renderCardFooter(teams)}
             </Card>
         );

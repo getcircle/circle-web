@@ -2,18 +2,15 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import Card from './Card';
+import CardColumns from './CardColumns';
 import CardFooter from './CardFooter';
-import CardFooterProfiles from './CardFooterProfiles';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
-import CardRow from './CardRow';
-import CardVerticalDivider from './CardVerticalDivider';
-import DetailViewAll from './DetailViewAll';
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
 import ProfileAvatar from './ProfileAvatar';
 
-class TeamDetailTeamMembers extends StyleableComponent {
+class TeamDetailTeamMembers extends CSSComponent {
 
     static propTypes = {
         managerId: PropTypes.string,
@@ -23,7 +20,7 @@ class TeamDetailTeamMembers extends StyleableComponent {
         onClickMember: PropTypes.func,
     }
 
-    _renderColumn(members) {
+    renderColumn(members) {
         if (members.length) {
             const children = members.map((item, index) => {
                 return (
@@ -44,45 +41,32 @@ class TeamDetailTeamMembers extends StyleableComponent {
         }
     }
 
-    _handleClickAction() {
+    handleClickAction() {
         this.refs.modal.show();
     }
 
-    _renderFooter(members) {
+    renderFooter(members) {
         if (members.length) {
             return (
-                <div>
-                    <CardFooter actionText="view all team members" onClick={this._handleClickAction.bind(this)}>
-                        <CardFooterProfiles profiles={members} />
-                    </CardFooter>
-                    <DetailViewAll
-                        items={this.props.members}
-                        onClickItem={this.props.onClickMember}
-                        ref="modal"
-                        title="Team Members"
-                    />
-                </div>
+                <CardFooter
+                    actionText="view all team members"
+                    onClick={::this.handleClickAction}
+                />
             );
         }
     }
 
     render() {
         const { members } = this.props;
-        // break out members into two columns, with a max of three profiles each
-        const firstColumn = members.slice(0, 3);
-        const secondColumn = members.slice(3, 6);
         return (
             <Card {...this.props} title="Team Members">
-                <CardRow>
-                    {this._renderColumn(firstColumn)}
-                    {() => {
-                        if (secondColumn.length) {
-                            return <CardVerticalDivider />;
-                        }
-                    }}
-                    {this._renderColumn(secondColumn)}
-                </CardRow>
-                {this._renderFooter(members.slice(6))}
+                <CardColumns
+                    items={members}
+                    itemsPerColumn={2}
+                    numberOfColumns={2}
+                    renderColumn={::this.renderColumn}
+                />
+                {this.renderFooter(members.slice(6))}
             </Card>
         );
     }
