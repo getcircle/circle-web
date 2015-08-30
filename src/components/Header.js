@@ -50,6 +50,7 @@ class Header extends CSSComponent {
                     style: {
                         paddingLeft: 0,
                         paddingRight: 0,
+                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, .10)',
                     },
                     titleStyle: {
                         display: 'flex',
@@ -80,6 +81,9 @@ class Header extends CSSComponent {
                     flexWrap: 'nowrap',
                 },
                 Search: {
+                    inputContainerStyle: {
+                        boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
+                    },
                     style: {
                         alignSelf: 'center',
                         justifyContent: 'center',
