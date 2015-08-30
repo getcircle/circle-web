@@ -79,6 +79,7 @@ class Profile extends PureComponent {
                 <ProfileDetail
                     extendedProfile={extendedProfile}
                     isLoggedInUser={isLoggedInUser}
+                    onUpdateProfile={::this.onUpdateProfile}
                     organization={organization}
                 />
             );

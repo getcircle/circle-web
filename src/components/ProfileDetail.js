@@ -28,7 +28,7 @@ class ProfileDetail extends StyleableComponent {
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
         isLoggedInUser: PropTypes.bool.isRequired,
-        onUpdateProfileCallback: PropTypes.func.isRequired,
+        onUpdateProfile: PropTypes.func.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
     }
 
@@ -43,7 +43,7 @@ class ProfileDetail extends StyleableComponent {
     onUpdateStatus(statusText) {
         const {
             extendedProfile,
-            onUpdateProfileCallback,
+            onUpdateProfile,
         } = this.props;
 
         let profileStatusV1 = new ProfileStatusV1({
@@ -54,7 +54,7 @@ class ProfileDetail extends StyleableComponent {
             status:  profileStatusV1,
         });
 
-        onUpdateProfileCallback(updatedProfile);
+        onUpdateProfile(updatedProfile);
     }
 
     // Render Methods
