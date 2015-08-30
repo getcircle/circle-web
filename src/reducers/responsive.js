@@ -16,13 +16,13 @@ export default function header(state = initialState, action) {
         const display = action.payload;
         if (display && state.get('deviceSize') !== Sizes.SMALL) {
             return state.withMutations(map => {
-                return map.set('displayHeader', action.payload)
-                    .set('displayFooter', !action.payload);
+                return map.set('displayHeader', display)
+                    .set('displayFooter', !display);
                 });
         }
         return state.withMutations(map => {
-            return map.set('displayHeader', display)
-                .set('displayFooter', !display);
+            return map.set('displayHeader', false)
+                .set('displayFooter', true);
             });
     case types.DEVICE_RESIZED:
         const {
