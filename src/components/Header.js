@@ -62,10 +62,14 @@ class Header extends CSSComponent {
                         paddingLeft: 0,
                         paddingRight: 0,
                         boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, .10)',
+                        position: 'fixed',
                     },
                     titleStyle: {
                         display: 'flex',
                     },
+                },
+                headerContainer: {
+                    paddingBottom: 64,
                 },
                 HeaderMenu: {
                     style: {
@@ -166,11 +170,13 @@ class Header extends CSSComponent {
 
     render() {
         return (
-            <AppBar
-                is="AppBar"
-                showMenuIconButton={false}
-                title={this.renderHeader()}
-            />
+            <header is="headerContainer">
+                <AppBar
+                    is="AppBar"
+                    showMenuIconButton={false}
+                    title={this.renderHeader()}
+                />
+            </header>
         );
     }
 }
