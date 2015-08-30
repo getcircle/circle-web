@@ -94,6 +94,7 @@ class Header extends CSSComponent {
                 root: {
                     display: 'flex',
                     flexWrap: 'nowrap',
+                    width: '100%',
                 },
                 Search: {
                     inputContainerStyle: {
