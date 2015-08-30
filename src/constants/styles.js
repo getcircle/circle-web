@@ -36,6 +36,12 @@ export const backgroundColors = {
 }
 
 export const fontColors = {
+    darkWhite: {
+        color: 'rgba(255, 255, 255, 0.8)',
+    },
+    lightWhite: {
+        color: 'rgba(255, 255, 255, 0.6)',
+    },
     extraLight: {
         color: 'rgba(0, 0, 0, 0.3)',
     },
@@ -48,6 +54,9 @@ export const fontColors = {
 }
 
 export const fontWeights = {
+    light: {
+        fontWeight: 300,
+    },
     bold: {
         fontWeight: 'bold',
     },

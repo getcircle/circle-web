@@ -1,26 +1,32 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
-const styles = {
-    root: {
-        backgroundColor: '#333',
-        height: 320,
-    },
-};
+class DetailHeader extends CSSComponent {
 
-class DetailHeader extends StyleableComponent {
+    static propTypes = {
+        children: PropTypes.arrayOf(PropTypes.element),
+        img: PropTypes.string,
+        style: PropTypes.object,
+    }
+
+    classes() {
+        return {
+            default: {
+                root: {
+                    backgroundColor: '#333',
+                    height: 320,
+                },
+            },
+        };
+    }
 
     render() {
         const {
             style,
             ...other,
         } = this.props;
-        return (
-            <header {...other} style={this.mergeAndPrefix(styles.root, style)} >
-                {this.props.children}
-            </header>
-        );
+        return <header {...other} style={{...this.styles().root, ...style}} />;
     }
 
 }

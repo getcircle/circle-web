@@ -144,7 +144,6 @@ class ProfileDetail extends StyleableComponent {
         return (
             <div>
                 <ProfileDetailHeader
-                    location={locations[0]}
                     organization={organization}
                     profile={profile}
                     team={team}

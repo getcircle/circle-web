@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
-const styles = {
-    root: {
-        backgroundColor: '#F7F9FA',
-        minHeight: '100vh',
-        paddingBottom: 100,
-    },
-};
+class Container extends CSSComponent {
 
-class Container extends StyleableComponent {
+    static propTypes = {
+        children: PropTypes.arrayOf(PropTypes.element),
+        style: PropTypes.object,
+    }
+
+    classes() {
+        return {
+            default: {
+                root: {
+                    backgroundColor: '#F7F9FA',
+                    minHeight: '100vh',
+                    paddingBottom: 100,
+                },
+            },
+        };
+    }
 
     render() {
         const {
@@ -18,7 +27,7 @@ class Container extends StyleableComponent {
             ...other,
         } = this.props;
         return (
-            <section {...other} style={this.mergeAndPrefix(styles.root, style)}>
+            <section {...other} is="root">
                 {this.props.children}
             </section>
         );
