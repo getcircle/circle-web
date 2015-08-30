@@ -10,11 +10,11 @@ import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
+import DetailMembers from './DetailMembers';
 import ProfileAvatar from './ProfileAvatar';
 import TeamDetailDescription from './TeamDetailDescription';
 import TeamDetailHeader from './TeamDetailHeader';
 import TeamDetailStatus from './TeamDetailStatus';
-import TeamDetailTeamMembers from './TeamDetailTeamMembers';
 import TeamDetailTeams from './TeamDetailTeams';
 
 const { DescriptionV1 } = services.common.containers;
@@ -144,11 +144,14 @@ class TeamDetail extends CSSComponent {
     renderTeamMembers(manager, members) {
         if (members && members.length) {
             members = _.filter(members, (profile) => profile.id !== manager.id);
+            // TODO fix title
             return (
-                <TeamDetailTeamMembers
+                <DetailMembers
+                    actionText="View All Team Members"
                     is="section"
                     members={members}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
+                    title="Teams"
                 />
             );
         }

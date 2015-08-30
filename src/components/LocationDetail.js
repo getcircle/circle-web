@@ -3,28 +3,17 @@ import { services } from 'protobufs';
 
 import { routeToProfile } from '../utils/routes';
 
+import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import DetailMembers from './DetailMembers';
 import DetailViewAll from './DetailViewAll';
 import LocationDetailDescription from './LocationDetailDescription';
 import LocationDetailHeader from './LocationDetailHeader';
 import LocationDetailLocation from './LocationDetailLocation';
-import StyleableComponent from './StyleableComponent';
 
 const { DescriptionV1 } = services.common.containers;
 
-const styles = {
-    description: {
-        padding: 20,
-        lineHeight: '24px',
-        fontSize: '14px',
-    },
-    section: {
-        marginTop: 20,
-    },
-};
-
-class LocationDetail extends StyleableComponent {
+class LocationDetail extends CSSComponent {
 
     static propTypes = {
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
@@ -40,6 +29,21 @@ class LocationDetail extends StyleableComponent {
 
     static defaultProps = {
         members: [],
+    }
+
+    classes() {
+        return {
+            default: {
+                description: {
+                    padding: 20,
+                    lineHeight: '24px',
+                    fontSize: '14px',
+                },
+                section: {
+                    marginTop: 20,
+                },
+            },
+        };
     }
 
     // Update Methods
@@ -67,9 +71,9 @@ class LocationDetail extends StyleableComponent {
         return (
             <LocationDetailDescription
                 description={office.description}
+                is="section"
                 isEditable={isEditable}
                 onSaveCallback={this.onUpdateDescription.bind(this)}
-                style={this.mergeAndPrefix(styles.section)}
             />
         );
     }
@@ -79,10 +83,10 @@ class LocationDetail extends StyleableComponent {
             return (
                 <DetailMembers
                     actionText="View all Points of Contact"
+                    is="section"
+                    itemsPerColumn={1}
                     members={office.points_of_contact}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
-                    perColumn={1}
-                    style={styles.section}
                     title="Points of Contact"
                 />
             );
@@ -98,10 +102,10 @@ class LocationDetail extends StyleableComponent {
             return (
                 <DetailMembers
                     actionText="View all People"
+                    is="section"
                     members={members}
                     onClickActionText={this.handleClickAction.bind(this)}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
-                    style={styles.section}
                     title="Works Here"
                 />
             );

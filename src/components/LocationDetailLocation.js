@@ -1,40 +1,62 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { iconColors } from '../constants/styles';
 import moment from '../utils/moment';
+import resizable from '../decorators/resizable';
 
 import Card from './Card';
-import CardFooter from './CardFooter';
-import CardFooterProfiles from './CardFooterProfiles';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
-import CardVerticalDivider from './CardVerticalDivider';
+import CSSComponent from './CSSComponent';
 import IconContainer from './IconContainer';
 import EmbeddedGoogleMap from './EmbeddedGoogleMap';
-import TimeIcon from './TimeIcon';
 import LocationIcon from './LocationIcon';
-import StyleableComponent from './StyleableComponent';
 
-const styles = {
-    icon: {
-        color: 'rgba(0, 0, 0, .4)',
-    },
-    map: {
-        position: 'absolute',
-    },
-    mapContainer: {
-        position: 'relative',
-    },
-};
-
-class LocationDetailLocation extends StyleableComponent {
+@resizable
+class LocationDetailLocation extends CSSComponent {
 
     static propTypes = {
+        largerDevice: PropTypes.bool.isRequired,
         office: PropTypes.instanceOf(services.organization.containers.LocationV1),
     }
 
-    _getAddress(office) {
+    static defaultProps = {
+        largerDevice: false,
+    }
+
+    classes() {
+        return {
+            default: {
+                AddressCardList: {
+                    className: 'col-xs-12 col-sm-6 col-md-6 col-lg-6 first-sm first-md first-lg',
+                },
+                IconContainer: {
+                    ...iconColors.medium,
+                },
+                MapCardList: {
+                    className: 'col-xs-12 col-sm-6 col-md-6 col-lg-6 first-xs',
+                    style: {
+                        height: 150,
+                    }
+                },
+            },
+            'largerDevice-true': {
+                map: {
+                    position: 'absolute',
+                },
+                MapCardList: {
+                    style: {
+                        height: 'initial',
+                        position: 'relative',
+                    },
+                },
+            },
+        };
+    }
+
+    getAddress(office) {
         let parts = [];
         if (office.address_1) {
             parts.push(office.address_1);
@@ -51,48 +73,46 @@ class LocationDetailLocation extends StyleableComponent {
         return parts.join(', ');
     }
 
-    _getLocalTime(office) {
+    getLocalTime(office) {
         return moment().tz(office.timezone).format('h:mm:ss a, MMMM Do YYYY');
     }
 
-    _renderAddressDetails(office) {
+    renderAddressDetails(office) {
         return (
-            <CardList>
+            <CardList is="AddressCardList">
                 <CardListItem
+                    disabled={true}
                     key={0}
-                    primaryText="Address"
-                    secondaryText={this._getAddress(office)}
-                    leftAvatar={<IconContainer IconClass={LocationIcon} stroke={styles.icon.color} />}
-                    disabled={true}
-                />
-                <CardListItem
-                    key={1}
-                    primaryText="Local Time"
-                    secondaryText={this._getLocalTime(office)}
-                    leftAvatar={<IconContainer IconClass={TimeIcon} stroke={styles.icon.color} />}
-                    disabled={true}
+                    leftAvatar={<IconContainer IconClass={LocationIcon} is="IconContainer" />}
+                    primaryText={this.getAddress(office)}
                 />
             </CardList>
         );
 
     }
 
-    _renderMap(office) {
+    renderMap(office) {
         return (
-            <CardList style={styles.mapContainer}>
-                <EmbeddedGoogleMap style={styles.map} office={office} height="100%" width="100%" />
+            <CardList is="MapCardList">
+                <EmbeddedGoogleMap
+                    height="100%"
+                    is="map"
+                    office={office}
+                    width="100%"
+                />
             </CardList>
         );
 
     }
 
     render() {
+        console.log(this.props.largerDevice);
         const { office } = this.props;
         return (
-            <Card {...this.props} title="Location">
+            <Card {...this.props} title="Address">
                 <CardRow>
-                    {this._renderAddressDetails(office)}
-                    {this._renderMap(office)}
+                    {this.renderAddressDetails(office)}
+                    {this.renderMap(office)}
                 </CardRow>
             </Card>
         );

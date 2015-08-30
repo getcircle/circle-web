@@ -20,7 +20,6 @@ class CardColumns extends CSSComponent {
     }
 
     static defaultProps = {
-        itemsPerCollapsedColumn: 3,
         itemsPerColumn: 2,
         numberOfColumns: 2,
     }
@@ -43,8 +42,13 @@ class CardColumns extends CSSComponent {
             ...other,
         } = this.props;
 
+        let perCollapsedColumn = itemsPerCollapsedColumn;
+        if (perCollapsedColumn === undefined || perCollapsedColumn === null) {
+            perCollapsedColumn = itemsPerColumn + 1;
+        }
+
         let resolvedNumberOfColumns = this.props.largerDevice ? numberOfColumns : 1;
-        let resolvedItemsPerColumn = this.props.largerDevice ? itemsPerColumn : itemsPerCollapsedColumn;
+        let resolvedItemsPerColumn = this.props.largerDevice ? itemsPerColumn : perCollapsedColumn;
         const columns = _.range(resolvedNumberOfColumns).map((value) => {
             return items.slice(value * resolvedItemsPerColumn, (value + 1) * resolvedItemsPerColumn);
         });

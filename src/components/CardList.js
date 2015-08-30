@@ -7,7 +7,12 @@ class CardList extends CSSComponent {
 
     static propTypes = {
         children: PropTypes.arrayOf(PropTypes.element),
+        className: PropTypes.string,
         style: PropTypes.object,
+    }
+
+    static defaultProps = {
+        className: 'col-xs',
     }
 
     classes() {
@@ -27,8 +32,9 @@ class CardList extends CSSComponent {
             style,
             ...other,
         } = this.props;
+
         return (
-            <List {...other} className="col-xs" is="root">
+            <List {...other} style={{...this.styles().root, ...style}}>
                 {this.props.children}
             </List>
         );
