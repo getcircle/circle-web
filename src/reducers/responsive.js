@@ -14,16 +14,11 @@ export default function header(state = initialState, action) {
     switch(action.type) {
     case types.TOGGLE_DISPLAY_HEADER:
         const display = action.payload;
-        if (display && state.get('deviceSize') !== Sizes.SMALL) {
-            return state.withMutations(map => {
-                return map.set('displayHeader', display)
-                    .set('displayFooter', !display);
-                });
+        if (display && state.get('deviceSize') === Sizes.SMALL) {
+            // ignore requests to display header on small devices
+            return state;
         }
-        return state.withMutations(map => {
-            return map.set('displayHeader', false)
-                .set('displayFooter', true);
-            });
+        return state.set('displayHeader', display);
     case types.DEVICE_RESIZED:
         const {
             pathname,
