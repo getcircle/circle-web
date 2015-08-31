@@ -244,6 +244,7 @@ class AutoComplete extends CSSComponent {
                     isActive: this.props.alwaysActive ? true : false,
                     highlightedIndex: null,
                 });
+                this.setIgnoreBlur(false);
             }
         },
 
