@@ -1,17 +1,9 @@
-import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { getCustomThemeManager } from '../utils/ThemeManager';
-import { fontColors, fontWeights } from '../constants/styles';
-
+import Dialog from './Dialog';
 import CSSComponent from './CSSComponent';
 import Search from './SearchV2';
-
-const {
-    Dialog,
-    FlatButton,
-} = mui;
 
 // Spec:
 
@@ -19,13 +11,6 @@ const {
 // [x] has a filter box at the top for filtering the content
     // [ ] needs to take CategoryV1, AttributeV1 and the attribute value so we can filter the searchk
 // [x] exposes a "show" and "dismiss" dialog
-
-const ThemeManager = getCustomThemeManager();
-const common = {
-    background: {
-        backgroundColor: 'rgb(249, 245, 244)',
-    },
-};
 
 class DetailViewAll extends CSSComponent {
 
@@ -38,33 +23,6 @@ class DetailViewAll extends CSSComponent {
         title: PropTypes.string.isRequired,
     }
 
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: ThemeManager.getCurrentTheme(),
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.customizeTheme(nextProps);
-    }
-
-    originalDesktopKeylineIncrement = ThemeManager.getCurrentTheme().spacing.desktopKeylineIncrement
-
-    customizeTheme(props) {
-        ThemeManager.setPalette({
-            canvasColor: common.background.backgroundColor,
-        });
-        if (!props.largerDevice) {
-            ThemeManager.setSpacing({desktopKeylineIncrement: 0});
-        } else {
-            ThemeManager.setSpacing({desktopKeylineIncrement: this.originalDesktopKeylineIncrement});
-        }
-    }
-
     styles() {
         return this.css({
             hideFilterInput: this.props.items ? this.props.items.length < 10 : false,
@@ -74,51 +32,17 @@ class DetailViewAll extends CSSComponent {
     classes() {
         return {
             default: {
-                Dialog: {
-                    contentStyle: {
-                        maxWidth: 480,
-                    },
-                    bodyStyle: {
-                        padding: 10,
-                    },
-                },
-                DialogClose: {
-                    className: 'col-xs-1',
-                },
-                DialogCloseButton: {
-                    style: {
-                        minWidth: 15,
-                    },
-                    labelStyle: {
-                        fontSize: '12px',
-                        ...fontColors.light,
-                        ...fontWeights.semiBold,
-                    },
-                },
-                DialogHeader: {
-                    className: 'row',
-                    style: {
-                        display: 'flex',
-                    },
-                },
-                DialogTitle: {
-                    className: 'col-xs-10 center-xs',
-                    style: {
-                        alignSelf: 'center',
-                        display: 'flex',
-                        fontSize: '12px',
-                        textTransform: 'uppercase',
-                        ...fontColors.light,
-                        ...fontWeights.semiBold,
-                    },
-                },
                 Search: {
                     className: 'col-xs',
                     inputContainerStyle: {
                         boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
                     },
+                    resultsListStyle: {
+                        borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                    },
                     style: {
-                        maxWidth: 460,
+                        paddingRight: 0,
+                        paddingLeft: 0,
                     },
                 },
                 searchContainer: {
@@ -136,15 +60,6 @@ class DetailViewAll extends CSSComponent {
                 },
             },
             'largerDevice-false': {
-                Dialog: {
-                    contentStyle: {
-                        maxWidth: '100vw',
-                        width: '100%',
-                    },
-                    style: {
-                        paddingTop: 0,
-                    },
-                },
                 Search: {
                     resultsHeight: document.body.offsetHeight - 137,
                     resultsListStyle: {
@@ -183,21 +98,8 @@ class DetailViewAll extends CSSComponent {
                     is="Dialog"
                     ref="modal"
                     repositionOnUpdate={false}
+                    title={title}
                 >
-                    <header is="DialogHeader">
-                        <div is="DialogClose">
-                            <FlatButton
-                                is="DialogCloseButton"
-                                label="x"
-                                onTouchTap={() => {
-                                    this.dismiss();
-                                }}
-                            />
-                        </div>
-                        <span is="DialogTitle">
-                            {title}
-                        </span>
-                    </header>
                     <div className="row center-xs" is="searchContainer">
                         <Search
                             canExplore={false}
