@@ -1,7 +1,7 @@
 import { ListItem } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { fontColors, fontWeights } from '../constants/styles';
+import { fontColors } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
 

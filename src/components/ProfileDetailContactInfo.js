@@ -122,7 +122,7 @@ class ProfileDetailContactInfo extends CSSComponent {
             const locations = this.props.locations.map((item, index) => {
 
                 let secondaryText = `${this.getAddress(item)} `;
-                if (item.profile_count == 1) {
+                if (item.profile_count === 1) {
                     secondaryText += `(${item.profile_count} Person)`;
                 } else {
                     secondaryText += `(${item.profile_count} People)`;

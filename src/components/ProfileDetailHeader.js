@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
 
 import CSSComponent from './CSSComponent';
@@ -16,6 +15,10 @@ class ProfileDetailHeader extends CSSComponent {
         team: PropTypes.instanceOf(services.organization.containers.TeamV1),
     }
 
+    static contextTypes = {
+        muiTheme: PropTypes.object.isRequired,
+    }
+
     classes() {
         return {
             default: {
@@ -27,28 +30,9 @@ class ProfileDetailHeader extends CSSComponent {
                 avatarSection: {
                     paddingTop: '5vh',
                 },
-                name: {
-                    fontSize: '36px',
-                    lineHeight: '49px',
-                    ...fontColors.white,
-                    ...fontWeights.light,
-                },
-                tenure: {
-                    fontSize: '12px',
-                    lineHeight: '18px',
-                    ...fontColors.darkWhite,
-                },
                 tenureSection: {
                     paddingTop: 10,
                     paddingBottom: '5vh',
-                },
-                title: {
-                    textTransform: 'uppercase',
-                    fontSize: '12px',
-                    lineHeight: '17px',
-                    letterSpacing: '2px',
-                    ...fontColors.white,
-                    ...fontWeights.semiBold,
                 },
                 titleSection: {
                     paddingTop: 10,
@@ -69,15 +53,15 @@ class ProfileDetailHeader extends CSSComponent {
                     <ProfileAvatar is="avatar" profile={profile} />
                 </div>
                 <div className="row center-xs" is="nameSection">
-                    <span is="name">{profile.full_name}</span>
+                    <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>{profile.full_name}</span>
                 </div>
                 <div className="row center-xs" is="titleSection">
-                    <span is="title">
+                    <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>
                         {profile.title} {team && team.name ? `(${team.name})` : ''}
                     </span>
                 </div>
                 <div className="row center-xs" is="tenureSection">
-                    <span is="tenure">
+                    <span style={this.context.muiTheme.commonStyles.headerTertiaryText}>
                         {`\u2014 at ${organization.name} for ${moment(profile.hire_date).fromNow(true)}`}
                     </span>
                 </div>
