@@ -142,6 +142,10 @@ class AutoComplete extends CSSComponent {
         React.findDOMNode(this.refs.input).blur();
     }
 
+    blurInput() {
+        React.findDOMNode(this.refs.input).blur();
+    }
+
     setIgnoreBlur(ignoreBlur) {
         this.ignoreBlur = ignoreBlur;
     }
@@ -161,6 +165,9 @@ class AutoComplete extends CSSComponent {
         if (this.ignoreBlur) {
             event.preventDefault();
             return;
+        }
+        if (this.props.clearValueOnSelection) {
+            this.setState({value: ''});
         }
         this.props.onBlur(event);
     }
@@ -244,6 +251,8 @@ class AutoComplete extends CSSComponent {
                 highlightedIndex: null,
                 isActive: this.props.alwaysActive ? true : false,
             });
+            this.blurInput();
+            this.props.onBlur();
         }
     }
 
@@ -257,6 +266,7 @@ class AutoComplete extends CSSComponent {
             return React.cloneElement(element, {
                 key: `item-${index}`,
                 onMouseEnter: () => this.setIgnoreBlur(true),
+                onMouseLeave: () => this.setIgnoreBlur(false),
                 onTouchTap: () => this.handleSelectItem(item, element.props.onTouchTap),
             });
         });

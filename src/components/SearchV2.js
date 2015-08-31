@@ -571,7 +571,11 @@ class Search extends CSSComponent {
     }
 
     handleBlur(event) {
-        this.props.onBlur();
+        if (!this.props.canExplore) {
+            this.setState({query: ''});
+            this.props.dispatch(clearSearchResults());
+            this.props.onBlur();
+        }
     }
 
     handleSelection(event, item) {
