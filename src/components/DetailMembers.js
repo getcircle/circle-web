@@ -6,6 +6,7 @@ import CardColumns from './CardColumns';
 import CardFooter from './CardFooter';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
+import DetailViewAll from './DetailViewAll';
 import StyleableComponent from './StyleableComponent';
 
 import ProfileAvatar from './ProfileAvatar';
@@ -18,12 +19,15 @@ class DetailMembers extends StyleableComponent {
         actionText: PropTypes.string,
         itemsPerCollapsedColumn: PropTypes.number,
         itemsPerColumn: PropTypes.number,
+        largerDevice: PropTypes.bool,
         members: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
         numberOfColumns: PropTypes.number,
         onClickActionText: PropTypes.func,
         onClickMember: PropTypes.func,
+        viewAllFilterPlaceholderText: PropTypes.string,
+        viewAllTitle: PropTypes.string,
     }
 
     renderColumn(members) {
@@ -48,10 +52,22 @@ class DetailMembers extends StyleableComponent {
     renderFooter() {
         if (this.props.members.length > MIN_MEMBERS_TO_SHOW_FOOTER) {
             return (
-                <CardFooter
-                    actionText={this.props.actionText}
-                    onClick={this.props.onClickActionText}
-                />
+                <div>
+                    <CardFooter
+                        actionText={this.props.actionText}
+                        onClick={() => {
+                            const { onClickActionText } = this.props;
+                            onClickActionText ? onClickActionText() : this.refs.modal.show();
+                        }}
+                    />
+                    <DetailViewAll
+                        filterPlaceholder={this.props.viewAllFilterPlaceholderText}
+                        items={this.props.members}
+                        largerDevice={this.props.largerDevice}
+                        ref="modal"
+                        title={this.props.viewAllTitle}
+                    />
+                </div>
             );
         }
     }

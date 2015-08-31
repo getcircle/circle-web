@@ -116,6 +116,7 @@ class Search extends CSSComponent {
         canExplore: PropTypes.bool,
         defaults: PropTypes.arrayOf(PropTypes.oneOf(
             services.profile.containers.ProfileV1,
+            services.organization.containers.TeamV1,
         )),
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
@@ -371,6 +372,8 @@ class Search extends CSSComponent {
         return defaults.map((item) => {
             if (item instanceof services.profile.containers.ProfileV1) {
                 return this.getProfileResult(item);
+            } else if (item instanceof services.organization.containers.TeamV1) {
+                return this.getTeamResult(item);
             }
         });
     }

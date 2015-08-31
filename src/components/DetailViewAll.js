@@ -18,6 +18,7 @@ class DetailViewAll extends CSSComponent {
         filterPlaceholder: PropTypes.string,
         items: PropTypes.arrayOf(PropTypes.oneOf(
             services.profile.containers.ProfileV1,
+            services.organization.containers.TeamV1,
         )),
         largerDevice: PropTypes.object.isRequired,
         title: PropTypes.string.isRequired,
@@ -36,6 +37,10 @@ class DetailViewAll extends CSSComponent {
                     className: 'col-xs',
                     inputContainerStyle: {
                         boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
+                        width: 'initial',
+                        marginRight: 10,
+                        marginLeft: 10,
+                        marginBottom: 10,
                     },
                     resultsListStyle: {
                         borderTop: '1px solid rgba(0, 0, 0, 0.1)',
@@ -102,6 +107,7 @@ class DetailViewAll extends CSSComponent {
                 >
                     <div className="row center-xs" is="searchContainer">
                         <Search
+                            alwaysActive={true}
                             canExplore={false}
                             defaults={items}
                             focused={true}

@@ -55,6 +55,12 @@ class AutoComplete extends CSSComponent {
         showCancel: false,
     }
 
+    componentDidMount() {
+        if (this.props.alwaysActive) {
+            this.focusInput();
+        }
+    }
+
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.alwaysActive && !nextState.isActive) {
             this.setState({isActive: true});

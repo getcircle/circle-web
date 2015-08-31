@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { routeToProfile, routeToTeam } from '../utils/routes';
+import resizable from '../decorators/resizable';
 import t from '../utils/gettext';
 
 import Card from './Card';
@@ -21,6 +22,7 @@ import TeamDetailTeams from './TeamDetailTeams';
 const { DescriptionV1 } = services.common.containers;
 const { TeamStatusV1 } = services.organization.containers;
 
+@resizable
 class TeamDetail extends CSSComponent {
 
     static propTypes = {
@@ -28,6 +30,7 @@ class TeamDetail extends CSSComponent {
             reportingDetails: PropTypes.object.isRequired,
             team: PropTypes.object.isRequired,
         }),
+        largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
         onUpdateTeamCallback: PropTypes.func.isRequired,
     }
@@ -135,6 +138,7 @@ class TeamDetail extends CSSComponent {
             return (
                 <TeamDetailTeams
                     is="section"
+                    largerDevice={this.props.largerDevice}
                     onClickTeam={routeToTeam.bind(null, this.context.router)}
                     teams={childTeams}
                     totalTeamsCount={totalTeamsCount}
@@ -159,9 +163,12 @@ class TeamDetail extends CSSComponent {
                 <DetailMembers
                     actionText={actionText}
                     is="section"
+                    largerDevice={this.props.largerDevice}
                     members={members}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
                     title={title}
+                    viewAllFilterPlaceholderText="Search People"
+                    viewAllTitle={`People (${totalMembersCount})`}
                 />
             );
         }

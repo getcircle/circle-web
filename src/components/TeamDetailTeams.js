@@ -10,6 +10,7 @@ import CardFooter from './CardFooter';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
+import DetailViewAll from './DetailViewAll';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 
@@ -18,6 +19,7 @@ const MIN_TEAMS_TO_SHOW_FOOTER = 4;
 class TeamDetailTeams extends CSSComponent {
 
     static propTypes = {
+        largerDevice: PropTypes.bool.isRequired,
         onClickTeam: PropTypes.func.isRequired,
         teams: PropTypes.arrayOf(
             PropTypes.instanceOf(services.organization.containers.TeamV1),
@@ -63,10 +65,6 @@ class TeamDetailTeams extends CSSComponent {
         );
     }
 
-    handleClickAction() {
-        this.refs.modal.show();
-    }
-
     renderCardFooter(teams) {
         if (teams.length > MIN_TEAMS_TO_SHOW_FOOTER) {
 
@@ -78,10 +76,19 @@ class TeamDetailTeams extends CSSComponent {
             }
 
             return (
-                <CardFooter
-                    actionText={actionText}
-                    onClick={this.handleClickAction.bind(this)}
-                />
+                <div>
+                    <CardFooter
+                        actionText={actionText}
+                        onClick={() => this.refs.childTeams.show()}
+                    />
+                    <DetailViewAll
+                        filterPlaceholder="Search Teams"
+                        items={teams}
+                        largerDevice={this.props.largerDevice}
+                        ref="childTeams"
+                        title={`Sub Teams (${this.props.teams.length})`}
+                    />
+                </div>
             );
         }
     }
