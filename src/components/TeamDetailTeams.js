@@ -13,6 +13,8 @@ import CSSComponent from './CSSComponent';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 
+const MIN_TEAMS_TO_SHOW_FOOTER = 4;
+
 class TeamDetailTeams extends CSSComponent {
 
     static propTypes = {
@@ -20,6 +22,7 @@ class TeamDetailTeams extends CSSComponent {
         teams: PropTypes.arrayOf(
             PropTypes.instanceOf(services.organization.containers.TeamV1),
         ).isRequired,
+        totalTeamsCount: PropTypes.number.isRequired,
     }
 
     classes() {
@@ -65,10 +68,18 @@ class TeamDetailTeams extends CSSComponent {
     }
 
     renderCardFooter(teams) {
-        if (teams.length > 4) {
+        if (teams.length > MIN_TEAMS_TO_SHOW_FOOTER) {
+
+            let actionText = '';
+            if (this.props.totalTeamsCount === 1) {
+                actionText = 'View 1 Team';
+            } else {
+                actionText = `View all ${this.props.totalTeamsCount} Teams`;
+            }
+
             return (
                 <CardFooter
-                    actionText="view all teams"
+                    actionText={actionText}
                     onClick={this.handleClickAction.bind(this)}
                 />
             );

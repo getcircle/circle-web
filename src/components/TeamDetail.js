@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { routeToProfile, routeToTeam } from '../utils/routes';
+import t from '../utils/gettext';
 
 import Card from './Card';
 import CardList from './CardList';
@@ -129,29 +130,37 @@ class TeamDetail extends CSSComponent {
         );
     }
 
-    renderChildTeams(childTeams) {
+    renderChildTeams(childTeams, totalTeamsCount) {
         if (childTeams && childTeams.length) {
             return (
                 <TeamDetailTeams
                     is="section"
                     onClickTeam={routeToTeam.bind(null, this.context.router)}
                     teams={childTeams}
+                    totalTeamsCount={totalTeamsCount}
                 />
             );
         }
     }
 
-    renderTeamMembers(manager, members) {
+    renderTeamMembers(manager, members, totalMembersCount) {
         if (members && members.length) {
             members = _.filter(members, (profile) => profile.id !== manager.id);
-            // TODO fix title
+            let actionText = '';
+            if (members.length === 1) {
+                actionText = 'View 1 Person';
+            } else {
+                actionText = `View all ${totalMembersCount} People`;
+            }
+
+            let title = `${t('People')} (${totalMembersCount})`;
             return (
                 <DetailMembers
-                    actionText="View All Team Members"
+                    actionText={actionText}
                     is="section"
                     members={members}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
-                    title="Teams"
+                    title={title}
                 />
             );
         }
@@ -171,8 +180,8 @@ class TeamDetail extends CSSComponent {
                     {this.renderStatus(team.status, canEdit)}
                     {this.renderDescription(team, canEdit)}
                     {this.renderManager(manager)}
-                    {this.renderChildTeams(childTeams)}
-                    {this.renderTeamMembers(manager, members)}
+                    {this.renderChildTeams(childTeams, team.child_team_count)}
+                    {this.renderTeamMembers(manager, members, team.profile_count)}
                 </DetailContent>
             </div>
         );

@@ -10,6 +10,8 @@ import StyleableComponent from './StyleableComponent';
 
 import ProfileAvatar from './ProfileAvatar';
 
+const MIN_MEMBERS_TO_SHOW_FOOTER = 4;
+
 class DetailMembers extends StyleableComponent {
 
     static propTypes = {
@@ -44,12 +46,14 @@ class DetailMembers extends StyleableComponent {
     }
 
     renderFooter() {
-        return (
-            <CardFooter
-                actionText={this.props.actionText}
-                onClick={this.props.onClickActionText}
-            />
-        );
+        if (this.props.members.length > MIN_MEMBERS_TO_SHOW_FOOTER) {
+            return (
+                <CardFooter
+                    actionText={this.props.actionText}
+                    onClick={this.props.onClickActionText}
+                />
+            );
+        }
     }
 
     render() {
