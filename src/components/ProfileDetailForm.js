@@ -18,6 +18,14 @@ class ProfileDetailForm extends CSSComponent {
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
     }
 
+    componentWillMount() {
+        this.mergeStateAndProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+        this.mergeStateAndProps(nextProps);
+    }
+
     classes() {
         return {
             'default': {
@@ -70,14 +78,6 @@ class ProfileDetailForm extends CSSComponent {
                 },
             },
         };
-    }
-
-    componentWillMount() {
-        this.mergeStateAndProps(this.props);
-    }
-
-    componentWillReceiveProps(nextProps, nextState) {
-        this.mergeStateAndProps(nextProps);
     }
 
     /**
