@@ -348,7 +348,7 @@ class Search extends CSSComponent {
             if (trackItem.type === RESULT_TYPES.EXPANDED_PROFILE) {
                 trackItem.type = RESULT_TYPES.PROFILE;
             }
-            this.props.dispatch(viewSearchResult(item));
+            this.props.dispatch(viewSearchResult(trackItem));
             if (onTouchTap && typeof onTouchTap === 'function') {
                 onTouchTap();
             }
