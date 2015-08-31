@@ -43,6 +43,7 @@ export const SEARCH = 'SEARCH';
 export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
 export const SEARCH_FAILURE = 'SEARCH_FAILURE';
 export const CLEAR_SEARCH_RESULTS = 'CLEAR_SEARCH_RESULTS';
+export const VIEW_SEARCH_RESULT = 'VIEW_SEARCH_RESULT';
 
 // Explore actions
 export const EXPLORE = 'EXPLORE';

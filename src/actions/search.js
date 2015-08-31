@@ -23,3 +23,10 @@ export function clearSearchResults() {
         type: types.CLEAR_SEARCH_RESULTS,
     }
 }
+
+export function viewSearchResult(result) {
+    return {
+        type: types.VIEW_SEARCH_RESULT,
+        payload: result,
+    };
+}

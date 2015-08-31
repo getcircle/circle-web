@@ -7,7 +7,7 @@ import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
-import { loadSearchResults, clearSearchResults } from '../actions/search';
+import { loadSearchResults, clearSearchResults, viewSearchResult } from '../actions/search';
 import moment from '../utils/moment';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
@@ -101,6 +101,8 @@ const selector = selectors.createImmutableSelector(
         locationsLoadingState,
         searchState,
     ) => {
+        const recents = searchState.get('recents').toJS()
+        recents.reverse();
         return {
             loading: (
                 profilesLoadingState ||
@@ -108,7 +110,8 @@ const selector = selectors.createImmutableSelector(
                 locationsLoadingState ||
                 searchState.get('loading')
             ),
-            ...searchState.toJS(),
+            results: searchState.get('results').toJS(),
+            recents: recents,
             ...cacheState.toJS(),
         };
     }
@@ -143,6 +146,7 @@ class Search extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        recents: PropTypes.arrayOf(PropTypes.object),
         results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
         resultsHeight: PropTypes.number,
         resultsListStyle: PropTypes.object,
@@ -334,8 +338,24 @@ class Search extends CSSComponent {
         return results ? results : [];
     }
 
+    trackTouchTap(item) {
+        const onTouchTap = item.onTouchTap;
+        item.onTouchTap = () => {
+            const trackItem = Object.assign({}, item);
+            // Don't expand tracked results
+            if (trackItem.type === RESULT_TYPES.EXPANDED_PROFILE) {
+                trackItem.type = RESULT_TYPES.PROFILE;
+            }
+            this.props.dispatch(viewSearchResult(item));
+            if (onTouchTap && typeof onTouchTap === 'function') {
+                onTouchTap();
+            }
+        }
+        return item;
+    }
+
     getProfileResult(profile, numberOfResults) {
-        return {
+        const item = {
             leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: profile.full_name,
             secondaryText: `${profile.title} (TODO)`,
@@ -343,10 +363,11 @@ class Search extends CSSComponent {
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
         };
+        return this.trackTouchTap(item);
     }
 
     getTeamResult(team) {
-        return {
+        const item = {
             leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
             primaryText: team.display_name,
             secondaryText: `${team.child_team_count} Teams, ${team.profile_count} People`,
@@ -354,10 +375,11 @@ class Search extends CSSComponent {
             type: RESULT_TYPES.TEAM,
             instance: team,
         };
+        return this.trackTouchTap(item);
     }
 
     getLocationResult(location) {
-        return {
+        const item = {
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
             primaryText: location.name,
             secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
@@ -365,6 +387,7 @@ class Search extends CSSComponent {
             type: RESULT_TYPES.LOCATION,
             instance: location,
         };
+        return this.trackTouchTap(item);
     }
 
     getCategoryResultsProfiles() {
@@ -399,6 +422,15 @@ class Search extends CSSComponent {
         });
     }
 
+    getRecentResults() {
+        return this.props.recents.slice(0, 3).map((item) => {
+            return {
+                subheader: 'recents',
+                ...item,
+            };
+        });
+    }
+
     getDefaultResults() {
         const { organization } = this.props;
         const { CategoryV1 } = services.search.containers.search;
@@ -416,7 +448,8 @@ class Search extends CSSComponent {
                 primaryText: t(`Locations (${organization.location_count})`),
             },
         ];
-        return items.map((item) => {
+        const recents = this.getRecentResults();
+        const exploreResults = items.map((item) => {
             return {
                 estimatedHeight: 64,
                 innerDivStyle: this.styles().searchResult,
@@ -428,6 +461,7 @@ class Search extends CSSComponent {
                 ...item,
             };
         });
+        return recents.concat(exploreResults);
     }
 
     expandProfile(profile) {
@@ -504,6 +538,8 @@ class Search extends CSSComponent {
                 return this.getCategoryResults();
             } else if (this.props.defaults) {
                 return this.resolveDefaults(this.props.defaults);
+            } else if (this.props.recents && !this.props.canExplore) {
+                return this.getRecentResults();
             } else if (this.props.canExplore) {
                 return this.getDefaultResults();
             }
