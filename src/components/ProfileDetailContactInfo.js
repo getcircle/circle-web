@@ -90,9 +90,9 @@ class ProfileDetailContactInfo extends CSSComponent {
             case ContactMethodTypeV1.EMAIL:
                 return (
                     <CardListItem
-                        disabled={true}
                         key={index}
                         leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
+                        onTouchTap={() => window.location.href = `mailto:${item.value}`}
                         primaryText={item.value}
                     />
                 );
