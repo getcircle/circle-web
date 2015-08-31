@@ -82,7 +82,7 @@ class LocationDetail extends CSSComponent {
     renderPointsOfContact(office) {
         if (office.points_of_contact && office.points_of_contact.length) {
 
-            let title = `${t('Points of Contact')} (${office.points_of_contact})`;
+            let title = `${t('Points of Contact')} (${office.points_of_contact.length})`;
             let actionText = '';
             if (office.points_of_contact.length === 1) {
                 actionText = 'View 1 Point of Contact';
