@@ -2,8 +2,10 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import keymirror from 'keymirror';
 import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 import { Tabs, Tab } from 'material-ui';
 
+import { routeToProfile } from '../utils/routes';
 import * as selectors from '../selectors';
 
 import CSSComponent from './CSSComponent';
@@ -27,6 +29,7 @@ class TabBar extends CSSComponent {
 
     static propTypes = {
         pathname: PropTypes.string.isRequired,
+        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         style: PropTypes.object,
     }
 
@@ -45,17 +48,6 @@ class TabBar extends CSSComponent {
 
     state = {
         tabValue: 'none',
-    }
-
-    resolveTabValue(props) {
-        const { pathname } = props;
-        if (pathname === '/') {
-            this.setState({tabValue: TABS.SEARCH});
-        } else if (pathname === '/me') {
-            this.setState({tabValue: TABS.USER_PROFILE});
-        } else {
-            this.setState({tabValue: 'none'});
-        }
     }
 
     classes() {
@@ -78,12 +70,34 @@ class TabBar extends CSSComponent {
         };
     }
 
+    isUserProfilePath(pathname) {
+        const regex = new RegExp(`/profile/${this.props.profile.id}$`);
+        if (pathname && pathname.match(regex)) {
+            return true;
+        }
+        return false;
+    }
+
+    resolveTabValue(props) {
+        const { pathname } = props;
+        if (pathname === '/') {
+            this.setState({tabValue: TABS.SEARCH});
+        } else if (this.isUserProfilePath(pathname)) {
+            this.setState({tabValue: TABS.USER_PROFILE});
+        } else {
+            this.setState({tabValue: 'none'});
+        }
+    }
+
     handleChange(value, event, tab) {
         const { transitionTo } = this.context.router;
         switch(value) {
         case TABS.SEARCH:
             transitionTo('/');
-        //TODO implement /me
+            break;
+        case TABS.USER_PROFILE:
+            routeToProfile(this.context.router, this.props.profile);
+            break;
         }
         this.setState({tabValue: value});
     }
