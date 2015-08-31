@@ -173,6 +173,7 @@ class AutoComplete extends CSSComponent {
     }
 
     handleKeyDown(event) {
+        this.setIgnoreBlur(true);
         if (this.keyDownHandlers[event.key]) {
             this.keyDownHandlers[event.key].call(this, event);
         } else {
@@ -251,6 +252,7 @@ class AutoComplete extends CSSComponent {
                 highlightedIndex: null,
                 isActive: this.props.alwaysActive ? true : false,
             });
+            this.setIgnoreBlur(false);
             this.blurInput();
             this.props.onBlur();
         }
