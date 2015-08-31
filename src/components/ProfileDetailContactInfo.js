@@ -76,7 +76,7 @@ class ProfileDetailContactInfo extends CSSComponent {
     // TODO move this to display_address on location
     getAddress(location) {
         return _.filter(
-            [location.address_1, location.address_2, location.city, location.region],
+            [location.city, location.region],
             (item) => item !== null,
         ).join(', ');
     }
@@ -120,13 +120,21 @@ class ProfileDetailContactInfo extends CSSComponent {
     renderLocations() {
         if (this.props.locations && this.props.locations.length) {
             const locations = this.props.locations.map((item, index) => {
+
+                let secondaryText = `${this.getAddress(item)} `;
+                if (item.profile_count == 1) {
+                    secondaryText += `(${item.profile_count} Person)`;
+                } else {
+                    secondaryText += `(${item.profile_count} People)`;
+                }
+
                 return (
                     <CardListItem
                         key={index}
                         leftAvatar={<IconContainer IconClass={OfficeIcon} is="IconContainer" />}
                         onTouchTap={this.props.onClickLocation.bind(null, item)}
                         primaryText={item.name}
-                        secondaryText={this.getAddress(item)}
+                        secondaryText={secondaryText}
                     />
                 );
             })

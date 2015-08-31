@@ -17,17 +17,17 @@ class CardFooter extends CSSComponent {
         return {
             default: {
                 button: {
+                    textAlign: 'left',
+                    textTransform: 'none',
                     width: '100%',
                 },
                 buttonContainer: {
                     flex: 1,
                     display: 'flex',
-                    justifyContent: 'center',
                 },
                 footerButtonLabel: {
                     color: tintColor,
-                    fontSize: 16,
-                    ...fontWeights.semiBold,
+                    fontSize: 14,
                 },
                 root: {
                     backgroundColor: 'white',

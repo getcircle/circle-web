@@ -73,7 +73,7 @@ class ProfileDetailHeader extends CSSComponent {
                 </div>
                 <div className="row center-xs" is="titleSection">
                     <span is="title">
-                        {profile.title} {team && team.name ? `| ${team.name}` : ''}
+                        {profile.title} {team && team.name ? `(${team.name})` : ''}
                     </span>
                 </div>
                 <div className="row center-xs" is="tenureSection">

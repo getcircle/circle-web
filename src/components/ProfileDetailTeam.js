@@ -36,11 +36,6 @@ class ProfileDetailTeam extends CSSComponent {
         };
     }
 
-    getManagerSecondaryText(manager) {
-        const parts = [manager.full_name, manager.title];
-        return parts.join(', ');
-    }
-
     renderTeam() {
         const { team } = this.props;
         return (
@@ -62,8 +57,8 @@ class ProfileDetailTeam extends CSSComponent {
                 <CardListItem
                     leftAvatar={<ProfileAvatar profile={manager} />}
                     onTouchTap={this.props.onClickManager}
-                    primaryText="Reports to"
-                    secondaryText={this.getManagerSecondaryText(manager)}
+                    primaryText={manager.full_name}
+                    secondaryText={manager.title}
                 />
             </CardList>
         );
@@ -73,30 +68,7 @@ class ProfileDetailTeam extends CSSComponent {
         this.refs.modal.show();
     }
 
-    renderFooter() {
-        const { peers } = this.props;
-        if (peers && peers.length) {
-            return (
-                <div>
-                    <CardFooter
-                        actionText="view all team members"
-                        onClick={this.handleClickAction.bind(this)}
-                    >
-                        <CardFooterProfiles profiles={peers} />
-                    </CardFooter>
-                    <DetailViewAll
-                        items={peers}
-                        onClickItem={this.props.onClickPeer}
-                        ref="modal"
-                        title="Team Members"
-                    />
-                </div>
-            );
-        }
-    }
-
     render() {
-        // TODO fix the peer count down below
         return (
             <DetailSection
                 {...this.props}
@@ -107,7 +79,7 @@ class ProfileDetailTeam extends CSSComponent {
                 )}
                 footer={(
                     <CardFooter
-                        actionText={`Works with ${this.props.team.profile_count} peers`}
+                        actionText={`Works with ${this.props.team.profile_count} Peers`}
                         onClick={::this.handleClickAction}
                     />
                 )}

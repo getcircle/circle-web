@@ -1,6 +1,8 @@
 import { ListItem } from 'material-ui';
 import React, { PropTypes } from 'react';
 
+import { fontColors, fontWeights } from '../constants/styles';
+
 import CSSComponent from './CSSComponent';
 
 class CardListItem extends CSSComponent {
@@ -32,6 +34,14 @@ class CardListItem extends CSSComponent {
                     paddingTop: 30,
                     paddingBottom: 30,
                 },
+                primaryTextStyle: {
+                    fontSize: '16px',
+                    ...fontColors.dark,
+                },
+                secondaryTextStyle: {
+                    fontSize: '12px',
+                    ...fontColors.light,
+                },
             },
             singleLine: {
                 avatar: {
@@ -42,8 +52,8 @@ class CardListItem extends CSSComponent {
                     height: 96,
                 },
                 primaryTextStyle: {
-                    display: 'flex',
                     alignSelf: 'center',
+                    display: 'flex',
                 },
             },
         };
@@ -68,12 +78,14 @@ class CardListItem extends CSSComponent {
         }
         const innerStyle = {...this.styles().innerDivStyle, ...innerDivStyle};
         const primaryStyle = {...this.styles().primaryTextStyle, ...primaryTextStyle};
+        const secondaryStyle = {...this.styles().secondaryTextStyle};
         return (
             <ListItem
                 {...other}
                 innerDivStyle={innerStyle}
                 leftAvatar={avatar}
                 primaryTextStyle={primaryStyle}
+                secondaryTextStyle={secondaryStyle}
             />
         );
     }

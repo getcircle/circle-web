@@ -53,10 +53,18 @@ class ProfileDetailManages extends CSSComponent {
     renderFooter() {
         const { directReports } = this.props;
         if (directReports && directReports.length) {
+            let actionText = '';
+            if (directReports.length === 1) {
+                actionText = 'View 1 Direct Report';
+            }
+            else {
+                actionText = `View ${directReports.length} Direct Reports`;
+            }
+
             return (
                 <div>
                     <CardFooter
-                        actionText="view all direct reports"
+                        actionText={actionText}
                         onClick={::this.handleClickAction}
                     />
                 </div>
