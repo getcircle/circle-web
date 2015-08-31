@@ -8,6 +8,7 @@ import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
 import { loadSearchResults, clearSearchResults } from '../actions/search';
+import moment from '../utils/moment';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
@@ -30,8 +31,13 @@ const {
 } = mui;
 
 const RESULT_TYPES = keymirror({
+    CONTACT_METHOD: null,
     EXPLORE: null,
     LOADING: null,
+    PROFILE: null,
+    EXPANDED_PROFILE: null,
+    TEAM: null,
+    LOCATION: null,
 });
 
 export const SEARCH_RESULT_HEIGHT = 72;
@@ -328,12 +334,14 @@ class Search extends CSSComponent {
         return results ? results : [];
     }
 
-    getProfileResult(profile) {
+    getProfileResult(profile, numberOfResults) {
         return {
             leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: profile.full_name,
             secondaryText: `${profile.title} (TODO)`,
             onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
+            type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
+            instance: profile,
         };
     }
 
@@ -343,6 +351,8 @@ class Search extends CSSComponent {
             primaryText: team.display_name,
             secondaryText: `${team.child_team_count} Teams, ${team.profile_count} People`,
             onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
+            type: RESULT_TYPES.TEAM,
+            instance: team,
         };
     }
 
@@ -352,6 +362,8 @@ class Search extends CSSComponent {
             primaryText: location.name,
             secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
             onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
+            type: RESULT_TYPES.LOCATION,
+            instance: location,
         };
     }
 
@@ -418,16 +430,50 @@ class Search extends CSSComponent {
         });
     }
 
+    expandProfile(profile) {
+        const expansions = [];
+        expansions.push({
+            estimatedHeight: 64,
+            type: RESULT_TYPES.CONTACT_METHOD,
+            primaryText: t(`Email ${profile.first_name}`),
+            primaryTextStyle: {
+                fontSize: '12px',
+                lineHeight: '17px',
+                ...fontColors.dark,
+            },
+            innerDivStyle: {
+                paddingLeft: 70,
+            },
+            onTouchTap: () => window.location.href = `mailto:${profile.email}`,
+        });
+        return expansions;
+    }
+
+    getExpandedResults(item, result) {
+        const expandedResults = [item];
+        if (result.profile) {
+            const expansions = this.expandProfile(result.profile);
+            if (expansions) {
+                expandedResults.push(...expansions);
+            }
+        }
+        return expandedResults;
+    }
+
     getSearchResultItems(results) {
-        return results.map((result) => {
+        let items = results.map((result) => {
             if (result.profile) {
-                return this.getProfileResult(result.profile);
+                return this.getProfileResult(result.profile, results.length);
             } else if (result.team) {
-                return this.getTeamResult(result.team);
+                return this.getTeamResult(result.team, results.length);
             } else if (result.location) {
-                return this.getLocationResult(result.location);
+                return this.getLocationResult(result.location, results.length);
             }
         });
+        if (results.length === 1) {
+            items = this.getExpandedResults(items[0], results[0]);
+        }
+        return items;
     }
 
     getSearchResults() {
@@ -562,26 +608,91 @@ class Search extends CSSComponent {
         );
     }
 
+    renderDefaultResult(item, highlighted, style) {
+        return (
+            <ListItem
+                {...item}
+                onTouchTap={item.onTouchTap}
+                primaryText={item.primaryText}
+                ref={(component) => {
+                    ((highlighted) =>  {
+                        // NB: Component will be null in some cases (unmounting and on change)
+                        if (component) {
+                            component.applyFocusState(highlighted ? 'keyboard-focused' : 'none');
+                        }
+                    })(highlighted);
+                }}
+            />
+        );
+    }
+
+    renderExpandedProfile(item, highlighted, style) {
+        const defaultResult = this.renderDefaultResult(item, highlighted, style);
+        return (
+            <div estimatedHeight={SEARCH_RESULT_HEIGHT + 42}>
+                {defaultResult}
+                {(() => {
+                    const { status } = item.instance;
+                    const created = moment(status.created).fromNow()
+                    if (status && status.value.trim() !== '') {
+                        return (
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                marginLeft: 70,
+                                paddingBottom: 8,
+                            }}>
+                                <span style={{
+                                    fontSize: '10px',
+                                    lineHeight: '14px',
+                                    letterSpacing: '1px',
+                                    textTransform: 'uppercase',
+                                    ...fontWeights.semiBold,
+                                    ...fontColors.light,
+                                }}>{t('Currently Working On')}</span>
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'row'
+                                }}>
+                                    <span style={{
+                                        display: 'flex',
+                                        alignSelf: 'center',
+                                        fontStyle: 'italic',
+                                        fontSize: '12px',
+                                        ...fontColors.dark,
+                                        lineHeight: '20px',
+                                    }}>
+                                        {`"${status.value}"`}
+                                    </span>
+                                    <span style={{
+                                        display: 'flex',
+                                        alignSelf: 'center',
+                                        fontSize: '12px',
+                                        lineHeight: '14px',
+                                        ...fontColors.light,
+                                    }}>
+                                        &nbsp;&mdash;&nbsp;{created}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    }
+                })()}
+            </div>
+        )
+    }
+
     renderItem(item, highlighted, style) {
         let element;
-        if (item.type === RESULT_TYPES.LOADING) {
+        switch(item.type) {
+        case RESULT_TYPES.LOADING:
             element = this.getLoadingIndicator();
-        } else {
-            element = (
-                <ListItem
-                    {...item}
-                    onTouchTap={item.onTouchTap}
-                    primaryText={item.primaryText}
-                    ref={(component) => {
-                        ((highlighted) =>  {
-                            // NB: Component will be null in some cases (unmounting and on change)
-                            if (component) {
-                                component.applyFocusState(highlighted ? 'keyboard-focused' : 'none');
-                            }
-                        })(highlighted);
-                    }}
-                />
-            );
+            break;
+        case RESULT_TYPES.EXPANDED_PROFILE:
+            element = this.renderExpandedProfile(item, highlighted, style);
+            break;
+        default:
+            element = this.renderDefaultResult(item, highlighted, style);
         }
         return element;
     }
