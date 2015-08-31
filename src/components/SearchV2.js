@@ -673,8 +673,8 @@ class Search extends CSSComponent {
                 {defaultResult}
                 {(() => {
                     const { status } = item.instance;
-                    const created = moment(status.created).fromNow()
                     if (status && status.value.trim() !== '') {
+                        const created = moment(status.created).fromNow()
                         return (
                             <div style={{
                                 display: 'flex',
