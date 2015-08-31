@@ -17,7 +17,7 @@ export function loadExtendedTeam(teamId) {
     };
 }
 
-export function loadTeamMembers(teamId) {
+export function loadTeamMembers(teamId, nextRequest=null) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -29,7 +29,7 @@ export function loadTeamMembers(teamId) {
             remote: () => getProfiles({team_id: teamId}),
             /*eslint-enable camelcase */
             bailout: (state) => {
-                if (state.teamMembers.has(teamId)) {
+                if (state.teamMembers.has(teamId) && nextRequest === null) {
                     return state.teamMembers.get(teamId).get('ids').size > 0;
                 }
             },

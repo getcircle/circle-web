@@ -118,6 +118,7 @@ class Search extends CSSComponent {
             services.profile.containers.ProfileV1,
             services.organization.containers.TeamV1,
         )),
+        defaultsLoadMore: PropTypes.func,
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
@@ -139,6 +140,9 @@ class Search extends CSSComponent {
         results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
         resultsHeight: PropTypes.number,
         resultsListStyle: PropTypes.object,
+        searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
+        searchAttributeValue: PropTypes.string,
+        searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
         showCancel: PropTypes.bool,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
@@ -157,6 +161,7 @@ class Search extends CSSComponent {
     static defaultProps = {
         alwaysActive: false,
         canExplore: true,
+        defaultsLoadMore() {},
         focused: false,
         largerDevice: false,
         loading: false,
@@ -165,6 +170,10 @@ class Search extends CSSComponent {
         onFocus() {},
         placeholder: t('Search People, Teams & Locations'),
         showCancel: false,
+    }
+
+    componentWillUnmount() {
+        this.props.dispatch(clearSearchResults());
     }
 
     state = {
@@ -499,6 +508,8 @@ class Search extends CSSComponent {
         const nextRequest = this.getCategoryNextRequest();
         if (nextRequest) {
             this.explore(this.state.category, nextRequest);
+        } else if (this.props.defaults && this.props.defaults.length) {
+            this.props.defaultsLoadMore();
         }
     }
 
@@ -526,10 +537,20 @@ class Search extends CSSComponent {
     }
 
     loadSearchResults(value = this.state.query, category = this.state.category) {
-        if ((!value || value === '') && category !== null) {
+        if ((!value || value === '') && category !== null && this.props.canExplore) {
             this.explore(category);
         } else {
-            this.props.dispatch(loadSearchResults(value, category));
+            let { searchCategory } = this.props;
+            if (searchCategory === null || searchCategory === undefined) {
+                searchCategory = category;
+            }
+            const parameters = [
+                value,
+                searchCategory,
+                this.props.searchAttribute,
+                this.props.searchAttributeValue,
+            ]
+            this.props.dispatch(loadSearchResults(...parameters));
         }
     }
 

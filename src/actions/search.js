@@ -3,7 +3,7 @@ import { SERVICE_REQUEST } from '../middleware/services';
 
 import { search } from '../services/search';
 
-export function loadSearchResults(query, category) {
+export function loadSearchResults(query, category, attribute, attributeValue) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -11,10 +11,10 @@ export function loadSearchResults(query, category) {
                 types.SEARCH_SUCCESS,
                 types.SEARCH_FAILURE,
             ],
-            remote: () => search(query, category),
+            remote: () => search(query, category, attribute, attributeValue),
             bailout: (state) => state.search.getIn(['results', query]),
         },
-        payload: { query, category },
+        payload: { query, category, attribute, attributeValue},
     }
 }
 

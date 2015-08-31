@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import { services, soa } from 'protobufs';
 
 import { routeToProfile, routeToTeam } from '../utils/routes';
 import resizable from '../decorators/resizable';
@@ -32,6 +32,7 @@ class TeamDetail extends CSSComponent {
         }),
         largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
+        membersLoadMore: PropTypes.func,
         onUpdateTeamCallback: PropTypes.func.isRequired,
     }
 
@@ -165,8 +166,11 @@ class TeamDetail extends CSSComponent {
                     is="section"
                     largerDevice={this.props.largerDevice}
                     members={members}
+                    membersLoadMore={this.props.membersLoadMore}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
                     title={title}
+                    viewAllAttribute={services.search.containers.search.AttributeV1.TEAM_ID}
+                    viewAllAttributeValue={this.props.extendedTeam.team.id}
                     viewAllFilterPlaceholderText="Search People"
                     viewAllTitle={`People (${totalMembersCount})`}
                 />

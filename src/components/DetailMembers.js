@@ -23,9 +23,12 @@ class DetailMembers extends StyleableComponent {
         members: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
+        membersLoadMore: PropTypes.func,
         numberOfColumns: PropTypes.number,
         onClickActionText: PropTypes.func,
         onClickMember: PropTypes.func,
+        viewAllAttribute: PropTypes.instanceOf(services.search.containers.AttributeV1),
+        viewAllAttributeValue: PropTypes.string,
         viewAllFilterPlaceholderText: PropTypes.string,
         viewAllTitle: PropTypes.string,
     }
@@ -63,8 +66,12 @@ class DetailMembers extends StyleableComponent {
                     <DetailViewAll
                         filterPlaceholder={this.props.viewAllFilterPlaceholderText}
                         items={this.props.members}
+                        itemsLoadMore={this.props.membersLoadMore}
                         largerDevice={this.props.largerDevice}
                         ref="modal"
+                        searchAttribute={this.props.viewAllAttribute}
+                        searchAttributeValue={this.props.viewAllAttributeValue}
+                        searchCategory={services.search.containers.search.CategoryV1.PROFILES}
                         title={this.props.viewAllTitle}
                     />
                 </div>

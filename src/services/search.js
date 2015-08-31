@@ -2,8 +2,15 @@ import {services} from 'protobufs';
 
 import client from './client';
 
-export function search(query, category) {
-    let request = new services.search.actions.search.RequestV1({query, category});
+export function search(query, category, attribute, attributeValue) {
+    let request = new services.search.actions.search.RequestV1({
+        query,
+        category,
+        attribute,
+        /*eslint-disable camelcase*/
+        attribute_value: attributeValue,
+        /*eslint-enable camelcase*/
+    });
     return new Promise((resolve, reject) => {
         if (query === null || query.trim() === '') {
             resolve({results: []});

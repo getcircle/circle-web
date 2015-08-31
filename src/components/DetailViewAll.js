@@ -20,7 +20,11 @@ class DetailViewAll extends CSSComponent {
             services.profile.containers.ProfileV1,
             services.organization.containers.TeamV1,
         )),
+        itemsLoadMore: PropTypes.func,
         largerDevice: PropTypes.object.isRequired,
+        searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
+        searchAttributeValue: PropTypes.string,
+        searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
         title: PropTypes.string.isRequired,
     }
 
@@ -95,7 +99,11 @@ class DetailViewAll extends CSSComponent {
         const {
             filterPlaceholder,
             items,
+            itemsLoadMore,
             title,
+            searchAttribute,
+            searchAttributeValue,
+            searchCategory,
         } = this.props;
         return (
             <div >
@@ -110,9 +118,13 @@ class DetailViewAll extends CSSComponent {
                             alwaysActive={true}
                             canExplore={false}
                             defaults={items}
+                            defaultsLoadMore={itemsLoadMore}
                             focused={true}
                             is="Search"
                             placeholder={filterPlaceholder}
+                            searchAttribute={searchAttribute}
+                            searchAttributeValue={searchAttributeValue}
+                            searchCategory={searchCategory}
                         />
                     </div>
                 </Dialog>

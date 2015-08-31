@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import { services, soa } from 'protobufs';
 
 import {
     loadExtendedTeam,
@@ -13,7 +13,7 @@ import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
-import PureComponent from '../components/PureComponent';
+import CSSComponent from '../components/CSSComponent';
 import TeamDetail from '../components/TeamDetail';
 
 const selector = createSelector(
@@ -24,7 +24,7 @@ const selector = createSelector(
         selectors.teamMembersSelector,
     ],
     (cacheState, extendedTeamsState, parametersSelector, membersState) => {
-        let extendedTeam, members;
+        let extendedTeam, members, membersNextRequest;
         const teamId = parametersSelector.teamId;
         const cache = cacheState.toJS();
         if (extendedTeamsState.get('ids').has(teamId)) {
@@ -33,13 +33,14 @@ const selector = createSelector(
         if (membersState.has(teamId) && !membersState.get(teamId).get('loading')) {
             const ids = membersState.get(teamId).get('ids').toJS();
             members = retrieveProfiles(ids, cache);
+            membersNextRequest = membersState.get(teamId).get('nextRequest');
         }
-        return {extendedTeam: extendedTeam, members: members};
+        return {extendedTeam: extendedTeam, members: members, membersNextRequest: membersNextRequest};
     }
 );
 
 @connect(selector)
-class Team extends PureComponent {
+class Team extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
@@ -50,31 +51,36 @@ class Team extends PureComponent {
         members: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
+        membersNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         params: PropTypes.shape({
             teamId: PropTypes.string,
         }),
     }
 
     componentWillMount() {
-        this._loadTeam(this.props);
+        this.loadTeam(this.props);
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.teamId !== this.props.params.teamId) {
-            this._loadTeam(nextProps);
+            this.loadTeam(nextProps);
         }
     }
 
-    _loadTeam(props) {
+    loadTeam(props) {
         props.dispatch(loadExtendedTeam(props.params.teamId));
-        props.dispatch(loadTeamMembers(props.params.teamId));
+        this.loadTeamMembers(props);
+    }
+
+    loadTeamMembers(props) {
+        props.dispatch(loadTeamMembers(props.params.teamId, props.membersNextRequest));
     }
 
     onUpdateTeam(team) {
         this.props.dispatch(updateTeam(team))
     }
 
-    _renderTeam() {
+    renderTeam() {
         const {
             extendedTeam,
             members,
@@ -84,6 +90,10 @@ class Team extends PureComponent {
                 <TeamDetail
                     extendedTeam={extendedTeam}
                     members={members}
+                    membersLoadMore={() => {
+                        // TODO this is broken because it reloads the entire component, need to think of a way to handle this
+                        // this.loadTeamMembers(this.props);
+                    }}
                     onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
                 />
             );
@@ -95,7 +105,7 @@ class Team extends PureComponent {
     render() {
         return (
             <Container>
-                {this._renderTeam()}
+                {this.renderTeam()}
             </Container>
         );
     }
