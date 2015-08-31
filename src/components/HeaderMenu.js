@@ -4,6 +4,7 @@ import { Avatar } from 'material-ui';
 import React, { PropTypes } from 'react/addons';
 
 import { logout } from '../actions/authentication';
+import { routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
@@ -20,6 +21,11 @@ class HeaderMenu extends CSSComponent {
         expandedView: PropTypes.bool,
         profile: PropTypes.object,
         shouldDisplayName: PropTypes.bool,
+    }
+
+    static contextTypes = {
+        mixins: PropTypes.object,
+        router: PropTypes.object,
     }
 
     static defaultProps = {
@@ -69,8 +75,8 @@ class HeaderMenu extends CSSComponent {
         this.setState({menuDisplayed: !this.state.menuDisplayed});
     }
 
-    handleLogout(event) {
-        this.props.dispatch(logout());
+    handleViewProfile(event) {
+        routeToProfile(this.context.router, this.props.profile);
     }
 
     hideMenu(event) {
@@ -85,13 +91,19 @@ class HeaderMenu extends CSSComponent {
                     desktop={true}
                     is="menu"
                     listStyle={this.styles().menuListStyle}
+                    onItemTouchTap={::this.hideMenu}
                     onEscKeyDown={::this.hideMenu}
                     width={110}
                 >
                     <MenuItem
                         desktop={true}
-                        onTouchTap={::this.handleLogout}
+                        onTouchTap={() => this.props.dispatch(logout())}
                         primaryText={t('Logout')}
+                    />
+                    <MenuItem
+                        desktop={true}
+                        onTouchTap={::this.handleViewProfile}
+                        primaryText={t('View Profile')}
                     />
                 </Menu>
             );
