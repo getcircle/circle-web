@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { routeToProfile } from '../utils/routes';
+import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
@@ -80,14 +81,23 @@ class LocationDetail extends CSSComponent {
 
     renderPointsOfContact(office) {
         if (office.points_of_contact && office.points_of_contact.length) {
+
+            let title = `${t('Points of Contact')} (${office.points_of_contact})`;
+            let actionText = '';
+            if (office.points_of_contact.length === 1) {
+                actionText = 'View 1 Point of Contact';
+            } else {
+                actionText = `View all ${office.points_of_contact} Points of Contact`;
+            }
+
             return (
                 <DetailMembers
-                    actionText="View all Points of Contact"
+                    actionText={actionText}
                     is="section"
                     itemsPerColumn={1}
                     members={office.points_of_contact}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
-                    title="Points of Contact"
+                    title={title}
                 />
             );
         }
@@ -97,16 +107,25 @@ class LocationDetail extends CSSComponent {
         this.refs.modal.show();
     }
 
-    renderMembers(members) {
+    renderMembers(members, totalMembersCount) {
         if (members.length) {
+
+            let title = `${t('People')} (${totalMembersCount})`;
+            let actionText = '';
+            if (totalMembersCount.length === 1) {
+                actionText = 'View 1 Person';
+            } else {
+                actionText = `View all ${totalMembersCount} People`;
+            }
+
             return (
                 <DetailMembers
-                    actionText="View all People"
+                    actionText={actionText}
                     is="section"
                     members={members}
                     onClickActionText={this.handleClickAction.bind(this)}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
-                    title="Works Here"
+                    title={title}
                 />
             );
         }
@@ -123,7 +142,7 @@ class LocationDetail extends CSSComponent {
                     <LocationDetailLocation office={office} />
                     {this.renderDescription(office, canEdit)}
                     {this.renderPointsOfContact(office)}
-                    {this.renderMembers(members)}
+                    {this.renderMembers(members, office.profile_count)}
                 </DetailContent>
                 <DetailViewAll
                     items={members}

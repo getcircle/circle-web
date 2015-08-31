@@ -102,8 +102,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                         disabled={true}
                         key={index}
                         leftAvatar={<IconContainer IconClass={PhoneIcon} is="IconContainer" />}
-                        primaryText="Phone"
-                        secondaryText={item.value}
+                        primaryText={item.value}
                     />
                 );
             }

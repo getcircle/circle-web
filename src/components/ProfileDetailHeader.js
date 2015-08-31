@@ -53,7 +53,9 @@ class ProfileDetailHeader extends CSSComponent {
                     <ProfileAvatar is="avatar" profile={profile} />
                 </div>
                 <div className="row center-xs" is="nameSection">
-                    <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>{profile.full_name}</span>
+                    <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>
+                        {profile.full_name}
+                    </span>
                 </div>
                 <div className="row center-xs" is="titleSection">
                     <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>

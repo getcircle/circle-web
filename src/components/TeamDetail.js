@@ -146,14 +146,15 @@ class TeamDetail extends CSSComponent {
     renderTeamMembers(manager, members, totalMembersCount) {
         if (members && members.length) {
             members = _.filter(members, (profile) => profile.id !== manager.id);
+
+            let title = `${t('People')} (${totalMembersCount})`;
             let actionText = '';
-            if (members.length === 1) {
+            if (totalMembersCount === 1) {
                 actionText = 'View 1 Person';
             } else {
                 actionText = `View all ${totalMembersCount} People`;
             }
 
-            let title = `${t('People')} (${totalMembersCount})`;
             return (
                 <DetailMembers
                     actionText={actionText}
