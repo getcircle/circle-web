@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+import { fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import t from '../utils/gettext';
 
@@ -73,7 +74,6 @@ class TextValue extends CSSComponent {
                     borderColor: 'rgba(0, 0, 0, 0.2)',
                     borderRadius: '4px',
                     boxSizing: 'border-box',
-                    color: 'rgba(0, 0, 0, 0.7)',
                     display: 'flex',
                     fontSize: 16,
                     height: 100,
@@ -81,6 +81,7 @@ class TextValue extends CSSComponent {
                     padding: '10px',
                     resize: 'none',
                     width: '100%',
+                    ...fontColors.dark,
                 },
                 textareaContainer: {
                     display: 'flex',
@@ -90,8 +91,8 @@ class TextValue extends CSSComponent {
                 },
                 text: {
                     fontSize: 16,
-                    color: 'rgb(0, 0, 0)',
                     lineHeight: '29px',
+                    ...fontColors.dark,
                 },
                 timestamp: {
                     fontSize: 10,

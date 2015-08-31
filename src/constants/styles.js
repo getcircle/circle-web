@@ -51,6 +51,9 @@ export const fontColors = {
     white: {
         color: 'white',
     },
+    dark: {
+        color: 'rgba(0, 0, 0, 0.8)',
+    },
 }
 
 export const fontWeights = {

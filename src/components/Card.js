@@ -1,7 +1,7 @@
 import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { fontColors } from '../constants/styles';
+import { fontColors, fontWeights } from '../constants/styles';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -35,12 +35,13 @@ class Card extends CSSComponent {
                     display: 'flex',
                 },
                 headerText: {
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: 'rgba(0, 0, 0, .4)',
                     alignSelf: 'center',
+                    fontSize: '12px',
+                    letterSpacing: '1px',
                     paddingLeft: 12,
                     textTransform: 'uppercase',
+                    ...fontColors.light,
+                    ...fontWeights.semiBold,
                 },
                 headerActionButton: {
                     flex: 1,
@@ -51,7 +52,7 @@ class Card extends CSSComponent {
                 headerActionButtonLabel: {
                     color: '#8598FF',
                     fontSize: 16,
-                    fontWeight: 600,
+                    ...fontWeights.semiBold,
                 },
                 root: {
                     boxShadow: '1px 1px 2px 0 rgba(0, 0, 0, 0.1)',

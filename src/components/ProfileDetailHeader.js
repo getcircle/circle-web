@@ -29,7 +29,6 @@ class ProfileDetailHeader extends CSSComponent {
                 },
                 name: {
                     fontSize: '36px',
-                    fontWeight: 300,
                     lineHeight: '49px',
                     ...fontColors.white,
                     ...fontWeights.light,
@@ -45,7 +44,7 @@ class ProfileDetailHeader extends CSSComponent {
                 },
                 title: {
                     textTransform: 'uppercase',
-                    fontSize: '14px',
+                    fontSize: '12px',
                     lineHeight: '17px',
                     letterSpacing: '2px',
                     ...fontColors.white,
