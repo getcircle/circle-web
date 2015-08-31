@@ -47,6 +47,10 @@ class Dialog extends CSSComponent {
         };
     }
 
+    componentWillMount() {
+        this.customizeTheme(this.props);
+    }
+
     componentWillReceiveProps(nextProps) {
         this.customizeTheme(nextProps);
     }

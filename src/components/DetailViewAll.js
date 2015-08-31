@@ -74,7 +74,6 @@ class DetailViewAll extends CSSComponent {
                     resultsListStyle: {
                         height: '100vh',
                         width: '100vw',
-                        marginTop: 10,
                         opacity: 1,
                         position: 'absolute',
                         borderTop: '1px solid rgba(0, 0, 0, 0.1)',
@@ -100,6 +99,7 @@ class DetailViewAll extends CSSComponent {
             filterPlaceholder,
             items,
             itemsLoadMore,
+            largerDevice,
             title,
             searchAttribute,
             searchAttributeValue,
@@ -109,6 +109,7 @@ class DetailViewAll extends CSSComponent {
             <div >
                 <Dialog
                     is="Dialog"
+                    largerDevice={largerDevice}
                     ref="modal"
                     repositionOnUpdate={false}
                     title={title}
