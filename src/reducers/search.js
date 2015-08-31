@@ -3,7 +3,10 @@ import Immutable from 'immutable';
 import * as types from '../constants/actionTypes';
 
 const initialState = Immutable.fromJS({
-    recents: Immutable.OrderedSet(),
+    recents: {
+        keys: Immutable.OrderedSet(),
+        values: {},
+    },
     results: {},
     loading: false,
 });
@@ -25,10 +28,16 @@ export default function search(state = initialState, action) {
             .set('loading', false);
         });
     case types.VIEW_SEARCH_RESULT:
-        return state.update('recents', (set) => {
-            return set.delete(action.payload)
-                .add(action.payload);
+        return state.update('recents', (map) => {
+            return map.withMutations(map => {
+                const id = action.payload.instance.id;
+                return map.update('keys', set => {
+                    return set.delete(id)
+                        .add(id);
+                })
+                    .update('values', map => map.set(id, action.payload));
             });
+        });
     }
     return state;
 }

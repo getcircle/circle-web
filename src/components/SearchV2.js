@@ -101,7 +101,9 @@ const selector = selectors.createImmutableSelector(
         locationsLoadingState,
         searchState,
     ) => {
-        const recents = searchState.get('recents').toJS()
+        const recentsState = searchState.get('recents');
+        const recentIds = recentsState.get('keys').toJS();
+        const recents = recentIds.map(id => recentsState.get('values').get(id));
         recents.reverse();
         return {
             loading: (
