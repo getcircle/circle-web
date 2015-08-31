@@ -81,7 +81,7 @@ class Dialog extends CSSComponent {
                     },
                 },
                 DialogClose: {
-                    className: 'col-xs-1',
+                    className: 'col-xs-2',
                 },
                 DialogCloseButton: {
                     style: {
@@ -100,14 +100,25 @@ class Dialog extends CSSComponent {
                     },
                 },
                 DialogSave: {
-                    className: 'col-xs-1',
+                    className: 'col-xs-2',
+                },
+                DialogSaveButton: {
+                    style: {
+                        minWidth: 15,
+                    },
+                    labelStyle: {
+                        fontSize: '12px',
+                        ...fontColors.light,
+                        ...fontWeights.semiBold,
+                    },
                 },
                 DialogTitle: {
-                    className: 'col-xs-10 center-xs',
+                    className: 'col-xs-8 center-xs',
                     style: {
                         alignSelf: 'center',
                         display: 'flex',
                         fontSize: '12px',
+                        letterSpacing: '1px',
                         textTransform: 'uppercase',
                         ...fontColors.light,
                         ...fontWeights.semiBold,
@@ -143,6 +154,7 @@ class Dialog extends CSSComponent {
         const {
             children,
             dialogDismissLabel,
+            dialogSaveLabel,
             title,
             ...other,
         } = this.props;
@@ -161,8 +173,19 @@ class Dialog extends CSSComponent {
                     <span is="DialogTitle">
                         {title}
                     </span>
+                    <div is="DialogSave">
+                        <FlatButton
+                            is="DialogSaveButton"
+                            label={dialogSaveLabel}
+                            onTouchTap={() => {
+                                this.props.onSave();
+                                this.dismiss();
+                            }}
+                        />
+                    </div>
+
                     {(() => {
-                        if (this.props.dialogSaveLabel) {
+                        if (dialogSaveLabel !== '') {
                             <div is="DialogSave">
                                 <FlatButton
                                     is="DialogSaveButton"

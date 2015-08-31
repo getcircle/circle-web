@@ -10,6 +10,7 @@ import {
 
 import DetailContent from './DetailContent';
 import ProfileDetailContactInfo from './ProfileDetailContactInfo';
+import ProfileDetailForm from './ProfileDetailForm';
 import ProfileDetailHeader from './ProfileDetailHeader';
 import ProfileDetailManages from './ProfileDetailManages';
 import ProfileDetailStatus from './ProfileDetailStatus';
@@ -116,6 +117,12 @@ class ProfileDetail extends StyleableComponent {
         }
     }
 
+    renderProfileDetailForm() {
+        this.refs.profileDetailForm.show()
+    }
+
+    // Helpers
+
     getContactMethods() {
         const { profile } = this.props.extendedProfile;
         let contactMethods = [new ContactMethodV1({
@@ -144,11 +151,14 @@ class ProfileDetail extends StyleableComponent {
         const {
             organization,
             isLoggedInUser,
+            onUpdateProfile,
         } = this.props;
 
         return (
             <div>
                 <ProfileDetailHeader
+                    isEditable={isLoggedInUser}
+                    onEditTapped={this.renderProfileDetailForm.bind(this)}
                     organization={organization}
                     profile={profile}
                     team={team}
@@ -159,6 +169,12 @@ class ProfileDetail extends StyleableComponent {
                     {this.renderTeam(manager, peers, team)}
                     {this.renderManages(manages_team, direct_reports)}
                 </DetailContent>
+                <ProfileDetailForm
+                    contactMethods={this.getContactMethods()}
+                    onSaveCallback={onUpdateProfile}
+                    profile={profile}
+                    ref="profileDetailForm"
+                />
             </div>
         );
     }

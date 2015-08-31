@@ -1,7 +1,10 @@
+import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
+import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import DetailHeader from './DetailHeader';
@@ -10,6 +13,8 @@ import ProfileAvatar from './ProfileAvatar';
 class ProfileDetailHeader extends CSSComponent {
 
     static propTypes = {
+        isEditable: PropTypes.bool.isRequired,
+        onEditTapped: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         team: PropTypes.instanceOf(services.organization.containers.TeamV1),
@@ -27,8 +32,18 @@ class ProfileDetailHeader extends CSSComponent {
                     width: 120,
                     fontSize: '48px',
                 },
-                avatarSection: {
-                    paddingTop: '5vh',
+                editButtonContainer: {
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                },
+                editButton: {
+                    backgroundColor: 'transparent',
+                    border: '1px solid white',
+                    margin: '16px 16px 0 16px',
+                    fontSize: 11,
+                    letterSpacing: '1px',
+                    ...fontColors.white,
+                    ...fontWeights.semiBold,
                 },
                 tenureSection: {
                     paddingTop: 10,
@@ -37,8 +52,36 @@ class ProfileDetailHeader extends CSSComponent {
                 titleSection: {
                     paddingTop: 10,
                 },
+            },
+            'isEditable-false': {
+                avatarSection: {
+                    paddingTop: '6vh',
+                },
             }
         }
+    }
+
+    renderEditButton() {
+        const {
+            isEditable,
+        } = this.props;
+
+        if (!isEditable) {
+            return;
+        }
+
+        return (
+            <div is="editButtonContainer">
+                <FlatButton
+                    is="editButton"
+                    label={t('Edit Profile')}
+                    onTouchTap={() => {
+                        this.props.onEditTapped();
+                    }}
+                />
+            </div>
+        );
+
     }
 
     render() {
@@ -49,6 +92,7 @@ class ProfileDetailHeader extends CSSComponent {
         } = this.props;
         return (
             <DetailHeader>
+                {this.renderEditButton()}
                 <div className="row center-xs" is="avatarSection">
                     <ProfileAvatar is="avatar" profile={profile} />
                 </div>
