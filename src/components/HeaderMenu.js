@@ -91,8 +91,8 @@ class HeaderMenu extends CSSComponent {
                     desktop={true}
                     is="menu"
                     listStyle={this.styles().menuListStyle}
-                    onItemTouchTap={::this.hideMenu}
                     onEscKeyDown={::this.hideMenu}
+                    onItemTouchTap={::this.hideMenu}
                     width={110}
                 >
                     <MenuItem
