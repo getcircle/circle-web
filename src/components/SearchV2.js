@@ -114,6 +114,9 @@ class Search extends CSSComponent {
     static propTypes = {
         alwaysActive: PropTypes.bool,
         canExplore: PropTypes.bool,
+        defaults: PropTypes.arrayOf(PropTypes.oneOf(
+            services.profile.containers.ProfileV1,
+        )),
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
@@ -127,6 +130,7 @@ class Search extends CSSComponent {
         onCancel: PropTypes.func,
         onFocus: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
+        placeholder: PropTypes.string,
         profiles: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
@@ -158,6 +162,7 @@ class Search extends CSSComponent {
         onBlur() {},
         onCancel() {},
         onFocus() {},
+        placeholder: t('Search People, Teams & Locations'),
         showCancel: false,
     }
 
@@ -361,6 +366,15 @@ class Search extends CSSComponent {
         }
     }
 
+    resolveDefaults() {
+        const { defaults } = this.props;
+        return defaults.map((item) => {
+            if (item instanceof services.profile.containers.ProfileV1) {
+                return this.getProfileResult(item);
+            }
+        });
+    }
+
     getDefaultResults() {
         const { organization } = this.props;
         const { CategoryV1 } = services.search.containers.search;
@@ -430,6 +444,8 @@ class Search extends CSSComponent {
                 return this.getSearchResults();
             } else if (this.state.category !== null) {
                 return this.getCategoryResults();
+            } else if (this.props.defaults) {
+                return this.resolveDefaults(this.props.defaults);
             } else if (this.props.canExplore) {
                 return this.getDefaultResults();
             }
@@ -638,6 +654,7 @@ class Search extends CSSComponent {
             onBlur,
             onCancel,
             onFocus,
+            placeholder,
             showCancel,
             style,
             ...other,
@@ -658,7 +675,7 @@ class Search extends CSSComponent {
                     onClearToken={::this.handleClearCategory}
                     onFocus={onFocus}
                     onSelect={::this.handleSelection}
-                    placeholderText={t('Search People, Teams & Locations')}
+                    placeholderText={placeholder}
                     renderItem={::this.renderItem}
                     renderMenu={::this.renderMenu}
                     showCancel={showCancel}

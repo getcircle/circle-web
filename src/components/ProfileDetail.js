@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import resizable from '../decorators/resizable';
 import {
     routeToProfile,
     routeToLocation,
@@ -23,11 +24,13 @@ const styles = {
     },
 };
 
+@resizable
 class ProfileDetail extends StyleableComponent {
 
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
         isLoggedInUser: PropTypes.bool.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         onUpdateProfile: PropTypes.func.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
     }
@@ -85,6 +88,7 @@ class ProfileDetail extends StyleableComponent {
         if (team) {
             return (
                 <ProfileDetailTeam
+                    largerDevice={this.props.largerDevice}
                     manager={manager}
                     onClickManager={routeToProfile.bind(null, this.context.router, manager)}
                     onClickPeer={routeToProfile.bind(null, this.context.router)}
@@ -102,6 +106,7 @@ class ProfileDetail extends StyleableComponent {
             return (
                 <ProfileDetailManages
                     directReports={directReports}
+                    largerDevice={this.props.largerDevice}
                     onClickDirectReport={routeToProfile.bind(null, this.context.router)}
                     onClickTeam={routeToTeam.bind(null, this.context.router, team)}
                     style={this.mergeAndPrefix(styles.section)}

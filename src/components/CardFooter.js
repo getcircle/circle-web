@@ -44,10 +44,12 @@ class CardFooter extends CSSComponent {
     render() {
         const {
             actionText,
+            children,
             onClick,
+            ...other,
         } = this.props;
         return (
-            <footer {...this.props} className="row" is="root">
+            <footer {...other} className="row" is="root">
                 <div is="buttonContainer">
                     <FlatButton
                         is="button"
@@ -56,6 +58,7 @@ class CardFooter extends CSSComponent {
                         onTouchTap={onClick}
                     />
                 </div>
+                {children}
             </footer>
         );
     }

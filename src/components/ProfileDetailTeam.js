@@ -5,7 +5,6 @@ import { getTeamLabel } from '../services/organization';
 
 import Card from './Card';
 import CardFooter from './CardFooter';
-import CardFooterProfiles from './CardFooterProfiles';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
@@ -18,6 +17,7 @@ import ProfileAvatar from './ProfileAvatar';
 class ProfileDetailTeam extends CSSComponent {
 
     static propTypes = {
+        largerDevice: PropTypes.bool.isRequired,
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         onClickManager: PropTypes.func,
         onClickPeer: PropTypes.func,
@@ -64,31 +64,36 @@ class ProfileDetailTeam extends CSSComponent {
         );
     }
 
-    handleClickAction() {
-        this.refs.modal.show();
-    }
-
     render() {
         return (
-            <DetailSection
-                {...this.props}
-                firstCard={(
-                    <Card title="Reports To">
-                        {this.renderManager()}
-                    </Card>
-                )}
-                footer={(
-                    <CardFooter
-                        actionText={`Works with ${this.props.team.profile_count} Peers`}
-                        onClick={::this.handleClickAction}
-                    />
-                )}
-                secondCard={(
-                    <Card title="Team">
-                        {this.renderTeam()}
-                    </Card>
-                )}
-            />
+            <div>
+                <DetailSection
+                    {...this.props}
+                    firstCard={(
+                        <Card title="Reports To">
+                            {this.renderManager()}
+                        </Card>
+                    )}
+                    footer={(
+                        <CardFooter
+                            actionText={`Works with ${this.props.peers.length} Peers`}
+                            onClick={() => this.refs.peers.show()}
+                        />
+                    )}
+                    secondCard={(
+                        <Card title="Team">
+                            {this.renderTeam()}
+                        </Card>
+                    )}
+                />
+                <DetailViewAll
+                    filterPlaceholder="Search Peers"
+                    items={this.props.peers}
+                    largerDevice={this.props.largerDevice}
+                    ref="peers"
+                    title={`Peers (${this.props.peers.length})`}
+                />
+            </div>
         );
     }
 

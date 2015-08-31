@@ -9,6 +9,7 @@ import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
+import DetailViewAll from './DetailViewAll';
 
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
@@ -17,6 +18,7 @@ class ProfileDetailManages extends CSSComponent {
 
     static propTypes = {
         directReports: PropTypes.arrayOf(services.profile.containers.ProfileV1),
+        largerDevice: PropTypes.bool.isRequired,
         onClickDirectReport: PropTypes.func,
         onClickTeam: PropTypes.func,
         team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
@@ -46,10 +48,6 @@ class ProfileDetailManages extends CSSComponent {
         );
     }
 
-    handleClickAction() {
-        this.refs.modal.show();
-    }
-
     renderFooter() {
         const { directReports } = this.props;
         if (directReports && directReports.length) {
@@ -65,7 +63,14 @@ class ProfileDetailManages extends CSSComponent {
                 <div>
                     <CardFooter
                         actionText={actionText}
-                        onClick={::this.handleClickAction}
+                        onClick={() => this.refs.directReports.show()}
+                    />
+                    <DetailViewAll
+                        filterPlaceholder="Search Direct Reports"
+                        items={directReports}
+                        largerDevice={this.props.largerDevice}
+                        ref="directReports"
+                        title={`Direct Reports (${this.props.directReports.length})`}
                     />
                 </div>
             );
