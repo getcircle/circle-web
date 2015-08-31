@@ -358,7 +358,7 @@ class Search extends CSSComponent {
         const item = {
             leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: profile.full_name,
-            secondaryText: `${profile.title} (TODO)`,
+            secondaryText: `${profile.title}`,
             onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
