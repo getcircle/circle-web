@@ -7,7 +7,6 @@ import t from '../utils/gettext';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import DetailMembers from './DetailMembers';
-import DetailViewAll from './DetailViewAll';
 import LocationDetailDescription from './LocationDetailDescription';
 import LocationDetailHeader from './LocationDetailHeader';
 import LocationDetailLocation from './LocationDetailLocation';
@@ -17,6 +16,7 @@ const { DescriptionV1 } = services.common.containers;
 class LocationDetail extends CSSComponent {
 
     static propTypes = {
+        largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
         onUpdateLocationCallback: PropTypes.func.isRequired,
@@ -103,10 +103,6 @@ class LocationDetail extends CSSComponent {
         }
     }
 
-    handleClickAction() {
-        this.refs.modal.show();
-    }
-
     renderMembers(members, totalMembersCount) {
         if (members.length) {
 
@@ -122,10 +118,14 @@ class LocationDetail extends CSSComponent {
                 <DetailMembers
                     actionText={actionText}
                     is="section"
+                    largerDevice={this.props.largerDevice}
                     members={members}
-                    onClickActionText={this.handleClickAction.bind(this)}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
                     title={title}
+                    viewAllAttribute={services.search.containers.search.AttributeV1.LOCATION_ID}
+                    viewAllAttributeValue={this.props.office.id}
+                    viewAllFilterPlaceholderText="Search People"
+                    viewAllTitle={`People (${totalMembersCount})`}
                 />
             );
         }
@@ -144,12 +144,6 @@ class LocationDetail extends CSSComponent {
                     {this.renderPointsOfContact(office)}
                     {this.renderMembers(members, office.profile_count)}
                 </DetailContent>
-                <DetailViewAll
-                    items={members}
-                    onClickItem={routeToProfile.bind(null, this.context.router)}
-                    ref="modal"
-                    title={`Working at ${this.props.office.name}`}
-                />
             </div>
         );
     }

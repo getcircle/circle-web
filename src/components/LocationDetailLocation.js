@@ -106,7 +106,6 @@ class LocationDetailLocation extends CSSComponent {
     }
 
     render() {
-        console.log(this.props.largerDevice);
         const { office } = this.props;
         return (
             <Card {...this.props} title="Address">

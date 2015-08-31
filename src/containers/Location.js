@@ -8,6 +8,7 @@ import {
     loadLocationMembers,
     updateLocation,
 } from '../actions/locations';
+import resizable from '../decorators/resizable';
 import { retrieveLocation, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
@@ -39,10 +40,12 @@ const selector = createSelector(
 ) ;
 
 @connect(selector)
+@resizable
 class Location extends PureComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         // NB: This is named "office" bc "location" is used by react-router >.<
         office: PropTypes.instanceOf(services.organization.containers.LocationV1),
@@ -80,6 +83,7 @@ class Location extends PureComponent {
         if (office && members) {
             return (
                 <LocationDetail
+                    largerDevice={this.props.largerDevice}
                     members={members}
                     office={office}
                     onUpdateLocationCallback={this.onUpdateLocation.bind(this)}
