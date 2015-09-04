@@ -369,10 +369,23 @@ class Search extends CSSComponent {
     }
 
     getTeamResult(team) {
+        let subTextParts = [];
+        if (team.child_team_count > 1) {
+            subTextParts.push(`${team.child_team_count} Teams`);
+        } else if (team.child_team_count === 1) {
+            subTextParts.push(`${team.child_team_count} Team`);
+        }
+
+        if (team.profile_count > 1) {
+            subTextParts.push(`${team.profile_count} People`);
+        } else if (team.profile_count === 1) {
+            subTextParts.push(`${team.profile_count} Person`);
+        }
+
         const item = {
             leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
             primaryText: team.display_name,
-            secondaryText: `${team.child_team_count} Teams, ${team.profile_count} People`,
+            secondaryText: subTextParts.join(', '),
             onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
             type: RESULT_TYPES.TEAM,
             instance: team,
