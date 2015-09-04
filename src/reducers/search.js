@@ -14,7 +14,7 @@ const initialState = Immutable.fromJS({
 export default function search(state = initialState, action) {
     switch(action.type) {
     case types.SEARCH:
-        return state.set('loading', false);
+        return state.set('loading', true);
     case types.SEARCH_SUCCESS:
         return state.withMutations(map => {
             map.setIn(['results', action.payload.query], action.payload.results)
