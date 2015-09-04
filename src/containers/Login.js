@@ -31,12 +31,15 @@ class Login extends CSSComponent {
     }
 
     static contextTypes = {
-        muiTheme: React.PropTypes.object.isRequired,
+        muiTheme: PropTypes.object.isRequired,
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }),
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
-            this.transitionTo(this.props.location.nextPathname || '/');
+            this.context.router.transitionTo(this.props.location.nextPathname || '/');
             return false;
         }
         return true;

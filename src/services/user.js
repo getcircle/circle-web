@@ -3,7 +3,7 @@ import {services} from 'protobufs';
 import client from './client';
 import logger from '../utils/logger';
 
-export function authenticateUser(backend, key, secret) {
+export function authenticate(backend, key, secret) {
     /*eslint-disable camelcase*/
     let parameters = {
         backend: backend,
@@ -51,9 +51,7 @@ export function logout() {
     let request = new services.user.actions.logout.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(() => {
-                resolve();
-            })
+            .then(() => resolve())
             .catch((error) => {
                 logger.log(`Error logging out: ${error}`);
                 reject(error);

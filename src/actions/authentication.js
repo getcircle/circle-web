@@ -1,9 +1,6 @@
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
-import {
-    authenticateUser,
-    logout as logoutUser,
-} from '../services/user';
+import * as userService from '../services/user';
 import client from '../services/client';
 import { getOrganization } from '../services/organization';
 import { getProfile } from '../services/profile';
@@ -18,7 +15,7 @@ export function authenticate(backend, key, secret) {
             ],
             remote: () => {
                 let payload = {};
-                return authenticateUser(backend, key, secret)
+                return userService.authenticate(backend, key, secret)
                     .then((response) => {
                         const { user, token } = response;
                         payload.user = user;
@@ -48,7 +45,7 @@ export function logout() {
                 types.LOGOUT_SUCCESS,
                 types.LOGOUT_FAILURE,
             ],
-            remote: () => logoutUser(),
+            remote: () => userService.logout(),
         },
     };
 }

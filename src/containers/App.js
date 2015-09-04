@@ -25,12 +25,14 @@ const selector = createSelector(
         authenticationState,
         responsiveState,
         footerState,
-    ) => { return {
-        displayFooter: responsiveState.get('displayFooter'),
-        displayHeader: responsiveState.get('displayHeader'),
-        authenticated: authenticationState.get('authenticated'),
-        profile: authenticationState.get('profile'),
-    } }
+    ) => {
+        return {
+            displayFooter: responsiveState.get('displayFooter'),
+            displayHeader: responsiveState.get('displayHeader'),
+            authenticated: authenticationState.get('authenticated'),
+            profile: authenticationState.get('profile'),
+        }
+    }
 );
 
 @connect(selector)
