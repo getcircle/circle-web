@@ -64,7 +64,10 @@ class ProfileDetailTeam extends CSSComponent {
         );
     }
 
-    render() {
+    renderFooter() {
+        if (this.props.peers.length === 0) {
+            return;
+        }
 
         let footerActionText = '';
         if (this.props.peers.length === 1) {
@@ -75,6 +78,16 @@ class ProfileDetailTeam extends CSSComponent {
         }
 
         return (
+            <CardFooter
+                actionText={footerActionText}
+                onClick={() => this.refs.peers.show()}
+            />
+        );
+    }
+
+    render() {
+
+        return (
             <div>
                 <DetailSection
                     {...this.props}
@@ -83,12 +96,7 @@ class ProfileDetailTeam extends CSSComponent {
                             {this.renderManager()}
                         </Card>
                     )}
-                    footer={(
-                        <CardFooter
-                            actionText={footerActionText}
-                            onClick={() => this.refs.peers.show()}
-                        />
-                    )}
+                    footer={this.renderFooter()}
                     secondCard={(
                         <Card title="Team">
                             {this.renderTeam()}
