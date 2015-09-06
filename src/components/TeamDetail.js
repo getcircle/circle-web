@@ -152,12 +152,14 @@ class TeamDetail extends CSSComponent {
         if (members && members.length) {
             members = _.filter(members, (profile) => profile.id !== manager.id);
 
-            let title = `${t('People')} (${totalMembersCount})`;
+            // Subtract one for manager
+            let membersCount = totalMembersCount - 1;
+            let title = `${t('People')} (${membersCount})`;
             let actionText = '';
             if (totalMembersCount === 1) {
                 actionText = 'View 1 Person';
             } else {
-                actionText = `View all ${totalMembersCount} People`;
+                actionText = `View all ${membersCount} People`;
             }
 
             return (
@@ -172,7 +174,7 @@ class TeamDetail extends CSSComponent {
                     viewAllAttribute={services.search.containers.search.AttributeV1.TEAM_ID}
                     viewAllAttributeValue={this.props.extendedTeam.team.id}
                     viewAllFilterPlaceholderText="Search People"
-                    viewAllTitle={`People (${totalMembersCount})`}
+                    viewAllTitle={`People (${membersCount})`}
                 />
             );
         }
