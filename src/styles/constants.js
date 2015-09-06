@@ -1,19 +1,21 @@
 const baseColors = {
-    olive: 'rgb(30, 146, 57)',
-    tumeric: 'rgb(14, 99, 177)',
-    shakespeare: 'rgb(109, 109, 109)',
-    sienna: 'rgb(213, 102, 19)',
-    violet: 'rgb(119, 65, 133)',
-    fuchsia: 'rgb(179, 44, 40)',
+    brown: '#C6AE8D',
+    red: '#C46973',
+    pink: '#C085AE',
+    purple: '#B37DD1',
+    violet: '#898FD2',
+    blue: '#77A5C5',
+    green: '#8CCB9D',
 };
 
 const brightColors = [
-    baseColors.olive,
-    baseColors.tumeric,
-    baseColors.shakespeare,
-    baseColors.sienna,
+    baseColors.brown,
+    baseColors.red,
+    baseColors.pink,
+    baseColors.purple,
     baseColors.violet,
-    baseColors.fuchsia,
+    baseColors.blue,
+    baseColors.green,
 ];
 
 const colors = {
