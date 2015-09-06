@@ -65,6 +65,15 @@ class ProfileDetailTeam extends CSSComponent {
     }
 
     render() {
+
+        let footerActionText = '';
+        if (this.props.peers.length === 1) {
+            footerActionText = 'Works with 1 Peer';
+        }
+        else {
+            footerActionText = `View ${this.props.peers.length} Peers`;
+        }
+
         return (
             <div>
                 <DetailSection
@@ -76,7 +85,7 @@ class ProfileDetailTeam extends CSSComponent {
                     )}
                     footer={(
                         <CardFooter
-                            actionText={`Works with ${this.props.peers.length} Peers`}
+                            actionText={footerActionText}
                             onClick={() => this.refs.peers.show()}
                         />
                     )}
