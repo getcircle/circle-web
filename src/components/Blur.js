@@ -7,6 +7,7 @@ class Blur extends CSSComponent {
 
     static propTypes = {
         children: PropTypes.arrayOf(PropTypes.element),
+        className: PropTypes.string,
         img: PropTypes.string,
         style: PropTypes.object,
     }
@@ -16,7 +17,6 @@ class Blur extends CSSComponent {
             'default': {
                 root: {
                     Absolute: '0',
-                    zIndex: 0,
                 },
             },
         };

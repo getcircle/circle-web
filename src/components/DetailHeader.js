@@ -25,9 +25,6 @@ class DetailHeader extends CSSComponent {
                     position: 'relative',
                     zIndex: 1,
                 },
-                blurContainer: {
-                    top: 64
-                },
             },
         };
     }
@@ -42,7 +39,7 @@ class DetailHeader extends CSSComponent {
         // TODO: Enable after fixing cross origin issues
         let headerImage = /*img && img !== '' ? img : */ backgroundImage;
         return (
-            <Blur blurRadius={50} img={headerImage} style={{...this.styles().blurContainer}}>
+            <Blur className="detail-blur-canvas" blurRadius={50} img={headerImage}>
                 <header {...other} style={{...this.styles().root, ...style}} />
             </Blur>
         );
