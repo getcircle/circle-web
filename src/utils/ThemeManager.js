@@ -54,6 +54,8 @@ export function getCustomThemeManager() {
             ...fontWeights.semiBold,
         },
         headerTertiaryText: {
+            display: 'flex',
+            alignItems: 'center',
             fontSize: '12px',
             lineHeight: '18px',
             ...fontColors.darkWhite,
