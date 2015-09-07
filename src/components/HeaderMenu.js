@@ -9,6 +9,9 @@ import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
+import IconContainer from './IconContainer';
+import LogoutIcon from './LogoutIcon';
+import ProfileIcon from './ProfileIcon';
 
 import rectangleIcon from '../images/icons/down_arrow_icon.svg';
 
@@ -67,6 +70,19 @@ class HeaderMenu extends CSSComponent {
                     color: tintColor,
                     lineHeight: 2,
                 },
+                MenuItemIcon: {
+                    height: 28,
+                    width: 28,
+                },
+                MenuItemIconContainer: {
+                    stroke: 'rgb(106, 106, 106)',
+                },
+                MenuItemIconContainerContainer: {
+                    border: 0,
+                    borderRadius: 0,
+                    height: 28,
+                    width: 28,
+                },
             },
         };
     }
@@ -97,13 +113,25 @@ class HeaderMenu extends CSSComponent {
                 >
                     <MenuItem
                         desktop={true}
-                        onTouchTap={() => this.props.dispatch(logout())}
-                        primaryText={t('Logout')}
+                        leftIcon={<IconContainer
+                            IconClass={ProfileIcon}
+                            iconStyle={{...this.styles().MenuItemIcon}}
+                            is="MenuItemIconContainer"
+                            style={{...this.styles().MenuItemIconContainerContainer}}
+                        />}
+                        onTouchTap={::this.handleViewProfile}
+                        primaryText={t('View Profile')}
                     />
                     <MenuItem
                         desktop={true}
-                        onTouchTap={::this.handleViewProfile}
-                        primaryText={t('View Profile')}
+                        leftIcon={<IconContainer
+                            IconClass={LogoutIcon}
+                            iconStyle={{...this.styles().MenuItemIcon}}
+                            is="MenuItemIconContainer"
+                            style={{...this.styles().MenuItemIconContainerContainer}}
+                        />}
+                        onTouchTap={() => this.props.dispatch(logout())}
+                        primaryText={t('Logout')}
                     />
                 </Menu>
             );
