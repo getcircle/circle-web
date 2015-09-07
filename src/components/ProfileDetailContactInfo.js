@@ -11,7 +11,9 @@ import DetailSection from './DetailSection';
 import IconContainer from './IconContainer';
 import OfficeIcon from './OfficeIcon';
 import MailIcon from './MailIcon';
+import MoonIcon from './MoonIcon';
 import PhoneIcon from './PhoneIcon';
+import SunIcon from './SunIcon';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
@@ -53,6 +55,23 @@ class ProfileDetailContactInfo extends CSSComponent {
                         paddingRight: 0,
                     },
                 },
+                DayNightIndicatorIcon: {
+                    height: '28px',
+                    width: '28px',
+                },
+                DayNightIndicatorIconContainer: {
+                    stroke: 'rgb(178, 178, 178)',
+                },
+                DayNightIndicatorIconContainerContainer: {
+                    border: 0,
+                    borderRadius: 0,
+                    height: '28px',
+                    left: 0,
+                    position: 'relative',
+                    top: 0,
+                    right: 0,
+                    width: '28px',
+                },
                 IconContainer: {
                     stroke: 'rgba(0, 0, 0, .4)',
                 },
@@ -69,7 +88,7 @@ class ProfileDetailContactInfo extends CSSComponent {
 
     getCurrentTime(props) {
         if (props.locations && props.locations.length) {
-            return moment().tz(props.locations[0].timezone).calendar();
+            return moment().tz(props.locations[0].timezone);
         }
     }
 
@@ -79,6 +98,21 @@ class ProfileDetailContactInfo extends CSSComponent {
             [location.city, location.region],
             (item) => item !== null,
         ).join(', ');
+    }
+
+    // Render Methods
+
+    renderDayNightIndicatorImage() {
+        let hour = this.state.currentTime.hour();
+        let isDay = hour < 18 && hour >= 6;
+        return (
+            <IconContainer
+                IconClass={isDay ? SunIcon : MoonIcon}
+                iconStyle={{...this.styles().DayNightIndicatorIcon}}
+                is="DayNightIndicatorIconContainer"
+                style={{...this.styles().DayNightIndicatorIconContainerContainer}}
+            />
+        );
     }
 
     renderContactInfo() {
@@ -108,7 +142,11 @@ class ProfileDetailContactInfo extends CSSComponent {
             }
         })
         return (
-            <Card subTitle={this.state.currentTime} title="Contact">
+            <Card
+                subTitle={this.state.currentTime.calendar()}
+                subTitleImage={this.renderDayNightIndicatorImage()}
+                title="Contact"
+            >
                 <CardList>
                     {methods}
                 </CardList>

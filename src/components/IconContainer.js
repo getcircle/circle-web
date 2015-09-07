@@ -28,25 +28,26 @@ class IconContainer extends StyleableComponent {
 
     static propTypes = {
         IconClass: PropTypes.func.isRequired,
+        iconStyle: PropTypes.object,
         stroke: PropTypes.string,
         strokeWidth: PropTypes.number,
-        iconStyle: PropTypes.object,
+        style: PropTypes.object,
     }
 
     render() {
         const {
             iconStyle,
-            style,
             stroke,
             strokeWidth,
+            style,
             ...other,
         } = this.props;
         return (
             <div {...other} style={this.mergeAndPrefix(styles.root, style)}>
                 <this.props.IconClass
-                    style={this.mergeAndPrefix(styles.icon, iconStyle)}
                     stroke={stroke}
                     strokeWidth={strokeWidth}
+                    style={this.mergeAndPrefix(styles.icon, iconStyle)}
                 />
             </div>
         );

@@ -19,6 +19,7 @@ class Card extends CSSComponent {
         onSaveTapped: PropTypes.func,
         style: PropTypes.object,
         subTitle: PropTypes.string,
+        subTitleImage: PropTypes.element,
         title: PropTypes.string,
     }
 
@@ -60,6 +61,7 @@ class Card extends CSSComponent {
                     borderRadius: 3,
                 },
                 subTitleText: {
+                    alignItems: 'center',
                     alignSelf: 'center',
                     display: 'flex',
                     flex: 1,
@@ -74,7 +76,12 @@ class Card extends CSSComponent {
     }
 
     renderHeader() {
-        const { title, subTitle } = this.props;
+        const {
+            title,
+            subTitleImage,
+            subTitle
+        } = this.props;
+
         if (title) {
             return (
                 <header is="header">
@@ -82,6 +89,7 @@ class Card extends CSSComponent {
                         {title}
                     </span>
                     <span is="subTitleText">
+                        {subTitleImage}
                         {subTitle}
                     </span>
                     {this.renderEditButton()}
