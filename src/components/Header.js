@@ -70,6 +70,8 @@ class Header extends CSSComponent {
                 },
                 headerContainer: {
                     paddingBottom: 64,
+                    position: 'relative',
+                    zIndex: 10,
                 },
                 HeaderMenu: {
                     style: {

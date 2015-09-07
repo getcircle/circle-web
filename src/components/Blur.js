@@ -16,7 +16,7 @@ class Blur extends CSSComponent {
             'default': {
                 root: {
                     Absolute: '0',
-                    zIndex: -1,
+                    zIndex: 0,
                 },
             },
         };

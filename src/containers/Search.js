@@ -149,6 +149,7 @@ class Search extends CSSComponent {
             'largerDevice-true': {
                 header: {
                     display: 'initial',
+                    position: 'relative',
                 },
                 HeaderMenu: {
                     style: {

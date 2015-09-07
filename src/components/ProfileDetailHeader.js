@@ -91,7 +91,7 @@ class ProfileDetailHeader extends CSSComponent {
             team,
         } = this.props;
         return (
-            <DetailHeader>
+            <DetailHeader img={profile.image_url}>
                 {this.renderEditButton()}
                 <div className="row center-xs" is="avatarSection">
                     <ProfileAvatar is="avatar" profile={profile} />

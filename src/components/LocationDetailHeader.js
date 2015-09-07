@@ -140,7 +140,7 @@ class LocationDetailHeader extends CSSComponent {
         let iconColor = {...this.styles().icon}.color;
         let iconStrokeWidth = {...this.styles().icon}.strokeWidth;
         return (
-            <DetailHeader>
+            <DetailHeader img={office.image_url}>
                 <div className="row center-xs" is="iconSection">
                     <IconContainer
                         IconClass={OfficeIcon}
