@@ -17,7 +17,7 @@ module.exports = {
     plugins: [
         new ExtractTextPlugin('app.css', { allChunks: true }),
         new HtmlWebpackPlugin({
-            title: 'Circle',
+            title: 'Luno',
             filename: 'index.html',
             template: 'index.template.html',
             favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico')
