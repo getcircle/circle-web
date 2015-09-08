@@ -44,7 +44,7 @@ class LoginForm extends CSSComponent {
                 },
                 header: {
                     fontSize: 36,
-                    paddingBottom: 50,
+                    paddingBottom: 20,
                     ...fontColors.white,
                 },
                 section: {
@@ -53,7 +53,7 @@ class LoginForm extends CSSComponent {
                 },
                 subHeader: {
                     fontSize: 26,
-                    paddingBottom: 20,
+                    paddingBottom: 70,
                     ...fontColors.white,
                 },
             }
@@ -78,15 +78,15 @@ class LoginForm extends CSSComponent {
                 <section className="col-xs" is="section">
                     <div>
                         <div className="row center-xs">
-                            <h1 is="header">{t('circle')}</h1>
+                            <h1 is="header">luno</h1>
                         </div>
                         <div className="row center-xs">
-                            <h2 is="subHeader">{t('know the people you work with')}</h2>
+                            <h2 is="subHeader">{t('organizing your company\'s knowledge')}</h2>
                         </div>
                         <div className="row center-xs">
                             <RaisedButton
                                 is="button"
-                                label={`${ t('START USING CIRCLE') }`}
+                                label={`${ t('START USING LUNO') }`}
                                 labelStyle={this.styles().label}
                                 onTouchTap={this.handleTouchTap.bind(this)}
                                 primary={true}

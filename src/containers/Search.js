@@ -209,7 +209,7 @@ class Search extends CSSComponent {
                     </section>
                     <section is="poweredBySection">
                         <div className="row center-xs">
-                            <span is="poweredBy">{t('Powered by Circle')}</span>
+                            <span is="poweredBy">{t('Powered by Luno')}</span>
                         </div>
                     </section>
                 </section>
