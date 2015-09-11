@@ -38,7 +38,7 @@ export default class Transport {
             case ENVIRONMENTS.local:
                 return 'localhost:8000';
             default:
-                return 'api.circlehq.co';
+                return 'api.lunohq.com';
         }
     }
 
