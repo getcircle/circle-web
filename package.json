@@ -10,8 +10,8 @@
     "dev-deploy": "npm run build-prod && divshot deploy",
     "lint": "eslint src",
     "start": "npm run build && node webpack/webpack-dev-server",
-    "setup-dns": "echo '127.0.0.1 local.circlehq.co' >> /etc/hosts && dscacheutil -flushcache",
-    "open": "open http://local.circlehq.co:9110/",
+    "setup-dns": "echo '127.0.0.1 local.lunohq.com' >> /etc/hosts && dscacheutil -flushcache",
+    "open": "open http://local.lunohq.com:9110/",
     "test": "mocha --compilers js:babel/register --recursive 'src/**/*spec.js'"
   },
   "repository": {
