@@ -89,6 +89,8 @@ class ProfileDetailContactInfo extends CSSComponent {
     getCurrentTime(props) {
         if (props.locations && props.locations.length) {
             return moment().tz(props.locations[0].timezone);
+        } else {
+            return moment();
         }
     }
 
