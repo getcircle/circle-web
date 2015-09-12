@@ -8,3 +8,4 @@ export default class ServiceError extends ExtendableError {
         this.request = request;
     }
 }
+
