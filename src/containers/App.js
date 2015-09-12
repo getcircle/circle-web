@@ -67,7 +67,8 @@ class App extends CSSComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        if (!nextProps.authenticated && nextProps.location.pathname !== '/login') {
+        // TODO: Correctly add support for white labeling URLs
+        if (!nextProps.authenticated && nextProps.location.pathname !== '/login' && nextProps.location.pathname !== '/billing') {
             this.context.router.transitionTo('/login');
         }
     }

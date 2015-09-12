@@ -65,3 +65,8 @@ export const UPDATE_TEAM_FAILURE = 'UPDATE_TEAM_FAILURE';
 
 // Device Actions
 export const DEVICE_RESIZED = 'DEVICE_RESIZED';
+
+// Billing Actions
+export const STORE_TOKEN = 'STORE_TOKEN';
+export const STORE_TOKEN_SUCCESS = 'STORE_TOKEN_SUCCESS';
+export const STORE_TOKEN_FAILURE = 'STORE_TOKEN_FAILURE';

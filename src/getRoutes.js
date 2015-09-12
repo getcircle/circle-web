@@ -33,6 +33,7 @@ const getRoutes = (history, store) => {
             next(nextState, transition);
         };
     };
+
     const displayHeader = (next) => {
         return (nextState, transition) => {
             store.dispatch(toggleHeader(true));
@@ -53,6 +54,11 @@ const getRoutes = (history, store) => {
         <Router history={history}>
             <Route component={reduxRouteComponent(store)}>
                 <Route component={require('./containers/App')}>
+                    <Route
+                        component={require('./containers/Billing')}
+                        onEnter={applyMiddleware(displayHeader)}
+                        path="/billing"
+                    />
                     <Route
                         component={require('./containers/Search')}
                         onEnter={applyMiddleware(requireAuth, hideHeader)}

@@ -94,6 +94,7 @@
     "react-pure-render": "^1.0.2",
     "react-redux": "^1.0.0",
     "react-router": "^1.0.0-beta1",
+    "react-stripe-checkout": "^1.7.0",
     "react-tap-event-plugin": "^0.1.7",
     "reactcss": "mhahn/reactcss",
     "reactify": "~1.1.1",
