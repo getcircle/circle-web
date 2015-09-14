@@ -23,7 +23,7 @@ module.exports = {
             favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico')
         }),
         new webpack.DefinePlugin({
-            __DEVELOPMENT__: false,
+            __DEVELOPMENT__: true,
             __DEVTOOLS__: false,
             'process.env': {
                 API_ENDPOINT: JSON.stringify('https://api.dev.lunohq.com'),
