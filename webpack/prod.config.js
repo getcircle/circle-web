@@ -29,6 +29,8 @@ module.exports = {
                 // Useful to reduce the size of client-side libraries, eg. react
                 NODE_ENV: JSON.stringify('production')
                 API_ENDPOINT: JSON.stringify('https://api.lunohq.com')
+                GOOGLE_CLIENT_ID: JSON.stringify('1057892432577-im3kndbpr8k14dkefm91hb5qth134nb0.apps.googleusercontent.com'),
+                GOOGLE_MAPS_API_KEY: JSON.stringify('AIzaSyA_ooSzt99omg9hWAugqIZnAyX8axkjrlk')
             }
         }),
 

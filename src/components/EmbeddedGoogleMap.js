@@ -8,7 +8,7 @@ class EmbeddedGoogleMap extends PureComponent {
         office: PropTypes.object.isRequired,
     }
 
-    apiKey = 'AIzaSyA_ooSzt99omg9hWAugqIZnAyX8axkjrlk'
+    apiKey = process.env.GOOGLE_MAPS_API_KEY
 
     getGoogleMapsEndpoint(office) {
         const googleAddress = [

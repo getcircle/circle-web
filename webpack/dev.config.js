@@ -27,6 +27,8 @@ module.exports = {
             __DEVTOOLS__: false,
             'process.env': {
                 API_ENDPOINT: JSON.stringify('https://api.dev.lunohq.com'),
+                GOOGLE_CLIENT_ID: JSON.stringify('1090169577912-57r89ml43udqthb050v57kim3vddlrvu.apps.googleusercontent.com'),
+                GOOGLE_MAPS_API_KEY: JSON.stringify('AIzaSyAlKvipmEx76I45QIHP6NAI4pJ0Ybp55u8')
             }
         }),
 

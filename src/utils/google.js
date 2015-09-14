@@ -9,8 +9,7 @@ export function getAuthInstance() {
             if ( instance === null) {
                 instance = window.gapi.auth2.init({
                     /*eslint-disable camelcase*/
-                    // TODO: should be coming from settings
-                    client_id: '1057892432577-im3kndbpr8k14dkefm91hb5qth134nb0.apps.googleusercontent.com',
+                    client_id: process.env.GOOGLE_CLIENT_ID,
                     scope: (
                         'https://www.googleapis.com/auth/plus.login ' +
                         'https://www.googleapis.com/auth/plus.profile.emails.read'
