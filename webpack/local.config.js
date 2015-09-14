@@ -1,46 +1,38 @@
 var path = require('path');
 var webpack = require('webpack');
-var CleanPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var strip = require('strip-loader');
+var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
-    devtool: 'source-map',
+    devtool: 'cheap-eval-source-map',
     context: path.resolve(__dirname, '..'),
-    entry: ['./src'],
+    entry: [
+        'webpack-dev-server/client?http://localhost:9110',
+        'webpack/hot/only-dev-server',
+        './src'
+    ],
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/dist/'
     },
     plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new WebpackNotifierPlugin(),
+        new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin('app.css', { allChunks: true }),
         new HtmlWebpackPlugin({
-            title: 'Luno',
+            title: 'Luno Dev',
             filename: 'index.html',
             template: 'index.template.html',
             favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico')
         }),
         new webpack.DefinePlugin({
-            __DEVELOPMENT__: false,
-            __DEVTOOLS__: false,
+            __DEVELOPMENT__: true,
+            __DEVTOOLS__: process.env.DEVTOOLS ? true : false,
             'process.env': {
-                // Useful to reduce the size of client-side libraries, eg. react
-                NODE_ENV: JSON.stringify('production')
-                API_ENDPOINT: JSON.stringify('https://api.lunohq.com')
-            }
-        }),
-
-        // ignore dev config
-        new webpack.IgnorePlugin(/\.\/dev/, /\/config$/),
-
-        // optimiazations
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
+                API_ENDPOINT: JSON.stringify('http://localhost:8000'),
             }
         })
     ],
@@ -53,12 +45,13 @@ module.exports = {
                     'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
                 ]
             },
-            { test: /\.js$/, loaders: [strip.loader('debug'), 'babel?stage=0&optional=runtime', 'react-map-styles'], exclude: /node_modules/ },
+            { test: /\.js$/, loaders: ['react-hot', 'babel?stage=0&optional=runtime&cacheDirectory'], exclude: /node_modules/ },
+            { test: /(components|containers).*\.js$/, loaders: ['react-map-styles'], exclude: /node_modules/ },
             { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
             { test: /\.json$/, loaders: ['json-loader']}
         ]
     },
     node: {
       fs: "empty"
-    }
+    },
 };

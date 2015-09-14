@@ -1,26 +1,20 @@
 var path = require('path');
 var webpack = require('webpack');
+var CleanPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var WebpackNotifierPlugin = require('webpack-notifier');
+var strip = require('strip-loader');
 
 module.exports = {
-    devtool: 'cheap-eval-source-map',
+    devtool: 'source-map',
     context: path.resolve(__dirname, '..'),
-    entry: [
-        'webpack-dev-server/client?http://localhost:9110',
-        'webpack/hot/only-dev-server',
-        './src'
-    ],
+    entry: ['./src'],
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, '../dist'),
         publicPath: '/dist/'
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new WebpackNotifierPlugin(),
-        new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin('app.css', { allChunks: true }),
         new HtmlWebpackPlugin({
             title: 'Luno Dev',
@@ -29,8 +23,23 @@ module.exports = {
             favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico')
         }),
         new webpack.DefinePlugin({
-            __DEVELOPMENT__: true,
-            __DEVTOOLS__: process.env.DEVTOOLS ? true : false,
+            __DEVELOPMENT__: false,
+            __DEVTOOLS__: false,
+            'process.env': {
+                API_ENDPOINT: JSON.stringify('https://api.dev.lunohq.com'),
+            }
+        }),
+
+        // ignore dev config
+        new webpack.IgnorePlugin(/\.\/dev/, /\/config$/),
+
+        // optimiazations
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
         })
     ],
     module: {
@@ -42,13 +51,12 @@ module.exports = {
                     'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
                 ]
             },
-            { test: /\.js$/, loaders: ['react-hot', 'babel?stage=0&optional=runtime&cacheDirectory'], exclude: /node_modules/ },
-            { test: /(components|containers).*\.js$/, loaders: ['react-map-styles'], exclude: /node_modules/ },
+            { test: /\.js$/, loaders: [strip.loader('debug'), 'babel?stage=0&optional=runtime', 'react-map-styles'], exclude: /node_modules/ },
             { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
             { test: /\.json$/, loaders: ['json-loader']}
         ]
     },
     node: {
       fs: "empty"
-    },
+    }
 };
