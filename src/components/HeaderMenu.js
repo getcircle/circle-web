@@ -1,6 +1,5 @@
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import { Avatar } from 'material-ui';
 import React, { PropTypes } from 'react/addons';
 
 import { logout } from '../actions/authentication';
@@ -11,6 +10,7 @@ import { tintColor } from '../constants/styles';
 import CSSComponent from './CSSComponent';
 import IconContainer from './IconContainer';
 import LogoutIcon from './LogoutIcon';
+import ProfileAvatar from './ProfileAvatar';
 import ProfileIcon from './ProfileIcon';
 
 import rectangleIcon from '../images/icons/down_arrow_icon.svg';
@@ -171,7 +171,7 @@ class HeaderMenu extends CSSComponent {
                     onTouchTap={::this.handleTouchTap}
                 >
                     <div className="col-xs">
-                        <Avatar src={profile.image_url} />
+                        <ProfileAvatar profile={profile} />
                     </div>
                     {this.renderProfileName()}
                     {this.renderDownArrow()}
