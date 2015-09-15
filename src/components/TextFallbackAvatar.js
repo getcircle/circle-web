@@ -1,20 +1,11 @@
-import _ from 'lodash';
 import { Avatar } from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { getRandomColor } from '../utils/avatars';
 
-import StyleableComponent from './StyleableComponent';
+import CSSComponent from './CSSComponent';
 
-const styles = {
-    avatar: {
-        display: 'flex',
-        height: 40,
-        width: 40,
-    },
-};
-
-class TextFallbackAvatar extends StyleableComponent {
+class TextFallbackAvatar extends CSSComponent {
 
     static propTypes = {
         className: PropTypes.string,
@@ -38,6 +29,19 @@ class TextFallbackAvatar extends StyleableComponent {
         this.setState({imageSrc: nextProps.src});
     }
 
+    classes() {
+        return {
+            default: {
+                avatar: {
+                    display: 'flex',
+                    height: 40,
+                    width: 40,
+                    objectFit: 'cover',
+                },
+            }
+        }
+    }
+
     _handleImageError() {
         this.setState({imageSrc: null});
     }
@@ -49,11 +53,11 @@ class TextFallbackAvatar extends StyleableComponent {
     }
 
     render() {
-        const avatarStyle = _.assign({}, styles.avatar, this.props.style);
         let backgroundColor;
         if (!this.state.imageSrc && this.props.fallbackText.length > 0) {
             backgroundColor = getRandomColor(this.props.fallbackText);
         }
+
         return (
             <div className={this.props.className}>
                 <Avatar
@@ -62,7 +66,7 @@ class TextFallbackAvatar extends StyleableComponent {
                     className="content--center--h content--center--v"
                     onError={this._handleImageError.bind(this)}
                     src={this.state.imageSrc}
-                    style={avatarStyle}
+                    style={{...this.styles().avatar,...this.props.style}}
                 >
                     {this._renderText()}
                 </Avatar>
