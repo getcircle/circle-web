@@ -23,8 +23,8 @@ const profileSelector = selectors.createImmutableSelector(
         // Profile ID is passed because extended profile might not have been fetched
         // ID is used to check whether this user is the logged in user or not
         return {
-            extendedProfile: extendedProfile,
-            profileId: profileId,
+            extendedProfile,
+            profileId,
         };
     }
 );
