@@ -52,7 +52,8 @@ class Card extends CSSComponent {
                 },
                 headerActionButtonLabel: {
                     color: '#8598FF',
-                    fontSize: 16,
+                    fontSize: 12,
+                    letterSpacing: '1px',
                     ...fontWeights.semiBold,
                 },
                 root: {
@@ -128,7 +129,7 @@ class Card extends CSSComponent {
         return (
             <div is="headerActionButton">
                 <FlatButton
-                    label={t('Edit')}
+                    label={t('Update')}
                     labelStyle={this.styles().headerActionButtonLabel}
                     onTouchTap={onEditTapped}
                 />

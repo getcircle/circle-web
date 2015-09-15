@@ -20,6 +20,9 @@ export function getCustomThemeManager() {
         appBar: {
             color: '#F7F9FA',
         },
+        flatButton: {
+            color: 'rgb(255, 255, 255)',
+        },
         tab: {
             textColor: 'rgba(0, 0, 0, 0.3)',
             selectedTextColor: tintColor,
