@@ -32,7 +32,10 @@ export const iconColors = {
 export const backgroundColors = {
     light: {
         backgroundColor: 'white',
-    }
+    },
+    dark: {
+        backgroundColor: 'rgb(47, 55, 62)',
+    },
 }
 
 export const fontColors = {

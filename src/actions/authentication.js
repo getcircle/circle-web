@@ -73,3 +73,16 @@ export function refresh() {
         }
     };
 }
+
+export function getAuthenticationInstructions(email) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_AUTHENTICATION_INSTRUCTIONS,
+                types.GET_AUTHENTICATION_INSTRUCTIONS_SUCCESS,
+                types.GET_AUTHENTICATION_INSTRUCTIONS_FAILURE,
+            ],
+            remote: (state) => userService.getAuthenticationInstructions(email),
+        },
+    };
+}

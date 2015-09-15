@@ -16,8 +16,12 @@ export function authenticate(backend, key, secret) {
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then((response) => {
-                let {user, token} = response.result;
-                resolve({user, token});
+                if (response.isSuccess()) {
+                    let {user, token} = response.result;
+                    resolve({user, token});
+                } else {
+                    reject(response.reject());
+                }
             })
             .catch((error) => {
                 logger.log(`Error logging in: ${error}`);
@@ -31,11 +35,15 @@ export function getAuthenticationInstructions(email) {
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then((response) => {
-                resolve({
-                    authorizationUrl: response.result.authorization_url,
-                    backend: response.result.backend,
-                    userExists: response.result.user_exists,
-                });
+                if (response.isSuccess()) {
+                    resolve({
+                        authorizationUrl: response.result.authorization_url,
+                        backend: response.result.backend,
+                        userExists: response.result.user_exists,
+                    });
+                } else {
+                    reject(response.reject());
+                }
             })
             .catch((error) => {
                 logger.log(`Error fetching instructions: ${error}`);

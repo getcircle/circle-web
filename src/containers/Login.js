@@ -3,8 +3,8 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 
 import AppStoreBadge from '../images/AppStoreBadge.svg'
-import { authenticate } from '../actions/authentication';
-import constants from '../styles/constants';
+import { authenticate, getAuthenticationInstructions } from '../actions/authentication';
+import { backgroundColors } from '../constants/styles';
 import t from '../utils/gettext';
 import * as selectors from '../selectors';
 
@@ -17,6 +17,9 @@ const selector = createSelector(
         return {
             authError: authenticationState.get('authError'),
             authenticated: authenticationState.get('authenticated'),
+            authorizationUrl: authenticationState.get('authorizationUrl'),
+            backend: authenticationState.get('backend'),
+            userExists: authenticationState.get('userExists'),
         }
     },
 )
@@ -26,8 +29,12 @@ class Login extends CSSComponent {
 
     static propTypes = {
         authError: PropTypes.object,
+        authenticated: PropTypes.bool,
+        authorizationUrl: PropTypes.string,
+        backend: PropTypes.number,
         dispatch: PropTypes.func.isRequired,
         location: PropTypes.object.isRequired,
+        userExists: PropTypes.bool,
     }
 
     static contextTypes = {
@@ -48,10 +55,6 @@ class Login extends CSSComponent {
     classes() {
         return {
             default: {
-                root: {
-                    backgroundColor: constants.colors.background,
-                    minHeight: '100vh',
-                },
                 appBadgesTitleContainer: {
                     marginTop: '100px',
                 },
@@ -68,6 +71,10 @@ class Login extends CSSComponent {
                 appStoreBadge: {
                     width: '151px',
                 },
+                root: {
+                    minHeight: '100vh',
+                    ...backgroundColors.dark,
+                },
                 wrap: {
                     marginBottom: 0,
                 },
@@ -83,6 +90,10 @@ class Login extends CSSComponent {
                     <LoginForm
                         authError={this.props.authError}
                         authenticate={(...args) => dispatch(authenticate(...args))}
+                        authorizationUrl={this.props.authorizationUrl}
+                        backend={this.props.backend}
+                        getAuthenticationInstructions={(email) => dispatch(getAuthenticationInstructions(email))}
+                        userExists={this.props.userExists}
                     />
                     <div className="row center-xs" is="appBadgesTitleContainer">
                         <h2 is="appBadgesTitle">{t('Get the mobile app')}</h2>

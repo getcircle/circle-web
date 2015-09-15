@@ -57,8 +57,7 @@ const getInitialState = (checkCache = true) => {
     return initialState;
 }
 
-// XXX clearState on LOGOUT
-const storeState = (state) => {
+function storeState(state) {
     let nextState = state.toJS();
     for (let key of protobufKeys) {
         nextState[key] = nextState[key].encode64();
@@ -66,25 +65,29 @@ const storeState = (state) => {
     localStorage.setItem(AUTHENTICATION_STATE, JSON.stringify(nextState));
 }
 
-const clearState = () => {
+function clearState() {
     localStorage.clear();
     client.logout();
     let state = getInitialState(false);
     return state;
 }
 
-const handleAuthenticateSuccess = (state, action) => {
+function handleAuthenticateSuccess(state, action) {
     const {user, token, profile, organization} = action.payload;
     const nextState = state.merge({user, token, profile, organization, authenticated: true});
     storeState(nextState);
     return nextState;
 }
 
-const handleRefreshSuccess = (state, action) => {
+function handleRefreshSuccess(state, action) {
     const {profile, organization} = action.payload;
     const nextState = state.merge({profile, organization});
     storeState(nextState);
     return nextState;
+}
+
+function handleGetAuthenticationInstructionsSuccess(state, action) {
+    return state.merge({...action.payload});
 }
 
 const initialState = getInitialState();
@@ -93,6 +96,8 @@ export default function authentication(state = initialState, action) {
     switch (action.type) {
     case types.AUTHENTICATE_SUCCESS:
         return handleAuthenticateSuccess(state, action);
+    case types.GET_AUTHENTICATION_INSTRUCTIONS_SUCCESS:
+        return handleGetAuthenticationInstructionsSuccess(state, action);
     case types.LOGOUT_SUCCESS:
         return clearState();
     case types.REFRESH_SUCCESS:

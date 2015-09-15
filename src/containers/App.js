@@ -20,6 +20,11 @@ import TabBar from '../components/TabBar';
 const { AppCanvas } = mui;
 const { StyleResizable } = mui.Mixins;
 
+const UNAUTHENTICATED_ROUTES = [
+    '/billing',
+    '/login',
+];
+
 const selector = createSelector(
     [
         selectors.authenticationSelector,
@@ -72,7 +77,7 @@ class App extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         // TODO: Correctly add support for white labeling URLs
-        if (!nextProps.authenticated && nextProps.location.pathname !== '/login' && nextProps.location.pathname !== '/billing') {
+        if (!nextProps.authenticated && UNAUTHENTICATED_ROUTES.indexOf(nextProps.location.pathname) === -1) {
             this.context.router.transitionTo('/login');
         }
     }
