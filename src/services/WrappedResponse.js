@@ -68,6 +68,10 @@ export default class WrappedResponse {
         return action.control.paginator;
     }
 
+    isSuccess() {
+        return this.action.result.success;
+    }
+
     resolve(key=null) {
         const copy = this.result.$type.decode(this.result.encode());
         const normalized = normalize(copy, key );
@@ -82,7 +86,7 @@ export default class WrappedResponse {
     }
 
     finish(resolve, reject, key=null) {
-        if (this.action.result.success) {
+        if (this.isSuccess()) {
             return resolve(this.resolve(key));
         } else {
             return reject(this.reject());
