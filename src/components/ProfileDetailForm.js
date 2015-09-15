@@ -30,6 +30,7 @@ class ProfileDetailForm extends CSSComponent {
         return {
             'default': {
                 formContainer: {
+                    backgroundColor: 'rgb(255, 255, 255)',
                     display: 'flex',
                     justifyContent: 'center',
                     flexDirection: 'column',

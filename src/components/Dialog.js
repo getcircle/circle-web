@@ -88,15 +88,16 @@ class Dialog extends CSSComponent {
                         minWidth: 15,
                     },
                     labelStyle: {
-                        fontSize: '12px',
-                        ...fontColors.light,
-                        ...fontWeights.semiBold,
+                        fontSize: '14px',
+                        textTransform: 'none',
+                        ...fontColors.dark,
                     },
                 },
                 DialogHeader: {
                     className: 'row',
                     style: {
                         display: 'flex',
+                        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                     },
                 },
                 DialogSave: {
