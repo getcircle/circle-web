@@ -79,7 +79,7 @@
     "morgan": "~1.2.2",
     "node-notifier": "~4.2.3",
     "node-sass": "^3.2.0",
-    "protobuf-normalizr": "git+ssh://git@github.com/mhahn/protobuf-normalizr.git#v0.0.13",
+    "protobuf-normalizr": "git+ssh://git@github.com/mhahn/protobuf-normalizr.git#v0.0.14",
     "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.39.3",
     "q": "~1.2.0",
     "qs": "^3.1.0",
