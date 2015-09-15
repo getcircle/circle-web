@@ -228,7 +228,7 @@ class Search extends CSSComponent {
                     alignSelf: 'center',
                 },
                 resultsList: {
-                    borderRadius: '0px 0px 5px 5px',
+                    borderRadius: '0px 0px 3px 3px',
                     boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
                     justifyContent: 'flex-start',
                     opacity: '0.9',

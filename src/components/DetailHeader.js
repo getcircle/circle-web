@@ -1,12 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import {
-    backgroundImage,
-} from '../constants/styles';
-
 import Blur from './Blur';
 import CSSComponent from './CSSComponent';
-
 
 class DetailHeader extends CSSComponent {
 
@@ -20,13 +15,24 @@ class DetailHeader extends CSSComponent {
         return {
             default: {
                 root: {
-                    backgroundColor: 'rgba(51, 51, 51, 0.8)',
+                    backgroundColor: 'rgb(51, 51, 51)',
                     height: 320,
                     position: 'relative',
                     zIndex: 1,
                 },
             },
+            withImageSet: {
+                root: {
+                    backgroundColor: 'rgba(51, 51, 51, 0.8)',
+                },
+            },
         };
+    }
+
+    styles() {
+        return this.css({
+          'withImageSet': this.props.img && this.props.img !== '',
+        });
     }
 
     render() {
@@ -36,13 +42,18 @@ class DetailHeader extends CSSComponent {
             ...other,
         } = this.props;
 
-        // TODO: Enable after fixing cross origin issues
-        let headerImage = /*img && img !== '' ? img : */ backgroundImage;
-        return (
-            <Blur className="detail-blur-canvas" blurRadius={50} img={headerImage}>
+        let headerImage = img && img !== '' ? img : '';
+        if (headerImage) {
+            return (
+                <Blur blurRadius={50} className="detail-blur-canvas" img={headerImage}>
+                    <header {...other} style={{...this.styles().root, ...style}} />
+                </Blur>
+            );
+        } else {
+            return (
                 <header {...other} style={{...this.styles().root, ...style}} />
-            </Blur>
-        );
+            );
+        }
     }
 
 }

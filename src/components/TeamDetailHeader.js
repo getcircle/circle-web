@@ -69,7 +69,7 @@ class TeamDetailHeader extends CSSComponent {
         let iconColor = {...this.styles().icon}.color;
         let iconStrokeWidth = {...this.styles().icon}.strokeWidth;
         return (
-            <DetailHeader img={team.image_url}>
+            <DetailHeader>
                 <div className="row center-xs" is="iconSection">
                     <IconContainer
                         IconClass={GroupIcon}

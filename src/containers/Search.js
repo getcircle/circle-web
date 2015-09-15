@@ -7,7 +7,6 @@ import resizable from '../decorators/resizable';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
-import Blur from '../components/Blur';
 import HeaderMenu from '../components/HeaderMenu';
 import CSSComponent from '../components/CSSComponent';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/SearchV2';
@@ -75,6 +74,7 @@ class Search extends CSSComponent {
                 poweredBy: {
                     fontSize: '10px',
                     lineHeight: '14px',
+                    letterSpacing: '1px',
                     textTransform: 'uppercase',
                     ...fontColors.extraLight,
                     ...fontWeights.semiBold,
@@ -83,7 +83,6 @@ class Search extends CSSComponent {
                     paddingTop: 20,
                 },
                 root: {
-                    backgroundColor: '#333',
                     height: '100%',
                     paddingBottom: 20,
                     width: '100%',
@@ -111,8 +110,6 @@ class Search extends CSSComponent {
                     focused: true,
                     resultsListStyle: {
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        borderRadius: 0,
-                        boxShadow: 'none',
                     },
                 },
             },
@@ -177,7 +174,7 @@ class Search extends CSSComponent {
 
     render() {
         return (
-            <Blur blurRadius={30} is="root">
+            <div is="root">
                 <header is="header">
                     <div className="row end-xs">
                         <HeaderMenu
@@ -213,7 +210,7 @@ class Search extends CSSComponent {
                         </div>
                     </section>
                 </section>
-            </Blur>
+            </div>
         );
     }
 }
