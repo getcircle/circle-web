@@ -5,9 +5,13 @@ import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import autoBind from '../utils/autoBind';
+import {
+    canvasColor,
+} from '../constants/styles';
 import { refresh } from '../actions/authentication';
 import * as selectors from '../selectors';
 import { deviceResized } from '../actions/device';
+
 
 import CSSComponent from '../components/CSSComponent';
 import Header from '../components/Header';
@@ -86,6 +90,9 @@ class App extends CSSComponent {
                     height: '100vh',
                     width: '100vw',
                 },
+                canvasContainer: {
+                    backgroundColor: canvasColor,
+                },
             },
         };
     }
@@ -101,7 +108,7 @@ class App extends CSSComponent {
         return (
             <div is="root">
                 <AppCanvas>
-                    <div>
+                    <div is="canvasContainer">
                         {header}
                         {this.props.children}
                         {footer}
