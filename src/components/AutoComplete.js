@@ -230,6 +230,16 @@ class AutoComplete extends CSSComponent {
             });
         },
 
+        Backspace(event) {
+            const { value } = this.state;
+            // Currently, this explicitly calls the clear token callback
+            // We can generalize if needed to add a dedicated onClear handler
+            if ((value === null || value === '') && !!this.props.onClearToken && !!this.props.tokens) {
+                this.props.onClearToken();
+                this.setIgnoreBlur(false);
+            }
+        },
+
         Enter(event) {
             if (this.state.isActive === false) {
                 // already selected, do nothing
