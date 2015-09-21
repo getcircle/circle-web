@@ -63,8 +63,12 @@ class HeaderMenu extends CSSComponent {
                     right: 10,
                 },
                 menuListStyle: {
+                    backgroundColor: 'rgb(42, 42, 42)',
                     paddingTop: 10,
                     paddingBottom: 10,
+                },
+                menuItemDivStyle: {
+                    color: 'white',
                 },
                 text: {
                     color: tintColor,
@@ -113,6 +117,7 @@ class HeaderMenu extends CSSComponent {
                 >
                     <MenuItem
                         desktop={true}
+                        innerDivStyle={{...this.styles().menuItemDivStyle}}
                         leftIcon={<IconContainer
                             IconClass={ProfileIcon}
                             iconStyle={{...this.styles().MenuItemIcon}}
@@ -124,6 +129,7 @@ class HeaderMenu extends CSSComponent {
                     />
                     <MenuItem
                         desktop={true}
+                        innerDivStyle={{...this.styles().menuItemDivStyle}}
                         leftIcon={<IconContainer
                             IconClass={LogoutIcon}
                             iconStyle={{...this.styles().MenuItemIcon}}

@@ -87,7 +87,6 @@ class Search extends CSSComponent {
                     width: '100%',
                 },
                 searchSection: {
-                    paddingTop: '5vh',
                     paddingLeft: 20,
                     paddingRight: 20,
                     transition: 'all 0.3s ease',
