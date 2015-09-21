@@ -66,7 +66,6 @@ class Search extends CSSComponent {
                 organizationLogo: {
                     maxHeight: 200,
                     maxWidth: SEARCH_CONTAINER_WIDTH,
-                    width: '100%',
                 },
                 organizationLogoSection: {
                     paddingTop: '20vh',

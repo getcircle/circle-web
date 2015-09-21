@@ -83,8 +83,6 @@ class Header extends CSSComponent {
                     alignSelf: 'center',
                     cursor: 'pointer',
                     display: 'flex',
-                    height: '100%',
-                    width: '100%',
                     maxHeight: 64,
                 },
                 logoContainer: {
