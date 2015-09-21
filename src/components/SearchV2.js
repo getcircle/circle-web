@@ -19,6 +19,7 @@ import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
+import MailIcon from './MailIcon';
 import OfficeIcon from './OfficeIcon';
 import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
@@ -212,6 +213,18 @@ class Search extends CSSComponent {
                         width: 30,
                     },
                     strokeWidth: 1,
+                },
+                ActionIcon: {
+                    style: {
+                        border: 0,
+                        height: 40,
+                        left: '2px',
+                        width: 40,
+                    },
+                    iconStyle: {
+                        height: 30,
+                        width: 30,
+                    },
                 },
                 ListDivider: {
                     style: {
@@ -518,6 +531,7 @@ class Search extends CSSComponent {
         expansions.push({
             estimatedHeight: 64,
             type: RESULT_TYPES.CONTACT_METHOD,
+            leftAvatar: <IconContainer IconClass={MailIcon} is="ActionIcon" stroke="rgba(0, 0, 0, 0.4)" />,
             primaryText: t(`Email ${profile.first_name}`),
             primaryTextStyle: {
                 fontSize: '12px',
@@ -525,7 +539,10 @@ class Search extends CSSComponent {
                 ...fontColors.dark,
             },
             innerDivStyle: {
-                paddingLeft: 70,
+                paddingLeft: 40,
+            },
+            style: {
+                paddingLeft: 58,
             },
             onTouchTap: () => window.location.href = `mailto:${profile.email}`,
         });
