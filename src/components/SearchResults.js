@@ -34,7 +34,7 @@ class SearchResults extends StyleableComponent {
             } else if (result instanceof services.organization.containers.LocationV1) {
                 components.push(<LocationSearchResult key={key} location={result} onClick={onClickResult} />);
             }
-            if (parseInt(index) + 1 != this.props.results.length) {
+            if (parseInt(index) + 1 !== this.props.results.length) {
                 key += 1
                 components.push(<ListDivider inset={true} key={key} />);
             }
@@ -43,8 +43,8 @@ class SearchResults extends StyleableComponent {
     }
 
     render() {
-        const { 
-            onClickResult, 
+        const {
+            onClickResult,
             results,
             ...other
         } = this.props;

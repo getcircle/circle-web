@@ -274,6 +274,40 @@ class Search extends CSSComponent {
                     display: 'flex',
                     paddingLeft: 18,
                 },
+                statusTextContainer: {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginLeft: 70,
+                    paddingBottom: 8,
+                },
+                statusTextTimestamp: {
+                    display: 'flex',
+                    flexDirection: 'row',
+                    fontSize: '10px',
+                    marginTop: '2px',
+                    ...fontColors.light,
+                },
+                statusTextTitle: {
+                    fontSize: '10px',
+                    lineHeight: '14px',
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase',
+                    ...fontWeights.semiBold,
+                    ...fontColors.light,
+                },
+                statusTextValueContainer: {
+                    display: 'flex',
+                    flexDirection: 'row',
+                    marginTop: '2px',
+                },
+                statusTextValue: {
+                    display: 'flex',
+                    alignSelf: 'center',
+                    fontStyle: 'italic',
+                    fontSize: '12px',
+                    ...fontColors.dark,
+                    lineHeight: '20px',
+                },
             },
             'largerDevice-true': {
                 AutoComplete: {
@@ -691,43 +725,17 @@ class Search extends CSSComponent {
                     if (status && status.value.trim() !== '') {
                         const created = moment(status.created).fromNow()
                         return (
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                marginLeft: 70,
-                                paddingBottom: 8,
-                            }}>
-                                <span style={{
-                                    fontSize: '10px',
-                                    lineHeight: '14px',
-                                    letterSpacing: '1px',
-                                    textTransform: 'uppercase',
-                                    ...fontWeights.semiBold,
-                                    ...fontColors.light,
-                                }}>{t('Currently Working On')}</span>
-                                <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'row'
-                                }}>
-                                    <span style={{
-                                        display: 'flex',
-                                        alignSelf: 'center',
-                                        fontStyle: 'italic',
-                                        fontSize: '12px',
-                                        ...fontColors.dark,
-                                        lineHeight: '20px',
-                                    }}>
+                            <div is="statusTextContainer">
+                                <span is="statusTextTitle">
+                                    {t('Currently Working On')}
+                                </span>
+                                <div is="statusTextValueContainer">
+                                    <span is="statusTextValue">
                                         {`"${status.value}"`}
                                     </span>
-                                    <span style={{
-                                        display: 'flex',
-                                        alignSelf: 'center',
-                                        fontSize: '12px',
-                                        lineHeight: '14px',
-                                        ...fontColors.light,
-                                    }}>
-                                        &nbsp;&mdash;&nbsp;{created}
-                                    </span>
+                                </div>
+                                <div is="statusTextTimestamp">
+                                    &nbsp;&mdash;&nbsp;{created}
                                 </div>
                             </div>
                         );
