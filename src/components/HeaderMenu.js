@@ -8,12 +8,11 @@ import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
+import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
 import LogoutIcon from './LogoutIcon';
 import ProfileAvatar from './ProfileAvatar';
 import ProfileIcon from './ProfileIcon';
-
-import rectangleIcon from '../images/icons/down_arrow_icon.svg';
 
 const { TransitionGroup } = React.addons;
 
@@ -50,9 +49,17 @@ class HeaderMenu extends CSSComponent {
     classes() {
         return {
             default: {
-                arrow: {
-                    paddingTop: 12,
-                    paddingLeft: 10,
+                arrowIcon: {
+                    height: 8,
+                    width: 14,
+                },
+                arrowContainer: {
+                    border: 0,
+                    height: 8,
+                    left: 0,
+                    position: 'relative',
+                    top: 13,
+                    width: 14,
                 },
                 container: {
                     cursor: 'pointer',
@@ -157,9 +164,12 @@ class HeaderMenu extends CSSComponent {
     renderDownArrow() {
         if (this.props.expandedView) {
             return (
-                <div>
-                    <img is="arrow" src={rectangleIcon} />
-                </div>
+                <IconContainer
+                    IconClass={DownArrowIcon}
+                    iconStyle={{...this.styles().arrowIcon}}
+                    stroke={tintColor}
+                    style={{...this.styles().arrowContainer}}
+                />
             );
         }
     }
