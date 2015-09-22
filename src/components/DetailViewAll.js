@@ -59,6 +59,9 @@ class DetailViewAll extends CSSComponent {
                 },
             },
             hideFilterInput: {
+                searchContainer: {
+                    paddingTop: 0,
+                },
                 Search: {
                     inputContainerStyle: {
                         display: 'none',
