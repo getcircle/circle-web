@@ -33,8 +33,10 @@ class TextFallbackAvatar extends CSSComponent {
         return {
             default: {
                 avatar: {
+                    alignItems: 'center',
                     display: 'flex',
                     height: 40,
+                    justifyContent: 'center',
                     width: 40,
                     objectFit: 'cover',
                 },
@@ -62,8 +64,6 @@ class TextFallbackAvatar extends CSSComponent {
             <div className={this.props.className}>
                 <Avatar
                     backgroundColor={backgroundColor}
-                    // XXX remove these classes, we should standardize on inline style
-                    className="content--center--h content--center--v"
                     onError={this._handleImageError.bind(this)}
                     src={this.state.imageSrc}
                     style={{...this.styles().avatar,...this.props.style}}
