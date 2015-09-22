@@ -1,3 +1,4 @@
+import Dropzone from 'react-dropzone';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -6,6 +7,8 @@ import { fontColors, fontWeights } from '../constants/styles';
 import t from '../utils/gettext';
 
 import CSSComponent from  './CSSComponent';
+import EditProfileCameraIcon from './EditProfileCameraIcon';
+import IconContainer from './IconContainer';
 
 const { ContactMethodV1 } = services.profile.containers;
 
@@ -29,25 +32,43 @@ class ProfileDetailForm extends CSSComponent {
     classes() {
         return {
             'default': {
-                formContainer: {
-                    backgroundColor: 'rgb(255, 255, 255)',
+                dropzone: {
+                    alignItems: 'center',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    borderRadius: '4px',
+                    boxShadow: 'none',
+                    boxSizing: 'border-box',
                     display: 'flex',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    padding: 16,
+                    fontSize: 14,
+                    height: '50px',
+                    justifyContent: 'flex-start',
+                    outline: 'none',
                     width: '100%',
+                    ...fontColors.dark,
                 },
-                sectionTitle: {
-                    fontSize: 11,
-                    letterSpacing: '2px',
-                    margin: '10px 0',
-                    textAlign: 'left',
-                    textTransform: 'uppercase',
-                    ...fontColors.light,
-                    ...fontWeights.semiBold,
+                dropzoneActive: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
+                },
+                dropzoneTriggerContainer: {
+                    alignItems: 'center',
+                    display: 'flex',
+                },
+                EditProfileCameraIconContainer: {
+                    border: 0,
+                    left: 0,
+                    height: 50,
+                    position: 'relative',
+                    top: 0,
+                    width: 45,
+                },
+                EditProfileCameraIcon: {
+                    height: 50,
+                    width: 50,
                 },
                 errorContainer: {
-                    display: 'flex',
+                    display: 'none',
                     justifyContent: 'space-between',
                     padding: '10px 10px 10px 0',
                 },
@@ -55,8 +76,16 @@ class ProfileDetailForm extends CSSComponent {
                     color: 'rgba(255, 0, 0, 0.7)',
                     fontSize: 13,
                 },
+                formContainer: {
+                    backgroundColor: 'rgb(255, 255, 255)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    padding: '0 16px 16px 16px',
+                    width: '100%',
+                },
                 input: {
-                    borderColor: 'rgba(0, 0, 0, 0.1)',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
                     borderRadius: '4px',
                     boxSizing: 'border-box',
                     display: 'flex',
@@ -67,15 +96,36 @@ class ProfileDetailForm extends CSSComponent {
                     width: '100%',
                     ...fontColors.dark,
                 },
+                profileImage: {
+                    borderRadius: 25,
+                    height: 50,
+                    width: 50,
+                },
+                profileImageButton: {
+                    backgroundColor: 'transparent',
+                    border: 0,
+                    display: 'flex',
+                    marginRight: 10,
+                    oultine: 'none',
+                    padding: 0,
+                },
+                profileImageUploadContainer: {
+                    alignItems: 'center',
+                    display: 'flex',
+                },
+                sectionTitle: {
+                    fontSize: 11,
+                    letterSpacing: '2px',
+                    margin: '16px 0',
+                    textAlign: 'left',
+                    textTransform: 'uppercase',
+                    ...fontColors.light,
+                    ...fontWeights.semiBold,
+                },
             },
             'error': {
                 textarea: {
                     borderColor: 'rgba(255, 0, 0, 0.7)',
-                },
-            },
-            'quoted': {
-                text: {
-                    fontStyle: 'italic',
                 },
             },
         };
@@ -103,14 +153,18 @@ class ProfileDetailForm extends CSSComponent {
             }
         }
         this.setState({
+            imageUrl: props ? props.profile.image_url : '',
             title: props ? props.profile.title : '',
             cellNumber: cellNumber,
+            imageFiles: [],
         });
     }
 
     state = {
+        imageUrl: '',
         title: '',
         phoneNumber: '',
+        imageFiles: [],
     }
 
     // Public Methods
@@ -171,11 +225,45 @@ class ProfileDetailForm extends CSSComponent {
         onSaveCallback(updatedProfile);
     }
 
+    onOpenClick() {
+        this.refs.dropzone.open();
+    }
+
+    onDrop(files) {
+        let updatedState = {};
+        updatedState.imageFiles = files;
+        this.setState(Object.assign({}, this.state, updatedState))
+    }
+
     renderContent() {
         let error = '';
+        let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
 
         return (
             <form is="formContainer">
+                <div is="sectionTitle">Photo</div>
+                <div is="profileImageUploadContainer">
+                    <button is="profileImageButton" onClick={this.onOpenClick.bind(this)} type="button">
+                        <img alt="Profile Image" is="profileImage" src={imageUrl} />
+                    </button>
+                    <Dropzone
+                        activeStyle={{...this.styles().dropzoneActive}}
+                        multiple={false}
+                        onDrop={this.onDrop.bind(this)}
+                        ref="dropzone"
+                        style={{...this.styles().dropzone}}
+                    >
+                        <div is="dropzoneTriggerContainer">
+                            <IconContainer
+                                IconClass={EditProfileCameraIcon}
+                                iconStyle={{...this.styles().EditProfileCameraIcon}}
+                                stroke='rgba(0, 0, 0, 0.4)'
+                                style={{...this.styles().EditProfileCameraIconContainer}}
+                            />
+                            <div>Update Photo</div>
+                        </div>
+                    </Dropzone>
+                </div>
                 <div is="sectionTitle">Title</div>
                 <input
                     is="input"
