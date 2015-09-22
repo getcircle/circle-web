@@ -18,9 +18,11 @@ export default {
     display: (value) => {
         if (value === 'flex') {
             // TODO: figure out how to make display work correctly on safari, maybe somehow getting tricky about adding a className to the element so we can do this with css? see: https://github.com/facebook/react/issues/2020#issuecomment
-            value = '-webkit-flex';
+            value = 'display: -ms-flexbox; display: -webkit-flex; display: flex;';
         }
-        return {display: value};
+        return {
+            display: value,
+        };
     },
     flexDirection: memoizedAutoprefix('flexDirection'),
     flexWrap: memoizedAutoprefix('flexWrap'),
