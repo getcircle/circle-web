@@ -14,6 +14,7 @@ function memoizedAutoprefix(key) {
 
 export default {
     alignSelf: memoizedAutoprefix('alignSelf'),
+    alignItems: memoizedAutoprefix('alignItems'),
     display: (value) => {
         if (value === 'flex') {
             // TODO: figure out how to make display work correctly on safari, maybe somehow getting tricky about adding a className to the element so we can do this with css? see: https://github.com/facebook/react/issues/2020#issuecomment
@@ -23,4 +24,5 @@ export default {
     },
     flexDirection: memoizedAutoprefix('flexDirection'),
     flexWrap: memoizedAutoprefix('flexWrap'),
+    justifyContent: memoizedAutoprefix('justifyContent'),
 }
