@@ -7,6 +7,7 @@ import {
     routeToLocation,
     routeToTeam,
 } from '../utils/routes';
+import t from '../utils/gettext';
 
 import DetailContent from './DetailContent';
 import ProfileDetailContactInfo from './ProfileDetailContactInfo';
@@ -74,10 +75,11 @@ class ProfileDetail extends StyleableComponent {
         );
     }
 
-    renderContactInfo(contactMethods=[], locations=[]) {
+    renderContactInfo(contactMethods=[], locations=[], isLoggedInUser = false) {
         return (
             <ProfileDetailContactInfo
                 contactMethods={contactMethods}
+                isLoggedInUser={isLoggedInUser}
                 locations={locations}
                 onClickLocation={routeToLocation.bind(null, this.context.router)}
                 style={this.mergeAndPrefix(styles.section)}
@@ -124,7 +126,10 @@ class ProfileDetail extends StyleableComponent {
     // Helpers
 
     getContactMethods() {
-        const { profile } = this.props.extendedProfile;
+        const {
+            isLoggedInUser,
+            profile,
+        } = this.props.extendedProfile;
         let contactMethods = [new ContactMethodV1({
             label: 'Email',
             value: profile.email,
@@ -132,6 +137,20 @@ class ProfileDetail extends StyleableComponent {
             contact_method_type: ContactMethodV1.ContactMethodTypeV1.EMAIL,
             /*eslint-enable camelcase*/
         })];
+
+        // Add placeholder for phone number too
+        if (profile.contact_methods.length === 0) {
+            contactMethods.push(
+                new ContactMethodV1({
+                    label: 'Cell',
+                    value: isLoggedInUser ? t('Add number') : '',
+                    /*eslint-disable camelcase*/
+                    contact_method_type: ContactMethodV1.ContactMethodTypeV1.CELL_NUMBER,
+                    /*eslint-enable camelcase*/
+                })
+            );
+        }
+
         return contactMethods.concat(profile.contact_methods);
     }
 
@@ -165,7 +184,7 @@ class ProfileDetail extends StyleableComponent {
                 />
                 <DetailContent>
                     {this.renderStatus(profile.status, isLoggedInUser)}
-                    {this.renderContactInfo(this.getContactMethods(), locations)}
+                    {this.renderContactInfo(this.getContactMethods(), locations, isLoggedInUser)}
                     {this.renderTeam(manager, peers, team)}
                     {this.renderManages(manages_team, direct_reports)}
                 </DetailContent>

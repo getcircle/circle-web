@@ -3,6 +3,8 @@ import moment from '../utils/moment';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import t from '../utils/gettext';
+
 import Card from './Card';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
@@ -23,6 +25,7 @@ class ProfileDetailContactInfo extends CSSComponent {
         contactMethods: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
+        isLoggedInUser: PropTypes.bool,
         locations: PropTypes.arrayOf(
             PropTypes.instanceOf(services.organization.containers.LocationV1),
         ),
@@ -54,6 +57,9 @@ class ProfileDetailContactInfo extends CSSComponent {
                         paddingLeft: 0,
                         paddingRight: 0,
                     },
+                },
+                emptyValueIndicator: {
+                    color: 'rgba(255, 0, 0, 0.7)',
                 },
                 DayNightIndicatorIcon: {
                     height: '28px',
@@ -102,6 +108,27 @@ class ProfileDetailContactInfo extends CSSComponent {
         ).join(', ');
     }
 
+    getValue(contactItem) {
+        if (!this.hasEmptyValue(contactItem)) {
+            return contactItem.value;
+        }
+
+        switch (contactItem.contact_method_type) {
+        case ContactMethodTypeV1.EMAIL:
+            return t('Email not provided');
+        case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
+            if (this.props.isLoggedInUser) {
+                return t('Add Number');
+            } else {
+                return t('Number not added');
+            }
+        }
+    }
+
+    hasEmptyValue(contactItem) {
+        return contactItem.value === '' || contactItem.value === null;
+    }
+
     // Render Methods
 
     renderDayNightIndicatorImage() {
@@ -122,6 +149,10 @@ class ProfileDetailContactInfo extends CSSComponent {
             if (!item) {
                 return;
             }
+
+            let shouldHighlight = this.props.isLoggedInUser && this.hasEmptyValue(item);
+            let primaryTextStyle = shouldHighlight ? {...this.styles().emptyValueIndicator} : {};
+
             switch (item.contact_method_type) {
             case ContactMethodTypeV1.EMAIL:
                 return (
@@ -129,7 +160,8 @@ class ProfileDetailContactInfo extends CSSComponent {
                         key={index}
                         leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
                         onTouchTap={() => window.location.href = `mailto:${item.value}`}
-                        primaryText={item.value}
+                        primaryText={this.getValue(item)}
+                        primaryTextStyle={primaryTextStyle}
                     />
                 );
             case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
@@ -138,7 +170,8 @@ class ProfileDetailContactInfo extends CSSComponent {
                         disabled={true}
                         key={index}
                         leftAvatar={<IconContainer IconClass={PhoneIcon} is="IconContainer" />}
-                        primaryText={item.value}
+                        primaryText={this.getValue(item)}
+                        primaryTextStyle={primaryTextStyle}
                     />
                 );
             }
