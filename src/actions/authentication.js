@@ -23,12 +23,9 @@ export function authenticate(backend, key, secret) {
                         client.authenticate(token);
                         return Promise.resolve(user);
                     })
-                    .then(() => getProfile())
-                    .then((profile) => {
+                    .then(() => Promise.all([getProfile(), getOrganization()]))
+                    .then(([profile, organization]) => {
                         payload.profile = profile;
-                        return getOrganization();
-                    })
-                    .then((organization) => {
                         payload.organization = organization;
                         return Promise.resolve(payload);
                     });
