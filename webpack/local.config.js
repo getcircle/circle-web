@@ -23,7 +23,7 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin('app.css', { allChunks: true }),
         new HtmlWebpackPlugin({
-            title: 'Luno Dev',
+            title: 'Luno Local',
             filename: 'index.html',
             template: 'index.template.html',
             favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico')
