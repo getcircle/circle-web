@@ -92,7 +92,9 @@ class Login extends CSSComponent {
                         authenticate={(...args) => dispatch(authenticate(...args))}
                         authorizationUrl={this.props.authorizationUrl}
                         backend={this.props.backend}
-                        getAuthenticationInstructions={(email) => dispatch(getAuthenticationInstructions(email))}
+                        getAuthenticationInstructions={(email, redirectUri) => {
+                            return dispatch(getAuthenticationInstructions(email, redirectUri));
+                        }}
                         userExists={this.props.userExists}
                     />
                     <div className="row center-xs" is="appBadgesTitleContainer">

@@ -71,7 +71,7 @@ export function refresh() {
     };
 }
 
-export function getAuthenticationInstructions(email) {
+export function getAuthenticationInstructions(email, redirectUri) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -79,7 +79,7 @@ export function getAuthenticationInstructions(email) {
                 types.GET_AUTHENTICATION_INSTRUCTIONS_SUCCESS,
                 types.GET_AUTHENTICATION_INSTRUCTIONS_FAILURE,
             ],
-            remote: (state) => userService.getAuthenticationInstructions(email),
+            remote: (state) => userService.getAuthenticationInstructions(email, redirectUri),
         },
     };
 }
