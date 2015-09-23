@@ -45,8 +45,8 @@ https://github.com/rackt/react-redux
 
 ## Unit Testing
 
-- We are using Mocha
-- Run `npm test`
+- We are using Mocha. To install, run `npm install -g mocha` once.
+- Run `npm test` to run the tests.
 
 http://mochajs.org/
 http://rackt.github.io/redux/docs/recipes/WritingTests.html
