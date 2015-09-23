@@ -55,6 +55,11 @@ const getRoutes = (history, store) => {
             <Route component={reduxRouteComponent(store)}>
                 <Route component={require('./containers/App')}>
                     <Route
+                        component={require('./containers/AuthorizationHandler')}
+                        onEnter={applyMiddleware(loginOnce)}
+                        path="/auth"
+                    />
+                    <Route
                         component={require('./containers/Billing')}
                         onEnter={applyMiddleware(displayHeader)}
                         path="/billing"

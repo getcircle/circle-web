@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 
 import client from '../services/client';
 import { AUTHENTICATION_STATE } from '../constants/localStorageKeys';
+import t from '../utils/gettext';
 import * as types from '../constants/actionTypes';
 
 const { OrganizationV1 } = services.organization.containers;
@@ -90,12 +91,18 @@ function handleGetAuthenticationInstructionsSuccess(state, action) {
     return state.merge({...action.payload});
 }
 
+function handleAuthenticationFailure(state, action) {
+    return state.merge({authError: action.payload});
+}
+
 const initialState = getInitialState();
 
 export default function authentication(state = initialState, action) {
     switch (action.type) {
     case types.AUTHENTICATE_SUCCESS:
         return handleAuthenticateSuccess(state, action);
+    case types.AUTHENTICATE_FAILURE:
+        return handleAuthenticationFailure(state, action);
     case types.GET_AUTHENTICATION_INSTRUCTIONS_SUCCESS:
         return handleGetAuthenticationInstructionsSuccess(state, action);
     case types.LOGOUT_SUCCESS:

@@ -21,6 +21,7 @@ const { AppCanvas } = mui;
 const { StyleResizable } = mui.Mixins;
 
 const UNAUTHENTICATED_ROUTES = [
+    '/auth',
     '/billing',
     '/login',
 ];
@@ -76,7 +77,6 @@ class App extends CSSComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        // TODO: Correctly add support for white labeling URLs
         if (!nextProps.authenticated && UNAUTHENTICATED_ROUTES.indexOf(nextProps.location.pathname) === -1) {
             this.context.router.transitionTo('/login');
         }

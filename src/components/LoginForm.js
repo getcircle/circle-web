@@ -1,6 +1,5 @@
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
 
 import { fontColors, fontWeights } from '../constants/styles';
 import logger from '../utils/logger';
@@ -14,8 +13,6 @@ const {
     TextField,
 } = mui;
 
-const BACKENDS = services.user.actions.authenticate_user.RequestV1.AuthBackendV1
-
 class LoginForm extends CSSComponent {
 
     static propTypes = {
@@ -28,6 +25,9 @@ class LoginForm extends CSSComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
+        if (nextProps.authorizationUrl !== null && nextProps.authorizationUrl !== undefined) {
+            return window.location = nextProps.authorizationUrl;
+        }
         if (nextProps.userExists) {
             this.setState({buttonLabelText: t('Sign In')});
         }
@@ -118,7 +118,8 @@ class LoginForm extends CSSComponent {
 
     handleTouchTap() {
         if (this.props.backend === null || this.props.backend === undefined) {
-            this.props.getAuthenticationInstructions(this.state.email);
+            const redirectUri = `${window.location.origin}/auth`;
+            this.props.getAuthenticationInstructions(this.state.email, redirectUri);
         } else {
             // internal auth
             this.props.authenticate(this.props.backend, this.state.email, this.state.password);

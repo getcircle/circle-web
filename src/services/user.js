@@ -3,6 +3,8 @@ import {services} from 'protobufs';
 import client from './client';
 import logger from '../utils/logger';
 
+export const AUTH_BACKENDS = services.user.actions.authenticate_user.RequestV1.AuthBackendV1;
+
 export function authenticate(backend, key, secret) {
     /*eslint-disable camelcase*/
     let parameters = {
@@ -30,8 +32,12 @@ export function authenticate(backend, key, secret) {
     });
 }
 
-export function getAuthenticationInstructions(email) {
-    let request = new services.user.actions.get_authentication_instructions.RequestV1({email});
+export function getAuthenticationInstructions(email, redirectUri) {
+    const parameters = {email};
+    if (redirectUri) {
+        parameters['redirect_uri'] = redirectUri;
+    }
+    let request = new services.user.actions.get_authentication_instructions.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then((response) => {
