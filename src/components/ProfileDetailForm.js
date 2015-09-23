@@ -32,12 +32,12 @@ class ProfileDetailForm extends CSSComponent {
         this.mergeStateAndProps(this.props);
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
-        this.mergeStateAndProps(nextProps);
-    }
-
     componentDidMount() {
         this.show();
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+        this.mergeStateAndProps(nextProps);
     }
 
     classes() {
@@ -153,8 +153,6 @@ class ProfileDetailForm extends CSSComponent {
      * @return {Void}
      */
     mergeStateAndProps(props) {
-        console.log("PROPERTIES");
-        console.log(props);
         let cellNumber = '';
         if (props.contactMethods && props.contactMethods.length > 0) {
             for (let key in props.contactMethods) {
@@ -165,6 +163,7 @@ class ProfileDetailForm extends CSSComponent {
                     }
             }
         }
+
         this.setState({
             imageUrl: props ? (props.mediaUrl && props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url) : '',
             title: props ? props.profile.title : '',

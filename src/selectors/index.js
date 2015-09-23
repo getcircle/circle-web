@@ -64,6 +64,6 @@ export const searchSelector = state => state.search;
 export const teamMembersSelector = state => state.teamMembers;
 export const mediaUploadSelector = state => {
     return {
-        mediaUrl: state.mediaUrl
+        mediaUrl: state.mediaUpload.get('mediaUrl'),
     };
 }

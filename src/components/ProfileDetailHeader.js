@@ -62,7 +62,6 @@ class ProfileDetailHeader extends CSSComponent {
     }
 
     renderEditButton() {
-        console.log('COMING HERE');
         const {
             isEditable,
         } = this.props;

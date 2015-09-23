@@ -17,7 +17,7 @@ export default function mediaUpload(state = initialState, action) {
 
     case types.MEDIA_UPLOAD_SUCCESS:
         return Immutable.fromJS({
-            mediaUrl: action.payload,
+            mediaUrl: action.payload.mediaUrl,
             loading: false,
         });
 
