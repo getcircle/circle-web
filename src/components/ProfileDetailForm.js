@@ -1,22 +1,29 @@
+import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import Dialog from './Dialog';
 import { fontColors, fontWeights } from '../constants/styles';
+import * as selectors from '../selectors';
 import t from '../utils/gettext';
+import { uploadMedia } from '../actions/media';
 
 import CSSComponent from  './CSSComponent';
+import Dialog from './Dialog';
 import EditProfileCameraIcon from './EditProfileCameraIcon';
 import IconContainer from './IconContainer';
 
+const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
+@connect(selectors.mediaUploadSelector)
 class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
+        dispatch: PropTypes.func.isRequired,
+        mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
     }
@@ -27,6 +34,10 @@ class ProfileDetailForm extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         this.mergeStateAndProps(nextProps);
+    }
+
+    componentDidMount() {
+        this.show();
     }
 
     classes() {
@@ -142,6 +153,8 @@ class ProfileDetailForm extends CSSComponent {
      * @return {Void}
      */
     mergeStateAndProps(props) {
+        console.log("PROPERTIES");
+        console.log(props);
         let cellNumber = '';
         if (props.contactMethods && props.contactMethods.length > 0) {
             for (let key in props.contactMethods) {
@@ -153,7 +166,7 @@ class ProfileDetailForm extends CSSComponent {
             }
         }
         this.setState({
-            imageUrl: props ? props.profile.image_url : '',
+            imageUrl: props ? (props.mediaUrl && props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url) : '',
             title: props ? props.profile.title : '',
             cellNumber: cellNumber,
             imageFiles: [],
@@ -216,9 +229,10 @@ class ProfileDetailForm extends CSSComponent {
         })];
 
         let updatedProfile = Object.assign({}, profile, {
-            title:  this.state.title,
             /*eslint-disable camelcase*/
             contact_methods: contactMethods,
+            image_url: this.state.imageUrl,
+            title:  this.state.title,
             /*eslint-enable camelcase*/
         });
 
@@ -232,7 +246,10 @@ class ProfileDetailForm extends CSSComponent {
     onDrop(files) {
         let updatedState = {};
         updatedState.imageFiles = files;
-        this.setState(Object.assign({}, this.state, updatedState))
+        if (files.length > 0) {
+           this.setState(Object.assign({}, this.state, updatedState));
+           this.props.dispatch(uploadMedia(files[0], MediaTypeV1.PROFILE,this.props.profile.id));
+        }
     }
 
     renderContent() {

@@ -1,0 +1,79 @@
+import { services } from 'protobufs';
+import requests from 'superagent';
+
+import client from './client';
+import logger from '../utils/logger';
+
+export function uploadMedia(data, mediaType, mediaKey) {
+    return new Promise((resolve, reject) => {
+        startMediaUpload(mediaType, mediaKey)
+            .then((instructions) => upload(instructions.upload_url, data))
+            .then((response) => completeMediaUpload(mediaType, mediaKey, instructions.upload_id, instructions.upload_key))
+            .then((mediaUrl) => resolve(mediaUrl))
+            .catch((error) => {
+                logger.log(`Error uploading media: ${error}`);
+                reject(error);
+            });
+        });
+}
+
+function startMediaUpload(mediaType, mediaKey) {
+    /*eslint-disable camelcase*/
+    let parameters = {
+        media_type: mediaType,
+        media_key: mediaKey,
+    };
+    /*eslint-enable camelcase*/
+
+    let request = new services.media.actions.start_image_upload.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let uploadInstructions = response.result.upload_instructions;
+                resolve(uploadInstructions)
+            })
+            .catch((error) => {
+                logger.log(`Error fetching upload instructions: ${error}`);
+                reject(error);
+            });
+    });
+}
+
+function completeMediaUpload(mediaType, mediaKey, uploadId, uploadKey) {
+     /*eslint-disable camelcase*/
+    let parameters = {
+        media_type: mediaType,
+        media_key: mediaKey,
+        upload_id: uploadId,
+        upload_key: uploadKey,
+    };
+    /*eslint-enable camelcase*/
+
+    let request = new services.media.actions.complete_image_upload.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then((response) => {
+                let mediaUrl = response.result.media_url;
+                resolve(mediaUrl)
+            })
+            .catch((error) => {
+                logger.log(`Error completing media upload: ${error}`);
+                reject(error);
+            });
+    });
+}
+
+function upload(url, data) {
+    return new Promise((resolve, reject) => {
+        requests
+            .put(url, data)
+            .withCredentials()
+            .end((err, res) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(res);
+                }
+            });
+    });
+}

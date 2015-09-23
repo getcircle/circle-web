@@ -3,6 +3,7 @@ export { default as cache } from './cache';
 export { default as explore } from './explore';
 export { default as extendedProfiles } from './extendedProfiles';
 export { default as extendedTeams } from './extendedTeams';
+export { default as mediaUpload } from './media';
 export { default as locationMembers } from './locationMembers';
 export { default as locations } from './locations';
 export { default as profiles } from './profiles';
