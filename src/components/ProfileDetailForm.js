@@ -177,7 +177,7 @@ class ProfileDetailForm extends CSSComponent {
         }
 
         this.setState({
-            imageUrl: getPreviewImageUrl(props),
+            imageUrl: this.getPreviewImageUrl(props),
             title: props ? props.profile.title : '',
             cellNumber: cellNumber,
         }, () => {
@@ -338,7 +338,7 @@ class ProfileDetailForm extends CSSComponent {
                                 <IconContainer
                                     IconClass={EditProfileCameraIcon}
                                     iconStyle={{...this.styles().editProfileCameraIcon}}
-                                    is="EditProfileCameraIconContainer"
+                                    is="editProfileCameraIconContainer"
                                     stroke='rgba(0, 0, 0, 0.4)'
                                 />
                                 <div>{t('Update Photo')}</div>
