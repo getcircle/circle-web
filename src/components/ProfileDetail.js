@@ -119,8 +119,13 @@ class ProfileDetail extends StyleableComponent {
         }
     }
 
-    renderProfileDetailForm() {
-        this.refs.profileDetailForm.show()
+    editButtonTapped() {
+        // XXX: Hack
+        // ProfileDetailForm connects directly to the Redux store
+        // For these kind of components, Redux creates a Connect wrapper
+        // component and there are no good solutions to
+        // access the original instance.
+        this.refs.profileDetailForm.refs.wrappedInstance.show();
     }
 
     // Helpers
@@ -154,6 +159,24 @@ class ProfileDetail extends StyleableComponent {
         return contactMethods.concat(profile.contact_methods);
     }
 
+    renderProfileDetailForm(profile) {
+        const {
+            isLoggedInUser,
+            onUpdateProfile,
+        } = this.props;
+
+        if (isLoggedInUser) {
+            return (
+                <ProfileDetailForm
+                    contactMethods={this.getContactMethods()}
+                    onSaveCallback={onUpdateProfile}
+                    profile={profile}
+                    ref="profileDetailForm"
+                />
+            );
+        }
+    }
+
     render() {
         const {
             /*eslint-disable camelcase*/
@@ -170,14 +193,13 @@ class ProfileDetail extends StyleableComponent {
         const {
             organization,
             isLoggedInUser,
-            onUpdateProfile,
         } = this.props;
 
         return (
             <div>
                 <ProfileDetailHeader
                     isEditable={isLoggedInUser}
-                    onEditTapped={this.renderProfileDetailForm.bind(this)}
+                    onEditTapped={this.editButtonTapped.bind(this)}
                     organization={organization}
                     profile={profile}
                     team={team}
@@ -188,12 +210,7 @@ class ProfileDetail extends StyleableComponent {
                     {this.renderTeam(manager, peers, team)}
                     {this.renderManages(manages_team, direct_reports)}
                 </DetailContent>
-                <ProfileDetailForm
-                    contactMethods={this.getContactMethods()}
-                    onSaveCallback={onUpdateProfile}
-                    profile={profile}
-                    ref="profileDetailForm"
-                />
+                {this.renderProfileDetailForm(profile)}
             </div>
         );
     }

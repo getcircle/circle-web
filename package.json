@@ -87,7 +87,7 @@
     "react": "~0.13.1",
     "reactcss": "mhahn/reactcss",
     "reactify": "~1.1.1",
-    "react-blur": "^0.2.4",
+    "react-blur": "git+ssh://git@github.com/ravirani/react-blur.git",
     "react-dropzone": "^2.1.0",
     "react-google-maps": "^1.7.1",
     "react-hot-loader": "^1.2.8",

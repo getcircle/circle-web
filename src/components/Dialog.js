@@ -36,10 +36,10 @@ class Dialog extends CSSComponent {
     static defaultProps = {
         // TODO this should be an icon
         dialogDismissLabel: 'x',
+        dialogSaveLabel: '',
         onDismiss() {},
         onSave() {},
     }
-
 
     getChildContext() {
         return {
@@ -53,6 +53,10 @@ class Dialog extends CSSComponent {
 
     componentWillReceiveProps(nextProps) {
         this.customizeTheme(nextProps);
+    }
+
+    state = {
+        saveEnabled: true,
     }
 
     originalDesktopKeylineIncrement = ThemeManager.getCurrentTheme().spacing.desktopKeylineIncrement
@@ -108,9 +112,9 @@ class Dialog extends CSSComponent {
                         minWidth: 15,
                     },
                     labelStyle: {
-                        fontSize: '12px',
-                        ...fontColors.light,
-                        ...fontWeights.semiBold,
+                        fontSize: '14px',
+                        textTransform: 'none',
+                        ...fontColors.dark,
                     },
                 },
                 DialogTitle: {
@@ -151,11 +155,36 @@ class Dialog extends CSSComponent {
         this.refs.modal.dismiss();
     }
 
+    setSaveEnabled(enabled) {
+        this.setState({
+            saveEnabled: enabled,
+        });
+    }
+
+    renderSaveButton() {
+        const {
+            dialogSaveLabel,
+        } = this.props;
+
+        if (dialogSaveLabel !== '') {
+            return (
+                <div is="DialogSave">
+                    <FlatButton
+                        disabled={!this.state.saveEnabled}
+                        is="DialogSaveButton"
+                        label={dialogSaveLabel}
+                        onTouchTap={() => this.props.onSave()}
+                        ref="saveButton"
+                    />
+                </div>
+            );
+        }
+    }
+
     render() {
         const {
             children,
             dialogDismissLabel,
-            dialogSaveLabel,
             title,
             ...other,
         } = this.props;
@@ -166,39 +195,13 @@ class Dialog extends CSSComponent {
                         <FlatButton
                             is="DialogCloseButton"
                             label={dialogDismissLabel}
-                            onTouchTap={() => {
-                                this.dismiss();
-                            }}
+                            onTouchTap={() => this.dismiss()}
                         />
                     </div>
                     <span is="DialogTitle">
                         {title}
                     </span>
-                    <div is="DialogSave">
-                        <FlatButton
-                            is="DialogSaveButton"
-                            label={dialogSaveLabel}
-                            onTouchTap={() => {
-                                this.props.onSave();
-                                this.dismiss();
-                            }}
-                        />
-                    </div>
-
-                    {(() => {
-                        if (dialogSaveLabel !== '') {
-                            <div is="DialogSave">
-                                <FlatButton
-                                    is="DialogSaveButton"
-                                    label={dialogSaveLabel}
-                                    onTouchTap={() => {
-                                        this.props.onSave();
-                                        this.dismiss();
-                                    }}
-                                />
-                            </div>
-                        }
-                    })()}
+                    {this.renderSaveButton()}
                 </header>
                 {children}
             </mui.Dialog>

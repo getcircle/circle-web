@@ -1,24 +1,44 @@
+import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
+import { LinearProgress } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import Dialog from './Dialog';
 import { fontColors, fontWeights } from '../constants/styles';
+import * as selectors from '../selectors';
 import t from '../utils/gettext';
+import { uploadMedia } from '../actions/media';
 
 import CSSComponent from  './CSSComponent';
+import Dialog from './Dialog';
 import EditProfileCameraIcon from './EditProfileCameraIcon';
 import IconContainer from './IconContainer';
 
+const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
+const mediaSelector = selectors.createImmutableSelector(
+    [selectors.mediaUploadSelector], (mediaUploadState) => {
+        return {
+            mediaUrl: mediaUploadState.get('mediaUrl'),
+        };
+    }
+);
+
+@connect(mediaSelector)
 class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
+        dispatch: PropTypes.func.isRequired,
+        mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+    }
+
+    static defaultProps = {
+        mediaUrl: '',
     }
 
     componentWillMount() {
@@ -55,7 +75,7 @@ class ProfileDetailForm extends CSSComponent {
                     alignItems: 'center',
                     display: 'flex',
                 },
-                EditProfileCameraIconContainer: {
+                editProfileCameraIconContainer: {
                     border: 0,
                     left: 0,
                     height: 50,
@@ -63,7 +83,7 @@ class ProfileDetailForm extends CSSComponent {
                     top: 0,
                     width: 45,
                 },
-                EditProfileCameraIcon: {
+                editProfileCameraIcon: {
                     height: 50,
                     width: 50,
                 },
@@ -81,8 +101,10 @@ class ProfileDetailForm extends CSSComponent {
                     display: 'flex',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    padding: '0 16px 16px 16px',
                     width: '100%',
+                },
+                form: {
+                    padding: '0 16px 16px 16px',
                 },
                 input: {
                     border: '1px solid rgba(0, 0, 0, 0.1)',
@@ -99,6 +121,7 @@ class ProfileDetailForm extends CSSComponent {
                 profileImage: {
                     borderRadius: 25,
                     height: 50,
+                    objectFit: 'cover',
                     width: 50,
                 },
                 profileImageButton: {
@@ -152,19 +175,26 @@ class ProfileDetailForm extends CSSComponent {
                     }
             }
         }
+
         this.setState({
-            imageUrl: props ? props.profile.image_url : '',
+            imageUrl: this.getPreviewImageUrl(props),
             title: props ? props.profile.title : '',
             cellNumber: cellNumber,
-            imageFiles: [],
+        }, () => {
+            // Given our state machine, the only time mediaUrl is present is when a save is in progress.
+            // Continue the save action
+            if (props && props.mediaUrl !== '') {
+                this.updateProfile();
+            }
         });
     }
 
     state = {
         imageUrl: '',
-        title: '',
-        phoneNumber: '',
         imageFiles: [],
+        phoneNumber: '',
+        title: '',
+        saving: false,
     }
 
     // Public Methods
@@ -175,6 +205,16 @@ class ProfileDetailForm extends CSSComponent {
 
     dismiss() {
         this.refs.modal.dismiss();
+    }
+
+    getPreviewImageUrl(props) {
+        if (!props) {
+            return '';
+        }
+
+        // Show preview of the existing image or the new one being uploaded
+        // by the user
+        return props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url;
     }
 
     handleChange(event) {
@@ -194,10 +234,10 @@ class ProfileDetailForm extends CSSComponent {
                 break;
         }
 
-        this.setState(Object.assign({}, this.state, updatedState));
+        this.setState(updatedState);
     }
 
-    handleSaveTapped() {
+    updateProfile() {
         // TODO:
         // Add validation
         // Handle contact methods correctly
@@ -216,13 +256,37 @@ class ProfileDetailForm extends CSSComponent {
         })];
 
         let updatedProfile = Object.assign({}, profile, {
-            title:  this.state.title,
             /*eslint-disable camelcase*/
             contact_methods: contactMethods,
+            image_url: this.state.imageUrl,
+            title:  this.state.title,
             /*eslint-enable camelcase*/
         });
 
         onSaveCallback(updatedProfile);
+        // Need to reset state before dismissing because these
+        // components can be cached and carry state.
+        this.refs.modal.setSaveEnabled(true);
+        this.dismiss();
+    }
+
+    handleSaveTapped() {
+
+        // Disable Save button
+        this.refs.modal.setSaveEnabled(false);
+
+        // If an image was added, upload it first
+        if (this.state.imageFiles.length > 0 && this.props.mediaUrl === '') {
+            this.props.dispatch(uploadMedia(
+                this.state.imageFiles[0],
+                MediaTypeV1.PROFILE,
+                this.props.profile.id
+            ));
+            // Wait until media upload is done
+            this.setState({saving: true});
+        } else {
+            this.updateProfile();
+        }
     }
 
     onOpenClick() {
@@ -232,7 +296,17 @@ class ProfileDetailForm extends CSSComponent {
     onDrop(files) {
         let updatedState = {};
         updatedState.imageFiles = files;
-        this.setState(Object.assign({}, this.state, updatedState))
+        if (files.length > 0) {
+           this.setState(updatedState);
+        }
+    }
+
+    renderProgressIndicator() {
+        if (this.state.saving) {
+            return (
+                <LinearProgress mode="indeterminate" />
+            );
+        }
     }
 
     renderContent() {
@@ -240,54 +314,64 @@ class ProfileDetailForm extends CSSComponent {
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
 
         return (
-            <form is="formContainer">
-                <div is="sectionTitle">Photo</div>
-                <div is="profileImageUploadContainer">
-                    <button is="profileImageButton" onClick={this.onOpenClick.bind(this)} type="button">
-                        <img alt="Profile Image" is="profileImage" src={imageUrl} />
-                    </button>
-                    <Dropzone
-                        activeStyle={{...this.styles().dropzoneActive}}
-                        multiple={false}
-                        onDrop={this.onDrop.bind(this)}
-                        ref="dropzone"
-                        style={{...this.styles().dropzone}}
-                    >
-                        <div is="dropzoneTriggerContainer">
-                            <IconContainer
-                                IconClass={EditProfileCameraIcon}
-                                iconStyle={{...this.styles().EditProfileCameraIcon}}
-                                stroke='rgba(0, 0, 0, 0.4)'
-                                style={{...this.styles().EditProfileCameraIconContainer}}
-                            />
-                            <div>Update Photo</div>
-                        </div>
-                    </Dropzone>
-                </div>
-                <div is="sectionTitle">Title</div>
-                <input
-                    is="input"
-                    name="title"
-                    onChange={this.handleChange.bind(this)}
-                    placeholder={t('Job Title')}
-                    type="text"
-                    value={this.state.title}
-                 />
-                 <div is="errorContainer">
-                    <span is="errorMessage">
-                        {error}
-                    </span>
-                </div>
-                <div is="sectionTitle">Contact</div>
-                <input
-                    is="input"
-                    name="cellNumber"
-                    onChange={this.handleChange.bind(this)}
-                    placeholder={t('Add your cell number')}
-                    type="text"
-                    value={this.state.cellNumber}
-                 />
-            </form>
+            <div is="formContainer">
+                {this.renderProgressIndicator()}
+                <form is="form">
+                    <div is="sectionTitle">{t('Photo')}</div>
+                    <div is="profileImageUploadContainer">
+                        <button
+                            disabled={this.state.saving}
+                            is="profileImageButton"
+                            onClick={this.onOpenClick.bind(this)}
+                            type="button"
+                        >
+                            <img alt={t('Profile Image')} is="profileImage" src={imageUrl} />
+                        </button>
+                        <Dropzone
+                            activeStyle={{...this.styles().dropzoneActive}}
+                            is="dropzone"
+                            multiple={false}
+                            onDrop={this.onDrop.bind(this)}
+                            ref="dropzone"
+                        >
+                            <div is="dropzoneTriggerContainer">
+                                <IconContainer
+                                    IconClass={EditProfileCameraIcon}
+                                    iconStyle={{...this.styles().editProfileCameraIcon}}
+                                    is="editProfileCameraIconContainer"
+                                    stroke='rgba(0, 0, 0, 0.4)'
+                                />
+                                <div>{t('Update Photo')}</div>
+                            </div>
+                        </Dropzone>
+                    </div>
+                    <div is="sectionTitle">{t('Title')}</div>
+                    <input
+                        disabled={this.state.saving}
+                        is="input"
+                        name="title"
+                        onChange={this.handleChange.bind(this)}
+                        placeholder={t('Job Title')}
+                        type="text"
+                        value={this.state.title}
+                     />
+                     <div is="errorContainer">
+                        <span is="errorMessage">
+                            {error}
+                        </span>
+                    </div>
+                    <div is="sectionTitle">{t('Contact')}</div>
+                    <input
+                        disabled={this.state.saving}
+                        is="input"
+                        name="cellNumber"
+                        onChange={this.handleChange.bind(this)}
+                        placeholder={t('Add your cell number')}
+                        type="text"
+                        value={this.state.cellNumber}
+                     />
+                </form>
+            </div>
         );
     }
 
