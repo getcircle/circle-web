@@ -15,6 +15,11 @@ export function getCustomThemeManager() {
     ThemeManager.setPalette({
         accent1Color: tintColor,
         canvasColor: canvasColor,
+        // All of them are shades of tint color generated from:
+        // http://mcg.mbitson.com/#/
+        primary1Color: tintColor,
+        primary2Color: '#5C6BBF',
+        primary3Color: '#D7DDFF',
     });
     ThemeManager.setComponentThemes({
         appBar: {

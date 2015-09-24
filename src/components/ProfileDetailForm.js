@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
+import { LinearProgress } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -96,8 +97,10 @@ class ProfileDetailForm extends CSSComponent {
                     display: 'flex',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    padding: '0 16px 16px 16px',
                     width: '100%',
+                },
+                form: {
+                    padding: '0 16px 16px 16px',
                 },
                 input: {
                     border: '1px solid rgba(0, 0, 0, 0.1)',
@@ -169,12 +172,11 @@ class ProfileDetailForm extends CSSComponent {
             }
         }
 
-        this.setState({
+        this.setState(Object.assign({}, this.state, {
             imageUrl: props ? (props.mediaUrl && props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url) : '',
             title: props ? props.profile.title : '',
             cellNumber: cellNumber,
-            imageFiles: [],
-        }, () => {
+        }), () => {
             // Given our state machine, the only time mediaUrl is present is when a save is in progress.
             // Continue the save action
             if (props && props.mediaUrl && props.mediaUrl !== '') {
@@ -185,9 +187,10 @@ class ProfileDetailForm extends CSSComponent {
 
     state = {
         imageUrl: '',
-        title: '',
-        phoneNumber: '',
         imageFiles: [],
+        phoneNumber: '',
+        title: '',
+        saving: false,
     }
 
     // Public Methods
@@ -259,6 +262,7 @@ class ProfileDetailForm extends CSSComponent {
         if (this.state.imageFiles.length > 0 && (!this.props.mediaUrl || this.props.mediaUrl === '')) {
            this.props.dispatch(uploadMedia(this.state.imageFiles[0], MediaTypeV1.PROFILE,this.props.profile.id));
             // Wait until media upload is done
+            this.setState(Object.assign({}, this.state, {saving: true}));
             return;
         }
         else {
@@ -278,59 +282,77 @@ class ProfileDetailForm extends CSSComponent {
         }
     }
 
+    renderProgressIndicator() {
+        if (this.state.saving) {
+            return (
+                <LinearProgress mode="indeterminate" />
+            );
+        }
+    }
+
     renderContent() {
         let error = '';
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
 
         return (
-            <form is="formContainer">
-                <div is="sectionTitle">Photo</div>
-                <div is="profileImageUploadContainer">
-                    <button is="profileImageButton" onClick={this.onOpenClick.bind(this)} type="button">
-                        <img alt="Profile Image" is="profileImage" src={imageUrl} />
-                    </button>
-                    <Dropzone
-                        activeStyle={{...this.styles().dropzoneActive}}
-                        multiple={false}
-                        onDrop={this.onDrop.bind(this)}
-                        ref="dropzone"
-                        style={{...this.styles().dropzone}}
-                    >
-                        <div is="dropzoneTriggerContainer">
-                            <IconContainer
-                                IconClass={EditProfileCameraIcon}
-                                iconStyle={{...this.styles().EditProfileCameraIcon}}
-                                stroke='rgba(0, 0, 0, 0.4)'
-                                style={{...this.styles().EditProfileCameraIconContainer}}
-                            />
-                            <div>Update Photo</div>
-                        </div>
-                    </Dropzone>
-                </div>
-                <div is="sectionTitle">Title</div>
-                <input
-                    is="input"
-                    name="title"
-                    onChange={this.handleChange.bind(this)}
-                    placeholder={t('Job Title')}
-                    type="text"
-                    value={this.state.title}
-                 />
-                 <div is="errorContainer">
-                    <span is="errorMessage">
-                        {error}
-                    </span>
-                </div>
-                <div is="sectionTitle">Contact</div>
-                <input
-                    is="input"
-                    name="cellNumber"
-                    onChange={this.handleChange.bind(this)}
-                    placeholder={t('Add your cell number')}
-                    type="text"
-                    value={this.state.cellNumber}
-                 />
-            </form>
+            <div is="formContainer">
+                {this.renderProgressIndicator()}
+                <form is="form">
+                    <div is="sectionTitle">Photo</div>
+                    <div is="profileImageUploadContainer">
+                        <button
+                            disabled={this.state.saving}
+                            is="profileImageButton"
+                            onClick={this.onOpenClick.bind(this)}
+                            type="button"
+                        >
+                            <img alt="Profile Image" is="profileImage" src={imageUrl} />
+                        </button>
+                        <Dropzone
+                            activeStyle={{...this.styles().dropzoneActive}}
+                            multiple={false}
+                            onDrop={this.onDrop.bind(this)}
+                            ref="dropzone"
+                            style={{...this.styles().dropzone}}
+                        >
+                            <div is="dropzoneTriggerContainer">
+                                <IconContainer
+                                    IconClass={EditProfileCameraIcon}
+                                    iconStyle={{...this.styles().EditProfileCameraIcon}}
+                                    stroke='rgba(0, 0, 0, 0.4)'
+                                    style={{...this.styles().EditProfileCameraIconContainer}}
+                                />
+                                <div>Update Photo</div>
+                            </div>
+                        </Dropzone>
+                    </div>
+                    <div is="sectionTitle">Title</div>
+                    <input
+                        disabled={this.state.saving}
+                        is="input"
+                        name="title"
+                        onChange={this.handleChange.bind(this)}
+                        placeholder={t('Job Title')}
+                        type="text"
+                        value={this.state.title}
+                     />
+                     <div is="errorContainer">
+                        <span is="errorMessage">
+                            {error}
+                        </span>
+                    </div>
+                    <div is="sectionTitle">Contact</div>
+                    <input
+                        disabled={this.state.saving}
+                        is="input"
+                        name="cellNumber"
+                        onChange={this.handleChange.bind(this)}
+                        placeholder={t('Add your cell number')}
+                        type="text"
+                        value={this.state.cellNumber}
+                     />
+                </form>
+            </div>
         );
     }
 
