@@ -108,9 +108,9 @@ class Dialog extends CSSComponent {
                         minWidth: 15,
                     },
                     labelStyle: {
-                        fontSize: '12px',
-                        ...fontColors.light,
-                        ...fontWeights.semiBold,
+                        fontSize: '14px',
+                        textTransform: 'none',
+                        ...fontColors.dark,
                     },
                 },
                 DialogTitle: {
