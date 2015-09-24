@@ -36,6 +36,7 @@ class Dialog extends CSSComponent {
     static defaultProps = {
         // TODO this should be an icon
         dialogDismissLabel: 'x',
+        dialogSaveLabel: '',
         onDismiss() {},
         onSave() {},
     }
@@ -155,9 +156,9 @@ class Dialog extends CSSComponent {
     }
 
     setSaveEnabled(enabled) {
-        this.setState(Object.assign({}, this.state, {
+        this.setState({
             saveEnabled: enabled,
-        }));
+        });
     }
 
     renderSaveButton() {
@@ -172,9 +173,7 @@ class Dialog extends CSSComponent {
                         disabled={!this.state.saveEnabled}
                         is="DialogSaveButton"
                         label={dialogSaveLabel}
-                        onTouchTap={() => {
-                            this.props.onSave();
-                        }}
+                        onTouchTap={() => this.props.onSave()}
                         ref="saveButton"
                     />
                 </div>
@@ -196,9 +195,7 @@ class Dialog extends CSSComponent {
                         <FlatButton
                             is="DialogCloseButton"
                             label={dialogDismissLabel}
-                            onTouchTap={() => {
-                                this.dismiss();
-                            }}
+                            onTouchTap={() => this.dismiss()}
                         />
                     </div>
                     <span is="DialogTitle">

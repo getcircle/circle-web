@@ -172,11 +172,11 @@ class ProfileDetailForm extends CSSComponent {
             }
         }
 
-        this.setState(Object.assign({}, this.state, {
+        this.setState({
             imageUrl: props ? (props.mediaUrl && props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url) : '',
             title: props ? props.profile.title : '',
             cellNumber: cellNumber,
-        }), () => {
+        }, () => {
             // Given our state machine, the only time mediaUrl is present is when a save is in progress.
             // Continue the save action
             if (props && props.mediaUrl && props.mediaUrl !== '') {
@@ -220,7 +220,7 @@ class ProfileDetailForm extends CSSComponent {
                 break;
         }
 
-        this.setState(Object.assign({}, this.state, updatedState));
+        this.setState(updatedState);
     }
 
     updateProfile() {
@@ -265,7 +265,7 @@ class ProfileDetailForm extends CSSComponent {
         if (this.state.imageFiles.length > 0 && (!this.props.mediaUrl || this.props.mediaUrl === '')) {
            this.props.dispatch(uploadMedia(this.state.imageFiles[0], MediaTypeV1.PROFILE,this.props.profile.id));
             // Wait until media upload is done
-            this.setState(Object.assign({}, this.state, {saving: true}));
+            this.setState({saving: true});
             return;
         }
         else {
@@ -281,7 +281,7 @@ class ProfileDetailForm extends CSSComponent {
         let updatedState = {};
         updatedState.imageFiles = files;
         if (files.length > 0) {
-           this.setState(Object.assign({}, this.state, updatedState));
+           this.setState(updatedState);
         }
     }
 
