@@ -40,7 +40,6 @@ class Dialog extends CSSComponent {
         onSave() {},
     }
 
-
     getChildContext() {
         return {
             muiTheme: ThemeManager.getCurrentTheme(),
@@ -53,6 +52,10 @@ class Dialog extends CSSComponent {
 
     componentWillReceiveProps(nextProps) {
         this.customizeTheme(nextProps);
+    }
+
+    state = {
+        saveEnabled: true,
     }
 
     originalDesktopKeylineIncrement = ThemeManager.getCurrentTheme().spacing.desktopKeylineIncrement
@@ -151,6 +154,12 @@ class Dialog extends CSSComponent {
         this.refs.modal.dismiss();
     }
 
+    setSaveEnabled(enabled) {
+        this.setState(Object.assign({}, this.state, {
+            saveEnabled: enabled,
+        }));
+    }
+
     renderSaveButton() {
         const {
             dialogSaveLabel,
@@ -160,11 +169,13 @@ class Dialog extends CSSComponent {
             return (
                 <div is="DialogSave">
                     <FlatButton
+                        disabled={!this.state.saveEnabled}
                         is="DialogSaveButton"
                         label={dialogSaveLabel}
                         onTouchTap={() => {
                             this.props.onSave();
                         }}
+                        ref="saveButton"
                     />
                 </div>
             );
@@ -175,7 +186,6 @@ class Dialog extends CSSComponent {
         const {
             children,
             dialogDismissLabel,
-            dialogSaveLabel,
             title,
             ...other,
         } = this.props;
