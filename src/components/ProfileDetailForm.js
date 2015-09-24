@@ -71,7 +71,7 @@ class ProfileDetailForm extends CSSComponent {
                     alignItems: 'center',
                     display: 'flex',
                 },
-                EditProfileCameraIconContainer: {
+                editProfileCameraIconContainer: {
                     border: 0,
                     left: 0,
                     height: 50,
@@ -79,7 +79,7 @@ class ProfileDetailForm extends CSSComponent {
                     top: 0,
                     width: 45,
                 },
-                EditProfileCameraIcon: {
+                editProfileCameraIcon: {
                     height: 50,
                     width: 50,
                 },
@@ -266,9 +266,7 @@ class ProfileDetailForm extends CSSComponent {
            this.props.dispatch(uploadMedia(this.state.imageFiles[0], MediaTypeV1.PROFILE,this.props.profile.id));
             // Wait until media upload is done
             this.setState({saving: true});
-            return;
-        }
-        else {
+        } else {
             this.updateProfile();
         }
     }
@@ -301,7 +299,7 @@ class ProfileDetailForm extends CSSComponent {
             <div is="formContainer">
                 {this.renderProgressIndicator()}
                 <form is="form">
-                    <div is="sectionTitle">Photo</div>
+                    <div is="sectionTitle">{t('Photo')}</div>
                     <div is="profileImageUploadContainer">
                         <button
                             disabled={this.state.saving}
@@ -309,27 +307,27 @@ class ProfileDetailForm extends CSSComponent {
                             onClick={this.onOpenClick.bind(this)}
                             type="button"
                         >
-                            <img alt="Profile Image" is="profileImage" src={imageUrl} />
+                            <img alt={t('Profile Image')} is="profileImage" src={imageUrl} />
                         </button>
                         <Dropzone
                             activeStyle={{...this.styles().dropzoneActive}}
+                            is="dropzone"
                             multiple={false}
                             onDrop={this.onDrop.bind(this)}
                             ref="dropzone"
-                            style={{...this.styles().dropzone}}
                         >
                             <div is="dropzoneTriggerContainer">
                                 <IconContainer
                                     IconClass={EditProfileCameraIcon}
-                                    iconStyle={{...this.styles().EditProfileCameraIcon}}
+                                    iconStyle={{...this.styles().editProfileCameraIcon}}
+                                    is="EditProfileCameraIconContainer"
                                     stroke='rgba(0, 0, 0, 0.4)'
-                                    style={{...this.styles().EditProfileCameraIconContainer}}
                                 />
-                                <div>Update Photo</div>
+                                <div>{t('Update Photo')}</div>
                             </div>
                         </Dropzone>
                     </div>
-                    <div is="sectionTitle">Title</div>
+                    <div is="sectionTitle">{t('Title')}</div>
                     <input
                         disabled={this.state.saving}
                         is="input"
@@ -344,7 +342,7 @@ class ProfileDetailForm extends CSSComponent {
                             {error}
                         </span>
                     </div>
-                    <div is="sectionTitle">Contact</div>
+                    <div is="sectionTitle">{t('Contact')}</div>
                     <input
                         disabled={this.state.saving}
                         is="input"
