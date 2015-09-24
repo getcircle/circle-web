@@ -16,7 +16,15 @@ import IconContainer from './IconContainer';
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-@connect(selectors.mediaUploadSelector)
+const mediaSelector = selectors.createImmutableSelector(
+    [selectors.mediaUploadSelector], (mediaUploadState) => {
+        return {
+            mediaUrl: mediaUploadState.get('mediaUrl'),
+        };
+    }
+);
+
+@connect(mediaSelector)
 class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
@@ -170,6 +178,12 @@ class ProfileDetailForm extends CSSComponent {
             cellNumber: cellNumber,
             imageFiles: [],
         });
+
+        // Given our state machine, the only time mediaUrl is present is when a save is in progress.
+        // Continue the save action
+        if (props && props.mediaUrl && props.mediaUrl !== '') {
+            this.updateProfile();
+        }
     }
 
     state = {
@@ -209,7 +223,7 @@ class ProfileDetailForm extends CSSComponent {
         this.setState(Object.assign({}, this.state, updatedState));
     }
 
-    handleSaveTapped() {
+    updateProfile() {
         // TODO:
         // Add validation
         // Handle contact methods correctly
@@ -236,6 +250,20 @@ class ProfileDetailForm extends CSSComponent {
         });
 
         onSaveCallback(updatedProfile);
+        this.dismiss();
+    }
+
+    handleSaveTapped() {
+
+        // If an image was added, upload it first
+        if (this.state.imageFiles.length > 0 && (!this.props.mediaUrl || this.props.mediaUrl === '')) {
+           this.props.dispatch(uploadMedia(this.state.imageFiles[0], MediaTypeV1.PROFILE,this.props.profile.id));
+            // Wait until media upload is done
+            return;
+        }
+        else {
+            updateProfile();
+        }
     }
 
     onOpenClick() {
@@ -247,7 +275,6 @@ class ProfileDetailForm extends CSSComponent {
         updatedState.imageFiles = files;
         if (files.length > 0) {
            this.setState(Object.assign({}, this.state, updatedState));
-           this.props.dispatch(uploadMedia(files[0], MediaTypeV1.PROFILE,this.props.profile.id));
         }
     }
 

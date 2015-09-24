@@ -62,8 +62,4 @@ export const routerSelector = state => state.router;
 export const routerParametersSelector = state => state.router.params;
 export const searchSelector = state => state.search;
 export const teamMembersSelector = state => state.teamMembers;
-export const mediaUploadSelector = state => {
-    return {
-        mediaUrl: state.mediaUpload.get('mediaUrl'),
-    };
-}
+export const mediaUploadSelector = state => state.mediaUpload;
