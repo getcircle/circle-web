@@ -26,6 +26,15 @@ export default function mediaUpload(state = initialState, action) {
             mediaUrl: '',
             loading: false,
         });
+
+    case types.UPDATE_PROFILE_SUCCESS:
+        // URL is relevant only while we are updating a profile
+        // It should be cleared for the potential update profile
+        // action in future.
+        return Immutable.fromJS({
+            mediaUrl: '',
+            loading: false,
+        });
     }
 
     return state;
