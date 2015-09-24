@@ -37,6 +37,10 @@ class ProfileDetailForm extends CSSComponent {
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
     }
 
+    static defaultProps = {
+        mediaUrl: '',
+    }
+
     componentWillMount() {
         this.mergeStateAndProps(this.props);
     }
@@ -173,13 +177,13 @@ class ProfileDetailForm extends CSSComponent {
         }
 
         this.setState({
-            imageUrl: props ? (props.mediaUrl && props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url) : '',
+            imageUrl: getPreviewImageUrl(props),
             title: props ? props.profile.title : '',
             cellNumber: cellNumber,
         }, () => {
             // Given our state machine, the only time mediaUrl is present is when a save is in progress.
             // Continue the save action
-            if (props && props.mediaUrl && props.mediaUrl !== '') {
+            if (props && props.mediaUrl !== '') {
                 this.updateProfile();
             }
         });
@@ -201,6 +205,16 @@ class ProfileDetailForm extends CSSComponent {
 
     dismiss() {
         this.refs.modal.dismiss();
+    }
+
+    getPreviewImageUrl(props) {
+        if (!props) {
+            return '';
+        }
+
+        // Show preview of the existing image or the new one being uploaded
+        // by the user
+        return props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url;
     }
 
     handleChange(event) {
@@ -262,8 +276,12 @@ class ProfileDetailForm extends CSSComponent {
         this.refs.modal.setSaveEnabled(false);
 
         // If an image was added, upload it first
-        if (this.state.imageFiles.length > 0 && (!this.props.mediaUrl || this.props.mediaUrl === '')) {
-           this.props.dispatch(uploadMedia(this.state.imageFiles[0], MediaTypeV1.PROFILE,this.props.profile.id));
+        if (this.state.imageFiles.length > 0 && this.props.mediaUrl === '') {
+            this.props.dispatch(uploadMedia(
+                this.state.imageFiles[0],
+                MediaTypeV1.PROFILE,
+                this.props.profile.id
+            ));
             // Wait until media upload is done
             this.setState({saving: true});
         } else {

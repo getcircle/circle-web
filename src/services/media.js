@@ -13,7 +13,7 @@ export function uploadMedia(data, mediaType, mediaKey) {
                 return upload(instructions.upload_url, data);
             })
             .then((response) => completeMediaUpload(mediaType, mediaKey, instructionsRef.upload_id, instructionsRef.upload_key))
-            .then((mediaUrl) => resolve({mediaUrl: mediaUrl}))
+            .then((mediaUploadCompleteResponse) => resolve(mediaUploadCompleteResponse))
             .catch((error) => {
                 logger.log(`Error uploading media: ${error}`);
                 reject(error);
@@ -58,7 +58,7 @@ function completeMediaUpload(mediaType, mediaKey, uploadId, uploadKey) {
         client.sendRequest(request)
             .then((response) => {
                 let mediaUrl = response.result.media_url;
-                resolve(mediaUrl)
+                resolve({mediaUrl})
             })
             .catch((error) => {
                 logger.log(`Error completing media upload: ${error}`);
