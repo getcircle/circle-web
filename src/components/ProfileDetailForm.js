@@ -118,6 +118,7 @@ class ProfileDetailForm extends CSSComponent {
                 profileImage: {
                     borderRadius: 25,
                     height: 50,
+                    objectFit: 'cover',
                     width: 50,
                 },
                 profileImageButton: {
@@ -177,13 +178,13 @@ class ProfileDetailForm extends CSSComponent {
             title: props ? props.profile.title : '',
             cellNumber: cellNumber,
             imageFiles: [],
+        }, () => {
+            // Given our state machine, the only time mediaUrl is present is when a save is in progress.
+            // Continue the save action
+            if (props && props.mediaUrl && props.mediaUrl !== '') {
+                this.updateProfile();
+            }
         });
-
-        // Given our state machine, the only time mediaUrl is present is when a save is in progress.
-        // Continue the save action
-        if (props && props.mediaUrl && props.mediaUrl !== '') {
-            this.updateProfile();
-        }
     }
 
     state = {
@@ -255,6 +256,9 @@ class ProfileDetailForm extends CSSComponent {
 
     handleSaveTapped() {
 
+        // Disable Save button
+        this.refs.modal.setSaveEnabled(false);
+
         // If an image was added, upload it first
         if (this.state.imageFiles.length > 0 && (!this.props.mediaUrl || this.props.mediaUrl === '')) {
            this.props.dispatch(uploadMedia(this.state.imageFiles[0], MediaTypeV1.PROFILE,this.props.profile.id));
@@ -262,7 +266,7 @@ class ProfileDetailForm extends CSSComponent {
             return;
         }
         else {
-            updateProfile();
+            this.updateProfile();
         }
     }
 
