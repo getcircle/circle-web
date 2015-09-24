@@ -151,6 +151,26 @@ class Dialog extends CSSComponent {
         this.refs.modal.dismiss();
     }
 
+    renderSaveButton() {
+        const {
+            dialogSaveLabel,
+        } = this.props;
+
+        if (dialogSaveLabel !== '') {
+            return (
+                <div is="DialogSave">
+                    <FlatButton
+                        is="DialogSaveButton"
+                        label={dialogSaveLabel}
+                        onTouchTap={() => {
+                            this.props.onSave();
+                        }}
+                    />
+                </div>
+            );
+        }
+    }
+
     render() {
         const {
             children,
@@ -174,31 +194,7 @@ class Dialog extends CSSComponent {
                     <span is="DialogTitle">
                         {title}
                     </span>
-                    <div is="DialogSave">
-                        <FlatButton
-                            is="DialogSaveButton"
-                            label={dialogSaveLabel}
-                            onTouchTap={() => {
-                                this.props.onSave();
-                                this.dismiss();
-                            }}
-                        />
-                    </div>
-
-                    {(() => {
-                        if (dialogSaveLabel !== '') {
-                            <div is="DialogSave">
-                                <FlatButton
-                                    is="DialogSaveButton"
-                                    label={dialogSaveLabel}
-                                    onTouchTap={() => {
-                                        this.props.onSave();
-                                        this.dismiss();
-                                    }}
-                                />
-                            </div>
-                        }
-                    })()}
+                    {this.renderSaveButton()}
                 </header>
                 {children}
             </mui.Dialog>
