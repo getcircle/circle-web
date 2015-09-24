@@ -64,7 +64,7 @@ class Profile extends PureComponent {
     }
 
     onUpdateProfile(profile) {
-        this.props.dispatch(updateProfile(profile))
+        this.props.dispatch(updateProfile(profile));
     }
 
     renderProfile() {
