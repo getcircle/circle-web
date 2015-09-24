@@ -40,10 +40,6 @@ class ProfileDetailForm extends CSSComponent {
         this.mergeStateAndProps(this.props);
     }
 
-    componentDidMount() {
-        this.show();
-    }
-
     componentWillReceiveProps(nextProps, nextState) {
         this.mergeStateAndProps(nextProps);
     }
