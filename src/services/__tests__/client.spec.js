@@ -1,5 +1,5 @@
 import expect from 'expect.js';
-import { normalize } from 'protobuf-normalizr';
+import normalize from 'protobuf-normalizr';
 import protobufs from 'protobufs';
 
 import ServiceError from '../ServiceError';
