@@ -69,6 +69,30 @@ class App extends CSSComponent {
     componentWillMount() {
         // refresh any cached authentication objects
         if (this.props.authenticated) {
+            /*
+            ON LOGOUT
+            if (mixpanel.cookie && mixpanel.cookie.clear) {
+                mixpanel.cookie.clear();
+                window.clearInterval(id);
+              }
+
+            */
+            // Identify user is Mixpanel
+            let profile = this.props.profile;
+            mixpanel.identify(profile.user_id);
+            mixpanel.people.set({
+                'first_name': profile.first_name,
+                'organization_id': profile.organization_id,
+                'profile_id': profile.id,
+                'title': profile.title,
+                'user_id': profile.user_id,
+            });
+
+            mixpanel.register({
+                'organization_id': profile.organization_id,
+                'profile_id': profile.id,
+                'user_id': profile.user_id,
+            });
             this.props.dispatch(refresh());
         }
         this.props.dispatch(

@@ -20,7 +20,8 @@ module.exports = {
             title: 'Luno Dev',
             filename: 'index.html',
             template: 'index.template.html',
-            favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico')
+            favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico'),
+            mixpanelToken: 'c9e956923929efeeebcfbce0b9198656',
         }),
         new webpack.DefinePlugin({
             __DEVELOPMENT__: true,
@@ -28,7 +29,7 @@ module.exports = {
             'process.env': {
                 API_ENDPOINT: JSON.stringify('https://api.dev.lunohq.com'),
                 GOOGLE_CLIENT_ID: JSON.stringify('1090169577912-57r89ml43udqthb050v57kim3vddlrvu.apps.googleusercontent.com'),
-                GOOGLE_MAPS_API_KEY: JSON.stringify('AIzaSyAlKvipmEx76I45QIHP6NAI4pJ0Ybp55u8')
+                GOOGLE_MAPS_API_KEY: JSON.stringify('AIzaSyAlKvipmEx76I45QIHP6NAI4pJ0Ybp55u8'),
             }
         }),
 
