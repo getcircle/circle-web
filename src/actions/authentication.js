@@ -1,9 +1,9 @@
-import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as userService from '../services/user';
 import client from '../services/client';
 import { getOrganization } from '../services/organization';
 import { getProfile } from '../services/profile';
+import { SERVICE_REQUEST } from '../middleware/services';
 
 export function authenticate(backend, key, secret) {
     return {
