@@ -1,7 +1,7 @@
 require('babel/register');
 
 import FastClick from 'fastclick';
-import { history } from 'react-router/lib/BrowserHistory';
+import history from 'react-router/lib/BrowserHistory';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import React from 'react';
 
