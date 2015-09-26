@@ -45,7 +45,7 @@ export function getCustomThemeManager() {
      *
      * THIS SHOULD BE KEPT VERY SMALL, SO PLEASE DO NOT ABUSE THIS AS A PLACE FOR ADDING ALL CSS.
      */
-    ThemeManager.commonStyles = {
+    lunoMuiTheme.commonStyles = {
         headerPrimaryText: {
             fontSize: '36px',
             lineHeight: '49px',
@@ -69,7 +69,7 @@ export function getCustomThemeManager() {
         },
     };
 
-    return muiTheme;
+    return lunoMuiTheme;
 }
 
 export default getCustomThemeManager();

@@ -59,10 +59,10 @@ class Dialog extends CSSComponent {
         muiTheme: CurrentTheme,
     }
 
-    originalDesktopKeylineIncrement = CurrentTheme.spacing.desktopKeylineIncrement
+    originalDesktopKeylineIncrement = CurrentTheme.rawTheme.spacing.desktopKeylineIncrement;
 
     customizeTheme(props) {
-        let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CustomTheme, {
+        let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
             canvasColor: common.background.backgroundColor,
         });
 
