@@ -20,7 +20,8 @@ module.exports = {
             title: 'Luno',
             filename: 'index.html',
             template: 'index.template.html',
-            favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico')
+            favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico'),
+            mixpanelToken: '62bae2b7a51edf77b99f470ec114324a',
         }),
         new webpack.DefinePlugin({
             __DEVELOPMENT__: false,

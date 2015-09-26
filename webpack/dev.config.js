@@ -21,7 +21,7 @@ module.exports = {
             filename: 'index.html',
             template: 'index.template.html',
             favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico'),
-            mixpanelToken: 'c9e956923929efeeebcfbce0b9198656',
+            mixpanelToken: 'cfe0bd17e174c984714d5996b6a04606',
         }),
         new webpack.DefinePlugin({
             __DEVELOPMENT__: true,
