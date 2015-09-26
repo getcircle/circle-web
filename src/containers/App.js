@@ -106,8 +106,8 @@ class App extends CSSComponent {
 
     render() {
         let footer;
-        if (this.props.authenticated && this.props.displayFooter) {
-            footer = <TabBar is="TabBar" profile={this.props.profile} />; }
+        // if (this.props.authenticated && this.props.displayFooter) {
+        //     footer = <TabBar is="TabBar" profile={this.props.profile} />; }
         let header;
         if (this.props.authenticated && this.props.displayHeader) {
             header = <Header {...this.props} />;
