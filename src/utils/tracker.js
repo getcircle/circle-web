@@ -10,6 +10,15 @@ class Tracker {
     constructor() {
     }
 
+    // Session methods
+
+    /**
+     *  Initializes the session.
+     *
+     *  - Sets the session identifier.
+     *  - Adds attributes to a person profile.
+     *  - Registers super properties.
+     */
     initSession(profile) {
 
         // Identify user is Mixpanel
@@ -40,6 +49,22 @@ class Tracker {
             mixpanel.cookie.clear();
         }
     }
+
+    // Events
+
+    /**
+     * Tracks the page view event.
+     *
+     * pageType should be one of the page type constants.
+     * pageId is an optional identifier for the page. This should be the primary key
+     *         of the associated object.
+     *
+     *
+     */
+    trackPageView(pageType, pageId) {
+
+    }
+
 }
 
 // NOTE: This is not a singleton and a new instance is generated each time.
