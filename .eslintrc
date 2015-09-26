@@ -21,7 +21,7 @@
         "no-unused-vars": [2, {"vars": "all", "args": "none"}],
         "no-mixed-spaces-and-tabs": 0,
         "strict": 0,
-        "react/jsx-boolean-value": 1,
+        "react/jsx-boolean-value": 0,
         "react/jsx-curly-spacing": 1,
         "react/jsx-max-props-per-line": [1, { "maximum": 3 }],
         "react/jsx-no-duplicate-props": 1,
