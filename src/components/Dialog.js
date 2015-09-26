@@ -1,7 +1,7 @@
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { getCustomThemeManager } from '../utils/ThemeManager';
+import CurrentTheme from '../utils/ThemeManager';
 import { fontColors, fontWeights } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
@@ -10,7 +10,6 @@ const {
     FlatButton,
 } = mui;
 
-const ThemeManager = getCustomThemeManager();
 const common = {
     background: {
         backgroundColor: 'rgb(249, 245, 244)',
@@ -43,7 +42,7 @@ class Dialog extends CSSComponent {
 
     getChildContext() {
         return {
-            muiTheme: ThemeManager.getCurrentTheme(),
+            muiTheme: this.state.muiTheme,
         };
     }
 
@@ -57,19 +56,27 @@ class Dialog extends CSSComponent {
 
     state = {
         saveEnabled: true,
+        muiTheme: CurrentTheme,
     }
 
-    originalDesktopKeylineIncrement = ThemeManager.getCurrentTheme().spacing.desktopKeylineIncrement
+    originalDesktopKeylineIncrement = CurrentTheme.spacing.desktopKeylineIncrement
 
     customizeTheme(props) {
-        ThemeManager.setPalette({
+        let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CustomTheme, {
             canvasColor: common.background.backgroundColor,
         });
+
         if (!props.largerDevice) {
-            ThemeManager.setSpacing({desktopKeylineIncrement: 0});
+            customDialogTheme = mui.Styles.ThemeManager.modifyRawThemeSpacing(customDialogTheme, {
+                desktopKeylineIncrement: 0,
+            });
         } else {
-            ThemeManager.setSpacing({desktopKeylineIncrement: this.originalDesktopKeylineIncrement});
+            customDialogTheme = mui.Styles.ThemeManager.modifyRawThemeSpacing(customDialogTheme, {
+                desktopKeylineIncrement: this.originalDesktopKeylineIncrement,
+            });
         }
+
+        this.setState({muiTheme: customDialogTheme});
     }
 
     classes() {

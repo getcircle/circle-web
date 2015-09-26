@@ -7,7 +7,7 @@ import createStore from './createStore';
 import CSSMixins from './CSSMixins';
 import getRoutes from './getRoutes';
 import * as reducers from './reducers';
-import ThemeManager from './utils/ThemeManager';
+import CurrentTheme from './utils/ThemeManager';
 
 import PureComponent from './components/PureComponent';
 
@@ -31,7 +31,7 @@ export default class Root extends PureComponent {
     getChildContext() {
         return {
             mixins: CSSMixins,
-            muiTheme: ThemeManager.getCurrentTheme(),
+            muiTheme: CurrentTheme,
         };
     }
 

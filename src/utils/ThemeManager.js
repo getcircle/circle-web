@@ -8,11 +8,16 @@ import {
 } from '../constants/styles';
 
 export function getCustomThemeManager() {
-    const ThemeManager = new mui.Styles.ThemeManager();
+    const ThemeManager = mui.Styles.ThemeManager;
+    const muiTheme = ThemeManager.getMuiTheme(mui.Styles.LightRawTheme);
 
     // Custom Theme
-    ThemeManager.contentFontFamily = '"Open Sans", Arial, sans-serif';
-    ThemeManager.setPalette({
+    let lunoMuiTheme = ThemeManager.modifyRawThemeFontFamily(
+        muiTheme,
+        '"Open Sans", Arial, sans-serif'
+    );
+
+    lunoMuiTheme = ThemeManager.modifyRawThemePalette(lunoMuiTheme, {
         accent1Color: tintColor,
         canvasColor: canvasColor,
         // All of them are shades of tint color generated from:
@@ -21,21 +26,14 @@ export function getCustomThemeManager() {
         primary2Color: '#5C6BBF',
         primary3Color: '#D7DDFF',
     });
-    ThemeManager.setComponentThemes({
-        appBar: {
-            color: '#F7F9FA',
-        },
-        flatButton: {
-            color: 'rgb(255, 255, 255)',
-        },
-        tab: {
-            textColor: 'rgba(0, 0, 0, 0.3)',
-            selectedTextColor: tintColor,
-        },
-        tabs: {
-            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        },
-    });
+
+    lunoMuiTheme.appBar.color = '#F7F9FA';
+    lunoMuiTheme.flatButton.color = 'rgb(255, 255, 255)';
+    lunoMuiTheme.tab = {
+        textColor: 'rgba(0, 0, 0, 0.3)',
+        selectedTextColor: tintColor,
+    };
+    lunoMuiTheme.tabs.backgroundColor = 'rgba(255, 255, 255, 0.5)';
 
     /**
      * The purpose of this object is to consolidate any common styles
@@ -70,7 +68,7 @@ export function getCustomThemeManager() {
         },
     };
 
-    return ThemeManager;
+    return muiTheme;
 }
 
 export default getCustomThemeManager();
