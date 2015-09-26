@@ -1,3 +1,8 @@
+import {
+    EVENTS,
+    PAGE_TYPE,
+} from '../constants/trackerProperties';
+
 /*
     This class acts as a wrapper for our mixpanel implementation.
     It is named generically such that there are no conflicts with the libraries.
@@ -27,18 +32,18 @@ class Tracker {
 
         // Add attributes for this person
         mixpanel.people.set({
-            'first_name': profile.first_name,
-            'organization_id': profile.organization_id,
-            'profile_id': profile.id,
-            'title': profile.title,
-            'user_id': profile.user_id,
+            'Name': profile.first_name,
+            'Organization ID': profile.organization_id,
+            'Profile ID': profile.id,
+            'Title': profile.title,
+            'User ID': profile.user_id,
         });
 
         // Add super properties, which should be included with event event
         mixpanel.register({
-            'organization_id': profile.organization_id,
-            'profile_id': profile.id,
-            'user_id': profile.user_id,
+            'Organization ID': profile.organization_id,
+            'Profile ID': profile.id,
+            'User ID': profile.user_id,
         });
     }
 
@@ -58,11 +63,14 @@ class Tracker {
      * pageType should be one of the page type constants.
      * pageId is an optional identifier for the page. This should be the primary key
      *         of the associated object.
-     *
-     *
      */
     trackPageView(pageType, pageId) {
-
+        // TODO: Add some validation logic for pageType
+        mixpanel.track(EVENTS.PAGE_VIEW, {
+            'Page Type': pageType,
+            'Page ID': pageId,
+        });
+        mixpanel.people.increment('Page Views');
     }
 
 }

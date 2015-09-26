@@ -4,6 +4,7 @@ export const PAGE_TYPE = {
     // Global pages
     HOME: 'Home',
     SETTINGS: 'Settings',
+    BILLING: 'Billing',
 
     // Detail pages
     PROFILE_DETAIL: 'Profile Detail',
