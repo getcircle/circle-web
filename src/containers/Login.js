@@ -31,6 +31,7 @@ const selector = createSelector(
             backend: authenticationState.get('backend'),
             userExists: authenticationState.get('userExists'),
             organizationDomain: authenticationState.get('organizationDomain'),
+            organizationImageUrl: authenticationState.get('organizationImageUrl'),
             providerName: authenticationState.get('providerName'),
             email: authenticationState.get('email'),
         }
@@ -49,6 +50,7 @@ class Login extends CSSComponent {
         email: PropTypes.string,
         location: PropTypes.object.isRequired,
         organizationDomain: PropTypes.string,
+        organizationImageUrl: PropTypes.string,
         providerName: PropTypes.string,
         subdomain: PropTypes.string,
         userExists: PropTypes.bool,
@@ -79,11 +81,28 @@ class Login extends CSSComponent {
         return true;
     }
 
+    hasImage() {
+        if (
+            this.props.organizationImageUrl !== null &&
+            this.props.organizationImageUrl !== undefined &&
+            this.props.organizationImageUrl !== ''
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    styles() {
+        return this.css({
+            hasImage: this.hasImage(),
+        });
+    }
+
     classes() {
         return {
             default: {
                 container: {
-                    marginTop: '10%',
+                    marginTop: '2%',
                     maxWidth: 600,
                     minWidth: 400,
                     paddingTop: '5%',
@@ -96,6 +115,10 @@ class Login extends CSSComponent {
                     ...fontColors.dark,
                     ...fontWeights.semiBold,
                 },
+                organizationImage: {
+                    maxHeight: 200,
+                    maxWidth: 600,
+                },
                 section: {
                     marginLeft: 20,
                     marginRight: 20,
@@ -107,9 +130,15 @@ class Login extends CSSComponent {
                 },
                 wrap: {
                     marginBottom: 0,
+                    paddingTop: '10%',
                 },
-            }
-        }
+            },
+            hasImage: {
+                wrap: {
+                    paddingTop: '2%',
+                },
+            },
+        };
     }
 
     getHeaderText() {
@@ -135,6 +164,17 @@ class Login extends CSSComponent {
                 authorizationUrl: this.props.authorizationUrl,
                 backend: this.props.backend,
             };
+        }
+    }
+
+    renderOrganizationImage() {
+        const { organizationImageUrl } = this.props;
+        if (organizationImageUrl) {
+            return (
+                <div className="row center-xs">
+                    <img is="organizationImage" src={organizationImageUrl} />
+                </div>
+            );
         }
     }
 
@@ -169,6 +209,7 @@ class Login extends CSSComponent {
         return (
             <div is="root">
                 <div className="wrap" is="wrap">
+                    {this.renderOrganizationImage()}
                     <div className="row center-xs">
                         <Paper is="container">
                             <div className="row center-xs">

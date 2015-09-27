@@ -3,7 +3,6 @@ import { services } from 'protobufs';
 
 import client from '../services/client';
 import { AUTHENTICATION_STATE } from '../constants/localStorageKeys';
-import t from '../utils/gettext';
 import * as types from '../constants/actionTypes';
 
 const { OrganizationV1 } = services.organization.containers;
@@ -25,6 +24,7 @@ const getInitialState = (checkCache = true) => {
         email: null,
         organizationDomain: null,
         providerName: null,
+        organizationImageUrl: null,
     });
 
     let serializedState;

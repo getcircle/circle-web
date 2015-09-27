@@ -52,6 +52,7 @@ export function getAuthenticationInstructions(email, subdomain) {
                         email: email,
                         organizationDomain: subdomain,
                         providerName: response.result.provider_name,
+                        organizationImageUrl: response.result.organization_image_url
                     });
                 } else {
                     reject(response.reject());
