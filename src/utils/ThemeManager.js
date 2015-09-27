@@ -34,6 +34,7 @@ export function getCustomThemeManager() {
         selectedTextColor: tintColor,
     };
     lunoMuiTheme.tabs.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+    lunoMuiTheme.raisedButton.secondaryColor = '#5C6BBF';
 
     /**
      * The purpose of this object is to consolidate any common styles

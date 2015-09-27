@@ -1,15 +1,25 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import AppStoreBadge from '../images/AppStoreBadge.svg'
-import { authenticate, getAuthenticationInstructions } from '../actions/authentication';
-import { backgroundColors } from '../constants/styles';
-import t from '../utils/gettext';
+import {
+    authenticate,
+    getAuthenticationInstructions,
+} from '../actions/authentication';
+import { AUTH_BACKENDS } from '../services/user';
+import { fontColors, fontWeights } from '../constants/styles';
 import * as selectors from '../selectors';
+import { getSubdomain } from '../utils/subdomains';
+import t from '../utils/gettext';
 
 import CSSComponent from '../components/CSSComponent';
 import LoginForm from '../components/LoginForm';
+
+const {
+    CircularProgress,
+    Paper,
+} = mui;
 
 const selector = createSelector(
     [selectors.authenticationSelector],
@@ -20,6 +30,9 @@ const selector = createSelector(
             authorizationUrl: authenticationState.get('authorizationUrl'),
             backend: authenticationState.get('backend'),
             userExists: authenticationState.get('userExists'),
+            organizationDomain: authenticationState.get('organizationDomain'),
+            providerName: authenticationState.get('providerName'),
+            email: authenticationState.get('email'),
         }
     },
 )
@@ -33,7 +46,11 @@ class Login extends CSSComponent {
         authorizationUrl: PropTypes.string,
         backend: PropTypes.number,
         dispatch: PropTypes.func.isRequired,
+        email: PropTypes.string,
         location: PropTypes.object.isRequired,
+        organizationDomain: PropTypes.string,
+        providerName: PropTypes.string,
+        subdomain: PropTypes.string,
         userExists: PropTypes.bool,
     }
 
@@ -42,6 +59,16 @@ class Login extends CSSComponent {
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
         }),
+    }
+
+    static defaultProps = {
+        subdomain: getSubdomain(),
+    }
+
+    componentWillMount() {
+        if (this.props.subdomain) {
+            this.props.dispatch(getAuthenticationInstructions(null, this.props.subdomain));
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -55,25 +82,26 @@ class Login extends CSSComponent {
     classes() {
         return {
             default: {
-                appBadgesTitleContainer: {
-                    marginTop: '100px',
+                container: {
+                    marginTop: '10%',
+                    paddingTop: '5%',
+                    paddingBottom: '5%',
+                    width: '66%',
                 },
-                appBadgesContainer: {
-                    marginTop: '20px',
+                header: {
+                    fontSize: 28,
+                    paddingBottom: 20,
+                    ...fontColors.dark,
+                    ...fontWeights.semiBold,
                 },
-                appBadgesTitle: {
-                    color: 'white',
-                    fontSize: '16px',
-                    fontWeight: '500',
-                    textTransform: 'uppercase',
-                    letterSpacing: '3px',
+                section: {
+                    marginLeft: 20,
+                    marginRight: 20,
                 },
-                appStoreBadge: {
-                    width: '151px',
-                },
-                root: {
-                    minHeight: '100vh',
-                    ...backgroundColors.dark,
+                subHeader: {
+                    fontSize: 26,
+                    paddingBottom: 70,
+                    ...fontColors.dark,
                 },
                 wrap: {
                     marginBottom: 0,
@@ -82,28 +110,70 @@ class Login extends CSSComponent {
         }
     }
 
+    getHeaderText() {
+        if (this.props.subdomain) {
+            return t(`Sign in to ${window.location.host}`);
+        } else {
+            return t('Sign in');
+        }
+    }
+
+    getAuthenticationInstructions(props) {
+        // We only want to return authentication instructions if we've loaded instructions based on the subdomain and it
+        // is configured for SSO or we've asked the user for their email address and have accurate authentication
+        // instructions
+        if (
+            this.props.organizationDomain &&
+            !this.props.email &&
+            this.props.backend === AUTH_BACKENDS.INTERNAL
+        ) {
+            return {};
+        } else {
+            return {
+                authorizationUrl: this.props.authorizationUrl,
+                backend: this.props.backend,
+            };
+        }
+    }
+
+    renderLoginForm() {
+        if (!this.props.email && !this.props.organizationDomain) {
+            return (
+                <div className="row center-xs">
+                    <CircularProgress mode="indeterminate" size={0.5} />
+                </div>
+            );
+        } else {
+            const { dispatch } = this.props;
+            const instructions = this.getAuthenticationInstructions(this.props);
+            return (
+                <LoginForm
+                    authError={this.props.authError}
+                    authenticate={(...args) => dispatch(authenticate(...args))}
+                    authorizationUrl={instructions.authorizationUrl}
+                    backend={instructions.backend}
+                    email={this.props.email}
+                    getAuthenticationInstructions={(email) => {
+                        return dispatch(getAuthenticationInstructions(email));
+                    }}
+                    providerName={this.props.providerName}
+                    userExists={this.props.userExists}
+                />
+            );
+        }
+    }
+
     render() {
-        const { dispatch } = this.props;
         return (
             <div is="root">
                 <div className="wrap" is="wrap">
-                    <LoginForm
-                        authError={this.props.authError}
-                        authenticate={(...args) => dispatch(authenticate(...args))}
-                        authorizationUrl={this.props.authorizationUrl}
-                        backend={this.props.backend}
-                        getAuthenticationInstructions={(email, redirectUri) => {
-                            return dispatch(getAuthenticationInstructions(email, redirectUri));
-                        }}
-                        userExists={this.props.userExists}
-                    />
-                    <div className="row center-xs" is="appBadgesTitleContainer">
-                        <h2 is="appBadgesTitle">{t('Get the mobile app')}</h2>
-                    </div>
-                    <div className="row center-xs" is="appBadgesContainer">
-                        <a href="https://itunes.apple.com/us/app/circle-connect-your-co-workers/id981648781?ls=1&mt=8" target="_blank">
-                            <img alt="Download on the AppStore" is="appStoreBadge" src={AppStoreBadge} />
-                        </a>
+                    <div className="row center-xs">
+                        <Paper is="container">
+                            <div className="row center-xs">
+                                <h1 is="header">{this.getHeaderText()}</h1>
+                            </div>
+                            {this.renderLoginForm()}
+                        </Paper>
                     </div>
                 </div>
             </div>

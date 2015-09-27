@@ -1,17 +1,15 @@
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
+import { AUTH_BACKENDS } from '../services/user';
 import { fontColors, fontWeights } from '../constants/styles';
-import logger from '../utils/logger';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
+import LoginInternal from './LoginInternal';
+import LoginSSO from './LoginSSO';
 
-const {
-    RaisedButton,
-    Snackbar,
-    TextField,
-} = mui;
+const { Snackbar } = mui;
 
 class LoginForm extends CSSComponent {
 
@@ -20,35 +18,56 @@ class LoginForm extends CSSComponent {
         authenticate: PropTypes.func.isRequired,
         authorizationUrl: PropTypes.string,
         backend: PropTypes.number,
+        email: PropTypes.string,
         getAuthenticationInstructions: PropTypes.func.isRequired,
+        providerName: PropTypes.string,
         userExists: PropTypes.bool,
     }
 
+    state = {
+        authorizationUrl: '',
+        guest: true,
+        hasSingleSignOn: false,
+        internal: false,
+        providerName: '',
+        singleSignOn: false,
+    }
+
+    componentWillMount() {
+        this.mergeState(this.props, this.state);
+    }
+
     componentWillReceiveProps(nextProps, nextState) {
-        if (nextProps.authorizationUrl !== null && nextProps.authorizationUrl !== undefined) {
-            return window.location = nextProps.authorizationUrl;
-        }
-        if (nextProps.userExists) {
-            this.setState({buttonLabelText: t('Sign In')});
-        }
+        this.setState({guest: false});
+        this.mergeState(nextProps, nextState);
     }
 
     componentDidUpdate() {
         if (this.props.authError) {
-            logger.error(`Error logging in: ${JSON.stringify(this.props.authError)}`);
             this.refs.snackbar.show();
         }
     }
 
-    state = {
-        buttonLabelText: t('Start Using Luno'),
-        email: '',
-        password: '',
+    mergeState(props, state) {
+        if (props.backend === AUTH_BACKENDS.INTERNAL) {
+            this.setState({internal: true});
+        } else if ([AUTH_BACKENDS.GOOGLE, AUTH_BACKENDS.OKTA].includes(props.backend)) {
+            this.setState({
+                singleSignOn: true,
+                guest: false,
+                hasSingleSignOn: true,
+                authorizationUrl: props.authorizationUrl,
+                providerName: props.providerName,
+            });
+        } else if (props.authError) {
+            this.setState({guest: true});
+        }
     }
 
     styles() {
         return this.css({
-            internalAuthentication: this.props.backend === 0,
+            internal: this.state.internal,
+            singleSignOn: this.state.singleSignOn,
         });
     }
 
@@ -62,21 +81,26 @@ class LoginForm extends CSSComponent {
         return {
             default: {
                 button: {
-                    backgroundColor: 'rgb(0, 201, 255)',
                     height: 50,
+                    marginTop: 20,
                     textTransform: 'uppercase',
                     ...common.action,
                 },
+                primaryButton: {
+                    Extend: 'button',
+                },
                 container: {
-                    paddingTop: '15%',
+                    paddingTop: '2%',
+                },
+                header: {
+                    fontSize: '18px',
+                    ...fontWeights.light,
+                },
+                headerSection: {
+                    paddingBottom: '2%',
                 },
                 inputSection: {
                     paddingBottom: 10,
-                },
-                header: {
-                    fontSize: 36,
-                    paddingBottom: 20,
-                    ...fontColors.white,
                 },
                 label: {
                     lineHeight: '50px',
@@ -86,91 +110,102 @@ class LoginForm extends CSSComponent {
                 passwordSection: {
                     display: 'none',
                 },
-                section: {
-                    marginLeft: 20,
-                    marginRight: 20,
+                secondaryButton: {
+                    Extend: 'button',
                 },
-                subHeader: {
-                    fontSize: 26,
-                    paddingBottom: 70,
-                    ...fontColors.white,
+                secondaryButtonSection: {
+                    display: 'none',
                 },
                 TextInput: {
                     style: {
                         ...common.action,
                     },
                     inputStyle: {
-                        ...fontColors.white,
+                        ...fontColors.dark,
                     },
                 },
             },
-            internalAuthentication: {
+            'internal': {
+                secondaryButtonSection: {
+                    display: 'none',
+                },
                 passwordSection: {
-                    display: 'initial',
+                    display: 'block',
                 },
             },
+            'singleSignOn': {
+                emailSection: {
+                    display: 'none',
+                },
+                passwordSection: {
+                    display: 'none',
+                },
+                secondaryButtonSection: {
+                    display: 'block',
+                },
+            },
+        };
+    }
+
+    getInstructionsHeader() {
+        if (this.props.backend === undefined || this.state.guest) {
+            return t('Enter your work email addresss to get started.');
+        } else if (this.state.singleSignOn) {
+            return t('Your team has Single Sign On enabled. Click below to sign in.');
+        } else if (this.state.internal) {
+            return t('Enter your password to get started.');
         }
     }
 
-    handleChange(newValue) {
-        this.setState({email: newValue});
-    }
-
-    handleTouchTap() {
-        if (this.props.backend === null || this.props.backend === undefined) {
-            const redirectUri = `${window.location.origin}/auth`;
-            this.props.getAuthenticationInstructions(this.state.email, redirectUri);
-        } else {
-            // internal auth
-            this.props.authenticate(this.props.backend, this.state.email, this.state.password);
+    renderInputSection() {
+        const {
+            guest,
+            hasSingleSignOn,
+            internal,
+            singleSignOn,
+        } = this.state;
+        const {
+            authenticate,
+            authorizationUrl,
+            email,
+            getAuthenticationInstructions,
+            providerName,
+        } = this.props;
+        if (guest || internal) {
+            return (
+                <LoginInternal
+                    email={email}
+                    guest={guest}
+                    hasAlternative={hasSingleSignOn}
+                    onGuestSubmit={(...args) => {
+                        return getAuthenticationInstructions(...args);
+                    }}
+                    onLogin={authenticate}
+                    onUseAlternative={() => {
+                        this.setState({guest: false, singleSignOn: true, internal: false})
+                    }}
+                />
+            );
+        } else if (singleSignOn) {
+            return (
+                <LoginSSO
+                    authorizationUrl={authorizationUrl || this.state.authorizationUrl}
+                    onGuestLogin={() => {
+                        this.setState({guest: true, singleSignOn: false});
+                    }}
+                    providerName={providerName || this.state.providerName}
+                />
+            );
         }
     }
 
     render() {
         return (
-            <div className="row" is="container">
-                <section className="col-xs" is="section">
-                    <div>
-                        <div className="row center-xs">
-                            <h1 is="header">{t('luno')}</h1>
-                        </div>
-                        <div className="row center-xs">
-                            <h2 is="subHeader">{t('organizing your company\'s knowledge')}</h2>
-                        </div>
-                        <div className="row center-xs" is="inputSection">
-                            <div className="col-xs-12">
-                                <TextField
-                                    hintText={t('Work email address')}
-                                    is="TextInput"
-                                    valueLink={{
-                                        value: this.state.email,
-                                        requestChange: (newValue) => this.setState({email: newValue}),
-                                    }}
-                                />
-                            </div>
-                            <div className="col-xs-12" is="passwordSection">
-                                <TextField
-                                    hintText={t('Password')}
-                                    is="TextInput"
-                                    type="password"
-                                    valueLink={{
-                                        value: this.state.password,
-                                        requestChange: (newValue) => this.setState({password: newValue}),
-                                    }}
-                                />
-                            </div>
-                        </div>
-                        <div className="row center-xs">
-                            <RaisedButton
-                                is="button"
-                                label={this.state.buttonLabelText}
-                                labelStyle={this.styles().label}
-                                onTouchTap={::this.handleTouchTap}
-                                primary={true}
-                            />
-                        </div>
-                    </div>
-                </section>
+            <div className="row center-xs" is="container">
+                <div className="col-xs-12" is="headerSection">
+                    <span is="header">{this.getInstructionsHeader()}</span>
+                </div>
+                {this.renderInputSection()}
                 <Snackbar message={t('Error logging in')} ref="snackbar" />
             </div>
         );

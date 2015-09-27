@@ -11,7 +11,7 @@ class CenterLoadingIndicator extends React.Component {
 
     render() {
         return (
-            <div style={this.styles.container} className="row middle-xs center-xs">
+            <div className="row middle-xs center-xs" style={this.styles.container}>
                 <CircularProgress mode="indeterminate" size={1} />
             </div>
         );

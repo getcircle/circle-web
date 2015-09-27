@@ -22,6 +22,9 @@ const getInitialState = (checkCache = true) => {
         organization: null,
         authError: null,
         authenticated: false,
+        email: null,
+        organizationDomain: null,
+        providerName: null,
     });
 
     let serializedState;
@@ -102,6 +105,7 @@ export default function authentication(state = initialState, action) {
     case types.AUTHENTICATE_SUCCESS:
         return handleAuthenticateSuccess(state, action);
     case types.AUTHENTICATE_FAILURE:
+    case types.GET_AUTHENTICATION_INSTRUCTIONS_FAILURE:
         return handleAuthenticationFailure(state, action);
     case types.GET_AUTHENTICATION_INSTRUCTIONS_SUCCESS:
         return handleGetAuthenticationInstructionsSuccess(state, action);

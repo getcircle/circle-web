@@ -32,11 +32,14 @@ export function authenticate(backend, key, secret) {
     });
 }
 
-export function getAuthenticationInstructions(email, redirectUri) {
-    const parameters = {email};
-    if (redirectUri) {
-        parameters['redirect_uri'] = redirectUri;
-    }
+export function getAuthenticationInstructions(email, subdomain) {
+    const parameters = {
+        email,
+        /*eslint-disable camelcase*/
+        organization_domain: subdomain,
+        redirect_uri: `${window.location.origin}/auth`,
+        /*eslint-enable camelcase*/
+    };
     let request = new services.user.actions.get_authentication_instructions.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -46,6 +49,9 @@ export function getAuthenticationInstructions(email, redirectUri) {
                         authorizationUrl: response.result.authorization_url,
                         backend: response.result.backend,
                         userExists: response.result.user_exists,
+                        email: email,
+                        organizationDomain: subdomain,
+                        providerName: response.result.provider_name,
                     });
                 } else {
                     reject(response.reject());

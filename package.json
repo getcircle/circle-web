@@ -13,7 +13,8 @@
     "start": "npm run build && node webpack/webpack-dev-server",
     "setup-dns": "echo '127.0.0.1 local.lunohq.com' >> /etc/hosts && dscacheutil -flushcache",
     "open": "open http://local.lunohq.com:9110/",
-    "test": "mocha --require test/mocha-babel --require test/setup --recursive"
+    "test": "mocha --require test/mocha-babel --require test/setup --recursive",
+    "dev": "npm test -- --watch --growl"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "eslint": "^1.5.1",
     "eslint-plugin-react": "^3.4.2",
     "expect": "^1.11.1",
+    "expect.js": "^0.3.1",
     "express": "~4.7.2",
     "extract-text-webpack-plugin": "^0.8.2",
     "fastclick": "~1.0.3",
@@ -81,7 +83,7 @@
     "node-notifier": "~4.2.3",
     "node-sass": "^3.2.0",
     "protobuf-normalizr": "git+ssh://git@github.com/mhahn/protobuf-normalizr.git#v0.0.15",
-    "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.42.0",
+    "protobufs": "git+ssh://git@github.com/getcircle/protobuf-registry.git#2.44.1",
     "q": "~1.2.0",
     "qs": "^3.1.0",
     "radium": "^0.13.7",
@@ -99,6 +101,7 @@
     "react-redux": "^1.0.0",
     "react-router": "1.0.0-beta1",
     "react-stripe-checkout": "^1.7.0",
+    "react-stub-context": "^0.3.0",
     "react-tap-event-plugin": "^0.1.7",
     "reactcss": "mhahn/reactcss",
     "reactify": "~1.1.1",
@@ -109,7 +112,7 @@
     "require-dir": "~0.1.0",
     "reselect": "0.0.2",
     "sass-loader": "^2.0.0",
-    "sinon": "^1.16.1",
+    "sinon": "^1.17.1",
     "spin": "0.0.1",
     "strip-loader": "^0.1.0",
     "style-loader": "^0.12.3",
