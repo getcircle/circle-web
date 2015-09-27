@@ -46,6 +46,11 @@ https://github.com/rackt/react-redux
 ## Unit Testing
 
 - We are using Mocha. To install, run `npm install -g mocha` once.
+- Another dependency for writing tests is `iojs`. To install and set it as default, do the following once:
+```
+> nvm install iojs
+> nvm alias default iojs
+```
 - Run `npm test` to run the tests.
 
 http://mochajs.org/
