@@ -31,8 +31,11 @@ class Tracker {
         mixpanel.identify(profile.user_id);
 
         // Add attributes for this person
+        // NOTE: $first_name does not follow the convention
+        // because it a reserved mixpanel property and
+        // is supposed to be defined this way.
         mixpanel.people.set({
-            'Name': profile.first_name,
+            '$first_name': profile.first_name,
             'Organization ID': profile.organization_id,
             'Profile ID': profile.id,
             'Title': profile.title,
@@ -65,10 +68,14 @@ class Tracker {
      *         of the associated object.
      */
     trackPageView(pageType, pageId) {
-        // TODO: Add some validation logic for pageType
+        if (!pageType) {
+            console.error('pageType needs to be set for this function.');
+            return;
+        };
+
         mixpanel.track(EVENTS.PAGE_VIEW, {
             'Page Type': pageType,
-            'Page ID': pageId,
+            'Page ID': pageId && pageId !== '' ? pageId : undefined,
         });
         mixpanel.people.increment('Page Views');
     }
