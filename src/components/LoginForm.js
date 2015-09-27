@@ -38,7 +38,9 @@ class LoginForm extends CSSComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        this.setState({guest: false});
+        if (nextProps.email && this.state.guest) {
+            this.setState({guest: false});
+        }
         this.mergeState(nextProps, nextState);
     }
 
