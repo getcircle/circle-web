@@ -18,6 +18,9 @@ export const PAGE_TYPE = {
     LOCATION_MEMBERS: 'Location Members',
     LOCATION_POINTS_OF_CONTACT: 'Location Points of Contact',
     TEAM_SUBTEAMS: 'Team Sub-Teams',
+
+    // Editable Form
+    EDIT_PROFILE: 'Edit Profile',
 };
 
 // Events (Convention: Titlecase, Separator - Space)

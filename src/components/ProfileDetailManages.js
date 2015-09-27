@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getTeamLabel } from '../services/organization';
+import { PAGE_TYPE } from '../constants/trackerProperties';
 
 import Card from './Card';
 import CardFooter from './CardFooter';
@@ -69,6 +70,7 @@ class ProfileDetailManages extends CSSComponent {
                         filterPlaceholder="Search Direct Reports"
                         items={directReports}
                         largerDevice={this.props.largerDevice}
+                        pageType={PAGE_TYPE.DIRECT_REPORTS}
                         ref="directReports"
                         title={`Direct Reports (${this.props.directReports.length})`}
                     />

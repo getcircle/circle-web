@@ -22,6 +22,7 @@ class DetailViewAll extends CSSComponent {
         )),
         itemsLoadMore: PropTypes.func,
         largerDevice: PropTypes.object.isRequired,
+        pageType: PropTypes.string.isRequired,
         searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
         searchAttributeValue: PropTypes.string,
         searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
@@ -103,6 +104,7 @@ class DetailViewAll extends CSSComponent {
             items,
             itemsLoadMore,
             largerDevice,
+            pageType,
             title,
             searchAttribute,
             searchAttributeValue,
@@ -113,6 +115,7 @@ class DetailViewAll extends CSSComponent {
                 <Dialog
                     is="Dialog"
                     largerDevice={largerDevice}
+                    pageType={pageType}
                     ref="modal"
                     repositionOnUpdate={false}
                     title={title}

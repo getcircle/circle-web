@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 
 import CurrentTheme from '../utils/ThemeManager';
 import { fontColors, fontWeights } from '../constants/styles';
+import tracker from '../utils/tracker';
 
 import CSSComponent from './CSSComponent';
 
@@ -25,6 +26,7 @@ class Dialog extends CSSComponent {
         largerDevice: PropTypes.object.isRequired,
         onDismiss: PropTypes.func,
         onSave: PropTypes.func,
+        pageType: PropTypes.string.isRequired,
         title: PropTypes.string,
     }
 
@@ -157,6 +159,7 @@ class Dialog extends CSSComponent {
     // Public Methods
 
     show() {
+        tracker.trackPageView(this.props.pageType, '');
         this.refs.modal.show();
     }
 

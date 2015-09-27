@@ -5,6 +5,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { fontColors, fontWeights } from '../constants/styles';
+import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { uploadMedia } from '../actions/media';
@@ -386,6 +387,7 @@ class ProfileDetailForm extends CSSComponent {
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={t('Save')}
                     is="Dialog"
+                    pageType={PAGE_TYPE.EDIT_PROFILE}
                     onSave={this.handleSaveTapped.bind(this)}
                     ref="modal"
                     repositionOnUpdate={false}
