@@ -2,6 +2,7 @@ import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { AUTH_BACKENDS } from '../services/user';
+import { fontWeights, tintColor } from '../constants/styles';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -52,6 +53,33 @@ class LoginInternal extends CSSComponent {
 
     classes() {
         return {
+            default: {
+                alternativeDiv: {
+                    marginTop: '3%',
+                },
+                alternative: {
+                    fontSize: '13px',
+                    ...fontWeights.light,
+                },
+                alternativeLink: {
+                    color: tintColor,
+                    cursor: 'pointer',
+                },
+                button: {
+                    height: '50px',
+                    width: '100%',
+                },
+                header: {
+                    fontSize: '18px',
+                    ...fontWeights.light,
+                },
+                headerDiv: {
+                    marginBottom: '3%',
+                },
+                input: {
+                    width: '100%',
+                },
+            },
             'guest-true': {
                 passwordDiv: {
                     display: 'none',
@@ -89,14 +117,28 @@ class LoginInternal extends CSSComponent {
         }
     }
 
+    renderHeader() {
+        if (this.props.guest) {
+            return t('Enter your email address to get started.');
+        } else {
+            return t('Enter your email address and password.');
+        }
+    }
+
     renderUseAlternativeSection() {
         if (this.props.hasAlternative) {
             return (
-                <section>
-                    <div>
-                        <span>{t('Or, ')}</span><a onTouchTap={this.props.onUseAlternative}>{t('use your team\'s Single sign-on authentication')}</a>
-                    </div>
-                </section>
+                <div is="alternativeDiv">
+                    <span is="alternative">
+                        {t('Or, ')}
+                        <a
+                            is="alternativeLink"
+                            onTouchTap={this.props.onUseAlternative}
+                        >
+                            {t('use your team\'s Single sign-on authentication.')}
+                        </a>
+                    </span>
+                </div>
             );
         }
     }
@@ -104,17 +146,22 @@ class LoginInternal extends CSSComponent {
     render() {
         return (
             <section>
+                <div is="headerDiv">
+                    <span is="header">{this.renderHeader()}</span>
+                </div>
                 <section>
-                    <div>
+                    <div className="col-xs-12">
                         <LoginEmailInput
+                            is="input"
                             onChange={(event) => this.setState({email: event.target.value})}
                             onEnter={::this.handleEnter}
                             value={this.state.email}
                         />
                     </div>
-                    <div is="passwordDiv">
+                    <div className="col-xs-12" is="passwordDiv">
                         <TextField
                             hintText={t('password')}
+                            is="input"
                             onEnterKeyDown={::this.handleSubmit}
                             ref={(input) => {
                                 if (input !== null && this.state.email !== '' && this.state.password === '') {
@@ -128,13 +175,16 @@ class LoginInternal extends CSSComponent {
                             }}
                         />
                     </div>
-                    <RaisedButton
-                        disabled={!this.canSubmit()}
-                        label={t('Sign in')}
-                        onTouchTap={::this.handleSubmit}
-                        primary={true}
-                        ref="primary"
-                    />
+                    <div className="col-xs-12">
+                        <RaisedButton
+                            disabled={!this.canSubmit()}
+                            is="button"
+                            label={t('Sign in')}
+                            onTouchTap={::this.handleSubmit}
+                            primary={true}
+                            ref="primary"
+                        />
+                    </div>
                 </section>
                 {this.renderUseAlternativeSection()}
             </section>

@@ -171,4 +171,18 @@ describe('LoginInternal', () => {
         });
     });
 
+    describe('header', () => {
+        it('prompts for just email when guest account', () => {
+            const { output } = setup({guest: true});
+            const header = TestUtils.scryRenderedDOMComponentsWithTag(output, 'span')[0];
+            expect(header.props.children).toExclude('password');
+        });
+
+        it('prompts for email and password when guest', () => {
+            const { output } = setup({guest: false});
+            const header = TestUtils.scryRenderedDOMComponentsWithTag(output, 'span')[0];
+            expect(header.props.children).toInclude('password');
+        });
+    });
+
 });

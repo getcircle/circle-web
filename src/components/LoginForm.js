@@ -101,6 +101,7 @@ class LoginForm extends CSSComponent {
                 },
                 inputSection: {
                     paddingBottom: 10,
+                    maxWidth: 400,
                 },
                 label: {
                     lineHeight: '50px',
@@ -145,16 +146,6 @@ class LoginForm extends CSSComponent {
                 },
             },
         };
-    }
-
-    getInstructionsHeader() {
-        if (this.props.backend === undefined || this.state.guest) {
-            return t('Enter your work email addresss to get started.');
-        } else if (this.state.singleSignOn) {
-            return t('Your team has Single Sign On enabled. Click below to sign in.');
-        } else if (this.state.internal) {
-            return t('Enter your password to get started.');
-        }
     }
 
     renderInputSection() {
@@ -202,10 +193,9 @@ class LoginForm extends CSSComponent {
     render() {
         return (
             <div className="row center-xs" is="container">
-                <div className="col-xs-12" is="headerSection">
-                    <span is="header">{this.getInstructionsHeader()}</span>
+                <div className="col-xs-12" is="inputSection">
+                    {this.renderInputSection()}
                 </div>
-                {this.renderInputSection()}
                 <Snackbar message={t('Error logging in')} ref="snackbar" />
             </div>
         );

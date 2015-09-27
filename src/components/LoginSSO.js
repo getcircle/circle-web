@@ -1,6 +1,7 @@
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
+import { fontWeights, tintColor } from '../constants/styles';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -17,6 +18,31 @@ class LoginSSO extends CSSComponent {
         providerName: PropTypes.string.isRequired,
     }
 
+    classes() {
+        return {
+            default: {
+                button: {
+                    height: '50px',
+                    marginBottom: '5%',
+                    marginTop: '5%',
+                    width: '100%',
+                },
+                guest: {
+                    fontSize: '13px',
+                    ...fontWeights.light,
+                },
+                guestLink: {
+                    color: tintColor,
+                    cursor: 'pointer',
+                },
+                header: {
+                    fontSize: '18px',
+                    ...fontWeights.light,
+                },
+            },
+        };
+    }
+
     handleRedirect() {
         window.location = this.props.authorizationUrl;
     }
@@ -30,9 +56,10 @@ class LoginSSO extends CSSComponent {
             <section>
                 <section>
                     <div>
-                        <span>{t(`Your team uses ${providerName} for single sign on`)}</span>
+                        <span is="header">{t(`Your team uses ${providerName} for Single sign-on.`)}</span>
                     </div>
                     <RaisedButton
+                        is="button"
                         label={t(`Sign in with ${providerName}`)}
                         onTouchTap={::this.handleRedirect}
                         primary={true}
@@ -40,7 +67,10 @@ class LoginSSO extends CSSComponent {
                 </section>
                 <section>
                     <div>
-                        <span>{t('Or sign in using a ')}<a onTouchTap={onGuestLogin}>{t('guest account')}</a>.</span>
+                        <span is="guest">
+                            {t('Or sign in using a ')}
+                            <a is="guestLink" onTouchTap={onGuestLogin}>{t('guest account')}</a>.
+                        </span>
                     </div>
                 </section>
             </section>
