@@ -41,8 +41,8 @@ class AuthorizationHandler extends CSSComponent {
     componentWillMount() {
         let { identity } = this.props.location.query;
         identity = services.user.containers.IdentityV1.decode64(identity);
-        if (identity.provider === services.user.containers.IdentityV1.ProviderV1.SAML) {
-            this.handleSamlAuthorization(this.props.location.query);
+        if (identity.provider === services.user.containers.IdentityV1.ProviderV1.OKTA) {
+            this.handleOktaAuthorization(this.props.location.query);
         } else if (identity.provider === services.user.containers.IdentityV1.ProviderV1.GOOGLE) {
             this.handleGoogleAuthorization(this.props.location.query);
         }
@@ -56,9 +56,9 @@ class AuthorizationHandler extends CSSComponent {
         return true;
     }
 
-    handleSamlAuthorization(query) {
+    handleOktaAuthorization(query) {
         const samlDetails = services.user.containers.SAMLDetailsV1.decode64(query['saml_details']);
-        this.props.dispatch(authenticate(AUTH_BACKENDS.SAML, undefined, samlDetails.auth_state));
+        this.props.dispatch(authenticate(AUTH_BACKENDS.OKTA, undefined, samlDetails.auth_state));
     }
 
     handleGoogleAuthorization(query) {
