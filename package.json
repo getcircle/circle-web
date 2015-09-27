@@ -89,7 +89,7 @@
     "radium": "^0.13.7",
     "react": "~0.13.1",
     "react-blur": "git+ssh://git@github.com/ravirani/react-blur.git",
-    "react-dom": "^0.1.0",
+    "react-dom": "^0.14.0-rc1",
     "react-dropzone": "^2.1.0",
     "react-google-maps": "^1.7.1",
     "react-hot-loader": "^1.2.8",
