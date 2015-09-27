@@ -179,7 +179,7 @@ class Login extends CSSComponent {
     }
 
     renderLoginForm() {
-        if (!this.props.email && !this.props.organizationDomain) {
+        if (this.props.subdomain && !this.props.email && !this.props.organizationDomain) {
             return (
                 <div className="row center-xs">
                     <CircularProgress mode="indeterminate" size={0.5} />
