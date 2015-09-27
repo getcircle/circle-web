@@ -2,8 +2,8 @@ import expect from 'expect.js';
 import normalize from 'protobuf-normalizr';
 import protobufs from 'protobufs';
 
-import ServiceError from '../ServiceError';
-import WrappedResponse, { getResponseExtensionName } from '../WrappedResponse';
+import ServiceError from '../../src/services/ServiceError';
+import WrappedResponse, { getResponseExtensionName } from '../../src/services/WrappedResponse';
 
 function mockWrappedResponse(serviceResponse, request = new protobufs.soa.ServiceRequestV1()) {
     return new WrappedResponse(request, mockHttpResponse(serviceResponse));

@@ -2,7 +2,7 @@ import expect from 'expect.js';
 import Immutable from 'immutable';
 import { soa } from 'protobufs';
 
-import paginate from '../paginate';
+import paginate from '../../src/reducers/paginate';
 
 describe('paginate', function () {
 
