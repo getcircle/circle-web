@@ -166,7 +166,7 @@ class Tracker {
     }
 
     /**
-     * Tracks updates to profiles
+     * Tracks updates to a profile
      *
      * NOTE:
      * - Parameter and key are name "objectId" & "Object ID" to avoid conflict with the "Profile ID" super property.
@@ -174,7 +174,9 @@ class Tracker {
      *   be nice.
      *
      * @param {string} objectId ID of the profile being updated
-     * @param {array} fields Array of fields that were updated
+     * @param {array} fields Array of fields that were updated. Fields can be the actual protobuf fields.
+     *                       For nested structures, provide a string that represents the data.
+     *                       All fields should be lower case and separated by underscore.
      */
     trackProfileUpdate(objectId, fields) {
         if (!objectId) {
@@ -193,6 +195,39 @@ class Tracker {
 
         mixpanel.track(EVENTS.PROFILE_UPDATE, {
             'Object ID': objectId,
+            'Fields': fields,
+        });
+    }
+
+    /**
+     * Tracks updates to a team
+     *
+     * NOTE:
+     * - Fields should contain only fields that were REALLY updated to make analytics relevant and useful, which would
+     *   be nice.
+     *
+     * @param {string} teamId ID of the team being updated
+     * @param {array} fields Array of fields that were updated. Fields can be the actual protobuf fields.
+     *                       For nested structures, provide a string that represents the data.
+     *                       All fields should be lower case and separated by underscore.
+     */
+    trackTeamUpdate(teamId, fields) {
+        if (!teamId) {
+            console.error('Team ID needs to be set for tracking team updates.');
+            return;
+        }
+
+        if (!fields ||
+            fields === undefined ||
+            !(fields instanceof Array) ||
+            fields.length === 0
+        ) {
+            console.error('Fields that were updated need to be set and as an array for tracking team updates.');
+            return;
+        }
+
+        mixpanel.track(EVENTS.TEAM_UPDATE, {
+            'Team ID': teamId,
             'Fields': fields,
         });
     }

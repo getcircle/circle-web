@@ -16,6 +16,7 @@ export const EVENTS = {
     PAGE_VIEW: 'Page View',
     PROFILE_UPDATE: 'Profile Update',
     SEARCH_RESULT_TAP: 'Search Result Tap',
+    TEAM_UPDATE: 'Team Update',
 };
 
 // Page Types (Convention: Titlecase, Separator - Space)
