@@ -8,6 +8,7 @@ import {
     routeToTeam,
 } from '../utils/routes';
 import t from '../utils/gettext';
+import tracker from '../utils/tracker';
 
 import DetailContent from './DetailContent';
 import ProfileDetailContactInfo from './ProfileDetailContactInfo';
@@ -51,14 +52,20 @@ class ProfileDetail extends StyleableComponent {
             onUpdateProfile,
         } = this.props;
 
+        let profile = extendedProfile.profile;
         let profileStatusV1 = new ProfileStatusV1({
             value: statusText,
         });
-
-        let updatedProfile = Object.assign({}, extendedProfile.profile, {
+        let updatedProfile = Object.assign({}, profile, {
             status:  profileStatusV1,
         });
 
+        if ((profile.status && profile.status.value !== statusText) || !profile.status) {
+            tracker.trackProfileUpdate(
+                profile.id,
+                ['status']
+            );
+        }
         onUpdateProfile(updatedProfile);
     }
 

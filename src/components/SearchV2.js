@@ -419,10 +419,10 @@ class Search extends CSSComponent {
                     this.state.query,
                     trackingSource,
                     trackingResultType,
-                    trackItem.instance.id ? trackItem.instance.id : '',
                     // 1 to account for array index
                     trackItem.index + 1,
                     this.props.searchLocation,
+                    trackItem.instance.id ? trackItem.instance.id : '',
                 );
                 onTouchTap();
             }
