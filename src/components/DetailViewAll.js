@@ -5,6 +5,8 @@ import Dialog from './Dialog';
 import CSSComponent from './CSSComponent';
 import Search from './SearchV2';
 
+import { SEARCH_LOCATION } from '../constants/trackerProperties';
+
 // Spec:
 
 // [x] taking an array of objects and displays them in a modal
@@ -132,6 +134,7 @@ class DetailViewAll extends CSSComponent {
                             searchAttribute={searchAttribute}
                             searchAttributeValue={searchAttributeValue}
                             searchCategory={searchCategory}
+                            searchLocation={SEARCH_LOCATION.MODAL}
                         />
                     </div>
                 </Dialog>

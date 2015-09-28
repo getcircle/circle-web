@@ -88,10 +88,12 @@ class Tracker {
      * query Search term when the result was tapped.
      * source One of the SEARCH_RESULT_SOURCE constants.
      * resultType One of the SEARCH_RESULT_SUBTYPE constants.
+     * resultId ID of the object tapped.
+     * resultIndex Position of the result when tapped.
+     * searchLocation Location from where the search was performed. Constant value of SEARCH_LOCATIONS
      */
-    trackSearchResultTapped(query, source, resultType, resultId, resultIndex) {
+    trackSearchResultTapped(query, source, resultType, resultId, resultIndex, searchLocation) {
 
-        console.log('coming in track SEARCH RESULT TAPPED');
         if (!source) {
             console.error('Search source needs to be set for tracking search result taps.');
             return;
@@ -101,14 +103,14 @@ class Tracker {
             console.error('Search result type needs to be set for tracking search result taps.');
             return;
         };
-        console.log('Hello');
-        console.log(EVENTS.SEARCH_RESULT_TAPPED);
+
         mixpanel.track(EVENTS.SEARCH_RESULT_TAPPED, {
-            'Query': query,
-            'Source': source,
-            'Type': resultType,
-            'Result ID': resultId && resultId !== '' ? resultId : undefined,
-            'Result Index': resultIndex ? resultIndex : 0,
+            'Search Query': query,
+            'Search Source': source,
+            'Search Type': resultType,
+            'Search Result ID': resultId && resultId !== '' ? resultId : undefined,
+            'Search Result Index': resultIndex ? resultIndex : 0,
+            'Search Location': searchLocation
         });
     }
 }

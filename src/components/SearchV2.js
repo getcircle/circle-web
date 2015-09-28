@@ -158,6 +158,7 @@ class Search extends CSSComponent {
         searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
         searchAttributeValue: PropTypes.string,
         searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
+        searchLocation: PropTypes.string.isRequired,
         showCancel: PropTypes.bool,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
@@ -416,6 +417,7 @@ class Search extends CSSComponent {
                     trackItem.instance.id ? trackItem.instance.id : '',
                     // 1 to account for array index
                     trackItem.index + 1,
+                    this.props.searchLocation,
                 );
                 onTouchTap();
             }
@@ -428,7 +430,9 @@ class Search extends CSSComponent {
             return item.source;
         }
 
-        if (this.state.category !== null) {
+        // if search category is defined, its pre-constrained & hence
+        // not coming from explore
+        if (this.state.category !== null && !this.props.searchCategory) {
             return SEARCH_RESULT_SOURCE.EXPLORE;
         }
 

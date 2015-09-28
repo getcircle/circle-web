@@ -39,6 +39,7 @@ export const PAGE_TYPE = {
 };
 
 // Search Result Sources (Convention: Titlecase, Separator - Space)
+// Section under which the result was listed
 export const SEARCH_RESULT_SOURCE = {
     RECENTS: 'Recents',
     EXPLORE: 'Explore',
@@ -47,6 +48,7 @@ export const SEARCH_RESULT_SOURCE = {
 };
 
 // Search Result Types (Convention: Titlecase, Separator - Space)
+// Type of the result tapped
 export const SEARCH_RESULT_TYPE = {
 
     // Suggestions - Explore and Regular
@@ -65,4 +67,16 @@ export const SEARCH_RESULT_TYPE = {
     TEAM_MEMBERS: SharedConstants.TEAM_MEMBERS,
     TEAM_SUBTEAMS: SharedConstants.TEAM_SUBTEAMS,
     LOCATION_MEMBERS: SharedConstants.LOCATION_MEMBERS,
+};
+
+// Search Location (Convention: Titlecase, Separator - Space)
+// Where the search was performed
+export const SEARCH_LOCATION = {
+    HOME: 'Home',
+    // This is web specific.
+    PAGE_HEADER: 'Page Header',
+    // This really represents a filtered list view's header
+    // but 'modal' can imply that and is a cleaner way to represent
+    // it even if we can how the visuals work.
+    MODAL: 'Modal',
 };
