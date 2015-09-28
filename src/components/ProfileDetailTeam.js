@@ -74,7 +74,7 @@ class ProfileDetailTeam extends CSSComponent {
             footerActionText = 'Works with 1 Peer';
         }
         else {
-            footerActionText = `View ${this.props.peers.length} Peers`;
+            footerActionText = `Works with ${this.props.peers.length} Peers`;
         }
 
         return (
