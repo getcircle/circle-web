@@ -2,13 +2,21 @@ import {
     EVENTS,
 } from '../constants/trackerProperties';
 
-/*
-    This class acts as a wrapper for our mixpanel implementation.
-    It is named generically such that there are no conflicts with the libraries.
-
-    ASSUMPTION: It assumes the needed libraries (Mixpanel in this case) has been globally
-    added to the page and will be present before any call to this class is made.
-*/
+/**
+ *   This class acts as a wrapper for our mixpanel implementation.
+ *   It is named generically such that there are no conflicts with the libraries.
+ *
+ *   ASSUMPTION: It assumes the needed libraries (Mixpanel in this case) has been globally
+ *   added to the page and will be present before any call to this class is made.
+ *
+ *   CONVENTIIONS:
+ *   - All event tracking methods are named as track{Event in present tense}.
+ *     Its best to imagine a suffix Event when trying to name these.
+ *
+ *   NOTE:
+ *   The entire implementation here SHOULD be keept in sync with the spec.
+ *   @see https://docs.google.com/a/lunohq.com/spreadsheets/d/1_UrLo5KccI9pcJ8p5K--9URwOmcZwE4W2uVc5F3B5sA/edit?usp=sharing
+ */
 class Tracker {
 
     constructor() {
@@ -19,9 +27,11 @@ class Tracker {
     /**
      *  Initializes the session.
      *
-     *  - Sets the session identifier.
-     *  - Adds attributes to a person profile.
+     *  - Sets the session identifier
+     *  - Adds attributes to a person profile
      *  - Registers super properties.
+     *
+     * @param {ProfileV1} profile Profile of the logged in user
      */
     initSession(profile) {
 
@@ -49,6 +59,14 @@ class Tracker {
         });
     }
 
+    /**
+     * Removes all the cookies from Mixpanel.
+     *
+     * This resets the user session info and the super properties that
+     * are added to each event.
+     *
+     * NOTE: The behavior if called in mid-session is unknown.
+     */
     clearSession() {
         // Clears entire session
         // This should be called only on LOGOUT and not in mid-session.
@@ -62,9 +80,9 @@ class Tracker {
     /**
      * Tracks the page view event.
      *
-     * pageType One of the PAGE_TYPE constants.
-     * pageId is an optional identifier for the page. This should be the primary key
-     *         of the associated object.
+     * @param {string} pageType One of the PAGE_TYPE constants
+     * @param {?string} pageId Optional identifier for the page (can be the PK
+     *         of the associated object)
      */
     trackPageView(pageType, pageId) {
         if (!pageType) {
@@ -82,16 +100,19 @@ class Tracker {
     }
 
     /**
-     * Tracks the page view event.
+     * Tracks the taps on seach results.
      *
-     * query Search term when the result was tapped.
-     * source One of the SEARCH_RESULT_SOURCE constants.
-     * resultType One of the SEARCH_RESULT_SUBTYPE constants.
-     * resultId ID of the object tapped.
-     * resultIndex Position of the result when tapped.
-     * searchLocation Location from where the search was performed. Constant value of SEARCH_LOCATIONS
+     * Note: This should not be used to track that a search was performed.
+     * It is only if a user selected something from the suggested results.
+     *
+     * @param {string} query Search term when the result was tapped
+     * @param {string} source One of the SEARCH_RESULT_SOURCE constants
+     * @param {string} resultType One of the SEARCH_RESULT_SUBTYPE constants
+     * @param {number} resultIndex Position of the result when tapped
+     * @param {string} searchLocation Location from where the search was performed. Constant value of SEARCH_LOCATION
+     * @param {?string} resultId ID of the object tapped
      */
-    trackSearchResultTap(query, source, resultType, resultId, resultIndex, searchLocation) {
+    trackSearchResultTap(query, source, resultType, resultIndex, searchLocation, resultId) {
 
         if (!source) {
             console.error('Search source needs to be set for tracking search result taps.');
@@ -113,6 +134,13 @@ class Tracker {
         });
     }
 
+    /**
+     * Tracks the taps on contact methods.
+     *
+     * @param {string} contactMethod Constant value of CONTACT_METHOD
+     * @param {string} contactId Identifier of the profile whose contact method was tapped
+     * @param {string} contactLocation Constant value of CONTACT_LOCATION capturing where the tap happened
+     */
     trackContactTap(contactMethod, contactId, contactLocation) {
 
         if (!contactMethod) {
@@ -134,6 +162,38 @@ class Tracker {
             'Contact Method': contactMethod,
             'Contact ID': contactId,
             'Contact Location': contactLocation,
+        });
+    }
+
+    /**
+     * Tracks updates to profiles
+     *
+     * NOTE:
+     * - Parameter and key are name "objectId" & "Object ID" to avoid conflict with the "Profile ID" super property.
+     * - Fields should contain only fields that were REALLY updated to make analytics relevant and useful, which would
+     *   be nice.
+     *
+     * @param {string} objectId ID of the profile being updated
+     * @param {array} fields Array of fields that were updated
+     */
+    trackProfileUpdate(objectId, fields) {
+        if (!objectId) {
+            console.error('Object ID needs to be set for tracking profile updates.');
+            return;
+        }
+
+        if (!fields ||
+            fields === undefined ||
+            !(fields instanceof Array) ||
+            fields.length === 0
+        ) {
+            console.error('Fields that were updated need to be set and as an array for tracking profile updates.');
+            return;
+        }
+
+        mixpanel.track(EVENTS.PROFILE_UPDATE, {
+            'Object ID': objectId,
+            'Fields': fields.join(','),
         });
     }
 }

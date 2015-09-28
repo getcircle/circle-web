@@ -14,6 +14,7 @@ const SharedConstants = {
 export const EVENTS = {
     CONTACT_TAP: 'Contact Tap',
     PAGE_VIEW: 'Page View',
+    PROFILE_UPDATE: 'Profile Update',
     SEARCH_RESULT_TAP: 'Search Result Tap',
 };
 
