@@ -638,6 +638,17 @@ class Search extends CSSComponent {
                     CONTACT_LOCATION.SEARCH_SMART_ACTION
                 );
 
+                tracker.trackSearchResultTap(
+                    this.state.query,
+                    SEARCH_RESULT_SOURCE.SMART_ACTION,
+                    SEARCH_RESULT_TYPE.PROFILE,
+                    1,
+                    this.props.searchLocation,
+                    profile.id,
+                    this.getCurrentSearchCategory(),
+                    this.props.searchAttribute,
+                    this.props.searchAttributeValue,
+                );
                 window.location.href = `mailto:${profile.email}`;
             },
         });
