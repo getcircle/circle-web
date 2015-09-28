@@ -193,7 +193,7 @@ class Tracker {
 
         mixpanel.track(EVENTS.PROFILE_UPDATE, {
             'Object ID': objectId,
-            'Fields': fields.join(','),
+            'Fields': fields,
         });
     }
 }
