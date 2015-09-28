@@ -92,7 +92,6 @@ class Dialog extends CSSComponent {
                     },
                 },
                 DialogClose: {
-                    className: 'col-xs-2',
                 },
                 DialogCloseButton: {
                     style: {
@@ -100,19 +99,19 @@ class Dialog extends CSSComponent {
                     },
                     labelStyle: {
                         fontSize: '14px',
+                        padding: '0 15px',
                         textTransform: 'none',
                         ...fontColors.dark,
                     },
                 },
                 DialogHeader: {
-                    className: 'row',
                     style: {
                         display: 'flex',
+                        justifyContent: 'space-between',
                         borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                     },
                 },
                 DialogSave: {
-                    className: 'col-xs-2',
                 },
                 DialogSaveButton: {
                     style: {
@@ -120,6 +119,7 @@ class Dialog extends CSSComponent {
                     },
                     labelStyle: {
                         fontSize: '14px',
+                        padding: '0 15px',
                         textTransform: 'none',
                         ...fontColors.dark,
                     },
@@ -135,6 +135,9 @@ class Dialog extends CSSComponent {
                         ...fontColors.light,
                         ...fontWeights.semiBold,
                     },
+                },
+                placeholder: {
+                    width: '40px',
                 },
             },
             'largerDevice-false': {
@@ -183,6 +186,12 @@ class Dialog extends CSSComponent {
                         onTouchTap={() => this.props.onSave()}
                         ref="saveButton"
                     />
+                </div>
+            );
+        }
+        else {
+            return (
+                <div is="placeholder">
                 </div>
             );
         }
