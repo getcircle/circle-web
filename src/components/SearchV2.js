@@ -14,7 +14,6 @@ import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/
 import * as routes from '../utils/routes';
 import {
     CONTACT_LOCATION,
-    CONTACT_METHOD,
     SEARCH_RESULT_SOURCE,
     SEARCH_RESULT_TYPE
 } from '../constants/trackerProperties';
@@ -51,6 +50,8 @@ const RESULT_TYPES = keymirror({
 export const SEARCH_RESULT_HEIGHT = 72;
 export const SEARCH_CONTAINER_WIDTH = 460;
 export const SEARCH_RESULTS_MAX_HEIGHT = 420;
+
+const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 const cacheSelector = selectors.createImmutableSelector(
     [
@@ -619,7 +620,7 @@ class Search extends CSSComponent {
             },
             onTouchTap: () => {
                 tracker.trackContactTap(
-                    CONTACT_METHOD.EMAIL,
+                    ContactMethodTypeV1.EMAIL,
                     profile.id,
                     CONTACT_LOCATION.SEARCH_SMART_ACTION
                 );

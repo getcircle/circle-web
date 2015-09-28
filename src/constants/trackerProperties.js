@@ -89,15 +89,3 @@ export const CONTACT_LOCATION = {
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
     SEARCH_SMART_ACTION: 'Search Smart Action',
 };
-
-// Contact Method (Convention: Titlecase, Separator - Space)
-// Method of contact. We have Contact Methods as part of
-// the protobufs but they are defined as a member of enum and have
-// numerical values which
-// a. make it easier to change them in the future which doesn't work for tracking
-// b. make the processing of data in the Dashboard very hard
-// c. are more granular than needed for analytics. E.g., work vs home email/phone.
-export const CONTACT_METHOD = {
-    EMAIL: 'Email',
-    PHONE: 'Phone',
-};

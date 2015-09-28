@@ -168,13 +168,13 @@ class Tracker {
     /**
      * Tracks the taps on contact methods.
      *
-     * @param {string} contactMethod Constant value of CONTACT_METHOD
+     * @param {number} contactMethod Constant value of type ContactMethodTypeV1
      * @param {string} contactId Identifier of the profile whose contact method was tapped
      * @param {string} contactLocation Constant value of CONTACT_LOCATION capturing where the tap happened
      */
     trackContactTap(contactMethod, contactId, contactLocation) {
 
-        if (!contactMethod) {
+        if (contactMethod === undefined || contactMethod === null) {
             console.error('Contact Method needs to be set for tracking contact taps.');
             return;
         }

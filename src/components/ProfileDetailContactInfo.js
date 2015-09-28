@@ -5,7 +5,6 @@ import { services } from 'protobufs';
 
 import {
     CONTACT_LOCATION,
-    CONTACT_METHOD,
 } from '../constants/trackerProperties';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
@@ -167,7 +166,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                         leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
                         onTouchTap={() => {
                             tracker.trackContactTap(
-                                CONTACT_METHOD.EMAIL,
+                                ContactMethodTypeV1.EMAIL,
                                 this.props.profileId,
                                 CONTACT_LOCATION.PROFILE_DETAIL
                             );
