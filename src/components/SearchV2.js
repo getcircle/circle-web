@@ -436,13 +436,12 @@ class Search extends CSSComponent {
             return item.source;
         }
 
-        // if search category is defined, its pre-constrained & hence
-        // not coming from explore
-        if (this.state.category !== null && !this.props.searchCategory) {
-            return SEARCH_RESULT_SOURCE.EXPLORE;
+        // If a query term exists, then its a suggestion otherwise it is explore
+        if (this.state.query !== null && this.state.query !== undefined && this.state.query.trim() !== '') {
+            return SEARCH_RESULT_SOURCE.SUGGESTION;
         }
 
-        return SEARCH_RESULT_SOURCE.SUGGESTION;
+        return SEARCH_RESULT_SOURCE.EXPLORE;
     }
 
     getTrackingResultType(item) {
