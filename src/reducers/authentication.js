@@ -101,6 +101,12 @@ function handleAuthenticationFailure(state, action) {
 const initialState = getInitialState();
 
 export default function authentication(state = initialState, action) {
+    if (action.error && action.payload.status) {
+        if ([401, 403].includes(action.payload.status)) {
+            return clearState();
+        }
+    }
+
     switch (action.type) {
     case types.AUTHENTICATE_SUCCESS:
         return handleAuthenticateSuccess(state, action);

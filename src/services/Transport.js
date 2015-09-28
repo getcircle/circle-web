@@ -1,7 +1,13 @@
-import keymirror from 'keymirror';
-import requests from 'superagent';
+import ByteBuffer from 'bytebuffer';
+import requests, { parse } from 'superagent';
 
 import WrappedResponse from './WrappedResponse';
+
+// Handle arraybuffer responses
+parse['application/json'] = function (str) {
+    str = ByteBuffer.wrap(str).toUTF8();
+    return JSON.parse(str);
+}
 
 export default class Transport {
 
