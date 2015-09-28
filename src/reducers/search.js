@@ -13,6 +13,8 @@ const initialState = Immutable.fromJS({
 
 export default function search(state = initialState, action) {
     switch(action.type) {
+    case types.LOGOUT_SUCCESS:
+        return initialState;
     case types.SEARCH:
         return state.set('loading', true);
     case types.SEARCH_SUCCESS:

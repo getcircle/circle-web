@@ -8,6 +8,8 @@ const initialState = Immutable.fromJS({
 
 export default function extendedProfiles(state = initialState, action) {
     switch(action.type) {
+    case types.LOGOUT_SUCCESS:
+        return initialState;
     case types.LOAD_EXTENDED_PROFILE_SUCCESS:
         return state.updateIn(['ids'], set => set.add(action.payload.result));
     default:

@@ -7,6 +7,8 @@ const initialState = Immutable.fromJS({
 
 export default function locations(state = initialState, action) {
     switch(action.type) {
+    case types.LOGOUT_SUCCESS:
+        return initialState;
     case types.LOAD_LOCATION_SUCCESS:
         return state.updateIn(['ids'], set => set.add(action.payload.result));
     default:

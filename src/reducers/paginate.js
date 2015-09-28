@@ -1,5 +1,7 @@
 import Immutable from 'immutable';
 
+import * as actionTypes from '../constants/actionTypes';
+
 // ttl interval in milliseconds
 const TTL_INTERVAL = 300000
 
@@ -62,6 +64,8 @@ export default function paginate({
                     [key]: updatePagination(map.get(key), action),
                 });
             });
+        case actionTypes.LOGOUT_SUCCESS:
+            return Immutable.Map();
         default:
             return state;
         }

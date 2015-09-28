@@ -38,16 +38,16 @@ class TabBar extends CSSComponent {
         router: PropTypes.object,
     }
 
+    state = {
+        tabValue: 'none',
+    }
+
     componentWillMount() {
         this.resolveTabValue(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         this.resolveTabValue(nextProps);
-    }
-
-    state = {
-        tabValue: 'none',
     }
 
     classes() {
