@@ -3,15 +3,18 @@
 // of data
 const SharedConstants = {
     DIRECT_REPORTS: 'Direct Reports',
-    TEAM_MEMBERS: 'Team Members',
     LOCATION_MEMBERS: 'Location Members',
+    PROFILE_DETAIL: 'Profile Detail',
+    TEAM_MEMBERS: 'Team Members',
     TEAM_SUBTEAMS: 'Team Sub-Teams',
 };
 
 // Events (Convention: Titlecase, Separator - Space)
+// Do not use past tense
 export const EVENTS = {
+    CONTACT_TAP: 'Contact Tap',
     PAGE_VIEW: 'Page View',
-    SEARCH_RESULT_TAPPED: 'Search Result Tapped',
+    SEARCH_RESULT_TAP: 'Search Result Tap',
 };
 
 // Page Types (Convention: Titlecase, Separator - Space)
@@ -22,7 +25,7 @@ export const PAGE_TYPE = {
     BILLING: 'Billing',
 
     // Detail pages
-    PROFILE_DETAIL: 'Profile Detail',
+    PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
     TEAM_DETAIL: 'Team Detail',
     LOCATION_DETAIL: 'Location Detail',
 
@@ -56,10 +59,7 @@ export const SEARCH_RESULT_TYPE = {
     TEAM : 'Team',
     LOCATION : 'Location',
 
-    // Smart Actions
-    EMAIL : 'Email',
-    CALL : 'Call',
-    TEXT_MESSAGE: 'Text Message',
+    // Smart Actions (NOTE: Contact methods are captured separately)
     LOCATION_ADDRESS: 'Location Address',
 
     // Extended Results
@@ -79,4 +79,23 @@ export const SEARCH_LOCATION = {
     // but 'modal' can imply that and is a cleaner way to represent
     // it even if we can how the visuals work.
     MODAL: 'Modal',
+};
+
+// Contact Location (Convention: Titlecase, Separator - Space)
+// Where the contact method was tapped
+export const CONTACT_LOCATION = {
+    PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
+    SEARCH_SMART_ACTION: 'Search Smart Action',
+};
+
+// Contact Method (Convention: Titlecase, Separator - Space)
+// Method of contact. We have Contact Methods as part of
+// the protobufs but they are defined as a member of enum and have
+// numerical values which
+// a. make it easier to change them in the future which doesn't work for tracking
+// b. make the processing of data in the Dashboard very hard
+// c. are more granular than needed for analytics. E.g., work vs home email/phone.
+export const CONTACT_METHOD = {
+    EMAIL: 'Email',
+    PHONE: 'Phone',
 };

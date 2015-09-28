@@ -82,6 +82,7 @@ class ProfileDetail extends StyleableComponent {
                 isLoggedInUser={isLoggedInUser}
                 locations={locations}
                 onClickLocation={routeToLocation.bind(null, this.context.router)}
+                profileId={this.props.extendedProfile.profile.id}
                 style={this.mergeAndPrefix(styles.section)}
             />
         );

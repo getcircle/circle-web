@@ -12,7 +12,12 @@ import moment from '../utils/moment';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
-import { SEARCH_RESULT_SOURCE, SEARCH_RESULT_TYPE } from '../constants/trackerProperties';
+import {
+    CONTACT_LOCATION,
+    CONTACT_METHOD,
+    SEARCH_RESULT_SOURCE,
+    SEARCH_RESULT_TYPE
+} from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
@@ -410,7 +415,7 @@ class Search extends CSSComponent {
             if (onTouchTap && typeof onTouchTap === 'function') {
                 let trackingSource = this.getTrackingSource(trackItem);
                 let trackingResultType = this.getTrackingResultType(trackItem);
-                tracker.trackSearchResultTapped(
+                tracker.trackSearchResultTap(
                     this.state.query,
                     trackingSource,
                     trackingResultType,
@@ -612,7 +617,15 @@ class Search extends CSSComponent {
             style: {
                 paddingLeft: 58,
             },
-            onTouchTap: () => window.location.href = `mailto:${profile.email}`,
+            onTouchTap: () => {
+                tracker.trackContactTap(
+                    CONTACT_METHOD.EMAIL,
+                    profile.id,
+                    CONTACT_LOCATION.SEARCH_SMART_ACTION
+                );
+
+                window.location.href = `mailto:${profile.email}`;
+            },
         });
         return expansions;
     }

@@ -1,6 +1,5 @@
 import {
     EVENTS,
-    PAGE_TYPE,
 } from '../constants/trackerProperties';
 
 /*
@@ -71,7 +70,7 @@ class Tracker {
         if (!pageType) {
             console.error('Page Type needs to be set for tracking page views.');
             return;
-        };
+        }
 
         mixpanel.track(EVENTS.PAGE_VIEW, {
             'Page Type': pageType,
@@ -92,25 +91,49 @@ class Tracker {
      * resultIndex Position of the result when tapped.
      * searchLocation Location from where the search was performed. Constant value of SEARCH_LOCATIONS
      */
-    trackSearchResultTapped(query, source, resultType, resultId, resultIndex, searchLocation) {
+    trackSearchResultTap(query, source, resultType, resultId, resultIndex, searchLocation) {
 
         if (!source) {
             console.error('Search source needs to be set for tracking search result taps.');
             return;
-        };
+        }
 
         if (!resultType) {
             console.error('Search result type needs to be set for tracking search result taps.');
             return;
-        };
+        }
 
-        mixpanel.track(EVENTS.SEARCH_RESULT_TAPPED, {
+        mixpanel.track(EVENTS.SEARCH_RESULT_TAP, {
             'Search Query': query,
             'Search Source': source,
             'Search Type': resultType,
             'Search Result ID': resultId && resultId !== '' ? resultId : undefined,
             'Search Result Index': resultIndex ? resultIndex : 0,
-            'Search Location': searchLocation
+            'Search Location': searchLocation,
+        });
+    }
+
+    trackContactTap(contactMethod, contactId, contactLocation) {
+
+        if (!contactMethod) {
+            console.error('Contact Method needs to be set for tracking contact taps.');
+            return;
+        }
+
+        if (!contactId) {
+            console.error('Contact ID needs to be set for tracking contact taps.');
+            return;
+        }
+
+        if (!contactLocation) {
+            console.error('Contact Location needs to be set for tracking contact taps.');
+            return;
+        }
+
+        mixpanel.track(EVENTS.CONTACT_TAP, {
+            'Contact Method': contactMethod,
+            'Contact ID': contactId,
+            'Contact Location': contactLocation,
         });
     }
 }
