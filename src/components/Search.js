@@ -109,15 +109,15 @@ class Search extends StyleableComponent {
     static propTypes = {
         active: PropTypes.bool,
         defaultResults: PropTypes.object,
-        searchCategory: PropTypes.number,
-        onClearCategory: PropTypes.func,
-        focused: PropTypes.bool,
-        searchResults: PropTypes.object,
         exploreResults: PropTypes.array,
+        focused: PropTypes.bool,
         inHeader: PropTypes.bool,
-        searchBarStyle: PropTypes.object,
-        resultsListStyle: PropTypes.object,
+        onClearCategory: PropTypes.func,
         renderPoweredBy: PropTypes.bool,
+        resultsListStyle: PropTypes.object,
+        searchBarStyle: PropTypes.object,
+        searchCategory: PropTypes.number,
+        searchResults: PropTypes.object,
     }
 
     static defaultProps = {

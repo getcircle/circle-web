@@ -193,19 +193,19 @@ class Search extends CSSComponent {
         showCancel: false,
     }
 
-    componentWillUnmount() {
-        this.props.dispatch(clearSearchResults());
-    }
-
     state = {
         category: null,
         query: '',
         typing: false,
     }
 
+    componentWillUnmount() {
+        this.props.dispatch(clearSearchResults());
+    }
+
     currentSearch = null
 
-    attributesForRecentResults = {
+    trackingAttributesForRecentResults = {
         subheader: 'recents',
         source: SEARCH_RESULT_SOURCE.RECENTS,
     }
@@ -463,7 +463,7 @@ class Search extends CSSComponent {
     }
 
     getProfileResult(profile, index, isRecent, numberOfResults) {
-        let additionalAttributes = isRecent ? this.attributesForRecentResults : {};
+        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const item = {
             index: index,
             leftAvatar: <ProfileAvatar profile={profile} />,
@@ -472,7 +472,7 @@ class Search extends CSSComponent {
             onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
-            ...additionalAttributes,
+            ...trackingAttributes,
         };
         return this.trackTouchTap(item);
     }
@@ -491,7 +491,7 @@ class Search extends CSSComponent {
             subTextParts.push(`${team.profile_count} Person`);
         }
 
-        let additionalAttributes = isRecent ? this.attributesForRecentResults : {};
+        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const item = {
             index: index,
             leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
@@ -500,13 +500,13 @@ class Search extends CSSComponent {
             onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
             type: RESULT_TYPES.TEAM,
             instance: team,
-            ...additionalAttributes
+            ...trackingAttributes
         };
         return this.trackTouchTap(item);
     }
 
     getLocationResult(location, index, isRecent) {
-        let additionalAttributes = isRecent ? this.attributesForRecentResults : {};
+        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
         const item = {
             index: index,
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
@@ -515,7 +515,7 @@ class Search extends CSSComponent {
             onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
-            ...additionalAttributes
+            ...trackingAttributes
         };
         return this.trackTouchTap(item);
     }
