@@ -12,8 +12,10 @@ import moment from '../utils/moment';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
+import { SEARCH_RESULT_SOURCE, SEARCH_RESULT_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
+import tracker from '../utils/tracker';
 
 import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
@@ -196,6 +198,11 @@ class Search extends CSSComponent {
     }
 
     currentSearch = null
+
+    attributesForRecentResults = {
+        subheader: 'recents',
+        source: SEARCH_RESULT_SOURCE.RECENTS,
+    }
 
     classes() {
         return {
@@ -391,31 +398,77 @@ class Search extends CSSComponent {
         const onTouchTap = item.onTouchTap;
         item.onTouchTap = () => {
             const trackItem = Object.assign({}, item);
+
             // Don't expand tracked results
             if (trackItem.type === RESULT_TYPES.EXPANDED_PROFILE) {
                 trackItem.type = RESULT_TYPES.PROFILE;
             }
             this.props.dispatch(viewSearchResult(trackItem));
+
+            // Call click handler and record tap in analytics provider
             if (onTouchTap && typeof onTouchTap === 'function') {
+                let trackingSource = this.getTrackingSource(trackItem);
+                let trackingResultType = this.getTrackingResultType(trackItem);
+                tracker.trackSearchResultTapped(
+                    this.state.query,
+                    trackingSource,
+                    trackingResultType,
+                    trackItem.instance.id ? trackItem.instance.id : '',
+                    // 1 to account for array index
+                    trackItem.index + 1,
+                );
                 onTouchTap();
             }
         }
         return item;
     }
 
-    getProfileResult(profile, numberOfResults) {
+    getTrackingSource(item) {
+        if (item.source && item.source !== null) {
+            return item.source;
+        }
+
+        if (this.state.category !== null) {
+            return SEARCH_RESULT_SOURCE.EXPLORE;
+        }
+
+        return SEARCH_RESULT_SOURCE.SUGGESTION;
+    }
+
+    getTrackingResultType(item) {
+        switch (item.type) {
+            case RESULT_TYPES.EXPANDED_PROFILE:
+            case RESULT_TYPES.PROFILE:
+                return SEARCH_RESULT_TYPE.PROFILE;
+
+            case RESULT_TYPES.TEAM:
+                return SEARCH_RESULT_TYPE.TEAM;
+
+            case RESULT_TYPES.LOCATION:
+                return SEARCH_RESULT_TYPE.LOCATION;
+
+            default:
+                console.error('Did not find analytics tracking type for selected RESULT_TYPE');
+                return undefined;
+        }
+    }
+
+    getProfileResult(profile, index, isRecent, numberOfResults) {
+        let additionalAttributes = isRecent ? this.attributesForRecentResults : {};
         const item = {
+            index: index,
             leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: profile.full_name,
             secondaryText: `${profile.title}`,
             onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
+            ...additionalAttributes,
         };
         return this.trackTouchTap(item);
     }
 
-    getTeamResult(team) {
+    getTeamResult(team, index, isRecent) {
         let subTextParts = [];
         if (team.child_team_count > 1) {
             subTextParts.push(`${team.child_team_count} Teams`);
@@ -429,25 +482,31 @@ class Search extends CSSComponent {
             subTextParts.push(`${team.profile_count} Person`);
         }
 
+        let additionalAttributes = isRecent ? this.attributesForRecentResults : {};
         const item = {
+            index: index,
             leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
             primaryText: team.display_name,
             secondaryText: subTextParts.join(', '),
             onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
             type: RESULT_TYPES.TEAM,
             instance: team,
+            ...additionalAttributes
         };
         return this.trackTouchTap(item);
     }
 
-    getLocationResult(location) {
+    getLocationResult(location, index, isRecent) {
+        let additionalAttributes = isRecent ? this.attributesForRecentResults : {};
         const item = {
+            index: index,
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
             primaryText: location.name,
             secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
             onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
+            ...additionalAttributes
         };
         return this.trackTouchTap(item);
     }
@@ -455,41 +514,46 @@ class Search extends CSSComponent {
     getCategoryResultsProfiles() {
         const { profiles } = this.props;
         if (profiles) {
-            return profiles.map(profile => this.getProfileResult(profile));
+            return profiles.map((profile, index) => this.getProfileResult(profile, index));
         }
     }
 
     getCategoryResultsTeams() {
         const { teams } = this.props;
         if (teams) {
-            return teams.map(team => this.getTeamResult(team));
+            return teams.map((team, index) => this.getTeamResult(team, index));
         }
     }
 
     getCategoryResultsLocations() {
         const { locations } = this.props;
         if (locations) {
-            return locations.map(location => this.getLocationResult(location));
+            return locations.map((location, index) => this.getLocationResult(location, index));
         }
     }
 
     resolveDefaults() {
         const { defaults } = this.props;
-        return defaults.map((item) => {
+        return defaults.map((item, index) => {
             if (item instanceof services.profile.containers.ProfileV1) {
-                return this.getProfileResult(item);
+                return this.getProfileResult(item, index);
             } else if (item instanceof services.organization.containers.TeamV1) {
-                return this.getTeamResult(item);
+                return this.getTeamResult(item, index);
             }
         });
     }
 
     getRecentResults() {
-        return this.props.recents.slice(0, 3).map((item) => {
-            return {
-                subheader: 'recents',
-                ...item,
-            };
+        return this.props.recents.slice(0, 3).map((searchResultItem, index) => {
+            let item = searchResultItem.instance;
+
+            if (item instanceof services.profile.containers.ProfileV1) {
+                return this.getProfileResult(item, index, true);
+            } else if (item instanceof services.organization.containers.TeamV1) {
+                return this.getTeamResult(item, index, true);
+            } else if (item instanceof services.organization.containers.LocationV1) {
+                return this.getLocationResult(item, index, true);
+            }
         });
     }
 
@@ -561,13 +625,13 @@ class Search extends CSSComponent {
     }
 
     getSearchResultItems(results) {
-        let items = results.map((result) => {
+        let items = results.map((result, index) => {
             if (result.profile) {
-                return this.getProfileResult(result.profile, results.length);
+                return this.getProfileResult(result.profile, index, false, results.length);
             } else if (result.team) {
-                return this.getTeamResult(result.team, results.length);
+                return this.getTeamResult(result.team, index, false, results.length);
             } else if (result.location) {
-                return this.getLocationResult(result.location, results.length);
+                return this.getLocationResult(result.location, index, false, results.length);
             }
         });
         if (results.length === 1) {

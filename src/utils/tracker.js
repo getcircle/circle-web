@@ -63,13 +63,13 @@ class Tracker {
     /**
      * Tracks the page view event.
      *
-     * pageType should be one of the page type constants.
+     * pageType One of the PAGE_TYPE constants.
      * pageId is an optional identifier for the page. This should be the primary key
      *         of the associated object.
      */
     trackPageView(pageType, pageId) {
         if (!pageType) {
-            console.error('pageType needs to be set for this function.');
+            console.error('Page Type needs to be set for tracking page views.');
             return;
         };
 
@@ -77,9 +77,40 @@ class Tracker {
             'Page Type': pageType,
             'Page ID': pageId && pageId !== '' ? pageId : undefined,
         });
+
+        // Increment global page views count for the user.
         mixpanel.people.increment('Page Views');
     }
 
+    /**
+     * Tracks the page view event.
+     *
+     * query Search term when the result was tapped.
+     * source One of the SEARCH_RESULT_SOURCE constants.
+     * resultType One of the SEARCH_RESULT_SUBTYPE constants.
+     */
+    trackSearchResultTapped(query, source, resultType, resultId, resultIndex) {
+
+        console.log('coming in track SEARCH RESULT TAPPED');
+        if (!source) {
+            console.error('Search source needs to be set for tracking search result taps.');
+            return;
+        };
+
+        if (!resultType) {
+            console.error('Search result type needs to be set for tracking search result taps.');
+            return;
+        };
+        console.log('Hello');
+        console.log(EVENTS.SEARCH_RESULT_TAPPED);
+        mixpanel.track(EVENTS.SEARCH_RESULT_TAPPED, {
+            'Query': query,
+            'Source': source,
+            'Type': resultType,
+            'Result ID': resultId && resultId !== '' ? resultId : undefined,
+            'Result Index': resultIndex ? resultIndex : 0,
+        });
+    }
 }
 
 // NOTE: This is not a singleton and a new instance is generated each time.
