@@ -1,6 +1,11 @@
+import { services } from 'protobufs';
+
 import {
     EVENTS,
 } from '../constants/trackerProperties';
+
+const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
+const { AttributeV1, CategoryV1 } = services.search.containers.search;
 
 /**
  *   This class acts as a wrapper for our mixpanel implementation.
@@ -101,6 +106,21 @@ class Tracker {
         return !!userId;
     }
 
+    // If we get an integer enum value, trying using the key in the expected
+    // object as the string.
+    getStringKeyValue(object, value) {
+        if (typeof value === 'string') {
+            return value;
+        }
+
+        let matchedKeys = Object.keys(object).filter(key => object[key] === value);
+        if (matchedKeys.length === 0) {
+            return value;
+        }
+
+        return matchedKeys[0];
+    }
+
     // Events
 
     /**
@@ -142,8 +162,12 @@ class Tracker {
      * @param {number} resultIndex Position of the result when tapped
      * @param {string} searchLocation Location from where the search was performed. Constant value of SEARCH_LOCATION
      * @param {?string} resultId ID of the object tapped
+     * @param {?search.CategoryV1} category Category for search
+     * @param {?search.AttributeV1} attribute Search filter attribute
+     * @param {?string} value Search filter attribute value
+     *
      */
-    trackSearchResultTap(query, source, searchResultType, resultIndex, searchLocation, resultId) {
+    trackSearchResultTap(query, source, searchResultType, resultIndex, searchLocation, resultId, category, attribute, value) {
 
         if (!source) {
             console.error('Search source needs to be set for tracking search result taps.');
@@ -161,7 +185,10 @@ class Tracker {
             'Search Location': searchLocation,
             'Search Result Type': searchResultType,
             'Search Result ID': resultId && resultId !== '' ? resultId : undefined,
-            'Search Result Index': resultIndex ? resultIndex : 0,
+            'Search Result Index': resultIndex ? resultIndex : undefined,
+            'Search Category': category !== null ? this.getStringKeyValue(CategoryV1, category) : undefined,
+            'Search Attribute': attribute !== null ? this.getStringKeyValue(AttributeV1, attribute) : undefined,
+            'Search Attribute Value': value ? value : undefined,
         });
     }
 
@@ -190,7 +217,7 @@ class Tracker {
         }
 
         mixpanel.track(EVENTS.CONTACT_TAP, {
-            'Contact Method': contactMethod,
+            'Contact Method': this.getStringKeyValue(ContactMethodTypeV1, contactMethod),
             'Contact ID': contactId,
             'Contact Location': contactLocation,
         });

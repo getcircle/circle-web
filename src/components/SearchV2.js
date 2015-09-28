@@ -424,11 +424,27 @@ class Search extends CSSComponent {
                     trackItem.index + 1,
                     this.props.searchLocation,
                     trackItem.instance.id ? trackItem.instance.id : '',
+                    this.getCurrentSearchCategory(),
+                    this.props.searchAttribute,
+                    this.props.searchAttributeValue,
                 );
                 onTouchTap();
             }
         }
         return item;
+    }
+
+    getCurrentSearchCategory() {
+        let { searchCategory } = this.props;
+        console.log(searchCategory);
+        console.log(this.state.category);
+        if (searchCategory !== null && searchCategory !== undefined) {
+            return searchCategory;
+        } else if (this.state.category !== null) {
+            return this.state.category;
+        }
+
+        return undefined;
     }
 
     getTrackingSource(item) {
