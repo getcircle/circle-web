@@ -11,6 +11,8 @@ import HeaderMenu from '../components/HeaderMenu';
 import CSSComponent from '../components/CSSComponent';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/SearchV2';
 
+const ORGANIZATION_LOGO_HEIGHT = 200;
+
 const selector = createSelector(
     [selectors.authenticationSelector],
     (authenticationState) => {
@@ -39,15 +41,15 @@ class Search extends CSSComponent {
         router: PropTypes.object.isRequired,
     }
 
+    state = {
+        focused: false,
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if (!nextProps.authenticated) {
             return false;
         }
         return true;
-    }
-
-    state = {
-        focused: false,
     }
 
     styles() {
@@ -64,11 +66,12 @@ class Search extends CSSComponent {
                     display: 'none',
                 },
                 organizationLogo: {
-                    maxHeight: 200,
+                    maxHeight: ORGANIZATION_LOGO_HEIGHT,
                     maxWidth: SEARCH_CONTAINER_WIDTH,
                 },
                 organizationLogoSection: {
                     paddingTop: '20vh',
+                    height: ORGANIZATION_LOGO_HEIGHT,
                 },
                 poweredBy: {
                     fontSize: '10px',

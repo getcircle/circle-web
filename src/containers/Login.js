@@ -92,12 +92,6 @@ class Login extends CSSComponent {
         return false;
     }
 
-    styles() {
-        return this.css({
-            hasImage: this.hasImage(),
-        });
-    }
-
     classes() {
         return {
             default: {
@@ -130,11 +124,6 @@ class Login extends CSSComponent {
                 },
                 wrap: {
                     marginBottom: 0,
-                    paddingTop: '10%',
-                },
-            },
-            hasImage: {
-                wrap: {
                     paddingTop: '2%',
                 },
             },
@@ -175,6 +164,8 @@ class Login extends CSSComponent {
                     <img is="organizationImage" src={organizationImageUrl} />
                 </div>
             );
+        } else {
+            return <div style={{height: this.styles().organizationImage.maxHeight}} />;
         }
     }
 
