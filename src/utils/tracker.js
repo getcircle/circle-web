@@ -1,5 +1,7 @@
 import { services } from 'protobufs';
 
+import logger from './logger';
+
 import {
     EVENTS,
 } from '../constants/trackerProperties';
@@ -42,12 +44,12 @@ class Tracker {
     initSession(profile, organization) {
 
         if (!profile) {
-            console.error('Logged in user profile needs to be set for starting tracking session.');
+            logger.error('Logged in user profile needs to be set for starting tracking session.');
             return;
         }
 
         if (!organization) {
-            console.error('Logged in user organization needs to be set for starting tracking session.');
+            logger.error('Logged in user organization needs to be set for starting tracking session.');
             return;
         }
 
@@ -132,12 +134,12 @@ class Tracker {
      */
     trackPageView(pageType, pageId) {
         if (!pageType) {
-            console.error('Page Type needs to be set for tracking page views.');
+            logger.error('Page Type needs to be set for tracking page views.');
             return;
         }
 
         if (!this.isSessionInitialized()) {
-            console.log('Session is not initialized to begin tracking events.');
+            logger.log('Session is not initialized to begin tracking events.');
             return;
         }
 
@@ -170,12 +172,12 @@ class Tracker {
     trackSearchResultTap(query, source, searchResultType, resultIndex, searchLocation, resultId, category, attribute, value) {
 
         if (!source) {
-            console.error('Search source needs to be set for tracking search result taps.');
+            logger.error('Search source needs to be set for tracking search result taps.');
             return;
         }
 
         if (!searchResultType) {
-            console.error('Search result type needs to be set for tracking search result taps.');
+            logger.error('Search result type needs to be set for tracking search result taps.');
             return;
         }
 
@@ -202,17 +204,17 @@ class Tracker {
     trackContactTap(contactMethod, contactId, contactLocation) {
 
         if (contactMethod === undefined || contactMethod === null) {
-            console.error('Contact Method needs to be set for tracking contact taps.');
+            logger.error('Contact Method needs to be set for tracking contact taps.');
             return;
         }
 
         if (!contactId) {
-            console.error('Contact ID needs to be set for tracking contact taps.');
+            logger.error('Contact ID needs to be set for tracking contact taps.');
             return;
         }
 
         if (!contactLocation) {
-            console.error('Contact Location needs to be set for tracking contact taps.');
+            logger.error('Contact Location needs to be set for tracking contact taps.');
             return;
         }
 
@@ -238,7 +240,7 @@ class Tracker {
      */
     trackProfileUpdate(objectId, fields) {
         if (!objectId) {
-            console.error('Object ID needs to be set for tracking profile updates.');
+            logger.error('Object ID needs to be set for tracking profile updates.');
             return;
         }
 
@@ -247,7 +249,7 @@ class Tracker {
             !(fields instanceof Array) ||
             fields.length === 0
         ) {
-            console.error('Fields that were updated need to be set and as an array for tracking profile updates.');
+            logger.error('Fields that were updated need to be set and as an array for tracking profile updates.');
             return;
         }
 
@@ -271,7 +273,7 @@ class Tracker {
      */
     trackTeamUpdate(teamId, fields) {
         if (!teamId) {
-            console.error('Team ID needs to be set for tracking team updates.');
+            logger.error('Team ID needs to be set for tracking team updates.');
             return;
         }
 
@@ -280,7 +282,7 @@ class Tracker {
             !(fields instanceof Array) ||
             fields.length === 0
         ) {
-            console.error('Fields that were updated need to be set and as an array for tracking team updates.');
+            logger.error('Fields that were updated need to be set and as an array for tracking team updates.');
             return;
         }
 

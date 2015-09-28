@@ -436,8 +436,6 @@ class Search extends CSSComponent {
 
     getCurrentSearchCategory() {
         let { searchCategory } = this.props;
-        console.log(searchCategory);
-        console.log(this.state.category);
         if (searchCategory !== null && searchCategory !== undefined) {
             return searchCategory;
         } else if (this.state.category !== null) {
