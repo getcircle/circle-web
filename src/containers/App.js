@@ -42,6 +42,7 @@ const selector = createSelector(
             displayHeader: responsiveState.get('displayHeader'),
             authenticated: authenticationState.get('authenticated'),
             profile: authenticationState.get('profile'),
+            organization: authenticationState.get('organization'),
         }
     }
 );
@@ -59,6 +60,7 @@ class App extends CSSComponent {
         displayHeader: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         location: PropTypes.object,
+        organization: PropTypes.object,
         profile: PropTypes.object,
     }
 
@@ -70,7 +72,7 @@ class App extends CSSComponent {
     componentWillMount() {
         // refresh any cached authentication objects
         if (this.props.authenticated) {
-            tracker.initSession(this.props.profile);
+            tracker.initSession(this.props.profile, this.props.organization);
             this.props.dispatch(refresh());
         }
         this.props.dispatch(

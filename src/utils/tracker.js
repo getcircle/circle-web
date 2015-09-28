@@ -32,8 +32,19 @@ class Tracker {
      *  - Registers super properties.
      *
      * @param {ProfileV1} profile Profile of the logged in user
+     * @param {OrganizationV1} organization Organization of the the logged in user
      */
-    initSession(profile) {
+    initSession(profile, organization) {
+
+        if (!profile) {
+            console.error('Logged in user profile needs to be set for starting tracking session.');
+            return;
+        }
+
+        if (!organization) {
+            console.error('Logged in user organization needs to be set for starting tracking session.');
+            return;
+        }
 
         // Identify user is Mixpanel
         // Unique identifier for the user
@@ -46,6 +57,7 @@ class Tracker {
         mixpanel.people.set({
             '$first_name': profile.first_name,
             'Organization ID': profile.organization_id,
+            'Organization Domain': organization.domain.toLowerCase(),
             'Profile ID': profile.id,
             'Title': profile.title,
             'User ID': profile.user_id,
@@ -54,6 +66,7 @@ class Tracker {
         // Add super properties, which should be included with event event
         mixpanel.register({
             'Organization ID': profile.organization_id,
+            'Organization Domain': organization.domain.toLowerCase(),
             'Profile ID': profile.id,
             'User ID': profile.user_id,
         });
@@ -75,6 +88,19 @@ class Tracker {
         }
     }
 
+    /**
+     * Checks for the presence of a super property User ID.
+     *
+     * If it exists, it implies the session has been initialized.
+     * For anonymous sessions, it wonn't be set.
+     *
+     * @return {bool}
+     */
+    isSessionInitialized() {
+        let userId = mixpanel.get_property('User ID');
+        return !!userId;
+    }
+
     // Events
 
     /**
@@ -87,6 +113,11 @@ class Tracker {
     trackPageView(pageType, pageId) {
         if (!pageType) {
             console.error('Page Type needs to be set for tracking page views.');
+            return;
+        }
+
+        if (!this.isSessionInitialized()) {
+            console.log('Session is not initialized to begin tracking events.');
             return;
         }
 
