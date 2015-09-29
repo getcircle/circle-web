@@ -14,14 +14,12 @@ class LocationDetailDescription extends StyleableComponent {
 
     static propTypes = {
         description: PropTypes.instanceOf(services.common.containers.DescriptionV1),
-        isEditable: PropTypes.bool,
         onSaveCallback: PropTypes.func.isRequired,
         style: PropTypes.object,
     }
 
     render() {
         const {
-            isEditable,
             onSaveCallback,
             description,
             style,
@@ -29,7 +27,6 @@ class LocationDetailDescription extends StyleableComponent {
 
         return (
             <TextValue
-                isEditable={isEditable}
                 onSaveCallback={onSaveCallback}
                 placeholder={t('Add a description on your location. You can add unique things about the office, what teams work there, and local info about the office.')}
                 shouldLimitCharacters={false}
