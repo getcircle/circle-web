@@ -190,7 +190,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                 );
             })
             return (
-                <Card title="Works At">
+                <Card title={t('Works At')}>
                     <CardList>
                         {locations}
                     </CardList>
