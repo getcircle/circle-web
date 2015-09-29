@@ -72,7 +72,7 @@ class Search extends CSSComponent {
                 },
                 organizationLogoSection: {
                     paddingTop: '20vh',
-                    paddingBottom: '5vh',
+                    paddingBottom: '2vh',
                 },
                 organizationLogoPlaceholder: {
                     height: ORGANIZATION_LOGO_HEIGHT,
@@ -160,7 +160,7 @@ class Search extends CSSComponent {
                     },
                 },
                 organizationLogoSection: {
-                    paddingTop: '5vh',
+                    paddingTop: '2vh',
                 },
                 SearchComponent: {
                     alwaysActive: true,
