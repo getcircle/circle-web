@@ -71,6 +71,7 @@ class LoginInternal extends CSSComponent {
                 },
                 header: {
                     fontSize: '18px',
+                    lineHeight: '22px',
                     ...fontWeights.light,
                 },
                 headerDiv: {

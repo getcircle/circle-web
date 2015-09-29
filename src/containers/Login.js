@@ -106,6 +106,7 @@ class Login extends CSSComponent {
                 header: {
                     fontSize: 28,
                     paddingBottom: 20,
+                    lineHeight: '35px',
                     ...fontColors.dark,
                     ...fontWeights.semiBold,
                 },
