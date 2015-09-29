@@ -28,6 +28,7 @@ export function getCustomThemeManager() {
     });
 
     lunoMuiTheme.appBar.color = '#F7F9FA';
+    lunoMuiTheme.appCanvas.backgroundColor = canvasColor;
     lunoMuiTheme.flatButton.color = 'rgb(255, 255, 255)';
     lunoMuiTheme.tab = {
         textColor: 'rgba(0, 0, 0, 0.3)',
