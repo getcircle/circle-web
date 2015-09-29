@@ -4,7 +4,7 @@ import { soa } from 'protobufs';
 
 import paginate from '../../src/reducers/paginate';
 
-describe('paginate', function () {
+describe('paginate reducer', function () {
 
     beforeEach(function () {
         this.paginatedReducer = paginate({

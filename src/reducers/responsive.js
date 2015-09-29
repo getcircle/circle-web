@@ -10,7 +10,9 @@ const initialState = Immutable.fromJS({
     largerDevice: true,
 });
 
-export default function header(state = initialState, action) {
+const HEADER_AND_FOOTERLESS_PATHS = ['/', '/billing'];
+
+export default function responsive(state = initialState, action) {
     const { Sizes } = StyleResizable.statics;
     switch(action.type) {
     case types.TOGGLE_DISPLAY_HEADER:
@@ -26,31 +28,25 @@ export default function header(state = initialState, action) {
             deviceSize,
         } = action.payload;
         const largerDevice = deviceSize !== Sizes.SMALL;
-        if (!largerDevice) {
-            return state.withMutations(map => {
-                return map.set('displayHeader', false)
-                    .set('displayFooter', true)
-                    .set('largerDevice', largerDevice)
-                    .set('deviceSize', deviceSize);
-                });
+
+        let displayHeader;
+        let displayFooter;
+        if (HEADER_AND_FOOTERLESS_PATHS.includes(pathname)) {
+            displayHeader = false;
+            displayFooter = false;
+        } else if (!largerDevice) {
+            displayFooter = true;
+            displayHeader = false;
         } else {
-            // TODO move this logic somewhere...more logical
-            if (pathname === '/') {
-                return state.withMutations(map => {
-                    return map.set('displayFooter', false)
-                        .set('displayHeader', false)
-                        .set('largerDevice', largerDevice)
-                        .set('deviceSize', deviceSize);
-                    });
-            } else {
-                return state.withMutations(map => {
-                    return map.set('displayFooter', false)
-                        .set('displayHeader', true)
-                        .set('largerDevice', largerDevice)
-                        .set('deviceSize', deviceSize);
-                });
-            }
+            displayHeader = true;
+            displayFooter = false;
         }
+        return state.withMutations(map => {
+            return map.set('displayFooter', displayFooter)
+                .set('displayHeader', displayHeader)
+                .set('largerDevice', largerDevice)
+                .set('deviceSize', deviceSize);
+        });
     default:
         return state;
     }

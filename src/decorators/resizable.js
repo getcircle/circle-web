@@ -5,7 +5,7 @@ function getDisplayName(Component) {
   return Component.displayName || Component.name || 'Component';
 }
 
-const Sizes = {
+export const Sizes = {
     SMALL: 1,
     MEDIUM: 2,
     LARGE: 3,
