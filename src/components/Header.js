@@ -85,6 +85,7 @@ class Header extends CSSComponent {
                     cursor: 'pointer',
                     display: 'flex',
                     maxHeight: 64,
+                    maxWidth: '100%',
                 },
                 logoContainer: {
                     display: 'flex',
