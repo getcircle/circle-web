@@ -77,9 +77,11 @@ class HeaderMenu extends CSSComponent {
                 menuItemDivStyle: {
                     color: 'white',
                 },
-                text: {
+                profileName: {
                     color: tintColor,
                     lineHeight: 2,
+                    marginLeft: '10px',
+                    marginRight: '5px',
                 },
                 MenuItemIcon: {
                     height: 28,
@@ -154,8 +156,8 @@ class HeaderMenu extends CSSComponent {
     renderProfileName() {
         if (this.props.expandedView) {
             return (
-                <div className="col-xs">
-                    <span is="text">{this.props.profile.first_name}</span>
+                <div is="profileName">
+                    <span>{this.props.profile.first_name}</span>
                 </div>
             );
         }
@@ -186,7 +188,7 @@ class HeaderMenu extends CSSComponent {
                     is="container"
                     onTouchTap={::this.handleTouchTap}
                 >
-                    <div className="col-xs">
+                    <div>
                         <ProfileAvatar profile={profile} />
                     </div>
                     {this.renderProfileName()}
