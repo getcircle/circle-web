@@ -3,7 +3,6 @@ import { services } from 'protobufs';
 
 import { iconColors } from '../constants/styles';
 import moment from '../utils/moment';
-import resizable from '../decorators/resizable';
 
 import Card from './Card';
 import CardList from './CardList';
@@ -14,7 +13,6 @@ import IconContainer from './IconContainer';
 import EmbeddedGoogleMap from './EmbeddedGoogleMap';
 import LocationIcon from './LocationIcon';
 
-@resizable
 class LocationDetailLocation extends CSSComponent {
 
     static propTypes = {

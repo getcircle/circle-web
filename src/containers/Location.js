@@ -8,7 +8,6 @@ import {
     loadLocationMembers,
     updateLocation,
 } from '../actions/locations';
-import resizable from '../decorators/resizable';
 import { retrieveLocation, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
@@ -21,10 +20,11 @@ const selector = createSelector(
     [
         selectors.cacheSelector,
         selectors.locationsSelector,
+        selectors.responsiveSelector,
         selectors.routerParametersSelector,
         selectors.locationMembersSelector,
     ],
-    (cacheState, locationsState, paramsState, membersState) => {
+    (cacheState, locationsState, responsiveState, paramsState, membersState) => {
         let office, members;
         const locationId = paramsState.locationId;
         const cache = cacheState.toJS();
@@ -35,12 +35,15 @@ const selector = createSelector(
             const ids = membersState.get(locationId).get('ids').toJS();
             members = retrieveProfiles(ids, cache);
         }
-        return {office: office, members: members};
+        return {
+            largerDevice: responsiveState.get('largerDevice'),
+            members: members,
+            office: office,
+        };
     }
 ) ;
 
 @connect(selector)
-@resizable
 class Location extends PureComponent {
 
     static propTypes = {

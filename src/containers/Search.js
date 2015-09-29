@@ -3,7 +3,6 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
-import resizable from '../decorators/resizable';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
@@ -15,18 +14,18 @@ import { SEARCH_LOCATION } from '../constants/trackerProperties';
 const ORGANIZATION_LOGO_HEIGHT = 200;
 
 const selector = createSelector(
-    [selectors.authenticationSelector],
-    (authenticationState) => {
+    [selectors.authenticationSelector, selectors.responsiveSelector],
+    (authenticationState, responsiveState) => {
         return {
             profile: authenticationState.get('profile'),
             organization: authenticationState.get('organization'),
             authenticated: authenticationState.get('authenticated'),
+            largerDevice: responsiveState.get('largerDevice'),
         }
     },
 );
 
 @connect(selector)
-@resizable
 class Search extends CSSComponent {
 
     static propTypes = {

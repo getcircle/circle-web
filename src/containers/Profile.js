@@ -30,8 +30,8 @@ const profileSelector = selectors.createImmutableSelector(
 );
 
 const selector = selectors.createImmutableSelector(
-    [profileSelector, selectors.authenticationSelector],
-    (profileState, authenticationState) => {
+    [profileSelector, selectors.authenticationSelector, selectors.responsiveSelector],
+    (profileState, authenticationState, responsiveState) => {
         const profile = authenticationState.get('profile');
         let isLoggedInUser;
         if (profile && profile.id === profileState.profileId) {
@@ -42,6 +42,7 @@ const selector = selectors.createImmutableSelector(
         return {
             isLoggedInUser: isLoggedInUser,
             organization: authenticationState.get('organization'),
+            largerDevice: responsiveState.get('largerDevice'),
             ...profileState
         }
     }
@@ -54,6 +55,7 @@ class Profile extends PureComponent {
         dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object,
         isLoggedInUser: PropTypes.bool.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         params: PropTypes.shape({
             profileId: PropTypes.string.isRequired,
@@ -78,6 +80,7 @@ class Profile extends PureComponent {
         const {
             extendedProfile,
             isLoggedInUser,
+            largerDevice,
             organization,
         } = this.props;
         if (extendedProfile) {
@@ -85,6 +88,7 @@ class Profile extends PureComponent {
                 <ProfileDetail
                     extendedProfile={extendedProfile}
                     isLoggedInUser={isLoggedInUser}
+                    largerDevice={largerDevice}
                     onUpdateProfile={::this.onUpdateProfile}
                     organization={organization}
                 />

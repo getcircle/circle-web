@@ -135,14 +135,17 @@ class LocationDetail extends CSSComponent {
     }
 
     render() {
-        const { office, members } = this.props;
+        const {
+            largerDevice,
+            members,
+            office,
+        } = this.props;
         let canEdit = office.permissions ? office.permissions.can_edit : false;
-
         return (
             <div>
                 <LocationDetailHeader office={office} />
                 <DetailContent>
-                    <LocationDetailLocation office={office} />
+                    <LocationDetailLocation largerDevice={largerDevice} office={office} />
                     {this.renderDescription(office, canEdit)}
                     {this.renderPointsOfContact(office)}
                     {this.renderMembers(members, office.profile_count)}

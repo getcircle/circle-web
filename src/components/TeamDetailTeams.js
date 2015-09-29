@@ -96,12 +96,13 @@ class TeamDetailTeams extends CSSComponent {
     }
 
     render() {
-        const { teams } = this.props;
+        const { teams, largerDevice } = this.props;
         return (
             <Card {...this.props} title="Teams">
                 <CardColumns
                     items={teams}
                     itemsPerColumn={2}
+                    largerDevice={largerDevice}
                     numberOfColumns={2}
                     renderColumn={::this.renderColumn}
                 />

@@ -1,10 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import resizable from '../decorators/resizable';
-
 import CSSComponent from './CSSComponent';
 
-@resizable
 class DetailSection extends CSSComponent {
 
     static propTypes = {

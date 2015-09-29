@@ -1,13 +1,10 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
 
-import resizable from '../decorators/resizable';
-
 import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
 import CSSComponent from './CSSComponent';
 
-@resizable
 class CardColumns extends CSSComponent {
 
     static propTypes = {

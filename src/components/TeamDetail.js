@@ -4,7 +4,6 @@ import { services } from 'protobufs';
 
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToProfile, routeToTeam } from '../utils/routes';
-import resizable from '../decorators/resizable';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 
@@ -24,7 +23,6 @@ import TeamDetailTeams from './TeamDetailTeams';
 const { DescriptionV1 } = services.common.containers;
 const { TeamStatusV1 } = services.organization.containers;
 
-@resizable
 class TeamDetail extends CSSComponent {
 
     static propTypes = {

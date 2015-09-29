@@ -86,6 +86,7 @@ class DetailMembers extends StyleableComponent {
             actionText,
             itemsPerCollapsedColumn,
             itemsPerColumn,
+            largerDevice,
             members,
             onClickMember,
             ...other,
@@ -96,6 +97,7 @@ class DetailMembers extends StyleableComponent {
                     items={members}
                     itemsPerCollapsedColumn={itemsPerCollapsedColumn}
                     itemsPerColumn={itemsPerColumn}
+                    largerDevice={largerDevice}
                     renderColumn={::this.renderColumn}
                 />
                 {this.renderFooter()}

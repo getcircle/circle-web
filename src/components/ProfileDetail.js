@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import resizable from '../decorators/resizable';
 import {
     routeToProfile,
     routeToLocation,
@@ -27,7 +26,6 @@ const styles = {
     },
 };
 
-@resizable
 class ProfileDetail extends StyleableComponent {
 
     static propTypes = {
@@ -87,6 +85,7 @@ class ProfileDetail extends StyleableComponent {
             <ProfileDetailContactInfo
                 contactMethods={contactMethods}
                 isLoggedInUser={isLoggedInUser}
+                largerDevice={this.props.largerDevice}
                 locations={locations}
                 onClickLocation={routeToLocation.bind(null, this.context.router)}
                 profileId={this.props.extendedProfile.profile.id}

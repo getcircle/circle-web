@@ -1,25 +1,22 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import tracker from '../utils/tracker';
-import autoBind from '../utils/autoBind';
 import {
     canvasColor,
 } from '../constants/styles';
-import { refresh } from '../actions/authentication';
-import * as selectors from '../selectors';
 import { deviceResized } from '../actions/device';
-
+import { refresh } from '../actions/authentication';
+import resizable from '../decorators/resizable';
+import * as selectors from '../selectors';
+import tracker from '../utils/tracker';
 
 import CSSComponent from '../components/CSSComponent';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
 
 const { AppCanvas } = mui;
-const { StyleResizable } = mui.Mixins;
 
 const UNAUTHENTICATED_ROUTES = [
     '/auth',
@@ -48,13 +45,13 @@ const selector = createSelector(
 );
 
 @connect(selector)
-@decorate(StyleResizable)
-@decorate(autoBind(StyleResizable))
+@resizable
 class App extends CSSComponent {
 
     static propTypes = {
         authenticated: PropTypes.bool.isRequired,
         children: PropTypes.element.isRequired,
+        deviceSize: PropTypes.number.isRequired,
         dispatch: PropTypes.func.isRequired,
         displayFooter: PropTypes.bool.isRequired,
         displayHeader: PropTypes.bool.isRequired,
@@ -75,9 +72,10 @@ class App extends CSSComponent {
             tracker.initSession(this.props.profile, this.props.organization);
             this.props.dispatch(refresh());
         }
-        this.props.dispatch(
-            deviceResized(this.state.deviceSize, this.props.location.pathname)
-        );
+    }
+
+    componentDidMount() {
+        this.props.dispatch(deviceResized(this.props.deviceSize, this.props.location.pathname));
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -87,8 +85,8 @@ class App extends CSSComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.deviceSize !== this.state.deviceSize) {
-            this.props.dispatch(deviceResized(nextState.deviceSize, this.props.location.pathname));
+        if (nextProps.deviceSize !== this.props.deviceSize) {
+            this.props.dispatch(deviceResized(nextProps.deviceSize, this.props.location.pathname));
         }
     }
 

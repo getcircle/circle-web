@@ -20,10 +20,11 @@ const selector = createSelector(
     [
         selectors.cacheSelector,
         selectors.extendedTeamsSelector,
+        selectors.responsiveSelector,
         selectors.routerParametersSelector,
         selectors.teamMembersSelector,
     ],
-    (cacheState, extendedTeamsState, parametersSelector, membersState) => {
+    (cacheState, extendedTeamsState, responsiveState, parametersSelector, membersState) => {
         let extendedTeam, members, membersNextRequest;
         const teamId = parametersSelector.teamId;
         const cache = cacheState.toJS();
@@ -35,7 +36,12 @@ const selector = createSelector(
             members = retrieveProfiles(ids, cache);
             membersNextRequest = membersState.get(teamId).get('nextRequest');
         }
-        return {extendedTeam: extendedTeam, members: members, membersNextRequest: membersNextRequest};
+        return {
+            extendedTeam: extendedTeam,
+            largerDevice: responsiveState.get('largerDevice'),
+            members: members,
+            membersNextRequest: membersNextRequest,
+        };
     }
 );
 
@@ -48,6 +54,7 @@ class Team extends CSSComponent {
             reportingDetails: PropTypes.object.isRequired,
             team: PropTypes.object.isRequired,
         }),
+        largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
@@ -83,12 +90,14 @@ class Team extends CSSComponent {
     renderTeam() {
         const {
             extendedTeam,
+            largerDevice,
             members,
         } = this.props;
         if (extendedTeam && members) {
             return (
                 <TeamDetail
                     extendedTeam={extendedTeam}
+                    largerDevice={largerDevice}
                     members={members}
                     membersLoadMore={() => {
                         // TODO this is broken because it reloads the entire component, need to think of a way to handle this

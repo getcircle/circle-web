@@ -7,6 +7,7 @@ const initialState = Immutable.fromJS({
     deviceSize: null,
     displayHeader: false,
     displayFooter: false,
+    largerDevice: true,
 });
 
 export default function header(state = initialState, action) {
@@ -24,10 +25,12 @@ export default function header(state = initialState, action) {
             pathname,
             deviceSize,
         } = action.payload;
-        if (deviceSize === StyleResizable.statics.Sizes.SMALL) {
+        const largerDevice = deviceSize !== Sizes.SMALL;
+        if (!largerDevice) {
             return state.withMutations(map => {
                 return map.set('displayHeader', false)
                     .set('displayFooter', true)
+                    .set('largerDevice', largerDevice)
                     .set('deviceSize', deviceSize);
                 });
         } else {
@@ -36,12 +39,14 @@ export default function header(state = initialState, action) {
                 return state.withMutations(map => {
                     return map.set('displayFooter', false)
                         .set('displayHeader', false)
+                        .set('largerDevice', largerDevice)
                         .set('deviceSize', deviceSize);
                     });
             } else {
                 return state.withMutations(map => {
                     return map.set('displayFooter', false)
                         .set('displayHeader', true)
+                        .set('largerDevice', largerDevice)
                         .set('deviceSize', deviceSize);
                 });
             }
