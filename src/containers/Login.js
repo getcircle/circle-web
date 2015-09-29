@@ -98,10 +98,9 @@ class Login extends CSSComponent {
                 container: {
                     marginTop: '2%',
                     maxWidth: 600,
-                    minWidth: 400,
                     paddingTop: '5%',
                     paddingBottom: '5%',
-                    width: '80%',
+                    width: '95%',
                 },
                 header: {
                     fontSize: 28,
