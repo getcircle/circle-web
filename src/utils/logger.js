@@ -9,7 +9,7 @@ class Logger {
         this._console.log(message);
     }
 
-    error(message) {
+    error(message, error) {
         this._console.error(message);
     }
 

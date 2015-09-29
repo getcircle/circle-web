@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 
 import client from '../services/client';
 import { AUTHENTICATION_STATE } from '../constants/localStorageKeys';
+import logger from '../utils/logger';
 import tracker from '../utils/tracker';
 import * as types from '../constants/actionTypes';
 
@@ -13,27 +14,9 @@ const { UserV1 } = services.user.containers;
 const stateVersion = 1;
 const protobufKeys = ['user', 'profile', 'organization'];
 
-const getInitialState = (checkCache = true) => {
-    let initialState = Immutable.fromJS({
-        __version__: stateVersion,
-        user: null,
-        token: null,
-        profile: null,
-        organization: null,
-        authError: null,
-        authenticated: false,
-        email: null,
-        organizationDomain: null,
-        providerName: null,
-        organizationImageUrl: null,
-    });
-
-    let serializedState;
-    if (checkCache) {
-        serializedState = localStorage.getItem(AUTHENTICATION_STATE);
-    }
-    if (serializedState) {
-        // XXX catch this error
+function getLocalAuthenticationState() {
+    try {
+        const serializedState = localStorage.getItem(AUTHENTICATION_STATE);
         let previousState = JSON.parse(serializedState);
         for (let key of protobufKeys) {
             let ProtobufClass;
@@ -54,10 +37,40 @@ const getInitialState = (checkCache = true) => {
             }
             previousState[key] = ProtobufClass.decode64(previousState[key]);
         }
+
+        let initialState;
         if (previousState.__version__ === stateVersion) {
             initialState = Immutable.fromJS(previousState);
             client.authenticate(initialState.get('token'));
         }
+        return initialState;
+    } catch (e) {
+        logger.error('Error retrieving local authentication state', e);
+        return;
+    }
+}
+
+const getInitialState = (checkCache = true) => {
+    let initialState = Immutable.fromJS({
+        __version__: stateVersion,
+        user: null,
+        token: null,
+        profile: null,
+        organization: null,
+        authError: null,
+        authenticated: false,
+        email: null,
+        organizationDomain: null,
+        providerName: null,
+        organizationImageUrl: null,
+    });
+
+    let localState;
+    if (checkCache) {
+        localState = getLocalAuthenticationState();
+    }
+    if (localState) {
+        return localState;
     }
     return initialState;
 }
