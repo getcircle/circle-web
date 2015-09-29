@@ -72,6 +72,9 @@ class Search extends CSSComponent {
                 },
                 organizationLogoSection: {
                     paddingTop: '20vh',
+                    paddingBottom: '5vh',
+                },
+                organizationLogoPlaceholder: {
                     height: ORGANIZATION_LOGO_HEIGHT,
                 },
                 poweredBy: {
@@ -166,6 +169,15 @@ class Search extends CSSComponent {
         };
     }
 
+    getOrganizationImage() {
+        const imageUrl = this.props.organization.image_url;
+        if (imageUrl) {
+            return <img is="organizationLogo" src={imageUrl} />;
+        } else {
+            return <div is="organizationLogoPlaceholder" />;
+        }
+    }
+
     handleFocusSearch(event) {
         this.setState({focused: true});
     }
@@ -190,7 +202,7 @@ class Search extends CSSComponent {
                     <section is="organizationLogoSection">
                         <div className="row">
                             <div className="col-xs center-xs">
-                                <img is="organizationLogo" src={this.props.organization.image_url} />
+                                {this.getOrganizationImage()}
                             </div>
                         </div>
                     </section>
