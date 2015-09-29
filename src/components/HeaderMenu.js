@@ -114,7 +114,7 @@ class HeaderMenu extends CSSComponent {
         if (this.state.menuDisplayed) {
             return (
                 <Menu
-                    animated={true}
+                    animated={false}
                     desktop={true}
                     is="menu"
                     listStyle={this.styles().menuListStyle}
