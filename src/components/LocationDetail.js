@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
 
@@ -97,6 +98,7 @@ class LocationDetail extends CSSComponent {
                     itemsPerColumn={1}
                     members={office.points_of_contact}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
+                    pageType={PAGE_TYPE.LOCATION_POINTS_OF_CONTACT}
                     title={title}
                 />
             );
@@ -121,6 +123,7 @@ class LocationDetail extends CSSComponent {
                     largerDevice={this.props.largerDevice}
                     members={members}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
+                    pageType={PAGE_TYPE.LOCATION_MEMBERS}
                     title={title}
                     viewAllAttribute={services.search.containers.search.AttributeV1.LOCATION_ID}
                     viewAllAttributeValue={this.props.office.id}

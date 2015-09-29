@@ -4,6 +4,7 @@ import { decorate } from 'react-mixin';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
+import tracker from '../utils/tracker';
 import autoBind from '../utils/autoBind';
 import {
     canvasColor,
@@ -41,6 +42,7 @@ const selector = createSelector(
             displayHeader: responsiveState.get('displayHeader'),
             authenticated: authenticationState.get('authenticated'),
             profile: authenticationState.get('profile'),
+            organization: authenticationState.get('organization'),
         }
     }
 );
@@ -58,6 +60,7 @@ class App extends CSSComponent {
         displayHeader: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         location: PropTypes.object,
+        organization: PropTypes.object,
         profile: PropTypes.object,
     }
 
@@ -69,6 +72,7 @@ class App extends CSSComponent {
     componentWillMount() {
         // refresh any cached authentication objects
         if (this.props.authenticated) {
+            tracker.initSession(this.props.profile, this.props.organization);
             this.props.dispatch(refresh());
         }
         this.props.dispatch(
@@ -104,8 +108,8 @@ class App extends CSSComponent {
 
     render() {
         let footer;
-        if (this.props.authenticated && this.props.displayFooter) {
-            footer = <TabBar is="TabBar" profile={this.props.profile} />; }
+        // if (this.props.authenticated && this.props.displayFooter) {
+        //     footer = <TabBar is="TabBar" profile={this.props.profile} />; }
         let header;
         if (this.props.authenticated && this.props.displayHeader) {
             header = <Header {...this.props} />;

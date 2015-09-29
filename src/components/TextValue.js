@@ -25,20 +25,20 @@ class TextValue extends CSSComponent {
         title: PropTypes.string,
     }
 
-    componentWillMount() {
-        this.mergeStateAndProps(this.props);
-    }
-
-    componentWillReceiveProps(nextProps, nextState) {
-        this.mergeStateAndProps(nextProps);
-    }
-
     state = {
         authorName: '',
         editing: false,
         error: '',
         value: '',
         valueTimestamp: '',
+    }
+
+    componentWillMount() {
+        this.mergeStateAndProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+        this.mergeStateAndProps(nextProps);
     }
 
     styles() {

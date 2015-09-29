@@ -5,8 +5,10 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { fontColors, fontWeights } from '../constants/styles';
+import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
+import tracker from '../utils/tracker';
 import { uploadMedia } from '../actions/media';
 
 import CSSComponent from  './CSSComponent';
@@ -39,6 +41,14 @@ class ProfileDetailForm extends CSSComponent {
 
     static defaultProps = {
         mediaUrl: '',
+    }
+
+    state = {
+        imageUrl: '',
+        imageFiles: [],
+        cellNumber: '',
+        title: '',
+        saving: false,
     }
 
     componentWillMount() {
@@ -165,21 +175,10 @@ class ProfileDetailForm extends CSSComponent {
      * @return {Void}
      */
     mergeStateAndProps(props) {
-        let cellNumber = '';
-        if (props.contactMethods && props.contactMethods.length > 0) {
-            for (let key in props.contactMethods) {
-                let contactMethod = props.contactMethods[key];
-                    if (contactMethod && contactMethod.contact_method_type === ContactMethodV1.ContactMethodTypeV1.CELL_PHONE) {
-                        cellNumber = contactMethod.value;
-                        break;
-                    }
-            }
-        }
-
         this.setState({
             imageUrl: this.getPreviewImageUrl(props),
             title: props ? props.profile.title : '',
-            cellNumber: cellNumber,
+            cellNumber: this.getCellNumberFromProps(props),
         }, () => {
             // Given our state machine, the only time mediaUrl is present is when a save is in progress.
             // Continue the save action
@@ -187,14 +186,6 @@ class ProfileDetailForm extends CSSComponent {
                 this.updateProfile();
             }
         });
-    }
-
-    state = {
-        imageUrl: '',
-        imageFiles: [],
-        phoneNumber: '',
-        title: '',
-        saving: false,
     }
 
     // Public Methods
@@ -263,11 +254,52 @@ class ProfileDetailForm extends CSSComponent {
             /*eslint-enable camelcase*/
         });
 
+        let fieldsChanged = this.getFieldsThatChanged();
+        if (fieldsChanged.length > 0) {
+            tracker.trackProfileUpdate(
+                this.props.profile.id,
+                fieldsChanged
+            );
+        }
+
         onSaveCallback(updatedProfile);
         // Need to reset state before dismissing because these
         // components can be cached and carry state.
         this.refs.modal.setSaveEnabled(true);
         this.dismiss();
+    }
+
+    getFieldsThatChanged() {
+        let fields = [];
+        let profile = this.props.profile;
+        if (this.state.imageUrl !== profile.image_url) {
+            fields.push('image_url');
+        }
+
+        if (this.state.title !== profile.title) {
+            fields.push('title');
+        }
+
+        if (this.state.cellNumber !== this.getCellNumberFromProps(this.props)) {
+            fields.push('cell_number');
+        }
+
+        return fields;
+    }
+
+    getCellNumberFromProps(props) {
+        let cellNumber = '';
+        if (props.contactMethods && props.contactMethods.length > 0) {
+            for (let key in props.contactMethods) {
+                let contactMethod = props.contactMethods[key];
+                if (contactMethod && contactMethod.contact_method_type === ContactMethodV1.ContactMethodTypeV1.CELL_PHONE) {
+                    cellNumber = contactMethod.value;
+                    break;
+                }
+            }
+        }
+
+        return cellNumber;
     }
 
     handleSaveTapped() {
@@ -386,6 +418,7 @@ class ProfileDetailForm extends CSSComponent {
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={t('Save')}
                     is="Dialog"
+                    pageType={PAGE_TYPE.EDIT_PROFILE}
                     onSave={this.handleSaveTapped.bind(this)}
                     ref="modal"
                     repositionOnUpdate={false}

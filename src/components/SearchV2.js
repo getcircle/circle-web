@@ -12,8 +12,14 @@ import moment from '../utils/moment';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
+import {
+    CONTACT_LOCATION,
+    SEARCH_RESULT_SOURCE,
+    SEARCH_RESULT_TYPE
+} from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
+import tracker from '../utils/tracker';
 
 import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
@@ -44,6 +50,8 @@ const RESULT_TYPES = keymirror({
 export const SEARCH_RESULT_HEIGHT = 72;
 export const SEARCH_CONTAINER_WIDTH = 460;
 export const SEARCH_RESULTS_MAX_HEIGHT = 420;
+
+const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 const cacheSelector = selectors.createImmutableSelector(
     [
@@ -156,6 +164,7 @@ class Search extends CSSComponent {
         searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
         searchAttributeValue: PropTypes.string,
         searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
+        searchLocation: PropTypes.string.isRequired,
         showCancel: PropTypes.bool,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
@@ -185,17 +194,22 @@ class Search extends CSSComponent {
         showCancel: false,
     }
 
-    componentWillUnmount() {
-        this.props.dispatch(clearSearchResults());
-    }
-
     state = {
         category: null,
         query: '',
         typing: false,
     }
 
+    componentWillUnmount() {
+        this.props.dispatch(clearSearchResults());
+    }
+
     currentSearch = null
+
+    trackingAttributesForRecentResults = {
+        subheader: 'recents',
+        source: SEARCH_RESULT_SOURCE.RECENTS,
+    }
 
     classes() {
         return {
@@ -391,31 +405,93 @@ class Search extends CSSComponent {
         const onTouchTap = item.onTouchTap;
         item.onTouchTap = () => {
             const trackItem = Object.assign({}, item);
+
             // Don't expand tracked results
             if (trackItem.type === RESULT_TYPES.EXPANDED_PROFILE) {
                 trackItem.type = RESULT_TYPES.PROFILE;
             }
             this.props.dispatch(viewSearchResult(trackItem));
+
+            // Call click handler and record tap in analytics provider
             if (onTouchTap && typeof onTouchTap === 'function') {
+                let trackingSource = this.getTrackingSource(trackItem);
+                let trackingResultType = this.getTrackingResultType(trackItem);
+                tracker.trackSearchResultTap(
+                    this.state.query,
+                    trackingSource,
+                    trackingResultType,
+                    // 1 to account for array index
+                    trackItem.index + 1,
+                    this.props.searchLocation,
+                    trackItem.instance.id ? trackItem.instance.id : '',
+                    this.getCurrentSearchCategory(),
+                    this.props.searchAttribute,
+                    this.props.searchAttributeValue,
+                );
                 onTouchTap();
             }
         }
         return item;
     }
 
-    getProfileResult(profile, numberOfResults) {
+    getCurrentSearchCategory() {
+        let { searchCategory } = this.props;
+        if (searchCategory !== null && searchCategory !== undefined) {
+            return searchCategory;
+        } else if (this.state.category !== null) {
+            return this.state.category;
+        }
+
+        return undefined;
+    }
+
+    getTrackingSource(item) {
+        if (item.source && item.source !== null) {
+            return item.source;
+        }
+
+        // If a query term exists, then its a suggestion otherwise it is explore
+        if (this.state.query !== null && this.state.query !== undefined && this.state.query.trim() !== '') {
+            return SEARCH_RESULT_SOURCE.SUGGESTION;
+        }
+
+        return SEARCH_RESULT_SOURCE.EXPLORE;
+    }
+
+    getTrackingResultType(item) {
+        switch (item.type) {
+            case RESULT_TYPES.EXPANDED_PROFILE:
+            case RESULT_TYPES.PROFILE:
+                return SEARCH_RESULT_TYPE.PROFILE;
+
+            case RESULT_TYPES.TEAM:
+                return SEARCH_RESULT_TYPE.TEAM;
+
+            case RESULT_TYPES.LOCATION:
+                return SEARCH_RESULT_TYPE.LOCATION;
+
+            default:
+                console.error('Did not find analytics tracking type for selected RESULT_TYPE');
+                return undefined;
+        }
+    }
+
+    getProfileResult(profile, index, isRecent, numberOfResults) {
+        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const item = {
+            index: index,
             leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: profile.full_name,
             secondaryText: `${profile.title}`,
             onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
+            ...trackingAttributes,
         };
         return this.trackTouchTap(item);
     }
 
-    getTeamResult(team) {
+    getTeamResult(team, index, isRecent) {
         let subTextParts = [];
         if (team.child_team_count > 1) {
             subTextParts.push(`${team.child_team_count} Teams`);
@@ -429,25 +505,31 @@ class Search extends CSSComponent {
             subTextParts.push(`${team.profile_count} Person`);
         }
 
+        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const item = {
+            index: index,
             leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
             primaryText: team.display_name,
             secondaryText: subTextParts.join(', '),
             onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
             type: RESULT_TYPES.TEAM,
             instance: team,
+            ...trackingAttributes
         };
         return this.trackTouchTap(item);
     }
 
-    getLocationResult(location) {
+    getLocationResult(location, index, isRecent) {
+        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
         const item = {
+            index: index,
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
             primaryText: location.name,
             secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
             onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
+            ...trackingAttributes
         };
         return this.trackTouchTap(item);
     }
@@ -455,41 +537,46 @@ class Search extends CSSComponent {
     getCategoryResultsProfiles() {
         const { profiles } = this.props;
         if (profiles) {
-            return profiles.map(profile => this.getProfileResult(profile));
+            return profiles.map((profile, index) => this.getProfileResult(profile, index));
         }
     }
 
     getCategoryResultsTeams() {
         const { teams } = this.props;
         if (teams) {
-            return teams.map(team => this.getTeamResult(team));
+            return teams.map((team, index) => this.getTeamResult(team, index));
         }
     }
 
     getCategoryResultsLocations() {
         const { locations } = this.props;
         if (locations) {
-            return locations.map(location => this.getLocationResult(location));
+            return locations.map((location, index) => this.getLocationResult(location, index));
         }
     }
 
     resolveDefaults() {
         const { defaults } = this.props;
-        return defaults.map((item) => {
+        return defaults.map((item, index) => {
             if (item instanceof services.profile.containers.ProfileV1) {
-                return this.getProfileResult(item);
+                return this.getProfileResult(item, index);
             } else if (item instanceof services.organization.containers.TeamV1) {
-                return this.getTeamResult(item);
+                return this.getTeamResult(item, index);
             }
         });
     }
 
     getRecentResults() {
-        return this.props.recents.slice(0, 3).map((item) => {
-            return {
-                subheader: 'recents',
-                ...item,
-            };
+        return this.props.recents.slice(0, 3).map((searchResultItem, index) => {
+            let item = searchResultItem.instance;
+
+            if (item instanceof services.profile.containers.ProfileV1) {
+                return this.getProfileResult(item, index, true);
+            } else if (item instanceof services.organization.containers.TeamV1) {
+                return this.getTeamResult(item, index, true);
+            } else if (item instanceof services.organization.containers.LocationV1) {
+                return this.getLocationResult(item, index, true);
+            }
         });
     }
 
@@ -544,7 +631,26 @@ class Search extends CSSComponent {
             style: {
                 paddingLeft: 58,
             },
-            onTouchTap: () => window.location.href = `mailto:${profile.email}`,
+            onTouchTap: () => {
+                tracker.trackContactTap(
+                    ContactMethodTypeV1.EMAIL,
+                    profile.id,
+                    CONTACT_LOCATION.SEARCH_SMART_ACTION
+                );
+
+                tracker.trackSearchResultTap(
+                    this.state.query,
+                    SEARCH_RESULT_SOURCE.SMART_ACTION,
+                    SEARCH_RESULT_TYPE.PROFILE,
+                    1,
+                    this.props.searchLocation,
+                    profile.id,
+                    this.getCurrentSearchCategory(),
+                    this.props.searchAttribute,
+                    this.props.searchAttributeValue,
+                );
+                window.location.href = `mailto:${profile.email}`;
+            },
         });
         return expansions;
     }
@@ -561,13 +667,13 @@ class Search extends CSSComponent {
     }
 
     getSearchResultItems(results) {
-        let items = results.map((result) => {
+        let items = results.map((result, index) => {
             if (result.profile) {
-                return this.getProfileResult(result.profile, results.length);
+                return this.getProfileResult(result.profile, index, false, results.length);
             } else if (result.team) {
-                return this.getTeamResult(result.team, results.length);
+                return this.getTeamResult(result.team, index, false, results.length);
             } else if (result.location) {
-                return this.getLocationResult(result.location, results.length);
+                return this.getLocationResult(result.location, index, false, results.length);
             }
         });
         if (results.length === 1) {

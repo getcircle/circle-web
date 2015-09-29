@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 
 import { fontWeights, fontColors, iconColors } from '../constants/styles';
 import { getTeamLabel } from '../services/organization';
+import { PAGE_TYPE } from '../constants/trackerProperties';
 
 import Card from './Card';
 import CardColumns from './CardColumns';
@@ -85,6 +86,7 @@ class TeamDetailTeams extends CSSComponent {
                         filterPlaceholder="Search Teams"
                         items={teams}
                         largerDevice={this.props.largerDevice}
+                        pageType={PAGE_TYPE.TEAM_SUBTEAMS}
                         ref="childTeams"
                         title={`Sub Teams (${this.props.teams.length})`}
                     />

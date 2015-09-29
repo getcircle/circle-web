@@ -9,6 +9,7 @@ import * as selectors from '../selectors';
 import CSSComponent from '../components/CSSComponent';
 import HeaderMenu from '../components/HeaderMenu';
 import Search from '../components/SearchV2';
+import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
 const selector = createSelector(
     [selectors.authenticationSelector, selectors.searchSelector],
@@ -155,6 +156,7 @@ class Header extends CSSComponent {
                         onBlur={::this.handleBlurSearch}
                         onFocus={::this.handleFocusSearch}
                         organization={this.props.organization}
+                        searchLocation={SEARCH_LOCATION.PAGE_HEADER}
                     />
                 </div>
                 <div className="col-xs-2 end-xs" is="menuContainer">

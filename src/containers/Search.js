@@ -10,6 +10,7 @@ import t from '../utils/gettext';
 import HeaderMenu from '../components/HeaderMenu';
 import CSSComponent from '../components/CSSComponent';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/SearchV2';
+import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
 const ORGANIZATION_LOGO_HEIGHT = 200;
 
@@ -202,6 +203,7 @@ class Search extends CSSComponent {
                                 onCancel={::this.handleCancelSearch}
                                 onFocus={::this.handleFocusSearch}
                                 organization={this.props.organization}
+                                searchLocation={SEARCH_LOCATION.HOME}
                             />
                         </div>
                     </section>

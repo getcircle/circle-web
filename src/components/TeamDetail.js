@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
-import { services, soa } from 'protobufs';
+import { services } from 'protobufs';
 
+import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToProfile, routeToTeam } from '../utils/routes';
 import resizable from '../decorators/resizable';
 import t from '../utils/gettext';
+import tracker from '../utils/tracker';
 
 import Card from './Card';
 import CardList from './CardList';
@@ -82,14 +84,20 @@ class TeamDetail extends CSSComponent {
             onUpdateTeamCallback,
         } = this.props;
 
+        let team = extendedTeam.team;
         let teamStatusV1 = new TeamStatusV1({
             value: statusText,
         });
-
-        let updatedTeam = Object.assign({}, extendedTeam.team, {
+        let updatedTeam = Object.assign({}, team, {
             status:  teamStatusV1,
         });
 
+        if ((team.status && team.status.value !== statusText) || !team.status) {
+            tracker.trackTeamUpdate(
+                team.id,
+                ['status']
+            );
+        }
         onUpdateTeamCallback(updatedTeam);
     }
 
@@ -170,6 +178,7 @@ class TeamDetail extends CSSComponent {
                     members={members}
                     membersLoadMore={this.props.membersLoadMore}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
+                    pageType={PAGE_TYPE.TEAM_MEMBERS}
                     title={title}
                     viewAllAttribute={services.search.containers.search.AttributeV1.TEAM_ID}
                     viewAllAttributeValue={this.props.extendedTeam.team.id}

@@ -3,7 +3,9 @@ import React from 'react';
 import { Route, Router } from 'react-router';
 import { reduxRouteComponent } from 'redux-react-router';
 
+import { PAGE_TYPE } from './constants/trackerProperties';
 import { toggleHeader } from './actions/header';
+import tracker from './utils/tracker';
 
 const applyMiddleware = (...middleWares) => {
     const finish = _.noop;
@@ -48,6 +50,16 @@ const getRoutes = (history, store) => {
         }
     }
 
+    const trackPageView = (pageType, paramKey) => {
+        return (next) => {
+            return (nextState, transition) => {
+                let pageId = paramKey !== '' ? nextState.params[paramKey] : '';
+                tracker.trackPageView(pageType, pageId);
+                next(nextState, transition);
+            }
+        }
+    }
+
     const defaultMiddleware = [requireAuth, displayHeader];
 
     return (
@@ -61,17 +73,27 @@ const getRoutes = (history, store) => {
                     />
                     <Route
                         component={require('./containers/Billing')}
-                        onEnter={applyMiddleware(displayHeader)}
+                        onEnter={applyMiddleware(
+                            displayHeader,
+                            trackPageView(PAGE_TYPE.BILLING, '')
+                        )}
                         path="/billing"
                     />
                     <Route
                         component={require('./containers/Search')}
-                        onEnter={applyMiddleware(requireAuth, hideHeader)}
+                        onEnter={applyMiddleware(
+                            requireAuth,
+                            hideHeader,
+                            trackPageView(PAGE_TYPE.HOME, '')
+                        )}
                         path="/"
                     />
                     <Route
                         component={require('./containers/Location')}
-                        onEnter={applyMiddleware(...defaultMiddleware)}
+                        onEnter={applyMiddleware(
+                            ...defaultMiddleware,
+                            trackPageView(PAGE_TYPE.LOCATION_DETAIL, 'locationId')
+                        )}
                         path="/location/:locationId"
                     />
                     <Route
@@ -81,12 +103,18 @@ const getRoutes = (history, store) => {
                     />
                     <Route
                         component={require('./containers/Profile')}
-                        onEnter={applyMiddleware(...defaultMiddleware)}
+                        onEnter={applyMiddleware(
+                            ...defaultMiddleware,
+                            trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
+                        )}
                         path="/profile/:profileId"
                     />
                     <Route
                         component={require('./containers/Team')}
-                        onEnter={applyMiddleware(...defaultMiddleware)}
+                        onEnter={applyMiddleware(
+                            ...defaultMiddleware,
+                            trackPageView(PAGE_TYPE.TEAM_DETAIL, 'teamId')
+                        )}
                         path="/team/:teamId"
                     />
                     <Route

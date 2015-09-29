@@ -27,6 +27,7 @@ class DetailMembers extends StyleableComponent {
         numberOfColumns: PropTypes.number,
         onClickActionText: PropTypes.func,
         onClickMember: PropTypes.func,
+        pageType: PropTypes.string.isRequired,
         viewAllAttribute: PropTypes.instanceOf(services.search.containers.AttributeV1),
         viewAllAttributeValue: PropTypes.string,
         viewAllFilterPlaceholderText: PropTypes.string,
@@ -68,6 +69,7 @@ class DetailMembers extends StyleableComponent {
                         items={this.props.members}
                         itemsLoadMore={this.props.membersLoadMore}
                         largerDevice={this.props.largerDevice}
+                        pageType={this.props.pageType}
                         ref="modal"
                         searchAttribute={this.props.viewAllAttribute}
                         searchAttributeValue={this.props.viewAllAttributeValue}

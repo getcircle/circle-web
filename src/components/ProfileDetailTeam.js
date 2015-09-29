@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getTeamLabel } from '../services/organization';
+import { PAGE_TYPE } from '../constants/trackerProperties';
 
 import Card from './Card';
 import CardFooter from './CardFooter';
@@ -107,6 +108,7 @@ class ProfileDetailTeam extends CSSComponent {
                     filterPlaceholder="Search Peers"
                     items={this.props.peers}
                     largerDevice={this.props.largerDevice}
+                    pageType={PAGE_TYPE.PEERS}
                     ref="peers"
                     title={`Peers (${this.props.peers.length})`}
                 />

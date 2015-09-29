@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 
 import client from '../services/client';
 import { AUTHENTICATION_STATE } from '../constants/localStorageKeys';
+import tracker from '../utils/tracker';
 import * as types from '../constants/actionTypes';
 
 const { OrganizationV1 } = services.organization.containers;
@@ -72,6 +73,7 @@ function storeState(state) {
 function clearState() {
     localStorage.clear();
     client.logout();
+    tracker.clearSession();
     let state = getInitialState(false);
     return state;
 }
@@ -80,6 +82,7 @@ function handleAuthenticateSuccess(state, action) {
     const {user, token, profile, organization} = action.payload;
     const nextState = state.merge({user, token, profile, organization, authenticated: true});
     storeState(nextState);
+    tracker.initSession(profile);
     return nextState;
 }
 

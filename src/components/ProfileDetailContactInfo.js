@@ -3,7 +3,11 @@ import moment from '../utils/moment';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import {
+    CONTACT_LOCATION,
+} from '../constants/trackerProperties';
 import t from '../utils/gettext';
+import tracker from '../utils/tracker';
 
 import Card from './Card';
 import CardList from './CardList';
@@ -30,6 +34,7 @@ class ProfileDetailContactInfo extends CSSComponent {
             PropTypes.instanceOf(services.organization.containers.LocationV1),
         ),
         onClickLocation: PropTypes.func,
+        profileId: PropTypes.string.isRequired,
     }
 
     componentWillMount() {
@@ -159,7 +164,14 @@ class ProfileDetailContactInfo extends CSSComponent {
                     <CardListItem
                         key={index}
                         leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
-                        onTouchTap={() => window.location.href = `mailto:${item.value}`}
+                        onTouchTap={() => {
+                            tracker.trackContactTap(
+                                ContactMethodTypeV1.EMAIL,
+                                this.props.profileId,
+                                CONTACT_LOCATION.PROFILE_DETAIL
+                            );
+                            window.location.href = `mailto:${item.value}`;
+                        }}
                         primaryText={this.getValue(item)}
                         primaryTextStyle={primaryTextStyle}
                     />
