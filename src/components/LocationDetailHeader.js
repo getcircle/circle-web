@@ -1,14 +1,14 @@
 import _ from 'lodash';
-import moment from '../utils/moment';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+
+import moment from '../utils/moment';
+import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import DetailHeader from './DetailHeader';
 import IconContainer from './IconContainer';
-import MoonIcon from './MoonIcon';
 import OfficeIcon from './OfficeIcon';
-import SunIcon from './SunIcon';
 
 class LocationDetailHeader extends CSSComponent {
 
@@ -18,6 +18,10 @@ class LocationDetailHeader extends CSSComponent {
 
     static contextTypes = {
         muiTheme: PropTypes.object.isRequired,
+    }
+
+    state = {
+        currentTime: this.getCurrentTime(this.props),
     }
 
     componentWillMount() {
@@ -32,30 +36,9 @@ class LocationDetailHeader extends CSSComponent {
         clearInterval(this.interval);
     }
 
-    state = {
-        currentTime: this.getCurrentTime(this.props),
-    }
-
     classes() {
         return {
             default: {
-                DayNightIndicatorIcon: {
-                    height: '28px',
-                    width: '28px',
-                },
-                DayNightIndicatorIconContainer: {
-                    stroke: 'rgba(255, 255, 255, 0.8)',
-                },
-                DayNightIndicatorIconContainerContainer: {
-                    border: 0,
-                    borderRadius: 0,
-                    height: '28px',
-                    left: 0,
-                    position: 'relative',
-                    top: 0,
-                    right: 0,
-                    width: '28px',
-                },
                 icon: {
                     height: 80,
                     width: 80,
@@ -64,7 +47,7 @@ class LocationDetailHeader extends CSSComponent {
                 },
                 iconSection: {
                     position: 'relative',
-                    paddingTop: '5vh',
+                    paddingTop: '54px',
                 },
                 iconContainer: {
                     position: 'relative',
@@ -78,7 +61,7 @@ class LocationDetailHeader extends CSSComponent {
                     paddingTop: 10,
                 },
                 nameSection: {
-                    paddingTop: 20,
+                    paddingTop: 0,
                 },
                 timeSection: {
                     paddingTop: 10,
@@ -122,19 +105,6 @@ class LocationDetailHeader extends CSSComponent {
         return parts.join(' ');
     }
 
-    renderDayNightIndicatorImage() {
-        let hour = this.state.currentTime.hour();
-        let isDay = hour < 18 && hour >= 6;
-        return (
-            <IconContainer
-                IconClass={isDay ? SunIcon : MoonIcon}
-                iconStyle={{...this.styles().DayNightIndicatorIcon}}
-                is="DayNightIndicatorIconContainer"
-                style={{...this.styles().DayNightIndicatorIconContainerContainer}}
-            />
-        );
-    }
-
     render() {
         const { office } = this.props;
         let iconColor = {...this.styles().icon}.color;
@@ -158,7 +128,7 @@ class LocationDetailHeader extends CSSComponent {
                 </div>
                 <div className="row center-xs" is="timeSection">
                     <span style={this.context.muiTheme.commonStyles.headerTertiaryText}>
-                        {this.renderDayNightIndicatorImage()}
+                        {t('Local Time')}&nbsp;{'\u2013'}&nbsp;
                         {this.state.currentTime.calendar()}
                     </span>
                 </div>
