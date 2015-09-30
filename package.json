@@ -4,7 +4,7 @@
   "description": "Circle Web App",
   "scripts": {
     "build": "npm run clean && webpack --progress --config webpack/local.config.js",
-    "build-prod": "npm run clean && webpack --progress --config -p webpack/prod.config.js",
+    "build-prod": "npm run clean && webpack --progress --config webpack/prod.config.js",
     "build-dev": "npm run clean && webpack --progress --config webpack/dev.config.js",
     "clean": "rm -rf dist",
     "deploy-prod": "npm test && npm run build-prod && divshot deploy production",
