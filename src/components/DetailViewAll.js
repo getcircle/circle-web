@@ -3,7 +3,7 @@ import { services } from 'protobufs';
 
 import Dialog from './Dialog';
 import CSSComponent from './CSSComponent';
-import Search from './SearchV2';
+import Search from './Search';
 
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 

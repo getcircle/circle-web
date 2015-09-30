@@ -8,7 +8,7 @@ import * as selectors from '../selectors';
 
 import CSSComponent from '../components/CSSComponent';
 import HeaderMenu from '../components/HeaderMenu';
-import Search from '../components/SearchV2';
+import Search from '../components/Search';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
 const selector = createSelector(
