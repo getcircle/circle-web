@@ -1,5 +1,9 @@
+import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+
+import { fontColors, fontWeights } from '../constants/styles';
+import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import DetailHeader from './DetailHeader';
@@ -9,6 +13,9 @@ import IconContainer from './IconContainer';
 class TeamDetailHeader extends CSSComponent {
 
     static propTypes = {
+        isEditable: PropTypes.bool.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
+        onEditTapped: PropTypes.func,
         team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
 
@@ -19,6 +26,19 @@ class TeamDetailHeader extends CSSComponent {
     classes() {
         return {
             default: {
+                editButtonContainer: {
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                },
+                editButton: {
+                    backgroundColor: 'transparent',
+                    border: '1px solid white',
+                    margin: '16px 16px 0 16px',
+                    fontSize: 11,
+                    letterSpacing: '1px',
+                    ...fontColors.white,
+                    ...fontWeights.semiBold,
+                },
                 icon: {
                     height: 80,
                     width: 80,
@@ -27,7 +47,6 @@ class TeamDetailHeader extends CSSComponent {
                 },
                 iconSection: {
                     position: 'relative',
-                    paddingTop: 60,
                 },
                 iconContainer: {
                     position: 'relative',
@@ -42,6 +61,11 @@ class TeamDetailHeader extends CSSComponent {
                 },
                 nameSection: {
                     paddingTop: 20,
+                },
+            },
+            'isEditable-false': {
+                iconSection: {
+                    paddingTop: 60,
                 },
             },
         };
@@ -64,12 +88,36 @@ class TeamDetailHeader extends CSSComponent {
         return parts.join(' | ');
     }
 
+    renderEditButton() {
+        const {
+            isEditable,
+        } = this.props;
+
+        if (!isEditable) {
+            return;
+        }
+
+        return (
+            <div className="row" is="editButtonContainer">
+                <FlatButton
+                    is="editButton"
+                    label={t('Edit Team')}
+                    onTouchTap={() => {
+                        this.props.onEditTapped();
+                    }}
+                />
+            </div>
+        );
+
+    }
+
     render() {
         const { team } = this.props;
         let iconColor = {...this.styles().icon}.color;
         let iconStrokeWidth = {...this.styles().icon}.strokeWidth;
         return (
             <DetailHeader>
+                {this.renderEditButton()}
                 <div className="row center-xs" is="iconSection">
                     <IconContainer
                         IconClass={GroupIcon}

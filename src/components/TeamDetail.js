@@ -16,6 +16,7 @@ import DetailContent from './DetailContent';
 import DetailMembers from './DetailMembers';
 import ProfileAvatar from './ProfileAvatar';
 import TeamDetailDescription from './TeamDetailDescription';
+import TeamDetailForm from './TeamDetailForm';
 import TeamDetailHeader from './TeamDetailHeader';
 import TeamDetailStatus from './TeamDetailStatus';
 import TeamDetailTeams from './TeamDetailTeams';
@@ -99,25 +100,35 @@ class TeamDetail extends CSSComponent {
         onUpdateTeamCallback(updatedTeam);
     }
 
+    editButtonTapped() {
+        this.refs.teamDetailForm.show();
+    }
+
+    canEdit() {
+        return true;
+        let team = this.props.extendedTeam.team;
+        let canEdit = team.permissions ? team.permissions.can_edit : false;
+        return canEdit;
+    }
+
     // Render Methods
 
-    renderStatus(status, isEditable) {
+    renderStatus(status) {
         return (
             <TeamDetailStatus
                 is="section"
-                isEditable={isEditable}
+                isEditable={this.canEdit()}
                 onSaveCallback={this.onUpdateStatus.bind(this)}
                 status={status}
             />
         );
     }
 
-    renderDescription(team, isEditable) {
+    renderDescription(team) {
         return (
             <TeamDetailDescription
                 description={team.description}
                 is="section"
-                isEditable={isEditable}
                 onSaveCallback={this.onUpdateDescription.bind(this)}
             />
         );
@@ -187,23 +198,44 @@ class TeamDetail extends CSSComponent {
         }
     }
 
+    renderTeamDetailForm(team) {
+        const {
+            onUpdateTeamCallback,
+        } = this.props;
+
+        if (this.canEdit()) {
+            return (
+                <TeamDetailForm
+                    onSaveCallback={onUpdateTeamCallback}
+                    ref="teamDetailForm"
+                    team={team}
+                />
+            );
+        }
+    }
+
     render() {
         const { extendedTeam, members } = this.props;
         const { team, reportingDetails } = extendedTeam;
         const { manager } = reportingDetails;
         const childTeams = reportingDetails.child_teams;
 
-        let canEdit = team.permissions ? team.permissions.can_edit : false;
         return (
             <div>
-                <TeamDetailHeader team={team} />
+                <TeamDetailHeader
+                    isEditable={this.canEdit()}
+                    largerDevice={this.props.largerDevice}
+                    onEditTapped={this.editButtonTapped.bind(this)}
+                    team={team}
+                />
                 <DetailContent>
-                    {this.renderStatus(team.status, canEdit)}
-                    {this.renderDescription(team, canEdit)}
+                    {this.renderStatus(team.status)}
+                    {this.renderDescription(team)}
                     {this.renderManager(manager)}
                     {this.renderChildTeams(childTeams, team.child_team_count)}
                     {this.renderTeamMembers(manager, members, team.profile_count)}
                 </DetailContent>
+                {this.renderTeamDetailForm(team)}
             </div>
         );
     }
