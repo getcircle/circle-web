@@ -200,11 +200,17 @@ class Search extends CSSComponent {
         typing: false,
     }
 
+    componentWillReceiveProps(nextProps) {
+        // Resets tracked bit for new searches
+        this.checkAndResetSearchTracked(this.state.query);
+    }
+
     componentWillUnmount() {
         this.props.dispatch(clearSearchResults());
     }
 
-    currentSearch = null
+    currentSearchTimeout = null
+    searchTracked = false
 
     trackingAttributesForRecentResults = {
         subheader: 'recents',
@@ -370,6 +376,25 @@ class Search extends CSSComponent {
         this.selectCategory(null);
         this.setState({query: '', typing: false});
         this.props.onCancel();
+    }
+
+    checkAndResetSearchTracked(value) {
+        if (value.length === 0) {
+            this.searchTracked = false;
+        }
+    }
+
+    trackSearch(value) {
+        if (value.length > 1 && this.searchTracked === false) {
+            this.searchTracked = true;
+            tracker.trackSearchStart(
+                value,
+                this.props.searchLocation,
+                this.getCurrentSearchCategory(),
+                this.props.searchAttribute,
+                this.props.searchAttributeValue,
+            );
+        }
     }
 
     getCategoryNextRequest() {
@@ -774,14 +799,24 @@ class Search extends CSSComponent {
     }
 
     handleChange(event, value) {
-        if (this.currentSearch !== null) {
-            window.clearTimeout(this.currentSearch);
+        if (event.target === null) {
+            return;
         }
-        this.currentSearch = window.setTimeout(() => {
+
+        let query = event.target.value;
+        if (this.currentSearchTimeout !== null) {
+            window.clearTimeout(this.currentSearchTimeout);
+        }
+
+        // Resets tracked bit when hitting backspace
+        this.checkAndResetSearchTracked(query);
+        this.trackSearch(query);
+
+        this.currentSearchTimeout = window.setTimeout(() => {
             this.setState({typing: false});
-            this.loadSearchResults(value);
+            this.loadSearchResults(query);
         }, 300);
-        this.setState({query: value, typing: true});
+        this.setState({query: query, typing: true});
     }
 
     handleBlur(event) {

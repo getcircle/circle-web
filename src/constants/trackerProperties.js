@@ -16,6 +16,7 @@ export const EVENTS = {
     PAGE_VIEW: 'Page View',
     PROFILE_UPDATE: 'Profile Update',
     SEARCH_RESULT_TAP: 'Search Result Tap',
+    SEARCH_START: 'Search Start',
     TEAM_UPDATE: 'Team Update',
 };
 
