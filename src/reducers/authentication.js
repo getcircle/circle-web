@@ -11,14 +11,14 @@ const { OrganizationV1 } = services.organization.containers;
 const { ProfileV1 } = services.profile.containers;
 const { UserV1 } = services.user.containers;
 
-const stateVersion = 1;
-const protobufKeys = ['user', 'profile', 'organization'];
+const STATE_VERSION = 1;
+const PROTOBUF_KEYS = ['user', 'profile', 'organization'];
 
 function getLocalAuthenticationState() {
     try {
         const serializedState = localStorage.getItem(AUTHENTICATION_STATE);
         let previousState = JSON.parse(serializedState);
-        for (let key of protobufKeys) {
+        for (let key of PROTOBUF_KEYS) {
             let ProtobufClass;
             switch (key) {
             case 'user':
@@ -39,7 +39,7 @@ function getLocalAuthenticationState() {
         }
 
         let initialState;
-        if (previousState.__version__ === stateVersion) {
+        if (previousState.__version__ === STATE_VERSION) {
             initialState = Immutable.fromJS(previousState);
             client.authenticate(initialState.get('token'));
         }
@@ -52,7 +52,7 @@ function getLocalAuthenticationState() {
 
 const getInitialState = (checkCache = true) => {
     let initialState = Immutable.fromJS({
-        __version__: stateVersion,
+        __version__: STATE_VERSION,
         user: null,
         token: null,
         profile: null,
@@ -77,7 +77,7 @@ const getInitialState = (checkCache = true) => {
 
 function storeState(state) {
     let nextState = state.toJS();
-    for (let key of protobufKeys) {
+    for (let key of PROTOBUF_KEYS) {
         nextState[key] = nextState[key].encode64();
     }
     localStorage.setItem(AUTHENTICATION_STATE, JSON.stringify(nextState));
