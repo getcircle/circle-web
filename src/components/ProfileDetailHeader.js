@@ -71,7 +71,7 @@ class ProfileDetailHeader extends CSSComponent {
         }
 
         return (
-            <div is="editButtonContainer">
+            <div className="row" is="editButtonContainer">
                 <FlatButton
                     is="editButton"
                     label={t('Edit Profile')}

@@ -199,16 +199,16 @@ class Search extends CSSComponent {
                 </header>
                 <section className="wrap" is="wrap">
                     <section is="organizationLogoSection">
-                        <div className="row">
-                            <div className="col-xs center-xs">
+                        <div>
+                            <div className="row center-xs">
                                 {this.getOrganizationImage()}
                             </div>
                         </div>
                     </section>
                     <section is="searchSection">
-                        <div className="row">
+                        <div>
                             <SearchComponent
-                                className="col-xs center-xs"
+                                className="row center-xs"
                                 is="SearchComponent"
                                 largerDevice={this.props.largerDevice}
                                 onCancel={::this.handleCancelSearch}

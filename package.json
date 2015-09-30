@@ -118,6 +118,7 @@
     "strip-loader": "^0.1.0",
     "style-loader": "^0.12.3",
     "superagent": "git+ssh://git@github.com/mhahn/superagent.git",
+    "ua-parser-js": "^0.7.9",
     "util": "~0.10.3",
     "vinyl-buffer": "~1.0.0",
     "vinyl-source-stream": "~1.1.0",

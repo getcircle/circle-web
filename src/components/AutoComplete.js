@@ -55,6 +55,13 @@ class AutoComplete extends CSSComponent {
         showCancel: false,
     }
 
+    state = {
+        highlightedIndex: null,
+        isActive: false,
+        performAutoCompleteOnKeyUp: false,
+        value: this.props.initialValue || '',
+    }
+
     componentDidMount() {
         if (this.props.alwaysActive) {
             this.focusInput();
@@ -75,13 +82,6 @@ class AutoComplete extends CSSComponent {
         ) {
             this.focusInput();
         }
-    }
-
-    state = {
-        highlightedIndex: null,
-        isActive: false,
-        performAutoCompleteOnKeyUp: false,
-        value: this.props.initialValue || '',
     }
 
     ignoreBlur = false
@@ -329,12 +329,13 @@ class AutoComplete extends CSSComponent {
         } = this.props;
         return (
             <div
+                className="row"
                 {...other}
                 onBlur={::this.handleBlur}
                 onKeyDown={this.handleKeyDown.bind(this)}
                 style={{...this.styles().root, ...style}}
             >
-                <div style={{...this.styles().inputContainer, ...inputContainerStyle}}>
+                <div className="row" style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <SearchIcon is="SearchIcon" />
                     {this.renderTokens(tokens, onClearToken)}
                     <input
