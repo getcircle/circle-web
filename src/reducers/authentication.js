@@ -118,7 +118,7 @@ const initialState = getInitialState();
 
 export default function authentication(state = initialState, action) {
     if (action.error && action.payload.status) {
-        if ([401, 403].includes(action.payload.status)) {
+        if ([401, 403].indexOf(action.payload.status) !== -1) {
             return clearState();
         }
     }

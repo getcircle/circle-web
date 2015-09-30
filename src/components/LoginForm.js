@@ -53,7 +53,7 @@ class LoginForm extends CSSComponent {
     mergeState(props, state) {
         if (props.backend === AUTH_BACKENDS.INTERNAL) {
             this.setState({internal: true});
-        } else if ([AUTH_BACKENDS.GOOGLE, AUTH_BACKENDS.OKTA].includes(props.backend)) {
+        } else if ([AUTH_BACKENDS.GOOGLE, AUTH_BACKENDS.OKTA].indexOf(props.backend) !== -1) {
             this.setState({
                 singleSignOn: true,
                 guest: false,

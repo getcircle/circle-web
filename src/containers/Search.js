@@ -21,6 +21,7 @@ const selector = createSelector(
             organization: authenticationState.get('organization'),
             authenticated: authenticationState.get('authenticated'),
             largerDevice: responsiveState.get('largerDevice'),
+            mobileOS: responsiveState.get('mobileOS'),
         }
     },
 );
@@ -31,6 +32,7 @@ class Search extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
+        mobileOS: PropTypes.bool.isRequired,
         organization: PropTypes.object.isRequired,
         profile: PropTypes.object.isRequired,
     }
@@ -55,7 +57,8 @@ class Search extends CSSComponent {
     styles() {
         return this.css({
             focused: this.state.focused || this.props.largerDevice,
-            smallerDeviceFocused: this.state.focused && !this.props.largerDevice,
+            smallerDeviceFocused: this.state.focused && !this.props.largerDevice && this.props.mobileOS,
+            searchHeader: this.props.largerDevice || !this.props.mobileOS,
         });
     }
 
@@ -147,7 +150,7 @@ class Search extends CSSComponent {
                     marginBottom: 0,
                 },
             },
-            'largerDevice-true': {
+            'searchHeader': {
                 header: {
                     display: 'initial',
                     position: 'relative',

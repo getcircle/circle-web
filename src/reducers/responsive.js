@@ -3,16 +3,58 @@ import StyleResizable from 'material-ui/lib/mixins/style-resizable';
 
 import * as types from '../constants/actionTypes';
 
+const HEADER_AND_FOOTERLESS_PATHS = ['/billing'];
+const MOBILE_OS = ['iOS', 'Android'];
+
+const os = checkOS();
+const mobileOS = MOBILE_OS.indexOf(os) !== -1;
 const initialState = Immutable.fromJS({
     deviceSize: null,
     displayHeader: false,
     displayFooter: false,
     largerDevice: true,
+    os: os,
+    mobileOS: mobileOS,
 });
 
-const HEADER_AND_FOOTERLESS_PATHS = ['/', '/billing'];
+// (C) viazenetti GmbH (Christian Ludwig)
+// http://jsfiddle.net/ChristianL/AVyND/
+function checkOS() {
+  const clientStrings = [{
+    s:'Windows',
+    r:/(Windows)/
+  }, {
+    s:'Android',
+    r:/Android/
+  }, {
+    s:'Open BSD',
+    r:/OpenBSD/
+  }, {
+    s:'Linux',
+    r:/(Linux|X11)/
+  }, {
+    s:'iOS',
+    r:/(iPhone|iPad|iPod)/
+  }, {
+    s:'Mac',
+    r:/Mac/
+  }, {
+    s:'UNIX',
+    r:/UNIX/
+  }, {
+    s:'Robot',
+    r:/(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/
+  }];
 
-export default function responsive(state = initialState, action) {
+  for (let i = 0; i < clientStrings.length; i++) {
+    let cs = clientStrings[i];
+    if (cs.r.test(navigator.userAgent)) {
+      return cs.s;
+    }
+  }
+};
+
+export default function responsive(state = initialState, action, mobileOS = mobileOS) {
     const { Sizes } = StyleResizable.statics;
     switch(action.type) {
     case types.TOGGLE_DISPLAY_HEADER:
@@ -31,11 +73,14 @@ export default function responsive(state = initialState, action) {
 
         let displayHeader;
         let displayFooter;
-        if (HEADER_AND_FOOTERLESS_PATHS.includes(pathname)) {
+        if (HEADER_AND_FOOTERLESS_PATHS.indexOf(pathname) !== -1) {
             displayHeader = false;
             displayFooter = false;
-        } else if (!largerDevice) {
+        } else if (!largerDevice && mobileOS) {
             displayFooter = true;
+            displayHeader = false;
+        } else if (pathname === '/') {
+            displayFooter = false;
             displayHeader = false;
         } else {
             displayHeader = true;

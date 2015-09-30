@@ -29,10 +29,16 @@ describe('responsive reducer', () => {
         expect(state.get('displayHeader')).toExist();
     });
 
-    it('displays teh footer and not the header when device is resized to a small device', () => {
-        const state = responsive(undefined, deviceResized(Sizes.SMALL, '/profile/1233423'));
+    it('displays the footer and not the header when device is resized to a small device and os is mobile', () => {
+        const state = responsive(undefined, deviceResized(Sizes.SMALL, '/profile/1233423'), true);
         expect(state.get('displayFooter')).toExist();
         expect(state.get('displayHeader')).toNotExist();
+    });
+
+    it('doesn\'t display the footer when the device is small but not a mobile os', () => {
+        const state = responsive(undefined, deviceResized(Sizes.SMALL, '/profile/123423423'), false);
+        expect(state.get('displayFooter')).toNotExist();
+        expect(state.get('displayHeader')).toExist();
     });
 
 });
