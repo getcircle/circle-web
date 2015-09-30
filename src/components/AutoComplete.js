@@ -58,7 +58,6 @@ class AutoComplete extends CSSComponent {
     state = {
         highlightedIndex: null,
         isActive: false,
-        performAutoCompleteOnKeyUp: false,
         value: this.props.initialValue || '',
     }
 
@@ -213,7 +212,6 @@ class AutoComplete extends CSSComponent {
             this.setState({
                 highlightedIndex: index,
                 isActive: true,
-                performAutoCompleteOnKeyUp: true,
             });
         },
 
