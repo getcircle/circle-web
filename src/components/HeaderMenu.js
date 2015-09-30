@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react/addons';
 
 import autoBind from '../utils/autoBind';
+import CurrentTheme from '../utils/ThemeManager';
 import { logout } from '../actions/authentication';
 import { routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
@@ -18,6 +19,8 @@ import ProfileAvatar from './ProfileAvatar';
 import ProfileIcon from './ProfileIcon';
 
 const { TransitionGroup } = React.addons;
+
+const BACKGROUND_COLOR = 'rgb(42, 42, 42)';
 
 @decorate(ClickAwayable)
 @decorate(autoBind(ClickAwayable))
@@ -35,6 +38,10 @@ class HeaderMenu extends CSSComponent {
         router: PropTypes.object,
     }
 
+    static childContextTypes = {
+        muiTheme: PropTypes.object,
+    }
+
     static defaultProps = {
         expandedView: true,
     }
@@ -42,6 +49,12 @@ class HeaderMenu extends CSSComponent {
     state = {
         menuDisplayed: false,
         inHeader: false,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: this.getCustomTheme(),
+        };
     }
 
     shouldComponentUpdate(nextProps) {
@@ -53,6 +66,13 @@ class HeaderMenu extends CSSComponent {
 
     componentClickAway() {
         this.hideMenu();
+    }
+
+    getCustomTheme() {
+        return Object.assign({},
+            CurrentTheme,
+            {paper: {backgroundColor: BACKGROUND_COLOR}},
+        );
     }
 
     classes() {
@@ -79,7 +99,7 @@ class HeaderMenu extends CSSComponent {
                     right: 10,
                 },
                 menuListStyle: {
-                    backgroundColor: 'rgb(42, 42, 42)',
+                    backgroundColor: BACKGROUND_COLOR,
                     paddingTop: 10,
                     paddingBottom: 10,
                 },
@@ -125,7 +145,7 @@ class HeaderMenu extends CSSComponent {
         if (this.state.menuDisplayed) {
             return (
                 <Menu
-                    animated={false}
+                    animated={true}
                     desktop={true}
                     is="menu"
                     listStyle={this.styles().menuListStyle}
