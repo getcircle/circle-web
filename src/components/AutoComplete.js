@@ -170,6 +170,11 @@ class AutoComplete extends CSSComponent {
         });
     }
 
+    handleFocus(event) {
+        this.setState({highlightedIndex: null});
+        this.props.onFocus(event);
+    }
+
     handleBlur(event) {
         if (this.ignoreBlur) {
             event.preventDefault();
@@ -349,7 +354,7 @@ class AutoComplete extends CSSComponent {
                     <input
                         is="input"
                         onChange={::this.handleChange}
-                        onFocus={this.props.onFocus}
+                        onFocus={::this.handleFocus}
                         placeholder={!this.props.tokens ? placeholderText : ''}
                         ref="input"
                         type="text"
