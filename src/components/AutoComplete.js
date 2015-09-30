@@ -134,7 +134,10 @@ class AutoComplete extends CSSComponent {
     }
 
     focusInput() {
-        React.findDOMNode(this.refs.input).select();
+        const node = React.findDOMNode(this.refs.input);
+        if (node) {
+            node.select();
+        }
     }
 
     blurInput() {
@@ -152,6 +155,13 @@ class AutoComplete extends CSSComponent {
     getItems() {
         // this is wrapped in a function so in the future we could add `shouldItemRender` or `sortItems`
         return this.props.items || [];
+    }
+
+    selectItem(item) {
+        if (this.props.clearValueOnSelection) {
+            this.setState({value: ''});
+        }
+        this.props.onSelect(item);
     }
 
     handleChange(event) {
@@ -190,12 +200,11 @@ class AutoComplete extends CSSComponent {
 
     handleSelectItem(item, cb) {
         if (this.props.focusOnSelect) {
-            this.focusInput();
+            // NB: To handle "mailto" links opening in an external window, we need to retain focus on the selected item
+            // until the next tick.
+            setTimeout(::this.focusInput, 0);
         }
-        if (this.props.clearValueOnSelection) {
-            this.setState({value: ''});
-        }
-        this.props.onSelect(item);
+        this.selectItem(item);
         if (cb && typeof cb === 'function') {
             cb();
         }
@@ -253,6 +262,7 @@ class AutoComplete extends CSSComponent {
                     highlightedIndex: null,
                 });
                 this.setIgnoreBlur(false);
+                this.selectItem(this.getItems()[this.state.highlightedIndex]);
             }
         },
 

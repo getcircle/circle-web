@@ -130,6 +130,7 @@ class ProfileDetailContactInfo extends CSSComponent {
             case ContactMethodTypeV1.EMAIL:
                 return (
                     <CardListItem
+                        href={`mailto:${item.value}`}
                         key={index}
                         leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
                         onTouchTap={() => {
@@ -138,10 +139,10 @@ class ProfileDetailContactInfo extends CSSComponent {
                                 this.props.profileId,
                                 CONTACT_LOCATION.PROFILE_DETAIL
                             );
-                            window.location.href = `mailto:${item.value}`;
                         }}
                         primaryText={this.getValue(item)}
                         primaryTextStyle={primaryTextStyle}
+                        target="_blank"
                     />
                 );
             case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:

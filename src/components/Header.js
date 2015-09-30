@@ -38,15 +38,15 @@ class Header extends CSSComponent {
         }).isRequired,
     }
 
+    state = {
+        focused: false,
+    }
+
     shouldComponentUpdate(nextProps) {
         if (!nextProps.authenticated) {
             return false;
         }
         return true;
-    }
-
-    state = {
-        focused: false,
     }
 
     styles() {

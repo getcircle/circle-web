@@ -631,13 +631,14 @@ class Search extends CSSComponent {
             style: {
                 paddingLeft: 58,
             },
+            href: `mailto:${profile.email}`,
+            target: '_blank',
             onTouchTap: () => {
                 tracker.trackContactTap(
                     ContactMethodTypeV1.EMAIL,
                     profile.id,
                     CONTACT_LOCATION.SEARCH_SMART_ACTION
                 );
-
                 tracker.trackSearchResultTap(
                     this.state.query,
                     SEARCH_RESULT_SOURCE.SMART_ACTION,
@@ -649,7 +650,6 @@ class Search extends CSSComponent {
                     this.props.searchAttribute,
                     this.props.searchAttributeValue,
                 );
-                window.location.href = `mailto:${profile.email}`;
             },
         });
         return expansions;
@@ -758,6 +758,12 @@ class Search extends CSSComponent {
         }
     }
 
+    cleanup() {
+        this.setState({query: ''});
+        this.props.dispatch(clearSearchResults());
+        this.props.onBlur();
+    }
+
     handleInfiniteLoad() {
         const nextRequest = this.getCategoryNextRequest();
         if (nextRequest) {
@@ -780,17 +786,19 @@ class Search extends CSSComponent {
 
     handleBlur(event) {
         if (!this.props.canExplore) {
-            this.setState({query: ''});
-            this.props.dispatch(clearSearchResults());
-            this.props.onBlur();
+            this.cleanup();
         }
     }
 
-    handleSelection(event, item) {
+    handleSelection(item) {
         if (!this.props.canExplore) {
-            this.setState({query: ''});
-            this.props.dispatch(clearSearchResults());
-            this.props.onBlur();
+            if (item.type === RESULT_TYPES.CONTACT_METHOD) {
+                // NB: To handle "mailto" links opening in an external window, we need to cleanup on the next tick to
+                // allow the element to stay in focus and open a new window.
+                setTimeout(() => this.cleanup(), 0);
+            } else {
+                this.cleanup();
+            }
         }
     }
 
@@ -830,7 +838,11 @@ class Search extends CSSComponent {
                     ((highlighted) =>  {
                         // NB: Component will be null in some cases (unmounting and on change)
                         if (component) {
-                            component.applyFocusState(highlighted ? 'keyboard-focused' : 'none');
+                            if (highlighted) {
+                                // NB: We don't want to pass "none" to apply focus if it isn't highlighted because it
+                                // will blur the element which can prevent "mailto" links from working properly
+                                component.applyFocusState('keyboard-focused');
+                            }
                         }
                     })(highlighted);
                 }}
