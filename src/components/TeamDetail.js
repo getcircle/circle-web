@@ -105,7 +105,6 @@ class TeamDetail extends CSSComponent {
     }
 
     canEdit() {
-        return true;
         let team = this.props.extendedTeam.team;
         let canEdit = team.permissions ? team.permissions.can_edit : false;
         return canEdit;
