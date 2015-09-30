@@ -42,6 +42,11 @@ class Dialog extends CSSComponent {
         onSave() {},
     }
 
+    state = {
+        saveEnabled: true,
+        muiTheme: CurrentTheme,
+    }
+
     getChildContext() {
         return {
             muiTheme: this.state.muiTheme,
@@ -56,16 +61,15 @@ class Dialog extends CSSComponent {
         this.customizeTheme(nextProps);
     }
 
-    state = {
-        saveEnabled: true,
-        muiTheme: CurrentTheme,
-    }
-
     originalDesktopKeylineIncrement = CurrentTheme.rawTheme.spacing.desktopKeylineIncrement;
 
     customizeTheme(props) {
         let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
             canvasColor: common.background.backgroundColor,
+        });
+
+        customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(customDialogTheme, {
+            alternateTextColor: 'rgb(242, 242, 242)',
         });
 
         if (!props.largerDevice) {
@@ -209,7 +213,7 @@ class Dialog extends CSSComponent {
         } = this.props;
         return (
             <mui.Dialog {...other} is="Dialog" ref="modal">
-                <header is="DialogHeader">
+                <header className="row" is="DialogHeader">
                     <div is="DialogClose">
                         <FlatButton
                             is="DialogCloseButton"
