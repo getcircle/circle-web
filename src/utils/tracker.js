@@ -104,7 +104,12 @@ class Tracker {
      * @return {bool}
      */
     isSessionInitialized() {
-        let userId = mixpanel.get_property('User ID');
+        let userId;
+        try {
+            userId = mixpanel.get_property('User ID');
+        } catch (e) {
+            logger.error(`Error checking mixpanel property: ${e}`, e);
+        }
         return !!userId;
     }
 
