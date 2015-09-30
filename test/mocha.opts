@@ -1,0 +1,4 @@
+--reporter progress
+--require test/mocha-babel
+--require test/setup
+--recursive

@@ -13,7 +13,7 @@
     "start": "npm run build && node webpack/webpack-dev-server",
     "setup-dns": "echo '127.0.0.1 local.lunohq.com' >> /etc/hosts && dscacheutil -flushcache",
     "open": "open http://local.lunohq.com:9110/",
-    "test": "mocha --require test/mocha-babel --require test/setup --recursive",
+    "test": "mocha",
     "dev": "npm test -- --watch --growl"
   },
   "repository": {
