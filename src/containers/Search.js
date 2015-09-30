@@ -69,6 +69,7 @@ class Search extends CSSComponent {
                     display: 'none',
                 },
                 organizationLogo: {
+                    alignSelf: 'center',
                     maxHeight: ORGANIZATION_LOGO_HEIGHT,
                     maxWidth: SEARCH_CONTAINER_WIDTH,
                 },
@@ -174,7 +175,7 @@ class Search extends CSSComponent {
     getOrganizationImage() {
         const imageUrl = this.props.organization.image_url;
         if (imageUrl) {
-            return <img is="organizationLogo" src={imageUrl} />;
+            return <img className="row" is="organizationLogo" src={imageUrl} />;
         } else {
             return <div is="organizationLogoPlaceholder" />;
         }
