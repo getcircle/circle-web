@@ -1,7 +1,10 @@
+import { decorate } from 'react-mixin';
+import ClickAwayable from 'material-ui/lib/mixins/click-awayable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react/addons';
 
+import autoBind from '../utils/autoBind';
 import { logout } from '../actions/authentication';
 import { routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
@@ -16,6 +19,8 @@ import ProfileIcon from './ProfileIcon';
 
 const { TransitionGroup } = React.addons;
 
+@decorate(ClickAwayable)
+@decorate(autoBind(ClickAwayable))
 class HeaderMenu extends CSSComponent {
 
     static propTypes = {
@@ -34,6 +39,11 @@ class HeaderMenu extends CSSComponent {
         expandedView: true,
     }
 
+    state = {
+        menuDisplayed: false,
+        inHeader: false,
+    }
+
     shouldComponentUpdate(nextProps) {
         if (!nextProps.profile) {
             return false;
@@ -41,9 +51,8 @@ class HeaderMenu extends CSSComponent {
         return true;
     }
 
-    state = {
-        menuDisplayed: false,
-        inHeader: false,
+    componentClickAway() {
+        this.hideMenu();
     }
 
     classes() {
