@@ -172,7 +172,6 @@ class Tracker {
      * @param {?search.CategoryV1} category Category for search
      * @param {?search.AttributeV1} attribute Search filter attribute
      * @param {?string} value Search filter attribute value
-     *
      */
     trackSearchResultTap(query, source, searchResultType, resultIndex, searchLocation, resultId, category, attribute, value) {
 
@@ -186,6 +185,11 @@ class Tracker {
             return;
         }
 
+        if (!searchLocation) {
+            logger.error('Search location needs to be set for tracking search result taps.');
+            return;
+        }
+
         mixpanel.track(EVENTS.SEARCH_RESULT_TAP, {
             'Search Query': query === '' ? undefined : query,
             'Search Source': source,
@@ -193,6 +197,32 @@ class Tracker {
             'Search Result Type': searchResultType,
             'Search Result ID': resultId && resultId !== '' ? resultId : undefined,
             'Search Result Index': resultIndex ? resultIndex : undefined,
+            'Search Category': category !== null ? this.getStringKeyValue(CategoryV1, category) : undefined,
+            'Search Attribute': attribute !== null ? this.getStringKeyValue(AttributeV1, attribute) : undefined,
+            'Search Attribute Value': value ? value : undefined,
+        });
+    }
+
+
+    /**
+     * Tracks the start of a seach.
+     *
+     * @param {string} query Search term when the result was tapped
+     * @param {string} searchLocation Location from where the search was performed. Constant value of SEARCH_LOCATION
+     * @param {?search.CategoryV1} category Category for search
+     * @param {?search.AttributeV1} attribute Search filter attribute
+     * @param {?string} value Search filter attribute value
+     */
+    trackSearchStart(query, searchLocation, category, attribute, value) {
+
+        if (!searchLocation) {
+            logger.error('Search location needs to be set for tracking start of a search.');
+            return;
+        }
+
+        mixpanel.track(EVENTS.SEARCH_START, {
+            'Search Query': query === '' ? undefined : query,
+            'Search Location': searchLocation,
             'Search Category': category !== null ? this.getStringKeyValue(CategoryV1, category) : undefined,
             'Search Attribute': attribute !== null ? this.getStringKeyValue(AttributeV1, attribute) : undefined,
             'Search Attribute Value': value ? value : undefined,
