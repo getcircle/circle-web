@@ -206,6 +206,7 @@ class ProfileDetail extends StyleableComponent {
             <div>
                 <ProfileDetailHeader
                     isEditable={isLoggedInUser}
+                    largerDevice={this.props.largerDevice}
                     onEditTapped={this.editButtonTapped.bind(this)}
                     organization={organization}
                     profile={profile}

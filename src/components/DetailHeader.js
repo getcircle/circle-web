@@ -8,6 +8,7 @@ class DetailHeader extends CSSComponent {
     static propTypes = {
         children: PropTypes.arrayOf(PropTypes.element),
         img: PropTypes.string,
+        largerDevice: PropTypes.bool.isRequired,
         style: PropTypes.object,
     }
 
@@ -15,29 +16,24 @@ class DetailHeader extends CSSComponent {
         return {
             default: {
                 root: {
-                    backgroundColor: 'rgb(51, 51, 51)',
+                    backgroundColor: 'rgba(51, 51, 51, 0.8)',
                     height: 320,
                     position: 'relative',
                     zIndex: 1,
                 },
-            },
-            withImageSet: {
-                root: {
-                    backgroundColor: 'rgba(51, 51, 51, 0.8)',
+                nonBlurHeader: {
+                    backgroundColor: 'rgb(51, 51, 51)',
+                    height: 320,
+                    position: 'relative',
                 },
             },
         };
     }
 
-    styles() {
-        return this.css({
-          'withImageSet': this.props.img && this.props.img !== '',
-        });
-    }
-
     render() {
         const {
             img,
+            largerDevice,
             style,
             ...other,
         } = this.props;
@@ -45,13 +41,17 @@ class DetailHeader extends CSSComponent {
         let headerImage = img && img !== '' ? img : '';
         if (headerImage) {
             return (
-                <Blur blurRadius={50} className="detail-blur-canvas" img={headerImage}>
+                <Blur
+                    blurRadius={50}
+                    className={largerDevice ? 'detail-blur-canvas' : 'detail-blur-canvas-notop'}
+                    img={headerImage}
+                >
                     <header {...other} style={{...this.styles().root, ...style}} />
                 </Blur>
             );
         } else {
             return (
-                <header {...other} style={{...this.styles().root, ...style}} />
+                <header {...other} style={{...this.styles().nonBlurHeader, ...style}} />
             );
         }
     }

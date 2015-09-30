@@ -14,6 +14,7 @@ class ProfileDetailHeader extends CSSComponent {
 
     static propTypes = {
         isEditable: PropTypes.bool.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         onEditTapped: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -91,7 +92,10 @@ class ProfileDetailHeader extends CSSComponent {
             team,
         } = this.props;
         return (
-            <DetailHeader img={profile.image_url}>
+            <DetailHeader
+                img={profile.image_url}
+                largerDevice={this.props.largerDevice}
+            >
                 {this.renderEditButton()}
                 <div className="row center-xs" is="avatarSection">
                     <ProfileAvatar is="avatar" profile={profile} />
