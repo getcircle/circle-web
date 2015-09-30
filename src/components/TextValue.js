@@ -92,6 +92,7 @@ class TextValue extends CSSComponent {
                 text: {
                     fontSize: 16,
                     lineHeight: '29px',
+                    whiteSpace: 'pre',
                     ...fontColors.dark,
                 },
                 timestamp: {

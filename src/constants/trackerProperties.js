@@ -42,6 +42,7 @@ export const PAGE_TYPE = {
 
     // Editable Form
     EDIT_PROFILE: 'Edit Profile',
+    EDIT_TEAM: 'Edit Team',
 };
 
 // Search Result Sources (Convention: Titlecase, Separator - Space)
