@@ -26,7 +26,7 @@ export function loadTeamMembers(teamId, nextRequest=null) {
                 types.LOAD_TEAM_MEMBERS_FAILURE,
             ],
             /*eslint-disable camelcase */
-            remote: () => getProfiles({team_id: teamId}),
+            remote: () => getProfiles({team_id: teamId}, nextRequest),
             /*eslint-enable camelcase */
             bailout: (state) => {
                 if (state.teamMembers.has(teamId) && nextRequest === null) {

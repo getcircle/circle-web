@@ -31,7 +31,7 @@ const selector = createSelector(
         if (extendedTeamsState.get('ids').has(teamId)) {
             extendedTeam = retrieveExtendedTeam(teamId, cache);
         }
-        if (membersState.has(teamId) && !membersState.get(teamId).get('loading')) {
+        if (membersState.has(teamId)) {
             const ids = membersState.get(teamId).get('ids').toJS();
             members = retrieveProfiles(ids, cache);
             membersNextRequest = membersState.get(teamId).get('nextRequest');
@@ -93,7 +93,7 @@ class Team extends CSSComponent {
             largerDevice,
             members,
         } = this.props;
-        if (extendedTeam && members) {
+        if (extendedTeam) {
             return (
                 <TeamDetail
                     extendedTeam={extendedTeam}
@@ -101,7 +101,7 @@ class Team extends CSSComponent {
                     members={members}
                     membersLoadMore={() => {
                         // TODO this is broken because it reloads the entire component, need to think of a way to handle this
-                        // this.loadTeamMembers(this.props);
+                        this.loadTeamMembers(this.props);
                     }}
                     onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
                 />
