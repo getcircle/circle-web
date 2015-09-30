@@ -265,6 +265,10 @@ class ProfileDetailForm extends CSSComponent {
         onSaveCallback(updatedProfile);
         // Need to reset state before dismissing because these
         // components can be cached and carry state.
+        this.setState({
+            imageFiles: [],
+            saving: false,
+        });
         this.refs.modal.setSaveEnabled(true);
         this.dismiss();
     }
