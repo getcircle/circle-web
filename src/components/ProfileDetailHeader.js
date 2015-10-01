@@ -85,6 +85,13 @@ class ProfileDetailHeader extends CSSComponent {
 
     }
 
+    getImageUrl() {
+        const { profile } = this.props;
+        if (profile) {
+            return profile.image_url;
+        }
+    }
+
     render() {
         const {
             organization,
@@ -93,7 +100,7 @@ class ProfileDetailHeader extends CSSComponent {
         } = this.props;
         return (
             <DetailHeader
-                img={profile.image_url}
+                img={this.getImageUrl()}
                 largerDevice={this.props.largerDevice}
             >
                 {this.renderEditButton()}

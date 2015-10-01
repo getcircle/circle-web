@@ -138,6 +138,13 @@ class Header extends CSSComponent {
         this.setState({focused: false});
     }
 
+    getImageUrl() {
+        const { organization } = this.props;
+        if (organization) {
+            return organization.image_url;
+        }
+    }
+
     renderHeader() {
         const { router } = this.context;
         return (
@@ -146,7 +153,7 @@ class Header extends CSSComponent {
                     <img
                         is="image"
                         onTouchTap={() => router.transitionTo('/')}
-                        src={this.props.organization.image_url}
+                        src={this.getImageUrl()}
                     />
                 </div>
                 <div className="col-xs-8 center-xs" is="searchContainer">
