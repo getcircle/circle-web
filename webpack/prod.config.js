@@ -21,7 +21,6 @@ module.exports = {
             filename: 'index.html',
             template: 'index.template.html',
             favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico'),
-            mixpanelToken: '62bae2b7a51edf77b99f470ec114324a',
         }),
         new webpack.DefinePlugin({
             __DEVELOPMENT__: false,
@@ -32,6 +31,7 @@ module.exports = {
                 API_ENDPOINT: JSON.stringify('https://api.lunohq.com/v1/'),
                 GOOGLE_CLIENT_ID: JSON.stringify('1057892432577-im3kndbpr8k14dkefm91hb5qth134nb0.apps.googleusercontent.com'),
                 GOOGLE_MAPS_API_KEY: JSON.stringify('AIzaSyA_ooSzt99omg9hWAugqIZnAyX8axkjrlk'),
+                MIXPANEL_TOKEN: JSON.stringify('62bae2b7a51edf77b99f470ec114324a'),
             }
         }),
 

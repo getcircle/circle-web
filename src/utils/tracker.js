@@ -27,7 +27,13 @@ const { AttributeV1, CategoryV1 } = services.search.containers.search;
 class Tracker {
 
     constructor() {
+        this._mixpanelLoaded = false;
+        this._callbacks = [];
         this._sessionInitialized = false;
+        mixpanel.init(process.env.MIXPANEL_TOKEN, {loaded: () => {
+            this._mixpanelLoaded = true;
+            this.flushQueue();
+        }});
     }
 
     // Session methods
@@ -43,47 +49,50 @@ class Tracker {
      * @param {OrganizationV1} organization Organization of the the logged in user
      */
     initSession(profile, organization) {
+        this.withMixpanel(() => {
+            if (this._sessionInitialized && mixpanel.cookie) {
+                return;
+            }
 
-        if (!profile) {
-            logger.error('Logged in user profile needs to be set for starting tracking session.');
-            return;
-        }
+            if (!profile) {
+                logger.error('Logged in user profile needs to be set for starting tracking session.');
+                return;
+            }
 
-        if (!organization) {
-            logger.error('Logged in user organization needs to be set for starting tracking session.');
-            return;
-        }
+            if (!organization) {
+                logger.error('Logged in user organization needs to be set for starting tracking session.');
+                return;
+            }
 
-        if (this._sessionInitialized) {
-            return;
-        }
+            logger.log('Initialized Tracker');
 
-        // Identify user is Mixpanel
-        // Unique identifier for the user
-        mixpanel.identify(profile.user_id);
+            // Identify user is Mixpanel
+            // Unique identifier for the user
+            mixpanel.identify(profile.user_id);
 
-        // Add attributes for this person
-        // NOTE: $first_name does not follow the convention
-        // because it a reserved mixpanel property and
-        // is supposed to be defined this way.
-        mixpanel.people.set({
-            '$first_name': profile.first_name,
-            'Organization ID': profile.organization_id,
-            'Organization Domain': organization.domain.toLowerCase(),
-            'Profile ID': profile.id,
-            'Title': profile.title,
-            'User ID': profile.user_id,
+            // Add attributes for this person
+            // NOTE: $first_name does not follow the convention
+            // because it a reserved mixpanel property and
+            // is supposed to be defined this way.
+            mixpanel.people.set({
+                '$first_name': profile.first_name,
+                'Organization ID': profile.organization_id,
+                'Organization Domain': organization.domain.toLowerCase(),
+                'Profile ID': profile.id,
+                'Title': profile.title,
+                'User ID': profile.user_id,
+            });
+
+            // Add super properties, which should be included with event event
+            mixpanel.register({
+                'Organization ID': profile.organization_id,
+                'Organization Domain': organization.domain.toLowerCase(),
+                'Profile ID': profile.id,
+                'User ID': profile.user_id,
+            });
+
+            this._sessionInitialized = true;
         });
-
-        // Add super properties, which should be included with event event
-        mixpanel.register({
-            'Organization ID': profile.organization_id,
-            'Organization Domain': organization.domain.toLowerCase(),
-            'Profile ID': profile.id,
-            'User ID': profile.user_id,
-        });
-
-        this._sessionInitialized = true;
     }
 
     /**
@@ -95,11 +104,29 @@ class Tracker {
      * NOTE: The behavior if called in mid-session is unknown.
      */
     clearSession() {
-        // Clears entire session
-        // This should be called only on LOGOUT and not in mid-session.
-        if (mixpanel.cookie && mixpanel.cookie.clear) {
-            mixpanel.cookie.clear();
+        this.withMixpanel(() => {
+            // Clears entire session
+            // This should be called only on LOGOUT and not in mid-session.
+            if (mixpanel.cookie && mixpanel.cookie.clear) {
+                mixpanel.cookie.clear();
+                this._sessionInitialized = false;
+            }
+        });
+    }
+
+    flushQueue() {
+
+        if (this._mixpanelLoaded) {
+            let length = this._callbacks.length;
+            for (let i = 0; i < length; i++) {
+                (this._callbacks.pop())();
+            }
         }
+    }
+
+    withMixpanel(callback) {
+        this._callbacks.push(callback);
+        this.flushQueue();
     }
 
     // If we get an integer enum value, trying using the key in the expected
@@ -127,18 +154,21 @@ class Tracker {
      *         of the associated object)
      */
     trackPageView(pageType, pageId) {
-        if (!pageType) {
-            logger.error('Page Type needs to be set for tracking page views.');
-            return;
-        }
+        this.withMixpanel(() => {
+            logger.log('Track page view');
+            if (!pageType) {
+                logger.error('Page Type needs to be set for tracking page views.');
+                return;
+            }
 
-        mixpanel.track(EVENTS.PAGE_VIEW, {
-            'Page Type': pageType,
-            'Page ID': pageId && pageId !== '' ? pageId : undefined,
+            mixpanel.track(EVENTS.PAGE_VIEW, {
+                'Page Type': pageType,
+                'Page ID': pageId && pageId !== '' ? pageId : undefined,
+            });
+
+            // Increment global page views count for the user.
+            mixpanel.people.increment('Page Views');
         });
-
-        // Increment global page views count for the user.
-        mixpanel.people.increment('Page Views');
     }
 
     /**
@@ -158,32 +188,33 @@ class Tracker {
      * @param {?string} value Search filter attribute value
      */
     trackSearchResultTap(query, source, searchResultType, resultIndex, searchLocation, resultId, category, attribute, value) {
+        this.withMixpanel(() => {
+            if (!source) {
+                logger.error('Search source needs to be set for tracking search result taps.');
+                return;
+            }
 
-        if (!source) {
-            logger.error('Search source needs to be set for tracking search result taps.');
-            return;
-        }
+            if (!searchResultType) {
+                logger.error('Search result type needs to be set for tracking search result taps.');
+                return;
+            }
 
-        if (!searchResultType) {
-            logger.error('Search result type needs to be set for tracking search result taps.');
-            return;
-        }
+            if (!searchLocation) {
+                logger.error('Search location needs to be set for tracking search result taps.');
+                return;
+            }
 
-        if (!searchLocation) {
-            logger.error('Search location needs to be set for tracking search result taps.');
-            return;
-        }
-
-        mixpanel.track(EVENTS.SEARCH_RESULT_TAP, {
-            'Search Query': query === '' ? undefined : query,
-            'Search Source': source,
-            'Search Location': searchLocation,
-            'Search Result Type': searchResultType,
-            'Search Result ID': resultId && resultId !== '' ? resultId : undefined,
-            'Search Result Index': resultIndex ? resultIndex : undefined,
-            'Search Category': category !== null ? this.getStringKeyValue(CategoryV1, category) : undefined,
-            'Search Attribute': attribute !== null ? this.getStringKeyValue(AttributeV1, attribute) : undefined,
-            'Search Attribute Value': value ? value : undefined,
+            mixpanel.track(EVENTS.SEARCH_RESULT_TAP, {
+                'Search Query': query === '' ? undefined : query,
+                'Search Source': source,
+                'Search Location': searchLocation,
+                'Search Result Type': searchResultType,
+                'Search Result ID': resultId && resultId !== '' ? resultId : undefined,
+                'Search Result Index': resultIndex ? resultIndex : undefined,
+                'Search Category': category !== null ? this.getStringKeyValue(CategoryV1, category) : undefined,
+                'Search Attribute': attribute !== null ? this.getStringKeyValue(AttributeV1, attribute) : undefined,
+                'Search Attribute Value': value ? value : undefined,
+            });
         });
     }
 
@@ -198,18 +229,19 @@ class Tracker {
      * @param {?string} value Search filter attribute value
      */
     trackSearchStart(query, searchLocation, category, attribute, value) {
+        this.withMixpanel(() => {
+            if (!searchLocation) {
+                logger.error('Search location needs to be set for tracking start of a search.');
+                return;
+            }
 
-        if (!searchLocation) {
-            logger.error('Search location needs to be set for tracking start of a search.');
-            return;
-        }
-
-        mixpanel.track(EVENTS.SEARCH_START, {
-            'Search Query': query === '' ? undefined : query,
-            'Search Location': searchLocation,
-            'Search Category': category !== null ? this.getStringKeyValue(CategoryV1, category) : undefined,
-            'Search Attribute': attribute !== null ? this.getStringKeyValue(AttributeV1, attribute) : undefined,
-            'Search Attribute Value': value ? value : undefined,
+            mixpanel.track(EVENTS.SEARCH_START, {
+                'Search Query': query === '' ? undefined : query,
+                'Search Location': searchLocation,
+                'Search Category': category !== null ? this.getStringKeyValue(CategoryV1, category) : undefined,
+                'Search Attribute': attribute !== null ? this.getStringKeyValue(AttributeV1, attribute) : undefined,
+                'Search Attribute Value': value ? value : undefined,
+            });
         });
     }
 
@@ -221,26 +253,27 @@ class Tracker {
      * @param {string} contactLocation Constant value of CONTACT_LOCATION capturing where the tap happened
      */
     trackContactTap(contactMethod, contactId, contactLocation) {
+        this.withMixpanel(() => {
+            if (contactMethod === undefined || contactMethod === null) {
+                logger.error('Contact Method needs to be set for tracking contact taps.');
+                return;
+            }
 
-        if (contactMethod === undefined || contactMethod === null) {
-            logger.error('Contact Method needs to be set for tracking contact taps.');
-            return;
-        }
+            if (!contactId) {
+                logger.error('Contact ID needs to be set for tracking contact taps.');
+                return;
+            }
 
-        if (!contactId) {
-            logger.error('Contact ID needs to be set for tracking contact taps.');
-            return;
-        }
+            if (!contactLocation) {
+                logger.error('Contact Location needs to be set for tracking contact taps.');
+                return;
+            }
 
-        if (!contactLocation) {
-            logger.error('Contact Location needs to be set for tracking contact taps.');
-            return;
-        }
-
-        mixpanel.track(EVENTS.CONTACT_TAP, {
-            'Contact Method': this.getStringKeyValue(ContactMethodTypeV1, contactMethod),
-            'Contact ID': contactId,
-            'Contact Location': contactLocation,
+            mixpanel.track(EVENTS.CONTACT_TAP, {
+                'Contact Method': this.getStringKeyValue(ContactMethodTypeV1, contactMethod),
+                'Contact ID': contactId,
+                'Contact Location': contactLocation,
+            });
         });
     }
 
@@ -258,23 +291,25 @@ class Tracker {
      *                       All fields should be lower case and separated by underscore.
      */
     trackProfileUpdate(objectId, fields) {
-        if (!objectId) {
-            logger.error('Object ID needs to be set for tracking profile updates.');
-            return;
-        }
+        this.withMixpanel(() => {
+            if (!objectId) {
+                logger.error('Object ID needs to be set for tracking profile updates.');
+                return;
+            }
 
-        if (!fields ||
-            fields === undefined ||
-            !(fields instanceof Array) ||
-            fields.length === 0
-        ) {
-            logger.error('Fields that were updated need to be set and as an array for tracking profile updates.');
-            return;
-        }
+            if (!fields ||
+                fields === undefined ||
+                !(fields instanceof Array) ||
+                fields.length === 0
+            ) {
+                logger.error('Fields that were updated need to be set and as an array for tracking profile updates.');
+                return;
+            }
 
-        mixpanel.track(EVENTS.PROFILE_UPDATE, {
-            'Object ID': objectId,
-            'Fields': fields,
+            mixpanel.track(EVENTS.PROFILE_UPDATE, {
+                'Object ID': objectId,
+                'Fields': fields,
+            });
         });
     }
 
@@ -291,23 +326,25 @@ class Tracker {
      *                       All fields should be lower case and separated by underscore.
      */
     trackTeamUpdate(teamId, fields) {
-        if (!teamId) {
-            logger.error('Team ID needs to be set for tracking team updates.');
-            return;
-        }
+        this.withMixpanel(() => {
+            if (!teamId) {
+                logger.error('Team ID needs to be set for tracking team updates.');
+                return;
+            }
 
-        if (!fields ||
-            fields === undefined ||
-            !(fields instanceof Array) ||
-            fields.length === 0
-        ) {
-            logger.error('Fields that were updated need to be set and as an array for tracking team updates.');
-            return;
-        }
+            if (!fields ||
+                fields === undefined ||
+                !(fields instanceof Array) ||
+                fields.length === 0
+            ) {
+                logger.error('Fields that were updated need to be set and as an array for tracking team updates.');
+                return;
+            }
 
-        mixpanel.track(EVENTS.TEAM_UPDATE, {
-            'Team ID': teamId,
-            'Fields': fields,
+            mixpanel.track(EVENTS.TEAM_UPDATE, {
+                'Team ID': teamId,
+                'Fields': fields,
+            });
         });
     }
 }

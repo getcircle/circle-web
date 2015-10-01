@@ -53,8 +53,17 @@ const getRoutes = (history, store) => {
     const trackPageView = (pageType, paramKey) => {
         return (next) => {
             return (nextState, transition) => {
-                let pageId = paramKey !== '' ? nextState.params[paramKey] : '';
-                tracker.trackPageView(pageType, pageId);
+                let storeState = store.getState();
+                if (storeState.authentication && storeState.authentication.get('authenticated')) {
+                    let pageId = paramKey !== '' ? nextState.params[paramKey] : '';
+                    // Init session is idempotent
+                    let authenticationState = store.getState().authentication;
+                    tracker.initSession(
+                        authenticationState.get('profile'),
+                        authenticationState.get('organization')
+                    );
+                    tracker.trackPageView(pageType, pageId);
+                }
                 next(nextState, transition);
             }
         }
