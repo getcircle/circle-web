@@ -99,7 +99,6 @@ class Search extends CSSComponent {
                 searchSection: {
                     paddingLeft: 20,
                     paddingRight: 20,
-                    transition: 'all 0.3s ease',
                 },
                 SearchComponent: {
                     inputContainerStyle: {
