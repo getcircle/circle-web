@@ -183,6 +183,11 @@ class Search extends CSSComponent {
 
     handleFocusSearch(event) {
         this.setState({focused: true});
+        // Offset mobile browsers trying to scroll to focus the element.
+        if (this.props.mobileOS) {
+            window.scrollTo(0, 0);
+            document.body.scrollTop = 0;
+        }
     }
 
     handleCancelSearch() {
