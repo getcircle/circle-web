@@ -54,8 +54,9 @@ function checkOS() {
   }
 };
 
-export default function responsive(state = initialState, action, mobileOS = mobileOS) {
+export default function responsive(state = initialState, action, mobile) {
     const { Sizes } = StyleResizable.statics;
+    const isMobileOS = mobile ? mobile : mobileOS;
     switch(action.type) {
     case types.TOGGLE_DISPLAY_HEADER:
         const display = action.payload;
@@ -76,7 +77,7 @@ export default function responsive(state = initialState, action, mobileOS = mobi
         if (HEADER_AND_FOOTERLESS_PATHS.indexOf(pathname) !== -1) {
             displayHeader = false;
             displayFooter = false;
-        } else if (!largerDevice && mobileOS) {
+        } else if (!largerDevice && isMobileOS) {
             displayFooter = true;
             displayHeader = false;
         } else if (pathname === '/') {
