@@ -119,7 +119,7 @@ class Tracker {
         if (this._mixpanelLoaded) {
             let length = this._callbacks.length;
             for (let i = 0; i < length; i++) {
-                (this._callbacks.pop())();
+                (this._callbacks.shift())();
             }
         }
     }
