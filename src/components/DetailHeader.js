@@ -16,7 +16,7 @@ class DetailHeader extends CSSComponent {
         return {
             default: {
                 root: {
-                    backgroundColor: 'rgba(51, 51, 51, 0.8)',
+                    backgroundColor: 'rgb(51, 51, 51)',
                     height: 320,
                     position: 'relative',
                     zIndex: 1,
