@@ -95,7 +95,6 @@ function handleAuthenticateSuccess(state, action) {
     const {user, token, profile, organization} = action.payload;
     const nextState = state.merge({user, token, profile, organization, authenticated: true});
     storeState(nextState);
-    tracker.initSession(profile);
     return nextState;
 }
 

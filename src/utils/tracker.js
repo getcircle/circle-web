@@ -27,6 +27,7 @@ const { AttributeV1, CategoryV1 } = services.search.containers.search;
 class Tracker {
 
     constructor() {
+        this._sessionInitialized = false;
     }
 
     // Session methods
@@ -50,6 +51,10 @@ class Tracker {
 
         if (!organization) {
             logger.error('Logged in user organization needs to be set for starting tracking session.');
+            return;
+        }
+
+        if (this._sessionInitialized) {
             return;
         }
 
@@ -77,6 +82,8 @@ class Tracker {
             'Profile ID': profile.id,
             'User ID': profile.user_id,
         });
+
+        this._sessionInitialized = true;
     }
 
     /**
@@ -93,24 +100,6 @@ class Tracker {
         if (mixpanel.cookie && mixpanel.cookie.clear) {
             mixpanel.cookie.clear();
         }
-    }
-
-    /**
-     * Checks for the presence of a super property User ID.
-     *
-     * If it exists, it implies the session has been initialized.
-     * For anonymous sessions, it wonn't be set.
-     *
-     * @return {bool}
-     */
-    isSessionInitialized() {
-        let userId;
-        try {
-            userId = mixpanel.get_property('User ID');
-        } catch (e) {
-            logger.error(`Error checking mixpanel property: ${e}`, e);
-        }
-        return !!userId;
     }
 
     // If we get an integer enum value, trying using the key in the expected
@@ -140,11 +129,6 @@ class Tracker {
     trackPageView(pageType, pageId) {
         if (!pageType) {
             logger.error('Page Type needs to be set for tracking page views.');
-            return;
-        }
-
-        if (!this.isSessionInitialized()) {
-            logger.log('Session is not initialized to begin tracking events.');
             return;
         }
 

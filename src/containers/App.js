@@ -68,8 +68,8 @@ class App extends CSSComponent {
 
     componentWillMount() {
         // refresh any cached authentication objects
+        this.initTrackerSession();
         if (this.props.authenticated) {
-            tracker.initSession(this.props.profile, this.props.organization);
             this.props.dispatch(refresh());
         }
     }
@@ -82,11 +82,19 @@ class App extends CSSComponent {
         if (!nextProps.authenticated && UNAUTHENTICATED_ROUTES.indexOf(nextProps.location.pathname) === -1) {
             this.context.router.transitionTo('/login');
         }
+
+        this.initTrackerSession();
     }
 
     componentWillUpdate(nextProps, nextState) {
         if (nextProps.deviceSize !== this.props.deviceSize) {
             this.props.dispatch(deviceResized(nextProps.deviceSize, this.props.location.pathname));
+        }
+    }
+
+    initTrackerSession() {
+        if (this.props.authenticated) {
+            tracker.initSession(this.props.profile, this.props.organization);
         }
     }
 
