@@ -130,6 +130,7 @@ class DetailViewAll extends CSSComponent {
                             defaultsLoadMore={itemsLoadMore}
                             focused={true}
                             is="Search"
+                            onSelectItem={() => this.refs.modal.dismiss()}
                             placeholder={filterPlaceholder}
                             searchAttribute={searchAttribute}
                             searchAttributeValue={searchAttributeValue}

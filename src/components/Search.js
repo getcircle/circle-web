@@ -151,6 +151,7 @@ class Search extends CSSComponent {
         onBlur: PropTypes.func,
         onCancel: PropTypes.func,
         onFocus: PropTypes.func,
+        onSelectItem: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         placeholder: PropTypes.string,
         profiles: PropTypes.arrayOf(
@@ -190,6 +191,7 @@ class Search extends CSSComponent {
         onBlur() {},
         onCancel() {},
         onFocus() {},
+        onSelectItem() {},
         placeholder: t('Search People, Teams & Locations'),
         showCancel: false,
     }
@@ -436,6 +438,7 @@ class Search extends CSSComponent {
                 trackItem.type = RESULT_TYPES.PROFILE;
             }
             this.props.dispatch(viewSearchResult(trackItem));
+            this.props.onSelectItem(item);
 
             // Call click handler and record tap in analytics provider
             if (onTouchTap && typeof onTouchTap === 'function') {
