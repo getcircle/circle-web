@@ -18,7 +18,6 @@ class ProfileDetailHeader extends CSSComponent {
         onEditTapped: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
-        team: PropTypes.instanceOf(services.organization.containers.TeamV1),
     }
 
     static contextTypes = {
@@ -99,7 +98,6 @@ class ProfileDetailHeader extends CSSComponent {
         const {
             organization,
             profile,
-            team,
         } = this.props;
         return (
             <DetailHeader
@@ -117,7 +115,7 @@ class ProfileDetailHeader extends CSSComponent {
                 </div>
                 <div className="row center-xs" is="titleSection">
                     <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>
-                        {profile.title} {team && team.name ? `(${team.name})` : ''}
+                        {profile.display_title}
                     </span>
                 </div>
                 <div className="row center-xs" is="tenureSection">

@@ -210,7 +210,6 @@ class ProfileDetail extends StyleableComponent {
                     onEditTapped={this.editButtonTapped.bind(this)}
                     organization={organization}
                     profile={profile}
-                    team={team}
                 />
                 <DetailContent>
                     {this.renderStatus(profile.status, isLoggedInUser)}
