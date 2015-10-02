@@ -8,7 +8,6 @@ import t from '../utils/gettext';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import DetailMembers from './DetailMembers';
-import LocationDetailDescription from './LocationDetailDescription';
 import LocationDetailHeader from './LocationDetailHeader';
 import LocationDetailLocation from './LocationDetailLocation';
 
@@ -48,37 +47,7 @@ class LocationDetail extends CSSComponent {
         };
     }
 
-    // Update Methods
-
-    onUpdateDescription(descriptionText) {
-        const {
-            office,
-            onUpdateLocationCallback,
-        } = this.props;
-
-        let locationDescriptionV1 = new DescriptionV1({
-            value: descriptionText,
-        });
-
-        let updatedLocation = Object.assign({}, office, {
-            description: locationDescriptionV1,
-        });
-
-        onUpdateLocationCallback(updatedLocation);
-    }
-
     // Render Methods
-
-    renderDescription(office, isEditable) {
-        return (
-            <LocationDetailDescription
-                description={office.description}
-                is="section"
-                isEditable={isEditable}
-                onSaveCallback={this.onUpdateDescription.bind(this)}
-            />
-        );
-    }
 
     renderPointsOfContact(office) {
         if (office.points_of_contact && office.points_of_contact.length) {
@@ -146,7 +115,6 @@ class LocationDetail extends CSSComponent {
                 <LocationDetailHeader office={office} />
                 <DetailContent>
                     <LocationDetailLocation largerDevice={largerDevice} office={office} />
-                    {this.renderDescription(office, canEdit)}
                     {this.renderPointsOfContact(office)}
                     {this.renderMembers(members, office.profile_count)}
                 </DetailContent>
