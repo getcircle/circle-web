@@ -61,11 +61,11 @@ class LocationDetailHeader extends CSSComponent {
                     paddingTop: 10,
                 },
                 nameSection: {
-                    paddingTop: 0,
+                    paddingTop: 5,
                 },
                 timeSection: {
                     paddingTop: 10,
-                    paddingBottom: '5vh',
+                    paddingBottom: '56px',
                 },
             },
         };

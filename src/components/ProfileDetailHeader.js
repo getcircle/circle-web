@@ -46,6 +46,9 @@ class ProfileDetailHeader extends CSSComponent {
                     ...fontColors.white,
                     ...fontWeights.semiBold,
                 },
+                nameSection: {
+                    paddingTop: 5,
+                },
                 tenureSection: {
                     paddingTop: 10,
                     paddingBottom: '5vh',
@@ -56,7 +59,7 @@ class ProfileDetailHeader extends CSSComponent {
             },
             'isEditable-false': {
                 avatarSection: {
-                    paddingTop: '6vh',
+                    paddingTop: '60px',
                 },
             }
         }
