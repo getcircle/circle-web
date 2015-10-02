@@ -99,10 +99,7 @@ class Team extends CSSComponent {
                     extendedTeam={extendedTeam}
                     largerDevice={largerDevice}
                     members={members}
-                    membersLoadMore={() => {
-                        // TODO this is broken because it reloads the entire component, need to think of a way to handle this
-                        this.loadTeamMembers(this.props);
-                    }}
+                    membersLoadMore={() => this.loadTeamMembers(this.props)}
                     onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
                 />
             );

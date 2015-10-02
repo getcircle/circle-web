@@ -11,13 +11,12 @@ import DetailMembers from './DetailMembers';
 import LocationDetailHeader from './LocationDetailHeader';
 import LocationDetailLocation from './LocationDetailLocation';
 
-const { DescriptionV1 } = services.common.containers;
-
 class LocationDetail extends CSSComponent {
 
     static propTypes = {
         largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
+        membersLoadMore: PropTypes.func,
         office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
         onUpdateLocationCallback: PropTypes.func.isRequired,
     }
@@ -91,6 +90,7 @@ class LocationDetail extends CSSComponent {
                     is="section"
                     largerDevice={this.props.largerDevice}
                     members={members}
+                    membersLoadMore={this.props.membersLoadMore}
                     onClickMember={routeToProfile.bind(null, this.context.router)}
                     pageType={PAGE_TYPE.LOCATION_MEMBERS}
                     title={title}

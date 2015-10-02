@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import { services, soa } from 'protobufs';
 
 import {
     loadLocation,
@@ -25,20 +25,22 @@ const selector = createSelector(
         selectors.locationMembersSelector,
     ],
     (cacheState, locationsState, responsiveState, paramsState, membersState) => {
-        let office, members;
+        let office, members, membersNextRequest;
         const locationId = paramsState.locationId;
         const cache = cacheState.toJS();
         if (locationsState.get('ids').has(locationId)) {
             office = retrieveLocation(locationId, cache);
         }
-        if (membersState.has(locationId) && !membersState.get(locationId).get('loading')) {
+        if (membersState.has(locationId)) {
             const ids = membersState.get(locationId).get('ids').toJS();
             members = retrieveProfiles(ids, cache);
+            membersNextRequest = membersState.get(locationId).get('nextRequest');
         }
         return {
+            members,
+            membersNextRequest,
+            office,
             largerDevice: responsiveState.get('largerDevice'),
-            members: members,
-            office: office,
         };
     }
 ) ;
@@ -50,6 +52,7 @@ class Location extends PureComponent {
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
+        membersNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         // NB: This is named "office" bc "location" is used by react-router >.<
         office: PropTypes.instanceOf(services.organization.containers.LocationV1),
         params: PropTypes.object.isRequired,
@@ -60,25 +63,29 @@ class Location extends PureComponent {
     }
 
     componentWillMount() {
-        this._fetchLocation(this.props);
+        this.loadLocation(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.locationId !== this.props.params.locationId) {
-            this._fetchLocation(nextProps);
+            this.loadLocation(nextProps);
         }
     }
 
-    _fetchLocation(props) {
+    loadLocation(props) {
         props.dispatch(loadLocation(props.params.locationId));
-        props.dispatch(loadLocationMembers(props.params.locationId));
+        this.loadLocationMembers(props);
+    }
+
+    loadLocationMembers(props) {
+        props.dispatch(loadLocationMembers(props.params.locationId, props.membersNextRequest));
     }
 
     onUpdateLocation(location) {
         this.props.dispatch(updateLocation(location))
     }
 
-    _renderLocation() {
+    renderLocation() {
         const {
             office,
             members,
@@ -88,6 +95,7 @@ class Location extends PureComponent {
                 <LocationDetail
                     largerDevice={this.props.largerDevice}
                     members={members}
+                    membersLoadMore={() => this.loadLocationMembers(this.props)}
                     office={office}
                     onUpdateLocationCallback={this.onUpdateLocation.bind(this)}
                 />
@@ -100,7 +108,7 @@ class Location extends PureComponent {
     render() {
         return (
             <Container>
-                {this._renderLocation()}
+                {this.renderLocation()}
             </Container>
         );
     }
