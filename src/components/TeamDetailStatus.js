@@ -35,7 +35,7 @@ class TeamDetailStatus extends StyleableComponent {
                 isEditable={isEditable}
                 isQuoted={true}
                 onSaveCallback={onSaveCallback}
-                placeholder={t('What projects is your team working on?')}
+                placeholder={t('What #projects is your team working on?')}
                 shouldLimitCharacters={true}
                 style={this.mergeAndPrefix(styles, style)}
                 text={status ? status.value : ''}

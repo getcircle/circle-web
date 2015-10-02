@@ -245,7 +245,8 @@ class TeamDetailForm extends CSSComponent {
                         is="textarea"
                         name="teamDescription"
                         onChange={this.handleChange.bind(this)}
-                        placeholder={t('Add a description for your team')}
+                        placeholder={t('What is your team responsible for? Your team description should help your' +
+                         ' fellow coworkers understand if members of your team can answer their questions.')}
                         type="text"
                         value={this.state.description}
                      />

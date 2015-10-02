@@ -136,7 +136,7 @@ class LoginInternal extends CSSComponent {
                             is="alternativeLink"
                             onTouchTap={this.props.onUseAlternative}
                         >
-                            {t('use your team\'s Single sign-on authentication.')}
+                            {t('use your team\'s Single Sign-On authentication.')}
                         </a>
                     </span>
                 </div>

@@ -29,11 +29,11 @@ class ProfileDetailStatus extends StyleableComponent {
 
         return (
             <TextValue
-                editedTimestamp={status ? status.created : ''}
+                editedTimestamp={status && status.value.trim() !== '' ? status.created : ''}
                 isEditable={isEditable}
                 isQuoted={true}
                 onSaveCallback={onSaveCallback}
-                placeholder={t('I\'m working on #project with @mypeer!')}
+                placeholder={t('working on #project with @coworkers!')}
                 shouldLimitCharacters={true}
                 style={this.mergeAndPrefix(styles, style)}
                 text={status ? status.value : ''}

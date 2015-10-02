@@ -57,7 +57,7 @@ class LoginSSO extends CSSComponent {
             <section>
                 <section>
                     <div>
-                        <span is="header">{t(`Your team uses ${providerName} for Single sign-on.`)}</span>
+                        <span is="header">{t(`Your team uses ${providerName} for Single Sign-On.`)}</span>
                     </div>
                     <RaisedButton
                         is="button"
