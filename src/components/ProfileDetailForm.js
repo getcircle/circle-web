@@ -188,6 +188,16 @@ class ProfileDetailForm extends CSSComponent {
         });
     }
 
+    resetState() {
+        // Need to reset state before dismissing because these
+        // components can be cached and carry state.
+        this.setState({
+            imageFiles: [],
+            saving: false,
+        });
+        this.refs.modal.setSaveEnabled(true);
+    }
+
     // Public Methods
 
     show() {
@@ -263,13 +273,7 @@ class ProfileDetailForm extends CSSComponent {
         }
 
         onSaveCallback(updatedProfile);
-        // Need to reset state before dismissing because these
-        // components can be cached and carry state.
-        this.setState({
-            imageFiles: [],
-            saving: false,
-        });
-        this.refs.modal.setSaveEnabled(true);
+        this.resetState();
         this.dismiss();
     }
 
@@ -422,8 +426,9 @@ class ProfileDetailForm extends CSSComponent {
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={t('Save')}
                     is="Dialog"
-                    pageType={PAGE_TYPE.EDIT_PROFILE}
+                    onDismiss={this.resetState.bind(this)}
                     onSave={this.handleSaveTapped.bind(this)}
+                    pageType={PAGE_TYPE.EDIT_PROFILE}
                     ref="modal"
                     repositionOnUpdate={false}
                     title={t('Edit Profile')}
