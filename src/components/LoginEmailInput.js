@@ -30,6 +30,8 @@ class LoginEmailInput extends CSSComponent {
         } = this.props;
         return (
             <TextField
+                autocapitalize="off"
+                autocorrect="off"
                 hintText={t('you@domain.com')}
                 onEnterKeyDown={() => {
                     if (value !== '') {
@@ -41,6 +43,8 @@ class LoginEmailInput extends CSSComponent {
                         input.focus();
                     }
                 }}
+                spellcheck="false"
+                type="email"
                 value={value}
                 {...other}
             />

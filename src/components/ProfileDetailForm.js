@@ -412,7 +412,7 @@ class ProfileDetailForm extends CSSComponent {
                         name="cellNumber"
                         onChange={this.handleChange.bind(this)}
                         placeholder={t('Add your cell number')}
-                        type="text"
+                        type="tel"
                         value={this.state.cellNumber}
                      />
                 </form>
