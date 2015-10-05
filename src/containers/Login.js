@@ -111,7 +111,8 @@ class Login extends CSSComponent {
                 },
                 organizationImage: {
                     maxHeight: 200,
-                    maxWidth: 600,
+                    maxWidth: '100%',
+                    objectFit: 'contain',
                 },
                 section: {
                     marginLeft: 20,
