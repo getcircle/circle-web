@@ -175,11 +175,16 @@ class ProfileDetailForm extends CSSComponent {
      * @return {Void}
      */
     mergeStateAndProps(props) {
-        this.setState({
+        let updatedState = {
             imageUrl: this.getPreviewImageUrl(props),
-            title: props ? props.profile.title : '',
-            cellNumber: this.getCellNumberFromProps(props),
-        }, () => {
+        };
+
+        if (!this.state.saving) {
+            updatedState.title = props ? props.profile.title : '';
+            updatedState.cellNumber = this.getCellNumberFromProps(props);
+        }
+
+        this.setState(updatedState, () => {
             // Given our state machine, the only time mediaUrl is present is when a save is in progress.
             // Continue the save action
             if (props && props.mediaUrl !== '') {
