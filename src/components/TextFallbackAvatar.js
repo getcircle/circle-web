@@ -64,6 +64,7 @@ class TextFallbackAvatar extends CSSComponent {
             <div className={this.props.className}>
                 <Avatar
                     backgroundColor={backgroundColor}
+                    className="row middle-xs center-xs"
                     onError={this._handleImageError.bind(this)}
                     src={this.state.imageSrc}
                     style={{...this.styles().avatar,...this.props.style}}

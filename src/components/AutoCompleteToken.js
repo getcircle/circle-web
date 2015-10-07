@@ -22,7 +22,6 @@ class AutoCompleteToken extends CSSComponent {
                         display: 'flex',
                         height: '100%',
                         justifyContent: 'center',
-                        marginTop: 10,
                         marginLeft: 6,
                         minWidth: 50,
                         paddingLeft: 10,
