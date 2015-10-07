@@ -348,7 +348,7 @@ class AutoComplete extends CSSComponent {
                 onKeyDown={this.handleKeyDown.bind(this)}
                 style={{...this.styles().root, ...style}}
             >
-                <div className="row" style={{...this.styles().inputContainer, ...inputContainerStyle}}>
+                <div className="row middle-xs" style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <SearchIcon is="SearchIcon" />
                     {this.renderTokens(tokens, onClearToken)}
                     <input

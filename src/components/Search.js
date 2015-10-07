@@ -254,6 +254,11 @@ class Search extends CSSComponent {
                         marginLeft: 58,
                     },
                 },
+                ListItem: {
+                    style: {
+                        textAlign: 'left',
+                    },
+                },
                 loadingIndicatorContainer: {
                     display: 'flex',
                     justifyContent: 'center',
@@ -277,6 +282,7 @@ class Search extends CSSComponent {
                     lineHeight: '20px',
                     paddingTop: 14,
                     paddingLeft: 20,
+                    textAlign: 'left',
                     textTransform: 'uppercase',
                     ...fontColors.extraLight,
                     ...fontWeights.semiBold,
@@ -870,6 +876,7 @@ class Search extends CSSComponent {
         return (
             <ListItem
                 {...item}
+                is="ListItem"
                 onTouchTap={item.onTouchTap}
                 primaryText={item.primaryText}
                 ref={(component) => {
