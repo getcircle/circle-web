@@ -351,7 +351,7 @@ class Search extends CSSComponent {
                     },
                 },
                 resultsList: {
-                    maxWidth: SEARCH_CONTAINER_WIDTH,
+                    width: SEARCH_CONTAINER_WIDTH,
                     maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                 },
             },
