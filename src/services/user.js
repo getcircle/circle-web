@@ -37,7 +37,7 @@ export function getAuthenticationInstructions(email, subdomain) {
         email,
         /*eslint-disable camelcase*/
         organization_domain: subdomain,
-        redirect_uri: `${window.location.origin}/auth`,
+        redirect_uri: `${window.location.protocol}//${window.location.host}/auth`,
         /*eslint-enable camelcase*/
     };
     let request = new services.user.actions.get_authentication_instructions.RequestV1(parameters);
