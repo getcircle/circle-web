@@ -19,10 +19,12 @@ export default {
     display: (value) => {
 
         if (value === 'flex') {
-            let browserName = UAParser(window.navigator.userAgent).browser.name;
-            if (!!browserName.match('Safari')) {
+            let browser = UAParser(window.navigator.userAgent).browser;
+            if (!!browser.name.match('Safari')) {
                 value = '-webkit-flex';
-            } else if (!!browserName.match('Chrome')) {
+            } else if (!!browser.name.match('IE') && !!browser.version.match('10')) {
+                value = '-ms-flexbox';
+            } else if (!!browser.name.match('Chrome')) {
                 value = 'flex';
             } else {
                 // TODO: figure out how to make display work correctly on safari, maybe somehow getting tricky about adding a className to the element so we can do this with css? see: https://github.com/facebook/react/issues/2020#issuecomment
