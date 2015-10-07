@@ -98,7 +98,7 @@ class TeamDetailHeader extends CSSComponent {
         }
 
         return (
-            <div className="row" is="editButtonContainer">
+            <div className="row end-xs" is="editButtonContainer">
                 <FlatButton
                     is="editButton"
                     label={t('Edit Team')}
