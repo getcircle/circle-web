@@ -342,7 +342,7 @@ class AutoComplete extends CSSComponent {
         } = this.props;
         return (
             <div
-                className="row"
+                className="col-xs"
                 {...other}
                 onBlur={::this.handleBlur}
                 onKeyDown={this.handleKeyDown.bind(this)}

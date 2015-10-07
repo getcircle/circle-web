@@ -91,6 +91,7 @@ class Dialog extends CSSComponent {
                 Dialog: {
                     contentStyle: {
                         maxWidth: 480,
+                        width: 480,
                     },
                     bodyStyle: {
                         padding: 0,
@@ -150,7 +151,7 @@ class Dialog extends CSSComponent {
                 Dialog: {
                     contentStyle: {
                         maxWidth: '100vw',
-                        width: '480px',
+                        width: '100%',
                     },
                     style: {
                         paddingTop: 0,
