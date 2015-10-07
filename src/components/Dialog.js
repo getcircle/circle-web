@@ -131,7 +131,7 @@ class Dialog extends CSSComponent {
                     },
                 },
                 DialogTitle: {
-                    className: 'col-xs-8 center-xs',
+                    className: 'row col-xs-8 middle-xs center-xs',
                     style: {
                         alignSelf: 'center',
                         display: 'flex',
@@ -150,7 +150,7 @@ class Dialog extends CSSComponent {
                 Dialog: {
                     contentStyle: {
                         maxWidth: '100vw',
-                        width: '100%',
+                        width: '480px',
                     },
                     style: {
                         paddingTop: 0,
@@ -213,7 +213,7 @@ class Dialog extends CSSComponent {
         } = this.props;
         return (
             <mui.Dialog {...other} is="Dialog" ref="modal">
-                <header className="row" is="DialogHeader">
+                <header className="row between-xs" is="DialogHeader">
                     <div is="DialogClose">
                         <FlatButton
                             is="DialogCloseButton"
