@@ -49,7 +49,7 @@ class CardFooter extends CSSComponent {
             ...other,
         } = this.props;
         return (
-            <footer {...other} className="row" is="root">
+            <footer {...other} className="row middle-xs" is="root">
                 <div is="buttonContainer">
                     <FlatButton
                         is="button"

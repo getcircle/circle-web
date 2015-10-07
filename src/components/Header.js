@@ -159,6 +159,7 @@ class Header extends CSSComponent {
                 <div className="col-xs-8 center-xs" is="searchContainer">
                     <Search
                         canExplore={false}
+                        className="center-xs"
                         is="Search"
                         largerDevice={true}
                         onBlur={::this.handleBlurSearch}

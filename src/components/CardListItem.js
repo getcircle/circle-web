@@ -81,6 +81,7 @@ class CardListItem extends CSSComponent {
         const secondaryStyle = {...this.styles().secondaryTextStyle};
         return (
             <ListItem
+                className="middle-xs"
                 {...other}
                 innerDivStyle={innerStyle}
                 leftAvatar={avatar}

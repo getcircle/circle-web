@@ -85,11 +85,11 @@ class Card extends CSSComponent {
 
         if (title) {
             return (
-                <header is="header">
+                <header className="row middle-xs" is="header">
                     <span is="headerText">
                         {title}
                     </span>
-                    <span is="subTitleText">
+                    <span className="row end-xs" is="subTitleText">
                         {subTitleImage}
                         {subTitle}
                     </span>
@@ -106,7 +106,7 @@ class Card extends CSSComponent {
         } = this.props;
 
         return (
-            <div is="headerActionButton">
+            <div className="row end-xs" is="headerActionButton">
                 <FlatButton
                     label={t('Cancel')}
                     labelStyle={this.styles().headerActionButtonLabel}
@@ -127,7 +127,7 @@ class Card extends CSSComponent {
         } = this.props;
 
         return (
-            <div is="headerActionButton">
+            <div className="row end-xs" is="headerActionButton">
                 <FlatButton
                     label={t('Update')}
                     labelStyle={this.styles().headerActionButtonLabel}
