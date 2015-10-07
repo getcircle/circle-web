@@ -156,24 +156,12 @@ class HeaderMenu extends CSSComponent {
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
-                        leftIcon={<IconContainer
-                            IconClass={ProfileIcon}
-                            iconStyle={{...this.styles().MenuItemIcon}}
-                            is="MenuItemIconContainer"
-                            style={{...this.styles().MenuItemIconContainerContainer}}
-                        />}
                         onTouchTap={::this.handleViewProfile}
                         primaryText={t('View Profile')}
                     />
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
-                        leftIcon={<IconContainer
-                            IconClass={LogoutIcon}
-                            iconStyle={{...this.styles().MenuItemIcon}}
-                            is="MenuItemIconContainer"
-                            style={{...this.styles().MenuItemIconContainerContainer}}
-                        />}
                         onTouchTap={() => this.props.dispatch(logout())}
                         primaryText={t('Logout')}
                     />
