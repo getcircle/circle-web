@@ -220,7 +220,7 @@ class Tracker {
 
 
     /**
-     * Tracks the start of a seach.
+     * Tracks the start of a search.
      *
      * @param {string} query Search term when the result was tapped
      * @param {string} searchLocation Location from where the search was performed. Constant value of SEARCH_LOCATION

@@ -65,6 +65,7 @@ export const SEARCH_RESULT_TYPE = {
 
     // Smart Actions (NOTE: Contact methods are captured separately)
     LOCATION_ADDRESS: 'Location Address',
+    EMAIL_PROFILE: 'Email Profile',
 
     // Extended Results
     REPORTS_TO : SharedConstants.DIRECT_REPORTS,

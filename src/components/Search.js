@@ -670,7 +670,7 @@ class Search extends CSSComponent {
                 tracker.trackSearchResultTap(
                     this.state.query,
                     SEARCH_RESULT_SOURCE.SMART_ACTION,
-                    SEARCH_RESULT_TYPE.PROFILE,
+                    SEARCH_RESULT_TYPE.EMAIL_PROFILE,
                     1,
                     this.props.searchLocation,
                     profile.id,
