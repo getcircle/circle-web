@@ -149,13 +149,13 @@ class TextValue extends CSSComponent {
             shouldLimitCharacters
         } = this.props;
 
-        let finalStatusValue = this.state.value;
+        let finalStatusValue = this.state.value.replace(/^\s+|\s+$/g, '');
         if (shouldLimitCharacters && finalStatusValue.length > CHARACTER_LIMIT) {
             this.setState({
                 authorName: this.state.authorName,
                 editing: true,
                 error: t('Status can only be up to ' + CHARACTER_LIMIT + ' characters'),
-                value: this.state.value,
+                value: finalStatusValue,
                 valueTimestamp: this.state.valueTimestamp
             });
 
@@ -166,7 +166,7 @@ class TextValue extends CSSComponent {
             authorName: this.state.authorName,
             editing: false,
             error: '',
-            value: this.state.value,
+            value: finalStatusValue,
             valueTimestamp: this.state.valueTimestamp
         });
 
