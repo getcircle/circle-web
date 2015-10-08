@@ -105,6 +105,7 @@ class AutoComplete extends CSSComponent {
                 root: {
                     display: 'flex',
                     flexDirection: 'column',
+                    padding: 0,
                     width: '100%',
                 },
                 inputContainer: {

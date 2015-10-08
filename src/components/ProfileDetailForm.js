@@ -72,6 +72,7 @@ class ProfileDetailForm extends CSSComponent {
                     fontSize: 14,
                     height: '50px',
                     justifyContent: 'flex-start',
+                    padding: 0,
                     outline: 'none',
                     width: '100%',
                     ...fontColors.dark,
@@ -118,7 +119,7 @@ class ProfileDetailForm extends CSSComponent {
                 },
                 input: {
                     border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '4px',
+                    borderRadius: '3px',
                     boxSizing: 'border-box',
                     display: 'flex',
                     fontSize: 14,
@@ -129,6 +130,7 @@ class ProfileDetailForm extends CSSComponent {
                     ...fontColors.dark,
                 },
                 profileImage: {
+                    border: '0',
                     borderRadius: 25,
                     height: 50,
                     objectFit: 'cover',
@@ -136,11 +138,12 @@ class ProfileDetailForm extends CSSComponent {
                 },
                 profileImageButton: {
                     backgroundColor: 'transparent',
-                    border: 0,
-                    display: 'flex',
+                    border: '0',
                     marginRight: 10,
-                    oultine: 'none',
                     padding: 0,
+                    outline: 'none',
+                    width: 50,
+                    height: 50,
                 },
                 profileImageUploadContainer: {
                     alignItems: 'center',
@@ -359,34 +362,35 @@ class ProfileDetailForm extends CSSComponent {
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
 
         return (
-            <div is="formContainer">
+            <div className="col-xs center-xs" is="formContainer">
                 {this.renderProgressIndicator()}
                 <form is="form">
                     <div is="sectionTitle">{t('Photo')}</div>
-                    <div is="profileImageUploadContainer">
+                    <div className="row start-xs" is="profileImageUploadContainer">
                         <button
                             disabled={this.state.saving}
                             is="profileImageButton"
                             onClick={this.onOpenClick.bind(this)}
                             type="button"
                         >
-                            <img alt={t('Profile Image')} is="profileImage" src={imageUrl} />
+                            <img alt={t('Image')} is="profileImage" src={imageUrl} />
                         </button>
                         <Dropzone
                             activeStyle={{...this.styles().dropzoneActive}}
+                            className="col-xs"
                             is="dropzone"
                             multiple={false}
                             onDrop={this.onDrop.bind(this)}
                             ref="dropzone"
                         >
-                            <div is="dropzoneTriggerContainer">
+                            <div className="row center-xs middle-xs" is="dropzoneTriggerContainer">
                                 <IconContainer
                                     IconClass={EditProfileCameraIcon}
                                     iconStyle={{...this.styles().editProfileCameraIcon}}
                                     is="editProfileCameraIconContainer"
                                     stroke='rgba(0, 0, 0, 0.4)'
                                 />
-                                <div>{t('Update Photo')}</div>
+                                <div className="row col-xs start-xs">{t('Update Photo')}</div>
                             </div>
                         </Dropzone>
                     </div>
