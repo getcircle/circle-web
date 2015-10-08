@@ -57,7 +57,7 @@ class TeamDetailForm extends CSSComponent {
                 },
                 input: {
                     border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '4px',
+                    borderRadius: '3px',
                     boxSizing: 'border-box',
                     display: 'flex',
                     fontSize: 14,

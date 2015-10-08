@@ -48,12 +48,10 @@ class CardListItem extends CSSComponent {
                     top: '18px',
                 },
                 innerDivStyle: {
-                    display: 'flex',
                     height: 96,
                 },
                 primaryTextStyle: {
-                    alignSelf: 'center',
-                    display: 'flex',
+                    marginTop: 10,
                 },
             },
         };
