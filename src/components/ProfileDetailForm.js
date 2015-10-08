@@ -5,6 +5,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { fontColors, fontWeights } from '../constants/styles';
+import logger from '../utils/logger';
 import * as messageTypes from '../constants/messageTypes';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
@@ -47,10 +48,12 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     state = {
-        imageUrl: '',
-        imageFiles: [],
+        firstName: '',
+        lastName: '',
         cellNumber: '',
         dataChanged: false,
+        imageUrl: '',
+        imageFiles: [],
         title: '',
         saving: false,
     }
@@ -153,7 +156,7 @@ class ProfileDetailForm extends CSSComponent {
                 },
                 sectionTitle: {
                     fontSize: 11,
-                    letterSpacing: '2px',
+                    letterSpacing: '1px',
                     margin: '16px 0',
                     textAlign: 'left',
                     textTransform: 'uppercase',
@@ -187,6 +190,8 @@ class ProfileDetailForm extends CSSComponent {
         if (!this.state.saving) {
             updatedState.title = props ? props.profile.title : '';
             updatedState.cellNumber = this.getCellNumberFromProps(props);
+            updatedState.firstName = props ? props.profile.first_name : '';
+            updatedState.lastName = props ? props.profile.last_name : '';
         }
 
         this.setState(updatedState, () => {
@@ -232,18 +237,11 @@ class ProfileDetailForm extends CSSComponent {
     handleChange(event) {
         let updatedState = {};
 
-        // TODO: Make this generic
-        switch (event.target.name) {
-            case 'title':
-                updatedState.title = event.target.value;
-                break;
-
-            case 'cellNumber':
-                updatedState.cellNumber = event.target.value;
-                break;
-
-            default:
-                break;
+        if (this.state[event.target.name] !== undefined) {
+            updatedState[event.target.name] = event.target.value;
+        } else {
+            logger.error('Received change event for untracked input.');
+            return;
         }
 
         this.setState(updatedState, () => {
@@ -273,6 +271,8 @@ class ProfileDetailForm extends CSSComponent {
 
         let updatedProfile = Object.assign({}, profile, {
             /*eslint-disable camelcase*/
+            first_name: this.state.firstName,
+            last_name: this.state.lastName,
             contact_methods: contactMethods,
             image_url: this.state.imageUrl,
             title:  this.state.title,
@@ -295,12 +295,19 @@ class ProfileDetailForm extends CSSComponent {
     getFieldsThatChanged() {
         let fields = [];
         let profile = this.props.profile;
-        if (this.state.imageUrl !== profile.image_url) {
-            fields.push('image_url');
-        }
+        let directAttributesToStateMapping = {
+            /*eslint-disable camelcase*/
+            'first_name': 'firstName',
+            'last_name': 'lastName',
+            'image_url': 'imageUrl',
+            'title': 'title',
+            /*eslint-enable camelcase*/
+        };
 
-        if (this.state.title !== profile.title) {
-            fields.push('title');
+        for (let attribute in directAttributesToStateMapping) {
+            if (this.state[directAttributesToStateMapping[attribute]] !== profile[attribute]) {
+                fields.push[attribute]
+            }
         }
 
         if (this.state.cellNumber !== this.getCellNumberFromProps(this.props)) {
@@ -413,6 +420,32 @@ class ProfileDetailForm extends CSSComponent {
                                 <div className="row col-xs start-xs">{t('Update Photo')}</div>
                             </div>
                         </Dropzone>
+                    </div>
+                    <div className="row">
+                        <div className="col-xs">
+                            <div is="sectionTitle">{t('First Name')}</div>
+                            <input
+                                disabled={this.state.saving}
+                                is="input"
+                                name="firstName"
+                                onChange={this.handleChange.bind(this)}
+                                placeholder={t('First Name')}
+                                type="text"
+                                value={this.state.firstName}
+                             />
+                        </div>
+                        <div className="col-xs">
+                            <div is="sectionTitle">{t('Last Name')}</div>
+                            <input
+                                disabled={this.state.saving}
+                                is="input"
+                                name="lastName"
+                                onChange={this.handleChange.bind(this)}
+                                placeholder={t('Last Name')}
+                                type="text"
+                                value={this.state.lastName}
+                             />
+                        </div>
                     </div>
                     <div is="sectionTitle">{t('Title')}</div>
                     <input
