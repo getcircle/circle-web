@@ -12,7 +12,6 @@ export function loadExtendedTeam(teamId) {
                 types.LOAD_EXTENDED_TEAM_FAILURE,
             ],
             remote: () => organizationRequests.getExtendedTeam(teamId),
-            bailout: (state) => state.extendedTeams.getIn(['ids', teamId]),
         },
     };
 }
