@@ -33,8 +33,8 @@ const profileSelector = selectors.createImmutableSelector(
 const selector = selectors.createImmutableSelector(
     [profileSelector, selectors.authenticationSelector, selectors.responsiveSelector],
     (profileState, authenticationState, responsiveState) => {
-        const profile = authenticationState.get('profile');
         let isLoggedInUser;
+        const profile = authenticationState.get('profile');
         if (profile && profile.id === profileState.profileId) {
             isLoggedInUser = true;
         } else {

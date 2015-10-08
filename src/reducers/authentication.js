@@ -5,6 +5,7 @@ import client from '../services/client';
 import { AUTHENTICATION_STATE } from '../constants/localStorageKeys';
 import logger from '../utils/logger';
 import tracker from '../utils/tracker';
+import { retrieveProfile } from '../reducers/denormalizations';
 import * as types from '../constants/actionTypes';
 
 const { OrganizationV1 } = services.organization.containers;
@@ -114,6 +115,17 @@ function handleAuthenticationFailure(state, action) {
 }
 
 const initialState = getInitialState();
+
+export function getAuthenticatedProfile(state, cache) {
+    let profile = state.get('profile');
+    if (profile) {
+        let cachedProfile = retrieveProfile(profile.id, cache)
+        if (cachedProfile) {
+            profile = cachedProfile;
+        }
+    }
+    return profile;
+}
 
 export default function authentication(state = initialState, action) {
     if (action.error && action.payload.status) {

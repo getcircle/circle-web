@@ -30,3 +30,7 @@ export function retrieveProfiles(profileIds, cache) {
 export function retrieveTeams(teamIds, cache) {
     return denormalize(teamIds, services.organization.containers.TeamV1, cache);
 }
+
+export function retrieveProfile(profileId, cache) {
+    return denormalize(profileId, services.profile.containers.ProfileV1, cache);
+}

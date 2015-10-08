@@ -7,6 +7,7 @@ import {
     canvasColor,
 } from '../constants/styles';
 import { deviceResized } from '../actions/device';
+import { getAuthenticatedProfile } from '../reducers/authentication';
 import { refresh } from '../actions/authentication';
 import resizable from '../decorators/resizable';
 import * as selectors from '../selectors';
@@ -26,19 +27,22 @@ const UNAUTHENTICATED_ROUTES = [
 
 const selector = createSelector(
     [
+        selectors.cacheSelector,
         selectors.authenticationSelector,
         selectors.responsiveSelector,
     ],
     (
+        cacheState,
         authenticationState,
         responsiveState,
         footerState,
     ) => {
+        const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
             displayFooter: responsiveState.get('displayFooter'),
             displayHeader: responsiveState.get('displayHeader'),
             authenticated: authenticationState.get('authenticated'),
-            profile: authenticationState.get('profile'),
+            profile: profile,
             organization: authenticationState.get('organization'),
         }
     }

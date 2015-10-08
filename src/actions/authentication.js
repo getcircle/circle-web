@@ -3,7 +3,22 @@ import * as userService from '../services/user';
 import client from '../services/client';
 import { getOrganization } from '../services/organization';
 import { getProfile } from '../services/profile';
+import { retrieveProfile } from '../reducers/denormalizations';
 import { SERVICE_REQUEST } from '../middleware/services';
+
+function getAuthenticatedObjectsPayload(payload = {}) {
+    return new Promise((resolve, reject) => {
+        Promise.all([getProfile(), getOrganization()])
+            .then(([profileNormalizedResponse, organization]) => {
+                payload = Object.assign({}, payload, profileNormalizedResponse);
+                const profile = retrieveProfile(profileNormalizedResponse.result, profileNormalizedResponse);
+                payload.profile = profile;
+                payload.organization = organization;
+                resolve(payload);
+            })
+            .catch(error => reject(error));
+    });
+}
 
 export function authenticate(backend, key, secret) {
     return {
@@ -23,12 +38,7 @@ export function authenticate(backend, key, secret) {
                         client.authenticate(token);
                         return Promise.resolve(user);
                     })
-                    .then(() => Promise.all([getProfile(), getOrganization()]))
-                    .then(([profile, organization]) => {
-                        payload.profile = profile;
-                        payload.organization = organization;
-                        return Promise.resolve(payload);
-                    });
+                    .then(() => getAuthenticatedObjectsPayload(payload));
             },
         }
     };
@@ -55,18 +65,7 @@ export function refresh() {
                 types.REFRESH_SUCCESS,
                 types.REFRESH_FAILURE,
             ],
-            remote: (state) => {
-                let payload = {}
-                return getProfile()
-                    .then((profile) => {
-                        payload.profile = profile;
-                        return getOrganization(profile.organization_id);
-                    })
-                    .then((organization) => {
-                        payload.organization = organization;
-                        return Promise.resolve(payload);
-                    });
-            },
+            remote: state => getAuthenticatedObjectsPayload(),
         }
     };
 }

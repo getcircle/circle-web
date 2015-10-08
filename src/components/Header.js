@@ -12,11 +12,9 @@ import Search from '../components/Search';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
 const selector = createSelector(
-    [selectors.authenticationSelector, selectors.searchSelector],
-    (authenticationState, searchState) => {
+    [selectors.searchSelector],
+    (searchState) => {
         return {
-            organization: authenticationState.get('organization'),
-            profile: authenticationState.get('profile'),
             active: searchState.get('active'),
         }
     }

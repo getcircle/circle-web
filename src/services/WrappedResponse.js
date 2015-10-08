@@ -74,7 +74,7 @@ export default class WrappedResponse {
 
     resolve(key=null) {
         const copy = this.result.$type.decode(this.result.encode());
-        const normalized = normalize(copy, key );
+        const normalized = normalize(copy, key);
         return Object.assign({},
             {type: this.result.$type, nextRequest: this.getNextRequest()},
             normalized

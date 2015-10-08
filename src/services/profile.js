@@ -5,22 +5,17 @@ import client from './client';
 import logger from '../utils/logger';
 
 export function getProfile(parameters={}) {
+    let key = Object.values(parameters)[0];
 	let request = new services.profile.actions.get_profile.RequestV1(parameters);
 	return new Promise((resolve, reject) => {
 		client.sendRequest(request)
 			.then((response) => {
-                if (response.errors.length) {
-                    let { errors, errorDetails } = response;
-                    return reject({errors, errorDetails});
+                if (response.isSuccess()) {
+                    key = response.result.profile.id;
                 }
-
-				let { profile } = response.result;
-				resolve(profile);
-			})
-			.catch((error) => {
-				logger.log(`Error fetching profile: ${error}`);
-				reject(error);
-			});
+                response.finish(resolve, reject, key)
+            })
+            .catch(error => reject(error));
 	});
 }
 

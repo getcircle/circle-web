@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
+import { getAuthenticatedProfile } from '../reducers/authentication';
 import { resetScroll } from '../utils/window';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
@@ -15,10 +16,11 @@ import { SEARCH_LOCATION } from '../constants/trackerProperties';
 const ORGANIZATION_LOGO_HEIGHT = 200;
 
 const selector = createSelector(
-    [selectors.authenticationSelector, selectors.responsiveSelector],
-    (authenticationState, responsiveState) => {
+    [selectors.cacheSelector, selectors.authenticationSelector, selectors.responsiveSelector],
+    (cacheState, authenticationState, responsiveState) => {
+        const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
-            profile: authenticationState.get('profile'),
+            profile: profile,
             organization: authenticationState.get('organization'),
             authenticated: authenticationState.get('authenticated'),
             largerDevice: responsiveState.get('largerDevice'),
