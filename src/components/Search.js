@@ -192,7 +192,7 @@ class Search extends CSSComponent {
         onCancel() {},
         onFocus() {},
         onSelectItem() {},
-        placeholder: t('Search People, Teams & Locations'),
+        placeholder: t('Search People, Teams, & Locations'),
         showCancel: false,
     }
 
