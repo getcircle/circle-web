@@ -1,18 +1,36 @@
 import { CircularProgress } from 'material-ui';
 import React from 'react';
 
-class CenterLoadingIndicator extends React.Component {
+import CSSComponent from './CSSComponent';
 
-    styles = {
-        container: {
-            minHeight: '100vh',
-        },
+class CenterLoadingIndicator extends CSSComponent {
+
+    classes() {
+        return {
+            'default': {
+                container: {
+                    display: 'table',
+                    height: '100%',
+                    minHeight: '100vh',
+                    position: 'absolute',
+                    width: '100%',
+                    },
+                innerDiv: {
+                    display: 'table-cell',
+                    textAlign: 'center',
+                    verticalAlign: 'middle',
+                },
+            },
+        }
     }
+
 
     render() {
         return (
-            <div className="row middle-xs center-xs" style={this.styles.container}>
-                <CircularProgress mode="indeterminate" size={1} />
+            <div is="container">
+                <div is="innerDiv">
+                    <CircularProgress mode="indeterminate" size={1} />
+                </div>
             </div>
         );
     }
