@@ -14,9 +14,7 @@ import { tintColor } from '../constants/styles';
 import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
-import LogoutIcon from './LogoutIcon';
 import ProfileAvatar from './ProfileAvatar';
-import ProfileIcon from './ProfileIcon';
 
 const { TransitionGroup } = React.addons;
 
