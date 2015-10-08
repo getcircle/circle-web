@@ -5,6 +5,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { fontColors, fontWeights } from '../constants/styles';
+import * as messageTypes from '../constants/messageTypes';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
@@ -15,6 +16,7 @@ import CSSComponent from  './CSSComponent';
 import Dialog from './Dialog';
 import EditProfileCameraIcon from './EditProfileCameraIcon';
 import IconContainer from './IconContainer';
+import Toast from './Toast';
 
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
@@ -34,6 +36,7 @@ class ProfileDetailForm extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
         dispatch: PropTypes.func.isRequired,
+        hasManager: PropTypes.bool.isRequired,
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -47,6 +50,7 @@ class ProfileDetailForm extends CSSComponent {
         imageUrl: '',
         imageFiles: [],
         cellNumber: '',
+        dataChanged: false,
         title: '',
         saving: false,
     }
@@ -109,9 +113,7 @@ class ProfileDetailForm extends CSSComponent {
                 },
                 formContainer: {
                     backgroundColor: 'rgb(255, 255, 255)',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
+                    padding: 0,
                     width: '100%',
                 },
                 form: {
@@ -202,8 +204,9 @@ class ProfileDetailForm extends CSSComponent {
         this.setState({
             imageFiles: [],
             saving: false,
+            dataChanged: false,
         });
-        this.refs.modal.setSaveEnabled(true);
+        this.refs.modal.setSaveEnabled(false);
     }
 
     // Public Methods
@@ -243,7 +246,11 @@ class ProfileDetailForm extends CSSComponent {
                 break;
         }
 
-        this.setState(updatedState);
+        this.setState(updatedState, () => {
+            let dataChanged = this.getFieldsThatChanged().length > 0;
+            this.refs.modal.setSaveEnabled(dataChanged);
+            this.setState({dataChanged: dataChanged});
+        });
     }
 
     updateProfile() {
@@ -357,6 +364,17 @@ class ProfileDetailForm extends CSSComponent {
         }
     }
 
+    renderToast() {
+        if (this.props.hasManager === true && this.state.dataChanged === true) {
+            return (
+                <Toast
+                    message={t('Your manager will be notified of changes when you hit Save.')}
+                    messageType={messageTypes.WARNING}
+                />
+            );
+        }
+    }
+
     renderContent() {
         let error = '';
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
@@ -364,6 +382,7 @@ class ProfileDetailForm extends CSSComponent {
         return (
             <div className="col-xs center-xs" is="formContainer">
                 {this.renderProgressIndicator()}
+                {this.renderToast()}
                 <form is="form">
                     <div is="sectionTitle">{t('Photo')}</div>
                     <div className="row start-xs" is="profileImageUploadContainer">

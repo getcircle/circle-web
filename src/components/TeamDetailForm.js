@@ -3,24 +3,28 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { fontColors, fontWeights } from '../constants/styles';
+import * as messageTypes from '../constants/messageTypes';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 
 import CSSComponent from  './CSSComponent';
 import Dialog from './Dialog';
+import Toast from './Toast';
 
 const { DescriptionV1 } = services.common.containers;
 
 class TeamDetailForm extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        isManager: PropTypes.bool.isRequired,
         onSaveCallback: PropTypes.func.isRequired,
         team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
 
     state = {
         name: '',
+        dataChanged: false,
         description: '',
         saving: false,
     }
@@ -149,7 +153,11 @@ class TeamDetailForm extends CSSComponent {
                 break;
         }
 
-        this.setState(updatedState);
+        this.setState(updatedState, () => {
+            let dataChanged = this.getFieldsThatChanged().length > 0;
+            this.refs.modal.setSaveEnabled(dataChanged);
+            this.setState({dataChanged: dataChanged});
+        });
     }
 
     updateTeam() {
@@ -186,7 +194,6 @@ class TeamDetailForm extends CSSComponent {
             imageFiles: [],
             saving: false,
         });
-        this.refs.modal.setSaveEnabled(true);
         this.dismiss();
     }
 
@@ -217,12 +224,24 @@ class TeamDetailForm extends CSSComponent {
         }
     }
 
+    renderToast() {
+        if (this.props.isManager === false && this.state.dataChanged === true) {
+            return (
+                <Toast
+                    message={t('The team manager will be notified of changes when you hit Save.')}
+                    messageType={messageTypes.WARNING}
+                />
+            );
+        }
+    }
+
     renderContent() {
         let error = '';
 
         return (
             <div is="formContainer">
                 {this.renderProgressIndicator()}
+                {this.renderToast()}
                 <form is="form">
                     <div is="sectionTitle">{t('Team Name')}</div>
                     <input

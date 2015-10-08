@@ -19,13 +19,14 @@ import TeamDetail from '../components/TeamDetail';
 
 const selector = createSelector(
     [
+        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.extendedTeamsSelector,
         selectors.responsiveSelector,
         selectors.routerParametersSelector,
         selectors.teamMembersSelector,
     ],
-    (cacheState, extendedTeamsState, responsiveState, parametersSelector, membersState) => {
+    (authenticationState, cacheState, extendedTeamsState, responsiveState, parametersSelector, membersState) => {
         let extendedTeam, members, membersNextRequest;
         const teamId = parametersSelector.teamId;
         const cache = cacheState.toJS();
@@ -40,6 +41,7 @@ const selector = createSelector(
         return {
             extendedTeam: extendedTeam,
             largerDevice: responsiveState.get('largerDevice'),
+            loggedInUserProfile: authenticationState.get('profile'),
             members: members,
             membersNextRequest: membersNextRequest,
         };
@@ -56,6 +58,7 @@ class Team extends CSSComponent {
             team: PropTypes.object.isRequired,
         }),
         largerDevice: PropTypes.bool.isRequired,
+        loggedInUserProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         members: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
@@ -93,6 +96,7 @@ class Team extends CSSComponent {
         const {
             extendedTeam,
             largerDevice,
+            loggedInUserProfile,
             members,
         } = this.props;
         if (extendedTeam) {
@@ -100,6 +104,7 @@ class Team extends CSSComponent {
                 <TeamDetail
                     extendedTeam={extendedTeam}
                     largerDevice={largerDevice}
+                    loggedInUserProfile={loggedInUserProfile}
                     members={members}
                     membersLoadMore={() => this.loadTeamMembers(this.props)}
                     onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
