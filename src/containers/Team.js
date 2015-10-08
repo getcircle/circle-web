@@ -96,6 +96,7 @@ class Team extends CSSComponent {
         const {
             extendedTeam,
             largerDevice,
+            loggedInUserProfile,
             members,
         } = this.props;
         if (extendedTeam) {
