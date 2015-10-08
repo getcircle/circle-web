@@ -368,6 +368,7 @@ class ProfileDetailForm extends CSSComponent {
                     <div is="sectionTitle">{t('Photo')}</div>
                     <div className="row start-xs" is="profileImageUploadContainer">
                         <button
+                            className="dropzone-trigger"
                             disabled={this.state.saving}
                             is="profileImageButton"
                             onClick={this.onOpenClick.bind(this)}
@@ -383,7 +384,7 @@ class ProfileDetailForm extends CSSComponent {
                             onDrop={this.onDrop.bind(this)}
                             ref="dropzone"
                         >
-                            <div className="row center-xs middle-xs" is="dropzoneTriggerContainer">
+                            <div className="row center-xs middle-xs dropzone-trigger" is="dropzoneTriggerContainer">
                                 <IconContainer
                                     IconClass={EditProfileCameraIcon}
                                     iconStyle={{...this.styles().editProfileCameraIcon}}
