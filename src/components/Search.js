@@ -272,7 +272,7 @@ class Search extends CSSComponent {
                     boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
                     justifyContent: 'flex-start',
                     opacity: '0.9',
-                    overflowY: 'auto',
+                    overflowY: 'hidden',
                     textAlign: 'start',
                     width: '100%',
                     height: '100%',
@@ -999,9 +999,12 @@ class Search extends CSSComponent {
             containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
         }
 
-        // Height by default is set to 100% and IE does not likes this
+        // Height by default is set to 100% and IE does not like it.
         // Set explicit height and contain it by maxHeight attribute.
-        let dynamicStyle = {height: containerHeight};
+        // This change has no impact on other browsers.
+        let dynamicStyle = {
+            height: items.length === 0 ? '100%' : containerHeight,
+        };
 
         return (
             <Paper
