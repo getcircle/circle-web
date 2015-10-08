@@ -52,6 +52,7 @@ class ProfileDetailForm extends CSSComponent {
         lastName: '',
         cellNumber: '',
         dataChanged: false,
+        error: '',
         imageUrl: '',
         imageFiles: [],
         title: '',
@@ -64,6 +65,15 @@ class ProfileDetailForm extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         this.mergeStateAndProps(nextProps);
+    }
+
+    directAttributesToStateMapping = {
+        /*eslint-disable camelcase*/
+        'first_name': 'firstName',
+        'last_name': 'lastName',
+        'image_url': 'imageUrl',
+        'title': 'title',
+        /*eslint-enable camelcase*/
     }
 
     classes() {
@@ -105,14 +115,11 @@ class ProfileDetailForm extends CSSComponent {
                     height: 50,
                     width: 50,
                 },
-                errorContainer: {
-                    display: 'none',
-                    justifyContent: 'space-between',
-                    padding: '10px 10px 10px 0',
+                firstField: {
+                    paddingLeft: 0,
                 },
-                errorMessage: {
-                    color: 'rgba(255, 0, 0, 0.7)',
-                    fontSize: 13,
+                lastField: {
+                    paddingRight: 0,
                 },
                 formContainer: {
                     backgroundColor: 'rgb(255, 255, 255)',
@@ -207,6 +214,7 @@ class ProfileDetailForm extends CSSComponent {
         // Need to reset state before dismissing because these
         // components can be cached and carry state.
         this.setState({
+            error: '',
             imageFiles: [],
             saving: false,
             dataChanged: false,
@@ -218,6 +226,7 @@ class ProfileDetailForm extends CSSComponent {
 
     show() {
         this.refs.modal.show();
+        this.mergeStateAndProps(this.props);
     }
 
     dismiss() {
@@ -234,11 +243,34 @@ class ProfileDetailForm extends CSSComponent {
         return props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url;
     }
 
+    validate() {
+        const requiredFieldsToTitle = {
+            'firstName': 'First Name',
+            'lastName': 'Last Name',
+            'title': 'Title',
+        };
+
+        for (let requiredField in requiredFieldsToTitle) {
+            if (this.state[requiredField].trim() === '') {
+                this.setState({
+                    'error': t(requiredFieldsToTitle[requiredField] + ' cannot be empty.'),
+                });
+                return false;
+            }
+        }
+
+        this.setState({
+            'error': '',
+        });
+        return true;
+    }
+
     handleChange(event) {
         let updatedState = {};
-
         if (this.state[event.target.name] !== undefined) {
             updatedState[event.target.name] = event.target.value;
+            // Reset state on any key change
+            updatedState.error = '';
         } else {
             logger.error('Received change event for untracked input.');
             return;
@@ -252,33 +284,6 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     updateProfile() {
-        // TODO:
-        // Add validation
-        // Handle contact methods correctly
-
-        const {
-            profile,
-            onSaveCallback,
-        } = this.props;
-
-        let contactMethods = [new ContactMethodV1({
-            label: 'Cell Phone',
-            value: this.state.cellNumber,
-            /*eslint-disable camelcase*/
-            contact_method_type: ContactMethodV1.ContactMethodTypeV1.CELL_PHONE,
-            /*eslint-enable camelcase*/
-        })];
-
-        let updatedProfile = Object.assign({}, profile, {
-            /*eslint-disable camelcase*/
-            first_name: this.state.firstName,
-            last_name: this.state.lastName,
-            contact_methods: contactMethods,
-            image_url: this.state.imageUrl,
-            title:  this.state.title,
-            /*eslint-enable camelcase*/
-        });
-
         let fieldsChanged = this.getFieldsThatChanged();
         if (fieldsChanged.length > 0) {
             tracker.trackProfileUpdate(
@@ -287,26 +292,38 @@ class ProfileDetailForm extends CSSComponent {
             );
         }
 
-        onSaveCallback(updatedProfile);
+        this.props.onSaveCallback(this.getUpdatedProfile());
         this.resetState();
         this.dismiss();
+    }
+
+    getUpdatedProfile() {
+        let contactMethods = [new ContactMethodV1({
+            label: 'Cell Phone',
+            value: this.state.cellNumber,
+            /*eslint-disable camelcase*/
+            contact_method_type: ContactMethodV1.ContactMethodTypeV1.CELL_PHONE,
+            /*eslint-enable camelcase*/
+        })];
+
+        let updatedProfile = {
+            /*eslint-disable camelcase*/
+            contact_methods: contactMethods,
+            /*eslint-enable camelcase*/
+        };
+        for (let attribute in this.directAttributesToStateMapping) {
+            updatedProfile[attribute] = this.state[this.directAttributesToStateMapping[attribute]];
+        }
+        updatedProfile = Object.assign({}, this.props.profile, updatedProfile);
+        return updatedProfile;
     }
 
     getFieldsThatChanged() {
         let fields = [];
         let profile = this.props.profile;
-        let directAttributesToStateMapping = {
-            /*eslint-disable camelcase*/
-            'first_name': 'firstName',
-            'last_name': 'lastName',
-            'image_url': 'imageUrl',
-            'title': 'title',
-            /*eslint-enable camelcase*/
-        };
-
-        for (let attribute in directAttributesToStateMapping) {
-            if (this.state[directAttributesToStateMapping[attribute]] !== profile[attribute]) {
-                fields.push[attribute]
+        for (let attribute in this.directAttributesToStateMapping) {
+            if (this.state[this.directAttributesToStateMapping[attribute]] !== profile[attribute]) {
+                fields.push(attribute)
             }
         }
 
@@ -333,6 +350,9 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     handleSaveTapped() {
+        if (!this.validate()) {
+            return;
+        }
 
         // Disable Save button
         this.refs.modal.setSaveEnabled(false);
@@ -372,7 +392,14 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     renderToast() {
-        if (this.props.hasManager === true && this.state.dataChanged === true) {
+        if (this.state.error.trim() !== '') {
+            return (
+                <Toast
+                    message={this.state.error}
+                    messageType={messageTypes.ERROR}
+                />
+            );
+        } else if (this.props.hasManager === true && this.state.dataChanged === true) {
             return (
                 <Toast
                     message={t('Your manager will be notified of changes when you hit Save.')}
@@ -383,7 +410,6 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     renderContent() {
-        let error = '';
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
 
         return (
@@ -422,7 +448,7 @@ class ProfileDetailForm extends CSSComponent {
                         </Dropzone>
                     </div>
                     <div className="row">
-                        <div className="col-xs">
+                        <div className="col-xs" is="firstField">
                             <div is="sectionTitle">{t('First Name')}</div>
                             <input
                                 disabled={this.state.saving}
@@ -434,7 +460,7 @@ class ProfileDetailForm extends CSSComponent {
                                 value={this.state.firstName}
                              />
                         </div>
-                        <div className="col-xs">
+                        <div className="col-xs" is="lastField">
                             <div is="sectionTitle">{t('Last Name')}</div>
                             <input
                                 disabled={this.state.saving}
@@ -457,11 +483,6 @@ class ProfileDetailForm extends CSSComponent {
                         type="text"
                         value={this.state.title}
                      />
-                     <div is="errorContainer">
-                        <span is="errorMessage">
-                            {error}
-                        </span>
-                    </div>
                     <div is="sectionTitle">{t('Contact')}</div>
                     <input
                         disabled={this.state.saving}
