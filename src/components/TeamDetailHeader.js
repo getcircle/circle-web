@@ -29,11 +29,14 @@ class TeamDetailHeader extends CSSComponent {
                 editButtonContainer: {
                     display: 'flex',
                     justifyContent: 'flex-end',
+                    maxWidth: 800,
+                    margin: '0 auto',
+                    padding: '0 10px',
                 },
                 editButton: {
                     backgroundColor: 'transparent',
                     border: '1px solid white',
-                    margin: '16px 16px 0 16px',
+                    marginTop: '16px',
                     fontSize: 11,
                     letterSpacing: '1px',
                     ...fontColors.white,
