@@ -46,3 +46,7 @@ body .row {
     // let's stop thinking about subtracting padding from width
     box-sizing: border-box;
 }
+
+.no-padding {
+    padding: 0;
+}

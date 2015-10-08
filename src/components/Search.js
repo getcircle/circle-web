@@ -661,9 +661,7 @@ class Search extends CSSComponent {
             },
             innerDivStyle: {
                 paddingLeft: 40,
-            },
-            style: {
-                paddingLeft: 58,
+                marginLeft: 58,
             },
             href: `mailto:${profile.email}`,
             target: '_blank',
@@ -906,7 +904,7 @@ class Search extends CSSComponent {
                         const created = moment(status.created).fromNow()
                         return (
                             <div is="statusTextContainer">
-                                <span is="statusTextTitle">
+                                <span className="row start-xs" is="statusTextTitle">
                                     {t('Currently Working On')}
                                 </span>
                                 <div is="statusTextValueContainer">
@@ -993,12 +991,18 @@ class Search extends CSSComponent {
             return this.renderItemInMenu(item, index, addSubHeader);
         });
 
+
         const { resultsListStyle, resultsHeight } = this.props;
         if (resultsHeight !== null && resultsHeight !== undefined) {
             containerHeight = resultsHeight;
         } else {
             containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
         }
+
+        // Height by default is set to 100% and IE does not likes this
+        // Set explicit height and contain it by maxHeight attribute.
+        let dynamicStyle = {height: containerHeight};
+
         return (
             <Paper
                 key="menu"
@@ -1006,9 +1010,11 @@ class Search extends CSSComponent {
                     ...style,
                     ...this.styles().resultsList,
                     ...resultsListStyle,
+                    ...dynamicStyle
                 }}
             >
                 <Infinite
+                    className="col-xs no-padding"
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}
                     infiniteLoadBeginBottomOffset={200}
