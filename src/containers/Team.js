@@ -8,6 +8,7 @@ import {
     loadTeamMembers,
     updateTeam,
 } from '../actions/teams';
+import { resetScroll } from '../utils/window';
 import { retrieveExtendedTeam, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
@@ -77,6 +78,7 @@ class Team extends CSSComponent {
     loadTeam(props) {
         props.dispatch(loadExtendedTeam(props.params.teamId));
         this.loadTeamMembers(props);
+        resetScroll();
     }
 
     loadTeamMembers(props) {

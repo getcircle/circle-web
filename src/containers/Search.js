@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
+import { resetScroll } from '../utils/window';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
@@ -184,8 +185,7 @@ class Search extends CSSComponent {
         this.setState({focused: true});
         // Offset mobile browsers trying to scroll to focus the element.
         if (this.props.mobileOS) {
-            window.scrollTo(0, 0);
-            document.body.scrollTop = 0;
+            resetScroll();
         }
     }
 

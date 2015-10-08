@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
+import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
@@ -63,13 +64,18 @@ class Profile extends PureComponent {
     }
 
     componentWillMount() {
-        this.props.dispatch(getExtendedProfile(this.props.params.profileId));
+        this.loadProfile(this.props);
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
-            this.props.dispatch(getExtendedProfile(nextProps.params.profileId));
+            this.loadProfile(nextProps);
         }
+    }
+
+    loadProfile(props) {
+        this.props.dispatch(getExtendedProfile(props.params.profileId));
+        resetScroll();
     }
 
     onUpdateProfile(profile) {

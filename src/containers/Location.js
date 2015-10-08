@@ -8,6 +8,7 @@ import {
     loadLocationMembers,
     updateLocation,
 } from '../actions/locations';
+import { resetScroll } from '../utils/window';
 import { retrieveLocation, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
@@ -75,6 +76,7 @@ class Location extends PureComponent {
     loadLocation(props) {
         props.dispatch(loadLocation(props.params.locationId));
         this.loadLocationMembers(props);
+        resetScroll();
     }
 
     loadLocationMembers(props) {
