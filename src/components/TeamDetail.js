@@ -32,6 +32,7 @@ class TeamDetail extends CSSComponent {
             team: PropTypes.object.isRequired,
         }),
         largerDevice: PropTypes.bool.isRequired,
+        loggedInUserProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
         membersLoadMore: PropTypes.func,
         onUpdateTeamCallback: PropTypes.func.isRequired,
@@ -197,7 +198,7 @@ class TeamDetail extends CSSComponent {
         }
     }
 
-    renderTeamDetailForm(team) {
+    renderTeamDetailForm(team, isManager) {
         const {
             onUpdateTeamCallback,
         } = this.props;
@@ -205,6 +206,7 @@ class TeamDetail extends CSSComponent {
         if (this.canEdit()) {
             return (
                 <TeamDetailForm
+                    isManager={isManager}
                     onSaveCallback={onUpdateTeamCallback}
                     ref="teamDetailForm"
                     team={team}
@@ -214,7 +216,7 @@ class TeamDetail extends CSSComponent {
     }
 
     render() {
-        const { extendedTeam, members } = this.props;
+        const { extendedTeam, loggedInUserProfile, members } = this.props;
         const { team, reportingDetails } = extendedTeam;
         const { manager } = reportingDetails;
         const childTeams = reportingDetails.child_teams;
@@ -234,7 +236,7 @@ class TeamDetail extends CSSComponent {
                     {this.renderChildTeams(childTeams, team.child_team_count)}
                     {this.renderTeamMembers(manager, members, team.profile_count)}
                 </DetailContent>
-                {this.renderTeamDetailForm(team)}
+                {this.renderTeamDetailForm(team, loggedInUserProfile.id === manager.id)}
             </div>
         );
     }
