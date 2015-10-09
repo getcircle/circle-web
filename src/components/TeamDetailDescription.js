@@ -17,6 +17,7 @@ class TeamDetailDescription extends CSSComponent {
         isEditable: PropTypes.bool,
         manager: PropTypes.instanceOf(services.common.containers.ProfileV1),
         onSaveCallback: PropTypes.func.isRequired,
+        onEditTapped: PropTypes.func,
         style: PropTypes.object,
         team: PropTypes.instanceOf(services.organization.containers.TeamV1),
     }
@@ -57,6 +58,16 @@ class TeamDetailDescription extends CSSComponent {
                     target="_blank"
                 >
                     {t('Ask Me!')}
+                </FlatButton>
+            );
+        } else if (this.props.onEditTapped) {
+            defaultContent = (
+                <FlatButton
+                    is="link"
+                    onTouchTap={() => this.props.onEditTapped()}
+                    primary={true}
+                >
+                    {t('Add details')}
                 </FlatButton>
             );
         }

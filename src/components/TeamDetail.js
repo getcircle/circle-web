@@ -110,7 +110,9 @@ class TeamDetail extends CSSComponent {
     }
 
     editButtonTapped() {
-        this.refs.teamDetailForm.show();
+        if (this.refs.teamDetailForm) {
+            this.refs.teamDetailForm.show();
+        }
     }
 
     canEdit() {
@@ -141,6 +143,7 @@ class TeamDetail extends CSSComponent {
                 is="section"
                 isEditable={this.canEdit()}
                 manager={manager}
+                onEditTapped={this.editButtonTapped.bind(this)}
                 onSaveCallback={this.onUpdateDescription.bind(this)}
                 team={team}
             />
