@@ -8,7 +8,7 @@ import tracker from '../utils/tracker';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
-const PROFILE_ASK_ME = 'profile_askme';
+const PROFILE_STATUS_ASK_ME = 'profile_status_askme';
 const TEAM_STATUS_ASK_ME = 'team_status_askme';
 const TEAM_DESCRIPTION_ASK_ME = 'team_description_askme';
 
@@ -22,7 +22,7 @@ export function mailto(email) {
 
 export function mailtoProfileStatus(profile, fromProfile) {
     const subject = encodeURI(t('Working on in Luno'));
-    const sourceParameter = getTrackingParameter(PROFILE_ASK_ME);
+    const sourceParameter = getTrackingParameter(PROFILE_STATUS_ASK_ME);
     const link = `${window.location.host}/profile/${profile.id}?${sourceParameter}`;
     const body = encodeURI(t(
         `Hey ${profile.first_name},
