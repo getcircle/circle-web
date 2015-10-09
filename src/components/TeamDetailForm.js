@@ -201,7 +201,9 @@ class TeamDetailForm extends CSSComponent {
         let fields = [];
         let team = this.props.team;
         ['name', 'description'].map((field) => {
-            if (this.state[field] !== team[field]) {
+            const newValue = this.state[field];
+            const teamValue = team[field];
+            if (newValue !== teamValue && !(!newValue && !teamValue)) {
                 fields.push(field);
             }
         });
