@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { getAuthenticatedProfile } from '../reducers/authentication';
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
@@ -13,12 +14,26 @@ import ProfileDetail from '../components/ProfileDetail';
 import PureComponent from '../components/PureComponent';
 
 const profileSelector = selectors.createImmutableSelector(
-    [selectors.cacheSelector, selectors.extendedProfilesSelector, selectors.routerParametersSelector],
-    (cacheState, extendedProfilesState, paramsState) => {
+    [
+        selectors.cacheSelector,
+        selectors.extendedProfilesSelector,
+        selectors.routerParametersSelector,
+        selectors.authenticationSelector,
+    ],
+    (cacheState, extendedProfilesState, paramsState, authenticationState) => {
         let extendedProfile;
         const profileId = paramsState.profileId;
+        const cache = cacheState.toJS();
         if (extendedProfilesState.get('ids').has(profileId)) {
-            extendedProfile = retrieveExtendedProfile(profileId, cacheState.toJS());
+            extendedProfile = retrieveExtendedProfile(profileId, cache);
+        }
+
+        const authenticatedProfile = getAuthenticatedProfile(authenticationState, cache);
+        let isLoggedInUser;
+        if (authenticatedProfile && authenticatedProfile.id === profileId) {
+            isLoggedInUser = true;
+        } else {
+            isLoggedInUser = false;
         }
 
         // Profile ID is passed because extended profile might not have been fetched
@@ -26,23 +41,17 @@ const profileSelector = selectors.createImmutableSelector(
         return {
             extendedProfile,
             profileId,
+            authenticatedProfile,
+            isLoggedInUser,
+            organization: authenticationState.get('organization'),
         };
     }
 );
 
 const selector = selectors.createImmutableSelector(
-    [profileSelector, selectors.authenticationSelector, selectors.responsiveSelector],
-    (profileState, authenticationState, responsiveState) => {
-        let isLoggedInUser;
-        const profile = authenticationState.get('profile');
-        if (profile && profile.id === profileState.profileId) {
-            isLoggedInUser = true;
-        } else {
-            isLoggedInUser = false;
-        }
+    [profileSelector, selectors.responsiveSelector],
+    (profileState, responsiveState) => {
         return {
-            isLoggedInUser: isLoggedInUser,
-            organization: authenticationState.get('organization'),
             largerDevice: responsiveState.get('largerDevice'),
             ...profileState
         }
@@ -53,6 +62,7 @@ const selector = selectors.createImmutableSelector(
 class Profile extends PureComponent {
 
     static propTypes = {
+        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object,
         isLoggedInUser: PropTypes.bool.isRequired,
@@ -61,6 +71,16 @@ class Profile extends PureComponent {
         params: PropTypes.shape({
             profileId: PropTypes.string.isRequired,
         }).isRequired,
+    }
+
+    static childContextTypes = {
+        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+    }
+
+    getChildContext() {
+        return {
+            authenticatedProfile: this.props.authenticatedProfile,
+        };
     }
 
     componentWillMount() {

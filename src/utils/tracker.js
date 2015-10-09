@@ -8,6 +8,11 @@ import {
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 const { AttributeV1, CategoryV1 } = services.search.containers.search;
+const LUNO_SOURCE = 'ls';
+
+export function getTrackingParameter(source) {
+    return `${LUNO_SOURCE}=${source}`;
+}
 
 /**
  *   This class acts as a wrapper for our mixpanel implementation.
@@ -144,6 +149,14 @@ class Tracker {
         return matchedKeys[0];
     }
 
+    getLunoSource() {
+        const regex = new RegExp(`[[\\?&]${LUNO_SOURCE}=([^&#]*)`);
+        const results = regex.exec(window.location.search);
+        if (results !== null || (results && typeof(results[1]) === 'string' && results[1].length)) {
+            return decodeURIComponent(results[1]).replace(/\+/g, ' ');
+        };
+    }
+
     // Events
 
     /**
@@ -161,10 +174,15 @@ class Tracker {
                 return;
             }
 
-            mixpanel.track(EVENTS.PAGE_VIEW, {
+            const attributes = {
                 'Page Type': pageType,
                 'Page ID': pageId && pageId !== '' ? pageId : undefined,
-            });
+            };
+            const source = this.getLunoSource();
+            if (source) {
+                attributes['Page Source'] = source;
+            }
+            mixpanel.track(EVENTS.PAGE_VIEW, attributes);
 
             // Increment global page views count for the user.
             mixpanel.people.increment('Page Views');
