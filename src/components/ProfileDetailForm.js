@@ -5,6 +5,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { fontColors, fontWeights } from '../constants/styles';
+import logger from '../utils/logger';
 import * as messageTypes from '../constants/messageTypes';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
@@ -47,10 +48,13 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     state = {
-        imageUrl: '',
-        imageFiles: [],
+        firstName: '',
+        lastName: '',
         cellNumber: '',
         dataChanged: false,
+        error: '',
+        imageUrl: '',
+        imageFiles: [],
         title: '',
         saving: false,
     }
@@ -61,6 +65,15 @@ class ProfileDetailForm extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         this.mergeStateAndProps(nextProps);
+    }
+
+    directAttributesToStateMapping = {
+        /*eslint-disable camelcase*/
+        'first_name': 'firstName',
+        'last_name': 'lastName',
+        'image_url': 'imageUrl',
+        'title': 'title',
+        /*eslint-enable camelcase*/
     }
 
     classes() {
@@ -102,14 +115,11 @@ class ProfileDetailForm extends CSSComponent {
                     height: 50,
                     width: 50,
                 },
-                errorContainer: {
-                    display: 'none',
-                    justifyContent: 'space-between',
-                    padding: '10px 10px 10px 0',
+                firstField: {
+                    paddingLeft: 0,
                 },
-                errorMessage: {
-                    color: 'rgba(255, 0, 0, 0.7)',
-                    fontSize: 13,
+                lastField: {
+                    paddingRight: 0,
                 },
                 formContainer: {
                     backgroundColor: 'rgb(255, 255, 255)',
@@ -153,7 +163,7 @@ class ProfileDetailForm extends CSSComponent {
                 },
                 sectionTitle: {
                     fontSize: 11,
-                    letterSpacing: '2px',
+                    letterSpacing: '1px',
                     margin: '16px 0',
                     textAlign: 'left',
                     textTransform: 'uppercase',
@@ -187,6 +197,8 @@ class ProfileDetailForm extends CSSComponent {
         if (!this.state.saving) {
             updatedState.title = props ? props.profile.title : '';
             updatedState.cellNumber = this.getCellNumberFromProps(props);
+            updatedState.firstName = props ? props.profile.first_name : '';
+            updatedState.lastName = props ? props.profile.last_name : '';
         }
 
         this.setState(updatedState, () => {
@@ -202,6 +214,7 @@ class ProfileDetailForm extends CSSComponent {
         // Need to reset state before dismissing because these
         // components can be cached and carry state.
         this.setState({
+            error: '',
             imageFiles: [],
             saving: false,
             dataChanged: false,
@@ -213,6 +226,7 @@ class ProfileDetailForm extends CSSComponent {
 
     show() {
         this.refs.modal.show();
+        this.mergeStateAndProps(this.props);
     }
 
     dismiss() {
@@ -229,56 +243,49 @@ class ProfileDetailForm extends CSSComponent {
         return props.mediaUrl !== '' ? props.mediaUrl : props.profile.image_url;
     }
 
-    handleChange(event) {
-        let updatedState = {};
+    validate() {
+        const requiredFieldsToTitle = {
+            'firstName': 'First Name',
+            'lastName': 'Last Name',
+            'title': 'Title',
+        };
 
-        // TODO: Make this generic
-        switch (event.target.name) {
-            case 'title':
-                updatedState.title = event.target.value;
-                break;
-
-            case 'cellNumber':
-                updatedState.cellNumber = event.target.value;
-                break;
-
-            default:
-                break;
+        for (let requiredField in requiredFieldsToTitle) {
+            if (this.state[requiredField].trim() === '') {
+                this.setState({
+                    'error': t(requiredFieldsToTitle[requiredField] + ' cannot be empty.'),
+                });
+                return false;
+            }
         }
 
-        this.setState(updatedState, () => {
-            let dataChanged = this.getFieldsThatChanged().length > 0;
-            this.refs.modal.setSaveEnabled(dataChanged);
-            this.setState({dataChanged: dataChanged});
+        this.setState({
+            'error': '',
         });
+        return true;
+    }
+
+    handleChange(event) {
+        let updatedState = {};
+        if (this.state[event.target.name] !== undefined) {
+            updatedState[event.target.name] = event.target.value;
+            // Reset state on any key change
+            updatedState.error = '';
+        } else {
+            logger.error('Received change event for untracked input.');
+            return;
+        }
+
+        this.setState(updatedState, () => this.detectChangeAndEnableSaving());
+    }
+
+    detectChangeAndEnableSaving() {
+        let dataChanged = this.getFieldsThatChanged().length > 0 || this.state.imageFiles.length > 0;
+        this.refs.modal.setSaveEnabled(dataChanged);
+        this.setState({dataChanged: dataChanged});
     }
 
     updateProfile() {
-        // TODO:
-        // Add validation
-        // Handle contact methods correctly
-
-        const {
-            profile,
-            onSaveCallback,
-        } = this.props;
-
-        let contactMethods = [new ContactMethodV1({
-            label: 'Cell Phone',
-            value: this.state.cellNumber,
-            /*eslint-disable camelcase*/
-            contact_method_type: ContactMethodV1.ContactMethodTypeV1.CELL_PHONE,
-            /*eslint-enable camelcase*/
-        })];
-
-        let updatedProfile = Object.assign({}, profile, {
-            /*eslint-disable camelcase*/
-            contact_methods: contactMethods,
-            image_url: this.state.imageUrl,
-            title:  this.state.title,
-            /*eslint-enable camelcase*/
-        });
-
         let fieldsChanged = this.getFieldsThatChanged();
         if (fieldsChanged.length > 0) {
             tracker.trackProfileUpdate(
@@ -287,20 +294,39 @@ class ProfileDetailForm extends CSSComponent {
             );
         }
 
-        onSaveCallback(updatedProfile);
+        this.props.onSaveCallback(this.getUpdatedProfile());
         this.resetState();
         this.dismiss();
+    }
+
+    getUpdatedProfile() {
+        let contactMethods = [new ContactMethodV1({
+            label: 'Cell Phone',
+            value: this.state.cellNumber,
+            /*eslint-disable camelcase*/
+            contact_method_type: ContactMethodV1.ContactMethodTypeV1.CELL_PHONE,
+            /*eslint-enable camelcase*/
+        })];
+
+        let updatedProfile = {
+            /*eslint-disable camelcase*/
+            contact_methods: contactMethods,
+            /*eslint-enable camelcase*/
+        };
+        for (let attribute in this.directAttributesToStateMapping) {
+            updatedProfile[attribute] = this.state[this.directAttributesToStateMapping[attribute]];
+        }
+        updatedProfile = Object.assign({}, this.props.profile, updatedProfile);
+        return updatedProfile;
     }
 
     getFieldsThatChanged() {
         let fields = [];
         let profile = this.props.profile;
-        if (this.state.imageUrl !== profile.image_url) {
-            fields.push('image_url');
-        }
-
-        if (this.state.title !== profile.title) {
-            fields.push('title');
+        for (let attribute in this.directAttributesToStateMapping) {
+            if (this.state[this.directAttributesToStateMapping[attribute]] !== profile[attribute]) {
+                fields.push(attribute)
+            }
         }
 
         if (this.state.cellNumber !== this.getCellNumberFromProps(this.props)) {
@@ -326,8 +352,11 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     handleSaveTapped() {
+        if (!this.validate()) {
+            return;
+        }
 
-        // Disable Save button
+        // Disable Save button to avoid double submission
         this.refs.modal.setSaveEnabled(false);
 
         // If an image was added, upload it first
@@ -352,7 +381,7 @@ class ProfileDetailForm extends CSSComponent {
         let updatedState = {};
         updatedState.imageFiles = files;
         if (files.length > 0) {
-           this.setState(updatedState);
+           this.setState(updatedState, () => this.detectChangeAndEnableSaving());
         }
     }
 
@@ -365,7 +394,14 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     renderToast() {
-        if (this.props.hasManager === true && this.state.dataChanged === true) {
+        if (this.state.error.trim() !== '') {
+            return (
+                <Toast
+                    message={this.state.error}
+                    messageType={messageTypes.ERROR}
+                />
+            );
+        } else if (this.props.hasManager === true && this.state.dataChanged === true) {
             return (
                 <Toast
                     message={t('Your manager will be notified of changes when you hit Save.')}
@@ -376,7 +412,6 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     renderContent() {
-        let error = '';
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
 
         return (
@@ -414,6 +449,32 @@ class ProfileDetailForm extends CSSComponent {
                             </div>
                         </Dropzone>
                     </div>
+                    <div className="row">
+                        <div className="col-xs" is="firstField">
+                            <div is="sectionTitle">{t('First Name')}</div>
+                            <input
+                                disabled={this.state.saving}
+                                is="input"
+                                name="firstName"
+                                onChange={this.handleChange.bind(this)}
+                                placeholder={t('First Name')}
+                                type="text"
+                                value={this.state.firstName}
+                             />
+                        </div>
+                        <div className="col-xs" is="lastField">
+                            <div is="sectionTitle">{t('Last Name')}</div>
+                            <input
+                                disabled={this.state.saving}
+                                is="input"
+                                name="lastName"
+                                onChange={this.handleChange.bind(this)}
+                                placeholder={t('Last Name')}
+                                type="text"
+                                value={this.state.lastName}
+                             />
+                        </div>
+                    </div>
                     <div is="sectionTitle">{t('Title')}</div>
                     <input
                         disabled={this.state.saving}
@@ -424,11 +485,6 @@ class ProfileDetailForm extends CSSComponent {
                         type="text"
                         value={this.state.title}
                      />
-                     <div is="errorContainer">
-                        <span is="errorMessage">
-                            {error}
-                        </span>
-                    </div>
                     <div is="sectionTitle">{t('Contact')}</div>
                     <input
                         disabled={this.state.saving}

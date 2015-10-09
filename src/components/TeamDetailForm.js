@@ -86,7 +86,7 @@ class TeamDetailForm extends CSSComponent {
                 },
                 sectionTitle: {
                     fontSize: 11,
-                    letterSpacing: '2px',
+                    letterSpacing: '1px',
                     margin: '16px 0',
                     textAlign: 'left',
                     textTransform: 'uppercase',
