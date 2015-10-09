@@ -51,9 +51,16 @@ class ProfileDetail extends StyleableComponent {
         } = this.props;
 
         let profile = extendedProfile.profile;
-        let profileStatusV1 = new ProfileStatusV1({
-            value: statusText,
-        });
+        let profileStatusV1;
+        if (isNew) {
+            profileStatusV1 = new ProfileStatusV1({
+                value: statusText,
+            });
+        } else {
+            profileStatusV1 = Object.assign({}, profile.status, {
+                value: statusText,
+            });
+        }
 
         // Track status change
         if ((profile.status && profile.status.value !== statusText) || !profile.status) {

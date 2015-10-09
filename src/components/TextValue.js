@@ -192,7 +192,13 @@ class TextValue extends CSSComponent {
         const {
             onSaveCallback,
         } = this.props;
-        onSaveCallback(finalStatusValue, this.state.isNew);
+        let isNew = this.state.isNew;
+        if (finalStatusValue === '') {
+            // Don't save if there was nothing entered
+            this.mergeStateAndProps(this.props);
+            return;
+        }
+        onSaveCallback(finalStatusValue, isNew);
     }
 
     handleCancelTapped() {
