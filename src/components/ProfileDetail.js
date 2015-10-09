@@ -74,6 +74,7 @@ class ProfileDetail extends StyleableComponent {
             <ProfileDetailStatus
                 isEditable={isEditable}
                 onSaveCallback={this.onUpdateStatus.bind(this)}
+                profile={this.props.extendedProfile.profile}
                 status={status}
                 style={this.mergeAndPrefix(styles.section)}
             />

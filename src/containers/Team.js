@@ -41,7 +41,7 @@ const selector = createSelector(
         return {
             extendedTeam: extendedTeam,
             largerDevice: responsiveState.get('largerDevice'),
-            loggedInUserProfile: authenticationState.get('profile'),
+            authenticatedProfile: authenticationState.get('profile'),
             members: members,
             membersNextRequest: membersNextRequest,
         };
@@ -52,13 +52,13 @@ const selector = createSelector(
 class Team extends CSSComponent {
 
     static propTypes = {
+        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         dispatch: PropTypes.func.isRequired,
         extendedTeam: PropTypes.shape({
             reportingDetails: PropTypes.object.isRequired,
             team: PropTypes.object.isRequired,
         }),
         largerDevice: PropTypes.bool.isRequired,
-        loggedInUserProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         members: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
@@ -66,6 +66,16 @@ class Team extends CSSComponent {
         params: PropTypes.shape({
             teamId: PropTypes.string,
         }),
+    }
+
+    static childContextTypes = {
+        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+    }
+
+    getChildContext() {
+        return {
+            authenticatedProfile: this.props.authenticatedProfile,
+        };
     }
 
     componentWillMount() {
@@ -96,7 +106,6 @@ class Team extends CSSComponent {
         const {
             extendedTeam,
             largerDevice,
-            loggedInUserProfile,
             members,
         } = this.props;
         if (extendedTeam) {
@@ -104,7 +113,6 @@ class Team extends CSSComponent {
                 <TeamDetail
                     extendedTeam={extendedTeam}
                     largerDevice={largerDevice}
-                    loggedInUserProfile={loggedInUserProfile}
                     members={members}
                     membersLoadMore={() => this.loadTeamMembers(this.props)}
                     onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
