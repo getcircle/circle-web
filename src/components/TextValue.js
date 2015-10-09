@@ -336,7 +336,7 @@ class TextValue extends CSSComponent {
                 onCancelTapped={this.handleCancelTapped.bind(this)}
                 onEditTapped={this.handleNewUpdateTapped.bind(this)}
                 onSaveTapped={this.handleSaveTapped.bind(this)}
-                saveTitle={t('Post')}
+                saveTitle={this.state.isNew ? t('Post') : $('Save')}
                 style={{...this.styles().defaultStyle, ...style}}
                 title={title}
             >
