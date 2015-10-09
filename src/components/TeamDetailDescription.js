@@ -47,7 +47,7 @@ class TeamDetailDescription extends CSSComponent {
         } = this.props;
 
         let defaultContent;
-        if (manager.id !== this.context.authenticatedProfile.id) {
+        if (!isEditable) {
             defaultContent = (
                 <FlatButton
                     href={mailtoTeamDescription(team, manager, this.context.authenticatedProfile)}
@@ -64,7 +64,9 @@ class TeamDetailDescription extends CSSComponent {
         return (
             <TextValue
                 defaultContent={defaultContent}
-                isEditable={isEditable}
+                // Descriptions are editable from the form
+                // This property is still useful to control Ask Me links.
+                isEditable={false}
                 onSaveCallback={onSaveCallback}
                 placeholder={t('Add your team description here. Its best to add your team\'s mission statement or high level goals, and how your team impacts the business.')}
                 shouldLimitCharacters={false}

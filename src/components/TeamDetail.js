@@ -139,6 +139,7 @@ class TeamDetail extends CSSComponent {
             <TeamDetailDescription
                 description={team.description}
                 is="section"
+                isEditable={this.canEdit()}
                 manager={manager}
                 onSaveCallback={this.onUpdateDescription.bind(this)}
                 team={team}
