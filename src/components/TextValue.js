@@ -1,6 +1,7 @@
+import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { fontColors } from '../constants/styles';
+import { fontColors, tintColor } from '../constants/styles';
 import moment from '../utils/moment';
 import t from '../utils/gettext';
 
@@ -14,6 +15,7 @@ class TextValue extends CSSComponent {
 
     static propTypes = {
         authorName: PropTypes.string,
+        dataId: PropTypes.string,
         defaultContent: PropTypes.node,
         editedTimestamp: PropTypes.string,
         isEditable: PropTypes.bool,
@@ -26,10 +28,19 @@ class TextValue extends CSSComponent {
         title: PropTypes.string,
     }
 
+    static defaultProps = {
+        authorName: '',
+        dataId: '',
+        text: '',
+        editedTimestamp: '',
+    }
+
     state = {
         authorName: '',
         editing: false,
         error: '',
+        dataId: '',
+        isNew: false,
         value: '',
         valueTimestamp: '',
     }
@@ -56,6 +67,13 @@ class TextValue extends CSSComponent {
                     display: 'flex',
                     flexDirection: 'row',
                     padding: 20,
+                },
+                editButton: {
+                    minWidth: 50,
+                },
+                editButtonLabel: {
+                    fontSize: 11,
+                    color: tintColor,
                 },
                 errorContainer: {
                     display: 'flex',
@@ -127,9 +145,11 @@ class TextValue extends CSSComponent {
      */
     mergeStateAndProps(props) {
         this.setState({
-            authorName: props.authorName ? props.authorName : '',
+            authorName: props.authorName,
+            dataId: props.dataId,
             editing: false,
             error: '',
+            isNew: false,
             value: props.text,
             valueTimestamp: props.editedTimestamp,
         });
@@ -137,11 +157,18 @@ class TextValue extends CSSComponent {
 
     handleEditTapped() {
         this.setState({
-            authorName: this.state.authorName,
             editing: true,
-            error: '',
-            value: this.state.value,
-            valueTimestamp: this.state.valueTimestamp
+            isNew: false,
+        });
+    }
+
+    handleNewUpdateTapped() {
+        this.setState({
+            authorName: '',
+            editing: true,
+            isNew: true,
+            value: '',
+            valueTimestamp: ''
         });
     }
 
@@ -153,28 +180,23 @@ class TextValue extends CSSComponent {
         let finalStatusValue = this.state.value.replace(/^\s+|\s+$/g, '');
         if (shouldLimitCharacters && finalStatusValue.length > CHARACTER_LIMIT) {
             this.setState({
-                authorName: this.state.authorName,
-                editing: true,
                 error: t('Status can only be up to ' + CHARACTER_LIMIT + ' characters'),
                 value: finalStatusValue,
-                valueTimestamp: this.state.valueTimestamp
             });
 
             return;
         }
 
         this.setState({
-            authorName: this.state.authorName,
             editing: false,
             error: '',
             value: finalStatusValue,
-            valueTimestamp: this.state.valueTimestamp
         });
 
         const {
             onSaveCallback,
         } = this.props;
-        onSaveCallback(finalStatusValue);
+        onSaveCallback(finalStatusValue, this.state.isNew);
     }
 
     handleCancelTapped() {
@@ -183,11 +205,8 @@ class TextValue extends CSSComponent {
 
     handleChange(event) {
         this.setState({
-            authorName: this.state.authorName,
-            editing: true,
             error: '',
             value: event.target.value,
-            valueTimestamp: this.state.valueTimestamp
         });
     }
 
@@ -228,9 +247,33 @@ class TextValue extends CSSComponent {
         return (
             <div is="textContainer">
                 {content}
-                {this.renderStatusTimestamp()}
+                <div className="row middle-xs start-xs">
+                    <div>
+                        {this.renderStatusTimestamp()}
+                    </div>
+                    <div>
+                        {this.renderEditButton()}
+                    </div>
+                </div>
             </div>
         );
+    }
+
+    renderEditButton() {
+        const {
+            isEditable,
+        } = this.props;
+
+        if (isEditable === true) {
+            return (
+                <FlatButton
+                    is="editButton"
+                    label={t('Edit')}
+                    labelStyle={this.styles().editButtonLabel}
+                    onTouchTap={this.handleEditTapped.bind(this)}
+                />
+            );
+        }
     }
 
     renderCharacterCounter(value) {
@@ -287,11 +330,13 @@ class TextValue extends CSSComponent {
             <Card
                 {...other}
                 contentStyle={this.styles().contentStyle}
+                editTitle={t('New Update')}
                 isEditable={isEditable}
                 isEditing={this.state.editing}
                 onCancelTapped={this.handleCancelTapped.bind(this)}
-                onEditTapped={this.handleEditTapped.bind(this)}
+                onEditTapped={this.handleNewUpdateTapped.bind(this)}
                 onSaveTapped={this.handleSaveTapped.bind(this)}
+                saveTitle={t('Post')}
                 style={{...this.styles().defaultStyle, ...style}}
                 title={title}
             >

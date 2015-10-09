@@ -44,16 +44,25 @@ class ProfileDetail extends StyleableComponent {
 
     // Update Methods
 
-    onUpdateStatus(statusText) {
+    onUpdateStatus(statusText, isNew) {
         const {
             extendedProfile,
             onUpdateProfile,
         } = this.props;
 
         let profile = extendedProfile.profile;
-        let profileStatusV1 = new ProfileStatusV1({
-            value: statusText,
-        });
+        let profileStatusV1;
+
+        if (isNew) {
+            profileStatusV1 = new ProfileStatusV1({
+                value: statusText,
+            });
+        } else {
+            profileStatusV1 = Object.assign({}, profile.status, {
+                value: statusText,
+            });
+        }
+
         let updatedProfile = Object.assign({}, profile, {
             status:  profileStatusV1,
         });
@@ -61,7 +70,7 @@ class ProfileDetail extends StyleableComponent {
         if ((profile.status && profile.status.value !== statusText) || !profile.status) {
             tracker.trackProfileUpdate(
                 profile.id,
-                ['status']
+                [isNew ? 'new_status' : 'status']
             );
         }
         onUpdateProfile(updatedProfile);
