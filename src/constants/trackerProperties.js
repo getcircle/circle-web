@@ -90,5 +90,8 @@ export const SEARCH_LOCATION = {
 // Where the contact method was tapped
 export const CONTACT_LOCATION = {
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
+    PROFILE_DETAIL_STATUS: 'Profile Detail Status',
+    TEAM_DETAIL_STATUS: 'Team Detail Status',
+    TEAM_DETAIL_DESCRIPTION: 'Team Detail Description',
     SEARCH_SMART_ACTION: 'Search Smart Action',
 };

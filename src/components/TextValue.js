@@ -141,7 +141,6 @@ class TextValue extends CSSComponent {
      * @return {Void}
      */
     mergeStateAndProps(props) {
-        console.log(props);
         this.setState({
             authorName: props.authorName,
             editing: false,
