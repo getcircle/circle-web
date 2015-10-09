@@ -8,6 +8,7 @@ import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
 import { loadSearchResults, clearSearchResults, viewSearchResult } from '../actions/search';
+import { mailto } from '../utils/contact';
 import moment from '../utils/moment';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
@@ -663,7 +664,7 @@ class Search extends CSSComponent {
                 paddingLeft: 40,
                 marginLeft: 58,
             },
-            href: `mailto:${profile.email}`,
+            href: mailto(profile.email),
             target: '_blank',
             onTouchTap: () => {
                 tracker.trackContactTap(
