@@ -113,23 +113,27 @@ class TeamDetail extends CSSComponent {
 
     // Render Methods
 
-    renderStatus(status) {
+    renderStatus(status, manager, team) {
         return (
             <TeamDetailStatus
                 is="section"
                 isEditable={this.canEdit()}
+                manager={manager}
                 onSaveCallback={this.onUpdateStatus.bind(this)}
                 status={status}
+                team={team}
             />
         );
     }
 
-    renderDescription(team) {
+    renderDescription(manager, team) {
         return (
             <TeamDetailDescription
                 description={team.description}
                 is="section"
+                manager={manager}
                 onSaveCallback={this.onUpdateDescription.bind(this)}
+                team={team}
             />
         );
     }
@@ -231,8 +235,8 @@ class TeamDetail extends CSSComponent {
                     team={team}
                 />
                 <DetailContent>
-                    {this.renderStatus(team.status)}
-                    {this.renderDescription(team)}
+                    {this.renderStatus(team.status, manager, team)}
+                    {this.renderDescription(manager, team)}
                     {this.renderManager(manager)}
                     {this.renderChildTeams(childTeams, team.child_team_count)}
                     {this.renderTeamMembers(manager, members, team.profile_count)}
