@@ -92,7 +92,7 @@ class TeamDetail extends CSSComponent {
         if ((team.status && team.status.value !== statusText) || !team.status) {
             tracker.trackTeamUpdate(
                 team.id,
-                ['status']
+                [isNew ? 'new_status' : 'status']
             );
         }
 
