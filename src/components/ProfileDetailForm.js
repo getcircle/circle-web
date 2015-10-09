@@ -276,11 +276,13 @@ class ProfileDetailForm extends CSSComponent {
             return;
         }
 
-        this.setState(updatedState, () => {
-            let dataChanged = this.getFieldsThatChanged().length > 0;
-            this.refs.modal.setSaveEnabled(dataChanged);
-            this.setState({dataChanged: dataChanged});
-        });
+        this.setState(updatedState, () => this.detectChangeAndEnableSaving());
+    }
+
+    detectChangeAndEnableSaving() {
+        let dataChanged = this.getFieldsThatChanged().length > 0 || this.state.imageFiles.length > 0;
+        this.refs.modal.setSaveEnabled(dataChanged);
+        this.setState({dataChanged: dataChanged});
     }
 
     updateProfile() {
@@ -354,7 +356,7 @@ class ProfileDetailForm extends CSSComponent {
             return;
         }
 
-        // Disable Save button
+        // Disable Save button to avoid double submission
         this.refs.modal.setSaveEnabled(false);
 
         // If an image was added, upload it first
@@ -379,7 +381,7 @@ class ProfileDetailForm extends CSSComponent {
         let updatedState = {};
         updatedState.imageFiles = files;
         if (files.length > 0) {
-           this.setState(updatedState);
+           this.setState(updatedState, () => this.detectChangeAndEnableSaving());
         }
     }
 
