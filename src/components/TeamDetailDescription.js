@@ -47,7 +47,7 @@ class TeamDetailDescription extends CSSComponent {
         } = this.props;
 
         let defaultContent;
-        if (!isEditable) {
+        if (manager.id !== this.context.authenticatedProfile.id) {
             defaultContent = (
                 <FlatButton
                     href={mailtoTeamDescription(team, manager, this.context.authenticatedProfile)}
