@@ -895,8 +895,12 @@ class Search extends CSSComponent {
 
     renderExpandedProfile(item, highlighted, style) {
         const defaultResult = this.renderDefaultResult(item, highlighted, style);
+        // TODO:
+        // Terrible hack to deduce how many lines status is and to size
+        // the container appropriately
+        let delta = status && status.value.trim().length <= 60 ? 42 : 42*2;
         return (
-            <div estimatedHeight={SEARCH_RESULT_HEIGHT + 42}>
+            <div estimatedHeight={SEARCH_RESULT_HEIGHT + delta}>
                 {defaultResult}
                 {(() => {
                     const { status } = item.instance;
