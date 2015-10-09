@@ -6,6 +6,7 @@ import { services } from 'protobufs';
 import {
     CONTACT_LOCATION,
 } from '../constants/trackerProperties';
+import { mailto } from '../utils/contact';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 
@@ -130,7 +131,7 @@ class ProfileDetailContactInfo extends CSSComponent {
             case ContactMethodTypeV1.EMAIL:
                 return (
                     <CardListItem
-                        href={`mailto:${item.value}`}
+                        href={mailto(item.value)}
                         key={index}
                         leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
                         onTouchTap={() => {
