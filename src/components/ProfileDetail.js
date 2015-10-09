@@ -55,7 +55,7 @@ class ProfileDetail extends StyleableComponent {
 
         // no text was provided, assume the user just has to unset the status
         if (statusText.trim() === '') {
-            profileStatusV1 = undefined;
+            profileStatusV1 = null;
         } else if (isNew) {
             profileStatusV1 = new ProfileStatusV1({
                 value: statusText,
