@@ -85,20 +85,9 @@ class TeamDetail extends CSSComponent {
         } = this.props;
 
         let team = extendedTeam.team;
-        let teamStatusV1;
-
-        // no text was provided, assume the user just has to unset the status
-        if (statusText.trim() === '') {
-            teamStatusV1 = null;
-        } else if (isNew) {
-            teamStatusV1 = new TeamStatusV1({
-                value: statusText,
-            });
-        } else {
-            teamStatusV1 = Object.assign({}, team.status, {
-                value: statusText,
-            });
-        }
+        let teamStatusV1 = teamStatusV1 = new TeamStatusV1({
+            value: statusText,
+        });
 
         if ((team.status && team.status.value !== statusText) || !team.status) {
             tracker.trackTeamUpdate(

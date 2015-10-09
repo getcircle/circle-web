@@ -51,20 +51,9 @@ class ProfileDetail extends StyleableComponent {
         } = this.props;
 
         let profile = extendedProfile.profile;
-        let profileStatusV1;
-
-        // no text was provided, assume the user just has to unset the status
-        if (statusText.trim() === '') {
-            profileStatusV1 = null;
-        } else if (isNew) {
-            profileStatusV1 = new ProfileStatusV1({
-                value: statusText,
-            });
-        } else {
-            profileStatusV1 = Object.assign({}, profile.status, {
-                value: statusText,
-            });
-        }
+        let profileStatusV1 = new ProfileStatusV1({
+            value: statusText,
+        });
 
         // Track status change
         if ((profile.status && profile.status.value !== statusText) || !profile.status) {
