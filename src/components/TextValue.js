@@ -191,19 +191,6 @@ class TextValue extends CSSComponent {
         });
     }
 
-    getDefaultContent() {
-        const {
-            isEditable,
-            isQuoted,
-        } = this.props;
-
-        let statusValue = this.state.value !== '' ? isQuoted ? `"${this.state.value}"` : this.state.value : '';
-        if (statusValue === '' || statusValue.length === 0) {
-            statusValue = isEditable ? t('Add details') : t('Ask me!');
-        }
-        return <span is="text">{statusValue}</span>;
-    }
-
     renderStatusTimestamp() {
         let createdString = this.state.valueTimestamp ? moment(this.state.valueTimestamp).fromNow() : '';
         let authorName = this.state.authorName ? ' by ' + this.state.authorName : '';
@@ -225,15 +212,22 @@ class TextValue extends CSSComponent {
     }
 
     renderDefaultContent() {
-        let defaultContent;
-        if (this.props.defaultContent) {
-            defaultContent = this.props.defaultContent;
-        } else {
-            defaultContent = this.getDefaultContent();
+        const { defaultContent, isQuoted } = this.props;
+
+        let content;
+        let statusValue = this.state.value !== '' ? isQuoted ? `"${this.state.value}"` : this.state.value : '';
+        const hasStatus = statusValue !== '' || statusValue.length !== 0;
+        if (!hasStatus) {
+            statusValue = t('Add details');
         }
+        content = <span is="text">{statusValue}</span>;
+        if (!hasStatus && defaultContent) {
+            content = defaultContent;
+        }
+
         return (
             <div is="textContainer">
-                {defaultContent}
+                {content}
                 {this.renderStatusTimestamp()}
             </div>
         );

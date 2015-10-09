@@ -69,7 +69,7 @@ class TeamDetailStatus extends CSSComponent {
                 defaultContent={defaultContent}
                 editedTimestamp={status ? status.created : ''}
                 isEditable={isEditable}
-                isQuoted={true}
+                isQuoted={!isEditable}
                 onSaveCallback={onSaveCallback}
                 placeholder={t('What #projects is your team working on?')}
                 shouldLimitCharacters={true}

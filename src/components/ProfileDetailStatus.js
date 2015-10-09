@@ -64,7 +64,7 @@ class ProfileDetailStatus extends CSSComponent {
                 defaultContent={defaultContent}
                 editedTimestamp={status && status.value.trim() !== '' ? status.created : ''}
                 isEditable={isEditable}
-                isQuoted={true}
+                isQuoted={!isEditable}
                 onSaveCallback={onSaveCallback}
                 placeholder={t('working on #project with @coworkers!')}
                 shouldLimitCharacters={true}
