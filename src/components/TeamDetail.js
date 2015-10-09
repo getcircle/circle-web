@@ -32,13 +32,13 @@ class TeamDetail extends CSSComponent {
             team: PropTypes.object.isRequired,
         }),
         largerDevice: PropTypes.bool.isRequired,
-        loggedInUserProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
         membersLoadMore: PropTypes.func,
         onUpdateTeamCallback: PropTypes.func.isRequired,
     }
 
     static contextTypes = {
+        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
         }).isRequired,
@@ -216,9 +216,10 @@ class TeamDetail extends CSSComponent {
     }
 
     render() {
-        const { extendedTeam, loggedInUserProfile, members } = this.props;
+        const { extendedTeam, members } = this.props;
         const { team, reportingDetails } = extendedTeam;
         const { manager } = reportingDetails;
+        const { authenticatedProfile } = this.context;
         const childTeams = reportingDetails.child_teams;
 
         return (
@@ -236,7 +237,7 @@ class TeamDetail extends CSSComponent {
                     {this.renderChildTeams(childTeams, team.child_team_count)}
                     {this.renderTeamMembers(manager, members, team.profile_count)}
                 </DetailContent>
-                {this.renderTeamDetailForm(team, loggedInUserProfile.id === manager.id)}
+                {this.renderTeamDetailForm(team, authenticatedProfile.id === manager.id)}
             </div>
         );
     }
