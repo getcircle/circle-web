@@ -53,7 +53,10 @@ class ProfileDetail extends StyleableComponent {
         let profile = extendedProfile.profile;
         let profileStatusV1;
 
-        if (isNew) {
+        // no text was provided, assume the user just has to unset the status
+        if (statusText.trim() === '') {
+            profileStatusV1 = undefined;
+        } else if (isNew) {
             profileStatusV1 = new ProfileStatusV1({
                 value: statusText,
             });
@@ -63,16 +66,17 @@ class ProfileDetail extends StyleableComponent {
             });
         }
 
-        let updatedProfile = Object.assign({}, profile, {
-            status:  profileStatusV1,
-        });
-
+        // Track status change
         if ((profile.status && profile.status.value !== statusText) || !profile.status) {
             tracker.trackProfileUpdate(
                 profile.id,
                 [isNew ? 'new_status' : 'status']
             );
         }
+
+        let updatedProfile = Object.assign({}, profile, {
+            status: profileStatusV1,
+        });
         onUpdateProfile(updatedProfile);
     }
 

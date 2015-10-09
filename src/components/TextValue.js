@@ -15,7 +15,6 @@ class TextValue extends CSSComponent {
 
     static propTypes = {
         authorName: PropTypes.string,
-        dataId: PropTypes.string,
         defaultContent: PropTypes.node,
         editedTimestamp: PropTypes.string,
         isEditable: PropTypes.bool,
@@ -30,7 +29,6 @@ class TextValue extends CSSComponent {
 
     static defaultProps = {
         authorName: '',
-        dataId: '',
         text: '',
         editedTimestamp: '',
     }
@@ -39,7 +37,6 @@ class TextValue extends CSSComponent {
         authorName: '',
         editing: false,
         error: '',
-        dataId: '',
         isNew: false,
         value: '',
         valueTimestamp: '',
@@ -144,9 +141,9 @@ class TextValue extends CSSComponent {
      * @return {Void}
      */
     mergeStateAndProps(props) {
+        console.log(props);
         this.setState({
             authorName: props.authorName,
-            dataId: props.dataId,
             editing: false,
             error: '',
             isNew: false,
@@ -264,7 +261,7 @@ class TextValue extends CSSComponent {
             isEditable,
         } = this.props;
 
-        if (isEditable === true) {
+        if (isEditable === true && this.props.editedTimestamp !== '') {
             return (
                 <FlatButton
                     is="editButton"
