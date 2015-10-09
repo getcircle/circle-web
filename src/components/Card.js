@@ -12,15 +12,22 @@ class Card extends CSSComponent {
     static propTypes = {
         children: PropTypes.object,
         contentStyle: PropTypes.object,
+        editTitle: PropTypes.string,
         isEditable: PropTypes.bool,
         isEditing: PropTypes.bool,
         onCancelTapped: PropTypes.func,
         onEditTapped: PropTypes.func,
         onSaveTapped: PropTypes.func,
+        saveTitle: PropTypes.string,
         style: PropTypes.object,
         subTitle: PropTypes.string,
         subTitleImage: PropTypes.element,
         title: PropTypes.string,
+    }
+
+    static defaultProps = {
+        editTitle: t('Update'),
+        saveTitle: t('Save'),
     }
 
     classes() {
@@ -103,6 +110,7 @@ class Card extends CSSComponent {
         const {
             onSaveTapped,
             onCancelTapped,
+            saveTitle,
         } = this.props;
 
         return (
@@ -113,7 +121,7 @@ class Card extends CSSComponent {
                     onTouchTap={onCancelTapped}
                 />
                 <FlatButton
-                    label={t('Save')}
+                    label={saveTitle}
                     labelStyle={this.styles().headerActionButtonLabel}
                     onTouchTap={onSaveTapped}
                 />
@@ -123,13 +131,14 @@ class Card extends CSSComponent {
 
     renderButton() {
         const {
+            editTitle,
             onEditTapped,
         } = this.props;
 
         return (
             <div className="row end-xs" is="headerActionButton">
                 <FlatButton
-                    label={t('Update')}
+                    label={editTitle}
                     labelStyle={this.styles().headerActionButtonLabel}
                     onTouchTap={onEditTapped}
                 />

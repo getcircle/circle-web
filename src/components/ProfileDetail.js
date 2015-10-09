@@ -44,7 +44,7 @@ class ProfileDetail extends StyleableComponent {
 
     // Update Methods
 
-    onUpdateStatus(statusText) {
+    onUpdateStatus(statusText, isNew) {
         const {
             extendedProfile,
             onUpdateProfile,
@@ -54,16 +54,18 @@ class ProfileDetail extends StyleableComponent {
         let profileStatusV1 = new ProfileStatusV1({
             value: statusText,
         });
-        let updatedProfile = Object.assign({}, profile, {
-            status:  profileStatusV1,
-        });
 
+        // Track status change
         if ((profile.status && profile.status.value !== statusText) || !profile.status) {
             tracker.trackProfileUpdate(
                 profile.id,
-                ['status']
+                [isNew ? 'new_status' : 'status']
             );
         }
+
+        let updatedProfile = Object.assign({}, profile, {
+            status: profileStatusV1,
+        });
         onUpdateProfile(updatedProfile);
     }
 

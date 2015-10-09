@@ -78,26 +78,27 @@ class TeamDetail extends CSSComponent {
         onUpdateTeamCallback(updatedTeam);
     }
 
-    onUpdateStatus(statusText) {
+    onUpdateStatus(statusText, isNew) {
         const {
             extendedTeam,
             onUpdateTeamCallback,
         } = this.props;
 
         let team = extendedTeam.team;
-        let teamStatusV1 = new TeamStatusV1({
+        let teamStatusV1 = teamStatusV1 = new TeamStatusV1({
             value: statusText,
-        });
-        let updatedTeam = Object.assign({}, team, {
-            status:  teamStatusV1,
         });
 
         if ((team.status && team.status.value !== statusText) || !team.status) {
             tracker.trackTeamUpdate(
                 team.id,
-                ['status']
+                [isNew ? 'new_status' : 'status']
             );
         }
+
+        let updatedTeam = Object.assign({}, team, {
+            status:  teamStatusV1,
+        });
         onUpdateTeamCallback(updatedTeam);
     }
 
