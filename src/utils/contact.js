@@ -1,12 +1,5 @@
-import { services } from 'protobufs';
-
 import { getTrackingParameter } from './tracker';
 import t from './gettext';
-
-import { CONTACT_LOCATION } from '../constants/trackerProperties';
-import tracker from '../utils/tracker';
-
-const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 const PROFILE_STATUS_ASK_ME = 'profile_status_askme';
 const TEAM_STATUS_ASK_ME = 'team_status_askme';
@@ -32,11 +25,6 @@ export function mailtoProfileStatus(profile, fromProfile) {
         \n${fromProfile.first_name}`
     ));
 
-    tracker.trackContactTap(
-        ContactMethodTypeV1.EMAIL,
-        profile.id,
-        CONTACT_LOCATION.PROFILE_DETAIL_STATUS
-    );
     return `mailto:${profile.email}?subject=${subject}&body=${body}${sentFrom()}`;
 }
 
@@ -75,15 +63,6 @@ function mailtoTeam(source, team, manager, fromProfile) {
         \n${fromProfile.first_name}`
     ));
 
-    let contactLocation = CONTACT_LOCATION.TEAM_DETAIL_STATUS;
-    if (source === TEAM_DESCRIPTION_ASK_ME) {
-        contactLocation = CONTACT_LOCATION.TEAM_DETAIL_DESCRIPTION;
-    }
-    tracker.trackContactTap(
-        ContactMethodTypeV1.EMAIL,
-        manager.id,
-        contactLocation
-    );
     return `mailto:${manager.email}?subject=${subject}&body=${body}${sentFrom()}`;
 
 }

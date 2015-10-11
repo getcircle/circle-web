@@ -2,13 +2,16 @@ import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { CONTACT_LOCATION } from '../constants/trackerProperties';
 import { mailtoTeamStatus } from '../utils/contact';
 import t from '../utils/gettext';
+import tracker from '../utils/tracker';
 
 import TextValue from './TextValue';
 import CSSComponent from './CSSComponent';
 
 const { FlatButton } = mui;
+const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 class TeamDetailStatus extends CSSComponent {
 
@@ -55,6 +58,13 @@ class TeamDetailStatus extends CSSComponent {
                     href={mailtoTeamStatus(team, manager, this.context.authenticatedProfile)}
                     is="link"
                     linkButton={true}
+                    onTouchTap={() => {
+                        tracker.trackContactTap(
+                            ContactMethodTypeV1.EMAIL,
+                            manager.id,
+                            CONTACT_LOCATION.TEAM_DETAIL_STATUS
+                        );
+                    }}
                     primary={true}
                     target="_blank"
                 >
