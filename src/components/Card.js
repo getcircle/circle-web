@@ -21,13 +21,13 @@ class Card extends CSSComponent {
         saveTitle: PropTypes.string,
         style: PropTypes.object,
         subTitle: PropTypes.string,
-        subTitleImage: PropTypes.element,
         title: PropTypes.string,
     }
 
     static defaultProps = {
         editTitle: t('Update'),
         saveTitle: t('Save'),
+        subTitle: '',
     }
 
     classes() {
@@ -83,11 +83,23 @@ class Card extends CSSComponent {
         }
     }
 
+    renderSubTitle() {
+        const {
+            subTitle,
+        } = this.props;
+
+        if (subTitle && subTitle.trim() !== '') {
+            return (
+                <span className="row end-xs" is="subTitleText">
+                    {subTitle}
+                </span>
+            );
+        }
+    }
+
     renderHeader() {
         const {
             title,
-            subTitleImage,
-            subTitle
         } = this.props;
 
         if (title) {
@@ -96,10 +108,7 @@ class Card extends CSSComponent {
                     <span is="headerText">
                         {title}
                     </span>
-                    <span className="row end-xs" is="subTitleText">
-                        {subTitleImage}
-                        {subTitle}
-                    </span>
+                    {this.renderSubTitle()}
                     {this.renderEditButton()}
                 </header>
             );
