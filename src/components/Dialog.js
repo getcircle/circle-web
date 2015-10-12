@@ -132,7 +132,7 @@ class Dialog extends CSSComponent {
                     },
                 },
                 DialogTitle: {
-                    className: 'row col-xs-8 middle-xs center-xs',
+                    className: 'row col-xs middle-xs center-xs',
                     style: {
                         alignSelf: 'center',
                         display: 'flex',
