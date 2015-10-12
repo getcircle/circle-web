@@ -276,7 +276,7 @@ class Search extends CSSComponent {
                     overflowY: 'hidden',
                     textAlign: 'start',
                     width: '100%',
-                    height: '100%',
+                    height: 'auto',
                 },
                 resultsListSubHeader: {
                     fontSize: '11px',
@@ -1004,13 +1004,6 @@ class Search extends CSSComponent {
             containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
         }
 
-        // Height by default is set to 100% and IE does not like it.
-        // Set explicit height and contain it by maxHeight attribute.
-        // This change has no impact on other browsers.
-        let dynamicStyle = {
-            height: items.length === 0 ? '100%' : containerHeight,
-        };
-
         return (
             <Paper
                 key="menu"
@@ -1018,7 +1011,6 @@ class Search extends CSSComponent {
                     ...style,
                     ...this.styles().resultsList,
                     ...resultsListStyle,
-                    ...dynamicStyle
                 }}
             >
                 <Infinite
