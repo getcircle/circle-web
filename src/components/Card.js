@@ -48,6 +48,8 @@ class Card extends CSSComponent {
                     letterSpacing: '1px',
                     paddingLeft: 12,
                     textTransform: 'uppercase',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
                     ...fontColors.light,
                     ...fontWeights.semiBold,
                 },
@@ -90,7 +92,7 @@ class Card extends CSSComponent {
 
         if (subTitle && subTitle.trim() !== '') {
             return (
-                <span className="row end-xs" is="subTitleText">
+                <span className="col-xs end-xs" is="subTitleText">
                     {subTitle}
                 </span>
             );
@@ -105,7 +107,7 @@ class Card extends CSSComponent {
         if (title) {
             return (
                 <header className="row middle-xs" is="header">
-                    <span is="headerText">
+                    <span className="col-xs start-xs" is="headerText">
                         {title}
                     </span>
                     {this.renderSubTitle()}
@@ -123,7 +125,7 @@ class Card extends CSSComponent {
         } = this.props;
 
         return (
-            <div className="row end-xs" is="headerActionButton">
+            <span className="col-xs end-xs" is="headerActionButton">
                 <FlatButton
                     label={t('Cancel')}
                     labelStyle={this.styles().headerActionButtonLabel}
@@ -134,7 +136,7 @@ class Card extends CSSComponent {
                     labelStyle={this.styles().headerActionButtonLabel}
                     onTouchTap={onSaveTapped}
                 />
-            </div>
+            </span>
         );
     }
 
@@ -145,13 +147,13 @@ class Card extends CSSComponent {
         } = this.props;
 
         return (
-            <div className="row end-xs" is="headerActionButton">
+            <span className="col-xs end-xs" is="headerActionButton">
                 <FlatButton
                     label={editTitle}
                     labelStyle={this.styles().headerActionButtonLabel}
                     onTouchTap={onEditTapped}
                 />
-            </div>
+            </span>
         );
     }
 
