@@ -36,6 +36,10 @@ class ProfileDetailContactInfo extends CSSComponent {
         profileId: PropTypes.string.isRequired,
     }
 
+    static contextTypes = {
+        mobileOS: PropTypes.bool.isRequired,
+    }
+
     state = {
         currentTime: this.getCurrentTime(this.props),
     }
@@ -116,6 +120,10 @@ class ProfileDetailContactInfo extends CSSComponent {
         return contactItem.value === '' || contactItem.value === null;
     }
 
+    canCall(contactItem) {
+        return this.context.mobileOS && contactItem.value.trim() !== ''
+    }
+
     // Render Methods
 
     renderContactInfo() {
@@ -149,9 +157,19 @@ class ProfileDetailContactInfo extends CSSComponent {
             case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
                 return (
                     <CardListItem
-                        disabled={true}
+                        disabled={!this.canCall(item)}
                         key={index}
                         leftAvatar={<IconContainer IconClass={PhoneIcon} is="IconContainer" />}
+                        onTouchTap={() => {
+                            if (this.canCall(item)) {
+                                tracker.trackContactTap(
+                                    ContactMethodTypeV1.CELL_PHONE,
+                                    this.props.profileId,
+                                    CONTACT_LOCATION.PROFILE_DETAIL
+                                );
+                                window.location.href = 'tel:' + item.value;
+                            }
+                        }}
                         primaryText={this.getValue(item)}
                         primaryTextStyle={primaryTextStyle}
                     />

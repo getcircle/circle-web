@@ -53,6 +53,7 @@ const selector = selectors.createImmutableSelector(
     (profileState, responsiveState) => {
         return {
             largerDevice: responsiveState.get('largerDevice'),
+            mobileOS: responsiveState.get('mobileOS'),
             ...profileState
         }
     }
@@ -67,6 +68,7 @@ class Profile extends PureComponent {
         extendedProfile: PropTypes.object,
         isLoggedInUser: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
+        mobileOS: PropTypes.bool.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         params: PropTypes.shape({
             profileId: PropTypes.string.isRequired,
@@ -75,11 +77,13 @@ class Profile extends PureComponent {
 
     static childContextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+        mobileOS: PropTypes.bool.isRequired,
     }
 
     getChildContext() {
         return {
             authenticatedProfile: this.props.authenticatedProfile,
+            mobileOS: this.props.mobileOS,
         };
     }
 
