@@ -38,6 +38,7 @@ class ProfileDetailForm extends CSSComponent {
         ),
         dispatch: PropTypes.func.isRequired,
         hasManager: PropTypes.bool.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -502,6 +503,7 @@ class ProfileDetailForm extends CSSComponent {
 
     render() {
         const {
+            largerDevice,
             ...other
         } = this.props;
 
@@ -511,6 +513,7 @@ class ProfileDetailForm extends CSSComponent {
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={t('Save')}
                     is="Dialog"
+                    largerDevice={largerDevice}
                     onDismiss={this.resetState.bind(this)}
                     onSave={this.handleSaveTapped.bind(this)}
                     pageType={PAGE_TYPE.EDIT_PROFILE}

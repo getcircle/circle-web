@@ -18,6 +18,7 @@ class TeamDetailForm extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         isManager: PropTypes.bool.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         onSaveCallback: PropTypes.func.isRequired,
         team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
@@ -283,6 +284,7 @@ class TeamDetailForm extends CSSComponent {
 
     render() {
         const {
+            largerDevice,
             ...other
         } = this.props;
 
@@ -292,6 +294,7 @@ class TeamDetailForm extends CSSComponent {
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={t('Save')}
                     is="Dialog"
+                    largerDevice={largerDevice}
                     onSave={this.handleSaveTapped.bind(this)}
                     pageType={PAGE_TYPE.EDIT_TEAM}
                     ref="modal"

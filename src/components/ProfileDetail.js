@@ -179,6 +179,7 @@ class ProfileDetail extends StyleableComponent {
     renderProfileDetailForm(profile, hasManager) {
         const {
             isLoggedInUser,
+            largerDevice,
             onUpdateProfile,
         } = this.props;
 
@@ -187,6 +188,7 @@ class ProfileDetail extends StyleableComponent {
                 <ProfileDetailForm
                     contactMethods={this.getContactMethods()}
                     hasManager={hasManager}
+                    largerDevice={largerDevice}
                     onSaveCallback={onUpdateProfile}
                     profile={profile}
                     ref="profileDetailForm"

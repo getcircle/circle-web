@@ -216,6 +216,7 @@ class TeamDetail extends CSSComponent {
 
     renderTeamDetailForm(team, isManager) {
         const {
+            largerDevice,
             onUpdateTeamCallback,
         } = this.props;
 
@@ -223,6 +224,7 @@ class TeamDetail extends CSSComponent {
             return (
                 <TeamDetailForm
                     isManager={isManager}
+                    largerDevice={largerDevice}
                     onSaveCallback={onUpdateTeamCallback}
                     ref="teamDetailForm"
                     team={team}
