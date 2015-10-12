@@ -54,10 +54,8 @@ class Card extends CSSComponent {
                     ...fontWeights.semiBold,
                 },
                 headerActionButton: {
-                    flex: 1,
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    marginRight: 20,
+                    textAlign: 'right',
+                    whiteSpace: 'nowrap',
                 },
                 headerActionButtonLabel: {
                     color: '#8598FF',
@@ -92,9 +90,11 @@ class Card extends CSSComponent {
 
         if (subTitle && subTitle.trim() !== '') {
             return (
-                <span className="col-xs end-xs" is="subTitleText">
-                    {subTitle}
-                </span>
+                <div className="col-xs end-xs" is="subTitleText">
+                    <div className="box">
+                        {subTitle}
+                    </div>
+                </div>
             );
         }
     }
@@ -107,9 +107,11 @@ class Card extends CSSComponent {
         if (title) {
             return (
                 <header className="row middle-xs" is="header">
-                    <span className="col-xs start-xs" is="headerText">
-                        {title}
-                    </span>
+                    <div className="col-xs start-xs" is="headerText">
+                        <div className="box">
+                            {title}
+                        </div>
+                    </div>
                     {this.renderSubTitle()}
                     {this.renderEditButton()}
                 </header>
@@ -125,18 +127,20 @@ class Card extends CSSComponent {
         } = this.props;
 
         return (
-            <span className="col-xs end-xs" is="headerActionButton">
-                <FlatButton
-                    label={t('Cancel')}
-                    labelStyle={this.styles().headerActionButtonLabel}
-                    onTouchTap={onCancelTapped}
-                />
-                <FlatButton
-                    label={saveTitle}
-                    labelStyle={this.styles().headerActionButtonLabel}
-                    onTouchTap={onSaveTapped}
-                />
-            </span>
+            <div className="col-xs end-xs" is="headerActionButton">
+                <div className="box">
+                    <FlatButton
+                        label={t('Cancel')}
+                        labelStyle={this.styles().headerActionButtonLabel}
+                        onTouchTap={onCancelTapped}
+                    />
+                    <FlatButton
+                        label={saveTitle}
+                        labelStyle={this.styles().headerActionButtonLabel}
+                        onTouchTap={onSaveTapped}
+                    />
+                </div>
+            </div>
         );
     }
 
@@ -147,13 +151,15 @@ class Card extends CSSComponent {
         } = this.props;
 
         return (
-            <span className="col-xs end-xs" is="headerActionButton">
-                <FlatButton
-                    label={editTitle}
-                    labelStyle={this.styles().headerActionButtonLabel}
-                    onTouchTap={onEditTapped}
-                />
-            </span>
+            <div className="col-xs end-xs" is="headerActionButton">
+                <div className="box">
+                    <FlatButton
+                        label={editTitle}
+                        labelStyle={this.styles().headerActionButtonLabel}
+                        onTouchTap={onEditTapped}
+                    />
+                </div>
+            </div>
         );
     }
 
