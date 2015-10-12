@@ -39,6 +39,11 @@ class AuthorizationHandler extends CSSComponent {
     }
 
     componentWillMount() {
+        const { error } = this.props.location.query;
+        if (error) {
+            return this.handleError(this.props.location.query)
+        }
+
         let { identity } = this.props.location.query;
         identity = services.user.containers.IdentityV1.decode64(identity);
         if (identity.provider === services.user.containers.IdentityV1.ProviderV1.OKTA) {
@@ -54,6 +59,16 @@ class AuthorizationHandler extends CSSComponent {
             return false;
         }
         return true;
+    }
+
+    handleError(query) {
+        const { error } = query;
+        const userInfo = query.user_info;
+        let params = {};
+        if (error === 'PROFILE_NOT_FOUND') {
+            params = {accessRequest: true, userInfo};
+        }
+        this.context.router.replaceWith('/login', params);
     }
 
     handleOktaAuthorization(query) {

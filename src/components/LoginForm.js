@@ -91,19 +91,12 @@ class LoginForm extends CSSComponent {
                 primaryButton: {
                     Extend: 'button',
                 },
-                container: {
-                    paddingTop: '2%',
-                },
                 header: {
                     fontSize: '18px',
                     ...fontWeights.light,
                 },
                 headerSection: {
                     paddingBottom: '2%',
-                },
-                inputSection: {
-                    paddingBottom: 10,
-                    maxWidth: 400,
                 },
                 label: {
                     lineHeight: '50px',
@@ -194,10 +187,8 @@ class LoginForm extends CSSComponent {
 
     render() {
         return (
-            <div className="row center-xs" is="container">
-                <div className="col-xs-12" is="inputSection">
-                    {this.renderInputSection()}
-                </div>
+            <div>
+                {this.renderInputSection()}
                 <Snackbar message={t('Error logging in')} ref="snackbar" />
             </div>
         );

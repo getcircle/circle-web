@@ -79,3 +79,21 @@ export function logout() {
             });
     });
 }
+
+export function requestAccess(domain, userInfo) {
+    /*eslint-disable camelcase*/
+    const parameters = {
+        anonymous_user: {
+            user_info: userInfo,
+            location: window.location.origin,
+            domain,
+        },
+    };
+    /*eslint-enable camelcase*/
+    let request = new services.user.actions.request_access.RequestV1(parameters);
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(() => resolve())
+            .catch(error => reject(error));
+    });
+}

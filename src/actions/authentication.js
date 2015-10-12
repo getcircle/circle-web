@@ -82,3 +82,16 @@ export function getAuthenticationInstructions(email, subdomain) {
         },
     };
 }
+
+export function requestAccess(domain, userInfo) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.REQUEST_ACCESS,
+                types.REQUEST_ACCESS_SUCCESS,
+                types.REQUEST_ACCESS_FAILURE,
+            ],
+            remote: (state) => userService.requestAccess(domain, userInfo),
+        },
+    };
+}

@@ -6,6 +6,7 @@ import React, { PropTypes } from 'react';
 import {
     authenticate,
     getAuthenticationInstructions,
+    requestAccess,
 } from '../actions/authentication';
 import { AUTH_BACKENDS } from '../services/user';
 import { fontColors, fontWeights } from '../constants/styles';
@@ -14,6 +15,7 @@ import { getSubdomain } from '../utils/subdomains';
 import t from '../utils/gettext';
 
 import CSSComponent from '../components/CSSComponent';
+import LoginRequestAccess from '../components/LoginRequestAccess';
 import LoginForm from '../components/LoginForm';
 
 const {
@@ -68,7 +70,7 @@ class Login extends CSSComponent {
     }
 
     componentWillMount() {
-        if (this.props.subdomain) {
+        if (this.props.subdomain && !this.isAccessRequest()) {
             this.props.dispatch(getAuthenticationInstructions(null, this.props.subdomain));
         }
     }
@@ -92,6 +94,13 @@ class Login extends CSSComponent {
         return false;
     }
 
+    isAccessRequest() {
+        if (this.props.location && this.props.location.query) {
+            return this.props.location.query.accessRequest;
+        }
+        return false;
+    }
+
     classes() {
         return {
             default: {
@@ -108,6 +117,10 @@ class Login extends CSSComponent {
                     lineHeight: '35px',
                     ...fontColors.dark,
                     ...fontWeights.semiBold,
+                },
+                form: {
+                    paddingBottom: 10,
+                    maxWidth: 400,
                 },
                 organizationImage: {
                     maxHeight: 200,
@@ -132,8 +145,11 @@ class Login extends CSSComponent {
     }
 
     getHeaderText() {
-        if (this.props.subdomain) {
+        const isAccessRequest = this.isAccessRequest();
+        if (this.props.subdomain && !isAccessRequest) {
             return t(`Sign in to ${window.location.host}`);
+        } else if (isAccessRequest) {
+            return t('Security is a little tight around here');
         } else {
             return t('Sign in');
         }
@@ -171,11 +187,22 @@ class Login extends CSSComponent {
     }
 
     renderLoginForm() {
-        if (this.props.subdomain && !this.props.email && !this.props.organizationDomain) {
+        const isAccessRequest = this.isAccessRequest();
+        if (this.props.subdomain && !isAccessRequest && !this.props.email && !this.props.organizationDomain) {
             return (
                 <div className="row center-xs">
                     <CircularProgress mode="indeterminate" size={0.5} />
                 </div>
+            );
+        } else if (isAccessRequest) {
+            const { userInfo } = this.props.location.query;
+            return (
+                <LoginRequestAccess
+                    onRequestAccess={() => {
+                        const user = atob(userInfo);
+                        return this.props.dispatch(requestAccess(this.props.subdomain, user));
+                    }}
+                />
             );
         } else {
             const { dispatch } = this.props;
@@ -207,7 +234,11 @@ class Login extends CSSComponent {
                             <div className="row center-xs">
                                 <h1 is="header">{this.getHeaderText()}</h1>
                             </div>
-                            {this.renderLoginForm()}
+                            <div className="row center-xs">
+                                <div className="col-xs-12" is="form">
+                                    {this.renderLoginForm()}
+                                </div>
+                            </div>
                         </Paper>
                     </div>
                 </div>
