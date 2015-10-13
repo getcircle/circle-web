@@ -28,7 +28,7 @@ const getRoutes = (history, store) => {
     const requireAuth = (next) => {
         return (nextState, transition) => {
             if (!store.getState().authentication.get('authenticated')) {
-                transition.to('login', null, {nextPathname: nextState.location.pathname});
+                transition.to('/login', null, {nextPathname: nextState.location.pathname});
                 return;
             }
 
