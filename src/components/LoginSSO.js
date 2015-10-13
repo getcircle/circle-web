@@ -20,7 +20,7 @@ class LoginSSO extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.object.isRequired,
+        router: PropTypes.object,
     }
 
     classes() {
@@ -49,12 +49,18 @@ class LoginSSO extends CSSComponent {
         };
     }
 
+    getNextPathname() {
+        if (this.context.router && this.context.router.state) {
+            return this.context.router.state.location.state;
+        }
+    }
+
     render() {
         const {
             onGuestLogin,
             providerName,
         } = this.props;
-        const { nextPathname } = this.context.router.state.location.state;
+        const nextPathname = this.getNextPathname();
         return (
             <section>
                 <section>
