@@ -5,6 +5,7 @@ import { services } from 'protobufs';
 
 import { authenticate } from '../actions/authentication';
 import { AUTH_BACKENDS } from '../services/user';
+import { getNextPathname } from '../utils/routes';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -55,7 +56,8 @@ class AuthorizationHandler extends CSSComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated || nextProps.authError) {
-            this.context.router.replaceWith('/');
+            const nextPathname = getNextPathname() || '/';
+            this.context.router.replaceWith(nextPathname);
             return false;
         }
         return true;
