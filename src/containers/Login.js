@@ -75,6 +75,12 @@ class Login extends CSSComponent {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.backend && this.props.subdomain) {
+            this.props.dispatch(getAuthenticationInstructions(null, this.props.subdomain));
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
             this.context.router.transitionTo(this.props.location.nextPathname || '/');

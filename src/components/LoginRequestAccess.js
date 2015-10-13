@@ -1,7 +1,7 @@
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { fontWeights } from '../constants/styles';
+import { fontWeights, tintColor } from '../constants/styles';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -12,6 +12,12 @@ class LoginRequestAccess extends CSSComponent {
 
     static propTypes = {
         onRequestAccess: PropTypes.func.isRequired,
+    }
+
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }),
     }
 
     state = {
@@ -32,6 +38,15 @@ class LoginRequestAccess extends CSSComponent {
                 },
                 headerDiv: {
                     marginBottom: '10%',
+                },
+                retry: {
+                    color: tintColor,
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    ...fontWeights.light,
+                },
+                retrySection: {
+                    marginTop: '5%',
                 },
             },
         };
@@ -62,6 +77,14 @@ class LoginRequestAccess extends CSSComponent {
                         }}
                         primary={true}
                     />
+                    <div is="retrySection">
+                        <a
+                            is="retry"
+                            onTouchTap={() => {this.context.router.transitionTo('/login')}}
+                        >
+                            {t('Try Again')}
+                        </a>
+                    </div>
                 </div>
             </section>
         );
