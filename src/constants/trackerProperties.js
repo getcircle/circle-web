@@ -31,6 +31,7 @@ export const PAGE_TYPE = {
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
     TEAM_DETAIL: 'Team Detail',
     LOCATION_DETAIL: 'Location Detail',
+    PROFILE_STATUS_DETAIL: 'Profile Status Detail',
 
     // List pages
     PEERS: 'Peers',
