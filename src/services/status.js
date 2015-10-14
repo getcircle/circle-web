@@ -4,7 +4,7 @@ import client from './client';
 
 export function getStatus(statusId) {
     /*eslint-disable camelcase*/
-    let request = new services.profile.actions.get_status.RequestV1({status_id: statusId});
+    let request = new services.profile.actions.get_status.RequestV1({id: statusId});
     /*eslint-enable camelcase*/
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
