@@ -172,11 +172,11 @@ class TeamDetailForm extends CSSComponent {
         } = this.props;
 
         let teamDescriptionV1 = new DescriptionV1({
-            value: this.state.description,
+            value: this.state.description.replace(/^\s+|\s+$/g, ''),
         });
 
         let updatedTeam = Object.assign({}, team, {
-            name: this.state.name,
+            name: this.state.name.trim(),
             description: teamDescriptionV1,
         });
 
