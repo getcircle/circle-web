@@ -9,7 +9,6 @@ import { services, soa } from 'protobufs';
 import * as exploreActions from '../actions/explore';
 import { loadSearchResults, clearSearchResults, viewSearchResult } from '../actions/search';
 import { mailto } from '../utils/contact';
-import moment from '../utils/moment';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
@@ -19,6 +18,7 @@ import {
     SEARCH_RESULT_TYPE
 } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
+import moment from '../utils/moment';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 
@@ -351,6 +351,9 @@ class Search extends CSSComponent {
                     ...fontColors.dark,
                     lineHeight: '20px',
                 },
+                statusTextResultText: {
+                    lineHeight: '22px',
+                },
             },
             'largerDevice-true': {
                 AutoComplete: {
@@ -575,11 +578,18 @@ class Search extends CSSComponent {
 
     getProfileStatusResult(status, index, isRecent) {
         let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
+        let numberOfCharacters = status.value.length;
+        let estNumberOfLines = (numberOfCharacters/44) + 1; // 1 for author and 1 for correct math
+        let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
+
+        console.log('Number of Lines = ' + estNumberOfLines);
         const item = {
+            estimatedHeight: estimatedHeight,
             index: index,
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
             primaryText: '"' + status.value + '"',
-            secondaryText: status.profile ? status.profile.full_name : 'PROFILE',
+            primaryTextStyle: this.styles().statusTextResultText,
+            secondaryText: status.profile.full_name + ', ' + moment(status.created).fromNow(),
             onTouchTap: routes.routeToStatus.bind(null, this.context.router, status),
             type: RESULT_TYPES.PROFILE_STATUS,
             instance: status,
@@ -630,6 +640,8 @@ class Search extends CSSComponent {
                 return this.getTeamResult(item, index, true);
             } else if (item instanceof services.organization.containers.LocationV1) {
                 return this.getLocationResult(item, index, true);
+            } else if (item instanceof services.profile.containers.ProfileStatusV1) {
+                return this.getProfileStatusResult(item, index, true)
             }
         });
     }

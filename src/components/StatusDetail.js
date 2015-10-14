@@ -33,10 +33,24 @@ class StatusDetail extends CSSComponent {
                     marginTop: 20,
                 },
                 statusText: {
-                    fontSize: 16,
-                    lineHeight: '29px',
+                    borderBottom: '1px solid rgba(0, 0, 0, .1)',
+                    fontSize: 24,
+                    fontStyle: 'italic',
+                    lineHeight: '30px',
+                    padding: 24,
                     whiteSpace: 'pre-wrap',
                     ...fontColors.dark,
+                },
+                cardListItemInnerDivStyle: {
+                    height: 72,
+                    paddingLeft: 72,
+                    paddingTop: 20,
+                    paddingBottom: 16,
+                },
+                cardListAvatar: {
+                    height: 40,
+                    width: 40,
+                    top: '16px',
                 },
             },
         };
@@ -48,7 +62,7 @@ class StatusDetail extends CSSComponent {
         const { status } = this.props;
         const author = status.profile;
         const statusText = `"${status.value}"`;
-        let cardTitle = `${author.first_name}' status &nbsp;&ndash;&nbsp; ${moment(status.changed).fromNow()}`;
+        let cardTitle = `${author.first_name}'s status ― ${moment(status.changed).fromNow()}`;
 
         return (
             <DetailContent>
@@ -60,7 +74,8 @@ class StatusDetail extends CSSComponent {
                         <CardRow>
                             <CardList>
                                 <CardListItem
-                                    leftAvatar={<ProfileAvatar profile={author} />}
+                                    innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
+                                    leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
                                     onTouchTap={routeToProfile.bind(null, this.context.router, author)}
                                     primaryText={author.full_name}
                                     secondaryText={author.title}
