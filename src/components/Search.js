@@ -30,6 +30,7 @@ import MailIcon from './MailIcon';
 import OfficeIcon from './OfficeIcon';
 import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
+import QuoteIcon from './QuoteIcon';
 
 const {
     CircularProgress,
@@ -585,7 +586,7 @@ class Search extends CSSComponent {
         const item = {
             estimatedHeight: estimatedHeight,
             index: index,
-            leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
+            leftAvatar: <IconContainer IconClass={QuoteIcon} is="ResultIcon" stroke="#7c7b7b" />,
             primaryText: '"' + status.value + '"',
             primaryTextStyle: this.styles().statusTextResultText,
             secondaryText: status.profile.full_name + ', ' + moment(status.created).fromNow(),
