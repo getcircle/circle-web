@@ -46,6 +46,7 @@ const RESULT_TYPES = keymirror({
     EXPANDED_PROFILE: null,
     TEAM: null,
     LOCATION: null,
+    PROFILE_STATUS: null,
 });
 
 export const SEARCH_RESULT_HEIGHT = 72;
@@ -505,6 +506,9 @@ class Search extends CSSComponent {
             case RESULT_TYPES.LOCATION:
                 return SEARCH_RESULT_TYPE.LOCATION;
 
+            case RESULT_TYPES.PROFILE_STATUS:
+                return SEARCH_RESULT_TYPE.PROFILE_STATUS;
+
             default:
                 console.error('Did not find analytics tracking type for selected RESULT_TYPE');
                 return undefined;
@@ -564,6 +568,21 @@ class Search extends CSSComponent {
             onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
+            ...trackingAttributes
+        };
+        return this.trackTouchTap(item);
+    }
+
+    getProfileStatusResult(status, index, isRecent) {
+        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
+        const item = {
+            index: index,
+            leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
+            primaryText: '"' + status.value + '"',
+            secondaryText: status.profile ? status.profile.full_name : 'PROFILE',
+            onTouchTap: routes.routeToStatus.bind(null, this.context.router, status),
+            type: RESULT_TYPES.PROFILE_STATUS,
+            instance: status,
             ...trackingAttributes
         };
         return this.trackTouchTap(item);
@@ -707,6 +726,8 @@ class Search extends CSSComponent {
                 return this.getTeamResult(result.team, index, false, results.length);
             } else if (result.location) {
                 return this.getLocationResult(result.location, index, false, results.length);
+            } else if (result.profile_status) {
+                return this.getProfileStatusResult(result.profile_status, index, false, results.length);
             }
         });
         if (results.length === 1) {
