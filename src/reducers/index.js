@@ -10,3 +10,4 @@ export { default as profiles } from './profiles';
 export { default as responsive } from './responsive';
 export { default as search } from './search';
 export { default as teamMembers } from './teamMembers';
+export { default as statuses } from './statuses';

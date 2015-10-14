@@ -109,7 +109,7 @@ class LocationDetail extends CSSComponent {
             members,
             office,
         } = this.props;
-        let canEdit = office.permissions ? office.permissions.can_edit : false;
+
         return (
             <div>
                 <LocationDetailHeader office={office} />

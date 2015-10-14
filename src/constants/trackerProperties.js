@@ -31,6 +31,7 @@ export const PAGE_TYPE = {
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
     TEAM_DETAIL: 'Team Detail',
     LOCATION_DETAIL: 'Location Detail',
+    PROFILE_STATUS_DETAIL: 'Profile Status Detail',
 
     // List pages
     PEERS: 'Peers',
@@ -62,6 +63,7 @@ export const SEARCH_RESULT_TYPE = {
     PROFILE : 'Profile',
     TEAM : 'Team',
     LOCATION : 'Location',
+    PROFILE_STATUS: 'Profile Status',
 
     // Smart Actions (NOTE: Contact methods are captured separately)
     LOCATION_ADDRESS: 'Location Address',

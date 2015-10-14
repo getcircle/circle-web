@@ -9,7 +9,6 @@ import { services, soa } from 'protobufs';
 import * as exploreActions from '../actions/explore';
 import { loadSearchResults, clearSearchResults, viewSearchResult } from '../actions/search';
 import { mailto } from '../utils/contact';
-import moment from '../utils/moment';
 import { iconColors, fontColors, fontWeights } from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
@@ -19,6 +18,7 @@ import {
     SEARCH_RESULT_TYPE
 } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
+import moment from '../utils/moment';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 
@@ -30,6 +30,7 @@ import MailIcon from './MailIcon';
 import OfficeIcon from './OfficeIcon';
 import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
+import QuoteIcon from './QuoteIcon';
 
 const {
     CircularProgress,
@@ -46,6 +47,7 @@ const RESULT_TYPES = keymirror({
     EXPANDED_PROFILE: null,
     TEAM: null,
     LOCATION: null,
+    PROFILE_STATUS: null,
 });
 
 export const SEARCH_RESULT_HEIGHT = 72;
@@ -350,6 +352,9 @@ class Search extends CSSComponent {
                     ...fontColors.dark,
                     lineHeight: '20px',
                 },
+                statusTextResultText: {
+                    lineHeight: '22px',
+                },
             },
             'largerDevice-true': {
                 AutoComplete: {
@@ -505,6 +510,9 @@ class Search extends CSSComponent {
             case RESULT_TYPES.LOCATION:
                 return SEARCH_RESULT_TYPE.LOCATION;
 
+            case RESULT_TYPES.PROFILE_STATUS:
+                return SEARCH_RESULT_TYPE.PROFILE_STATUS;
+
             default:
                 console.error('Did not find analytics tracking type for selected RESULT_TYPE');
                 return undefined;
@@ -569,6 +577,27 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
+    getProfileStatusResult(status, index, isRecent) {
+        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
+        let numberOfCharacters = status.value ? status.value.length : 0;
+        let estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
+        let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
+
+        const item = {
+            estimatedHeight: estimatedHeight,
+            index: index,
+            leftAvatar: <IconContainer IconClass={QuoteIcon} is="ResultIcon" stroke="#7c7b7b" />,
+            primaryText: '"' + status.value + '"',
+            primaryTextStyle: this.styles().statusTextResultText,
+            secondaryText: status.profile.full_name + ', ' + moment(status.created).fromNow(),
+            onTouchTap: routes.routeToStatus.bind(null, this.context.router, status),
+            type: RESULT_TYPES.PROFILE_STATUS,
+            instance: status,
+            ...trackingAttributes
+        };
+        return this.trackTouchTap(item);
+    }
+
     getCategoryResultsProfiles() {
         const { profiles } = this.props;
         if (profiles) {
@@ -611,6 +640,8 @@ class Search extends CSSComponent {
                 return this.getTeamResult(item, index, true);
             } else if (item instanceof services.organization.containers.LocationV1) {
                 return this.getLocationResult(item, index, true);
+            } else if (item instanceof services.profile.containers.ProfileStatusV1) {
+                return this.getProfileStatusResult(item, index, true)
             }
         });
     }
@@ -707,6 +738,8 @@ class Search extends CSSComponent {
                 return this.getTeamResult(result.team, index, false, results.length);
             } else if (result.location) {
                 return this.getLocationResult(result.location, index, false, results.length);
+            } else if (result.profile_status) {
+                return this.getProfileStatusResult(result.profile_status, index, false, results.length);
             }
         });
         if (results.length === 1) {

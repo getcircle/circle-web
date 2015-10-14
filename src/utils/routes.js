@@ -12,6 +12,10 @@ export function routeToLocation(router, location) {
     router.transitionTo(`/location/${location.id}`);
 }
 
+export function routeToStatus(router, status) {
+    router.transitionTo(`/status/${status.id}`);
+}
+
 export function routeToURL(url, nextPathname = null) {
     if (nextPathname !== null) {
         localStorage.setItem(NEXT_PATHNAME_KEY, nextPathname);

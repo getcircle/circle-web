@@ -34,3 +34,7 @@ export function retrieveTeams(teamIds, cache) {
 export function retrieveProfile(profileId, cache) {
     return denormalize(profileId, services.profile.containers.ProfileV1, cache);
 }
+
+export function retrieveStatus(statusId, cache) {
+    return denormalize(statusId, services.profile.containers.ProfileStatusV1, cache);
+}
