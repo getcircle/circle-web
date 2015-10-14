@@ -580,7 +580,7 @@ class Search extends CSSComponent {
     getProfileStatusResult(status, index, isRecent) {
         let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
         let numberOfCharacters = status.value ? status.value.length : 0;
-        let estNumberOfLines = (numberOfCharacters/44) + 1; // 1 for author and 1 for correct math
+        let estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
         let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
 
         const item = {
