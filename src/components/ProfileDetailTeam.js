@@ -110,6 +110,9 @@ class ProfileDetailTeam extends CSSComponent {
                     largerDevice={this.props.largerDevice}
                     pageType={PAGE_TYPE.PEERS}
                     ref="peers"
+                    searchAttribute={services.search.containers.search.AttributeV1.TEAM_ID}
+                    searchAttributeValue={this.props.team.id}
+                    searchCategory={services.search.containers.search.CategoryV1.PROFILES}
                     title={`Peers (${this.props.peers.length})`}
                 />
             </div>
