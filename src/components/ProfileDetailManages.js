@@ -72,6 +72,9 @@ class ProfileDetailManages extends CSSComponent {
                         largerDevice={this.props.largerDevice}
                         pageType={PAGE_TYPE.DIRECT_REPORTS}
                         ref="directReports"
+                        searchAttribute={services.search.containers.search.AttributeV1.TEAM_ID}
+                        searchAttributeValue={this.props.team.id}
+                        searchCategory={services.search.containers.search.CategoryV1.PROFILES}
                         title={`Direct Reports (${this.props.directReports.length})`}
                     />
                 </div>
