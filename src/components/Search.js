@@ -589,7 +589,7 @@ class Search extends CSSComponent {
             leftAvatar: <IconContainer IconClass={QuoteIcon} is="ResultIcon" stroke="#7c7b7b" />,
             primaryText: '"' + status.value + '"',
             primaryTextStyle: this.styles().statusTextResultText,
-            secondaryText: status.profile.full_name + ', ' + moment(status.created).fromNow(),
+            secondaryText: status.profile.full_name + ', ' + moment(status.changed).fromNow(),
             onTouchTap: routes.routeToStatus.bind(null, this.context.router, status),
             type: RESULT_TYPES.PROFILE_STATUS,
             instance: status,
@@ -939,7 +939,7 @@ class Search extends CSSComponent {
                 {(() => {
                     const { status } = item.instance;
                     if (status && status.value.trim() !== '') {
-                        const created = moment(status.created).fromNow()
+                        const changed = moment(status.changed).fromNow()
                         return (
                             <div is="statusTextContainer">
                                 <span className="row start-xs" is="statusTextTitle">
@@ -951,7 +951,7 @@ class Search extends CSSComponent {
                                     </span>
                                 </div>
                                 <div is="statusTextTimestamp">
-                                    &nbsp;&mdash;&nbsp;{created}
+                                    &nbsp;&mdash;&nbsp;{changed}
                                 </div>
                             </div>
                         );
