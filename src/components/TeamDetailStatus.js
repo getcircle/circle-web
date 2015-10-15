@@ -77,7 +77,7 @@ class TeamDetailStatus extends CSSComponent {
             <TextValue
                 authorName={authorName}
                 defaultContent={defaultContent}
-                editedTimestamp={status ? status.created : ''}
+                editedTimestamp={status ? status.changed : ''}
                 isEditable={isEditable}
                 isQuoted={!isEditable}
                 onSaveCallback={onSaveCallback}

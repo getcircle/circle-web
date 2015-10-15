@@ -73,7 +73,7 @@ class ProfileDetailStatus extends CSSComponent {
         return (
             <TextValue
                 defaultContent={defaultContent}
-                editedTimestamp={status && status.value.trim() !== '' ? status.created : ''}
+                editedTimestamp={status && status.value.trim() !== '' ? status.changed : ''}
                 isEditable={isEditable}
                 isQuoted={!isEditable}
                 onSaveCallback={onSaveCallback}
