@@ -102,6 +102,15 @@ class ProfileDetailHeader extends CSSComponent {
             organization,
             profile,
         } = this.props;
+
+        var tenureText;
+        if (moment(profile.hire_date).isAfter(moment().subtract(7, 'days'))) {
+            tenureText = "\u2B50 New at " + organization.name + ". Say hi!";
+        }
+        else {
+            tenureText = "\u2014 at " + organization.name + " for " + moment(profile.hire_date).fromNow(true);
+        }
+
         return (
             <DetailHeader
                 img={this.getImageUrl()}
@@ -123,7 +132,7 @@ class ProfileDetailHeader extends CSSComponent {
                 </div>
                 <div className="row center-xs" is="tenureSection">
                     <span style={this.context.muiTheme.commonStyles.headerTertiaryText}>
-                        {`\u2014 at ${organization.name} for ${moment(profile.hire_date).fromNow(true)}`}
+                        {tenureText}
                     </span>
                 </div>
             </DetailHeader>
