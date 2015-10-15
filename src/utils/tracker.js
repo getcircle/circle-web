@@ -96,6 +96,10 @@ class Tracker {
                 'User ID': profile.user_id,
             });
 
+            mixpanel.people.set_once({
+                'First Seen': new Date()
+            });
+
             this._sessionInitialized = true;
         });
     }
