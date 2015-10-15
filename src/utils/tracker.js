@@ -271,18 +271,18 @@ class Tracker {
      * Tracks the taps on contact methods.
      *
      * @param {number} contactMethod Constant value of type ContactMethodTypeV1
-     * @param {string} contactId Identifier of the profile whose contact method was tapped
+     * @param {ProfileV1} contactProfile Profile object of the person being contacted
      * @param {string} contactLocation Constant value of CONTACT_LOCATION capturing where the tap happened
      */
-    trackContactTap(contactMethod, contactId, contactLocation) {
+    trackContactTap(contactMethod, contactProfile, contactLocation) {
         this.withMixpanel(() => {
             if (contactMethod === undefined || contactMethod === null) {
                 logger.error('Contact Method needs to be set for tracking contact taps.');
                 return;
             }
 
-            if (!contactId) {
-                logger.error('Contact ID needs to be set for tracking contact taps.');
+            if (!contactProfile) {
+                logger.error('Contact Profile needs to be set for tracking contact taps.');
                 return;
             }
 
@@ -292,14 +292,20 @@ class Tracker {
             }
 
             let loggedInUserProfileID = mixpanel.get_property('Profile ID');
-            if (loggedInUserProfileID !== undefined && loggedInUserProfileID === contactId) {
+            if (loggedInUserProfileID !== undefined && loggedInUserProfileID === contactProfile.id) {
                 // Do not log a contact tap if user tap on their own contact methods
                 return;
             }
 
+            let title = contactProfile.display_title;
+            if (title === undefined || title === '') {
+                title = contactProfile.title;
+            }
             mixpanel.track(EVENTS.CONTACT_TAP, {
                 'Contact Method': this.getStringKeyValue(ContactMethodTypeV1, contactMethod),
-                'Contact ID': contactId,
+                'Contact ID': contactProfile.id,
+                'Contact Name': contactProfile.first_name,
+                'Contact Title': title,
                 'Contact Location': contactLocation,
             });
         });

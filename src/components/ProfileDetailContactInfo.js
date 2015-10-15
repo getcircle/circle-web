@@ -33,7 +33,7 @@ class ProfileDetailContactInfo extends CSSComponent {
             PropTypes.instanceOf(services.organization.containers.LocationV1),
         ),
         onClickLocation: PropTypes.func,
-        profileId: PropTypes.string.isRequired,
+        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
     }
 
     static contextTypes = {
@@ -145,7 +145,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                         onTouchTap={() => {
                             tracker.trackContactTap(
                                 ContactMethodTypeV1.EMAIL,
-                                this.props.profileId,
+                                this.props.profile,
                                 CONTACT_LOCATION.PROFILE_DETAIL
                             );
                         }}
@@ -164,7 +164,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                             if (this.canCall(item)) {
                                 tracker.trackContactTap(
                                     ContactMethodTypeV1.CELL_PHONE,
-                                    this.props.profileId,
+                                    this.props.profile,
                                     CONTACT_LOCATION.PROFILE_DETAIL
                                 );
                                 window.location.href = 'tel:' + item.value;

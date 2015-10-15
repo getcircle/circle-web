@@ -61,7 +61,7 @@ class TeamDetailStatus extends CSSComponent {
                     onTouchTap={() => {
                         tracker.trackContactTap(
                             ContactMethodTypeV1.EMAIL,
-                            manager.id,
+                            manager,
                             CONTACT_LOCATION.TEAM_DETAIL_STATUS
                         );
                     }}

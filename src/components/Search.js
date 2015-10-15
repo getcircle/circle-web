@@ -700,7 +700,7 @@ class Search extends CSSComponent {
             onTouchTap: () => {
                 tracker.trackContactTap(
                     ContactMethodTypeV1.EMAIL,
-                    profile.id,
+                    profile,
                     CONTACT_LOCATION.SEARCH_SMART_ACTION
                 );
                 tracker.trackSearchResultTap(

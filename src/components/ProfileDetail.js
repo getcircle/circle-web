@@ -98,7 +98,7 @@ class ProfileDetail extends StyleableComponent {
                 largerDevice={this.props.largerDevice}
                 locations={locations}
                 onClickLocation={routeToLocation.bind(null, this.context.router)}
-                profileId={this.props.extendedProfile.profile.id}
+                profile={this.props.extendedProfile.profile}
                 style={this.mergeAndPrefix(styles.section)}
             />
         );

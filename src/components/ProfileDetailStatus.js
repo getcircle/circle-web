@@ -57,7 +57,7 @@ class ProfileDetailStatus extends CSSComponent {
                     onTouchTap={() => {
                         tracker.trackContactTap(
                             ContactMethodTypeV1.EMAIL,
-                            profile.id,
+                            profile,
                             CONTACT_LOCATION.PROFILE_DETAIL_STATUS
                         );
 
