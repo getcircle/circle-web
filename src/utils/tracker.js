@@ -287,6 +287,12 @@ class Tracker {
                 return;
             }
 
+            let loggedInUserProfileID = mixpanel.get_property('Profile ID');
+            if (loggedInUserProfileID !== undefined && loggedInUserProfileID === contactId) {
+                // Do not log a contact tap if user tap on their own contact methods
+                return;
+            }
+
             mixpanel.track(EVENTS.CONTACT_TAP, {
                 'Contact Method': this.getStringKeyValue(ContactMethodTypeV1, contactMethod),
                 'Contact ID': contactId,
