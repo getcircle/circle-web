@@ -71,6 +71,8 @@ export const fontWeights = {
     },
 }
 
+export const fontFamily = '"Open Sans", Arial, sans-serif';
+
 export const backgroundImage = 'https://s3.amazonaws.com/otterbots-media/locations/san-franc.jpg';
 
 export default constants;
