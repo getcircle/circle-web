@@ -39,11 +39,14 @@ const selector = createSelector(
     ) => {
         const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
+            authenticated: authenticationState.get('authenticated'),
             displayFooter: responsiveState.get('displayFooter'),
             displayHeader: responsiveState.get('displayHeader'),
-            authenticated: authenticationState.get('authenticated'),
-            profile: profile,
+            managesTeam: authenticationState.get('managesTeam'),
             organization: authenticationState.get('organization'),
+            profile: profile,
+            profileLocation: authenticationState.get('profileLocation'),
+            team: authenticationState.get('team'),
         }
     }
 );
@@ -61,8 +64,11 @@ class App extends CSSComponent {
         displayHeader: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         location: PropTypes.object,
+        managesTeam: PropTypes.object,
         organization: PropTypes.object,
         profile: PropTypes.object,
+        profileLocation: PropTypes.object,
+        team: PropTypes.object,
     }
 
     static contextTypes = {
@@ -98,7 +104,12 @@ class App extends CSSComponent {
 
     initTrackerSession() {
         if (this.props.authenticated) {
-            tracker.initSession(this.props.profile, this.props.organization);
+            tracker.initSession(
+                this.props.profile,
+                this.props.organization,
+                this.props.team,
+                this.props.profileLocation
+            );
         }
     }
 

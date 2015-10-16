@@ -25,6 +25,7 @@ class Header extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        managesTeam: PropTypes.object,
         organization: PropTypes.object.isRequired,
         profile: PropTypes.object.isRequired,
     }
@@ -172,6 +173,7 @@ class Header extends CSSComponent {
                         expandedView={false}
                         is="HeaderMenu"
                         profile={this.props.profile}
+                        managesTeam={this.props.managesTeam}
                     />
                 </div>
             </div>

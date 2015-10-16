@@ -31,6 +31,15 @@ function getLocalAuthenticationState() {
             case 'organization':
                 ProtobufClass = OrganizationV1;
                 break;
+            case 'team':
+                ProtobufClass = TeamV1;
+                break;
+            case 'managesTeam':
+                ProtobufClass = TeamV1;
+                break;
+            case 'profileLocation':
+                ProtobufClass = LocationV1;
+                break;
             default:
                 // Conservatively clear state and return blank initial state
                 clearState();
@@ -52,6 +61,10 @@ function getLocalAuthenticationState() {
 }
 
 const getInitialState = (checkCache = true) => {
+    /*
+        Check for any existing reserved keys like `location` being used by Redux libraries
+        Those are not namespaced and can cause weird application errors.
+    */
     let initialState = Immutable.fromJS({
         __version__: STATE_VERSION,
         user: null,
@@ -64,6 +77,9 @@ const getInitialState = (checkCache = true) => {
         organizationDomain: null,
         providerName: null,
         organizationImageUrl: null,
+        team: null,
+        managesTeam: null,
+        profileLocation: null,
     });
 
     let localState;
@@ -93,15 +109,15 @@ function clearState() {
 }
 
 function handleAuthenticateSuccess(state, action) {
-    const {user, token, profile, organization} = action.payload;
-    const nextState = state.merge({user, token, profile, organization, authenticated: true});
+    const {user, token, profile, team, managesTeam, profileLocation, organization} = action.payload;
+    const nextState = state.merge({user, token, profile, team, managesTeam, profileLocation, organization, authenticated: true});
     storeState(nextState);
     return nextState;
 }
 
 function handleRefreshSuccess(state, action) {
-    const {profile, organization} = action.payload;
-    const nextState = state.merge({profile, organization});
+    const {profile, team, managesTeam, profileLocation, organization} = action.payload;
+    const nextState = state.merge({profile, team, managesTeam, profileLocation, organization});
     storeState(nextState);
     return nextState;
 }
