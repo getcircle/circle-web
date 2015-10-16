@@ -213,7 +213,7 @@ class HeaderMenu extends CSSComponent {
             // and they don't have any checks around it.
             // Not returning anything or returning empty breaks the component
             return (
-                <span></span>
+                <span />
             );
         }
     }
