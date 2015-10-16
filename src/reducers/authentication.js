@@ -31,6 +31,15 @@ function getLocalAuthenticationState() {
             case 'organization':
                 ProtobufClass = OrganizationV1;
                 break;
+            case 'team':
+                ProtobufClass = TeamV1;
+                break;
+            case 'managesTeam':
+                ProtobufClass = TeamV1;
+                break;
+            case 'location':
+                ProtobufClass = LocationV1;
+                break;
             default:
                 // Conservatively clear state and return blank initial state
                 clearState();
@@ -64,6 +73,9 @@ const getInitialState = (checkCache = true) => {
         organizationDomain: null,
         providerName: null,
         organizationImageUrl: null,
+        team: null,
+        managesTeam: null,
+        location: null,
     });
 
     let localState;
@@ -93,15 +105,15 @@ function clearState() {
 }
 
 function handleAuthenticateSuccess(state, action) {
-    const {user, token, profile, organization} = action.payload;
-    const nextState = state.merge({user, token, profile, organization, authenticated: true});
+    const {user, token, profile, team, managesTeam, location, organization} = action.payload;
+    const nextState = state.merge({user, token, profile, team, managesTeam, location, organization, authenticated: true});
     storeState(nextState);
     return nextState;
 }
 
 function handleRefreshSuccess(state, action) {
-    const {profile, organization} = action.payload;
-    const nextState = state.merge({profile, organization});
+    const {profile, team, managesTeam, location, organization} = action.payload;
+    const nextState = state.merge({profile, team, managesTeam, location, organization});
     storeState(nextState);
     return nextState;
 }
