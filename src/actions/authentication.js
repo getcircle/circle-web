@@ -21,7 +21,7 @@ function getAuthenticatedObjectsPayload(payload = {}) {
                 const extendedProfile = retrieveExtendedProfile(extendedProfileResponse.result, extendedProfileResponse);
                 payload.team = extendedProfile.team;
                 payload.location = extendedProfile.locations && extendedProfile.locations.length > 0 ? extendedProfile.locations[0] : null;
-                payload.managesTeam = extendedProfile.managesTeam;
+                payload.managesTeam = extendedProfile.manages_team;
                 resolve(payload);
             })
             .catch(error => reject(error));

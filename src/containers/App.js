@@ -44,6 +44,7 @@ const selector = createSelector(
             displayFooter: responsiveState.get('displayFooter'),
             displayHeader: responsiveState.get('displayHeader'),
             location: authenticationState.get('location'),
+            managesTeam: authenticationState.get('managesTeam'),
             organization: authenticationState.get('organization'),
             profile: profile,
             team: authenticationState.get('team'),
@@ -63,10 +64,11 @@ class App extends CSSComponent {
         displayFooter: PropTypes.bool.isRequired,
         displayHeader: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
-        location: PropTypes.instanceOf(services.organization.containers.LocationV1),
-        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
-        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-        team: PropTypes.instanceOf(services.organization.containers.TeamV1),
+        location: PropTypes.object,
+        managesTeam: PropTypes.object,
+        organization: PropTypes.object,
+        profile: PropTypes.object,
+        team: PropTypes.object,
     }
 
     static contextTypes = {

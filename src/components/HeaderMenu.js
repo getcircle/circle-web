@@ -7,7 +7,7 @@ import React, { PropTypes } from 'react/addons';
 import autoBind from '../utils/autoBind';
 import CurrentTheme from '../utils/ThemeManager';
 import { logout } from '../actions/authentication';
-import { routeToProfile } from '../utils/routes';
+import { routeToProfile, routeToTeam } from '../utils/routes';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
@@ -27,6 +27,7 @@ class HeaderMenu extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         expandedView: PropTypes.bool,
+        managesTeam: PropTypes.object,
         profile: PropTypes.object,
         shouldDisplayName: PropTypes.bool,
     }
@@ -135,6 +136,10 @@ class HeaderMenu extends CSSComponent {
         routeToProfile(this.context.router, this.props.profile);
     }
 
+    handleViewTeam(event) {
+        routeToTeam(this.context.router, this.props.managesTeam);
+    }
+
     hideMenu(event) {
         this.setState({menuDisplayed: false});
     }
@@ -155,8 +160,9 @@ class HeaderMenu extends CSSComponent {
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
                         onTouchTap={::this.handleViewProfile}
-                        primaryText={t('View Profile')}
+                        primaryText={t('My Profile')}
                     />
+                    {this.renderMyTeamMenuItem()}
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
@@ -191,11 +197,25 @@ class HeaderMenu extends CSSComponent {
         }
     }
 
+    renderMyTeamMenuItem() {
+        if (this.props.managesTeam && this.props.managesTeam.id) {
+            return (
+                <MenuItem
+                    desktop={true}
+                    innerDivStyle={{...this.styles().menuItemDivStyle}}
+                    onTouchTap={::this.handleViewTeam}
+                    primaryText={t('My Team')}
+                />
+            );
+        }
+    }
+
     render() {
         const {
             profile,
             ...other,
         } = this.props;
+
         return (
             <div {...other}>
                 <div
