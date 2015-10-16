@@ -60,7 +60,9 @@ const getRoutes = (history, store) => {
                     let authenticationState = store.getState().authentication;
                     tracker.initSession(
                         authenticationState.get('profile'),
-                        authenticationState.get('organization')
+                        authenticationState.get('organization'),
+                        authenticationState.get('team'),
+                        authenticationState.get('location')
                     );
                     tracker.trackPageView(pageType, pageId);
                 }

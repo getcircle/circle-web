@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
 import {
     canvasColor,
@@ -39,11 +40,13 @@ const selector = createSelector(
     ) => {
         const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
+            authenticated: authenticationState.get('authenticated'),
             displayFooter: responsiveState.get('displayFooter'),
             displayHeader: responsiveState.get('displayHeader'),
-            authenticated: authenticationState.get('authenticated'),
-            profile: profile,
+            location: authenticationState.get('location'),
             organization: authenticationState.get('organization'),
+            profile: profile,
+            team: authenticationState.get('team'),
         }
     }
 );
@@ -60,9 +63,10 @@ class App extends CSSComponent {
         displayFooter: PropTypes.bool.isRequired,
         displayHeader: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
-        location: PropTypes.object,
-        organization: PropTypes.object,
-        profile: PropTypes.object,
+        location: PropTypes.instanceOf(services.organization.containers.LocationV1),
+        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
+        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+        team: PropTypes.instanceOf(services.organization.containers.TeamV1),
     }
 
     static contextTypes = {
@@ -98,7 +102,12 @@ class App extends CSSComponent {
 
     initTrackerSession() {
         if (this.props.authenticated) {
-            tracker.initSession(this.props.profile, this.props.organization);
+            tracker.initSession(
+                this.props.profile,
+                this.props.organization,
+                this.props.team,
+                this.props.location
+            );
         }
     }
 
