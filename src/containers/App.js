@@ -42,7 +42,6 @@ const selector = createSelector(
             authenticated: authenticationState.get('authenticated'),
             displayFooter: responsiveState.get('displayFooter'),
             displayHeader: responsiveState.get('displayHeader'),
-            location: authenticationState.get('location'),
             managesTeam: authenticationState.get('managesTeam'),
             organization: authenticationState.get('organization'),
             profile: profile,
