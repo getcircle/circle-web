@@ -34,7 +34,7 @@ export function getProfiles(parameters, nextRequest=null, key=null) {
 
 export function getExtendedProfile(profileId) {
     let parameters = {}
-    if (profileId === undefined) {
+    if (profileId !== undefined) {
         /*eslint-disable camelcase*/
         parameters.profile_id = profileId;
         /*eslint-enable camelcase*/
