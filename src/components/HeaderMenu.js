@@ -207,6 +207,14 @@ class HeaderMenu extends CSSComponent {
                     primaryText={t('My Team')}
                 />
             );
+        } else {
+            // We need to return something because material-ui
+            // doesn't handle empty children. They show up as null in a for loop
+            // and they don't have any checks around it.
+            // Not returning anything or returning empty breaks the component
+            return (
+                <span></span>
+            );
         }
     }
 
