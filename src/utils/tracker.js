@@ -91,8 +91,6 @@ class Tracker {
                 'Hire Date': profile.hire_date,
             };
 
-            console.log('Coming here');
-
             // Add team name if it is set
             if (team && team.name && team.name.trim() !== '') {
                 peopleProperties.Team = team.name;
