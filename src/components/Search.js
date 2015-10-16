@@ -299,11 +299,17 @@ class Search extends CSSComponent {
                     display: 'flex',
                     alignSelf: 'center',
                 },
+                requestInfo: {
+                    marginTop: 16,
+                },
                 requestInfoLabel: {
                     color: tintColor,
                     cursor: 'pointer',
                     paddingLeft: 5,
                     fontSize: 12,
+                },
+                requestInfoLabelPrimary: {
+                    paddingLeft: 18,
                 },
                 resultsList: {
                     borderRadius: '0px 0px 3px 3px',
@@ -790,26 +796,27 @@ class Search extends CSSComponent {
             return this.getSearchResultItems(results);
         } else if (!this.props.loading && !this.state.typing) {
             const noResults = [{
-                primaryText: (
+                disabled: true,
+                estimatedHeight: 84,
+                primaryText: t(`No results for "${this.state.query}"!`),
+                primaryTextStyle: this.styles().searchResultText,
+                secondaryText: (
                     <div>
-                        <span>
-                            {t(`No results for "${this.state.query}"!`)}
+                        <span is="requestInfoLabelPrimary">
+                            {t('Can\'t find what you\'re looking for?')}
                         </span>
                         <span
                             is="requestInfoLabel"
-                            onTouchTap={() => {
-                                this.refs.modal.show();
-                            }}
+                            onTouchTap={() => this.refs.modal.show()}
                         >
-                            {t('request missing info')}
+                            {t('Request missing info')}
                         </span>
                     </div>
                 ),
-                primaryTextStyle: this.styles().searchResultText,
-                disabled: true,
+                secondaryTextStyle: this.styles().requestInfo,
             }];
             if (this.props.canExplore) {
-                noResults.push(this.getDefaultResults());
+                noResults.push(...this.getDefaultResults());
             }
             return noResults;
         } else {
