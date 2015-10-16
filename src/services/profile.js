@@ -33,12 +33,24 @@ export function getProfiles(parameters, nextRequest=null, key=null) {
 }
 
 export function getExtendedProfile(profileId) {
-    /*eslint-disable camelcase*/
-    let request = new services.profile.actions.get_extended_profile.RequestV1({profile_id: profileId});
-    /*eslint-enable camelcase*/
+    let parameters = {}
+    if (profileId === undefined) {
+        /*eslint-disable camelcase*/
+        parameters.profile_id = profileId;
+        /*eslint-enable camelcase*/
+    }
+
+    let request = new services.profile.actions.get_extended_profile.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.finish(resolve, reject, profileId))
+            .then(response => {
+                let resultId = profileId;
+                if (resultId === undefined && response.result && response.result.profile) {
+                    resultId = response.result.profile.id;
+                }
+
+                response.finish(resolve, reject, resultId);
+            })
             .catch(error => reject(error));
     });
 }

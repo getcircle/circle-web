@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
 
 import {
     canvasColor,
@@ -47,6 +46,7 @@ const selector = createSelector(
             managesTeam: authenticationState.get('managesTeam'),
             organization: authenticationState.get('organization'),
             profile: profile,
+            profileLocation: authenticationState.get('profileLocation'),
             team: authenticationState.get('team'),
         }
     }
@@ -68,6 +68,7 @@ class App extends CSSComponent {
         managesTeam: PropTypes.object,
         organization: PropTypes.object,
         profile: PropTypes.object,
+        profileLocation: PropTypes.object,
         team: PropTypes.object,
     }
 
@@ -108,7 +109,7 @@ class App extends CSSComponent {
                 this.props.profile,
                 this.props.organization,
                 this.props.team,
-                this.props.location
+                this.props.profileLocation
             );
         }
     }
