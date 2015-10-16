@@ -93,4 +93,12 @@ export default class WrappedResponse {
         }
     }
 
+    simple(resolve, reject) {
+        if (this.isSuccess()) {
+            return resolve();
+        } else {
+            return reject(this.reject());
+        }
+    }
+
 }

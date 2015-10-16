@@ -7,9 +7,20 @@ import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
-import { loadSearchResults, clearSearchResults, viewSearchResult } from '../actions/search';
+import {
+    loadSearchResults,
+    clearSearchResults,
+    noSearchResults,
+    viewSearchResult,
+} from '../actions/search';
 import { mailto } from '../utils/contact';
-import { iconColors, fontColors, fontWeights } from '../constants/styles';
+import {
+    iconColors,
+    fontColors,
+    fontFamily,
+    fontWeights,
+    tintColor,
+} from '../constants/styles';
 import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
 import {
@@ -34,6 +45,7 @@ import QuoteIcon from './QuoteIcon';
 
 const {
     CircularProgress,
+    Dialog,
     ListItem,
     ListDivider,
     Paper,
@@ -201,6 +213,7 @@ class Search extends CSSComponent {
 
     state = {
         category: null,
+        infoRequest: '',
         query: '',
         typing: false,
     }
@@ -225,6 +238,22 @@ class Search extends CSSComponent {
     classes() {
         return {
             'default': {
+                Dialog: {
+                    contentStyle: {
+                        maxWidth: 480,
+                    },
+                },
+                dialogTextArea: {
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    borderRadius: 2,
+                    fontFamily: fontFamily,
+                    fontSize: '15px',
+                    height: 150,
+                    outline: 'none',
+                    padding: 10,
+                    resize: 'none',
+                    width: '100%',
+                },
                 inputContainerStyle: {
                     width: '100%',
                 },
@@ -269,6 +298,12 @@ class Search extends CSSComponent {
                 loadingIndicator: {
                     display: 'flex',
                     alignSelf: 'center',
+                },
+                requestInfoLabel: {
+                    color: tintColor,
+                    cursor: 'pointer',
+                    paddingLeft: 5,
+                    fontSize: 12,
                 },
                 resultsList: {
                     borderRadius: '0px 0px 3px 3px',
@@ -755,7 +790,21 @@ class Search extends CSSComponent {
             return this.getSearchResultItems(results);
         } else if (!this.props.loading && !this.state.typing) {
             const noResults = [{
-                primaryText: t(`No results for "${this.state.query}"!`),
+                primaryText: (
+                    <div>
+                        <span>
+                            {t(`No results for "${this.state.query}"!`)}
+                        </span>
+                        <span
+                            is="requestInfoLabel"
+                            onTouchTap={() => {
+                                this.refs.modal.show();
+                            }}
+                        >
+                            {t('request missing info')}
+                        </span>
+                    </div>
+                ),
                 primaryTextStyle: this.styles().searchResultText,
                 disabled: true,
             }];
@@ -864,6 +913,13 @@ class Search extends CSSComponent {
         if (!this.props.canExplore) {
             this.cleanup();
         }
+    }
+
+    handleDialogSubmit() {
+        this.props.dispatch(
+            noSearchResults(this.state.query, this.state.infoRequest)
+        );
+        this.refs.modal.dismiss();
     }
 
     handleSelection(item) {
@@ -1062,6 +1118,30 @@ class Search extends CSSComponent {
         );
     }
 
+    renderDialog() {
+        const standardActions = [
+            {text: 'Cancel'},
+            {text: 'Submit', onTouchTap: ::this.handleDialogSubmit}
+        ];
+        return (
+            <Dialog
+                actions={standardActions}
+                is="Dialog"
+                ref="modal"
+                title={t('What were you trying to find?')}
+            >
+                <textarea
+                    autoFocus={true}
+                    is="dialogTextArea"
+                    valueLink={{
+                        value: this.state.infoRequest,
+                        requestChange: newValue => this.setState({infoRequest: newValue}),
+                    }}
+                />
+            </Dialog>
+        )
+    }
+
     render() {
         const {
             alwaysActive,
@@ -1098,6 +1178,7 @@ class Search extends CSSComponent {
                     showCancel={showCancel}
                     tokens={this.getSearchTokens()}
                 />
+                {this.renderDialog()}
             </div>
         );
     }
