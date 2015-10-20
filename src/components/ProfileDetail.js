@@ -176,7 +176,7 @@ class ProfileDetail extends StyleableComponent {
         return contactMethods.concat(profile.contact_methods);
     }
 
-    renderProfileDetailForm(profile, hasManager) {
+    renderProfileDetailForm(profile, peers, manager) {
         const {
             isLoggedInUser,
             largerDevice,
@@ -187,9 +187,10 @@ class ProfileDetail extends StyleableComponent {
             return (
                 <ProfileDetailForm
                     contactMethods={this.getContactMethods()}
-                    hasManager={hasManager}
                     largerDevice={largerDevice}
+                    manager={manager}
                     onSaveCallback={onUpdateProfile}
+                    peers={peers}
                     profile={profile}
                     ref="profileDetailForm"
                 />
@@ -230,7 +231,7 @@ class ProfileDetail extends StyleableComponent {
                     {this.renderTeam(manager, peers, team)}
                     {this.renderManages(manages_team, direct_reports)}
                 </DetailContent>
-                {this.renderProfileDetailForm(profile, !!team)}
+                {this.renderProfileDetailForm(profile, peers, manager)}
             </div>
         );
     }

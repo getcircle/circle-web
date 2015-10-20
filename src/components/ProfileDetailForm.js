@@ -18,6 +18,7 @@ import Dialog from './Dialog';
 import EditProfileCameraIcon from './EditProfileCameraIcon';
 import IconContainer from './IconContainer';
 import Toast from './Toast';
+import SelectField from './SelectField'
 
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
@@ -37,10 +38,11 @@ class ProfileDetailForm extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
         dispatch: PropTypes.func.isRequired,
-        hasManager: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
+        manager: PropTypes.object,
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
+        peers: PropTypes.array,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
     }
 
@@ -57,6 +59,8 @@ class ProfileDetailForm extends CSSComponent {
         imageUrl: '',
         imageFiles: [],
         title: '',
+        manager: null,
+        managerQuery: '',
         saving: false,
     }
 
@@ -200,6 +204,7 @@ class ProfileDetailForm extends CSSComponent {
             updatedState.cellNumber = this.getCellNumberFromProps(props);
             updatedState.firstName = props ? props.profile.first_name : '';
             updatedState.lastName = props ? props.profile.last_name : '';
+            updatedState.manager = props.manager;
         }
 
         this.setState(updatedState, () => {
@@ -352,6 +357,29 @@ class ProfileDetailForm extends CSSComponent {
         return cellNumber;
     }
 
+    getFilteredTeamMembers() {
+        let query = this.state.managerQuery;
+        let teamMembers = [this.props.manager].concat(this.props.peers);
+        let filteredTeamMembers = [];
+
+        for (let i in teamMembers) {
+            let member = teamMembers[i];
+
+            if (query.length === 0 || member.full_name.toLowerCase().startsWith(query.toLowerCase())) {
+                filteredTeamMembers.push({
+                    primaryText: member.full_name,
+                    onTouchTap: this.handleTeamMemberTapped.bind(this, member),
+                });
+            }
+        }
+
+        return filteredTeamMembers
+    }
+
+    handleTeamMemberTapped(member) {
+        this.setState({'manager': member});
+    }
+
     handleSaveTapped() {
         if (!this.validate()) {
             return;
@@ -402,7 +430,7 @@ class ProfileDetailForm extends CSSComponent {
                     messageType={messageTypes.ERROR}
                 />
             );
-        } else if (this.props.hasManager === true && this.state.dataChanged === true) {
+        } else if (!!this.props.manager && this.state.dataChanged === true) {
             return (
                 <Toast
                     message={t('Your manager will be notified of changes when you hit Save.')}
@@ -496,6 +524,14 @@ class ProfileDetailForm extends CSSComponent {
                         type="tel"
                         value={this.state.cellNumber}
                      />
+                    <div is="sectionTitle">{t('Reports to')}</div>
+                    <SelectField
+                        inputName="managerQuery"
+                        inputStyle={{...this.styles().input}}
+                        items={this.getFilteredTeamMembers()}
+                        onInputChange={::this.handleChange}
+                        value={this.state.manager.full_name}
+                    />
                 </form>
             </div>
         );
