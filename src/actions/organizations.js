@@ -6,9 +6,9 @@ export function setManager(managerProfileId, profileId) {
     return {
         [SERVICE_REQUEST]: {
             types: [
-                types.UPDATE_ORGANIZATION,
-                types.UPDATE_ORGANIZATION_SUCCESS,
-                types.UPDATE_ORGANIZATION_FAILURE,
+                types.SET_MANAGER,
+                types.SET_MANAGER_SUCCESS,
+                types.SET_MANAGER_FAILURE,
             ],
             remote: () => organizationRequests.setManager(managerProfileId, profileId),
         },
