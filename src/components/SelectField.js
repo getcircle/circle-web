@@ -23,8 +23,15 @@ class SelectField extends CSSComponent {
     }
 
     state = {
-        focused: true,  // TODO: this should not be 'true' by default
+        focused: false,
         value: 0,
+    }
+
+    componentDidUpdate() {
+        let searchInput = React.findDOMNode(this.refs.searchInput);
+        if (searchInput !== null) {
+            searchInput.focus();
+        }
     }
 
     classes() {
@@ -37,10 +44,11 @@ class SelectField extends CSSComponent {
                     borderRadius: '0px 0px 3px 3px',
                     boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
                     justifyContent: 'flex-start',
-                    overflowY: 'hidden',
                     textAlign: 'start',
                     height: 'auto',
+                    width: 'calc(100% - 32px)',
                     position: 'absolute',
+                    'margin-top': '-1px',
                 },
                 ListItem: {
                     style: {
@@ -60,8 +68,14 @@ class SelectField extends CSSComponent {
         this.setState({focused: true});
     }
 
-    handleBlur() {
-        this.setState({focused: false});
+    handleBlur(event) {
+        let relatedTarget = event.relatedTarget;
+        if (relatedTarget !== null && relatedTarget.name === 'ListItem') {
+            event.preventDefault();
+        }
+        else {
+            this.setState({focused: false});
+        }
     }
 
     handleItemTapped(item, index) {
@@ -75,6 +89,7 @@ class SelectField extends CSSComponent {
             <ListItem
                 is="ListItem"
                 keyboardFocused={highlighted}
+                name="ListItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
                 primaryText={item.primaryText}
             />
@@ -119,6 +134,7 @@ class SelectField extends CSSComponent {
                     name={this.props.inputName}
                     onChange={this.props.onInputChange}
                     placeholder={t('Search')}
+                    ref="searchInput"
                     style={this.props.inputStyle}
                 />
                 <Infinite
@@ -138,10 +154,12 @@ class SelectField extends CSSComponent {
         }
 
         return (
-            <div is="container">
+            <div is="container"
+                onBlur={::this.handleBlur}
+                onFocus={::this.handleFocus}
+            >
                 <input
-                    onBlur={::this.handleBlur}
-                    onFocus={::this.handleFocus}
+                    readOnly={true}
                     style={this.props.inputStyle}
                     value={this.props.value}
                 />
