@@ -339,6 +339,10 @@ class ProfileDetailForm extends CSSComponent {
             fields.push('cell_number');
         }
 
+        if (this.state.manager !== this.props.manager) {
+            fields.push('manager');
+        }
+
         return fields;
     }
 
@@ -377,7 +381,7 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     handleTeamMemberTapped(member) {
-        this.setState({'manager': member});
+        this.setState({manager: member}, () => this.detectChangeAndEnableSaving());
     }
 
     handleSaveTapped() {
