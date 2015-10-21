@@ -4,6 +4,7 @@ import { services } from 'protobufs';
 
 import { getAuthenticatedProfile } from '../reducers/authentication';
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
+import { setManager } from '../actions/organizations';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
@@ -102,8 +103,12 @@ class Profile extends PureComponent {
         resetScroll();
     }
 
-    onUpdateProfile(profile) {
+    onUpdateProfile(profile, manager) {
         this.props.dispatch(updateProfile(profile));
+
+        if (manager !== this.props.extendedProfile.manager) {
+            this.props.dispatch(setManager(manager.id, profile.id));
+        }
     }
 
     renderProfile() {

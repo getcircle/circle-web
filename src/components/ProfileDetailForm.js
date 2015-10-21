@@ -300,7 +300,7 @@ class ProfileDetailForm extends CSSComponent {
             );
         }
 
-        this.props.onSaveCallback(this.getUpdatedProfile());
+        this.props.onSaveCallback(this.getUpdatedProfile(), this.state.manager);
         this.resetState();
         this.dismiss();
     }
