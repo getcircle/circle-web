@@ -91,6 +91,13 @@ const getRoutes = (history, store) => {
                         path="/billing"
                     />
                     <Route
+                        component={require('./containers/Editor')}
+                        onEnter={applyMiddleware(
+                            displayHeader,
+                        )}
+                        path="/editor"
+                    />
+                    <Route
                         component={require('./containers/Search')}
                         onEnter={applyMiddleware(
                             requireAuth,
