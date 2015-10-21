@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import { default as MediumEditor } from 'react-medium-editor';
 
 import { fontColors } from '../constants/styles';
 import { routeToProfile } from '../utils/routes';
@@ -26,7 +27,7 @@ class Editor extends CSSComponent {
 
     state = {
         title: '',
-        content: '',
+        body: '',
     }
 
     classes() {
@@ -34,6 +35,10 @@ class Editor extends CSSComponent {
             default: {
                 section: {
                     marginTop: 5,
+                },
+                contentContainer: {
+                    marginTop: '20px',
+                    marginLeft: '16px',
                 },
                 postTitle: {
                     background: 'transparent',
@@ -43,8 +48,7 @@ class Editor extends CSSComponent {
                     fontSize: '36px',
                     lineHeight: '1.15',
                     letterSpacing: '-0.02em',
-                    marginLeft: '16px',
-                    marginTop: '20px',
+                    marginBottom: '20px',
                     outline: 'none',
                     width: '100%',
                     ...fontColors.dark,
@@ -68,9 +72,16 @@ class Editor extends CSSComponent {
     }
 
     // Change Methods
+
     handleTitleChange(event) {
         this.setState({
             title: event.target.value,
+        });
+    }
+
+    handleBodyChange(bodyText) {
+        this.setState({
+            body: bodyText,
         });
     }
 
@@ -78,6 +89,11 @@ class Editor extends CSSComponent {
 
     render() {
         let author = this.context.authenticatedProfile;
+        let editorOptions = {
+            placeholder: {
+                text: 'Type your text',
+            },
+        };
 
         return (
             <DetailContent>
@@ -92,14 +108,21 @@ class Editor extends CSSComponent {
                 </CardList>
                 <div className="row">
                     <div className="col-xs">
-                        <div className="box">
+                        <div className="box" is="contentContainer">
                             <input
+                                autoFocus="true"
                                 is="postTitle"
                                 name="title"
-                                onChanged={::this.handleTitleChange}
+                                onChange={::this.handleTitleChange}
                                 placeholder={t('Title')}
                                 text={this.state.title}
                                 type="text"
+                            />
+                            <MediumEditor
+                                onChange={::this.handleBodyChange}
+                                options={editorOptions}
+                                text={this.state.body}
+
                             />
                         </div>
                     </div>
