@@ -25,7 +25,6 @@ class SelectField extends CSSComponent {
 
     state = {
         focused: false,
-        value: 0,
     }
 
     componentDidUpdate() {
@@ -84,16 +83,15 @@ class SelectField extends CSSComponent {
     handleItemTapped(item, index) {
         item.onTouchTap();
 
-        this.setState({value: index, focused: false});
+        this.setState({focused: false});
 
         this.props.onBlur();
     }
 
-    renderResult(item, index, highlighted) {
+    renderResult(item, index) {
         return (
             <ListItem
                 is="ListItem"
-                keyboardFocused={highlighted}
                 key={index}
                 name="ListItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
@@ -102,17 +100,17 @@ class SelectField extends CSSComponent {
         );
     }
 
-    renderItemInMenu(item, index, highlighted) {
+    renderItemInMenu(item, index) {
         let element;
         if (index !== 0) {
             element = (
                 <div>
                     <ListDivider is="ListDivider" />
-                    {this.renderResult(item, highlighted)}
+                    {this.renderResult(item)}
                 </div>
             );
         } else {
-            element = this.renderResult(item, highlighted);
+            element = this.renderResult(item);
         }
 
         return element;
@@ -125,7 +123,7 @@ class SelectField extends CSSComponent {
             let height = 50;
             containerHeight += height;
             elementHeights.push(height);
-            return this.renderItemInMenu(item, index, (index === this.state.value));
+            return this.renderItemInMenu(item, index);
         });
 
         containerHeight = Math.min(containerHeight, 150);
