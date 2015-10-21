@@ -76,15 +76,17 @@ class SelectField extends CSSComponent {
         }
         else {
             this.setState({focused: false});
+            
+            this.props.onBlur();
         }
-
-        this.props.onBlur();
     }
 
     handleItemTapped(item, index) {
         item.onTouchTap();
 
         this.setState({value: index, focused: false});
+
+        this.props.onBlur();
     }
 
     renderResult(item, index, highlighted) {
@@ -92,6 +94,7 @@ class SelectField extends CSSComponent {
             <ListItem
                 is="ListItem"
                 keyboardFocused={highlighted}
+                key={index}
                 name="ListItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
                 primaryText={item.primaryText}
