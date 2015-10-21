@@ -16,6 +16,7 @@ class Editor extends CSSComponent {
 
     static propTypes = {
         largerDevice: PropTypes.bool.isRequired,
+        onSaveCallback: PropTypes.func.isRequired,
     }
 
     static contextTypes = {
@@ -29,6 +30,12 @@ class Editor extends CSSComponent {
         title: '',
         body: '',
     }
+
+    componentWillUpdate(nextProps, nextState) {
+        this.saveData();
+    }
+
+    saveTimeout = null
 
     classes() {
         return {
@@ -69,6 +76,16 @@ class Editor extends CSSComponent {
                 },
             },
         };
+    }
+
+    saveData() {
+        if (this.saveTimeout !== null) {
+            window.clearTimeout(this.saveTimeout);
+        }
+
+        this.saveTimeout = window.setTimeout(() => {
+            this.props.onSaveCallback(this.state.title, this.state.body);
+        }, 500);
     }
 
     // Change Methods

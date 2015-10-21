@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import logger from '../utils/logger';
 import { resetScroll } from '../utils/window';
 import * as selectors from '../selectors';
 
@@ -49,6 +50,11 @@ class Editor extends PureComponent {
         resetScroll();
     }
 
+    onSavePost(title, body) {
+        logger.log('Saving Post');
+        logger.log(body);
+    }
+
     render() {
         const {
             largerDevice,
@@ -58,6 +64,7 @@ class Editor extends PureComponent {
             <Container>
                 <EditorComponent
                     largerDevice={largerDevice}
+                    onSaveCallback={::this.onSavePost}
                 />
             </Container>
         );
