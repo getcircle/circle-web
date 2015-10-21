@@ -18,6 +18,7 @@ class SelectField extends CSSComponent {
         inputName: PropTypes.string,
         inputStyle: PropTypes.object,
         items: PropTypes.array,
+        onBlur: PropTypes.func,
         onInputChange: PropTypes.func,
         value: PropTypes.string,
     }
@@ -76,6 +77,8 @@ class SelectField extends CSSComponent {
         else {
             this.setState({focused: false});
         }
+
+        this.props.onBlur();
     }
 
     handleItemTapped(item, index) {

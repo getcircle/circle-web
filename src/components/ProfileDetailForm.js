@@ -384,6 +384,10 @@ class ProfileDetailForm extends CSSComponent {
         this.setState({manager: member}, () => this.detectChangeAndEnableSaving());
     }
 
+    handleManagerSelectBlur() {
+        this.setState({managerQuery: ''});
+    }
+
     handleSaveTapped() {
         if (!this.validate()) {
             return;
@@ -533,6 +537,7 @@ class ProfileDetailForm extends CSSComponent {
                         inputName="managerQuery"
                         inputStyle={{...this.styles().input}}
                         items={this.getFilteredTeamMembers()}
+                        onBlur={::this.handleManagerSelectBlur}
                         onInputChange={::this.handleChange}
                         value={this.state.manager.full_name}
                     />
