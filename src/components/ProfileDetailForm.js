@@ -372,7 +372,7 @@ class ProfileDetailForm extends CSSComponent {
             if (query.length === 0 || member.full_name.toLowerCase().startsWith(query.toLowerCase())) {
                 filteredTeamMembers.push({
                     primaryText: member.full_name,
-                    onTouchTap: this.handleTeamMemberTapped.bind(this, member),
+                    onTouchTap: this.handleManagerSelected.bind(this, member),
                 });
             }
         }
@@ -380,7 +380,7 @@ class ProfileDetailForm extends CSSComponent {
         return filteredTeamMembers
     }
 
-    handleTeamMemberTapped(member) {
+    handleManagerSelected(member) {
         this.setState({manager: member}, () => this.detectChangeAndEnableSaving());
     }
 
