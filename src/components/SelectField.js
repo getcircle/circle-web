@@ -30,7 +30,7 @@ class SelectField extends CSSComponent {
 
     componentDidUpdate() {
         let searchInput = React.findDOMNode(this.refs.searchInput);
-        if (searchInput !== null) {
+        if (!!searchInput) {
             searchInput.focus();
         }
     }
@@ -71,7 +71,7 @@ class SelectField extends CSSComponent {
 
     handleBlur(event) {
         let relatedTarget = event.relatedTarget;
-        if (relatedTarget !== null && relatedTarget.name === 'ListItem') {
+        if (!!relatedTarget && relatedTarget.name === 'ListItem') {
             event.preventDefault();
         }
         else {
