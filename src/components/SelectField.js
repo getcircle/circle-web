@@ -79,9 +79,9 @@ class SelectField extends CSSComponent {
     }
 
     handleItemTapped(item, index) {
-        this.setState({value: index});
-
         item.onTouchTap();
+
+        this.setState({value: index, focused: false});
     }
 
     renderResult(item, index, highlighted) {
