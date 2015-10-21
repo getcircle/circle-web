@@ -12,6 +12,7 @@ import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 import { uploadMedia } from '../actions/media';
+import { loadSearchResults } from '../actions/search';
 
 import CSSComponent from  './CSSComponent';
 import Dialog from './Dialog';
@@ -23,15 +24,23 @@ import SelectField from './SelectField'
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const mediaSelector = selectors.createImmutableSelector(
-    [selectors.mediaUploadSelector], (mediaUploadState) => {
+const selector = selectors.createImmutableSelector(
+    [
+        selectors.mediaUploadSelector,
+        selectors.searchSelector,
+    ],
+    (
+        mediaUploadState,
+        searchState,
+    ) => {
         return {
             mediaUrl: mediaUploadState.get('mediaUrl'),
+            results: searchState.get('results').toJS(),
         };
     }
 );
 
-@connect(mediaSelector)
+@connect(selector)
 class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
@@ -44,6 +53,7 @@ class ProfileDetailForm extends CSSComponent {
         onSaveCallback: PropTypes.func.isRequired,
         peers: PropTypes.array,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
     }
 
     static defaultProps = {
@@ -285,6 +295,11 @@ class ProfileDetailForm extends CSSComponent {
         this.setState(updatedState, () => this.detectChangeAndEnableSaving());
     }
 
+    handleManagerQueryChange(event) {
+        this.loadSearchResults(event.target.value);
+        this.setState({managerQuery: event.target.value});
+    }
+
     detectChangeAndEnableSaving() {
         let dataChanged = this.getFieldsThatChanged().length > 0 || this.state.imageFiles.length > 0;
         this.refs.modal.setSaveEnabled(dataChanged);
@@ -361,23 +376,31 @@ class ProfileDetailForm extends CSSComponent {
         return cellNumber;
     }
 
-    getFilteredTeamMembers() {
-        let query = this.state.managerQuery;
-        let teamMembers = [this.props.manager].concat(this.props.peers);
-        let filteredTeamMembers = [];
-
-        for (let i in teamMembers) {
-            let member = teamMembers[i];
-
-            if (query.length === 0 || member.full_name.toLowerCase().startsWith(query.toLowerCase())) {
-                filteredTeamMembers.push({
-                    primaryText: member.full_name,
-                    onTouchTap: this.handleManagerSelected.bind(this, member),
-                });
-            }
+    getSearchResults() {
+        const results = this.props.results[this.state.managerQuery];
+        let items = [];
+        if (!!results) {
+            items = results.map((result, index) => {
+                const item = {
+                    primaryText: result.profile.full_name,
+                    onTouchTap: this.handleManagerSelected.bind(this, result.profile)
+                };
+                return item
+            });
         }
 
-        return filteredTeamMembers
+        return items
+    }
+
+    loadSearchResults(query) {
+        const parameters = [
+            query,
+            services.search.containers.search.CategoryV1.PROFILES,
+            null,
+            null,
+        ]
+
+        this.props.dispatch(loadSearchResults(...parameters));
     }
 
     handleManagerSelected(member) {
@@ -536,9 +559,9 @@ class ProfileDetailForm extends CSSComponent {
                     <SelectField
                         inputName="managerQuery"
                         inputStyle={{...this.styles().input}}
-                        items={this.getFilteredTeamMembers()}
+                        items={this.getSearchResults()}
                         onBlur={::this.handleManagerSelectBlur}
-                        onInputChange={::this.handleChange}
+                        onInputChange={::this.handleManagerQueryChange}
                         value={this.state.manager.full_name}
                     />
                 </form>
