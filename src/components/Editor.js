@@ -45,7 +45,7 @@ class Editor extends CSSComponent {
                     border: '0',
                     fontWeight: '700',
                     fontStyle: 'normal',
-                    fontSize: '36px',
+                    fontSize: '40px',
                     lineHeight: '1.15',
                     letterSpacing: '-0.02em',
                     marginBottom: '20px',
@@ -119,6 +119,7 @@ class Editor extends CSSComponent {
                                 type="text"
                             />
                             <MediumEditor
+                                className="leditor"
                                 onChange={::this.handleBodyChange}
                                 options={editorOptions}
                                 text={this.state.body}

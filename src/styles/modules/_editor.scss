@@ -1,0 +1,57 @@
+.leditor {
+    outline: none;
+    min-height: 100px;
+}
+
+.leditor > b, .leditor > strong {
+    font-weight: bold;
+}
+
+.leditor > blockquote {
+    font-weight: 400;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1.58;
+    letter-spacing: -0.003em;
+    border-left: 3px solid rgba(0,0,0,0.8);
+    padding-left: 20px;
+    margin-left: -23px;
+    padding-bottom: 3px;
+}
+
+.leditor > em {
+    font-style: italic;
+}
+
+.leditor > h2 {
+    color: rgba(0,0,0,0.8);
+    font-weight: 700;
+    font-style: normal;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-top: 56px;
+}
+
+.leditor > h3 {
+    color: rgba(0,0,0,0.44);
+    font-weight: 300;
+    font-style: normal;
+    font-size: 28px;
+    line-height: 1.22;
+    letter-spacing: -0.022em;
+    margin-top: 39px;
+}
+
+.leditor > p:first-child {
+    margin-top: 0;
+}
+
+.leditor > p {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1.58;
+    letter-spacing: -0.003em;
+    margin-top: 29px;
+}
