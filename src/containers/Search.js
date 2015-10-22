@@ -24,6 +24,7 @@ const selector = createSelector(
             organization: authenticationState.get('organization'),
             authenticated: authenticationState.get('authenticated'),
             largerDevice: responsiveState.get('largerDevice'),
+            managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
         }
     },
@@ -35,6 +36,7 @@ class Search extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
+        managesTeam: PropTypes.object,
         mobileOS: PropTypes.bool.isRequired,
         organization: PropTypes.object.isRequired,
         profile: PropTypes.object.isRequired,
@@ -203,6 +205,7 @@ class Search extends CSSComponent {
                         <HeaderMenu
                             dispatch={this.props.dispatch}
                             is="HeaderMenu"
+                            managesTeam={this.props.managesTeam}
                             profile={this.props.profile}
                         />
                     </div>
