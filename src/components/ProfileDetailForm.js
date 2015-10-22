@@ -409,9 +409,11 @@ class ProfileDetailForm extends CSSComponent {
         return cellNumber;
     }
 
-    getSearchResults() {
-        const results = this.props.managerSelectResults[this.state.managerQuery];
+    getManagerSelectItems() {
+        const searchResults = this.props.managerSelectResults[this.state.managerQuery];
+
         let items = [];
+
         if (this.state.managerQuery.length === 0) {
             const { managerSelectProfiles } = this.props;
             if (managerSelectProfiles) {
@@ -424,8 +426,8 @@ class ProfileDetailForm extends CSSComponent {
                 });
             }
         }
-        else if (!!results) {
-            items = results.map((result, index) => {
+        else if (!!searchResults) {
+            items = searchResults.map((result, index) => {
                 const item = {
                     primaryText: result.profile.full_name,
                     onTouchTap: this.handleManagerSelected.bind(this, result.profile)
@@ -435,17 +437,6 @@ class ProfileDetailForm extends CSSComponent {
         }
 
         return items
-    }
-
-    loadSearchResults(query) {
-        const parameters = [
-            query,
-            services.search.containers.search.CategoryV1.PROFILES,
-            null,
-            null,
-        ]
-
-        this.props.dispatch(loadSearchResults(...parameters));
     }
 
     handleManagerSelected(member) {
@@ -468,8 +459,9 @@ class ProfileDetailForm extends CSSComponent {
         let value = event.target.value;
 
         this.currentManagerSearchTimeout = window.setTimeout(() => {
-            this.loadSearchResults(value);
+            this.props.dispatch(loadSearchResults(value, services.search.containers.search.CategoryV1.PROFILES));
         }, 300);
+
         this.setState({managerQuery: value});
     }
 
@@ -623,7 +615,7 @@ class ProfileDetailForm extends CSSComponent {
                         inputName="managerQuery"
                         inputStyle={{...this.styles().input}}
                         isInfiniteLoading={this.props.managerSelectProfilesLoading}
-                        items={this.getSearchResults()}
+                        items={this.getManagerSelectItems()}
                         onBlur={::this.handleManagerSelectBlur}
                         onInfiniteLoad={::this.handleManagerSelectInfiniteLoad}
                         onInputChange={::this.handleManagerQueryChange}
