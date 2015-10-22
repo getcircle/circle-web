@@ -118,10 +118,6 @@ class ProfileDetailForm extends CSSComponent {
         this.mergeStateAndProps(this.props);
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
-        this.mergeStateAndProps(nextProps);
-    }
-
     directAttributesToStateMapping = {
         /*eslint-disable camelcase*/
         'first_name': 'firstName',
