@@ -5,10 +5,13 @@ import { services } from 'protobufs';
 import logger from '../utils/logger';
 import { resetScroll } from '../utils/window';
 import * as selectors from '../selectors';
+import { updateProfile } from '../actions/profiles';
 
 import Container from '../components/Container';
 import { default as EditorComponent } from '../components/Editor';
 import PureComponent from '../components/PureComponent';
+
+const { ProfileStatusV1 } = services.profile.containers;
 
 const selector = selectors.createImmutableSelector(
     [
@@ -39,6 +42,12 @@ class Editor extends PureComponent {
         mobileOS: PropTypes.bool.isRequired,
     }
 
+    state = {
+        // TODO: Remove TEMP CODE
+        statusId: '',
+        saving: false,
+    }
+
     getChildContext() {
         return {
             authenticatedProfile: this.props.authenticatedProfile,
@@ -50,9 +59,51 @@ class Editor extends PureComponent {
         resetScroll();
     }
 
+    componentWillReceiveProps(nextProps, nextState) {
+        if (nextProps.authenticatedProfile &&
+            nextProps.authenticatedProfile.status &&
+            nextProps.authenticatedProfile.status.id) {
+            this.setState({
+                statusId: nextProps.authenticatedProfile.status.id,
+            });
+        }
+    }
+
     onSavePost(title, body) {
         logger.log('Saving Post');
         logger.log(body);
+
+        if (body === '') {
+            return;
+        }
+
+        // TODO: Remove TEMP CODE
+        const {
+            authenticatedProfile,
+        } = this.props;
+
+        let profile = authenticatedProfile;
+        let profileStatusV1;
+
+        if (this.state.statusId === '') {
+            logger.log('CREATING NEW STATUS');
+            profileStatusV1 = new ProfileStatusV1({
+                value: body,
+            });
+        }
+        else {
+            logger.log('SAVING EXISTING STATUS');
+            profileStatusV1 = Object.assign({}, profile.status, {
+                value: body,
+                id: this.state.statusId
+            });
+        }
+
+        let updatedProfile = Object.assign({}, profile, {
+            status: profileStatusV1,
+        });
+
+        this.props.dispatch(updateProfile(updatedProfile));
     }
 
     render() {
