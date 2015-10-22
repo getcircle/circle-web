@@ -409,13 +409,6 @@ class ProfileDetailForm extends CSSComponent {
         return cellNumber;
     }
 
-    getCategoryResultsProfiles() {
-        const { managerSelectProfiles } = this.props;
-        if (managerSelectProfiles) {
-            return managerSelectProfiles.map((profile, index) => this.getProfileResult(profile, index));
-        }
-    }
-
     getSearchResults() {
         const results = this.props.managerSelectResults[this.state.managerQuery];
         let items = [];
