@@ -87,7 +87,6 @@ class ProfileDetailForm extends CSSComponent {
         manager: PropTypes.object,
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
-        peers: PropTypes.array,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         profiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         profilesLoading: PropTypes.bool,
