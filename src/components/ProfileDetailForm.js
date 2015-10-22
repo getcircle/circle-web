@@ -2,7 +2,8 @@ import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { LinearProgress } from 'material-ui';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import { services, soa } from 'protobufs';
+import Immutable from 'immutable';
 
 import { fontColors, fontWeights } from '../constants/styles';
 import logger from '../utils/logger';
@@ -13,6 +14,8 @@ import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 import { uploadMedia } from '../actions/media';
 import { loadSearchResults } from '../actions/search';
+import * as exploreActions from '../actions/explore';
+import { retrieveProfiles } from '../reducers/denormalizations';
 
 import CSSComponent from  './CSSComponent';
 import Dialog from './Dialog';
@@ -24,18 +27,51 @@ import SelectField from './SelectField'
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const selector = selectors.createImmutableSelector(
+const cacheSelector = selectors.createImmutableSelector(
     [
-        selectors.mediaUploadSelector,
-        selectors.searchSelector,
+        selectors.cacheSelector,
+        selectors.exploreProfilesIdsSelector,
     ],
     (
+        cacheState,
+        profilesState,
+    ) => {
+        let profiles, profilesNextRequest;
+        const cache = cacheState.toJS();
+        if (profilesState) {
+            const ids = profilesState.get('ids').toJS();
+            if (ids.length) {
+                profiles = retrieveProfiles(ids, cache);
+            }
+            profilesNextRequest = profilesState.get('nextRequest');
+        }
+        return Immutable.fromJS({
+            profiles,
+            profilesNextRequest,
+        });
+    },
+);
+
+const selector = selectors.createImmutableSelector(
+    [
+        cacheSelector,
+        selectors.mediaUploadSelector,
+        selectors.searchSelector,
+        selectors.exploreProfilesLoadingSelector,
+    ],
+    (
+        cacheState,
         mediaUploadState,
         searchState,
+        profilesLoadingState,
     ) => {
         return {
+            ...cacheState.toJS(),
             mediaUrl: mediaUploadState.get('mediaUrl'),
             results: searchState.get('results').toJS(),
+            profilesloading: (
+                profilesLoadingState || searchState.get('loading')
+            ),
         };
     }
 );
@@ -53,6 +89,9 @@ class ProfileDetailForm extends CSSComponent {
         onSaveCallback: PropTypes.func.isRequired,
         peers: PropTypes.array,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        profiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
+        profilesLoading: PropTypes.bool,
+        profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
     }
 
@@ -75,6 +114,7 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     componentWillMount() {
+        this.handleManagerSelectInfiniteLoad();
         this.mergeStateAndProps(this.props);
     }
 
@@ -376,10 +416,29 @@ class ProfileDetailForm extends CSSComponent {
         return cellNumber;
     }
 
+    getCategoryResultsProfiles() {
+        const { profiles } = this.props;
+        if (profiles) {
+            return profiles.map((profile, index) => this.getProfileResult(profile, index));
+        }
+    }
+
     getSearchResults() {
         const results = this.props.results[this.state.managerQuery];
         let items = [];
-        if (!!results) {
+        if (this.state.managerQuery.length === 0) {
+            const { profiles } = this.props;
+            if (profiles) {
+                items = profiles.map((profile, index) => {
+                    const item = {
+                        primaryText: profile.full_name,
+                        onTouchTap: this.handleManagerSelected.bind(this, profile)
+                    };
+                    return item
+                });
+            }
+        }
+        else if (!!results) {
             items = results.map((result, index) => {
                 const item = {
                     primaryText: result.profile.full_name,
@@ -409,6 +468,10 @@ class ProfileDetailForm extends CSSComponent {
 
     handleManagerSelectBlur() {
         this.setState({managerQuery: ''});
+    }
+
+    handleManagerSelectInfiniteLoad() {
+        this.props.dispatch(exploreActions.exploreProfiles(this.props.profilesNextRequest));
     }
 
     handleSaveTapped() {
@@ -557,10 +620,13 @@ class ProfileDetailForm extends CSSComponent {
                      />
                     <div is="sectionTitle">{t('Reports to')}</div>
                     <SelectField
+                        infiniteLoadBeginBottomOffset={100}
                         inputName="managerQuery"
                         inputStyle={{...this.styles().input}}
+                        isInfiniteLoading={this.props.profilesLoading}
                         items={this.getSearchResults()}
                         onBlur={::this.handleManagerSelectBlur}
+                        onInfiniteLoad={::this.handleManagerSelectInfiniteLoad}
                         onInputChange={::this.handleManagerQueryChange}
                         value={this.state.manager.full_name}
                     />

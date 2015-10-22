@@ -7,6 +7,7 @@ import t from '../utils/gettext';
 import CSSComponent from './CSSComponent';
 
 const {
+    CircularProgress,
     ListItem,
     ListDivider,
     Paper,
@@ -15,10 +16,13 @@ const {
 class SelectField extends CSSComponent {
 
     static propTypes = {
+        infiniteLoadBeginBottomOffset: PropTypes.number,
         inputName: PropTypes.string,
         inputStyle: PropTypes.object,
+        isInfiniteLoading: PropTypes.bool,
         items: PropTypes.array,
         onBlur: PropTypes.func,
+        onInfiniteLoad: PropTypes.func,
         onInputChange: PropTypes.func,
         value: PropTypes.string,
     }
@@ -59,9 +63,19 @@ class SelectField extends CSSComponent {
                     style: {
                         backgroundColor: 'rgba(0, 0, 0, .05)',
                     },
-                }
+                },
+                loadingIndicatorContainer: {
+                    display: 'flex',
+                    justifyContent: 'center',
+                },
             }
         }
+    }
+
+    handleChange(event) {
+        this.refs.list.getDOMNode().scrollTop = 0;
+
+        this.props.onInputChange(event);
     }
 
     handleFocus() {
@@ -86,6 +100,16 @@ class SelectField extends CSSComponent {
         this.setState({focused: false});
 
         this.props.onBlur();
+    }
+
+    renderLoadingIndicator() {
+        if (this.props.isInfiniteLoading) {
+            return (
+                <div is="loadingIndicatorContainer" key="loading-indicator">
+                    <CircularProgress mode="indeterminate" size={0.5} />
+                </div>
+            );
+        }
     }
 
     renderResult(item, index) {
@@ -136,7 +160,7 @@ class SelectField extends CSSComponent {
             >
                 <input
                     name={this.props.inputName}
-                    onChange={this.props.onInputChange}
+                    onChange={::this.handleChange}
                     placeholder={t('Search')}
                     ref="searchInput"
                     style={this.props.inputStyle}
@@ -144,6 +168,11 @@ class SelectField extends CSSComponent {
                 <Infinite
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}
+                    infiniteLoadBeginBottomOffset={this.props.infiniteLoadBeginBottomOffset}
+                    isInfiniteLoading={this.props.isInfiniteLoading}
+                    loadingSpinnerDelegate={::this.renderLoadingIndicator()}
+                    onInfiniteLoad={this.props.onInfiniteLoad}
+                    ref="list"
                 >
                     {elements}
                 </Infinite>
