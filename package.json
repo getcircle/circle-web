@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/getcircle/circle-web",
   "devDependencies": {
-    "alt": "^0.16.10",
     "autoprefix": "^0.1.4",
     "babel": "^5.8.23",
     "babel-core": "^5.8.25",
