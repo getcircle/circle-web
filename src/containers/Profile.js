@@ -3,8 +3,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getAuthenticatedProfile } from '../reducers/authentication';
-import { getExtendedProfile, updateProfile } from '../actions/profiles';
-import { setManager } from '../actions/organizations';
+import { getExtendedProfile, updateProfile, setManager } from '../actions/profiles';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
