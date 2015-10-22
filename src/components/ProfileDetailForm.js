@@ -118,7 +118,7 @@ class ProfileDetailForm extends CSSComponent {
         this.mergeStateAndProps(this.props);
     }
 
-    currentSearchTimeout = null
+    currentManagerSearchTimeout = null
 
     directAttributesToStateMapping = {
         /*eslint-disable camelcase*/
@@ -468,13 +468,13 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     handleManagerQueryChange(event) {
-        if (this.currentSearchTimeout !== null) {
-            window.clearTimeout(this.currentSearchTimeout);
+        if (this.currentManagerSearchTimeout !== null) {
+            window.clearTimeout(this.currentManagerSearchTimeout);
         }
 
         let value = event.target.value;
 
-        this.currentSearchTimeout = window.setTimeout(() => {
+        this.currentManagerSearchTimeout = window.setTimeout(() => {
             this.loadSearchResults(value);
         }, 300);
         this.setState({managerQuery: value});
