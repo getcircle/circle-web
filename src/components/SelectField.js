@@ -86,10 +86,9 @@ class SelectField extends CSSComponent {
         let relatedTarget = event.relatedTarget;
         if (!!relatedTarget && relatedTarget.name === 'ListItem') {
             event.preventDefault();
-        }
-        else {
+        } else {
             this.setState({focused: false});
-            
+
             this.props.onBlur();
         }
     }

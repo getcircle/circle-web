@@ -425,8 +425,7 @@ class ProfileDetailForm extends CSSComponent {
                     return item
                 });
             }
-        }
-        else if (!!searchResults) {
+        } else if (!!searchResults) {
             items = searchResults.map((result, index) => {
                 const item = {
                     primaryText: result.profile.full_name,
