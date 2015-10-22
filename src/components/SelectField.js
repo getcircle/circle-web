@@ -21,6 +21,10 @@ class SelectField extends CSSComponent {
         inputStyle: PropTypes.object,
         isInfiniteLoading: PropTypes.bool,
         items: PropTypes.array,
+        listDividerStyle: PropTypes.object,
+        listItemHeight: PropTypes.number,
+        listStyle: PropTypes.object,
+        maxListHeight: PropTypes.number,
         onBlur: PropTypes.func,
         onInfiniteLoad: PropTypes.func,
         onInputChange: PropTypes.func,
@@ -41,29 +45,6 @@ class SelectField extends CSSComponent {
     classes() {
         return {
             'default': {
-                container: {
-                    width: '100%',
-                },
-                resultsList: {
-                    borderRadius: '0px 0px 3px 3px',
-                    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
-                    justifyContent: 'flex-start',
-                    textAlign: 'start',
-                    height: 'auto',
-                    width: 'calc(100% - 32px)',
-                    position: 'absolute',
-                    'margin-top': '-1px',
-                },
-                ListItem: {
-                    style: {
-                        textAlign: 'left',
-                    },
-                },
-                ListDivider: {
-                    style: {
-                        backgroundColor: 'rgba(0, 0, 0, .05)',
-                    },
-                },
                 loadingIndicatorContainer: {
                     display: 'flex',
                     justifyContent: 'center',
@@ -84,7 +65,7 @@ class SelectField extends CSSComponent {
 
     handleBlur(event) {
         let relatedTarget = event.relatedTarget;
-        if (!!relatedTarget && relatedTarget.name === 'ListItem') {
+        if (!!relatedTarget && relatedTarget.name === 'listItem') {
             event.preventDefault();
         } else {
             this.setState({focused: false});
@@ -104,7 +85,10 @@ class SelectField extends CSSComponent {
     renderLoadingIndicator() {
         if (this.props.isInfiniteLoading) {
             return (
-                <div is="loadingIndicatorContainer" key="loading-indicator">
+                <div
+                    is="loadingIndicatorContainer"
+                    key="loading-indicator"
+                >
                     <CircularProgress mode="indeterminate" size={0.5} />
                 </div>
             );
@@ -114,9 +98,8 @@ class SelectField extends CSSComponent {
     renderResult(item, index) {
         return (
             <ListItem
-                is="ListItem"
                 key={index}
-                name="ListItem"
+                name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
                 primaryText={item.primaryText}
             />
@@ -128,7 +111,9 @@ class SelectField extends CSSComponent {
         if (index !== 0) {
             element = (
                 <div>
-                    <ListDivider is="ListDivider" />
+                    <ListDivider
+                        style={{...this.props.listDividerStyle}}
+                    />
                     {this.renderResult(item)}
                 </div>
             );
@@ -141,21 +126,19 @@ class SelectField extends CSSComponent {
 
     renderMenu() {
         let containerHeight = 0;
+        let height = this.props.listItemHeight;
         const elementHeights = [];
         const elements = this.props.items.map((item, index) => {
-            let height = 50;
             containerHeight += height;
             elementHeights.push(height);
             return this.renderItemInMenu(item, index);
         });
 
-        containerHeight = Math.min(containerHeight, 150);
+        containerHeight = Math.min(containerHeight, this.props.maxListHeight);
 
         return (
             <Paper
-                style={{
-                    ...this.styles().resultsList
-                }}
+                style={{...this.props.listStyle}}
             >
                 <input
                     name={this.props.inputName}
@@ -186,7 +169,7 @@ class SelectField extends CSSComponent {
         }
 
         return (
-            <div is="container"
+            <div
                 onBlur={::this.handleBlur}
                 onFocus={::this.handleFocus}
             >

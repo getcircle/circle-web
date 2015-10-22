@@ -214,6 +214,19 @@ class ProfileDetailForm extends CSSComponent {
                     alignItems: 'center',
                     display: 'flex',
                 },
+                selectList: {
+                    borderRadius: '0px 0px 3px 3px',
+                    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
+                    justifyContent: 'flex-start',
+                    textAlign: 'start',
+                    height: 'auto',
+                    width: 'calc(100% - 32px)',
+                    position: 'absolute',
+                    'margin-top': '-1px',
+                },
+                selectListDivider: {
+                    backgroundColor: 'rgba(0, 0, 0, .05)',
+                },
                 sectionTitle: {
                     fontSize: 11,
                     letterSpacing: '1px',
@@ -615,6 +628,10 @@ class ProfileDetailForm extends CSSComponent {
                         inputStyle={{...this.styles().input}}
                         isInfiniteLoading={this.props.managerSelectProfilesLoading}
                         items={this.getManagerSelectItems()}
+                        listDividerStyle={{...this.styles().selectListDivider}}
+                        listItemHeight={50}
+                        listStyle={{...this.styles().selectList}}
+                        maxListHeight={150}
                         onBlur={::this.handleManagerSelectBlur}
                         onInfiniteLoad={::this.handleManagerSelectInfiniteLoad}
                         onInputChange={::this.handleManagerSelectInputChange}
