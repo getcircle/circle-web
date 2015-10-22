@@ -36,18 +36,18 @@ const cacheSelector = selectors.createImmutableSelector(
         cacheState,
         profilesState,
     ) => {
-        let profiles, profilesNextRequest;
+        let managerSelectProfiles, managerSelectProfilesNextRequest;
         const cache = cacheState.toJS();
         if (profilesState) {
             const ids = profilesState.get('ids').toJS();
             if (ids.length) {
-                profiles = retrieveProfiles(ids, cache);
+                managerSelectProfiles = retrieveProfiles(ids, cache);
             }
-            profilesNextRequest = profilesState.get('nextRequest');
+            managerSelectProfilesNextRequest = profilesState.get('nextRequest');
         }
         return Immutable.fromJS({
-            profiles,
-            profilesNextRequest,
+            managerSelectProfiles,
+            managerSelectProfilesNextRequest,
         });
     },
 );
@@ -68,8 +68,8 @@ const selector = selectors.createImmutableSelector(
         return {
             ...cacheState.toJS(),
             mediaUrl: mediaUploadState.get('mediaUrl'),
-            results: searchState.get('results').toJS(),
-            profilesloading: (
+            managerSelectResults: searchState.get('results').toJS(),
+            managerSelectProfilesLoading: (
                 profilesLoadingState || searchState.get('loading')
             ),
         };
@@ -86,13 +86,13 @@ class ProfileDetailForm extends CSSComponent {
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         manager: PropTypes.object,
+        managerSelectProfiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
+        managerSelectProfilesLoading: PropTypes.bool,
+        managerSelectProfilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        managerSelectResults: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
-        profiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
-        profilesLoading: PropTypes.bool,
-        profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
-        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
     }
 
     static defaultProps = {
@@ -410,19 +410,19 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     getCategoryResultsProfiles() {
-        const { profiles } = this.props;
-        if (profiles) {
-            return profiles.map((profile, index) => this.getProfileResult(profile, index));
+        const { managerSelectProfiles } = this.props;
+        if (managerSelectProfiles) {
+            return managerSelectProfiles.map((profile, index) => this.getProfileResult(profile, index));
         }
     }
 
     getSearchResults() {
-        const results = this.props.results[this.state.managerQuery];
+        const results = this.props.managerSelectResults[this.state.managerQuery];
         let items = [];
         if (this.state.managerQuery.length === 0) {
-            const { profiles } = this.props;
-            if (profiles) {
-                items = profiles.map((profile, index) => {
+            const { managerSelectProfiles } = this.props;
+            if (managerSelectProfiles) {
+                items = managerSelectProfiles.map((profile, index) => {
                     const item = {
                         primaryText: profile.full_name,
                         onTouchTap: this.handleManagerSelected.bind(this, profile)
@@ -464,7 +464,7 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     handleManagerSelectInfiniteLoad() {
-        this.props.dispatch(exploreActions.exploreProfiles(this.props.profilesNextRequest));
+        this.props.dispatch(exploreActions.exploreProfiles(this.props.managerSelectProfilesNextRequest));
     }
 
     handleManagerQueryChange(event) {
@@ -629,7 +629,7 @@ class ProfileDetailForm extends CSSComponent {
                         infiniteLoadBeginBottomOffset={100}
                         inputName="managerQuery"
                         inputStyle={{...this.styles().input}}
-                        isInfiniteLoading={this.props.profilesLoading}
+                        isInfiniteLoading={this.props.managerSelectProfilesLoading}
                         items={this.getSearchResults()}
                         onBlur={::this.handleManagerSelectBlur}
                         onInfiniteLoad={::this.handleManagerSelectInfiniteLoad}
