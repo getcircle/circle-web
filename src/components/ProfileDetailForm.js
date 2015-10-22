@@ -78,6 +78,7 @@ const selector = selectors.createImmutableSelector(
 
 @connect(selector)
 class ProfileDetailForm extends CSSComponent {
+
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
@@ -116,6 +117,8 @@ class ProfileDetailForm extends CSSComponent {
         this.handleManagerSelectInfiniteLoad();
         this.mergeStateAndProps(this.props);
     }
+
+    currentSearchTimeout = null
 
     directAttributesToStateMapping = {
         /*eslint-disable camelcase*/
@@ -331,8 +334,17 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     handleManagerQueryChange(event) {
-        this.loadSearchResults(event.target.value);
-        this.setState({managerQuery: event.target.value});
+
+        if (this.currentSearchTimeout !== null) {
+            window.clearTimeout(this.currentSearchTimeout);
+        }
+
+        let value = event.target.value;
+
+        this.currentSearchTimeout = window.setTimeout(() => {
+            this.loadSearchResults(value);
+        }, 300);
+        this.setState({managerQuery: value});
     }
 
     detectChangeAndEnableSaving() {
