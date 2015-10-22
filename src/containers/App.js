@@ -4,18 +4,21 @@ import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import {
+    backgroundColors,
     canvasColor,
 } from '../constants/styles';
 import { deviceResized } from '../actions/device';
 import { getAuthenticatedProfile } from '../reducers/authentication';
 import { refresh } from '../actions/authentication';
 import resizable from '../decorators/resizable';
+import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import tracker from '../utils/tracker';
 
 import CSSComponent from '../components/CSSComponent';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
+import Search from '../components/Search';
 
 const { AppCanvas } = mui;
 
@@ -76,6 +79,10 @@ class App extends CSSComponent {
         router: PropTypes.object.isRequired,
     }
 
+    state = {
+        focused: false,
+    }
+
     componentWillMount() {
         // refresh any cached authentication objects
         this.initTrackerSession();
@@ -123,8 +130,62 @@ class App extends CSSComponent {
                 canvasContainer: {
                     backgroundColor: canvasColor,
                 },
+                Search: {
+                    inputContainerStyle: {
+                        boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
+                    },
+                    style: {
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        flex: 1,
+                    },
+                },
+            },
+            focused: {
+                Search: {
+                    inputContainerStyle: {
+                        borderRadius: '0px',
+                    },
+                    focused: true,
+                    resultsListStyle: {
+                        height: 'initial',
+                        marginTop: 1,
+                        opacity: 1,
+                        position: 'absolute',
+                        ...backgroundColors.light,
+                    },
+                },
             },
         };
+    }
+
+    styles() {
+        return this.css({
+            focused: this.state.focused,
+        });
+    }
+
+    handleFocusSearch() {
+        this.setState({focused: true});
+    }
+
+    handleBlurSearch() {
+        this.setState({focused: false});
+    }
+
+    renderHeaderActionsContainer() {
+        return (
+            <Search
+                canExplore={false}
+                className="center-xs"
+                is="Search"
+                largerDevice={true}
+                onBlur={::this.handleBlurSearch}
+                onFocus={::this.handleFocusSearch}
+                organization={this.props.organization}
+                searchLocation={SEARCH_LOCATION.PAGE_HEADER}
+            />
+        );
     }
 
     render() {
@@ -134,7 +195,12 @@ class App extends CSSComponent {
         }
         let header;
         if (this.props.authenticated && this.props.displayHeader) {
-            header = <Header {...this.props} />;
+            header = (
+                <Header
+                    actionsContainer={this.renderHeaderActionsContainer()}
+                    {...this.props}
+                />
+            );
         }
         return (
             <div is="root">

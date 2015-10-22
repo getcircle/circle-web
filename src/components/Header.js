@@ -3,13 +3,10 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react/addons';
 
-import { backgroundColors } from '../constants/styles';
 import * as selectors from '../selectors';
 
 import CSSComponent from '../components/CSSComponent';
 import HeaderMenu from '../components/HeaderMenu';
-import Search from '../components/Search';
-import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
 const selector = createSelector(
     [selectors.searchSelector],
@@ -24,6 +21,7 @@ const selector = createSelector(
 class Header extends CSSComponent {
 
     static propTypes = {
+        actionsContainer: React.PropTypes.element,
         dispatch: PropTypes.func.isRequired,
         managesTeam: PropTypes.object,
         organization: PropTypes.object.isRequired,
@@ -37,21 +35,11 @@ class Header extends CSSComponent {
         }).isRequired,
     }
 
-    state = {
-        focused: false,
-    }
-
     shouldComponentUpdate(nextProps) {
         if (!nextProps.authenticated) {
             return false;
         }
         return true;
-    }
-
-    styles() {
-        return this.css({
-            focused: this.state.focused,
-        });
     }
 
     classes() {
@@ -97,44 +85,11 @@ class Header extends CSSComponent {
                     flexWrap: 'nowrap',
                     width: '100%',
                 },
-                Search: {
-                    inputContainerStyle: {
-                        boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
-                    },
-                    style: {
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        flex: 1,
-                    },
-                },
-                searchContainer: {
+                headerActionsContainer: {
                     display: 'flex',
                 },
             },
-            focused: {
-                Search: {
-                    inputContainerStyle: {
-                        borderRadius: '0px',
-                    },
-                    focused: true,
-                    resultsListStyle: {
-                        height: 'initial',
-                        marginTop: 1,
-                        opacity: 1,
-                        position: 'absolute',
-                        ...backgroundColors.light,
-                    },
-                },
-            },
         };
-    }
-
-    handleFocusSearch() {
-        this.setState({focused: true});
-    }
-
-    handleBlurSearch() {
-        this.setState({focused: false});
     }
 
     getImageUrl() {
@@ -155,25 +110,16 @@ class Header extends CSSComponent {
                         src={this.getImageUrl()}
                     />
                 </div>
-                <div className="col-xs-8 center-xs" is="searchContainer">
-                    <Search
-                        canExplore={false}
-                        className="center-xs"
-                        is="Search"
-                        largerDevice={true}
-                        onBlur={::this.handleBlurSearch}
-                        onFocus={::this.handleFocusSearch}
-                        organization={this.props.organization}
-                        searchLocation={SEARCH_LOCATION.PAGE_HEADER}
-                    />
+                <div className="col-xs-8 center-xs" is="headerActionsContainer">
+                    {this.props.actionsContainer}
                 </div>
                 <div className="col-xs-2 end-xs" is="menuContainer">
                     <HeaderMenu
                         dispatch={this.props.dispatch}
                         expandedView={false}
                         is="HeaderMenu"
-                        profile={this.props.profile}
                         managesTeam={this.props.managesTeam}
+                        profile={this.props.profile}
                     />
                 </div>
             </div>
