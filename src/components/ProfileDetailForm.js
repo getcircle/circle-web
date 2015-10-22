@@ -333,20 +333,6 @@ class ProfileDetailForm extends CSSComponent {
         this.setState(updatedState, () => this.detectChangeAndEnableSaving());
     }
 
-    handleManagerQueryChange(event) {
-
-        if (this.currentSearchTimeout !== null) {
-            window.clearTimeout(this.currentSearchTimeout);
-        }
-
-        let value = event.target.value;
-
-        this.currentSearchTimeout = window.setTimeout(() => {
-            this.loadSearchResults(value);
-        }, 300);
-        this.setState({managerQuery: value});
-    }
-
     detectChangeAndEnableSaving() {
         let dataChanged = this.getFieldsThatChanged().length > 0 || this.state.imageFiles.length > 0;
         this.refs.modal.setSaveEnabled(dataChanged);
@@ -479,6 +465,19 @@ class ProfileDetailForm extends CSSComponent {
 
     handleManagerSelectInfiniteLoad() {
         this.props.dispatch(exploreActions.exploreProfiles(this.props.profilesNextRequest));
+    }
+
+    handleManagerQueryChange(event) {
+        if (this.currentSearchTimeout !== null) {
+            window.clearTimeout(this.currentSearchTimeout);
+        }
+
+        let value = event.target.value;
+
+        this.currentSearchTimeout = window.setTimeout(() => {
+            this.loadSearchResults(value);
+        }, 300);
+        this.setState({managerQuery: value});
     }
 
     handleSaveTapped() {
