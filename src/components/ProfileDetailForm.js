@@ -451,7 +451,7 @@ class ProfileDetailForm extends CSSComponent {
         this.props.dispatch(exploreActions.exploreProfiles(this.props.managerSelectProfilesNextRequest));
     }
 
-    handleManagerQueryChange(event) {
+    handleManagerSelectInputChange(event) {
         if (this.currentManagerSearchTimeout !== null) {
             window.clearTimeout(this.currentManagerSearchTimeout);
         }
@@ -618,7 +618,7 @@ class ProfileDetailForm extends CSSComponent {
                         items={this.getManagerSelectItems()}
                         onBlur={::this.handleManagerSelectBlur}
                         onInfiniteLoad={::this.handleManagerSelectInfiniteLoad}
-                        onInputChange={::this.handleManagerQueryChange}
+                        onInputChange={::this.handleManagerSelectInputChange}
                         value={this.state.manager.full_name}
                     />
                 </form>
