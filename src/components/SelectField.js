@@ -3,8 +3,11 @@ import mui from 'material-ui';
 import Infinite from 'react-infinite';
 
 import t from '../utils/gettext';
+import { tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
+import DownArrowIcon from './DownArrowIcon';
+import IconContainer from './IconContainer';
 
 const {
     CircularProgress,
@@ -16,6 +19,8 @@ const {
 class SelectField extends CSSComponent {
 
     static propTypes = {
+        arrowIconContainerStyle: PropTypes.object,
+        arrowIconStyle: PropTypes.object,
         infiniteLoadBeginBottomOffset: PropTypes.number,
         inputName: PropTypes.string,
         inputStyle: PropTypes.object,
@@ -177,6 +182,12 @@ class SelectField extends CSSComponent {
                     readOnly={true}
                     style={this.props.inputStyle}
                     value={this.props.value}
+                />
+                <IconContainer
+                    IconClass={DownArrowIcon}
+                    iconStyle={{...this.props.arrowIconStyle}}
+                    stroke={tintColor}
+                    style={{...this.props.arrowIconContainerStyle}}
                 />
                 {menu}
             </div>

@@ -222,7 +222,20 @@ class ProfileDetailForm extends CSSComponent {
                     height: 'auto',
                     width: 'calc(100% - 32px)',
                     position: 'absolute',
-                    'margin-top': '-1px',
+                    'margin-top': '-9px',
+                },
+                selectListArrowIcon: {
+                    height: 8,
+                    width: 14,
+                },
+                selectListArrowIconContainer: {
+                    border: 0,
+                    height: 8,
+                    width: 14,
+                    position: 'relative',
+                    top: -25,
+                    left: 'calc(100% - 32px)',
+                    'pointer-events': 'none',
                 },
                 selectListDivider: {
                     backgroundColor: 'rgba(0, 0, 0, .05)',
@@ -623,6 +636,8 @@ class ProfileDetailForm extends CSSComponent {
                      />
                     <div is="sectionTitle">{t('Reports to')}</div>
                     <SelectField
+                        arrowIconContainerStyle={{...this.styles().selectListArrowIconContainer}}
+                        arrowIconStyle={{...this.styles().selectListArrowIcon}}
                         infiniteLoadBeginBottomOffset={100}
                         inputName="managerQuery"
                         inputStyle={{...this.styles().input}}
