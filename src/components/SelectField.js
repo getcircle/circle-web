@@ -28,6 +28,8 @@ class SelectField extends CSSComponent {
         items: PropTypes.array,
         listDividerStyle: PropTypes.object,
         listItemHeight: PropTypes.number,
+        listItemInnerDivStyle: PropTypes.object,
+        listItemPrimaryTextStyle: PropTypes.object,
         listStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
         onBlur: PropTypes.func,
@@ -103,10 +105,12 @@ class SelectField extends CSSComponent {
     renderResult(item, index) {
         return (
             <ListItem
+                innerDivStyle={{...this.props.listItemInnerDivStyle}}
                 key={index}
                 name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
                 primaryText={item.primaryText}
+                primaryTextStyle={{...this.props.listItemPrimaryTextStyle}}
             />
         );
     }

@@ -240,6 +240,13 @@ class ProfileDetailForm extends CSSComponent {
                 selectListDivider: {
                     backgroundColor: 'rgba(0, 0, 0, .05)',
                 },
+                selectListItemInnerDivStyle: {
+                    paddingLeft: 10,
+                },
+                selectListItemPrimaryTextStyle: {
+                    fontSize: 14,
+                    ...fontColors.dark,
+                },
                 sectionTitle: {
                     fontSize: 11,
                     letterSpacing: '1px',
@@ -645,6 +652,8 @@ class ProfileDetailForm extends CSSComponent {
                         items={this.getManagerSelectItems()}
                         listDividerStyle={{...this.styles().selectListDivider}}
                         listItemHeight={50}
+                        listItemInnerDivStyle={{...this.styles().selectListItemInnerDivStyle}}
+                        listItemPrimaryTextStyle={{...this.styles().selectListItemPrimaryTextStyle}}
                         listStyle={{...this.styles().selectList}}
                         maxListHeight={150}
                         onBlur={::this.handleManagerSelectBlur}
