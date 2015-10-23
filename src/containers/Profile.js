@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { getAuthenticatedProfile } from '../reducers/authentication';
-import { getExtendedProfile, updateProfile, setManager } from '../actions/profiles';
+import { getExtendedProfile, updateProfile } from '../actions/profiles';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
@@ -103,10 +103,11 @@ class Profile extends PureComponent {
     }
 
     onUpdateProfile(profile, manager) {
-        this.props.dispatch(updateProfile(profile));
-
         if (manager !== this.props.extendedProfile.manager) {
-            this.props.dispatch(setManager(manager.id, profile.id));
+            this.props.dispatch(updateProfile(profile, manager, this.props.extendedProfile.team));
+        }
+        else {
+            this.props.dispatch(updateProfile(profile));
         }
     }
 

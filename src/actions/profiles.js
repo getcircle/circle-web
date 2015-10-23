@@ -1,7 +1,6 @@
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/profile';
-import * as organizationRequests from '../services/organization';
 
 export function getProfiles(parameters, nextRequest) {
     return {
@@ -29,7 +28,7 @@ export function getExtendedProfile(profileId) {
     };
 }
 
-export function updateProfile(profile) {
+export function updateProfile(profile, manager, team) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -37,20 +36,7 @@ export function updateProfile(profile) {
                 types.UPDATE_PROFILE_SUCCESS,
                 types.UPDATE_PROFILE_FAILURE,
             ],
-            remote: () => requests.updateProfile(profile),
-        },
-    };
-}
-
-export function setManager(managerProfileId, profileId) {
-    return {
-        [SERVICE_REQUEST]: {
-            types: [
-                types.SET_MANAGER,
-                types.SET_MANAGER_SUCCESS,
-                types.SET_MANAGER_FAILURE,
-            ],
-            remote: () => organizationRequests.setManager(managerProfileId, profileId),
+            remote: () => requests.updateProfile(profile, manager, team),
         },
     };
 }

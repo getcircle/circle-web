@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { services } from 'protobufs';
+import * as organizationRequests from '../services/organization';
 
 import client from './client';
 import logger from '../utils/logger';
@@ -149,12 +150,23 @@ export function getTag(tagId) {
     });
 }
 
-export function updateProfile(profile) {
+export function updateProfile(profile, manager, team) {
     let request = new services.profile.actions.update_profile.RequestV1({profile: profile});
-    return new Promise((resolve, reject) => {
+    let updateProfile = new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => response.finish(resolve, reject, profile))
             .catch(error => reject(error));
     });
-}
 
+    if (!!manager) {
+        return new Promise((resolve, reject) => {
+            Promise.all([updateProfile, organizationRequests.setManager(profile.id, manager.id, team)])
+                .then(() => getExtendedProfile(profile.id))
+                .then(response => resolve(response))
+                .catch(error => reject(error));
+        });
+    }
+    else {
+        return updateProfile;
+    }
+}
