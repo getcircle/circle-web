@@ -84,7 +84,7 @@ class Editor extends CSSComponent {
                     textTransform: 'none',
                 },
                 headerActionButton: {
-                    background: 'transparent',
+                    backgroundColor: 'transparent',
                     borderRadius: '20px',
                     border: '1px solid #8598FF',
                 },
@@ -147,24 +147,17 @@ class Editor extends CSSComponent {
 
     getProgressMessage() {
         if (this.state.saving) {
-            return '(Saving...)';
+            return t('(Saving...)');
         } else if (this.state.statusId !== '') {
-            return '(Saved)';
+            return t('(Saved)');
         }
-
-        return '';
     }
 
     renderHeaderActionsContainer() {
         return (
             <div className="row middle-xs between-xs" is="headerActionContainer">
                 <div is="headerMessageText">
-                    <span>
-                        Draft
-                    </span>
-                    <span>
-                        {this.getProgressMessage()}
-                    </span>
+                    <span>Draft {this.getProgressMessage()}</span>
                 </div>
                 <div>
                     <FlatButton
