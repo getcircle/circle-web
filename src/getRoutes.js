@@ -93,7 +93,8 @@ const getRoutes = (history, store) => {
                     <Route
                         component={require('./containers/Editor')}
                         onEnter={applyMiddleware(
-                            displayHeader,
+                            requireAuth,
+                            hideHeader,
                         )}
                         path="/editor"
                     />
