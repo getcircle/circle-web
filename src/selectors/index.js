@@ -56,11 +56,12 @@ export const extendedProfilesSelector = state => state.extendedProfiles;
 export const extendedTeamsSelector = state => state.extendedTeams;
 export const locationMembersSelector = state => state.locationMembers;
 export const locationsSelector = state => state.locations;
+export const mediaUploadSelector = state => state.mediaUpload;
+export const postsSelector = state => state.posts;
 export const profilesSelector = state => state.profiles;
 export const responsiveSelector = state => state.responsive;
 export const routerSelector = state => state.router;
 export const routerParametersSelector = state => state.router.params;
 export const searchSelector = state => state.search;
+export const statusesSelector = state => state.statuses;
 export const teamMembersSelector = state => state.teamMembers;
-export const mediaUploadSelector = state => state.mediaUpload;
-export const statusesSelector = state => state.statuses
