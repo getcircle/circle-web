@@ -60,8 +60,8 @@ class Login extends CSSComponent {
 
     static contextTypes = {
         muiTheme: PropTypes.object.isRequired,
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }),
     }
 
@@ -83,7 +83,7 @@ class Login extends CSSComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
-            this.context.router.transitionTo(this.props.location.state.nextPathname || '/');
+            this.context.history.pushState(null, this.props.location.state.nextPathname || '/');
             return false;
         }
         return true;

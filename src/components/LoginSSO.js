@@ -20,7 +20,8 @@ class LoginSSO extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.object,
+        history: PropTypes.object,
+        location: PropTypes.object,
     }
 
     classes() {
@@ -50,8 +51,8 @@ class LoginSSO extends CSSComponent {
     }
 
     getNextPathname() {
-        if (this.context.router && this.context.router.state) {
-            return this.context.router.state.location.state.nextPathname;
+        if (this.context.location && this.context.location.state) {
+            return this.context.location.state.nextPathname;
         }
     }
 

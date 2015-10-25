@@ -1,9 +1,9 @@
-import { createSelectorCreator } from 'reselect';
+import { createSelectorCreator, defaultMemoize } from 'reselect';
 import Immutable from 'immutable';
 
 import { EXPLORE_TYPES } from '../actions/explore';
 
-export const createImmutableSelector = createSelectorCreator(Immutable.is);
+export const createImmutableSelector = createSelectorCreator(defaultMemoize, Immutable.is);
 
 export const authenticationSelector = state => state.authentication;
 
@@ -66,8 +66,7 @@ export const postSelector = state => state.post;
 export const postsSelector = state => state.posts;
 export const profilesSelector = state => state.profiles;
 export const responsiveSelector = state => state.responsive;
-export const routerSelector = state => state.router;
-export const routerParametersSelector = state => state.router.params;
+export const routerParametersSelector = (_, props) => props.params;
 export const searchSelector = state => state.search;
 export const teamMembersSelector = state => state.teamMembers;
 export const updateProfileSelector = state => state.updateProfile;

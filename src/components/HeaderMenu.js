@@ -35,8 +35,10 @@ class HeaderMenu extends CSSComponent {
     static contextTypes = {
         flags: PropTypes.object,
         mixins: PropTypes.object,
-        router: PropTypes.object,
         showCTAsInHeader: PropTypes.bool,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     static childContextTypes = {
@@ -148,11 +150,11 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewProfile(event) {
-        routeToProfile(this.context.router, this.props.profile);
+        routeToProfile(this.context.history, this.props.profile);
     }
 
     handleViewTeam(event) {
-        routeToTeam(this.context.router, this.props.managesTeam);
+        routeToTeam(this.context.history, this.props.managesTeam);
     }
 
     handleViewKnowledge(event) {
@@ -279,7 +281,7 @@ class HeaderMenu extends CSSComponent {
             profile,
             ...other,
         } = this.props;
-        
+
         return (
             <div {...other}>
                 <div

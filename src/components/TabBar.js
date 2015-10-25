@@ -1,12 +1,9 @@
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import keymirror from 'keymirror';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import { Tabs, Tab } from 'material-ui';
 
 import { routeToProfile } from '../utils/routes';
-import * as selectors from '../selectors';
 
 import CSSComponent from './CSSComponent';
 
@@ -15,27 +12,19 @@ const TABS = keymirror({
     USER_PROFILE: null,
 });
 
-const selector = createSelector(
-    [selectors.routerSelector],
-    (routerState) => {
-        return {
-            pathname: routerState.pathname,
-        }
-    }
-)
-
-@connect(selector)
 class TabBar extends CSSComponent {
 
     static propTypes = {
-        pathname: PropTypes.string.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         style: PropTypes.object,
     }
 
     static contextTypes = {
         mixins: PropTypes.object,
-        router: PropTypes.object,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
+        }),
+        location: PropTypes.object,
     }
 
     state = {
@@ -43,11 +32,11 @@ class TabBar extends CSSComponent {
     }
 
     componentWillMount() {
-        this.resolveTabValue(this.props);
+        this.resolveTabValue();
     }
 
     componentWillReceiveProps(nextProps) {
-        this.resolveTabValue(nextProps);
+        this.resolveTabValue();
     }
 
     classes() {
@@ -78,8 +67,8 @@ class TabBar extends CSSComponent {
         return false;
     }
 
-    resolveTabValue(props) {
-        const { pathname } = props;
+    resolveTabValue() {
+        const { pathname } = this.context.location;
         if (pathname === '/') {
             this.setState({tabValue: TABS.SEARCH});
         } else if (this.isUserProfilePath(pathname)) {
@@ -90,13 +79,12 @@ class TabBar extends CSSComponent {
     }
 
     handleChange(value, event, tab) {
-        const { transitionTo } = this.context.router;
         switch(value) {
         case TABS.SEARCH:
-            transitionTo('/');
+            this.context.history.pushState(null, '/');
             break;
         case TABS.USER_PROFILE:
-            routeToProfile(this.context.router, this.props.profile);
+            routeToProfile(this.context.history, this.props.profile);
             break;
         }
         this.setState({tabValue: value});

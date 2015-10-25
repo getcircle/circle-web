@@ -1,15 +1,15 @@
 const NEXT_PATHNAME_KEY = 'n:p';
 
-export function routeToProfile(router, profile) {
-    router.transitionTo(`/profile/${profile.id}`);
+export function routeToProfile(history, profile) {
+    history.pushState(null, `/profile/${profile.id}`);
 }
 
-export function routeToTeam(router, team) {
-    router.transitionTo(`/team/${team.id}`);
+export function routeToTeam(history, team) {
+    history.pushState(null, `/team/${team.id}`);
 }
 
-export function routeToLocation(router, location) {
-    router.transitionTo(`/location/${location.id}`);
+export function routeToLocation(history, location) {
+    history.pushState(null, `/location/${location.id}`);
 }
 
 export function routeToEditPost(router, post) {

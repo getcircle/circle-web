@@ -34,8 +34,8 @@ class AuthorizationHandler extends CSSComponent {
 
     static contextTypes = {
         muiTheme: PropTypes.object.isRequired,
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            replaceState: PropTypes.func.isRequired,
         }),
     }
 
@@ -57,7 +57,7 @@ class AuthorizationHandler extends CSSComponent {
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated || nextProps.authError) {
             const nextPathname = getNextPathname() || '/';
-            this.context.router.replaceWith(nextPathname);
+            this.context.history.replaceState(null, nextPathname);
             return false;
         }
         return true;
@@ -70,7 +70,7 @@ class AuthorizationHandler extends CSSComponent {
         if (error === 'PROFILE_NOT_FOUND') {
             params = {accessRequest: true, userInfo};
         }
-        this.context.router.replaceWith('/login', params);
+        this.context.history.replaceState(null, '/login', params);
     }
 
     handleOktaAuthorization(query) {

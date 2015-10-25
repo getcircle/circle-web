@@ -17,8 +17,8 @@ class Header extends CSSComponent {
     static contextTypes = {
         flags: PropTypes.object,
         mixins: PropTypes.object.isRequired,
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
         showCTAsInHeader: PropTypes.bool,
     }
@@ -88,7 +88,7 @@ class Header extends CSSComponent {
     }
 
     renderHeader() {
-        const { router } = this.context;
+        const { history } = this.context;
         let actionsContainerClasses = 'col-xs-4 col-sm-6 col-md-7 col-lg-8 center-xs';
         let menuContainerClasses = 'col-xs-6 col-sm-4 col-md-3 col-lg-2 end-xs';
 
@@ -102,7 +102,7 @@ class Header extends CSSComponent {
                 <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2" is="logoContainer">
                     <img
                         is="image"
-                        onTouchTap={() => router.transitionTo('/')}
+                        onTouchTap={() => history.pushState(null, '/')}
                         src={this.getImageUrl()}
                     />
                 </div>

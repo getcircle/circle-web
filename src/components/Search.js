@@ -216,8 +216,8 @@ class Search extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
         mixins: PropTypes.object.isRequired,
     }
@@ -570,7 +570,7 @@ class Search extends CSSComponent {
             leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: profile.full_name,
             secondaryText: `${profile.display_title}`,
-            onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
+            onTouchTap: routes.routeToProfile.bind(null, this.context.history, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
             ...trackingAttributes,
@@ -598,7 +598,7 @@ class Search extends CSSComponent {
             leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
             primaryText: team.display_name,
             secondaryText: subTextParts.join(', '),
-            onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
+            onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
             type: RESULT_TYPES.TEAM,
             instance: team,
             ...trackingAttributes
@@ -613,7 +613,7 @@ class Search extends CSSComponent {
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
             primaryText: location.name,
             secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
-            onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
+            onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
             ...trackingAttributes

@@ -15,8 +15,8 @@ class LoginRequestAccess extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }),
     }
 
@@ -80,7 +80,7 @@ class LoginRequestAccess extends CSSComponent {
                     <div is="retrySection">
                         <a
                             is="retry"
-                            onTouchTap={() => {this.context.router.transitionTo('/login')}}
+                            onTouchTap={() => {this.context.history.pushState(null, '/login')}}
                         >
                             {t('Try Again')}
                         </a>

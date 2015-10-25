@@ -15,14 +15,14 @@ class Billing extends CSSComponent {
 
     static contextTypes = {
         muiTheme: PropTypes.object.isRequired,
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }),
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
-            this.context.router.transitionTo(this.props.location.nextPathname || '/');
+            this.context.history.pushState(null, this.props.location.nextPathname || '/');
             return false;
         }
         return true;

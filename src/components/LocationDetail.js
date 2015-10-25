@@ -22,8 +22,8 @@ class LocationDetail extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -65,7 +65,7 @@ class LocationDetail extends CSSComponent {
                     is="section"
                     itemsPerColumn={1}
                     members={office.points_of_contact}
-                    onClickMember={routeToProfile.bind(null, this.context.router)}
+                    onClickMember={routeToProfile.bind(null, this.context.history)}
                     pageType={PAGE_TYPE.LOCATION_POINTS_OF_CONTACT}
                     title={title}
                 />
@@ -91,7 +91,7 @@ class LocationDetail extends CSSComponent {
                     largerDevice={this.props.largerDevice}
                     members={members}
                     membersLoadMore={this.props.membersLoadMore}
-                    onClickMember={routeToProfile.bind(null, this.context.router)}
+                    onClickMember={routeToProfile.bind(null, this.context.history)}
                     pageType={PAGE_TYPE.LOCATION_MEMBERS}
                     title={title}
                     viewAllAttribute={services.search.containers.search.AttributeV1.LOCATION_ID}
