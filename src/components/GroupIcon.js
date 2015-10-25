@@ -21,11 +21,11 @@ class GroupIcon extends PureComponent {
             ...other,
         } = this.props;
         return (
-            <svg {...other} width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <svg {...other} width="40px" height="40px" viewBox="0 0 40 40">
                 <title>Rectangle 430 Copy 2</title>
                 <desc>Created with Sketch.</desc>
                 <defs></defs>
-                <g id="v1-Final" stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+                <g id="v1-Final" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g id="Group-Copy-17" transform="translate(8.000000, 11.000000)" stroke={stroke} strokeWidth={strokeWidth}>
                         <circle id="Oval-66-Copy-4" cx="8" cy="4" r="4"></circle>
                         <circle id="Oval-66-Copy-6" cx="18.5" cy="5.5" r="3.5"></circle>

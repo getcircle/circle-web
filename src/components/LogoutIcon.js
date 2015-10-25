@@ -18,9 +18,9 @@ class LogoutIcon extends PureComponent {
             ...other,
         } = this.props;
         return (
-            <svg {...other} width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <svg {...other} width="28px" height="28px" viewBox="0 0 28 28">
                 <defs></defs>
-                <g id="Feedback-Incorporated---AW-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Feedback-Incorporated---AW-2" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g id="icons" transform="translate(-446.000000, -994.000000)">
                         <rect id="Rectangle-1587-Copy-2" opacity="0" fill="#2A2A2A" x="-1" y="781" width="1123" height="766"></rect>
                         <g id="logout" transform="translate(452.000000, 999.000000)" fill={stroke}>

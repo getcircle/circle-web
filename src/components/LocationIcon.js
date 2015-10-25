@@ -18,7 +18,7 @@ class LocationIcon extends PureComponent {
             ...other,
         } = this.props;
         return (
-            <svg {...other} width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <svg {...other} width="40px" height="40px" viewBox="0 0 40 40">
                 <title>Rectangle 430 Copy</title>
                 <desc>Created with Sketch.</desc>
                 <defs></defs>
