@@ -1,6 +1,7 @@
 import mui from 'material-ui';
 import expect from 'expect';
-import React from 'react/addons';
+import React from 'react';
+import TestUtils from 'react-addons-test-utils';
 
 import { AUTH_BACKENDS } from '../../src/services/user';
 
@@ -11,8 +12,6 @@ const {
     RaisedButton,
     TextField,
 } = mui;
-
-const { TestUtils } = React.addons;
 
 function setup(overrides) {
     const defaults = {

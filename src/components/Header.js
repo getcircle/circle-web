@@ -1,5 +1,5 @@
 import { AppBar } from 'material-ui';
-import React, { PropTypes } from 'react/addons';
+import React, { PropTypes } from 'react';
 
 import CSSComponent from '../components/CSSComponent';
 import HeaderMenu from '../components/HeaderMenu';

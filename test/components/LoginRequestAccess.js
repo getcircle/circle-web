@@ -1,12 +1,11 @@
 import mui from 'material-ui';
 import expect from 'expect';
-import React from 'react/addons';
+import React from 'react';
+import TestUtils from 'react-addons-test-utils';
 
 import LoginRequestAccess from '../../src/components/LoginRequestAccess';
 
 const { RaisedButton } = mui;
-
-const { TestUtils } = React.addons;
 
 function setup(overrides) {
     const defaults = {

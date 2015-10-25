@@ -1,13 +1,12 @@
 import expect from 'expect';
-import React from 'react/addons';
+import React from 'react';
+import TestUtils from 'react-addons-test-utils';
 
 import { AUTH_BACKENDS } from '../../src/services/user';
 
 import LoginForm from '../../src/components/LoginForm';
 import LoginInternal from '../../src/components/LoginInternal';
 import LoginSSO from '../../src/components/LoginSSO';
-
-const { TestUtils } = React.addons;
 
 function setup(overrides) {
     const defaults = {

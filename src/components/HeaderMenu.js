@@ -2,7 +2,8 @@ import { decorate } from 'react-mixin';
 import ClickAwayable from 'material-ui/lib/mixins/click-awayable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import React, { PropTypes } from 'react/addons';
+import React, { PropTypes } from 'react';
+import TransitionGroup from 'react-addons-css-transition-group';
 
 import autoBind from '../utils/autoBind';
 import CurrentTheme from '../utils/ThemeManager';
@@ -17,8 +18,6 @@ import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from '../components/RoundedButton';
-
-const { TransitionGroup } = React.addons;
 
 const BACKGROUND_COLOR = 'rgb(42, 42, 42)';
 
@@ -280,7 +279,7 @@ class HeaderMenu extends CSSComponent {
             profile,
             ...other,
         } = this.props;
-
+        
         return (
             <div {...other}>
                 <div

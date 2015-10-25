@@ -1,27 +1,16 @@
-import { combineReducers } from 'redux';
+import createHistory from 'history/lib/createBrowserHistory';
 import { Provider } from 'react-redux';
-import React, { PropTypes } from 'react';
-import { routerStateReducer } from 'redux-react-router';
+import React, { Component, PropTypes } from 'react';
+import { Router } from 'react-router';
 
 import createStore from './createStore';
 import CSSMixins from './CSSMixins';
 import getRoutes from './getRoutes';
-import * as reducers from './reducers';
 import CurrentTheme from './utils/ThemeManager';
 
-import PureComponent from './components/PureComponent';
+const store = createStore();
 
-const reducer = combineReducers({
-    router: routerStateReducer,
-    ...reducers,
-});
-const store = createStore(reducer);
-
-export default class Root extends PureComponent {
-
-    static propTypes = {
-        history: PropTypes.object.isRequired,
-    }
+export default class Root extends Component {
 
     static childContextTypes = {
         mixins: PropTypes.object,
@@ -36,10 +25,9 @@ export default class Root extends PureComponent {
     }
 
     render() {
-        const { history } = this.props;
         const elements = [
             <Provider key="provider" store={store}>
-                {getRoutes.bind(null, history, store)}
+                <Router history={createHistory()} routes={getRoutes(store)} />
             </Provider>
         ];
         if (__DEVTOOLS__) {
