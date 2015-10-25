@@ -31,10 +31,6 @@ class Editor extends CSSComponent {
         body: '',
     }
 
-    componentWillUpdate(nextProps, nextState) {
-        this.saveData();
-    }
-
     saveTimeout = null
 
     classes() {
@@ -93,13 +89,13 @@ class Editor extends CSSComponent {
     handleTitleChange(event) {
         this.setState({
             title: event.target.value,
-        });
+        }, () => this.saveData());
     }
 
     handleBodyChange(bodyText) {
         this.setState({
             body: bodyText,
-        });
+        }, () => this.saveData());
     }
 
     // Render Methods
@@ -153,7 +149,6 @@ class Editor extends CSSComponent {
             </DetailContent>
         );
     }
-
 }
 
 export default Editor;

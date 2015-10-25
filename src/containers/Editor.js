@@ -7,26 +7,30 @@ import logger from '../utils/logger';
 import { resetScroll } from '../utils/window';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
-import { updateProfile } from '../actions/profiles';
+import { createPost, updatePost } from '../actions/posts';
 
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import { default as EditorComponent } from '../components/Editor';
 import Header from '../components/Header';
 
-const { ProfileStatusV1 } = services.profile.containers;
+const { PostV1, PostStateV1 } = services.post.containers;
 
 const selector = selectors.createImmutableSelector(
     [
         selectors.authenticationSelector,
+        selectors.postsSelector,
         selectors.responsiveSelector
     ],
-    (authenticationState, responsiveState) => {
+    (authenticationState, postsState, responsiveState) => {
+        console.log('State');
+        console.log(postsState.get('draftPost'));
         return {
             authenticatedProfile: authenticationState.get('profile'),
             largerDevice: responsiveState.get('largerDevice'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
+            post: postsState.get('draftPost'),
             organization: authenticationState.get('organization'),
         }
     }
@@ -40,6 +44,7 @@ class Editor extends CSSComponent {
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         mobileOS: PropTypes.bool.isRequired,
+        post: PropTypes.instanceOf(services.post.containers.PostV1),
     }
 
     static childContextTypes = {
@@ -48,8 +53,6 @@ class Editor extends CSSComponent {
     }
 
     state = {
-        // TODO: Remove TEMP CODE
-        statusId: '',
         saving: false,
     }
 
@@ -65,13 +68,9 @@ class Editor extends CSSComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        if (nextProps.authenticatedProfile &&
-            nextProps.authenticatedProfile.status &&
-            nextProps.authenticatedProfile.status.id) {
-            this.setState({
-                statusId: nextProps.authenticatedProfile.status.id,
-                saving: false,
-            });
+        if (nextProps.post) {
+            this.postCreationInProgress = false;
+            this.setState({saving: false});
         }
     }
 
@@ -100,45 +99,44 @@ class Editor extends CSSComponent {
         }
     }
 
+    postCreationInProgress = false
+
     onSavePost(title, body) {
         logger.log('Saving Post');
         logger.log(body);
 
-        if (body === '') {
+        if (title.trim() === '' || body.trim() === '') {
             return;
         }
 
-        // TODO: Remove TEMP CODE
-        const {
-            authenticatedProfile,
-        } = this.props;
+        // TODO: Remove temp code
+        // Don't save until post creation is completed
+        if (this.postCreationInProgress) {
+            return;
+        }
 
-        let profile = authenticatedProfile;
-        let profileStatusV1;
+        this.setState({saving: true});
 
-        this.setState({
-            saving: true,
-        });
-
-        if (this.state.statusId === '') {
-            logger.log('CREATING NEW STATUS');
-            profileStatusV1 = new ProfileStatusV1({
-                value: body,
+        if (!this.props.post) {
+            logger.log('CREATING NEW POST');
+            this.postCreationInProgress = true;
+            let postV1 = new PostV1({
+                content: body,
+                title: title,
+                state: PostStateV1.DRAFT,
             });
+
+            this.props.dispatch(createPost(postV1));
         }
         else {
-            logger.log('SAVING EXISTING STATUS');
-            profileStatusV1 = Object.assign({}, profile.status, {
-                value: body,
-                id: this.state.statusId
+            logger.log('SAVING EXISTING POST');
+            let postV1 = Object.assign({}, this.props.post, {
+                content: body,
+                title: title,
+                state: PostStateV1.DRAFT,
             });
+            this.props.dispatch(updatePost(postV1));
         }
-
-        let updatedProfile = Object.assign({}, profile, {
-            status: profileStatusV1,
-        });
-
-        this.props.dispatch(updateProfile(updatedProfile));
     }
 
     onPublishButtonTapped() {
@@ -148,7 +146,7 @@ class Editor extends CSSComponent {
     getProgressMessage() {
         if (this.state.saving) {
             return t('(Saving...)');
-        } else if (this.state.statusId !== '') {
+        } else if (this.props.post) {
             return t('(Saved)');
         }
     }
