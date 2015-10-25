@@ -16,6 +16,10 @@ export function routeToStatus(router, status) {
     router.transitionTo(`/status/${status.id}`);
 }
 
+export function routeToPosts(router) {
+    router.transitionTo('/');
+}
+
 export function routeToURL(url, nextPathname = null) {
     if (nextPathname !== null) {
         localStorage.setItem(NEXT_PATHNAME_KEY, nextPathname);

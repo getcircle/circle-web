@@ -17,6 +17,11 @@ class Editor extends CSSComponent {
     static propTypes = {
         largerDevice: PropTypes.bool.isRequired,
         onSaveCallback: PropTypes.func.isRequired,
+        post: PropTypes.instanceOf(services.post.containers.PostV1),
+    }
+
+    static defaultProps = {
+        post: null,
     }
 
     static contextTypes = {
@@ -29,6 +34,14 @@ class Editor extends CSSComponent {
     state = {
         title: '',
         body: '',
+    }
+
+    componentWillMount() {
+        this.mergeStateAndProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+        this.mergeStateAndProps(nextProps);
     }
 
     saveTimeout = null
@@ -72,6 +85,31 @@ class Editor extends CSSComponent {
                 },
             },
         };
+    }
+
+    /**
+     * Merges editable or dynamic properties into state.
+     *
+     * This is primarily done to support editing.
+     * All initial and updated values are captured in the state and these are read by elements for rendering.
+     * This also makes the values in props a reliable restore point for cancellation.
+     *
+     * @param {Object} props
+     * @return {Void}
+     */
+    mergeStateAndProps(props) {
+        // Update state with props only if this the intial load
+        // or if the post object is changed.
+        // This is to ensure we do not over-write the real time state changes caused by
+        // user typing their post
+        if (props.post && (!this.props.post || this.props.post.id !== props.post.id)) {
+            let updatedState = {
+                title: props.post.title,
+                body: props.post.content,
+            };
+
+            this.setState(updatedState);
+        }
     }
 
     saveData() {

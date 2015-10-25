@@ -3,11 +3,12 @@ import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { createPost, updatePost } from '../actions/posts';
 import logger from '../utils/logger';
 import { resetScroll } from '../utils/window';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
-import { createPost, updatePost } from '../actions/posts';
+import { routeToPosts } from '../utils/routes';
 
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
@@ -45,6 +46,12 @@ class Editor extends CSSComponent {
         largerDevice: PropTypes.bool.isRequired,
         mobileOS: PropTypes.bool.isRequired,
         post: PropTypes.instanceOf(services.post.containers.PostV1),
+    }
+
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     static childContextTypes = {
@@ -123,7 +130,6 @@ class Editor extends CSSComponent {
             let postV1 = new PostV1({
                 content: body,
                 title: title,
-                state: PostStateV1.DRAFT,
             });
 
             this.props.dispatch(createPost(postV1));
@@ -133,14 +139,22 @@ class Editor extends CSSComponent {
             let postV1 = Object.assign({}, this.props.post, {
                 content: body,
                 title: title,
-                state: PostStateV1.DRAFT,
             });
             this.props.dispatch(updatePost(postV1));
         }
     }
 
     onPublishButtonTapped() {
+        // TODO: Send error message back
+        if (!this.props.post) {
+            return;
+        }
 
+        let postV1 = Object.assign({}, this.props.post, {
+            state: PostStateV1.LISTED,
+        });
+        this.props.dispatch(updatePost(postV1));
+        routeToPosts(this.context.router);
     }
 
     getProgressMessage() {
@@ -173,6 +187,7 @@ class Editor extends CSSComponent {
         const {
             authenticatedProfile,
             largerDevice,
+            post,
         } = this.props;
 
         return (
@@ -185,6 +200,7 @@ class Editor extends CSSComponent {
                 <EditorComponent
                     largerDevice={largerDevice}
                     onSaveCallback={::this.onSavePost}
+                    post={post}
                 />
             </Container>
         );
