@@ -107,8 +107,13 @@ class Editor extends CSSComponent {
     render() {
         let author = this.context.authenticatedProfile;
         let editorOptions = {
+            autoLink: true,
+            imageDragging: false,
             placeholder: {
-                text: 'Type your text',
+                text: t('Type your text'),
+            },
+            toolbar: {
+                buttons: ['bold', 'italic', 'anchor'],
             },
         };
 
