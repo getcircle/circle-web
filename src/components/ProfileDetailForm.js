@@ -472,7 +472,7 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     handleManagerSelected(manager) {
-        this.setState({manager: manager}, () => this.detectChangeAndEnableSaving());
+        this.setState({manager}, () => this.detectChangeAndEnableSaving());
     }
 
     handleManagerSelectBlur() {
