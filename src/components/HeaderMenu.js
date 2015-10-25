@@ -3,7 +3,7 @@ import ClickAwayable from 'material-ui/lib/mixins/click-awayable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react';
-import TransitionGroup from 'react-addons-css-transition-group';
+import ReactTransitionGroup from 'react-addons-transition-group';
 
 import autoBind from '../utils/autoBind';
 import CurrentTheme from '../utils/ThemeManager';
@@ -296,9 +296,9 @@ class HeaderMenu extends CSSComponent {
                     {this.renderDownArrow()}
                 </div>
                 <div className="row start-xs">
-                    <TransitionGroup>
+                    <ReactTransitionGroup>
                         {this.renderMenu()}
-                    </TransitionGroup>
+                    </ReactTransitionGroup>
                 </div>
             </div>
         );
