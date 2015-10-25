@@ -53,7 +53,6 @@ class SelectField extends CSSComponent {
         return {
             'default': {
                 loadingIndicatorContainer: {
-                    display: 'flex',
                     justifyContent: 'center',
                 },
             }
@@ -89,11 +88,16 @@ class SelectField extends CSSComponent {
     renderLoadingIndicator() {
         if (this.props.isInfiniteLoading) {
             return (
-                <div
-                    is="loadingIndicatorContainer"
-                    key="loading-indicator"
-                >
-                    <CircularProgress mode="indeterminate" size={0.5} />
+                <div className="row center-xs">
+                    <div className="col-xs">
+                        <div
+                            className="box"
+                            is="loadingIndicatorContainer"
+                            key="loading-indicator"
+                        >
+                            <CircularProgress mode="indeterminate" size={0.5} />
+                        </div>
+                    </div>
                 </div>
             );
         }
