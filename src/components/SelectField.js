@@ -61,6 +61,7 @@ class SelectField extends CSSComponent {
     }
 
     handleChange(event) {
+        // Reset scroll position of the list when search query changes
         this.refs.list.getDOMNode().scrollTop = 0;
 
         this.props.onInputChange(event);
