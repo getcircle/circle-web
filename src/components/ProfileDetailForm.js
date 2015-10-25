@@ -559,6 +559,7 @@ class ProfileDetailForm extends CSSComponent {
 
     renderContent() {
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
+        let selectFieldValue = !!this.state.manager ? this.state.manager.full_name : '';
 
         return (
             <div className="col-xs center-xs" is="formContainer">
@@ -659,7 +660,7 @@ class ProfileDetailForm extends CSSComponent {
                         onBlur={::this.handleManagerSelectBlur}
                         onInfiniteLoad={::this.handleManagerSelectInfiniteLoad}
                         onInputChange={::this.handleManagerSelectInputChange}
-                        value={this.state.manager.full_name}
+                        value={selectFieldValue}
                     />
                 </form>
             </div>
