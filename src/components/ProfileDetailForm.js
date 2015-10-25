@@ -471,8 +471,8 @@ class ProfileDetailForm extends CSSComponent {
         return items
     }
 
-    handleManagerSelected(member) {
-        this.setState({manager: member}, () => this.detectChangeAndEnableSaving());
+    handleManagerSelected(manager) {
+        this.setState({manager: manager}, () => this.detectChangeAndEnableSaving());
     }
 
     handleManagerSelectBlur() {
