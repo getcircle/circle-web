@@ -197,7 +197,7 @@ class Search extends CSSComponent {
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         recents: PropTypes.arrayOf(PropTypes.object),
-        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
+        results: PropTypes.object,
         resultsHeight: PropTypes.number,
         resultsListStyle: PropTypes.object,
         searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
