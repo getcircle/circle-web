@@ -85,7 +85,7 @@ class ProfileDetailForm extends CSSComponent {
         ),
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
-        manager: PropTypes.object,
+        manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         managerSelectProfiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         managerSelectProfilesLoading: PropTypes.bool,
         managerSelectProfilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
