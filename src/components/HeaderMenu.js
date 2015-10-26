@@ -7,7 +7,7 @@ import React, { PropTypes } from 'react/addons';
 import autoBind from '../utils/autoBind';
 import CurrentTheme from '../utils/ThemeManager';
 import { logout } from '../actions/authentication';
-import { routeToProfile, routeToTeam } from '../utils/routes';
+import { routeToPosts, routeToProfile, routeToTeam } from '../utils/routes';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
@@ -140,6 +140,10 @@ class HeaderMenu extends CSSComponent {
         routeToTeam(this.context.router, this.props.managesTeam);
     }
 
+    handleViewKnowledge(event) {
+        routeToPosts(this.context.router);
+    }
+
     hideMenu(event) {
         this.setState({menuDisplayed: false});
     }
@@ -163,6 +167,12 @@ class HeaderMenu extends CSSComponent {
                         primaryText={t('My Profile')}
                     />
                     {this.renderMyTeamMenuItem()}
+                    <MenuItem
+                        desktop={true}
+                        innerDivStyle={{...this.styles().menuItemDivStyle}}
+                        onTouchTap={::this.handleViewKnowledge}
+                        primaryText={t('My Knowledge')}
+                    />
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
