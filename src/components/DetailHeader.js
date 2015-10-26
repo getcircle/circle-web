@@ -6,7 +6,7 @@ import CSSComponent from './CSSComponent';
 class DetailHeader extends CSSComponent {
 
     static propTypes = {
-        children: PropTypes.arrayOf(PropTypes.element),
+        children: PropTypes.node,
         img: PropTypes.string,
         largerDevice: PropTypes.bool.isRequired,
         style: PropTypes.object,

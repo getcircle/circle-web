@@ -20,7 +20,7 @@ const common = {
 class Dialog extends CSSComponent {
 
     static propTypes = {
-        children: PropTypes.object,
+        children: PropTypes.node,
         dialogDismissLabel: PropTypes.string,
         dialogSaveLabel: PropTypes.string,
         largerDevice: PropTypes.object.isRequired,

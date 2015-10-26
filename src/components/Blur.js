@@ -5,7 +5,7 @@ import CSSComponent from './CSSComponent';
 class Blur extends CSSComponent {
 
     static propTypes = {
-        children: PropTypes.arrayOf(PropTypes.element),
+        children: PropTypes.node,
         className: PropTypes.string,
         img: PropTypes.string,
         style: PropTypes.object,

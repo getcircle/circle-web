@@ -10,7 +10,7 @@ class Card extends CSSComponent {
 
     // TODO: Add custom validator for editing related props
     static propTypes = {
-        children: PropTypes.object,
+        children: PropTypes.node,
         contentStyle: PropTypes.object,
         editTitle: PropTypes.string,
         isEditable: PropTypes.bool,

@@ -9,7 +9,7 @@ class CardFooter extends CSSComponent {
 
     static propTypes = {
         actionText: PropTypes.string,
-        children: PropTypes.arrayOf(PropTypes.element),
+        children: PropTypes.node,
         onClick: PropTypes.func,
     }
 

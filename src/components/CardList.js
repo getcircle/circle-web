@@ -6,7 +6,7 @@ import CSSComponent from './CSSComponent';
 class CardList extends CSSComponent {
 
     static propTypes = {
-        children: PropTypes.object,
+        children: PropTypes.node,
         className: PropTypes.string,
         style: PropTypes.object,
     }
