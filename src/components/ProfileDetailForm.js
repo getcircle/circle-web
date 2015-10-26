@@ -222,7 +222,7 @@ class ProfileDetailForm extends CSSComponent {
                     height: 'auto',
                     width: 'calc(100% - 32px)',
                     position: 'absolute',
-                    'margin-top': '-9px',
+                    marginTop: '-9px',
                 },
                 selectListArrowIcon: {
                     height: 8,
@@ -235,7 +235,7 @@ class ProfileDetailForm extends CSSComponent {
                     position: 'relative',
                     top: -25,
                     left: 'calc(100% - 32px)',
-                    'pointer-events': 'none',
+                    pointerEvents: 'none',
                 },
                 selectListDivider: {
                     backgroundColor: 'rgba(0, 0, 0, .05)',
