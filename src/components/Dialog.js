@@ -23,7 +23,7 @@ class Dialog extends CSSComponent {
         children: PropTypes.node,
         dialogDismissLabel: PropTypes.string,
         dialogSaveLabel: PropTypes.string,
-        largerDevice: PropTypes.object.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         onDismiss: PropTypes.func,
         onSave: PropTypes.func,
         pageType: PropTypes.string.isRequired,

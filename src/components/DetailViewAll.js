@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 
 import Dialog from './Dialog';
 import CSSComponent from './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
 import Search from './Search';
 
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
@@ -18,16 +19,16 @@ class DetailViewAll extends CSSComponent {
 
     static propTypes = {
         filterPlaceholder: PropTypes.string,
-        items: PropTypes.arrayOf(PropTypes.oneOf(
+        items: PropTypes.arrayOf(PropTypes.oneOfType([
             services.profile.containers.ProfileV1,
             services.organization.containers.TeamV1,
-        )),
+        ])),
         itemsLoadMore: PropTypes.func,
-        largerDevice: PropTypes.object.isRequired,
+        largerDevice: PropTypes.bool.isRequired,
         pageType: PropTypes.string.isRequired,
-        searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
+        searchAttribute: InternalPropTypes.SearchAttributeV1,
         searchAttributeValue: PropTypes.string,
-        searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
+        searchCategory: InternalPropTypes.SearchCategoryV1,
         title: PropTypes.string.isRequired,
     }
 
