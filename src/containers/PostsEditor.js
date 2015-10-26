@@ -20,18 +20,18 @@ const { PostV1, PostStateV1 } = services.post.containers;
 const selector = selectors.createImmutableSelector(
     [
         selectors.authenticationSelector,
-        selectors.postsSelector,
+        selectors.postSelector,
         selectors.responsiveSelector
     ],
-    (authenticationState, postsState, responsiveState) => {
+    (authenticationState, postState, responsiveState) => {
         console.log('State');
-        console.log(postsState.get('draftPost'));
+        console.log(postState.get('post'));
         return {
             authenticatedProfile: authenticationState.get('profile'),
             largerDevice: responsiveState.get('largerDevice'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
-            post: postsState.get('draftPost'),
+            post: postState.get('post'),
             organization: authenticationState.get('organization'),
         }
     }
@@ -154,7 +154,7 @@ class Editor extends CSSComponent {
             state: PostStateV1.LISTED,
         });
         this.props.dispatch(updatePost(postV1));
-        routeToPosts(this.context.router);
+        routeToPosts(this.context.router, PostStateV1.LISTED);
     }
 
     getProgressMessage() {

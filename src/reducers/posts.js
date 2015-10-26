@@ -1,34 +1,14 @@
-import Immutable from 'immutable';
-
+import { getPostsNormalizations } from './normalizations';
+import paginate from './paginate';
 import * as types from '../constants/actionTypes';
 
-const initialState = Immutable.fromJS({
-    draftPost: '',
-    loading: false,
+const posts = paginate({
+    mapActionToKey: action => action.meta.paginateBy,
+    mapActionToResults: getPostsNormalizations,
+    types: [
+        types.GET_POSTS,
+        types.GET_POSTS_SUCCESS,
+        types.GET_POSTS_FAILURE,
+    ],
 });
-
-export default function posts(state = initialState, action) {
-    switch(action.type) {
-    case types.CREATE_POST:
-        return state.merge({
-            draftPost: '',
-            loading: true,
-        });
-
-    case types.CREATE_POST_SUCCESS:
-        console.log('Sucess');
-        console.log(action.payload);
-        return state.merge({
-            draftPost: action.payload.post,
-            loading: false,
-        });
-
-    case types.CREATE_POST_FAILURE:
-        return state.merge({
-            draftPost: '',
-            loading: false,
-        });
-    }
-
-    return state;
-}
+export default posts;

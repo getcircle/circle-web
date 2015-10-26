@@ -57,6 +57,7 @@ export const extendedTeamsSelector = state => state.extendedTeams;
 export const locationMembersSelector = state => state.locationMembers;
 export const locationsSelector = state => state.locations;
 export const mediaUploadSelector = state => state.mediaUpload;
+export const postSelector = state => state.post;
 export const postsSelector = state => state.posts;
 export const profilesSelector = state => state.profiles;
 export const responsiveSelector = state => state.responsive;

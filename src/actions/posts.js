@@ -27,3 +27,24 @@ export function updatePost(post) {
         },
     };
 }
+
+export function getPosts(postState, nextRequest) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_POSTS,
+                types.GET_POSTS_SUCCESS,
+                types.GET_POSTS_FAILURE,
+            ],
+            remote: () => requests.getPosts(postState, nextRequest),
+            bailout: (state) => {
+                if (state.posts.has(postState) && nextRequest === null) {
+                    return state.posts.get(postState).get('ids').size > 0;
+                }
+            },
+        },
+        meta: {
+            paginateBy: postState.toString(),
+        },
+    };
+}

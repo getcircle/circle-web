@@ -41,17 +41,20 @@ export function getPost(postId) {
     });
 }
 
-export function getPosts(byProfileId, state, nextRequest=null) {
+export function getPosts(state, nextRequest=null) {
 
     /*eslint-disable camelcase*/
     let parameters = {
-        by_profile_id: byProfileId,
         state: state,
     };
     /*eslint-enable camelcase*/
 
+    if (nextRequest) {
+        console.log('Next request set');
+    }
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);
-    let key = byProfileId;
+    let key = state;
+    console.log(request);
 
     return new Promise((resolve, reject) => {
         client.send(request)

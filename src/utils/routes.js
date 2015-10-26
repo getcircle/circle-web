@@ -16,8 +16,12 @@ export function routeToStatus(router, status) {
     router.transitionTo(`/status/${status.id}`);
 }
 
-export function routeToPosts(router) {
-    router.transitionTo('/');
+export function routeToPosts(router, postState) {
+    router.transitionTo(`/posts/${postState}`);
+}
+
+export function routeToPost(router, post) {
+    router.transitionTo(`/post/${post.id}`);
 }
 
 export function routeToURL(url, nextPathname = null) {

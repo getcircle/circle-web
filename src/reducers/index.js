@@ -6,6 +6,7 @@ export { default as extendedTeams } from './extendedTeams';
 export { default as locationMembers } from './locationMembers';
 export { default as locations } from './locations';
 export { default as mediaUpload } from './media';
+export { default as post } from './post';
 export { default as posts } from './posts';
 export { default as profiles } from './profiles';
 export { default as responsive } from './responsive';

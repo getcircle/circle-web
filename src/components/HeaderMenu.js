@@ -3,6 +3,7 @@ import ClickAwayable from 'material-ui/lib/mixins/click-awayable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react/addons';
+import { services } from 'protobufs';
 
 import autoBind from '../utils/autoBind';
 import CurrentTheme from '../utils/ThemeManager';
@@ -141,7 +142,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewKnowledge(event) {
-        routeToPosts(this.context.router);
+        routeToPosts(this.context.router, services.post.containers.PostStateV1.DRAFT);
     }
 
     hideMenu(event) {
