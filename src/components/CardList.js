@@ -19,6 +19,7 @@ class CardList extends CSSComponent {
         return {
             default: {
                 root: {
+                    backgroundColor: '#ffffff',
                     paddingTop: 0,
                     paddingBottom: 0,
                     width: '100%',
