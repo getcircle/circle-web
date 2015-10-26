@@ -104,7 +104,7 @@ class Profile extends PureComponent {
 
     onUpdateProfile(profile, manager) {
         if (manager !== this.props.extendedProfile.manager) {
-            this.props.dispatch(updateProfile(profile, manager, this.props.extendedProfile.team));
+            this.props.dispatch(updateProfile(profile, manager));
         }
         else {
             this.props.dispatch(updateProfile(profile));

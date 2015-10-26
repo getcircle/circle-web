@@ -150,7 +150,7 @@ export function getTag(tagId) {
     });
 }
 
-export function updateProfile(profile, manager, team) {
+export function updateProfile(profile, manager) {
     let request = new services.profile.actions.update_profile.RequestV1({profile: profile});
     let updateProfile = new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -160,7 +160,7 @@ export function updateProfile(profile, manager, team) {
 
     if (!!manager) {
         return new Promise((resolve, reject) => {
-            Promise.all([updateProfile, organizationRequests.setManager(profile.id, manager.id, team)])
+            Promise.all([updateProfile, organizationRequests.setManager(profile.id, manager.id)])
                 .then(() => getExtendedProfile(profile.id))
                 .then(response => resolve(response))
                 .catch(error => reject(error));
