@@ -165,8 +165,7 @@ export function updateProfile(profile, manager) {
                 .then(response => resolve(response))
                 .catch(error => reject(error));
         });
-    }
-    else {
+    } else {
         return updateProfile;
     }
 }
