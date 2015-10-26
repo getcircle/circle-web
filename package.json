@@ -79,7 +79,7 @@
     "json-loader": "^0.5.2",
     "keymirror": "^0.1.1",
     "lodash": "^3.9.3",
-    "material-ui": "git+ssh://git@github.com/lunohq/material-ui.git#84fccf8758b6f0a50916cd0ccd02f13a64a7360c",
+    "material-ui": "git+ssh://git@github.com/lunohq/material-ui.git#4ccb45ee492b66661a05c94da5aa56b5379c226a",
     "merge": "^1.2.0",
     "method-override": "~2.1.2",
     "moment": "^2.10.6",
