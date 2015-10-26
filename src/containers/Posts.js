@@ -87,12 +87,14 @@ class Posts extends PureComponent {
     renderPosts() {
         const {
             largerDevice,
+            params,
             posts,
         } = this.props;
         if (posts.length) {
             return (
                 <PostsComponent
                     largerDevice={largerDevice}
+                    postState={params.postState}
                     posts={posts}
                 />
             );
