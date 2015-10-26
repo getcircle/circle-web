@@ -13,7 +13,7 @@ import IconContainer from './IconContainer';
 class TeamDetailHeader extends CSSComponent {
 
     static propTypes = {
-        isEditable: PropTypes.bool.isRequired,
+        isEditable: PropTypes.bool,
         largerDevice: PropTypes.bool.isRequired,
         onEditTapped: PropTypes.func,
         team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
