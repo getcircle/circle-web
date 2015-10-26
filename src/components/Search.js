@@ -7,6 +7,7 @@ import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
+import CurrentTheme from '../utils/ThemeManager';
 import {
     loadSearchResults,
     clearSearchResults,
@@ -222,6 +223,10 @@ class Search extends CSSComponent {
         mixins: PropTypes.object.isRequired,
     }
 
+    static childContextTypes = {
+        muiTheme: PropTypes.object,
+    }
+
     static defaultProps = {
         alwaysActive: false,
         canExplore: true,
@@ -243,17 +248,39 @@ class Search extends CSSComponent {
     state = {
         category: null,
         infoRequest: '',
+        muiTheme: CurrentTheme,
         query: '',
         typing: false,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: this.state.muiTheme,
+        };
+    }
+
+    componentWillMount() {
+        this.customizeTheme();
     }
 
     componentWillReceiveProps(nextProps) {
         // Resets tracked bit for new searches
         this.checkAndResetSearchTracked(this.state.query);
+        this.customizeTheme();
     }
 
     componentWillUnmount() {
         this.props.dispatch(clearSearchResults());
+    }
+
+    customizeTheme() {
+        let customTheme = mui.Styles.ThemeManager.modifyRawThemePalette(
+            CurrentTheme,
+            {
+                canvasColor: '#ffffff',
+            },
+        );
+        this.setState({muiTheme: customTheme});
     }
 
     currentSearchTimeout = null
