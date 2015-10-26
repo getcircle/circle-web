@@ -40,7 +40,8 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-@connect(selector)
+
+@connect(mediaSelector, undefined, undefined, {withRef: true})
 class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(

@@ -90,12 +90,7 @@ class ProfileDetail extends StyleableComponent {
     }
 
     editButtonTapped() {
-        // XXX: Hack
-        // ProfileDetailForm connects directly to the Redux store
-        // For these kind of components, Redux creates a Connect wrapper
-        // component and there are no good solutions to
-        // access the original instance.
-        this.refs.profileDetailForm.refs.wrappedInstance.show();
+        this.refs.profileDetailForm.getWrappedInstance().show();
     }
 
     // Helpers
