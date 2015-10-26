@@ -11,12 +11,6 @@ const {
     FlatButton,
 } = mui;
 
-const common = {
-    background: {
-        backgroundColor: 'rgb(249, 245, 244)',
-    },
-};
-
 class Dialog extends CSSComponent {
 
     static propTypes = {
@@ -65,7 +59,7 @@ class Dialog extends CSSComponent {
 
     customizeTheme(props) {
         let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
-            canvasColor: common.background.backgroundColor,
+            canvasColor: 'rgb(242, 242, 242)',
         });
 
         customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(customDialogTheme, {
