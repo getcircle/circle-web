@@ -38,6 +38,11 @@ class SelectField extends CSSComponent {
         value: PropTypes.string,
     }
 
+    static defaultProps = {
+        onBlur: () => {},
+        onInputChange: () => {},
+    }
+
     state = {
         focused: false,
     }
