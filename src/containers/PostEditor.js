@@ -2,13 +2,15 @@ import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { createPost, updatePost } from '../actions/posts';
+import { createPost, getPost, updatePost } from '../actions/posts';
 import logger from '../utils/logger';
 import { resetScroll } from '../utils/window';
+import { retrievePost } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { routeToPosts } from '../utils/routes';
 
+import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import Post from '../components/Post';
@@ -20,16 +22,33 @@ const { PostV1, PostStateV1 } = services.post.containers;
 const selector = selectors.createImmutableSelector(
     [
         selectors.authenticationSelector,
+        selectors.cacheSelector,
         selectors.postSelector,
+        selectors.routerParametersSelector,
         selectors.responsiveSelector
     ],
-    (authenticationState, postState, responsiveState) => {
+    (authenticationState, cacheState, postState, paramsState, responsiveState) => {
+
+        let post;
+        let postId = null;
+        const cache = cacheState.toJS();
+
+        // We get here either when editing a post or when creating a new one.
+        if (paramsState && paramsState.postId) {
+            postId = paramsState.postId;
+            if (postState.get('ids').has(postId)) {
+                post = retrievePost(postId, cache);
+            }
+        } else {
+            post = postState.get('draftPost');
+        }
+
         return {
             authenticatedProfile: authenticationState.get('profile'),
             largerDevice: responsiveState.get('largerDevice'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
-            post: postState.get('draftPost'),
+            post: post,
             organization: authenticationState.get('organization'),
         }
     }
@@ -43,7 +62,14 @@ class PostEditor extends CSSComponent {
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         mobileOS: PropTypes.bool.isRequired,
+        params: PropTypes.shape({
+            postId: PropTypes.string,
+        }),
         post: PropTypes.instanceOf(services.post.containers.PostV1),
+    }
+
+    static defaultProps = {
+        post: null,
     }
 
     static contextTypes = {
@@ -69,14 +95,20 @@ class PostEditor extends CSSComponent {
     }
 
     componentWillMount() {
-        resetScroll();
+        this.loadPost(this.props);
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        if (nextProps.post) {
+        // If this is in edit mode, load another post if we detect a different post ID in the URL
+        if (this.props.params.postId && nextProps.params.postId) {
+            if (nextProps.params.postId !== this.props.params.postId) {
+                this.loadPost(nextProps);
+            }
+        } else if (nextProps.post) {
             this.postCreationInProgress = false;
-            this.setState({saving: false});
         }
+
+        this.setState({saving: false});
     }
 
     classes() {
@@ -105,6 +137,13 @@ class PostEditor extends CSSComponent {
     }
 
     postCreationInProgress = false
+
+    loadPost(props) {
+        if (props.params && props.params.postId) {
+           this.props.dispatch(getPost(props.params.postId));
+        }
+        resetScroll();
+    }
 
     onSavePost(title, body) {
         logger.log('Saving Post');
@@ -163,6 +202,19 @@ class PostEditor extends CSSComponent {
         }
     }
 
+    canEdit() {
+        if (this.props.params && this.props.params.postId) {
+            return true;
+            // if (this.props.post) {
+            //     console.log(this.props.post);
+            // }
+        } else {
+            return true;
+        }
+
+        return false;
+    }
+
     renderHeaderActionsContainer() {
         return (
             <div className="row middle-xs between-xs" is="headerActionContainer">
@@ -179,11 +231,30 @@ class PostEditor extends CSSComponent {
         );
     }
 
+    renderPost() {
+        const {
+            largerDevice,
+            params,
+            post,
+        } = this.props;
+
+        if (params && params.postId && !post) {
+            return <CenterLoadingIndicator />;
+        }
+
+        return (
+            <Post
+                isEditable={this.canEdit()}
+                largerDevice={largerDevice}
+                onSaveCallback={::this.onSavePost}
+                post={post}
+            />
+        );
+    }
+
     render() {
         const {
             authenticatedProfile,
-            largerDevice,
-            post,
         } = this.props;
 
         return (
@@ -193,12 +264,7 @@ class PostEditor extends CSSComponent {
                     profile={authenticatedProfile}
                     {...this.props}
                 />
-                <Post
-                    isEditable={true}
-                    largerDevice={largerDevice}
-                    onSaveCallback={::this.onSavePost}
-                    post={post}
-                />
+                {this.renderPost()}
             </Container>
         );
     }

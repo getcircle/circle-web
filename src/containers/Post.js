@@ -14,17 +14,17 @@ import { default as PostComponent } from '../components/Post';
 
 const selector = selectors.createImmutableSelector(
     [
+        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.postSelector,
-        selectors.routerParametersSelector,
-        selectors.authenticationSelector,
         selectors.responsiveSelector,
+        selectors.routerParametersSelector,
     ],
-    (cacheState, postSelector, paramsState, authenticationState, responsiveState) => {
+    (authenticationState, cacheState, postState, responsiveState, paramsState) => {
         let post;
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
-        if (postSelector.get('ids').has(postId)) {
+        if (postState.get('ids').has(postId)) {
             post = retrievePost(postId, cache);
         }
 

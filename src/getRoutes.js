@@ -99,6 +99,14 @@ const getRoutes = (history, store) => {
                         path="/new-post"
                     />
                     <Route
+                        component={require('./containers/PostEditor')}
+                        onEnter={applyMiddleware(
+                            requireAuth,
+                            hideHeader,
+                        )}
+                        path="/edit-post/:postId"
+                    />
+                    <Route
                         component={require('./containers/Post')}
                         onEnter={applyMiddleware(
                             ...defaultMiddleware,

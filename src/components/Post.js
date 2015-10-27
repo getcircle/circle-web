@@ -35,6 +35,7 @@ class Post extends CSSComponent {
     }
 
     state = {
+        editing: false,
         title: '',
         body: '',
     }
@@ -45,6 +46,10 @@ class Post extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         this.mergeStateAndProps(nextProps);
+        // Reset editing if a new post is loaded
+        if (this.props.post && nextProps.post && this.props.post.id !== nextProps.post.id) {
+            this.setState({editing: false});
+        }
     }
 
     saveTimeout = null
@@ -114,11 +119,10 @@ class Post extends CSSComponent {
      * @return {Void}
      */
     mergeStateAndProps(props) {
-        // Update state with props only if this the intial load
-        // or if the post object is changed.
+        // Update state with props only when editing hasn't started
         // This is to ensure we do not over-write the real time state changes caused by
         // user typing their post
-        if (props.post && (!this.props.post || this.props.post.id !== props.post.id)) {
+        if (props.post && !this.state.editing) {
             let updatedState = {
                 title: props.post.title,
                 body: props.post.content,
@@ -142,12 +146,14 @@ class Post extends CSSComponent {
 
     handleTitleChange(event) {
         this.setState({
+            editing: true,
             title: event.target.value,
         }, () => this.saveData());
     }
 
     handleBodyChange(bodyText) {
         this.setState({
+            editing: true,
             body: bodyText,
         }, () => this.saveData());
     }

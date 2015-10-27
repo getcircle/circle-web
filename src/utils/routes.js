@@ -12,6 +12,10 @@ export function routeToLocation(router, location) {
     router.transitionTo(`/location/${location.id}`);
 }
 
+export function routeToEditPost(router, post) {
+    router.transitionTo(`/edit-post/${post.id}`);
+}
+
 export function routeToNewPost(router) {
     router.transitionTo('/new-post');
 }
