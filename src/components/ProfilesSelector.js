@@ -146,23 +146,15 @@ class ProfilesSelector extends CSSComponent {
         return (
             <div>
                 <SelectField
-                    arrowIconContainerStyle={{...this.props.arrowIconContainerStyle}}
-                    arrowIconStyle={{...this.props.arrowIconStyle}}
                     infiniteLoadBeginBottomOffset={100}
                     inputName="query"
-                    inputStyle={{...this.props.inputStyle}}
-                    isInfiniteLoading={this.props.profilesLoading}
                     items={this.getItems()}
-                    listDividerStyle={{...this.props.listDividerStyle}}
                     listItemHeight={50}
-                    listItemInnerDivStyle={{...this.props.listItemInnerDivStyle}}
-                    listItemPrimaryTextStyle={{...this.props.listItemPrimaryTextStyle}}
-                    listStyle={{...this.props.listStyle}}
                     maxListHeight={150}
                     onBlur={::this.handleBlur}
                     onInfiniteLoad={::this.handleInfiniteLoad}
                     onInputChange={::this.handleInputChange}
-                    value={this.props.value}
+                    {...this.props}
                 />
             </div>
         );
