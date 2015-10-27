@@ -125,10 +125,9 @@ const getRoutes = (history, store) => {
                     <Route
                         component={require('./containers/Posts')}
                         onEnter={applyMiddleware(
-                            convertPostStateString,
                             ...defaultMiddleware,
                         )}
-                        path="/posts/:postStateString"
+                        path="/posts/:postState"
                     />
                     <Route
                         component={require('./containers/Search')}

@@ -29,7 +29,7 @@ export function routeToStatus(router, status) {
 }
 
 export function routeToPosts(router, postState) {
-    router.transitionTo(`/posts/${getPostStateString(postState)}`);
+    router.transitionTo(`/posts/${postState}`);
 }
 
 export function routeToPost(router, post) {
@@ -49,32 +49,32 @@ export function getNextPathname() {
     return nextPathname;
 }
 
-const DRAFTS = 'drafts';
-const LISTED = 'published';
-const UNLISTED = 'unlisted';
+// const DRAFTS = 'drafts';
+// const LISTED = 'published';
+// const UNLISTED = 'unlisted';
 
-function getPostStateString(postState) {
-    switch (Number(postState)) {
-        case services.post.containers.PostStateV1.DRAFT:
-            return DRAFTS;
-        case services.post.containers.PostStateV1.LISTED:
-            return LISTED;
-        case services.post.containers.PostStateV1.UNLISTED:
-            return UNLISTED;
-    }
+// function getPostStateString(postState) {
+//     switch (Number(postState)) {
+//         case services.post.containers.PostStateV1.DRAFT:
+//             return DRAFTS;
+//         case services.post.containers.PostStateV1.LISTED:
+//             return LISTED;
+//         case services.post.containers.PostStateV1.UNLISTED:
+//             return UNLISTED;
+//     }
 
-    logger.error('Post state mapping not defined.');
-    return null;
-}
+//     logger.error('Post state mapping not defined ' + postState);
+//     return null;
+// }
 
-export function getPostStateFromString(postStateString) {
-    switch (postStateString) {
-        case DRAFTS:
-            return services.post.containers.PostStateV1.DRAFT.toString();
-        case LISTED:
-            return services.post.containers.PostStateV1.LISTED.toString();
-    }
+// export function getPostStateFromString(postStateString) {
+//     switch (postStateString) {
+//         case DRAFTS:
+//             return services.post.containers.PostStateV1.DRAFT.toString();
+//         case LISTED:
+//             return services.post.containers.PostStateV1.LISTED.toString();
+//     }
 
-    logger.error('Unknow post state string.');
-    return null;
-}
+//     logger.error('Unknown post state string ' + postStateString);
+//     return null;
+// }

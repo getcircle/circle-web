@@ -3,7 +3,6 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
-import { getPostStateFromString } from '../utils/routes';
 import { getPosts } from '../actions/posts';
 import { resetScroll } from '../utils/window';
 import { retrievePosts } from '../reducers/denormalizations';
@@ -24,9 +23,9 @@ const selector = createSelector(
     (authenticationState, cacheState, responsiveState, parametersSelector, postsState) => {
         let posts, postsNextRequest;
         let postState = parametersSelector.postState
-        if (postState === undefined) {
-            postState = getPostStateFromString(parametersSelector.postStateString);
-        }
+        // if (postState === undefined) {
+        //     postState = getPostStateFromString(parametersSelector.postStateString);
+        // }
         const cache = cacheState.toJS();
         if (postsState.has(postState)) {
             const ids = postsState.get(postState).get('ids').toJS();
