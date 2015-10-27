@@ -29,6 +29,12 @@ export default function post(state = initialState, action) {
     case types.GET_POST_SUCCESS:
         return state.updateIn(['ids'], set => set.add(action.payload.result));
 
+    case '@@reduxReactRouter/locationDidChange':
+        return state.merge({
+            draftPost: null,
+            loading: false,
+        });
+
     case types.LOGOUT_SUCCESS:
         return initialState;
     }
