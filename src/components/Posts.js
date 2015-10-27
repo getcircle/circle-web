@@ -5,7 +5,7 @@ import { services } from 'protobufs';
 import CurrentTheme from '../utils/ThemeManager';
 import { fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
-import { routeToPosts, routeToPost } from '../utils/routes';
+import { routeToNewPost, routeToPosts, routeToPost } from '../utils/routes';
 import t from '../utils/gettext';
 
 import CardList from './CardList';
@@ -13,6 +13,7 @@ import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
+import RoundedButton from './RoundedButton';
 
 const { PostStateV1 } = services.post.containers;
 
@@ -62,12 +63,14 @@ class Posts extends CSSComponent {
                     borderBottom: '1px solid rgba(0, 0, 0, .1)',
                     padding: 30,
                 },
-                pageHeaderText: {
-                    fontSize: 30,
-                    lineHeight: '30px',
+                pageHeaderContainer: {
                     padding: '10px 0 50px 0',
+                    width: '100%',
+                },
+                pageHeaderText: {
+                    fontSize: 36,
+                    fontWeight: 300,
                     ...fontColors.dark,
-                    ...fontWeights.semiBold,
                 },
                 listInnerContainer: {
                     padding: 0,
@@ -109,8 +112,14 @@ class Posts extends CSSComponent {
         this.setState({muiTheme: customTabsTheme});
     }
 
+    // Event Handlers
+
     onTabChange(value, event, tab) {
         routeToPosts(this.context.router, value);
+    }
+
+    onAddPostTapped() {
+        routeToNewPost(this.context.router);
     }
 
     // Render Methods
@@ -139,7 +148,17 @@ class Posts extends CSSComponent {
         return (
             <DetailContent>
                 <CardRow>
-                    <h3 is="pageHeaderText">{t('My Knowledge')}</h3>
+                    <div className="row start-xs between-xs" is="pageHeaderContainer">
+                        <div>
+                            <h3 is="pageHeaderText">{t('My Knowledge')}</h3>
+                        </div>
+                        <div>
+                            <RoundedButton
+                                label={t('Add Knowledge')}
+                                onTouchTap={::this.onAddPostTapped}
+                            />
+                        </div>
+                    </div>
                     <div className="row" is="tabsContainer">
                         <Tabs
                             inkBarStyle={{...this.styles().tabInkBarStyle}}
