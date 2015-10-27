@@ -2,8 +2,7 @@ import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 import { LinearProgress } from 'material-ui';
 import React, { PropTypes } from 'react';
-import { services, soa } from 'protobufs';
-import Immutable from 'immutable';
+import { services } from 'protobufs';
 
 import { fontColors, fontWeights } from '../constants/styles';
 import logger from '../utils/logger';
@@ -13,70 +12,26 @@ import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 import { uploadMedia } from '../actions/media';
-import { loadSearchResults } from '../actions/search';
-import * as exploreActions from '../actions/explore';
-import { retrieveProfiles } from '../reducers/denormalizations';
 
 import CSSComponent from  './CSSComponent';
 import Dialog from './Dialog';
 import EditProfileCameraIcon from './EditProfileCameraIcon';
 import IconContainer from './IconContainer';
 import Toast from './Toast';
-import SelectField from './SelectField'
+import ProfilesSelector from './ProfilesSelector'
 
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const cacheSelector = selectors.createImmutableSelector(
-    [
-        selectors.cacheSelector,
-        selectors.exploreProfilesIdsSelector,
-    ],
-    (
-        cacheState,
-        profilesState,
-    ) => {
-        let managerSelectProfiles, managerSelectProfilesNextRequest;
-        const cache = cacheState.toJS();
-        if (profilesState) {
-            const ids = profilesState.get('ids').toJS();
-            if (ids.length) {
-                managerSelectProfiles = retrieveProfiles(ids, cache);
-            }
-            managerSelectProfilesNextRequest = profilesState.get('nextRequest');
-        }
-        return Immutable.fromJS({
-            managerSelectProfiles,
-            managerSelectProfilesNextRequest,
-        });
-    },
-);
-
-const selector = selectors.createImmutableSelector(
-    [
-        cacheSelector,
-        selectors.mediaUploadSelector,
-        selectors.searchSelector,
-        selectors.exploreProfilesLoadingSelector,
-    ],
-    (
-        cacheState,
-        mediaUploadState,
-        searchState,
-        profilesLoadingState,
-    ) => {
+const mediaSelector = selectors.createImmutableSelector(
+    [selectors.mediaUploadSelector], (mediaUploadState) => {
         return {
-            ...cacheState.toJS(),
             mediaUrl: mediaUploadState.get('mediaUrl'),
-            managerSelectResults: searchState.get('results').toJS(),
-            managerSelectProfilesLoading: (
-                profilesLoadingState || searchState.get('loading')
-            ),
         };
     }
 );
 
-@connect(selector)
+@connect(mediaSelector)
 class ProfileDetailForm extends CSSComponent {
 
     static propTypes = {
@@ -86,10 +41,6 @@ class ProfileDetailForm extends CSSComponent {
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-        managerSelectProfiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
-        managerSelectProfilesLoading: PropTypes.bool,
-        managerSelectProfilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
-        managerSelectResults: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -109,16 +60,12 @@ class ProfileDetailForm extends CSSComponent {
         imageFiles: [],
         title: '',
         manager: null,
-        managerQuery: '',
         saving: false,
     }
 
     componentWillMount() {
-        this.handleManagerSelectInfiniteLoad();
         this.mergeStateAndProps(this.props);
     }
-
-    currentManagerSearchTimeout = null
 
     directAttributesToStateMapping = {
         /*eslint-disable camelcase*/
@@ -442,59 +389,8 @@ class ProfileDetailForm extends CSSComponent {
         return cellNumber;
     }
 
-    getManagerSelectItems() {
-        const searchResults = this.props.managerSelectResults[this.state.managerQuery];
-
-        let items = [];
-
-        if (this.state.managerQuery.length === 0) {
-            const { managerSelectProfiles } = this.props;
-            if (managerSelectProfiles) {
-                items = managerSelectProfiles.map((profile, index) => {
-                    const item = {
-                        primaryText: profile.full_name,
-                        onTouchTap: this.handleManagerSelected.bind(this, profile)
-                    };
-                    return item
-                });
-            }
-        } else if (!!searchResults) {
-            items = searchResults.map((result, index) => {
-                const item = {
-                    primaryText: result.profile.full_name,
-                    onTouchTap: this.handleManagerSelected.bind(this, result.profile)
-                };
-                return item
-            });
-        }
-
-        return items
-    }
-
     handleManagerSelected(manager) {
         this.setState({manager}, () => this.detectChangeAndEnableSaving());
-    }
-
-    handleManagerSelectBlur() {
-        this.setState({managerQuery: ''});
-    }
-
-    handleManagerSelectInfiniteLoad() {
-        this.props.dispatch(exploreActions.exploreProfiles(this.props.managerSelectProfilesNextRequest));
-    }
-
-    handleManagerSelectInputChange(event) {
-        if (this.currentManagerSearchTimeout !== null) {
-            window.clearTimeout(this.currentManagerSearchTimeout);
-        }
-
-        let value = event.target.value;
-
-        this.currentManagerSearchTimeout = window.setTimeout(() => {
-            this.props.dispatch(loadSearchResults(value, services.search.containers.search.CategoryV1.PROFILES));
-        }, 300);
-
-        this.setState({managerQuery: value});
     }
 
     handleSaveTapped() {
@@ -643,23 +539,16 @@ class ProfileDetailForm extends CSSComponent {
                         value={this.state.cellNumber}
                      />
                     <div is="sectionTitle">{t('Reports to')}</div>
-                    <SelectField
+                    <ProfilesSelector
                         arrowIconContainerStyle={{...this.styles().selectListArrowIconContainer}}
                         arrowIconStyle={{...this.styles().selectListArrowIcon}}
-                        infiniteLoadBeginBottomOffset={100}
-                        inputName="managerQuery"
+                        dispatch={this.props.dispatch}
                         inputStyle={{...this.styles().input}}
-                        isInfiniteLoading={this.props.managerSelectProfilesLoading}
-                        items={this.getManagerSelectItems()}
                         listDividerStyle={{...this.styles().selectListDivider}}
-                        listItemHeight={50}
                         listItemInnerDivStyle={{...this.styles().selectListItemInnerDivStyle}}
                         listItemPrimaryTextStyle={{...this.styles().selectListItemPrimaryTextStyle}}
                         listStyle={{...this.styles().selectList}}
-                        maxListHeight={150}
-                        onBlur={::this.handleManagerSelectBlur}
-                        onInfiniteLoad={::this.handleManagerSelectInfiniteLoad}
-                        onInputChange={::this.handleManagerSelectInputChange}
+                        onSelect={::this.handleManagerSelected}
                         value={selectFieldValue}
                     />
                 </form>
