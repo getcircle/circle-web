@@ -5,7 +5,7 @@ import { services } from 'protobufs';
 import CurrentTheme from '../utils/ThemeManager';
 import { fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
-import { routeToNewPost, routeToPosts, routeToPost } from '../utils/routes';
+import { routeToEditPost, routeToNewPost, routeToPosts, routeToPost } from '../utils/routes';
 import t from '../utils/gettext';
 
 import CardList from './CardList';
@@ -114,13 +114,22 @@ class Posts extends CSSComponent {
 
     // Event Handlers
 
+    onAddPostTapped() {
+        routeToNewPost(this.context.router);
+    }
+
+    onPostTapped(post) {
+        if (post.state === PostStateV1.DRAFT || !post.state) {
+            routeToEditPost(this.context.router, post);
+        } else if (post.state === PostStateV1.LISTED) {
+            routeToPost(this.context.router, post);
+        }
+    }
+
     onTabChange(value, event, tab) {
         routeToPosts(this.context.router, value);
     }
 
-    onAddPostTapped() {
-        routeToNewPost(this.context.router);
-    }
 
     // Render Methods
 
@@ -129,7 +138,7 @@ class Posts extends CSSComponent {
         return (
             <CardListItem
                 innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
-                onTouchTap={routeToPost.bind(null, this.context.router, post)}
+                onTouchTap={() => this.onPostTapped(post)}
                 primaryText={post.title}
                 primaryTextStyle={{...this.styles().primaryTextStyle}}
                 secondaryText={lastUpdatedText}
