@@ -33,7 +33,6 @@ const mediaSelector = selectors.createImmutableSelector(
 
 @connect(mediaSelector)
 class ProfileDetailForm extends CSSComponent {
-
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
