@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -14,6 +13,7 @@ import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import { default as EditorComponent } from '../components/Editor';
 import Header from '../components/Header';
+import RoundedButton from '../components/RoundedButton';
 
 const { PostV1, PostStateV1 } = services.post.containers;
 
@@ -172,10 +172,8 @@ class Editor extends CSSComponent {
                     <span>Draft {this.getProgressMessage()}</span>
                 </div>
                 <div>
-                    <FlatButton
-                        is="headerActionButton"
+                    <RoundedButton
                         label={t('Publish')}
-                        labelStyle={this.styles().headerActionButtonLabel}
                         onTouchTap={::this.onPublishButtonTapped}
                     />
                 </div>

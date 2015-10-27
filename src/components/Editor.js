@@ -20,15 +20,15 @@ class Editor extends CSSComponent {
         post: PropTypes.instanceOf(services.post.containers.PostV1),
     }
 
-    static defaultProps = {
-        post: null,
-    }
-
     static contextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
         }).isRequired,
+    }
+
+    static defaultProps = {
+        post: null,
     }
 
     state = {
@@ -153,7 +153,7 @@ class Editor extends CSSComponent {
 
         return (
             <DetailContent>
-                <CardList className="row" is="cardList">
+                <CardList is="cardList">
                     <CardListItem
                         innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
                         leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
