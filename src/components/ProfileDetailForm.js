@@ -164,39 +164,6 @@ class ProfileDetailForm extends CSSComponent {
                     alignItems: 'center',
                     display: 'flex',
                 },
-                selectList: {
-                    borderRadius: '0px 0px 3px 3px',
-                    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
-                    justifyContent: 'flex-start',
-                    textAlign: 'start',
-                    height: 'auto',
-                    width: 'calc(100% - 32px)',
-                    position: 'absolute',
-                    marginTop: '-9px',
-                },
-                selectListArrowIcon: {
-                    height: 8,
-                    width: 14,
-                },
-                selectListArrowIconContainer: {
-                    border: 0,
-                    height: 8,
-                    width: 14,
-                    position: 'relative',
-                    top: -25,
-                    left: 'calc(100% - 32px)',
-                    pointerEvents: 'none',
-                },
-                selectListDivider: {
-                    backgroundColor: 'rgba(0, 0, 0, .05)',
-                },
-                selectListItemInnerDivStyle: {
-                    paddingLeft: 10,
-                },
-                selectListItemPrimaryTextStyle: {
-                    fontSize: 14,
-                    ...fontColors.dark,
-                },
                 sectionTitle: {
                     fontSize: 11,
                     letterSpacing: '1px',
@@ -205,6 +172,53 @@ class ProfileDetailForm extends CSSComponent {
                     textTransform: 'uppercase',
                     ...fontColors.light,
                     ...fontWeights.semiBold,
+                },
+                ProfilesSelector: {
+                    arrowIconContainerStyle: {
+                        border: 0,
+                        height: 8,
+                        width: 14,
+                        position: 'relative',
+                        top: -25,
+                        left: 'calc(100% - 32px)',
+                        pointerEvents: 'none',
+                    },
+                    arrowIconStyle: {
+                        height: 8,
+                        width: 14,
+                    },
+                    inputStyle: {
+                        border: '1px solid rgba(0, 0, 0, 0.1)',
+                        borderRadius: '3px',
+                        boxSizing: 'border-box',
+                        display: 'flex',
+                        fontSize: 14,
+                        height: '50px',
+                        outline: 'none',
+                        padding: '10px',
+                        width: '100%',
+                        ...fontColors.dark,
+                    },
+                    listDividerStyle: {
+                        backgroundColor: 'rgba(0, 0, 0, .05)',
+                    },
+                    listItemInnerDivStyle: {
+                        paddingLeft: 10,
+                    },
+                    listItemPrimaryTextStyle: {
+                        fontSize: 14,
+                        ...fontColors.dark,
+                    },
+                    listStyle: {
+                        borderRadius: '0px 0px 3px 3px',
+                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
+                        justifyContent: 'flex-start',
+                        textAlign: 'start',
+                        height: 'auto',
+                        width: 'calc(100% - 32px)',
+                        position: 'absolute',
+                        marginTop: '-9px',
+                    },
                 },
             },
             'error': {
@@ -543,14 +557,8 @@ class ProfileDetailForm extends CSSComponent {
                      />
                     <div is="sectionTitle">{t('Reports to')}</div>
                     <ProfilesSelector
-                        arrowIconContainerStyle={{...this.styles().selectListArrowIconContainer}}
-                        arrowIconStyle={{...this.styles().selectListArrowIcon}}
                         dispatch={this.props.dispatch}
-                        inputStyle={{...this.styles().input}}
-                        listDividerStyle={{...this.styles().selectListDivider}}
-                        listItemInnerDivStyle={{...this.styles().selectListItemInnerDivStyle}}
-                        listItemPrimaryTextStyle={{...this.styles().selectListItemPrimaryTextStyle}}
-                        listStyle={{...this.styles().selectList}}
+                        is="ProfilesSelector"
                         onSelect={::this.handleManagerSelected}
                         value={selectFieldValue}
                     />
