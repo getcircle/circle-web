@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { createPost, getPost, updatePost } from '../actions/posts';
+import { createPost, getPost, getPosts, updatePost } from '../actions/posts';
 import logger from '../utils/logger';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
@@ -191,6 +191,7 @@ class PostEditor extends CSSComponent {
             state: PostStateV1.LISTED,
         });
         this.props.dispatch(updatePost(postV1));
+        this.props.dispatch(getPosts(PostStateV1.LISTED));
         routeToPosts(this.context.router, PostStateV1.LISTED);
     }
 
