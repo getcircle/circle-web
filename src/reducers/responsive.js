@@ -3,7 +3,7 @@ import StyleResizable from 'material-ui/lib/mixins/style-resizable';
 
 import * as types from '../constants/actionTypes';
 
-const HEADER_AND_FOOTERLESS_PATHS = ['/billing', '/new-post'];
+const HEADER_AND_FOOTERLESS_PATHS = ['/billing', '/new-post', '/edit-post'];
 const MOBILE_OS = ['iOS', 'Android'];
 
 const os = checkOS();
@@ -54,6 +54,16 @@ function checkOS() {
   }
 };
 
+function shouldPathHaveNoHeaderAndFooter(pathname) {
+    for (let i = 0; i < HEADER_AND_FOOTERLESS_PATHS.length; i++) {
+        if (pathname.indexOf(HEADER_AND_FOOTERLESS_PATHS[i]) !== -1) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
 export default function responsive(state = initialState, action, mobile) {
     const { Sizes } = StyleResizable.statics;
     const isMobileOS = mobile ? mobile : mobileOS;
@@ -74,7 +84,7 @@ export default function responsive(state = initialState, action, mobile) {
 
         let displayHeader;
         let displayFooter;
-        if (HEADER_AND_FOOTERLESS_PATHS.indexOf(pathname) !== -1) {
+        if (shouldPathHaveNoHeaderAndFooter(pathname)) {
             displayHeader = false;
             displayFooter = false;
         } else if (!largerDevice && isMobileOS) {
