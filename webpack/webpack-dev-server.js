@@ -1,14 +1,32 @@
-var path = require('path');
+var Express = require('express');
 var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./local.config');
 
-new WebpackDevServer(webpack(config), {
-  contentBase: path.resolve(__dirname, '..', 'dist'),
-  publicPath: config.output.publicPath,
-  historyApiFallback: true,
-  hot: true
-}).listen(9110, 'localhost', function (err) {
-  if (err) console.log(err);
-  console.log('Listening at localhost:9110');
+var webpackConfig = require('./local.config');
+var compiler = webpack(webpackConfig);
+
+var host = process.env.HOST || 'localhost';
+var port = parseInt(process.env.PORT, 10) + 1 || 3001;
+var serverOptions = {
+    contentBase: 'http://' + host + ':' + port,
+    quiet: true,
+    noInfo: true,
+    hot: true,
+    inline: true,
+    lazy: false,
+    publicPath: webpackConfig.output.publicPath,
+    headers: {'Access-Control-Allow-Origin': '*'},
+    stats: {colors: true}
+};
+
+var app = new Express();
+
+app.use(require('webpack-dev-middleware')(compiler, serverOptions));
+app.use(require('webpack-hot-middleware')(compiler));
+
+app.listen(port, function onAppListening(err) {
+    if (err) {
+        console.error(err);
+    } else {
+        console.info('==> Webpack development server listening on port %s', port);
+    }
 });

@@ -1,34 +1,71 @@
+require('babel-core/polyfill');
+var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
 var WebpackNotifierPlugin = require('webpack-notifier');
+
+var assetsPath = path.resolve(__dirname, '../static/dist');
+var host = 'localhost';
+var port = parseInt(process.env.PORT) + 1 || 3001;
+
+// https://github.com/halt-hammerzeit/webpack-isomorphic-tools
+var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
+
+var babelrc = fs.readFileSync('./.babelrc');
+var babelrcObject = {};
+
+try {
+  babelrcObject = JSON.parse(babelrc);
+} catch (err) {
+  console.error('==>     ERROR: Error parsing your .babelrc.');
+  console.error(err);
+}
+
+var babelrcObjectDevelopment = babelrcObject.env && babelrcObject.env.development || {};
+var babelLoaderQuery = Object.assign({}, babelrcObject, babelrcObjectDevelopment);
+delete babelLoaderQuery.env;
+
+babelLoaderQuery.plugins = babelLoaderQuery.plugins || [];
+if (babelLoaderQuery.plugins.indexOf('react-transform') < 0) {
+  babelLoaderQuery.plugins.push('react-transform');
+}
+
+babelLoaderQuery.extra = babelLoaderQuery.extra || {};
+if (!babelLoaderQuery.extra['react-transform']) {
+  babelLoaderQuery.extra['react-transform'] = {};
+}
+if (!babelLoaderQuery.extra['react-transform'].transforms) {
+  babelLoaderQuery.extra['react-transform'].transforms = [];
+}
+babelLoaderQuery.extra['react-transform'].transforms.push({
+  transform: 'react-transform-hmr',
+  imports: ['react'],
+  locals: ['module']
+});
 
 module.exports = {
     devtool: 'cheap-eval-source-map',
     context: path.resolve(__dirname, '..'),
-    entry: [
-        'webpack-dev-server/client?http://localhost:9110',
-        'webpack/hot/only-dev-server',
-        './src'
-    ],
+    entry: {
+        main: [
+            'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
+            './src/client'
+        ]
+    },
     output: {
-        filename: 'app.js',
-        path: path.resolve(__dirname, '../dist'),
-        publicPath: '/dist/'
+        chunkFilename: '[name]-[chunkhash].js',
+        filename: '[name]-[hash].js',
+        path: assetsPath,
+        publicPath: 'http://' + host + ':' + port + '/dist/'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
         new WebpackNotifierPlugin(),
-        new webpack.NoErrorsPlugin(),
-        new ExtractTextPlugin('app.css', { allChunks: true }),
-        new HtmlWebpackPlugin({
-            title: 'Luno Local',
-            filename: 'index.html',
-            template: 'index.template.html',
-            favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico'),
-        }),
+        new webpack.IgnorePlugin(/webpack-stats\.json$/),
         new webpack.DefinePlugin({
+            __CLIENT__: true,
+            __SERVER__: false,
             __DEVELOPMENT__: true,
             __DEVTOOLS__: process.env.DEVTOOLS ? true : false,
             'process.env': {
@@ -37,20 +74,16 @@ module.exports = {
                 GOOGLE_MAPS_API_KEY: JSON.stringify('AIzaSyAlKvipmEx76I45QIHP6NAI4pJ0Ybp55u8'),
                 MIXPANEL_TOKEN: JSON.stringify('c9e956923929efeeebcfbce0b9198656'),
             }
-        })
+        }),
+        webpackIsomorphicToolsPlugin.development()
     ],
     module: {
         loaders: [
-            {
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                loaders: [
-                    'file?hash=sha512&digest=hex&name=[hash].[ext]',
-                    'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
-                ]
-            },
-            { test: /\.js$/, loaders: ['react-hot', 'babel?stage=0&optional=runtime&cacheDirectory'], exclude: /node_modules/ },
-            { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
-            { test: /\.json$/, loaders: ['json-loader']}
+            { test: /\.js$/, loaders: ['babel?' + JSON.stringify(babelLoaderQuery)], exclude: /node_modules/ },
+            { test: /\.json$/, loaders: ['json-loader']},
+            { test: /\.scss$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap' },
+            { test: webpackIsomorphicToolsPlugin.regular_expression('images'), loader: 'url-loader?limit=10240' },
+            { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' }
         ]
     },
     node: {
@@ -61,5 +94,11 @@ module.exports = {
             'Long': 'long',
             'ByteBuffer': 'bytebuffer'
         },
+        modulesDirectories: [
+            'src',
+            'node_modules',
+        ],
+        extensions: ['', '.json', '.js']
     },
+    progress: true,
 };

@@ -1,3 +1,4 @@
+require('babel-core/polyfill');
 var path = require('path');
 var webpack = require('webpack');
 var CleanPlugin = require('clean-webpack-plugin');
@@ -5,17 +6,29 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var strip = require('strip-loader');
 
+var relativeAssetsPath = '../static/dist';
+var assetsPath = path.join(__dirname, relativeAssetsPath);
+
+// https://github.com/halt-hammerzeit/webpack-isomorphic-tools
+var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
+
 module.exports = {
     devtool: 'source-map',
     context: path.resolve(__dirname, '..'),
-    entry: ['./src'],
+    entry: {
+        main: ['./src/client']
+    }
     output: {
-        filename: 'app.js',
-        path: path.resolve(__dirname, '../dist'),
+        path: assetsPath,
+        filename: '[name]-[chunkhash].js',
+        chunkFilename: '[name]-[chunkhash].js',
         publicPath: '/dist/'
     },
     plugins: [
-        new ExtractTextPlugin('app.css', { allChunks: true }),
+        new CleanPlugin([relativeAssetsPath]),
+
+        new ExtractTextPlugin('[name]-[chunkhash].css', { allChunks: true }),
         new HtmlWebpackPlugin({
             title: 'Luno',
             filename: 'index.html',
@@ -23,6 +36,8 @@ module.exports = {
             favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico'),
         }),
         new webpack.DefinePlugin({
+            __CLIENT__: true,
+            __SERVER__: false,
             __DEVELOPMENT__: false,
             __DEVTOOLS__: false,
             'process.env': {
@@ -45,20 +60,17 @@ module.exports = {
             compress: {
                 warnings: false
             }
-        })
+        }),
+
+        webpackIsomorphicToolsPlugin
     ],
     module: {
         loaders: [
-            {
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                loaders: [
-                    'file?hash=sha512&digest=hex&name=[hash].[ext]',
-                    'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
-                ]
-            },
             { test: /\.js$/, loaders: [strip.loader('debug'), 'babel?stage=0&optional=runtime'], exclude: /node_modules/ },
-            { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
-            { test: /\.json$/, loaders: ['json-loader']}
+            { test: /\.json$/, loaders: ['json-loader']},
+            { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=2&sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap=true&sourceMapContents=true') },
+            { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml" },
+            { test: webpackIsomorphicToolsPlugin.regular_expression('images'), loader: 'url-loader?limit=10240' }
         ]
     },
     node: {
@@ -69,5 +81,11 @@ module.exports = {
             'Long': 'long',
             'ByteBuffer': 'bytebuffer'
         },
+        modulesDirectories: [
+            'src',
+            'node_modules',
+        ],
+        extensions: ['', '.json', '.js']
     },
+    progress: true,
 };
