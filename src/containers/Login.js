@@ -111,6 +111,7 @@ class Login extends CSSComponent {
         return {
             default: {
                 container: {
+                    backgroundColor: '#ffffff',
                     marginTop: '2%',
                     maxWidth: 600,
                     paddingTop: '5%',
