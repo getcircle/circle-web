@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 import { default as MediumEditor } from 'react-medium-editor';
 
 import { fontColors } from '../constants/styles';
+import moment from '../utils/moment';
 import { routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
 
@@ -29,6 +30,7 @@ class Post extends CSSComponent {
     }
 
     static defaultProps = {
+        isEditable: false,
         post: null,
     }
 
@@ -50,19 +52,38 @@ class Post extends CSSComponent {
     classes() {
         return {
             default: {
-                section: {
-                    marginTop: 5,
+                cardListAvatar: {
+                    height: 40,
+                    width: 40,
+                    top: '16px',
+                    left: 0,
+                },
+                cardList: {
+                    background: 'transparent',
+                    marginBottom: 20,
+                },
+                cardListItemInnerDivStyle: {
+                    height: 72,
+                    paddingLeft: 56,
+                    paddingTop: 20,
+                    paddingBottom: 16,
                 },
                 contentContainer: {
                     marginTop: '20px',
                     marginLeft: '16px',
                 },
+                lastUpdatedText: {
+                    fontSize: 14,
+                    margin: '10px 0 5px 0',
+                    width: '100%',
+                    ...fontColors.light,
+                },
                 postTitle: {
                     background: 'transparent',
                     border: '0',
-                    fontWeight: '700',
+                    fontWeight: '400',
                     fontStyle: 'normal',
-                    fontSize: '40px',
+                    fontSize: '36px',
                     lineHeight: '1.15',
                     letterSpacing: '-0.02em',
                     marginBottom: '20px',
@@ -70,21 +91,15 @@ class Post extends CSSComponent {
                     width: '100%',
                     ...fontColors.dark,
                 },
-                cardList: {
-                    background: 'transparent',
-                },
-                cardListItemInnerDivStyle: {
-                    height: 72,
-                    paddingLeft: 72,
-                    paddingTop: 20,
-                    paddingBottom: 16,
-                },
-                cardListAvatar: {
-                    height: 40,
-                    width: 40,
-                    top: '16px',
+                section: {
+                    marginTop: 5,
                 },
             },
+            'isEditable-false': {
+                postTitle: {
+                    margin: 0,
+                },
+            }
         };
     }
 
@@ -140,16 +155,40 @@ class Post extends CSSComponent {
     // Render Methods
 
     renderReadonlyContent() {
+        const {
+            post
+        } = this.props;
+
+        const author = post.by_profile;
+        const lastUpdatedText = ` \u2013 ${t('Last updated')} ${moment(post.changed).fromNow()}`;
+        const editorOptions = {
+            disableEditing: true,
+        };
+
         return (
             <span>
-                <h1 is="postTitle">{this.state.title}</h1>
-                <div className="leditor">{this.state.body}</div>
+                <h1 is="postTitle">{post.title}</h1>
+                <div className="row" is="lastUpdatedText">{lastUpdatedText}</div>
+                <CardList is="cardList">
+                    <CardListItem
+                        innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
+                        leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
+                        onTouchTap={routeToProfile.bind(null, this.context.router, author)}
+                        primaryText={author.full_name}
+                        secondaryText={author.title}
+                    />
+                </CardList>
+                <MediumEditor
+                    className="leditor"
+                    options={editorOptions}
+                    text={post.content}
+                />
             </span>
         );
     }
 
     renderEditableContent() {
-        let editorOptions = {
+        const editorOptions = {
             autoLink: true,
             imageDragging: false,
             placeholder: {
@@ -194,18 +233,8 @@ class Post extends CSSComponent {
     }
 
     render() {
-        let author = this.context.authenticatedProfile;
         return (
             <DetailContent>
-                <CardList is="cardList">
-                    <CardListItem
-                        innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
-                        leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
-                        onTouchTap={routeToProfile.bind(null, this.context.router, author)}
-                        primaryText={author.full_name}
-                        secondaryText={author.title}
-                    />
-                </CardList>
                 <div className="row">
                     <div className="col-xs">
                         <div className="box" is="contentContainer">

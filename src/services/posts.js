@@ -36,7 +36,14 @@ export function getPost(postId) {
     let request = new services.post.actions.get_post.RequestV1({id: postId});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.finish(resolve, reject, postId))
+            .then(response => {
+                let resultId = postId;
+                if (resultId === undefined && response.result && response.result.post) {
+                    resultId = response.result.post.id;
+                }
+
+                response.finish(resolve, reject, resultId);
+            })
             .catch(error => reject(error));
     });
 }

@@ -48,3 +48,16 @@ export function getPosts(postState, nextRequest) {
         },
     };
 }
+
+export function getPost(postId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_POST,
+                types.GET_POST_SUCCESS,
+                types.GET_POST_FAILURE,
+            ],
+            remote: () => requests.getPost(postId),
+        },
+    };
+}

@@ -99,6 +99,13 @@ const getRoutes = (history, store) => {
                         path="/new-post"
                     />
                     <Route
+                        component={require('./containers/Post')}
+                        onEnter={applyMiddleware(
+                            ...defaultMiddleware,
+                        )}
+                        path="/post/:postId"
+                    />
+                    <Route
                         component={require('./containers/Posts')}
                         onEnter={applyMiddleware(
                             ...defaultMiddleware,

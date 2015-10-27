@@ -125,7 +125,7 @@ class Posts extends CSSComponent {
     // Render Methods
 
     renderPost(post) {
-        const lastUpdatedText = `Updated ― ${moment(post.changed).fromNow()}`;
+        const lastUpdatedText = `${t('Last updated')} ${moment(post.changed).fromNow()}`;
         return (
             <CardListItem
                 innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}

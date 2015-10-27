@@ -29,7 +29,7 @@ const selector = selectors.createImmutableSelector(
             largerDevice: responsiveState.get('largerDevice'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
-            post: postState.get('post'),
+            post: postState.get('draftPost'),
             organization: authenticationState.get('organization'),
         }
     }
@@ -194,7 +194,6 @@ class PostEditor extends CSSComponent {
                     {...this.props}
                 />
                 <Post
-
                     isEditable={true}
                     largerDevice={largerDevice}
                     onSaveCallback={::this.onSavePost}
