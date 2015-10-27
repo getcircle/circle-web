@@ -165,14 +165,14 @@ class Posts extends CSSComponent {
                             valueLink={{value: postState, requestChange: this.onTabChange.bind(this)}}
                         >
                             <Tab
-                                label={t('Drafts')}
-                                style={{...this.styles().tab}}
-                                value={PostStateV1.DRAFT.toString()}
-                            />
-                            <Tab
                                 label={t('Published')}
                                 style={{...this.styles().tab}}
                                 value={PostStateV1.LISTED.toString()}
+                            />
+                            <Tab
+                                label={t('Drafts')}
+                                style={{...this.styles().tab}}
+                                value={PostStateV1.DRAFT.toString()}
                             />
                         </Tabs>
                     </div>

@@ -1,6 +1,8 @@
 import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
+import { fontWeights } from '../constants/styles.js';
+
 import CSSComponent from './CSSComponent';
 
 class RoundedButton extends CSSComponent {
@@ -15,12 +17,12 @@ class RoundedButton extends CSSComponent {
             default: {
                 labelStyle: {
                     color: '#7A8EFF',
-                    fontSize: 16,
-                    textTransform: 'none',
+                    fontSize: 12,
+                    letterSpacing: '1px',
+                    ...fontWeights.semiBold,
                 },
                 buttonStyle: {
                     backgroundColor: 'transparent',
-                    borderRadius: '20px',
                     border: '1px solid #7A8EFF',
                 },
             },

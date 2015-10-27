@@ -192,7 +192,7 @@ class Post extends CSSComponent {
             autoLink: true,
             imageDragging: false,
             placeholder: {
-                text: t('Type your text'),
+                text: t('Contribute knowledge'),
             },
             toolbar: {
                 buttons: ['bold', 'italic', 'anchor'],

@@ -142,7 +142,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewKnowledge(event) {
-        routeToPosts(this.context.router, services.post.containers.PostStateV1.DRAFT);
+        routeToPosts(this.context.router, services.post.containers.PostStateV1.LISTED);
     }
 
     hideMenu(event) {
