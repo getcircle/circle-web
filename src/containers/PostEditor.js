@@ -68,10 +68,6 @@ class PostEditor extends CSSComponent {
         post: PropTypes.instanceOf(services.post.containers.PostV1),
     }
 
-    static defaultProps = {
-        post: null,
-    }
-
     static contextTypes = {
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
@@ -81,6 +77,10 @@ class PostEditor extends CSSComponent {
     static childContextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         mobileOS: PropTypes.bool.isRequired,
+    }
+
+    static defaultProps = {
+        post: null,
     }
 
     state = {

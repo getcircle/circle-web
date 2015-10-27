@@ -16,6 +16,7 @@ import ProfileAvatar from './ProfileAvatar';
 class Post extends CSSComponent {
 
     static propTypes = {
+        header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         onSaveCallback: PropTypes.func.isRequired,
@@ -213,8 +214,8 @@ class Post extends CSSComponent {
                     name="title"
                     onChange={::this.handleTitleChange}
                     placeholder={t('Title')}
-                    value={this.state.title}
                     type="text"
+                    value={this.state.title}
                 />
                 <MediumEditor
                     className="leditor"
@@ -239,8 +240,13 @@ class Post extends CSSComponent {
     }
 
     render() {
+        const {
+            header,
+        } = this.props;
+
         return (
             <DetailContent>
+                {header}
                 <div className="row">
                     <div className="col-xs">
                         <div className="box" is="contentContainer">

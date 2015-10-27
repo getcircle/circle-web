@@ -5,12 +5,15 @@ import { services } from 'protobufs';
 import { getPost } from '../actions/posts';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
+import { routeToEditPost } from '../utils/routes';
 import * as selectors from '../selectors';
+import t from '../utils/gettext';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import { default as PostComponent } from '../components/Post';
+import RoundedButton from '../components/RoundedButton';
 
 const selector = selectors.createImmutableSelector(
     [
@@ -56,6 +59,12 @@ class Post extends CSSComponent {
         postId: PropTypes.string,
     }
 
+    static contextTypes = {
+        router: PropTypes.shape({
+            transitionTo: PropTypes.func.isRequired,
+        }).isRequired,
+    }
+
     static childContextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         mobileOS: PropTypes.bool.isRequired,
@@ -78,9 +87,36 @@ class Post extends CSSComponent {
         }
     }
 
+    classes() {
+        return {
+            default: {
+                editButtonContainer: {
+                    width: '100%',
+                },
+            },
+        };
+    }
+
     loadPost(props) {
         this.props.dispatch(getPost(props.params.postId));
         resetScroll();
+    }
+
+    getEditButton() {
+        const {
+            post
+        } = this.props;
+
+        if (post && post.permissions && post.permissions.can_edit) {
+            return (
+                <div className="row end-xs" is="editButtonContainer">
+                    <RoundedButton
+                        label={t('Edit')}
+                        onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
+                    />
+                </div>
+            );
+        }
     }
 
     renderPost() {
@@ -91,6 +127,7 @@ class Post extends CSSComponent {
         if (post) {
             return (
                 <PostComponent
+                    header={this.getEditButton()}
                     largerDevice={largerDevice}
                     post={post}
                 />
