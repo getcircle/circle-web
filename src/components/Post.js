@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
-import { default as MediumEditor } from 'react-medium-editor';
 
 import { fontColors } from '../constants/styles';
 import moment from '../utils/moment';
@@ -84,6 +83,19 @@ class Post extends CSSComponent {
                     width: '100%',
                     ...fontColors.light,
                 },
+                postContent: {
+                    background: 'transparent',
+                    border: 0,
+                    color: 'rgba(0, 0, 0, 0.8)',
+                    fontSize: '21px',
+                    fontStyle: 'normal',
+                    fontWeight: '400',
+                    lineHeight: '1.58',
+                    minHeight: '100vh',
+                    outline: 0,
+                    resize: 'none',
+                    width: '100%',
+                },
                 postTitle: {
                     background: 'transparent',
                     border: '0',
@@ -104,6 +116,9 @@ class Post extends CSSComponent {
             'isEditable-false': {
                 postTitle: {
                     margin: 0,
+                },
+                postContent: {
+                    whiteSpace: 'pre-wrap',
                 },
             }
         };
@@ -152,10 +167,10 @@ class Post extends CSSComponent {
         }, () => this.saveData());
     }
 
-    handleBodyChange(bodyText) {
+    handleBodyChange(event) {
         this.setState({
             editing: true,
-            body: bodyText,
+            body: event.target.value,
         }, () => this.saveData());
     }
 
@@ -168,9 +183,6 @@ class Post extends CSSComponent {
 
         const author = post.by_profile;
         const lastUpdatedText = ` \u2013 ${t('Last updated')} ${moment(post.changed).fromNow()}`;
-        const editorOptions = {
-            disableEditing: true,
-        };
 
         return (
             <span>
@@ -185,27 +197,12 @@ class Post extends CSSComponent {
                         secondaryText={author.title}
                     />
                 </CardList>
-                <MediumEditor
-                    className="leditor"
-                    options={editorOptions}
-                    text={post.content}
-                />
+                <div is="postContent">{post.content}</div>
             </span>
         );
     }
 
     renderEditableContent() {
-        const editorOptions = {
-            autoLink: true,
-            imageDragging: false,
-            placeholder: {
-                text: t('Contribute knowledge'),
-            },
-            toolbar: {
-                buttons: ['bold', 'italic', 'anchor'],
-            },
-        };
-
         return (
             <span>
                 <input
@@ -217,11 +214,11 @@ class Post extends CSSComponent {
                     type="text"
                     value={this.state.title}
                 />
-                <MediumEditor
-                    className="leditor"
+                <textarea
+                    is="postContent"
                     onChange={::this.handleBodyChange}
-                    options={editorOptions}
-                    text={this.state.body}
+                    placeholder={t('Contribute Knowledge')}
+                    value={this.state.body}
                 />
             </span>
         );
