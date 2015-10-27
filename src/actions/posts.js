@@ -1,6 +1,6 @@
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
-import * as requests from '../services/post';
+import * as requests from '../services/posts';
 
 export function createPost(post) {
     return {

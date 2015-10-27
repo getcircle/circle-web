@@ -12,9 +12,10 @@ import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import ProfileAvatar from './ProfileAvatar';
 
-class Editor extends CSSComponent {
+class Post extends CSSComponent {
 
     static propTypes = {
+        isEditable: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         onSaveCallback: PropTypes.func.isRequired,
         post: PropTypes.instanceOf(services.post.containers.PostV1),
@@ -138,8 +139,16 @@ class Editor extends CSSComponent {
 
     // Render Methods
 
-    render() {
-        let author = this.context.authenticatedProfile;
+    renderReadonlyContent() {
+        return (
+            <span>
+                <h1 is="postTitle">{this.state.title}</h1>
+                <div className="leditor">{this.state.body}</div>
+            </span>
+        );
+    }
+
+    renderEditableContent() {
         let editorOptions = {
             autoLink: true,
             imageDragging: false,
@@ -151,6 +160,41 @@ class Editor extends CSSComponent {
             },
         };
 
+        return (
+            <span>
+                <input
+                    autoFocus="true"
+                    is="postTitle"
+                    name="title"
+                    onChange={::this.handleTitleChange}
+                    placeholder={t('Title')}
+                    text={this.state.title}
+                    type="text"
+                />
+                <MediumEditor
+                    className="leditor"
+                    onChange={::this.handleBodyChange}
+                    options={editorOptions}
+                    text={this.state.body}
+                />
+            </span>
+        );
+    }
+
+    renderContent() {
+        const {
+            isEditable,
+        } = this.props;
+
+        if (isEditable) {
+            return this.renderEditableContent();
+        } else {
+            return this.renderReadonlyContent();
+        }
+    }
+
+    render() {
+        let author = this.context.authenticatedProfile;
         return (
             <DetailContent>
                 <CardList is="cardList">
@@ -165,22 +209,7 @@ class Editor extends CSSComponent {
                 <div className="row">
                     <div className="col-xs">
                         <div className="box" is="contentContainer">
-                            <input
-                                autoFocus="true"
-                                is="postTitle"
-                                name="title"
-                                onChange={::this.handleTitleChange}
-                                placeholder={t('Title')}
-                                text={this.state.title}
-                                type="text"
-                            />
-                            <MediumEditor
-                                className="leditor"
-                                onChange={::this.handleBodyChange}
-                                options={editorOptions}
-                                text={this.state.body}
-
-                            />
+                            {this.renderContent()}
                         </div>
                     </div>
                 </div>
@@ -189,4 +218,4 @@ class Editor extends CSSComponent {
     }
 }
 
-export default Editor;
+export default Post;

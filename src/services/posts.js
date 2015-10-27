@@ -41,24 +41,16 @@ export function getPost(postId) {
     });
 }
 
-export function getPosts(state, nextRequest=null) {
+export function getPosts(postState, nextRequest=null) {
 
-    /*eslint-disable camelcase*/
     let parameters = {
-        state: state,
+        state: postState,
     };
-    /*eslint-enable camelcase*/
 
-    if (nextRequest) {
-        console.log('Next request set');
-    }
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);
-    let key = state;
-    console.log(request);
-
     return new Promise((resolve, reject) => {
         client.send(request)
-            .then(response => response.finish(resolve, reject, key))
+            .then(response => response.finish(resolve, reject, postState))
             .catch(error => reject(error));
     });
 }

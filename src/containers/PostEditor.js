@@ -11,7 +11,7 @@ import { routeToPosts } from '../utils/routes';
 
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
-import { default as EditorComponent } from '../components/Editor';
+import Post from '../components/Post';
 import Header from '../components/Header';
 import RoundedButton from '../components/RoundedButton';
 
@@ -24,8 +24,6 @@ const selector = selectors.createImmutableSelector(
         selectors.responsiveSelector
     ],
     (authenticationState, postState, responsiveState) => {
-        console.log('State');
-        console.log(postState.get('post'));
         return {
             authenticatedProfile: authenticationState.get('profile'),
             largerDevice: responsiveState.get('largerDevice'),
@@ -38,7 +36,7 @@ const selector = selectors.createImmutableSelector(
 );
 
 @connect(selector)
-class Editor extends CSSComponent {
+class PostEditor extends CSSComponent {
 
     static propTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -195,7 +193,9 @@ class Editor extends CSSComponent {
                     profile={authenticatedProfile}
                     {...this.props}
                 />
-                <EditorComponent
+                <Post
+
+                    isEditable={true}
                     largerDevice={largerDevice}
                     onSaveCallback={::this.onSavePost}
                     post={post}
@@ -205,4 +205,4 @@ class Editor extends CSSComponent {
     }
 }
 
-export default Editor;
+export default PostEditor;
