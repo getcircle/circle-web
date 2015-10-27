@@ -8,7 +8,6 @@ import { resetScroll } from '../utils/window';
 import { retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
-import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import { default as PostsComponent } from '../components/Posts';
 import PureComponent from '../components/PureComponent';
@@ -90,17 +89,13 @@ class Posts extends PureComponent {
             params,
             posts,
         } = this.props;
-        if (posts.length) {
-            return (
-                <PostsComponent
-                    largerDevice={largerDevice}
-                    postState={params.postState}
-                    posts={posts}
-                />
-            );
-        } else {
-            return <CenterLoadingIndicator />;
-        }
+        return (
+            <PostsComponent
+                largerDevice={largerDevice}
+                postState={params.postState}
+                posts={posts}
+            />
+        );
     }
 
     render() {

@@ -63,6 +63,12 @@ class Posts extends CSSComponent {
                     borderBottom: '1px solid rgba(0, 0, 0, .1)',
                     padding: 30,
                 },
+                emptyStateMessageContainer: {
+                    height: '100%',
+                    minHeight: '50vh',
+                    width: '100%',
+                    ...fontColors.light,
+                },
                 pageHeaderContainer: {
                     padding: '10px 0 50px 0',
                     width: '100%',
@@ -131,6 +137,18 @@ class Posts extends CSSComponent {
     }
 
 
+    getEmptyStateMessage() {
+        const {
+            postState,
+        } = this.props;
+
+        if (postState === PostStateV1.DRAFT.toString()) {
+            return t('You haven’t created any knowledge yet.');
+        } else if (postState === PostStateV1.LISTED.toString()) {
+            return t('You haven’t published any knowledge yet.');
+        }
+    }
+
     // Render Methods
 
     renderPost(post) {
@@ -146,13 +164,36 @@ class Posts extends CSSComponent {
         );
     }
 
+    renderPosts() {
+        const {
+            posts,
+        } = this.props;
+
+        if (posts.length) {
+            const postElements = posts.map((post, index) => {
+                return this.renderPost(post);
+            });
+
+            return (
+                <CardList className="row">
+                    <div className="col-xs" is="listInnerContainer">
+                        {postElements}
+                    </div>
+                </CardList>
+            );
+        } else {
+            return (
+                <p className="row center-xs middle-xs" is="emptyStateMessageContainer">
+                    {this.getEmptyStateMessage()}
+                </p>
+            );
+        }
+    }
+
     render() {
         const {
             postState,
         } = this.props;
-        const postElements = this.props.posts.map((post, index) => {
-            return this.renderPost(post);
-        });
 
         return (
             <DetailContent>
@@ -185,11 +226,7 @@ class Posts extends CSSComponent {
                             />
                         </Tabs>
                     </div>
-                    <CardList className="row">
-                        <div className="col-xs" is="listInnerContainer">
-                            {postElements}
-                        </div>
-                    </CardList>
+                    {this.renderPosts()}
                 </CardRow>
             </DetailContent>
         );
