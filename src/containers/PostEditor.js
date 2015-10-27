@@ -205,6 +205,7 @@ class PostEditor extends CSSComponent {
     canEdit() {
         if (this.props.params && this.props.params.postId) {
             return true;
+            // TODO: Fix this and add check for permissions if edit post
             // if (this.props.post) {
             //     console.log(this.props.post);
             // }

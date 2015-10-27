@@ -1,3 +1,7 @@
+import { services } from 'protobufs';
+
+import logger from './logger';
+
 const NEXT_PATHNAME_KEY = 'n:p';
 
 export function routeToProfile(router, profile) {
@@ -25,7 +29,7 @@ export function routeToStatus(router, status) {
 }
 
 export function routeToPosts(router, postState) {
-    router.transitionTo(`/posts/${postState}`);
+    router.transitionTo(`/posts/${getPostStateString(postState)}`);
 }
 
 export function routeToPost(router, post) {
@@ -43,4 +47,34 @@ export function getNextPathname() {
     const nextPathname = localStorage.getItem(NEXT_PATHNAME_KEY);
     localStorage.removeItem(NEXT_PATHNAME_KEY);
     return nextPathname;
+}
+
+const DRAFTS = 'drafts';
+const LISTED = 'published';
+const UNLISTED = 'unlisted';
+
+function getPostStateString(postState) {
+    switch (Number(postState)) {
+        case services.post.containers.PostStateV1.DRAFT:
+            return DRAFTS;
+        case services.post.containers.PostStateV1.LISTED:
+            return LISTED;
+        case services.post.containers.PostStateV1.UNLISTED:
+            return UNLISTED;
+    }
+
+    logger.error('Post state mapping not defined.');
+    return null;
+}
+
+export function getPostStateFromString(postStateString) {
+    switch (postStateString) {
+        case DRAFTS:
+            return services.post.containers.PostStateV1.DRAFT.toString();
+        case LISTED:
+            return services.post.containers.PostStateV1.LISTED.toString();
+    }
+
+    logger.error('Unknow post state string.');
+    return null;
 }

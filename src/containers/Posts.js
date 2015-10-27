@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
+import { getPostStateFromString } from '../utils/routes';
 import { getPosts } from '../actions/posts';
 import { resetScroll } from '../utils/window';
 import { retrievePosts } from '../reducers/denormalizations';
@@ -22,16 +23,21 @@ const selector = createSelector(
     ],
     (authenticationState, cacheState, responsiveState, parametersSelector, postsState) => {
         let posts, postsNextRequest;
-        const postState = parametersSelector.postState;
+        let postState = parametersSelector.postState
+        if (postState === undefined) {
+            postState = getPostStateFromString(parametersSelector.postStateString);
+        }
         const cache = cacheState.toJS();
         if (postsState.has(postState)) {
             const ids = postsState.get(postState).get('ids').toJS();
             posts = retrievePosts(ids, cache);
             postsNextRequest = postsState.get(postState).get('nextRequest');
         }
+
         return {
             authenticatedProfile: authenticationState.get('profile'),
             largerDevice: responsiveState.get('largerDevice'),
+            postState: postState,
             posts: posts,
             postsNextRequest: postsNextRequest,
         };
@@ -45,9 +51,7 @@ class Posts extends PureComponent {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
-        params: PropTypes.shape({
-            postState: PropTypes.string,
-        }),
+        postState: PropTypes.string.isRequired,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
         ),
@@ -73,26 +77,26 @@ class Posts extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        if (nextProps.params.postState !== this.props.params.postState) {
+        if (nextProps.postState !== this.props.postState) {
             this.loadPosts(nextProps);
         }
     }
 
     loadPosts(props) {
-        this.props.dispatch(getPosts(props.params.postState, props.postsNextRequest));
+        this.props.dispatch(getPosts(props.postState, props.postsNextRequest));
         resetScroll();
     }
 
     renderPosts() {
         const {
             largerDevice,
-            params,
+            postState,
             posts,
         } = this.props;
         return (
             <PostsComponent
                 largerDevice={largerDevice}
-                postState={params.postState}
+                postState={postState}
                 posts={posts}
             />
         );

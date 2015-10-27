@@ -3,6 +3,7 @@ import React from 'react';
 import { Route, Router } from 'react-router';
 import { reduxRouteComponent } from 'redux-react-router';
 
+import { getPostStateFromString } from './utils/routes';
 import { PAGE_TYPE } from './constants/trackerProperties';
 import { toggleHeader } from './actions/header';
 import tracker from './utils/tracker';
@@ -71,6 +72,14 @@ const getRoutes = (history, store) => {
         }
     }
 
+    const convertPostStateString = (next) => {
+        return (nextState, transition) => {
+            // TODO: Check what it is the right way to achieve this
+            nextState.params.postState = getPostStateFromString(nextState.params.postStateString);
+            next(nextState, transition);
+        }
+    }
+
     const defaultMiddleware = [requireAuth, displayHeader];
 
     return (
@@ -116,9 +125,10 @@ const getRoutes = (history, store) => {
                     <Route
                         component={require('./containers/Posts')}
                         onEnter={applyMiddleware(
+                            convertPostStateString,
                             ...defaultMiddleware,
                         )}
-                        path="/posts/:postState"
+                        path="/posts/:postStateString"
                     />
                     <Route
                         component={require('./containers/Search')}

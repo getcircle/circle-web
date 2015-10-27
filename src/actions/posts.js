@@ -37,15 +37,14 @@ export function getPosts(postState, nextRequest) {
                 types.GET_POSTS_FAILURE,
             ],
             remote: () => requests.getPosts(postState, nextRequest),
-            // Do not use cache for now
-            // bailout: (state) => {
-            //     if (state.posts.has(postState) && nextRequest === null) {
-            //         return state.posts.get(postState).get('ids').size > 0;
-            //     }
-            // },
+            bailout: (state) => {
+                if (state.posts.has(postState) && nextRequest === null) {
+                    return state.posts.get(postState).get('ids').size > 0;
+                }
+            },
         },
         meta: {
-            paginateBy: postState.toString(),
+            paginateBy: postState,
         },
     };
 }
