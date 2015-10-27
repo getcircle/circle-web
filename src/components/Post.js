@@ -213,7 +213,7 @@ class Post extends CSSComponent {
                     name="title"
                     onChange={::this.handleTitleChange}
                     placeholder={t('Title')}
-                    text={this.state.title}
+                    value={this.state.title}
                     type="text"
                 />
                 <MediumEditor
