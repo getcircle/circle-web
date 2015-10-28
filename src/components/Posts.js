@@ -1,4 +1,5 @@
-import { Tabs, Tab } from 'material-ui';
+import { IconButton, IconMenu, Tabs, Tab } from 'material-ui';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -13,6 +14,8 @@ import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
+import IconContainer from './IconContainer';
+import MoreVerticalIcon from './MoreVerticalIcon';
 import RoundedButton from './RoundedButton';
 
 const { PostStateV1 } = services.post.containers;
@@ -68,6 +71,23 @@ class Posts extends CSSComponent {
                     minHeight: '50vh',
                     width: '100%',
                     ...fontColors.light,
+                },
+                IconContainer: {
+                    iconStyle: {
+                        height: 24,
+                        width: 24,
+                    },
+                    rootStyle: {
+                        border: 0,
+                        borderRadius: 0,
+                        height: 24,
+                        left: 0,
+                        position: 'relative',
+                        top: 0,
+                        width: 24,
+                    },
+                    stroke: 'rgba(0, 0, 0, 0.1)',
+                    strokeWidth: 1,
                 },
                 pageHeaderContainer: {
                     padding: '10px 0 50px 0',
@@ -151,6 +171,26 @@ class Posts extends CSSComponent {
 
     // Render Methods
 
+    renderMoreButton() {
+        return (
+            <IconButton tooltip={t('More Actions')} touch={true}>
+                <IconContainer
+                    IconClass={MoreVerticalIcon}
+                    is="IconContainer"
+                />
+            </IconButton>
+        );
+    }
+
+    renderRightMenu(post) {
+        return (
+            <IconMenu iconButtonElement={this.renderMoreButton()}>
+                <MenuItem onTouchTap={routeToEditPost.bind(null, this.context.router, post)} primaryText={t('Edit')} />
+                <MenuItem primaryText={t('Delete')} />
+            </IconMenu>
+        );
+    }
+
     renderPost(post) {
         const lastUpdatedText = `${t('Last updated')} ${moment(post.changed).fromNow()}`;
         return (
@@ -159,6 +199,7 @@ class Posts extends CSSComponent {
                 onTouchTap={() => this.onPostTapped(post)}
                 primaryText={post.title}
                 primaryTextStyle={{...this.styles().primaryTextStyle}}
+                rightIconButton={this.renderRightMenu(post)}
                 secondaryText={lastUpdatedText}
             />
         );
