@@ -14,15 +14,13 @@ const posts = paginate({
     ],
     additionalTypesCallback: (state = Immutable.Map(), action) => {
         switch (action.type) {
-            case types.DELETE_POST_SUCCESS:
-                if (action.payload.postId && action.payload.postState !== undefined) {
-                    const postId = action.payload.postId;
-                    const postState = action.payload.postState;
-                    return state.mergeDeep({
-                        [postState]: state.get(postState).updateIn(['ids'], set => set.delete(postId))
-                    });
-                }
-                break;
+        case types.DELETE_POST_SUCCESS:
+            if (action.payload.postId && action.payload.postState !== undefined) {
+                const postId = action.payload.postId;
+                const postState = action.payload.postState;
+                return state.updateIn([postState, 'ids'], set => set.delete(postId));
+            }
+            break;
         }
         return state;
     }
