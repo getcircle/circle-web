@@ -3,7 +3,6 @@ import React from 'react';
 import { Route, Router } from 'react-router';
 import { reduxRouteComponent } from 'redux-react-router';
 
-import { getPostStateFromString } from './utils/routes';
 import { PAGE_TYPE } from './constants/trackerProperties';
 import { toggleHeader } from './actions/header';
 import tracker from './utils/tracker';
@@ -69,14 +68,6 @@ const getRoutes = (history, store) => {
                 }
                 next(nextState, transition);
             }
-        }
-    }
-
-    const convertPostStateString = (next) => {
-        return (nextState, transition) => {
-            // TODO: Check what it is the right way to achieve this
-            nextState.params.postState = getPostStateFromString(nextState.params.postStateString);
-            next(nextState, transition);
         }
     }
 

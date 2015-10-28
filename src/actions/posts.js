@@ -28,7 +28,7 @@ export function updatePost(post) {
     };
 }
 
-export function getPosts(postState, nextRequest) {
+export function getPosts(postStateURLString, nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -36,15 +36,15 @@ export function getPosts(postState, nextRequest) {
                 types.GET_POSTS_SUCCESS,
                 types.GET_POSTS_FAILURE,
             ],
-            remote: () => requests.getPosts(postState, nextRequest),
+            remote: () => requests.getPosts(postStateURLString, nextRequest),
             bailout: (state) => {
-                if (state.posts.has(postState) && nextRequest === null) {
-                    return state.posts.get(postState).get('ids').size > 0;
+                if (state.posts.has(postStateURLString) && nextRequest === null) {
+                    return state.posts.get(postStateURLString).get('ids').size > 0;
                 }
             },
         },
         meta: {
-            paginateBy: postState,
+            paginateBy: postStateURLString,
         },
     };
 }

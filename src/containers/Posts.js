@@ -23,9 +23,6 @@ const selector = createSelector(
     (authenticationState, cacheState, responsiveState, parametersSelector, postsState) => {
         let posts, postsNextRequest;
         let postState = parametersSelector.postState
-        // if (postState === undefined) {
-        //     postState = getPostStateFromString(parametersSelector.postStateString);
-        // }
         const cache = cacheState.toJS();
         if (postsState.has(postState)) {
             const ids = postsState.get(postState).get('ids').toJS();

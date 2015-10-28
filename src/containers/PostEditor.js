@@ -4,6 +4,7 @@ import { services } from 'protobufs';
 
 import { createPost, getPost, getPosts, updatePost } from '../actions/posts';
 import logger from '../utils/logger';
+import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
@@ -191,8 +192,8 @@ class PostEditor extends CSSComponent {
             state: PostStateV1.LISTED,
         });
         this.props.dispatch(updatePost(postV1));
-        this.props.dispatch(getPosts(PostStateV1.LISTED));
-        routeToPosts(this.context.router, PostStateV1.LISTED);
+        this.props.dispatch(getPosts(PostStateURLString.LISTED));
+        routeToPosts(this.context.router, PostStateURLString.LISTED);
     }
 
     getProgressMessage() {

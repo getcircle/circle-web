@@ -1,7 +1,3 @@
-import { services } from 'protobufs';
-
-import logger from './logger';
-
 const NEXT_PATHNAME_KEY = 'n:p';
 
 export function routeToProfile(router, profile) {
@@ -48,33 +44,3 @@ export function getNextPathname() {
     localStorage.removeItem(NEXT_PATHNAME_KEY);
     return nextPathname;
 }
-
-// const DRAFTS = 'drafts';
-// const LISTED = 'published';
-// const UNLISTED = 'unlisted';
-
-// function getPostStateString(postState) {
-//     switch (Number(postState)) {
-//         case services.post.containers.PostStateV1.DRAFT:
-//             return DRAFTS;
-//         case services.post.containers.PostStateV1.LISTED:
-//             return LISTED;
-//         case services.post.containers.PostStateV1.UNLISTED:
-//             return UNLISTED;
-//     }
-
-//     logger.error('Post state mapping not defined ' + postState);
-//     return null;
-// }
-
-// export function getPostStateFromString(postStateString) {
-//     switch (postStateString) {
-//         case DRAFTS:
-//             return services.post.containers.PostStateV1.DRAFT.toString();
-//         case LISTED:
-//             return services.post.containers.PostStateV1.LISTED.toString();
-//     }
-
-//     logger.error('Unknown post state string ' + postStateString);
-//     return null;
-// }

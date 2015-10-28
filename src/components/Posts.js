@@ -6,6 +6,7 @@ import { services } from 'protobufs';
 import CurrentTheme from '../utils/ThemeManager';
 import { fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
+import { PostStateURLString } from '../utils/post';
 import { routeToEditPost, routeToNewPost, routeToPosts, routeToPost } from '../utils/routes';
 import t from '../utils/gettext';
 
@@ -178,9 +179,9 @@ class Posts extends CSSComponent {
             postState,
         } = this.props;
 
-        if (postState === PostStateV1.DRAFT.toString()) {
+        if (postState === PostStateURLString.DRAFT.toString()) {
             return t('You haven’t created any knowledge yet.');
-        } else if (postState === PostStateV1.LISTED.toString()) {
+        } else if (postState === PostStateURLString.LISTED.toString()) {
             return t('You haven’t published any knowledge yet.');
         }
     }
@@ -336,12 +337,12 @@ class Posts extends CSSComponent {
                             <Tab
                                 label={t('Published')}
                                 style={{...this.styles().tab}}
-                                value={PostStateV1.LISTED.toString()}
+                                value={PostStateURLString.LISTED.toString()}
                             />
                             <Tab
                                 label={t('Drafts')}
                                 style={{...this.styles().tab}}
-                                value={PostStateV1.DRAFT.toString()}
+                                value={PostStateURLString.DRAFT.toString()}
                             />
                         </Tabs>
                     </div>

@@ -1,5 +1,7 @@
 import { services } from 'protobufs';
 
+import { getPostStateFromURLString } from '../utils/post';
+
 import client from './client';
 
 export function createPost(post) {
@@ -57,16 +59,16 @@ export function getPost(postId) {
     });
 }
 
-export function getPosts(postState, nextRequest=null) {
+export function getPosts(postStateURLString, nextRequest=null) {
 
     let parameters = {
-        state: postState,
+        state: getPostStateFromURLString(postStateURLString),
     };
 
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.send(request)
-            .then(response => response.finish(resolve, reject, postState))
+            .then(response => response.finish(resolve, reject, postStateURLString))
             .catch(error => reject(error));
     });
 }
