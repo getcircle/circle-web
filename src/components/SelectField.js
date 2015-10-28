@@ -166,11 +166,9 @@ class SelectField extends CSSComponent {
                 <Infinite
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}
-                    infiniteLoadBeginBottomOffset={this.props.infiniteLoadBeginBottomOffset}
-                    isInfiniteLoading={this.props.isInfiniteLoading}
                     loadingSpinnerDelegate={::this.renderLoadingIndicator()}
-                    onInfiniteLoad={this.props.onInfiniteLoad}
                     ref="list"
+                    {...this.props}
                 >
                     {elements}
                 </Infinite>
