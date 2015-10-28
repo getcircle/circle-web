@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import Infinite from 'react-infinite';
 
-import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
