@@ -164,15 +164,15 @@ class Post extends CSSComponent {
         this.setState({
             derivedTitle: false,
             editing: true,
-            title: event.target.value,
+            title: event.target.value.trimLeft(),
         }, () => this.saveData());
     }
 
     handleBodyChange(event) {
-        const newValue = event.target.value;
+        const newValue = event.target.value.trimLeft();
         let modifiedState = {
             editing: true,
-            body: event.target.value,
+            body: newValue,
         };
 
         if (this.state.title.trim() === '' || this.state.derivedTitle === true) {
