@@ -23,6 +23,7 @@ class SelectField extends CSSComponent {
         arrowIconStyle: PropTypes.object,
         infiniteLoadBeginBottomOffset: PropTypes.number,
         inputName: PropTypes.string,
+        inputPlaceholder: PropTypes.string,
         inputStyle: PropTypes.object,
         isInfiniteLoading: PropTypes.bool,
         items: PropTypes.array,
@@ -158,7 +159,7 @@ class SelectField extends CSSComponent {
                 <input
                     name={this.props.inputName}
                     onChange={::this.handleChange}
-                    placeholder={t('Search')}
+                    placeholder={this.props.inputPlaceholder}
                     ref="searchInput"
                     style={this.props.inputStyle}
                 />

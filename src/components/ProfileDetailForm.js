@@ -558,6 +558,7 @@ class ProfileDetailForm extends CSSComponent {
                     <div is="sectionTitle">{t('Reports to')}</div>
                     <ProfilesSelector
                         dispatch={this.props.dispatch}
+                        inputPlaceholder={t('Search Manager')}
                         is="ProfilesSelector"
                         onSelect={::this.handleManagerSelected}
                         value={selectFieldValue}

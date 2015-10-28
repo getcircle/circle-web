@@ -64,6 +64,7 @@ class ProfilesSelector extends CSSComponent {
         arrowIconContainerStyle: PropTypes.object,
         arrowIconStyle: PropTypes.object,
         dispatch: PropTypes.func.isRequired,
+        inputPlaceholder: PropTypes.string,
         inputStyle: PropTypes.object,
         listDividerStyle: PropTypes.object,
         listItemInnerDivStyle: PropTypes.object,
