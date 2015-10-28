@@ -1,4 +1,4 @@
-import { IconButton, IconMenu, Tabs, Tab } from 'material-ui';
+import { Dialog, FlatButton, IconButton, IconMenu, Tabs, Tab } from 'material-ui';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
@@ -42,7 +42,9 @@ class Posts extends CSSComponent {
     }
 
     state = {
+        confirmDelete: false,
         muiTheme: CurrentTheme,
+        postToBeDeleted: null,
     }
 
     getChildContext() {
@@ -89,6 +91,20 @@ class Posts extends CSSComponent {
                     },
                     stroke: 'rgba(0, 0, 0, 0.1)',
                     strokeWidth: 1,
+                },
+                MenuItem: {
+                    innerDivStyle: {
+                        fontSize: 12,
+                        ...fontColors.light,
+                    },
+                    style: {
+                        lineHeight: '30px',
+                    },
+                },
+                ModalPrimaryActionButton: {
+                    labelStyle: {
+                        color: 'rgba(255, 0, 0, 0.7)',
+                    },
                 },
                 pageHeaderContainer: {
                     padding: '10px 0 50px 0',
@@ -169,7 +185,61 @@ class Posts extends CSSComponent {
         }
     }
 
+    onDeleteButtonTapped(post) {
+        this.setState({
+            confirmDelete: true,
+            postToBeDeleted: post,
+        });
+    }
+
+    onModalCancelTapped() {
+        this.resetDeleteState();
+    }
+
+    onModalDeleteTapped() {
+        if (this.state.postToBeDeleted) {
+            this.props.onDeletePostCallback(this.state.postToBeDeleted);
+        }
+
+        this.resetDeleteState();
+    }
+
+    resetDeleteState() {
+        this.setState({
+            confirmDelete: false,
+            postToBeDeleted: null,
+        });
+    }
+
     // Render Methods
+
+    renderDeleteModal() {
+        if (this.state.confirmDelete) {
+            const dialogActions = [
+                (<FlatButton
+                    label={t('Cancel')}
+                    onTouchTap={::this.onModalCancelTapped}
+                    secondary={true}
+                />),
+                (<FlatButton
+                    is="ModalPrimaryActionButton"
+                    label={t('Delete')}
+                    onTouchTap={::this.onModalDeleteTapped}
+                    primary={true}
+                />)
+            ];
+            return (
+                <Dialog
+                    actions={dialogActions}
+                    modal={true}
+                    openImmediately={true}
+                    title={t('Delete Knowledge Post?')}
+                >
+                    {t('Please confirm if you want to delete this post. This action cannot be undone.')}
+                </Dialog>
+            );
+        }
+    }
 
     renderMoreButton() {
         return (
@@ -183,14 +253,18 @@ class Posts extends CSSComponent {
     }
 
     renderRightMenu(post) {
-        const {
-            onDeletePostCallback,
-        } = this.props;
-
         return (
             <IconMenu iconButtonElement={this.renderMoreButton()}>
-                <MenuItem onTouchTap={routeToEditPost.bind(null, this.context.router, post)} primaryText={t('Edit')} />
-                <MenuItem onTouchTap={() => onDeletePostCallback(post)} primaryText={t('Delete')} />
+                <MenuItem
+                    is="MenuItem"
+                    onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
+                    primaryText={t('Edit')}
+                />
+                <MenuItem
+                    is="MenuItem"
+                    onTouchTap={() => this.onDeleteButtonTapped(post)}
+                    primaryText={t('Delete')}
+                />
             </IconMenu>
         );
     }
@@ -273,6 +347,7 @@ class Posts extends CSSComponent {
                     </div>
                     {this.renderPosts()}
                 </CardRow>
+                {this.renderDeleteModal()}
             </DetailContent>
         );
     }
