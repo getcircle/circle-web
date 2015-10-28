@@ -197,11 +197,20 @@ class PostEditor extends CSSComponent {
     }
 
     getProgressMessage() {
-        if (this.state.saving) {
-            return t('(Saving...)');
-        } else if (this.props.post) {
-            return t('(Saved)');
+        let postType = '';
+        if (!this.props.post ||
+            (this.props.post && (this.props.post.state === null || this.props.post.state === PostStateV1.DRAFT))
+        ) {
+            postType = t('Draft');
         }
+
+        if (this.state.saving) {
+            return `${postType} ${t('Saving...')}`;
+        } else if (this.props.post) {
+            return`${postType} ${t('Saved')}`;
+        }
+
+        return postType;
     }
 
     canEdit() {
@@ -232,7 +241,7 @@ class PostEditor extends CSSComponent {
             return (
                 <div className="row middle-xs between-xs" is="headerActionContainer">
                     <div is="headerMessageText">
-                        <span>Draft {this.getProgressMessage()}</span>
+                        <span>{this.getProgressMessage()}</span>
                     </div>
                     <div>
                         <RoundedButton
