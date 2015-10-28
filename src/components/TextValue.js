@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 
 import { fontColors, tintColor } from '../constants/styles';
 import moment from '../utils/moment';
+import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
 
 import Card from './Card';
@@ -173,7 +174,7 @@ class TextValue extends CSSComponent {
             shouldLimitCharacters
         } = this.props;
 
-        let finalStatusValue = this.state.value.replace(/^\s+|\s+$/g, '');
+        let finalStatusValue = trimNewLinesAndWhitespace(this.state.value);
         if (shouldLimitCharacters && finalStatusValue.length > CHARACTER_LIMIT) {
             this.setState({
                 error: t('Status can only be up to ' + CHARACTER_LIMIT + ' characters'),

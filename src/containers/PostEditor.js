@@ -8,6 +8,7 @@ import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
+import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
 import { routeToPosts } from '../utils/routes';
 
@@ -161,22 +162,24 @@ class PostEditor extends CSSComponent {
         }
 
         this.setState({saving: true});
+        const trimmedBodyValue = trimNewLinesAndWhitespace(body);
+        const trimmedTitleValue = trimNewLinesAndWhitespace(title);
 
         if (!this.props.post) {
-            logger.log('CREATING NEW POST');
+            logger.log('Creating new post');
             this.postCreationInProgress = true;
             let postV1 = new PostV1({
-                content: body,
-                title: title,
+                content: trimmedBodyValue,
+                title: trimmedTitleValue,
             });
 
             this.props.dispatch(createPost(postV1));
         }
         else {
-            logger.log('SAVING EXISTING POST');
+            logger.log('Saving existing post');
             let postV1 = Object.assign({}, this.props.post, {
-                content: body,
-                title: title,
+                content: trimmedBodyValue,
+                title: trimmedTitleValue,
             });
             this.props.dispatch(updatePost(postV1));
         }
