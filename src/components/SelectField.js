@@ -2,11 +2,12 @@ import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import Infinite from 'react-infinite';
 
-import { tintColor } from '../constants/styles';
+import { tintColor, iconColors } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
+import SearchIcon from './SearchIcon';
 
 const {
     CircularProgress,
@@ -21,8 +22,6 @@ class SelectField extends CSSComponent {
         arrowIconContainerStyle: PropTypes.object,
         arrowIconStyle: PropTypes.object,
         infiniteLoadBeginBottomOffset: PropTypes.number,
-        inputName: PropTypes.string,
-        inputPlaceholder: PropTypes.string,
         inputStyle: PropTypes.object,
         isInfiniteLoading: PropTypes.bool,
         items: PropTypes.array,
@@ -35,6 +34,10 @@ class SelectField extends CSSComponent {
         onBlur: PropTypes.func,
         onInfiniteLoad: PropTypes.func,
         onInputChange: PropTypes.func,
+        searchIconStyle: PropTypes.object,
+        searchInputName: PropTypes.string,
+        searchInputPlaceholder: PropTypes.string,
+        searchInputStyle: PropTypes.object,
         value: PropTypes.string,
     }
 
@@ -60,6 +63,13 @@ class SelectField extends CSSComponent {
                 loadingIndicatorContainer: {
                     justifyContent: 'center',
                 },
+                SearchIcon: {
+                    style: {
+                        ...this.props.searchIconStyle
+                    },
+                    strokeWidth: '3px',
+                    ...iconColors.medium,
+                }
             }
         }
     }
@@ -155,12 +165,13 @@ class SelectField extends CSSComponent {
             <Paper
                 style={{...this.props.listStyle}}
             >
+                <SearchIcon is="SearchIcon" />
                 <input
-                    name={this.props.inputName}
+                    name={this.props.searchInputName}
                     onChange={::this.handleChange}
-                    placeholder={this.props.inputPlaceholder}
+                    placeholder={this.props.searchInputPlaceholder}
                     ref="searchInput"
-                    style={this.props.inputStyle}
+                    style={this.props.searchInputStyle}
                 />
                 <Infinite
                     containerHeight={containerHeight}

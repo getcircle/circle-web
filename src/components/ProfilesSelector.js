@@ -64,7 +64,6 @@ class ProfilesSelector extends CSSComponent {
         arrowIconContainerStyle: PropTypes.object,
         arrowIconStyle: PropTypes.object,
         dispatch: PropTypes.func.isRequired,
-        inputPlaceholder: PropTypes.string,
         inputStyle: PropTypes.object,
         listDividerStyle: PropTypes.object,
         listItemInnerDivStyle: PropTypes.object,
@@ -75,6 +74,9 @@ class ProfilesSelector extends CSSComponent {
         profilesLoading: PropTypes.bool,
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
+        searchIconStyle: PropTypes.object,
+        searchInputPlaceholder: PropTypes.string,
+        searchInputStyle: PropTypes.object,
         value: PropTypes.string,
     }
 
@@ -148,13 +150,13 @@ class ProfilesSelector extends CSSComponent {
             <div>
                 <SelectField
                     infiniteLoadBeginBottomOffset={100}
-                    inputName="query"
                     items={this.getItems()}
                     listItemHeight={50}
                     maxListHeight={150}
                     onBlur={::this.handleBlur}
                     onInfiniteLoad={::this.handleInfiniteLoad}
                     onInputChange={::this.handleInputChange}
+                    searchInputName="query"
                     {...this.props}
                 />
             </div>

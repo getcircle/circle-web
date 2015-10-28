@@ -219,6 +219,29 @@ class ProfileDetailForm extends CSSComponent {
                         position: 'absolute',
                         marginTop: '-9px',
                     },
+                    searchIconStyle: {
+                        height: 25,
+                        left: 10,
+                        position: 'absolute',
+                        top: 12,
+                        width: 25,
+                    },
+                    searchInputStyle: {
+                        border: '1px solid rgba(0, 0, 0, 0.1)',
+                        borderRadius: '3px',
+                        boxSizing: 'border-box',
+                        display: 'flex',
+                        fontSize: 14,
+                        height: '50px',
+                        outline: 'none',
+                        width: '100%',
+                        lineHeight: 'normal',
+                        paddingTop: '10px',
+                        paddingLeft: '40px',
+                        paddingBottom: '10px',
+                        paddingRight: '10px',
+                        ...fontColors.dark,
+                    },
                 },
             },
             'error': {
@@ -558,9 +581,9 @@ class ProfileDetailForm extends CSSComponent {
                     <div is="sectionTitle">{t('Reports to')}</div>
                     <ProfilesSelector
                         dispatch={this.props.dispatch}
-                        inputPlaceholder={t('Search Manager')}
                         is="ProfilesSelector"
                         onSelect={::this.handleManagerSelected}
+                        searchInputPlaceholder={t('Search Manager')}
                         value={selectFieldValue}
                     />
                 </form>
