@@ -35,6 +35,7 @@ class Post extends CSSComponent {
     }
 
     state = {
+        derivedTitle: false,
         editing: false,
         title: '',
         body: '',
@@ -161,16 +162,25 @@ class Post extends CSSComponent {
 
     handleTitleChange(event) {
         this.setState({
+            derivedTitle: false,
             editing: true,
             title: event.target.value,
         }, () => this.saveData());
     }
 
     handleBodyChange(event) {
-        this.setState({
+        const newValue = event.target.value;
+        let modifiedState = {
             editing: true,
             body: event.target.value,
-        }, () => this.saveData());
+        };
+
+        if (this.state.title.trim() === '' || this.state.derivedTitle === true) {
+            modifiedState.title = newValue.split('.')[0].substring(0, 40);
+            modifiedState.derivedTitle = true;
+        }
+
+        this.setState(modifiedState, () => this.saveData());
     }
 
     // Render Methods
