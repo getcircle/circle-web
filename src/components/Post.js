@@ -103,7 +103,6 @@ class Post extends CSSComponent {
                     fontStyle: 'normal',
                     fontSize: '36px',
                     lineHeight: '1.15',
-                    letterSpacing: '-0.02em',
                     marginBottom: '20px',
                     outline: 'none',
                     width: '100%',
@@ -181,9 +180,12 @@ class Post extends CSSComponent {
             post
         } = this.props;
 
+        if (!post) {
+            return;
+        }
+
         const author = post.by_profile;
         const lastUpdatedText = ` \u2013 ${t('Last updated')} ${moment(post.changed).fromNow()}`;
-
         return (
             <span>
                 <h1 is="postTitle">{post.title}</h1>

@@ -204,13 +204,22 @@ class PostEditor extends CSSComponent {
     }
 
     canEdit() {
-        if (this.props.params && this.props.params.postId) {
-            return true;
-            // TODO: Fix this and add check for permissions if edit post
-            // if (this.props.post) {
-            //     console.log(this.props.post);
+        const {
+            params,
+            // post,
+        } = this.props;
+
+        // Post is being edited
+        if (params && params.postId) {
+            // TODO: Enable this after the backend is fixed for update post
+            // calls. Without that this is a security hole.
+            // Check if post has been fetched
+            // if (post && post.permissions && post.permissions.can_edit) {
+            //     return true;
             // }
+            return true;
         } else {
+            // New post is being created.
             return true;
         }
 
@@ -218,19 +227,21 @@ class PostEditor extends CSSComponent {
     }
 
     renderHeaderActionsContainer() {
-        return (
-            <div className="row middle-xs between-xs" is="headerActionContainer">
-                <div is="headerMessageText">
-                    <span>Draft {this.getProgressMessage()}</span>
+        if (this.canEdit()) {
+            return (
+                <div className="row middle-xs between-xs" is="headerActionContainer">
+                    <div is="headerMessageText">
+                        <span>Draft {this.getProgressMessage()}</span>
+                    </div>
+                    <div>
+                        <RoundedButton
+                            label={t('Publish')}
+                            onTouchTap={::this.onPublishButtonTapped}
+                        />
+                    </div>
                 </div>
-                <div>
-                    <RoundedButton
-                        label={t('Publish')}
-                        onTouchTap={::this.onPublishButtonTapped}
-                    />
-                </div>
-            </div>
-        );
+            );
+        }
     }
 
     renderPost() {
