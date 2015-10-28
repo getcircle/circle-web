@@ -9,6 +9,7 @@ export default function paginate({
         types,
         mapActionToKey,
         mapActionToResults = action => action.payload.result,
+        additionalTypesCallback,
     }) {
     if (!Array.isArray(types) || types.length !== 3) {
         throw new Error('Expected types to be an array of three elements');
@@ -67,6 +68,10 @@ export default function paginate({
         case actionTypes.LOGOUT_SUCCESS:
             return Immutable.Map();
         default:
+            if (additionalTypesCallback) {
+                return additionalTypesCallback(state, action);
+            }
+
             return state;
         }
     };

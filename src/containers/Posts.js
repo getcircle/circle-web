@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
-import { getPosts } from '../actions/posts';
+import { deletePost, getPosts } from '../actions/posts';
 import { resetScroll } from '../utils/window';
 import { retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
@@ -86,6 +86,10 @@ class Posts extends PureComponent {
         resetScroll();
     }
 
+    onDeletePostTapped(post) {
+        this.props.dispatch(deletePost(post));
+    }
+
     renderPosts() {
         const {
             largerDevice,
@@ -95,6 +99,7 @@ class Posts extends PureComponent {
         return (
             <PostsComponent
                 largerDevice={largerDevice}
+                onDeletePostCallback={::this.onDeletePostTapped}
                 postState={postState}
                 posts={posts}
             />

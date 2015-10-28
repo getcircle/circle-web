@@ -24,6 +24,7 @@ class Posts extends CSSComponent {
 
     static propTypes = {
         largerDevice: PropTypes.bool.isRequired,
+        onDeletePostCallback: PropTypes.func.isRequired,
         postState: PropTypes.string,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
@@ -106,7 +107,6 @@ class Posts extends CSSComponent {
                 },
                 tabsContainer: {
                     borderBottom: '1px solid rgba(0, 0, 0, .1)',
-                    marginBottom: 20,
                     width: '100%',
                 },
                 tabInkBarStyle: {
@@ -183,10 +183,14 @@ class Posts extends CSSComponent {
     }
 
     renderRightMenu(post) {
+        const {
+            onDeletePostCallback,
+        } = this.props;
+
         return (
             <IconMenu iconButtonElement={this.renderMoreButton()}>
                 <MenuItem onTouchTap={routeToEditPost.bind(null, this.context.router, post)} primaryText={t('Edit')} />
-                <MenuItem primaryText={t('Delete')} />
+                <MenuItem onTouchTap={() => onDeletePostCallback(post)} primaryText={t('Delete')} />
             </IconMenu>
         );
     }

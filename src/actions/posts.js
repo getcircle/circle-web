@@ -61,3 +61,16 @@ export function getPost(postId) {
         },
     };
 }
+
+export function deletePost(post) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.DELETE_POST,
+                types.DELETE_POST_SUCCESS,
+                types.DELETE_POST_FAILURE,
+            ],
+            remote: () => requests.deletePost(post),
+        },
+    };
+}

@@ -23,11 +23,20 @@ export function updatePost(post) {
     });
 }
 
-export function deletePost(postId) {
-    let request = new services.post.actions.delete_post.RequestV1({id: postId});
+export function deletePost(post) {
+    let request = new services.post.actions.delete_post.RequestV1({id: post.id});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.finish(resolve, reject))
+            .then(response => {
+                if (response.isSuccess()) {
+                    resolve({
+                        postId: post.id,
+                        postState: post.state.toString(),
+                    });
+                } else {
+                    reject('Post wasn\'t deleted');
+                }
+            })
             .catch(error => reject(error));
     });
 }
