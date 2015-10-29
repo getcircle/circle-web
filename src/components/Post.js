@@ -6,6 +6,7 @@ import moment from '../utils/moment';
 import { routeToPost, routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
 
+import AutogrowTextarea from './AutogrowTextarea';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
@@ -89,15 +90,12 @@ class Post extends CSSComponent {
                 },
                 postContent: {
                     background: 'transparent',
-                    border: 0,
                     color: 'rgba(0, 0, 0, 0.8)',
                     fontSize: '21px',
                     fontStyle: 'normal',
                     fontWeight: '400',
                     lineHeight: '1.58',
                     minHeight: '100vh',
-                    outline: 0,
-                    resize: 'none',
                     width: '100%',
                 },
                 postTitle: {
@@ -106,7 +104,7 @@ class Post extends CSSComponent {
                     fontWeight: '400',
                     fontStyle: 'normal',
                     fontSize: '36px',
-                    lineHeight: '1.15',
+                    lineHeight: '1.5',
                     marginBottom: '20px',
                     outline: 'none',
                     width: '100%',
@@ -117,6 +115,31 @@ class Post extends CSSComponent {
                 },
                 section: {
                     marginTop: 5,
+                },
+                AutogrowTitleTextarea: {
+                    textareaStyle: {
+                        background: 'transparent',
+                        border: '0',
+                        fontWeight: '400',
+                        fontStyle: 'normal',
+                        fontSize: '36px',
+                        lineHeight: '1.5',
+                        marginBottom: '20px',
+                        minHeight: 49,
+                        ...fontColors.dark,
+                    },
+                },
+                AutogrowTextarea: {
+                    textareaStyle: {
+                        background: 'transparent',
+                        border: 0,
+                        color: 'rgba(0, 0, 0, 0.8)',
+                        fontSize: '21px',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        lineHeight: '1.58',
+                        minHeight: '50px',
+                    },
                 },
             },
             'isEditable-false': {
@@ -170,23 +193,23 @@ class Post extends CSSComponent {
 
     // Change Methods
 
-    handleTitleChange(event) {
+    handleTitleChange(event, value) {
         this.setState({
             derivedTitle: false,
             editing: true,
-            title: event.target.value.trimLeft(),
+            title: value.trimLeft(),
         }, () => this.saveData(false));
     }
 
-    handleBodyChange(event) {
-        const newValue = event.target.value.trimLeft();
+    handleBodyChange(event, value) {
+        const newValue = value.trimLeft();
         let modifiedState = {
             editing: true,
             body: newValue,
         };
 
         if (this.state.title.trim() === '' || this.state.derivedTitle === true) {
-            modifiedState.title = newValue.split('.')[0].substring(0, 40);
+            modifiedState.title = newValue.split('.')[0].substring(0, 80);
             modifiedState.derivedTitle = true;
         }
 
@@ -227,17 +250,17 @@ class Post extends CSSComponent {
     renderEditableContent() {
         return (
             <span>
-                <input
+                <AutogrowTextarea
                     autoFocus="true"
-                    is="postTitle"
-                    name="title"
+                    is="AutogrowTitleTextarea"
                     onChange={::this.handleTitleChange}
                     placeholder={t('Title')}
-                    type="text"
+                    singleLine={true}
                     value={this.state.title}
                 />
-                <textarea
-                    is="postContent"
+                <AutogrowTextarea
+                    additionalHeightDelta={50}
+                    is="AutogrowTextarea"
                     onChange={::this.handleBodyChange}
                     placeholder={t('Contribute Knowledge')}
                     value={this.state.body}
