@@ -4,7 +4,7 @@ import { LinearProgress } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { fontColors, fontWeights } from '../constants/styles';
+import { backgroundColors, fontColors, fontWeights } from '../constants/styles';
 import logger from '../utils/logger';
 import * as messageTypes from '../constants/messageTypes';
 import { PAGE_TYPE } from '../constants/trackerProperties';
@@ -187,7 +187,7 @@ class ProfileDetailForm extends CSSComponent {
                         height: 8,
                         width: 14,
                     },
-                    inputStyle: {
+                    fieldInputStyle: {
                         border: '1px solid rgba(0, 0, 0, 0.1)',
                         borderRadius: '3px',
                         boxSizing: 'border-box',
@@ -209,7 +209,7 @@ class ProfileDetailForm extends CSSComponent {
                         fontSize: 14,
                         ...fontColors.dark,
                     },
-                    listStyle: {
+                    fieldListStyle: {
                         borderRadius: '0px 0px 3px 3px',
                         boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
                         justifyContent: 'flex-start',
@@ -219,14 +219,14 @@ class ProfileDetailForm extends CSSComponent {
                         position: 'absolute',
                         marginTop: '-9px',
                     },
-                    searchIconStyle: {
+                    fieldSearchIconStyle: {
                         height: 25,
                         left: 10,
                         position: 'absolute',
                         top: 12,
                         width: 25,
                     },
-                    searchInputStyle: {
+                    fieldSearchInputStyle: {
                         border: '1px solid rgba(0, 0, 0, 0.1)',
                         borderRadius: '3px',
                         boxSizing: 'border-box',
@@ -241,6 +241,40 @@ class ProfileDetailForm extends CSSComponent {
                         paddingBottom: '10px',
                         paddingRight: '10px',
                         ...fontColors.dark,
+                    },
+                    dialogSearchInputContainerStyle: {
+                        boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
+                        width: 'initial',
+                        height: 50,
+                        margin: 10,
+                        ...backgroundColors.light,
+                    },
+                    dialogSearchInputStyle: {
+                        border: 'none',
+                        borderRadius: 4,
+                        flex: 1,
+                        fontSize: '14px',
+                        lineHeight: '19px',
+                        outline: 'none',
+                        paddingLeft: 5,
+                        height: '100%',
+                        ...fontColors.light,
+                    },
+                    dialogSearchIconStyle: {
+                        alignSelf: 'center',
+                        height: 25,
+                        marginLeft: 14,
+                        width: 25,
+                    },
+                    dialogListStyle: {
+                        borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                        borderRadius: '0px 0px 3px 3px',
+                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
+                        justifyContent: 'flex-start',
+                        overflowY: 'hidden',
+                        textAlign: 'start',
+                        height: '100vh',
+                        width: '100vw',
                     },
                 },
             },
@@ -494,6 +528,11 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     renderContent() {
+        const {
+            dispatch,
+            largerDevice,
+        } = this.props;
+
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
         let selectFieldValue = !!this.state.manager ? this.state.manager.full_name : '';
 
@@ -580,8 +619,9 @@ class ProfileDetailForm extends CSSComponent {
                      />
                     <div is="sectionTitle">{t('Reports to')}</div>
                     <ProfilesSelector
-                        dispatch={this.props.dispatch}
+                        dispatch={dispatch}
                         is="ProfilesSelector"
+                        largerDevice={largerDevice}
                         onSelect={::this.handleManagerSelected}
                         searchInputPlaceholder={t('Search Manager')}
                         value={selectFieldValue}

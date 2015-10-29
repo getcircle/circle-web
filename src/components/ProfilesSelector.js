@@ -7,9 +7,11 @@ import { loadSearchResults } from '../actions/search';
 import * as exploreActions from '../actions/explore';
 import { retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
+import { PAGE_TYPE } from '../constants/trackerProperties';
 
 import CSSComponent from  './CSSComponent';
 import SelectField from './SelectField';
+import SelectDialog from './SelectDialog';
 
 const cacheSelector = selectors.createImmutableSelector(
     [
@@ -63,20 +65,25 @@ class ProfilesSelector extends CSSComponent {
     static propTypes = {
         arrowIconContainerStyle: PropTypes.object,
         arrowIconStyle: PropTypes.object,
+        dialogListStyle: PropTypes.object,
+        dialogSearchIconStyle: PropTypes.object,
+        dialogSearchInputContainerStyle: PropTypes.object,
+        dialogSearchInputStyle: PropTypes.object,
         dispatch: PropTypes.func.isRequired,
-        inputStyle: PropTypes.object,
+        fieldInputStyle: PropTypes.object,
+        fieldListStyle: PropTypes.object,
+        fieldSearchIconStyle: PropTypes.object,
+        fieldSearchInputStyle: PropTypes.object,
+        largerDevice: PropTypes.bool.isRequired,
         listDividerStyle: PropTypes.object,
         listItemInnerDivStyle: PropTypes.object,
         listItemPrimaryTextStyle: PropTypes.object,
-        listStyle: PropTypes.object,
         onSelect: PropTypes.func,
         profiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         profilesLoading: PropTypes.bool,
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
-        searchIconStyle: PropTypes.object,
         searchInputPlaceholder: PropTypes.string,
-        searchInputStyle: PropTypes.object,
         value: PropTypes.string,
     }
 
@@ -145,20 +152,83 @@ class ProfilesSelector extends CSSComponent {
         this.setState({query: value});
     }
 
-    render() {
+    renderField() {
+        const {
+            fieldInputStyle,
+            fieldListStyle,
+            fieldSearchIconStyle,
+            fieldSearchInputStyle,
+        } = this.props;
+
+        return (
+            <SelectField
+                infiniteLoadBeginBottomOffset={100}
+                inputStyle={fieldInputStyle}
+                items={this.getItems()}
+                listItemHeight={50}
+                listStyle={fieldListStyle}
+                maxListHeight={150}
+                onBlur={::this.handleBlur}
+                onInfiniteLoad={::this.handleInfiniteLoad}
+                onInputChange={::this.handleInputChange}
+                searchIconStyle={fieldSearchIconStyle}
+                searchInputName="query"
+                searchInputStyle={fieldSearchInputStyle}
+                {...this.props}
+            />
+        );
+    }
+
+    renderDialog() {
+        const {
+            dialogListStyle,
+            dialogSearchIconStyle,
+            dialogSearchInputContainerStyle,
+            dialogSearchInputStyle,
+        } = this.props;
+
         return (
             <div>
-                <SelectField
+                <input
+                    onClick={() => this.refs.selectDialog.show()}
+                    readOnly={true}
+                    style={this.props.fieldInputStyle}
+                    value={this.props.value}
+                />
+                <SelectDialog
                     infiniteLoadBeginBottomOffset={100}
                     items={this.getItems()}
                     listItemHeight={50}
-                    maxListHeight={150}
-                    onBlur={::this.handleBlur}
+                    listStyle={dialogListStyle}
+                    onDismiss={::this.handleBlur}
                     onInfiniteLoad={::this.handleInfiniteLoad}
                     onInputChange={::this.handleInputChange}
-                    searchInputName="query"
+                    pageType={PAGE_TYPE.PROFILE_SELECTOR}
+                    ref="selectDialog"
+                    searchIconStyle={dialogSearchIconStyle}
+                    searchInputContainerStyle={dialogSearchInputContainerStyle}
+                    searchInputStyle={dialogSearchInputStyle}
+                    title={this.props.searchInputPlaceholder}
                     {...this.props}
                 />
+            </div>
+        );
+    }
+
+    render() {
+        let field;
+        let dialog;
+        if (this.props.largerDevice) {
+            field = this.renderField();
+        }
+        else {
+            dialog = this.renderDialog();
+        }
+
+        return (
+            <div>
+                {field}
+                {dialog}
             </div>
         );
     }
