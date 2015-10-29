@@ -52,6 +52,7 @@ const selector = selectors.createImmutableSelector(
             mobileOS: responsiveState.get('mobileOS'),
             post: post,
             organization: authenticationState.get('organization'),
+            shouldAutoSave: !post || (post && (!post.state || post.state === PostStateV1.DRAFT)),
         }
     }
 );
@@ -68,6 +69,7 @@ class PostEditor extends CSSComponent {
             postId: PropTypes.string,
         }),
         post: PropTypes.instanceOf(services.post.containers.PostV1),
+        shouldAutoSave: PropTypes.bool,
     }
 
     static contextTypes = {
@@ -82,6 +84,7 @@ class PostEditor extends CSSComponent {
     }
 
     static defaultProps = {
+        shouldAutoSave: true,
         post: null,
     }
 
@@ -200,17 +203,24 @@ class PostEditor extends CSSComponent {
     }
 
     getProgressMessage() {
+        const {
+            post,
+            shouldAutoSave,
+        } = this.props;
+
         let postType = '';
-        if (!this.props.post ||
-            (this.props.post && (this.props.post.state === null || this.props.post.state === PostStateV1.DRAFT))
+        if (!post ||
+            (post && (post.state === null || post.state === PostStateV1.DRAFT))
         ) {
             postType = t('Draft');
         }
 
-        if (this.state.saving) {
-            return `${postType} ${t('Saving...')}`;
-        } else if (this.props.post) {
-            return`${postType} ${t('Saved')}`;
+        if (shouldAutoSave) {
+            if (this.state.saving) {
+                return `${postType} ${t('Saving...')}`;
+            } else if (post) {
+                return`${postType} ${t('Saved')}`;
+            }
         }
 
         return postType;
@@ -239,6 +249,18 @@ class PostEditor extends CSSComponent {
         return false;
     }
 
+    renderPublishButton() {
+        if (this.props.shouldAutoSave) {
+            return (
+                <div>
+                    <RoundedButton
+                        label={t('Publish')}
+                        onTouchTap={::this.onPublishButtonTapped}
+                    />
+                </div>
+            );
+        }
+    }
     renderHeaderActionsContainer() {
         if (this.canEdit()) {
             return (
@@ -246,12 +268,7 @@ class PostEditor extends CSSComponent {
                     <div is="headerMessageText">
                         <span>{this.getProgressMessage()}</span>
                     </div>
-                    <div>
-                        <RoundedButton
-                            label={t('Publish')}
-                            onTouchTap={::this.onPublishButtonTapped}
-                        />
-                    </div>
+                    {this.renderPublishButton()}
                 </div>
             );
         }
@@ -262,6 +279,7 @@ class PostEditor extends CSSComponent {
             largerDevice,
             params,
             post,
+            shouldAutoSave,
         } = this.props;
 
         if (params && params.postId && !post) {
@@ -270,6 +288,7 @@ class PostEditor extends CSSComponent {
 
         return (
             <Post
+                autoSave={shouldAutoSave}
                 isEditable={this.canEdit()}
                 largerDevice={largerDevice}
                 onSaveCallback={::this.onSavePost}

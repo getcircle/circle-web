@@ -3,7 +3,7 @@ import { services } from 'protobufs';
 
 import { fontColors } from '../constants/styles';
 import moment from '../utils/moment';
-import { routeToProfile } from '../utils/routes';
+import { routeToPost, routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
 
 import CardList from './CardList';
@@ -11,10 +11,12 @@ import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import ProfileAvatar from './ProfileAvatar';
+import RoundedButton from './RoundedButton';
 
 class Post extends CSSComponent {
 
     static propTypes = {
+        autoSave: PropTypes.bool,
         header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
@@ -30,6 +32,7 @@ class Post extends CSSComponent {
     }
 
     static defaultProps = {
+        autoSave: true,
         isEditable: false,
         post: null,
     }
@@ -109,6 +112,9 @@ class Post extends CSSComponent {
                     width: '100%',
                     ...fontColors.dark,
                 },
+                publishButtonContainer: {
+                    width: '100%',
+                },
                 section: {
                     marginTop: 5,
                 },
@@ -148,14 +154,18 @@ class Post extends CSSComponent {
         }
     }
 
-    saveData() {
-        if (this.saveTimeout !== null) {
-            window.clearTimeout(this.saveTimeout);
-        }
+    saveData(explicitSave) {
+        if (this.props.autoSave === true) {
+            if (this.saveTimeout !== null) {
+                window.clearTimeout(this.saveTimeout);
+            }
 
-        this.saveTimeout = window.setTimeout(() => {
+            this.saveTimeout = window.setTimeout(() => {
+                this.props.onSaveCallback(this.state.title, this.state.body);
+            }, 500);
+        } else if (explicitSave === true) {
             this.props.onSaveCallback(this.state.title, this.state.body);
-        }, 500);
+        }
     }
 
     // Change Methods
@@ -165,7 +175,7 @@ class Post extends CSSComponent {
             derivedTitle: false,
             editing: true,
             title: event.target.value.trimLeft(),
-        }, () => this.saveData());
+        }, () => this.saveData(false));
     }
 
     handleBodyChange(event) {
@@ -180,7 +190,7 @@ class Post extends CSSComponent {
             modifiedState.derivedTitle = true;
         }
 
-        this.setState(modifiedState, () => this.saveData());
+        this.setState(modifiedState, () => this.saveData(false));
     }
 
     // Render Methods
@@ -248,6 +258,31 @@ class Post extends CSSComponent {
         }
     }
 
+    renderActionButtons() {
+        const {
+            autoSave,
+            header,
+            isEditable,
+            post,
+        } = this.props;
+
+        // If auto-save is false but the content is editable
+        // show explicit controls.
+        if (autoSave === false && isEditable === true && !header && post) {
+            return (
+                <div className="row end-xs" is="publishButtonContainer">
+                    <RoundedButton
+                        label={t('Publish')}
+                        onTouchTap={() => {
+                            this.saveData(true);
+                            routeToPost(this.context.router, post);
+                        }}
+                    />
+                </div>
+            );
+        }
+    }
+
     render() {
         const {
             header,
@@ -256,6 +291,7 @@ class Post extends CSSComponent {
         return (
             <DetailContent>
                 {header}
+                {this.renderActionButtons()}
                 <div className="row">
                     <div className="col-xs">
                         <div className="box" is="contentContainer">
