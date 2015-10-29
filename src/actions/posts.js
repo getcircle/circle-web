@@ -49,6 +49,15 @@ export function getPosts(postStateURLString, nextRequest) {
     };
 }
 
+export function clearPosts(postStateURLString) {
+    return {
+        type: types.CLEAR_POSTS_CACHE,
+        payload: {
+            postState: postStateURLString,
+        },
+    };
+}
+
 export function getPost(postId) {
     return {
         [SERVICE_REQUEST]: {

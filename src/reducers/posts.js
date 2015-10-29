@@ -21,6 +21,14 @@ const posts = paginate({
                 return state.updateIn([postState, 'ids'], set => set.delete(postId));
             }
             break;
+
+        case types.CLEAR_POSTS_CACHE:
+            if (action.payload.postState === null || action.payload.postState === undefined) {
+                return Immutable.Map();
+            } else if (action.payload.postState) {
+                return state.deleteIn([action.payload.postState]);
+            }
+            break;
         }
         return state;
     }

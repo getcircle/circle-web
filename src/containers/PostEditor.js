@@ -2,7 +2,8 @@ import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { createPost, getPost, getPosts, updatePost } from '../actions/posts';
+import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
+import { getPostStateURLString } from '../utils/post';
 import logger from '../utils/logger';
 import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
@@ -177,6 +178,7 @@ class PostEditor extends CSSComponent {
             });
 
             this.props.dispatch(createPost(postV1));
+            this.props.dispatch(clearPosts(PostStateURLString.DRAFT));
         }
         else {
             logger.log('Saving existing post');
@@ -185,6 +187,7 @@ class PostEditor extends CSSComponent {
                 title: trimmedTitleValue,
             });
             this.props.dispatch(updatePost(postV1));
+            this.props.dispatch(clearPosts(getPostStateURLString(postV1.state)));
         }
     }
 
@@ -197,8 +200,9 @@ class PostEditor extends CSSComponent {
         let postV1 = Object.assign({}, this.props.post, {
             state: PostStateV1.LISTED,
         });
+
         this.props.dispatch(updatePost(postV1));
-        this.props.dispatch(getPosts(PostStateURLString.LISTED));
+        this.props.dispatch(clearPosts());
         routeToPosts(this.context.router, PostStateURLString.LISTED);
     }
 
