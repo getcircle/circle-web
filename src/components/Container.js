@@ -27,7 +27,7 @@ class Container extends CSSComponent {
             ...other,
         } = this.props;
         return (
-            <section {...other} is="root">
+            <section {...other} style={{...this.styles().root, ...style}}>
                 {this.props.children}
             </section>
         );

@@ -23,6 +23,7 @@ class Post extends CSSComponent {
         largerDevice: PropTypes.bool.isRequired,
         onSaveCallback: PropTypes.func.isRequired,
         post: PropTypes.instanceOf(services.post.containers.PostV1),
+        style: PropTypes.object,
     }
 
     static contextTypes = {
@@ -309,10 +310,11 @@ class Post extends CSSComponent {
     render() {
         const {
             header,
+            style,
         } = this.props;
 
         return (
-            <DetailContent>
+            <DetailContent style={{...style}}>
                 {header}
                 {this.renderActionButtons()}
                 <div className="row">

@@ -120,6 +120,11 @@ class PostEditor extends CSSComponent {
     classes() {
         return {
             default: {
+                Container: {
+                    style: {
+                        backgroundColor: 'rgb(255, 255, 255)',
+                    },
+                },
                 headerActionButtonLabel: {
                     color: '#8598FF',
                     fontSize: 16,
@@ -137,6 +142,11 @@ class PostEditor extends CSSComponent {
                     color: 'rgba(0, 0, 0, 0.4)',
                     fontSize: 14,
                     marginRight: '20px',
+                },
+                Post: {
+                    style: {
+                        backgroundColor: 'rgb(255, 255, 255)',
+                    },
                 }
             },
         }
@@ -293,6 +303,7 @@ class PostEditor extends CSSComponent {
         return (
             <Post
                 autoSave={shouldAutoSave}
+                is="Post"
                 isEditable={this.canEdit()}
                 largerDevice={largerDevice}
                 onSaveCallback={::this.onSavePost}
@@ -307,7 +318,7 @@ class PostEditor extends CSSComponent {
         } = this.props;
 
         return (
-            <Container>
+            <Container is="Container">
                 <Header
                     actionsContainer={this.renderHeaderActionsContainer()}
                     profile={authenticatedProfile}
