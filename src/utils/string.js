@@ -5,3 +5,11 @@ export function trimNewLinesAndWhitespace(stringValue) {
 
     return stringValue;
 }
+
+export function trimNewLines(stringValue) {
+    if (stringValue !== undefined && stringValue !== null) {
+        return stringValue.replace(/\n|\r/g, '');
+    }
+
+    return stringValue;
+}
