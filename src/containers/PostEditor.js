@@ -161,7 +161,7 @@ class PostEditor extends CSSComponent {
         resetScroll();
     }
 
-    onSavePost(title, body) {
+    onSavePost(title, body, postState) {
         logger.log('Saving Post');
         logger.log(body);
 
@@ -176,10 +176,15 @@ class PostEditor extends CSSComponent {
         }
 
         this.setState({saving: true});
+        const {
+            dispatch,
+            post,
+        } = this.props;
+
         const trimmedBodyValue = trimNewLinesAndWhitespace(body);
         const trimmedTitleValue = trimNewLinesAndWhitespace(title);
 
-        if (!this.props.post) {
+        if (!post) {
             logger.log('Creating new post');
             this.postCreationInProgress = true;
             let postV1 = new PostV1({
@@ -187,17 +192,23 @@ class PostEditor extends CSSComponent {
                 title: trimmedTitleValue,
             });
 
-            this.props.dispatch(createPost(postV1));
-            this.props.dispatch(clearPosts(PostStateURLString.DRAFT));
+            dispatch(createPost(postV1));
+            dispatch(clearPosts(PostStateURLString.DRAFT));
         }
         else {
             logger.log('Saving existing post');
-            let postV1 = Object.assign({}, this.props.post, {
+            let updates = {
                 content: trimmedBodyValue,
                 title: trimmedTitleValue,
-            });
-            this.props.dispatch(updatePost(postV1));
-            this.props.dispatch(clearPosts(getPostStateURLString(postV1.state)));
+            };
+
+            if (postState !== undefined && postState !== null) {
+                updates.state = postState;
+            }
+
+            let postV1 = Object.assign({}, post, updates);
+            dispatch(updatePost(postV1));
+            dispatch(clearPosts(getPostStateURLString(postV1.state)));
         }
     }
 
@@ -207,11 +218,11 @@ class PostEditor extends CSSComponent {
             return;
         }
 
-        let postV1 = Object.assign({}, this.props.post, {
-            state: PostStateV1.LISTED,
-        });
-
-        this.props.dispatch(updatePost(postV1));
+        this.onSavePost(
+            this.refs.post.getCurrentTitle(),
+            this.refs.post.getCurrentBody(),
+            PostStateV1.LISTED,
+        );
         this.props.dispatch(clearPosts());
         routeToPosts(this.context.router, PostStateURLString.LISTED);
     }
@@ -308,6 +319,7 @@ class PostEditor extends CSSComponent {
                 largerDevice={largerDevice}
                 onSaveCallback={::this.onSavePost}
                 post={post}
+                ref="post"
             />
         );
     }

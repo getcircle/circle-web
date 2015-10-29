@@ -192,6 +192,16 @@ class Post extends CSSComponent {
         }
     }
 
+    // Getters
+
+    getCurrentTitle() {
+        return this.state.title;
+    }
+
+    getCurrentBody() {
+        return this.state.body;
+    }
+
     // Change Methods
 
     handleTitleChange(event, value) {
