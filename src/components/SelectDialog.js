@@ -49,8 +49,6 @@ class SelectDialog extends CSSComponent {
         return {
             default: {
                 root: {
-                    display: 'flex',
-                    flexDirection: 'column',
                     padding: 0,
                     width: '100%',
                 },
