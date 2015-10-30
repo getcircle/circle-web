@@ -48,6 +48,7 @@ const selector = selectors.createImmutableSelector(
 
         return {
             authenticatedProfile: authenticationState.get('profile'),
+            isSaving: postState.get('loading'),
             largerDevice: responsiveState.get('largerDevice'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
@@ -64,6 +65,7 @@ class PostEditor extends CSSComponent {
     static propTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         dispatch: PropTypes.func.isRequired,
+        isSaving: PropTypes.bool,
         largerDevice: PropTypes.bool.isRequired,
         mobileOS: PropTypes.bool.isRequired,
         params: PropTypes.shape({
@@ -89,10 +91,6 @@ class PostEditor extends CSSComponent {
         post: null,
     }
 
-    state = {
-        saving: false,
-    }
-
     getChildContext() {
         return {
             authenticatedProfile: this.props.authenticatedProfile,
@@ -104,7 +102,7 @@ class PostEditor extends CSSComponent {
         this.loadPost(this.props);
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
+    componentWillReceiveProps(nextProps) {
         // If this is in edit mode, load another post if we detect a different post ID in the URL
         if (this.props.params.postId && nextProps.params.postId) {
             if (nextProps.params.postId !== this.props.params.postId) {
@@ -113,8 +111,6 @@ class PostEditor extends CSSComponent {
         } else if (nextProps.post) {
             this.postCreationInProgress = false;
         }
-
-        this.setState({saving: false});
     }
 
     classes() {
@@ -162,9 +158,6 @@ class PostEditor extends CSSComponent {
     }
 
     onSavePost(title, body, postState) {
-        logger.log('Saving Post');
-        logger.log(body);
-
         if (title.trim() === '' || body.trim() === '') {
             return;
         }
@@ -175,7 +168,6 @@ class PostEditor extends CSSComponent {
             return;
         }
 
-        this.setState({saving: true});
         const {
             dispatch,
             post,
@@ -227,30 +219,6 @@ class PostEditor extends CSSComponent {
         routeToPosts(this.context.router, PostStateURLString.LISTED);
     }
 
-    getProgressMessage() {
-        const {
-            post,
-            shouldAutoSave,
-        } = this.props;
-
-        let postType = '';
-        if (!post ||
-            (post && (post.state === null || post.state === PostStateV1.DRAFT))
-        ) {
-            postType = t('Draft');
-        }
-
-        if (shouldAutoSave) {
-            if (this.state.saving) {
-                return `${postType} ${t('Saving...')}`;
-            } else if (post) {
-                return`${postType} ${t('Saved')}`;
-            }
-        }
-
-        return postType;
-    }
-
     canEdit() {
         const {
             params,
@@ -274,6 +242,31 @@ class PostEditor extends CSSComponent {
         return false;
     }
 
+    renderProgressMessage() {
+        const {
+            isSaving,
+            post,
+            shouldAutoSave,
+        } = this.props;
+
+        let postType = '';
+        if (!post ||
+            (post && (post.state === null || post.state === PostStateV1.DRAFT))
+        ) {
+            postType = t('Draft');
+        }
+
+        if (shouldAutoSave && isSaving) {
+            postType += ` (${t('Saving...')})`;
+        }
+
+        return (
+            <div is="headerMessageText">
+                <span>{postType}</span>
+            </div>
+        );
+    }
+
     renderPublishButton() {
         if (this.props.shouldAutoSave) {
             return (
@@ -290,9 +283,7 @@ class PostEditor extends CSSComponent {
         if (this.canEdit()) {
             return (
                 <div className="row middle-xs between-xs" is="headerActionContainer">
-                    <div is="headerMessageText">
-                        <span>{this.getProgressMessage()}</span>
-                    </div>
+                    {this.renderProgressMessage()}
                     {this.renderPublishButton()}
                 </div>
             );

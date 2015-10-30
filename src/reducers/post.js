@@ -10,6 +10,7 @@ const initialState = Immutable.fromJS({
 
 export default function post(state = initialState, action) {
     switch(action.type) {
+    case types.UPDATE_POST:
     case types.CREATE_POST:
         return state.merge({
             loading: true,
@@ -26,8 +27,10 @@ export default function post(state = initialState, action) {
             loading: false,
         });
 
+    case types.UPDATE_POST_SUCCESS:
     case types.GET_POST_SUCCESS:
-        return state.updateIn(['ids'], set => set.add(action.payload.result));
+        return state.updateIn(['ids'], set => set.add(action.payload.result))
+                    .merge({loading: false});
 
     case '@@reduxReactRouter/locationDidChange':
         return state.merge({
