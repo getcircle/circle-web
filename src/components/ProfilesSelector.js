@@ -220,8 +220,7 @@ class ProfilesSelector extends CSSComponent {
         let dialog;
         if (this.props.largerDevice) {
             field = this.renderField();
-        }
-        else {
+        } else {
             dialog = this.renderDialog();
         }
 
