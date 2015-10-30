@@ -111,6 +111,8 @@ class PostEditor extends CSSComponent {
         } else if (nextProps.post) {
             this.postCreationInProgress = false;
         }
+
+        this.showProgressMessage(nextProps);
     }
 
     classes() {
@@ -135,9 +137,10 @@ class PostEditor extends CSSComponent {
                     width: '100%',
                 },
                 headerMessageText: {
+                    backgroundColor: 'transparent',
+                    border: 0,
                     color: 'rgba(0, 0, 0, 0.4)',
                     fontSize: 14,
-                    marginRight: '20px',
                 },
                 Post: {
                     style: {
@@ -242,12 +245,12 @@ class PostEditor extends CSSComponent {
         return false;
     }
 
-    renderProgressMessage() {
+    showProgressMessage(props) {
         const {
             isSaving,
             post,
             shouldAutoSave,
-        } = this.props;
+        } = props;
 
         let postType = '';
         if (!post ||
@@ -257,14 +260,12 @@ class PostEditor extends CSSComponent {
         }
 
         if (shouldAutoSave && isSaving) {
-            postType += ` (${t('Saving...')})`;
+            postType += ` ${t('Saving')}\u2026`;
         }
 
-        return (
-            <div is="headerMessageText">
-                <span>{postType}</span>
-            </div>
-        );
+        if (this.refs.headerMessageText) {
+            this.refs.headerMessageText.getDOMNode().value = postType;
+        }
     }
 
     renderPublishButton() {
@@ -283,7 +284,9 @@ class PostEditor extends CSSComponent {
         if (this.canEdit()) {
             return (
                 <div className="row middle-xs between-xs" is="headerActionContainer">
-                    {this.renderProgressMessage()}
+                    <div>
+                        <input disabled={true} is="headerMessageText" ref="headerMessageText" />
+                    </div>
                     {this.renderPublishButton()}
                 </div>
             );
