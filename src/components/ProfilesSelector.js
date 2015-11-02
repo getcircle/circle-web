@@ -70,6 +70,7 @@ class ProfilesSelector extends CSSComponent {
         dialogSearchIconStyle: PropTypes.object,
         dialogSearchInputContainerStyle: PropTypes.object,
         dialogSearchInputStyle: PropTypes.object,
+        dialogTitle: PropTypes.string,
         dispatch: PropTypes.func.isRequired,
         fieldInputStyle: PropTypes.object,
         fieldListStyle: PropTypes.object,
@@ -211,7 +212,7 @@ class ProfilesSelector extends CSSComponent {
                     searchIconStyle={dialogSearchIconStyle}
                     searchInputContainerStyle={dialogSearchInputContainerStyle}
                     searchInputStyle={dialogSearchInputStyle}
-                    title={this.props.searchInputPlaceholder}
+                    title={this.props.dialogTitle}
                     {...this.props}
                 />
             </div>

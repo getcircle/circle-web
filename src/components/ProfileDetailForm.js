@@ -616,6 +616,7 @@ class ProfileDetailForm extends CSSComponent {
                     <div is="sectionTitle">{t('Reports to')}</div>
                     <ProfilesSelector
                         dispatch={dispatch}
+                        dialogTitle={t('Change Manager')}
                         is="ProfilesSelector"
                         largerDevice={largerDevice}
                         onSelect={::this.handleManagerSelected}
