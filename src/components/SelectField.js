@@ -121,11 +121,11 @@ class SelectField extends CSSComponent {
     renderResult(item, index) {
         return (
             <ListItem
+                {...item}
                 innerDivStyle={{...this.props.listItemInnerDivStyle}}
                 key={index}
                 name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
-                primaryText={item.primaryText}
                 primaryTextStyle={{...this.props.listItemPrimaryTextStyle}}
             />
         );

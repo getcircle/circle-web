@@ -98,11 +98,11 @@ class SelectDialog extends CSSComponent {
 
         return (
             <ListItem
+                {...item}
                 innerDivStyle={listItemInnerDivStyle}
                 key={index}
                 name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
-                primaryText={item.primaryText}
                 primaryTextStyle={listItemPrimaryTextStyle}
             />
         );

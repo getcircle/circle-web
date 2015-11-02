@@ -12,6 +12,7 @@ import { PAGE_TYPE } from '../constants/trackerProperties';
 import CSSComponent from  './CSSComponent';
 import SelectField from './SelectField';
 import SelectDialog from './SelectDialog';
+import ProfileAvatar from './ProfileAvatar';
 
 const cacheSelector = selectors.createImmutableSelector(
     [
@@ -101,6 +102,16 @@ class ProfilesSelector extends CSSComponent {
 
     currentSearchTimeout = null
 
+    listItemPropsForProfile(profile) {
+        const item = {
+            leftAvatar: <ProfileAvatar profile={profile} />,
+            primaryText: profile.full_name,
+            secondaryText: `${profile.display_title}`,
+            onTouchTap: this.props.onSelect.bind(this, profile)
+        };
+        return item
+    }
+
     getItems() {
         const searchResults = this.props.results[this.state.query];
 
@@ -110,20 +121,12 @@ class ProfilesSelector extends CSSComponent {
             const { profiles } = this.props;
             if (profiles) {
                 items = profiles.map((profile, index) => {
-                    const item = {
-                        primaryText: profile.full_name,
-                        onTouchTap: this.props.onSelect.bind(this, profile)
-                    };
-                    return item
+                    return this.listItemPropsForProfile(profile);
                 });
             }
         } else if (!!searchResults) {
             items = searchResults.map((result, index) => {
-                const item = {
-                    primaryText: result.profile.full_name,
-                    onTouchTap: this.props.onSelect.bind(this, result.profile)
-                };
-                return item
+                return this.listItemPropsForProfile(result.profile);
             });
         }
 

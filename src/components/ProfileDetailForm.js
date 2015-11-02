@@ -200,9 +200,10 @@ class ProfileDetailForm extends CSSComponent {
                     },
                     listDividerStyle: {
                         backgroundColor: 'rgba(0, 0, 0, .05)',
+                        marginLeft: 58,
                     },
                     listItemInnerDivStyle: {
-                        paddingLeft: 10,
+                        paddingLeft: 70,
                     },
                     listItemPrimaryTextStyle: {
                         fontSize: 14,
