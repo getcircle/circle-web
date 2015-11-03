@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { detectURLsAndAddMarkup } from '../utils/string';
 import { fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import { routeToPost, routeToProfile } from '../utils/routes';
@@ -227,6 +228,12 @@ class Post extends CSSComponent {
         this.setState(modifiedState, () => this.saveData(false));
     }
 
+    getReadOnlyContent(content) {
+        return {
+            __html: detectURLsAndAddMarkup(content),
+        };
+    }
+
     // Render Methods
 
     renderReadonlyContent() {
@@ -253,7 +260,7 @@ class Post extends CSSComponent {
                         secondaryText={author.title}
                     />
                 </CardList>
-                <div is="postContent">{post.content}</div>
+                <div dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)} is="postContent" />
             </span>
         );
     }
