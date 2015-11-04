@@ -88,7 +88,6 @@ class SelectField extends CSSComponent {
 
     handleFocus() {
         this.setState({focused: true});
-        this.setIgnoreBlur(true);
     }
 
     handleBlur(event) {
