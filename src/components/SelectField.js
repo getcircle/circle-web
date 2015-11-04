@@ -131,7 +131,6 @@ class SelectField extends CSSComponent {
                 innerDivStyle={{...this.props.listItemInnerDivStyle}}
                 key={index}
                 name="listItem"
-                onMouseEnter={() => this.setIgnoreBlur(true)}
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
                 primaryTextStyle={{...this.props.listItemPrimaryTextStyle}}
             />
