@@ -179,6 +179,9 @@ class Post extends CSSComponent {
         }
     }
 
+    /**
+     * If autoSave is true, the value passed in explicitSave is ignored.
+     */
     saveData(explicitSave) {
         if (this.props.autoSave === true) {
             if (this.saveTimeout !== null) {
@@ -260,7 +263,11 @@ class Post extends CSSComponent {
                         secondaryText={author.title}
                     />
                 </CardList>
-                <div className="postContent" dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)} is="postContent" />
+                <div
+                    className="postContent"
+                    dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
+                    is="postContent"
+                />
             </span>
         );
     }
@@ -318,6 +325,7 @@ class Post extends CSSComponent {
                             this.saveData(true);
                             routeToPost(this.context.router, post);
                         }}
+                        ref="publishButton"
                     />
                 </div>
             );
