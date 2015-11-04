@@ -260,7 +260,7 @@ class Post extends CSSComponent {
                         secondaryText={author.title}
                     />
                 </CardList>
-                <div dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)} is="postContent" />
+                <div className="postContent" dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)} is="postContent" />
             </span>
         );
     }

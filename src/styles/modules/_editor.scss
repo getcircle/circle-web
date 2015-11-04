@@ -3,16 +3,15 @@
     min-height: 100px;
 }
 
-.leditor a {
-    color: inherit;
-    cursor: text;
+.postContent a, .leditor a {
+    color: rgb(0, 136, 204);
     background-color: transparent;
-    background-image: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 50%);
+    background-image: linear-gradient(to bottom, rgba(0, 136, 204, 0) 50%, rgba(0, 136, 204, 0.6) 50%);
     background-repeat: repeat-x;
     background-size: 2px 2px;
     background-position: 0 22px;
     text-decoration: none;
-    -webkit-tap-highlight-color: rgba(0,0,0,0.3);
+    -webkit-tap-highlight-color: rgba(0, 136, 204, 0.3);
 }
 
 .leditor b, .leditor strong {
