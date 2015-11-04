@@ -55,6 +55,13 @@ class SelectField extends CSSComponent {
         if (!!searchInput) {
             searchInput.focus();
         }
+        this.ignoreBlur = false
+    }
+
+    ignoreBlur = false
+
+    setIgnoreBlur(ignoreBlur) {
+        this.ignoreBlur = ignoreBlur;
     }
 
     classes() {
@@ -85,8 +92,7 @@ class SelectField extends CSSComponent {
     }
 
     handleBlur(event) {
-        let relatedTarget = event.relatedTarget;
-        if (!!relatedTarget && relatedTarget.name === 'listItem') {
+        if (this.ignoreBlur) {
             event.preventDefault();
         } else {
             this.setState({focused: false});
@@ -125,6 +131,8 @@ class SelectField extends CSSComponent {
                 innerDivStyle={{...this.props.listItemInnerDivStyle}}
                 key={index}
                 name="listItem"
+                onMouseEnter={() => this.setIgnoreBlur(true)}
+                onMouseLeave={() => this.setIgnoreBlur(false)}
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
                 primaryTextStyle={{...this.props.listItemPrimaryTextStyle}}
             />
@@ -163,6 +171,7 @@ class SelectField extends CSSComponent {
 
         return (
             <Paper
+                onBlur={::this.handleBlur}
                 style={{...this.props.listStyle}}
             >
                 <SearchIcon is="SearchIcon" />
@@ -194,7 +203,6 @@ class SelectField extends CSSComponent {
 
         return (
             <div
-                onBlur={::this.handleBlur}
                 onFocus={::this.handleFocus}
             >
                 <input
