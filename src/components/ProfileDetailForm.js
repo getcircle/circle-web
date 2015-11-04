@@ -203,6 +203,7 @@ class ProfileDetailForm extends CSSComponent {
                         marginLeft: 58,
                     },
                     listItemInnerDivStyle: {
+                        textAlign: 'left',
                         paddingLeft: 70,
                     },
                     listItemPrimaryTextStyle: {
