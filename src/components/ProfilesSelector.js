@@ -166,12 +166,12 @@ class ProfilesSelector extends CSSComponent {
 
         return (
             <SelectField
-                infiniteLoadBeginBottomOffset={100}
+                infiniteLoadBeginBottomOffset={140}
                 inputStyle={fieldInputStyle}
                 items={this.getItems()}
-                listItemHeight={50}
+                listItemHeight={70}
                 listStyle={fieldListStyle}
-                maxListHeight={150}
+                maxListHeight={175}
                 onBlur={::this.handleBlur}
                 onInfiniteLoad={::this.handleInfiniteLoad}
                 onInputChange={::this.handleInputChange}
