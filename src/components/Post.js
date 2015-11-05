@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { detectURLsAndAddMarkup } from '../utils/string';
+import {
+    detectEmailsAndAddMarkup,
+    detectURLsAndAddMarkup,
+} from '../utils/string';
 import { fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import { routeToPost, routeToProfile } from '../utils/routes';
@@ -233,7 +236,7 @@ class Post extends CSSComponent {
 
     getReadOnlyContent(content) {
         return {
-            __html: detectURLsAndAddMarkup(content),
+            __html: detectEmailsAndAddMarkup(detectURLsAndAddMarkup(content)),
         };
     }
 

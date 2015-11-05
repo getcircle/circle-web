@@ -2,6 +2,7 @@ import expect from 'expect';
 import React, { PropTypes } from 'react/addons';
 import { services } from 'protobufs';
 
+import PostFactory from '../factories/PostFactory';
 import ProfileFactory from '../factories/ProfileFactory';
 
 import AutogrowTextarea from '../../src/components/AutogrowTextarea';
@@ -63,6 +64,25 @@ describe('PostComponent', () => {
             const { postComponent } = setup({isEditable: false});
             let textareas = TestUtils.scryRenderedComponentsWithType(postComponent, AutogrowTextarea);
             expect(textareas.length).toBe(0);
+        });
+
+        it('detects URLs and emails in readonly content and adds markup', () => {
+            const postContent = 'This is a sample post content. For more details checkout - https://lunohq.com ' +
+            'If you have any questions, contact ravi@lunohq.com or michael@lunohq.com';
+            const { postComponent } = setup({
+                isEditable: false,
+                post: PostFactory.getPostWithContent(postContent),
+            });
+
+            const postContentComponent = TestUtils.findRenderedDOMComponentWithClass(postComponent, 'postContent');
+            expect(TestUtils.isDOMComponent(postContentComponent)).toBe(true);
+
+            expect((React.findDOMNode(postContentComponent)).innerHTML).toBe(
+                'This is a sample post content. For more details checkout - ' +
+                '<a href="https://lunohq.com" target="_blank">https://lunohq.com</a> ' +
+                'If you have any questions, contact <a href="mailto:ravi@lunohq.com">ravi@lunohq.com</a> or ' +
+                '<a href="mailto:michael@lunohq.com">michael@lunohq.com</a>'
+            );
         });
 
     });
