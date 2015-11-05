@@ -120,6 +120,7 @@ class Posts extends CSSComponent {
                     padding: 0,
                 },
                 primaryTextStyle: {
+                    lineHeight: '25px',
                     marginBottom: 5,
                 },
                 tabsContainer: {

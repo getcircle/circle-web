@@ -64,6 +64,7 @@ export const SEARCH_RESULT_TYPE = {
     TEAM : 'Team',
     LOCATION : 'Location',
     PROFILE_STATUS: 'Profile Status',
+    POST: 'Post',
 
     // Smart Actions (NOTE: Contact methods are captured separately)
     LOCATION_ADDRESS: 'Location Address',
