@@ -64,3 +64,4 @@ export const searchSelector = state => state.search;
 export const teamMembersSelector = state => state.teamMembers;
 export const mediaUploadSelector = state => state.mediaUpload;
 export const statusesSelector = state => state.statuses
+export const updateProfileSelector = state => state.updateProfile;

@@ -11,3 +11,4 @@ export { default as responsive } from './responsive';
 export { default as search } from './search';
 export { default as teamMembers } from './teamMembers';
 export { default as statuses } from './statuses';
+export { default as updateProfile } from './profile';

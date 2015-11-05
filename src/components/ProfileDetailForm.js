@@ -23,15 +23,24 @@ import ProfilesSelector from './ProfilesSelector'
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const mediaSelector = selectors.createImmutableSelector(
-    [selectors.mediaUploadSelector], (mediaUploadState) => {
+const selector = selectors.createImmutableSelector(
+    [
+        selectors.mediaUploadSelector,
+        selectors.updateProfileSelector,
+    ],
+    (
+        mediaUploadState,
+        updateProfileState,
+    ) => {
         return {
             mediaUrl: mediaUploadState.get('mediaUrl'),
+            saveError: updateProfileState.get('error'),
+            saving: updateProfileState.get('saving'),
         };
     }
 );
 
-@connect(mediaSelector)
+@connect(selector)
 class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
@@ -43,10 +52,14 @@ class ProfileDetailForm extends CSSComponent {
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        saveError: PropTypes.object,
+        saving: PropTypes.bool,
     }
 
     static defaultProps = {
         mediaUrl: '',
+        saveError: null,
+        saving: false,
     }
 
     state = {
@@ -298,19 +311,31 @@ class ProfileDetailForm extends CSSComponent {
             imageUrl: this.getPreviewImageUrl(props),
         };
 
-        if (!this.state.saving) {
+        let wasSaving = this.state.saving;
+        if (!wasSaving) {
             updatedState.title = props ? props.profile.title : '';
             updatedState.cellNumber = this.getCellNumberFromProps(props);
             updatedState.firstName = props ? props.profile.first_name : '';
             updatedState.lastName = props ? props.profile.last_name : '';
             updatedState.manager = props.manager;
         }
+        else {
+            updatedState.error = props.saveError ? 'Error saving' : '';
+        }
+        updatedState.saving = props.saving
 
         this.setState(updatedState, () => {
             // Given our state machine, the only time mediaUrl is present is when a save is in progress.
             // Continue the save action
             if (props && props.mediaUrl !== '') {
                 this.updateProfile();
+            }
+            else if (wasSaving && !this.state.saving) {
+                if (this.state.error === '') {
+                    this.dismiss();
+                } else {
+                    this.refs.modal.setSaveEnabled(true);
+                }
             }
         });
     }
@@ -400,8 +425,6 @@ class ProfileDetailForm extends CSSComponent {
         }
 
         this.props.onSaveCallback(this.getUpdatedProfile(), this.state.manager);
-        this.resetState();
-        this.dismiss();
     }
 
     getUpdatedProfile() {
@@ -472,6 +495,9 @@ class ProfileDetailForm extends CSSComponent {
         // Disable Save button to avoid double submission
         this.refs.modal.setSaveEnabled(false);
 
+        // Wait until we hear back that it's saved
+        this.setState({saving: true});
+
         // If an image was added, upload it first
         if (this.state.imageFiles.length > 0 && this.props.mediaUrl === '') {
             this.props.dispatch(uploadMedia(
@@ -479,8 +505,6 @@ class ProfileDetailForm extends CSSComponent {
                 MediaTypeV1.PROFILE,
                 this.props.profile.id
             ));
-            // Wait until media upload is done
-            this.setState({saving: true});
         } else {
             this.updateProfile();
         }
