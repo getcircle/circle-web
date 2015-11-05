@@ -12,7 +12,7 @@ import CSSComponent from  './CSSComponent';
 import Dialog from './Dialog';
 import Toast from './Toast';
 
-const { DescriptionV1 } = services.common.containers;
+const { DescriptionV1 } = services.common.containers.description;
 
 class TeamDetailForm extends CSSComponent {
     static propTypes = {

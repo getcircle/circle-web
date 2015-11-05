@@ -21,7 +21,7 @@ import TeamDetailHeader from './TeamDetailHeader';
 import TeamDetailStatus from './TeamDetailStatus';
 import TeamDetailTeams from './TeamDetailTeams';
 
-const { DescriptionV1 } = services.common.containers;
+const { DescriptionV1 } = services.common.containers.description;
 const { TeamStatusV1 } = services.organization.containers;
 
 class TeamDetail extends CSSComponent {
