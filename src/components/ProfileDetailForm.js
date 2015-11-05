@@ -318,8 +318,7 @@ class ProfileDetailForm extends CSSComponent {
             updatedState.firstName = props ? props.profile.first_name : '';
             updatedState.lastName = props ? props.profile.last_name : '';
             updatedState.manager = props.manager;
-        }
-        else {
+        } else {
             updatedState.error = props.saveError ? 'Error saving' : '';
         }
         updatedState.saving = props.saving
@@ -329,8 +328,7 @@ class ProfileDetailForm extends CSSComponent {
             // Continue the save action
             if (props && props.mediaUrl !== '') {
                 this.updateProfile();
-            }
-            else if (wasSaving && !this.state.saving) {
+            } else if (wasSaving && !this.state.saving) {
                 if (this.state.error === '') {
                     this.dismiss();
                 } else {
