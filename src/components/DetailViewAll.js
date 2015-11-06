@@ -31,9 +31,13 @@ class DetailViewAll extends CSSComponent {
         title: PropTypes.string.isRequired,
     }
 
+    shouldHideFilterInput() {
+        return this.props.items ? this.props.items.length < 10 : false;
+    }
+
     styles() {
         return this.css({
-            hideFilterInput: this.props.items ? this.props.items.length < 10 : false,
+            hideFilterInput: this.shouldHideFilterInput(),
         });
     }
 
@@ -124,7 +128,7 @@ class DetailViewAll extends CSSComponent {
                 >
                     <div className="row center-xs" is="searchContainer">
                         <Search
-                            alwaysActive={true}
+                            alwaysActive={!this.shouldHideFilterInput()}
                             canExplore={false}
                             defaults={items}
                             defaultsLoadMore={itemsLoadMore}
