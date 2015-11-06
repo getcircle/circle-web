@@ -80,6 +80,7 @@ const getInitialState = (checkCache = true) => {
         team: null,
         managesTeam: null,
         profileLocation: null,
+        flags: null,
     });
 
     let localState;
@@ -116,8 +117,22 @@ function handleAuthenticateSuccess(state, action) {
 }
 
 function handleRefreshSuccess(state, action) {
-    const {profile, team, managesTeam, profileLocation, organization} = action.payload;
-    const nextState = state.merge({profile, team, managesTeam, profileLocation, organization});
+    const {
+        profile,
+        team,
+        managesTeam,
+        profileLocation,
+        organization,
+        flags,
+    } = action.payload;
+    const nextState = state.merge({
+        profile,
+        team,
+        managesTeam,
+        profileLocation,
+        organization,
+        flags,
+    });
     storeState(nextState);
     return nextState;
 }
