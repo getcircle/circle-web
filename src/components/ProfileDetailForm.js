@@ -319,7 +319,7 @@ class ProfileDetailForm extends CSSComponent {
             updatedState.lastName = props ? props.profile.last_name : '';
             updatedState.manager = props.manager;
         } else {
-            updatedState.error = props.saveError ? 'Error saving' : '';
+            updatedState.error = props.saveError ? t('Error updating profile') : '';
         }
         updatedState.saving = props.saving
 
