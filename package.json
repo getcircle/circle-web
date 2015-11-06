@@ -52,6 +52,7 @@
     "expect.js": "^0.3.1",
     "express": "~4.7.2",
     "extract-text-webpack-plugin": "^0.8.2",
+    "faker": "^3.0.1",
     "fastclick": "~1.0.3",
     "fb": "~0.7.0",
     "fbjs": "^0.2.1",
