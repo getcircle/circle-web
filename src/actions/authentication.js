@@ -1,6 +1,7 @@
 import * as types from '../constants/actionTypes';
 import * as userService from '../services/user';
 import client from '../services/client';
+import { getFlags } from '../services/feature';
 import { getOrganization } from '../services/organization';
 import { getExtendedProfile } from '../services/profile';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
@@ -8,8 +9,8 @@ import { SERVICE_REQUEST } from '../middleware/services';
 
 function getAuthenticatedObjectsPayload(payload = {}) {
     return new Promise((resolve, reject) => {
-        Promise.all([getExtendedProfile(), getOrganization()])
-            .then(([extendedProfileResponse, organization]) => {
+        Promise.all([getExtendedProfile(), getOrganization(), getFlags()])
+            .then(([extendedProfileResponse, organization, flags]) => {
                 payload = Object.assign({}, payload, extendedProfileResponse);
                 const extendedProfile = retrieveExtendedProfile(extendedProfileResponse.result, extendedProfileResponse);
                 payload.profile = extendedProfile.profile;
@@ -17,6 +18,7 @@ function getAuthenticatedObjectsPayload(payload = {}) {
                 payload.team = extendedProfile.team;
                 payload.profileLocation = extendedProfile.locations && extendedProfile.locations.length > 0 ? extendedProfile.locations[0] : null;
                 payload.managesTeam = extendedProfile.manages_team;
+                payload.flags = flags;
                 resolve(payload);
             })
             .catch(error => reject(error));

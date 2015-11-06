@@ -47,6 +47,7 @@ const selector = createSelector(
             profile: profile,
             profileLocation: authenticationState.get('profileLocation'),
             team: authenticationState.get('team'),
+            flags: authenticationState.get('flags'),
         }
     }
 );
@@ -62,6 +63,7 @@ class App extends CSSComponent {
         dispatch: PropTypes.func.isRequired,
         displayFooter: PropTypes.bool.isRequired,
         displayHeader: PropTypes.bool.isRequired,
+        flags: PropTypes.object,
         largerDevice: PropTypes.bool.isRequired,
         location: PropTypes.object,
         managesTeam: PropTypes.object,
