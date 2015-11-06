@@ -1,23 +1,9 @@
 import { AppBar } from 'material-ui';
-import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react/addons';
-
-import * as selectors from '../selectors';
 
 import CSSComponent from '../components/CSSComponent';
 import HeaderMenu from '../components/HeaderMenu';
 
-const selector = createSelector(
-    [selectors.searchSelector],
-    (searchState) => {
-        return {
-            active: searchState.get('active'),
-        }
-    }
-)
-
-@connect(selector)
 class Header extends CSSComponent {
 
     static propTypes = {
