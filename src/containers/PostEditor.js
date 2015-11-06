@@ -225,18 +225,14 @@ class PostEditor extends CSSComponent {
     canEdit() {
         const {
             params,
-            // post,
+            post,
         } = this.props;
 
         // Post is being edited
         if (params && params.postId) {
-            // TODO: Enable this after the backend is fixed for update post
-            // calls. Without that this is a security hole.
-            // Check if post has been fetched
-            // if (post && post.permissions && post.permissions.can_edit) {
-            //     return true;
-            // }
-            return true;
+            if (post && post.permissions && post.permissions.can_edit) {
+                return true;
+            }
         } else {
             // New post is being created.
             return true;
