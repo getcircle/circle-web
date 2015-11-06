@@ -5,9 +5,11 @@ class ProfileFactory {
     constructor() {
         this._profile = new services.profile.containers.ProfileV1({
             /*eslint-disable camelcase*/
-            email: 'ravi@lunohq.com',
             first_name: 'Ravi',
             last_name: 'Rani',
+            full_name: 'Ravi Rani',
+            title: 'Co-founder @ Luno',
+            image_url: 'https://dev-lunohq-media.s3.amazonaws.com/organizations/acme.png',
             /*eslint-enable camelcase*/
         });
     }

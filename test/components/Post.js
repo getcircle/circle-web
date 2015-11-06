@@ -17,6 +17,7 @@ function setup(propsOverrides, contextOverrides) {
     const defaultProps = {
         largerDevice: true,
         onSaveCallback: expect.createSpy(),
+        post: PostFactory.getPostWithTitleAndContent('', ''),
     }
     const props = Object.assign({}, defaultProps, propsOverrides);
 
@@ -43,7 +44,9 @@ function setup(propsOverrides, contextOverrides) {
         }
 
         render() {
-            return (<Post {...props} />);
+            return (
+                <Post {...props} />
+            );
         }
     }
 
@@ -71,7 +74,7 @@ describe('PostComponent', () => {
             'If you have any questions, contact ravi@lunohq.com or michael@lunohq.com';
             const { postComponent } = setup({
                 isEditable: false,
-                post: PostFactory.getPostWithContent(postContent),
+                post: PostFactory.getPostWithTitleAndContent('', postContent),
             });
 
             const postContentComponent = TestUtils.findRenderedDOMComponentWithClass(postComponent, 'postContent');
@@ -87,13 +90,12 @@ describe('PostComponent', () => {
 
     });
 
-    describe('editingContent', () => {
+    describe('when editingContent', () => {
 
         it('adds explicit Publish button when editing a post', () => {
             const { postComponent } = setup({
                 autoSave: false,
                 isEditable: true,
-                post: new services.post.containers.PostV1({}),
             });
 
             expect(postComponent.refs.publishButton).toExist();
@@ -152,7 +154,6 @@ describe('PostComponent', () => {
             const { postComponent, props } = setup({
                 autoSave: false,
                 isEditable: true,
-                post: new services.post.containers.PostV1({}),
             });
 
             postComponent.saveData(true);
