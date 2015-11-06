@@ -66,3 +66,4 @@ export const routerParametersSelector = state => state.router.params;
 export const searchSelector = state => state.search;
 export const statusesSelector = state => state.statuses;
 export const teamMembersSelector = state => state.teamMembers;
+export const updateProfileSelector = state => state.updateProfile;

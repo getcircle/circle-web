@@ -102,8 +102,12 @@ class Profile extends PureComponent {
         resetScroll();
     }
 
-    onUpdateProfile(profile) {
-        this.props.dispatch(updateProfile(profile));
+    onUpdateProfile(profile, manager) {
+        if (manager !== this.props.extendedProfile.manager) {
+            this.props.dispatch(updateProfile(profile, manager));
+        } else {
+            this.props.dispatch(updateProfile(profile));
+        }
     }
 
     renderProfile() {
