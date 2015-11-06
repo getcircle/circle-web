@@ -60,8 +60,8 @@ describe('PostEditorComponent', () => {
             params: {
                 postId: faker.random.uuid(),
             },
-            post: PostFactory.getPostWithPermissions(false, false),
+            post: PostFactory.getPostWithPermissions(true, false),
         });
-        expect(postEditorComponent.canEdit()).toBe(false);
+        expect(postEditorComponent.canEdit()).toBe(true);
     });
 });
