@@ -81,8 +81,18 @@ class App extends CSSComponent {
         router: PropTypes.object.isRequired,
     }
 
+    static childContextTypes = {
+        flags: PropTypes.object,
+    }
+
     state = {
         focused: false,
+    }
+
+    getChildContext() {
+        return {
+            flags: this.props.flags,
+        };
     }
 
     componentWillMount() {

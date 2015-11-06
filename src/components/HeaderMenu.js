@@ -34,6 +34,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     static contextTypes = {
+        flags: PropTypes.object,
         mixins: PropTypes.object,
         router: PropTypes.object,
     }
@@ -168,12 +169,7 @@ class HeaderMenu extends CSSComponent {
                         primaryText={t('My Profile')}
                     />
                     {this.renderMyTeamMenuItem()}
-                    <MenuItem
-                        desktop={true}
-                        innerDivStyle={{...this.styles().menuItemDivStyle}}
-                        onTouchTap={::this.handleViewKnowledge}
-                        primaryText={t('My Knowledge')}
-                    />
+                    {this.renderMyKnowledgeMenuItem()}
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
@@ -223,6 +219,23 @@ class HeaderMenu extends CSSComponent {
             // doesn't handle empty children. They show up as null in a for loop
             // and they don't have any checks around it.
             // Not returning anything or returning empty breaks the component
+            return (
+                <span />
+            );
+        }
+    }
+
+    renderMyKnowledgeMenuItem() {
+        if (this.context.flags && this.context.flags.get('posts')) {
+            return (
+                <MenuItem
+                    desktop={true}
+                    innerDivStyle={{...this.styles().menuItemDivStyle}}
+                    onTouchTap={::this.handleViewKnowledge}
+                    primaryText={t('My Knowledge')}
+                />
+            );
+        } else {
             return (
                 <span />
             );
