@@ -12,7 +12,9 @@ const { TestUtils } = React.addons;
 function setup(overrides) {
     const defaults = {
         authenticate: expect.createSpy(),
+        authorizationUrl: '',
         getAuthenticationInstructions: expect.createSpy(),
+        providerName: '',
     }
     const props = Object.assign({}, defaults, overrides);
 

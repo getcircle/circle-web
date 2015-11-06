@@ -27,3 +27,12 @@ export function getTeamNormalizations(action) {
         action.payload
     );
 }
+
+export function getPostsNormalizations(action) {
+    return getNormalizations(
+        'posts',
+        action.meta.paginateBy,
+        services.post.actions.get_posts.ResponseV1,
+        action.payload
+    );
+}

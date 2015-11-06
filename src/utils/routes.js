@@ -12,8 +12,24 @@ export function routeToLocation(router, location) {
     router.transitionTo(`/location/${location.id}`);
 }
 
+export function routeToEditPost(router, post) {
+    router.transitionTo(`/edit-post/${post.id}`);
+}
+
+export function routeToNewPost(router) {
+    router.transitionTo('/new-post');
+}
+
 export function routeToStatus(router, status) {
     router.transitionTo(`/status/${status.id}`);
+}
+
+export function routeToPosts(router, postState) {
+    router.transitionTo(`/posts/${postState}`);
+}
+
+export function routeToPost(router, post) {
+    router.transitionTo(`/post/${post.id}`);
 }
 
 export function routeToURL(url, nextPathname = null) {

@@ -13,7 +13,7 @@ class DetailContent extends CSSComponent {
         return {
             default: {
                 root: {
-                    backgroundColor: 'rgba(247, 249, 250)',
+                    backgroundColor: 'rgb(247, 249, 250)',
                     boxSizing: 'border-box',
                     paddingTop: 40,
                     maxWidth: 800,

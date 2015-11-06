@@ -14,7 +14,7 @@ class CenterLoadingIndicator extends CSSComponent {
                     minHeight: '100vh',
                     position: 'absolute',
                     width: '100%',
-                    },
+                },
                 innerDiv: {
                     display: 'table-cell',
                     textAlign: 'center',

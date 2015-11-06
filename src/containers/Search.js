@@ -20,12 +20,13 @@ const selector = createSelector(
     (cacheState, authenticationState, responsiveState) => {
         const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
-            profile: profile,
-            organization: authenticationState.get('organization'),
             authenticated: authenticationState.get('authenticated'),
+            flags: authenticationState.get('flags'),
             largerDevice: responsiveState.get('largerDevice'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
+            organization: authenticationState.get('organization'),
+            profile: profile,
         }
     },
 );
@@ -35,6 +36,7 @@ class Search extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        flags: PropTypes.object,
         largerDevice: PropTypes.bool.isRequired,
         managesTeam: PropTypes.object,
         mobileOS: PropTypes.bool.isRequired,
@@ -48,8 +50,18 @@ class Search extends CSSComponent {
         router: PropTypes.object.isRequired,
     }
 
+    static childContextTypes = {
+        flags: PropTypes.object,
+    }
+
     state = {
         focused: false,
+    }
+
+    getChildContext() {
+        return {
+            flags: this.props.flags,
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {

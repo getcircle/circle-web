@@ -43,8 +43,8 @@ class Dialog extends CSSComponent {
     }
 
     state = {
-        saveEnabled: true,
         muiTheme: CurrentTheme,
+        saveEnabled: true,
     }
 
     getChildContext() {

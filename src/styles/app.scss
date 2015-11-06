@@ -8,6 +8,7 @@
 @import 'layout/stack';
 
 @import 'modules/detail_header';
+@import 'modules/editor';
 @import 'modules/extended_profile';
 @import 'modules/fonts';
 @import 'modules/header';
@@ -15,6 +16,9 @@
 @import 'modules/location_tile';
 @import 'modules/profile_tile';
 @import 'modules/profile_edit_form';
+
+@import '../../node_modules/react-medium-editor/node_modules/medium-editor/dist/css/medium-editor.css';
+@import '../../node_modules/react-medium-editor/node_modules/medium-editor/dist/css/themes/default.css';
 
 body, html {
     margin: 0;

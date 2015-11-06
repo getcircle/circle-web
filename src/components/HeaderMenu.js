@@ -7,7 +7,8 @@ import React, { PropTypes } from 'react/addons';
 import autoBind from '../utils/autoBind';
 import CurrentTheme from '../utils/ThemeManager';
 import { logout } from '../actions/authentication';
-import { routeToProfile, routeToTeam } from '../utils/routes';
+import { PostStateURLString } from '../utils/post';
+import { routeToPosts, routeToProfile, routeToTeam } from '../utils/routes';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
@@ -33,6 +34,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     static contextTypes = {
+        flags: PropTypes.object,
         mixins: PropTypes.object,
         router: PropTypes.object,
     }
@@ -140,6 +142,10 @@ class HeaderMenu extends CSSComponent {
         routeToTeam(this.context.router, this.props.managesTeam);
     }
 
+    handleViewKnowledge(event) {
+        routeToPosts(this.context.router, PostStateURLString.LISTED);
+    }
+
     hideMenu(event) {
         this.setState({menuDisplayed: false});
     }
@@ -163,6 +169,7 @@ class HeaderMenu extends CSSComponent {
                         primaryText={t('My Profile')}
                     />
                     {this.renderMyTeamMenuItem()}
+                    {this.renderMyKnowledgeMenuItem()}
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
@@ -212,6 +219,23 @@ class HeaderMenu extends CSSComponent {
             // doesn't handle empty children. They show up as null in a for loop
             // and they don't have any checks around it.
             // Not returning anything or returning empty breaks the component
+            return (
+                <span />
+            );
+        }
+    }
+
+    renderMyKnowledgeMenuItem() {
+        if (this.context.flags && this.context.flags.get('posts')) {
+            return (
+                <MenuItem
+                    desktop={true}
+                    innerDivStyle={{...this.styles().menuItemDivStyle}}
+                    onTouchTap={::this.handleViewKnowledge}
+                    primaryText={t('My Knowledge')}
+                />
+            );
+        } else {
             return (
                 <span />
             );
