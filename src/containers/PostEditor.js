@@ -59,8 +59,7 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-@connect(selector)
-class PostEditor extends CSSComponent {
+export class PostEditor extends CSSComponent {
 
     static propTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -332,4 +331,4 @@ class PostEditor extends CSSComponent {
     }
 }
 
-export default PostEditor;
+export default connect(selector)(PostEditor);
