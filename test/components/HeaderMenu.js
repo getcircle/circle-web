@@ -1,17 +1,20 @@
 import expect from 'expect';
+import Immutable from 'immutable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import React from 'react/addons';
+import React, { PropTypes } from 'react/addons';
+import { services } from 'protobufs';
 
 import ProfileFactory from '../factories/ProfileFactory';
 import TeamFactory from '../factories/TeamFactory';
 
+import CSSComponent from '../../src/components/CSSComponent';
 import HeaderMenu from '../../src/components/HeaderMenu';
 import ProfileAvatar from '../../src/components/ProfileAvatar';
 
 const { TestUtils } = React.addons;
 
-function setup(propOverrides) {
+function setup(propOverrides, contextOverrides) {
     const defaultProps = {
         profile: ProfileFactory.getProfile(),
         managesTeam: null,
@@ -19,7 +22,39 @@ function setup(propOverrides) {
     }
 
     const props = Object.assign({}, defaultProps, propOverrides);
-    const headerMenu = TestUtils.renderIntoDocument(<HeaderMenu {...props} />);
+
+    // Context
+    const defaultContext = {
+        authenticatedProfile: ProfileFactory.getProfile(),
+        router: {
+            transitionTo: expect.createSpy(),
+        },
+    };
+    const context = Object.assign({}, defaultContext, contextOverrides);
+
+    class HeaderMenuContainer extends CSSComponent {
+
+        static childContextTypes = {
+            authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+            flags: PropTypes.object,
+            router: PropTypes.shape({
+                transitionTo: PropTypes.func.isRequired,
+            }).isRequired,
+        }
+
+        getChildContext() {
+            return context;
+        }
+
+        render() {
+            return (
+                <HeaderMenu {...props} />
+            );
+        }
+    }
+
+    const container = TestUtils.renderIntoDocument(<HeaderMenuContainer />);
+    const headerMenu = TestUtils.findRenderedComponentWithType(container, HeaderMenu);
 
     return {
         headerMenu,
@@ -105,6 +140,33 @@ describe('HeaderMenu', () => {
         const viewTeamHandlerSpy = expect.spyOn(headerMenu, 'handleViewTeam');
         menuItems[1].props.onTouchTap();
         expect(viewTeamHandlerSpy.calls.length).toBe(1);
+    });
+
+    it('shows my knowledge if feature flag is set', () => {
+        const { headerMenu } = setup({}, {
+            flags: Immutable.Map({posts: true}),
+        });
+        headerMenu.refs.container.props.onTouchTap();
+
+        const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
+        expect(menuItems.length).toBe(3);
+
+        const viewKnowledgeHandlerSpy = expect.spyOn(headerMenu, 'handleViewKnowledge');
+        menuItems[1].props.onTouchTap();
+        expect(viewKnowledgeHandlerSpy.calls.length).toBe(1);
+    });
+
+    it('hides my knowledge if feature flag is there but set to false', () => {
+        const { headerMenu } = setup({}, {
+            flags: Immutable.Map({posts: false}),
+        });
+        headerMenu.refs.container.props.onTouchTap();
+
+        const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
+        expect(menuItems.length).toBe(2);
+
+        const output = headerMenu.renderMyKnowledgeMenuItem();
+        expect(output.type).toBe('span');
     });
 
 });
