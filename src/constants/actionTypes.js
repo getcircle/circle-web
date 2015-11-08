@@ -117,3 +117,8 @@ export const GET_POSTS_FAILURE = 'GET_POSTS_FAILURE';
 
 // Clear Posts Action
 export const CLEAR_POSTS_CACHE = 'CLEAR_POSTS';
+
+// File Upload Actions
+export const FILE_UPLOAD = 'FILE_UPLOAD';
+export const FILE_UPLOAD_SUCCESS = 'FILE_UPLOAD_SUCCESS';
+export const FILE_UPLOAD_FAILURE = 'FILE_UPLOAD_FAILURE';
