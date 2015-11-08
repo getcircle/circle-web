@@ -3,7 +3,7 @@ import StyleResizable from 'material-ui/lib/mixins/style-resizable';
 
 import * as types from '../constants/actionTypes';
 
-const HEADER_AND_FOOTERLESS_PATHS = ['/billing', '/new-post', '/edit-post'];
+const HEADER_AND_FOOTERLESS_PATHS = [/\/billing/i, /\/new-post/, /^\/post(.*)edit$/i];
 const MOBILE_OS = ['iOS', 'Android'];
 
 const os = checkOS();
@@ -55,8 +55,10 @@ function checkOS() {
 };
 
 function shouldPathHaveNoHeaderAndFooter(pathname) {
+    let r;
     for (let i = 0; i < HEADER_AND_FOOTERLESS_PATHS.length; i++) {
-        if (pathname.indexOf(HEADER_AND_FOOTERLESS_PATHS[i]) !== -1) {
+        r = new RegExp(HEADER_AND_FOOTERLESS_PATHS[i]);
+        if (r.test(pathname) === true) {
             return true;
         }
     }

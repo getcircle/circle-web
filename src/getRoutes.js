@@ -104,7 +104,7 @@ const getRoutes = (history, store) => {
                             requireAuth,
                             hideHeader,
                         )}
-                        path="/edit-post/:postId"
+                        path="/post/:postId/edit"
                     />
                     <Route
                         component={require('./containers/Post')}

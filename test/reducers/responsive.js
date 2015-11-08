@@ -30,7 +30,7 @@ describe('responsive reducer', () => {
     });
 
     it('doesn\'t display the header or footer on the edit post page', () => {
-        const state = responsive(undefined, deviceResized(Sizes.LARGE, '/edit-post/123123'));
+        const state = responsive(undefined, deviceResized(Sizes.LARGE, '/post/123123/edit'));
         expect(state.get('displayFooter')).toNotExist();
         expect(state.get('displayHeader')).toNotExist();
     });
