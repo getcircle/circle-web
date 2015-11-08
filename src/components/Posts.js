@@ -174,7 +174,6 @@ class Posts extends CSSComponent {
         routeToPosts(this.context.router, value);
     }
 
-
     getEmptyStateMessage() {
         const {
             postState,
@@ -235,9 +234,9 @@ class Posts extends CSSComponent {
                     actions={dialogActions}
                     modal={true}
                     openImmediately={true}
-                    title={t('Delete Knowledge Post?')}
+                    title={t('Delete Post?')}
                 >
-                    {t('Please confirm if you want to delete this post. This action cannot be undone.')}
+                    {t('Please confirm you want to delete this post. This action cannot be undone.')}
                 </Dialog>
             );
         }

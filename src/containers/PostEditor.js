@@ -275,6 +275,7 @@ export class PostEditor extends CSSComponent {
             );
         }
     }
+
     renderHeaderActionsContainer() {
         if (this.canEdit()) {
             return (
