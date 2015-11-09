@@ -2,15 +2,7 @@ import {services} from 'protobufs';
 
 import client from './client';
 
-export function search(query, category, attribute, attributeValue) {
-    let request = new services.search.actions.search.RequestV1({
-        query,
-        category,
-        attribute,
-        /*eslint-disable camelcase*/
-        attribute_value: attributeValue,
-        /*eslint-enable camelcase*/
-    });
+function handleSearchResponse(query, request) {
     return new Promise((resolve, reject) => {
         if (query === null || query.trim() === '') {
             resolve({results: []});
@@ -27,4 +19,24 @@ export function search(query, category, attribute, attributeValue) {
                 .catch(error => reject(error));
         }
     });
+}
+
+export function search(query, category, attribute, attributeValue) {
+    let request = new services.search.actions.search.RequestV1({
+        query,
+        category,
+        attribute,
+        /*eslint-disable camelcase*/
+        attribute_value: attributeValue,
+        /*eslint-enable camelcase*/
+    });
+    return handleSearchResponse(query, request);
+}
+
+export function searchV2(query, category) {
+    let request = new services.search.actions.search_v2.RequestV1({
+        query,
+        category,
+    });
+    return handleSearchResponse(query, request);
 }
