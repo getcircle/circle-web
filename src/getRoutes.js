@@ -91,7 +91,7 @@ const getRoutes = (history, store) => {
                         path="/billing"
                     />
                     <Route
-                        component={require('./containers/PostEditor')}
+                        component={require('./containers/PostEditor').default}
                         onEnter={applyMiddleware(
                             requireAuth,
                             hideHeader,
@@ -99,7 +99,7 @@ const getRoutes = (history, store) => {
                         path="/new-post"
                     />
                     <Route
-                        component={require('./containers/PostEditor')}
+                        component={require('./containers/PostEditor').default}
                         onEnter={applyMiddleware(
                             requireAuth,
                             hideHeader,
