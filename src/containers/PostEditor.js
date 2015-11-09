@@ -47,6 +47,7 @@ const selector = selectors.createImmutableSelector(
         }
 
         return {
+            authenticated: authenticationState.get('authenticated'),
             authenticatedProfile: authenticationState.get('profile'),
             flags: authenticationState.get('flags'),
             isSaving: postState.get('loading'),
@@ -63,6 +64,7 @@ const selector = selectors.createImmutableSelector(
 class PostEditor extends CSSComponent {
 
     static propTypes = {
+        authenticated: PropTypes.bool.isRequired,
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         dispatch: PropTypes.func.isRequired,
         flags: PropTypes.object,
