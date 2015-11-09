@@ -127,17 +127,6 @@ describe('PostComponent', () => {
             expect(textareas.length).toBe(2);
         });
 
-        it('trims left title and body', () => {
-            const { postComponent } = setup();
-            const testTitle = '    This is a test title';
-            const testBody = '     This is a test body body';
-            postComponent.handleTitleChange({}, testTitle);
-            expect(postComponent.state.title).toBe(testTitle.trimLeft());
-
-            postComponent.handleBodyChange({}, testBody);
-            expect(postComponent.state.body).toBe(testBody.trimLeft());
-        });
-
         it('adds title from body if its not set', () => {
             const { postComponent } = setup();
             const testTitle = 'This is a test body body with title as the first line';
