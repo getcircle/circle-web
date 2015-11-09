@@ -115,8 +115,27 @@ function clearState() {
 }
 
 function handleAuthenticateSuccess(state, action) {
-    const {user, token, profile, team, managesTeam, profileLocation, organization} = action.payload;
-    const nextState = state.merge({user, token, profile, team, managesTeam, profileLocation, organization, authenticated: true});
+    const {
+        user,
+        token,
+        profile,
+        team,
+        managesTeam,
+        profileLocation,
+        organization,
+        flags,
+    } = action.payload;
+    const nextState = state.merge({
+        user,
+        token,
+        profile,
+        team,
+        managesTeam,
+        profileLocation,
+        organization,
+        flags,
+        authenticated: true,
+    });
     storeState(nextState);
     return nextState;
 }
