@@ -30,7 +30,6 @@ class HeaderMenu extends CSSComponent {
         expandedView: PropTypes.bool,
         managesTeam: PropTypes.object,
         profile: PropTypes.object,
-        shouldDisplayName: PropTypes.bool,
     }
 
     static contextTypes = {
@@ -146,6 +145,10 @@ class HeaderMenu extends CSSComponent {
         routeToPosts(this.context.router, PostStateURLString.LISTED);
     }
 
+    handleLogout(event) {
+        this.props.dispatch(logout());
+    }
+
     hideMenu(event) {
         this.setState({menuDisplayed: false});
     }
@@ -165,7 +168,7 @@ class HeaderMenu extends CSSComponent {
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
-                        onTouchTap={::this.handleViewProfile}
+                        onTouchTap={(e) => this.handleViewProfile(e)}
                         primaryText={t('My Profile')}
                     />
                     {this.renderMyTeamMenuItem()}
@@ -173,7 +176,7 @@ class HeaderMenu extends CSSComponent {
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
-                        onTouchTap={() => this.props.dispatch(logout())}
+                        onTouchTap={(e) => this.handleLogout(e)}
                         primaryText={t('Logout')}
                     />
                 </Menu>
@@ -210,7 +213,7 @@ class HeaderMenu extends CSSComponent {
                 <MenuItem
                     desktop={true}
                     innerDivStyle={{...this.styles().menuItemDivStyle}}
-                    onTouchTap={::this.handleViewTeam}
+                    onTouchTap={(e) => this.handleViewTeam(e)}
                     primaryText={t('My Team')}
                 />
             );
@@ -231,7 +234,7 @@ class HeaderMenu extends CSSComponent {
                 <MenuItem
                     desktop={true}
                     innerDivStyle={{...this.styles().menuItemDivStyle}}
-                    onTouchTap={::this.handleViewKnowledge}
+                    onTouchTap={(e) => this.handleViewKnowledge(e)}
                     primaryText={t('My Knowledge')}
                 />
             );
@@ -254,6 +257,7 @@ class HeaderMenu extends CSSComponent {
                     className="row"
                     is="container"
                     onTouchTap={::this.handleTouchTap}
+                    ref="container"
                 >
                     <div>
                         <ProfileAvatar profile={profile} />

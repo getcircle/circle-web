@@ -1,6 +1,6 @@
 import { services } from 'protobufs';
 
-import { getPostStateFromURLString } from '../utils/post';
+import { getPostStateURLString, getPostStateFromURLString } from '../utils/post';
 
 import client from './client';
 
@@ -9,7 +9,7 @@ export function createPost(post) {
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => {
-                let post = response.result.post;
+                const { post } = response.result;
                 resolve({post})
             })
             .catch(error => reject(error));
@@ -33,7 +33,7 @@ export function deletePost(post) {
                 if (response.isSuccess()) {
                     resolve({
                         postId: post.id,
-                        postState: post.state.toString(),
+                        postState: getPostStateURLString(post.state),
                     });
                 } else {
                     reject('Post wasn\'t deleted');
@@ -48,21 +48,19 @@ export function getPost(postId) {
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => {
-                let resultId = postId;
-                if (resultId === undefined && response.result && response.result.post) {
-                    resultId = response.result.post.id;
-                }
-
-                response.finish(resolve, reject, resultId);
+                response.finish(resolve, reject, postId);
             })
             .catch(error => reject(error));
     });
 }
 
-export function getPosts(postStateURLString, nextRequest=null) {
+export function getPosts(postStateURLString, byProfile, nextRequest=null) {
 
     let parameters = {
+        /*eslint-disable camelcase*/
+        by_profile_id: byProfile.id,
         state: getPostStateFromURLString(postStateURLString),
+        /*eslint-enable camelcase*/
     };
 
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);

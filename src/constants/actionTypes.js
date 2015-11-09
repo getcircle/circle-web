@@ -116,7 +116,7 @@ export const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
 export const GET_POSTS_FAILURE = 'GET_POSTS_FAILURE';
 
 // Clear Posts Action
-export const CLEAR_POSTS_CACHE = 'CLEAR_POSTS';
+export const CLEAR_POSTS_CACHE = 'CLEAR_POSTS_CACHE';
 
 // File Upload Actions
 export const FILE_UPLOAD = 'FILE_UPLOAD';

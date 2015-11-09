@@ -59,7 +59,7 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-export class PostEditor extends CSSComponent {
+class PostEditor extends CSSComponent {
 
     static propTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -275,6 +275,7 @@ export class PostEditor extends CSSComponent {
             );
         }
     }
+
     renderHeaderActionsContainer() {
         if (this.canEdit()) {
             return (
@@ -331,4 +332,8 @@ export class PostEditor extends CSSComponent {
     }
 }
 
+// Exporting the Redux store connected and the pure component separately allows
+// us to test the component individually rather than relying on the store
+// passing down the state.
+export { PostEditor };
 export default connect(selector)(PostEditor);

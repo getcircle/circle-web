@@ -4,6 +4,8 @@ import { trimNewLines } from '../utils/string';
 
 import CSSComponent from './CSSComponent';
 
+const DEFAULT_ROW_HEIGHT = 24;
+
 class AutogrowTextarea extends CSSComponent {
 
     static propTypes = {
@@ -25,7 +27,7 @@ class AutogrowTextarea extends CSSComponent {
     }
 
     state = {
-        height: this.props.rows * 24,
+        height: this.props.rows * DEFAULT_ROW_HEIGHT,
     }
 
     componentDidMount() {
@@ -116,8 +118,17 @@ class AutogrowTextarea extends CSSComponent {
         };
 
         const finalValue = this.getValue(value);
+
         return (
             <div style={{...this.styles().root, ...style}}>
+                { /*
+                        The content height inside a textarea is determined by the scroll height
+                        but we don't want a scroll bar on the main textarea. It is supposed to
+                        just expand to the correct height. So, we need to have a hidden shadow textarea,
+                        which gets the content first and then we set the height of the main one to be the
+                        scrollheight of the shadow.
+                    */
+                }
                 <textarea
                     onChange={::this.handleChange}
                     placeholder={placeholder}

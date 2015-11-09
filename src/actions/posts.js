@@ -28,7 +28,7 @@ export function updatePost(post) {
     };
 }
 
-export function getPosts(postStateURLString, nextRequest) {
+export function getPosts(postStateURLString, byProfile, nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -36,7 +36,7 @@ export function getPosts(postStateURLString, nextRequest) {
                 types.GET_POSTS_SUCCESS,
                 types.GET_POSTS_FAILURE,
             ],
-            remote: () => requests.getPosts(postStateURLString, nextRequest),
+            remote: () => requests.getPosts(postStateURLString, byProfile, nextRequest),
             bailout: (state) => {
                 if (state.posts.has(postStateURLString) && nextRequest === null) {
                     return state.posts.get(postStateURLString).get('ids').size > 0;

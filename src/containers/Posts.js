@@ -79,7 +79,7 @@ class Posts extends PureComponent {
     }
 
     loadPosts(props) {
-        this.props.dispatch(getPosts(props.postState, props.postsNextRequest));
+        this.props.dispatch(getPosts(props.postState, props.authenticatedProfile, props.postsNextRequest));
         resetScroll();
     }
 
