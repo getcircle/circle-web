@@ -1,3 +1,6 @@
+import Dropzone from 'react-dropzone';
+import Immutable from 'immutable';
+import { CircularProgress, List, ListItem } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -8,14 +11,17 @@ import {
 import { fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import { routeToPost, routeToProfile } from '../utils/routes';
+import { tintColor } from '../constants/styles';
 import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
 
+import AttachmentIcon from './AttachmentIcon';
 import AutogrowTextarea from './AutogrowTextarea';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
+import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from './RoundedButton';
 
@@ -49,6 +55,7 @@ class Post extends CSSComponent {
         editing: false,
         title: '',
         body: '',
+        files: Immutable.OrderedSet(),
     }
 
     componentWillMount() {
@@ -68,6 +75,37 @@ class Post extends CSSComponent {
     classes() {
         return {
             default: {
+                AttachementListItem: {
+                    innerDivStyle: {
+                        marginLeft: 0,
+                        paddingTop: 5,
+                        paddingLeft: 40,
+                        paddingBottom: 5,
+                    },
+                    style: {
+                        marginLeft: 0,
+                        paddingTop: 10,
+                        paddingLeft: 0,
+                        paddingBottom: 10,
+                    },
+                },
+                attachmentListItemTextStyle: {
+                    color: tintColor,
+                    fontSize: '14px',
+                },
+                attachmentListItemDisabledTextStyle: {
+                    ...fontColors.light,
+                    fontSize: '14px',
+                    paddingTop: 5,
+                    paddingLeft: 40,
+                    paddingBottom: 5,
+                },
+                attachmentsContainer: {
+                    paddingTop: '10px',
+                    paddingBottom: '0',
+                    transition: 'all 0.3s ease-out',
+                    width: '100%',
+                },
                 cardListAvatar: {
                     height: 40,
                     width: 40,
@@ -84,9 +122,49 @@ class Post extends CSSComponent {
                     paddingTop: 20,
                     paddingBottom: 16,
                 },
+                CircularProgress: {
+                    style: {
+                        top: '-20px',
+                        left: '-30px',
+                    }
+                },
                 contentContainer: {
                     marginTop: '20px',
                     marginLeft: '16px',
+                },
+                dropzoneTriggerContainer: {
+                    width: '100%',
+                },
+                Dropzone: {
+                    style: {
+                        borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                        boxShadow: 'none',
+                        fontSize: 14,
+                        height: '50px',
+                        padding: 0,
+                        outline: 'none',
+                        width: '100%',
+                        ...fontColors.light,
+                    },
+                    activeStyle: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                        border: '1px solid rgba(0, 0, 0, 0.1)',
+                        boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
+                    },
+                },
+                IconContainer: {
+                    style: {
+                        border: 0,
+                        left: 0,
+                        height: 24,
+                        top: 0,
+                        width: 24,
+                    },
+                    iconStyle: {
+                        height: 24,
+                        width: 24,
+                    },
+                    strokeWidth: 1,
                 },
                 lastUpdatedText: {
                     fontSize: 14,
@@ -200,6 +278,10 @@ class Post extends CSSComponent {
         }
     }
 
+    triggerUploads() {
+
+    }
+
     // Getters
 
     getCurrentTitle() {
@@ -208,6 +290,12 @@ class Post extends CSSComponent {
 
     getCurrentBody() {
         return this.state.body;
+    }
+
+    getReadOnlyContent(content) {
+        return {
+            __html: detectEmailsAndAddMarkup(detectURLsAndAddMarkup(content)),
+        };
     }
 
     // Change Methods
@@ -235,10 +323,14 @@ class Post extends CSSComponent {
         this.setState(modifiedState, () => this.saveData(false));
     }
 
-    getReadOnlyContent(content) {
-        return {
-            __html: detectEmailsAndAddMarkup(detectURLsAndAddMarkup(content)),
-        };
+    onDrop(files) {
+        let updatedState = {};
+        const existingFiles = this.state.files;
+        const newFilesSet = existingFiles.length ? existingFiles.union(files) : Immutable.OrderedSet(files);
+        updatedState.files = newFilesSet;
+        if (files.length > 0) {
+           this.setState(updatedState, () => this.triggerUploads());
+        }
     }
 
     // Render Methods
@@ -276,6 +368,37 @@ class Post extends CSSComponent {
         );
     }
 
+    renderFiles() {
+        let elements = [];
+        let odd = true;
+        this.state.files.forEach((file) => {
+            if (odd) {
+                elements.push(
+                    <ListItem
+                        is="AttachementListItem"
+                        leftIcon={<IconContainer IconClass={AttachmentIcon} is="IconContainer" stroke="#7c7b7b" />}
+                        primaryText={file.name}
+                        primaryTextStyle={{...this.styles().attachmentListItemTextStyle}}
+                    />
+                );
+                odd = false;
+            } else {
+                elements.push(
+                    <ListItem
+                        disabled={true}
+                        is="AttachementListItem"
+                        leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size="0.4" />}
+                        primaryText={file.name}
+                        primaryTextStyle={{...this.styles().attachmentListItemDisabledTextStyle}}
+                    />
+                );
+
+                odd = true;
+            }
+        });
+        return elements;
+    }
+
     renderEditableContent() {
         return (
             <span>
@@ -294,6 +417,22 @@ class Post extends CSSComponent {
                     placeholder={t('Contribute Knowledge')}
                     value={this.state.body}
                 />
+                <List
+                    is="attachmentsContainer"
+                >
+                    {this.renderFiles()}
+                </List>
+                <Dropzone
+                    className="row"
+                    is="Dropzone"
+                    multiple={true}
+                    onDrop={this.onDrop.bind(this)}
+                    ref="dropzone"
+                >
+                    <div className="row center-xs middle-xs dropzone-trigger" is="dropzoneTriggerContainer">
+                        <div className="row col-xs start-xs">{t('Add Attachments')}</div>
+                    </div>
+                </Dropzone>
             </span>
         );
     }
