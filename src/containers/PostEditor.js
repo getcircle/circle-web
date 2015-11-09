@@ -48,6 +48,7 @@ const selector = selectors.createImmutableSelector(
 
         return {
             authenticatedProfile: authenticationState.get('profile'),
+            flags: authenticationState.get('flags'),
             isSaving: postState.get('loading'),
             largerDevice: responsiveState.get('largerDevice'),
             managesTeam: authenticationState.get('managesTeam'),
@@ -64,8 +65,10 @@ class PostEditor extends CSSComponent {
     static propTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         dispatch: PropTypes.func.isRequired,
+        flags: PropTypes.object,
         isSaving: PropTypes.bool,
         largerDevice: PropTypes.bool.isRequired,
+        managesTeam: PropTypes.object,
         mobileOS: PropTypes.bool.isRequired,
         params: PropTypes.shape({
             postId: PropTypes.string,
@@ -82,6 +85,7 @@ class PostEditor extends CSSComponent {
 
     static childContextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+        flags: PropTypes.object,
         mobileOS: PropTypes.bool.isRequired,
     }
 
@@ -93,6 +97,7 @@ class PostEditor extends CSSComponent {
     getChildContext() {
         return {
             authenticatedProfile: this.props.authenticatedProfile,
+            flags: this.props.flags,
             mobileOS: this.props.mobileOS,
         };
     }
@@ -317,6 +322,7 @@ class PostEditor extends CSSComponent {
     render() {
         const {
             authenticatedProfile,
+            ...other,
         } = this.props;
 
         return (
@@ -324,7 +330,7 @@ class PostEditor extends CSSComponent {
                 <Header
                     actionsContainer={this.renderHeaderActionsContainer()}
                     profile={authenticatedProfile}
-                    {...this.props}
+                    {...other}
                 />
                 {this.renderPost()}
             </Container>
