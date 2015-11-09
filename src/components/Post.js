@@ -8,6 +8,7 @@ import {
 import { fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import { routeToPost, routeToProfile } from '../utils/routes';
+import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
 
 import AutogrowTextarea from './AutogrowTextarea';
@@ -215,19 +216,19 @@ class Post extends CSSComponent {
         this.setState({
             derivedTitle: false,
             editing: true,
-            title: value.trimLeft(),
+            title: value,
         }, () => this.saveData(false));
     }
 
     handleBodyChange(event, value) {
-        const newValue = value.trimLeft();
+        const newValue = value;
         let modifiedState = {
             editing: true,
             body: newValue,
         };
 
         if (this.state.title.trim() === '' || this.state.derivedTitle === true) {
-            modifiedState.title = newValue.split('.')[0].substring(0, 80);
+            modifiedState.title = trimNewLines(newValue.split('.')[0].substring(0, 80));
             modifiedState.derivedTitle = true;
         }
 
