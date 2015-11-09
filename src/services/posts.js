@@ -1,6 +1,6 @@
 import { services } from 'protobufs';
 
-import { getPostStateFromURLString } from '../utils/post';
+import { getPostStateURLString, getPostStateFromURLString } from '../utils/post';
 
 import client from './client';
 
@@ -33,7 +33,7 @@ export function deletePost(post) {
                 if (response.isSuccess()) {
                     resolve({
                         postId: post.id,
-                        postState: post.state.toString(),
+                        postState: getPostStateURLString(post.state),
                     });
                 } else {
                     reject('Post wasn\'t deleted');
