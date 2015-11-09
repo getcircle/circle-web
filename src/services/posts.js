@@ -54,10 +54,13 @@ export function getPost(postId) {
     });
 }
 
-export function getPosts(postStateURLString, nextRequest=null) {
+export function getPosts(postStateURLString, byProfile, nextRequest=null) {
 
     let parameters = {
+        /*eslint-disable camelcase*/
+        by_profile_id: byProfile.id,
         state: getPostStateFromURLString(postStateURLString),
+        /*eslint-enable camelcase*/
     };
 
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);
