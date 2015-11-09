@@ -9,7 +9,7 @@ export function createPost(post) {
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => {
-                let post = response.result.post;
+                const { post } = response.result;
                 resolve({post})
             })
             .catch(error => reject(error));
@@ -48,12 +48,7 @@ export function getPost(postId) {
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => {
-                let resultId = postId;
-                if (resultId === undefined && response.result && response.result.post) {
-                    resultId = response.result.post.id;
-                }
-
-                response.finish(resolve, reject, resultId);
+                response.finish(resolve, reject, postId);
             })
             .catch(error => reject(error));
     });
