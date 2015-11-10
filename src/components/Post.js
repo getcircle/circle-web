@@ -50,6 +50,7 @@ class Post extends CSSComponent {
         autoSave: true,
         isEditable: false,
         post: null,
+        uploadedFiles: Immutable.Map(),
     }
 
     state = {
@@ -276,6 +277,15 @@ class Post extends CSSComponent {
             uploadedFiles = props.uploadedFiles;
         }
 
+        // If new files are detected, save to post if its a Draft
+        if ((props.uploadedFiles &&
+             this.props.uploadedFiles &&
+             !props.uploadedFiles.equals(this.props.uploadedFiles)) ||
+            (!this.props.uploadedFiles.size))
+        {
+            this.saveData(false);
+        }
+
         if (props.post && props.post.files) {
             uploadedFiles = uploadedFiles.asMutable();
             props.post.files.forEach((file) => {
@@ -295,16 +305,26 @@ class Post extends CSSComponent {
      * If autoSave is true, the value passed in explicitSave is ignored.
      */
     saveData(explicitSave) {
-        if (this.props.autoSave === true) {
+        const {
+            autoSave,
+            isEditable,
+            onSaveCallback,
+        } = this.props;
+
+        if (!isEditable) {
+            return;
+        }
+
+        if (autoSave === true) {
             if (this.saveTimeout !== null) {
                 window.clearTimeout(this.saveTimeout);
             }
 
             this.saveTimeout = window.setTimeout(() => {
-                this.props.onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
+                onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
             }, 500);
         } else if (explicitSave === true) {
-            this.props.onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
+            onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
         }
     }
 
