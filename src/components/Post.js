@@ -182,7 +182,7 @@ class Post extends CSSComponent {
                 },
                 inlineImage: {
                     height: 'auto',
-                    objectFit: 'contain',
+                    objectFit: 'cover',
                     maxWidth: '100%',
                 },
                 inlineImageCaption: {
@@ -484,7 +484,9 @@ class Post extends CSSComponent {
                     inlineImages.push(
                         <div className="row center-xs middle-xs" is="inlineImageContainer">
                             <div is="inlineImageInnerDiv">
-                                <img alt={t('Post attached image')} is="inlineImage" src={file.source_url} />
+                                <a href={file.source_url} target="_blank">
+                                    <img alt={t('Post attached image')} is="inlineImage" src={file.source_url} />
+                                </a>
                             </div>
                             <div is="inlineImageCaption">
                                 {file.name}
