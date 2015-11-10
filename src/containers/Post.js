@@ -1,8 +1,12 @@
 import { connect } from 'react-redux';
+import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import CurrentTheme from '../utils/ThemeManager';
+import { canvasColor, fontColors } from '../constants/styles';
 import { getPost } from '../actions/posts';
+import { mailtoPost } from '../utils/contact';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import { routeToEditPost } from '../utils/routes';
@@ -68,12 +72,20 @@ class Post extends CSSComponent {
     static childContextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         mobileOS: PropTypes.bool.isRequired,
+        muiTheme: PropTypes.object,
+    }
+
+    state = {
+        muiTheme: CurrentTheme,
+        voted: false,
+        votedMessageShown: false,
     }
 
     getChildContext() {
         return {
             authenticatedProfile: this.props.authenticatedProfile,
             mobileOS: this.props.mobileOS,
+            muiTheme: this.state.muiTheme,
         };
     }
 
@@ -81,7 +93,7 @@ class Post extends CSSComponent {
         this.loadPost(this.props);
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
+    componentWillReceiveProps(nextProps) {
         if (nextProps.params.postId !== this.props.params.postId) {
             this.loadPost(nextProps);
         }
@@ -90,8 +102,29 @@ class Post extends CSSComponent {
     classes() {
         return {
             default: {
-                editButtonContainer: {
+                headerContainer: {
                     width: '100%',
+                },
+                FeedbackButton: {
+                    labelStyle: {
+                        ...fontColors.dark,
+                        fontSize: 16,
+                        textTransform: 'none',
+                    },
+                },
+                feedbackButtonSeparator: {
+                    ...fontColors.dark,
+                    padding: '0 5px',
+                },
+                feedbackConfirmation: {
+                    ...fontColors.light,
+                    fontSize: 14,
+                    padding: '0 20px',
+                },
+                ShareButton: {
+                    style: {
+                        marginLeft: '20px',
+                    },
                 },
             },
         };
@@ -100,16 +133,52 @@ class Post extends CSSComponent {
     loadPost(props) {
         this.props.dispatch(getPost(props.params.postId));
         resetScroll();
+        this.customizeTheme();
+        this.setState({
+            voted: false,
+            votedMessageShown: false,
+        });
     }
 
-    getEditButton() {
+    customizeTheme() {
+        let customTheme = JSON.parse(JSON.stringify(CurrentTheme));
+        customTheme.flatButton.color = canvasColor;
+        this.setState({muiTheme: customTheme});
+    }
+
+    recordFeedback() {
+        this.setState({
+            voted: true,
+        }, () => {
+            setTimeout(() => {
+                this.setState({
+                    votedMessageShown: true,
+                });
+            }, 2000);
+        });
+    }
+
+    renderShareButton(post) {
+        return (
+            <RoundedButton
+                className="center-xs"
+                href={mailtoPost(post)}
+                is="ShareButton"
+                label={t('Share')}
+                linkButton={true}
+                target="_blank"
+            />
+        );
+    }
+
+    renderHeader() {
         const {
             post
         } = this.props;
 
         if (post && post.permissions && post.permissions.can_edit) {
             return (
-                <div className="row end-xs" is="editButtonContainer">
+                <div className="row end-xs" is="headerContainer">
                     <RoundedButton
                         label={t('Edit')}
                         onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
@@ -117,6 +186,35 @@ class Post extends CSSComponent {
                 </div>
             );
         }
+
+        if (this.state.voted) {
+            let feedbackMessage = this.state.votedMessageShown ? '' : t('Thanks for your feedback!');
+            return (
+                <div className="row middle-xs end-xs" is="headerContainer">
+                    <div is="feedbackConfirmation">{feedbackMessage}</div>
+                    {this.renderShareButton(post)}
+                </div>
+            );
+        }
+
+        return (
+            <div className="row middle-xs end-xs" is="headerContainer">
+                <FlatButton
+                    hoverColor="#ccc"
+                    is="FeedbackButton"
+                    label={t('Helpful')}
+                    onTouchTap={::this.recordFeedback}
+                />
+                <div is="feedbackButtonSeparator">{`\u002F`}</div>
+                <FlatButton
+                    hoverColor="#ccc"
+                    is="FeedbackButton"
+                    label={t('Unhelpful')}
+                    onTouchTap={::this.recordFeedback}
+                />
+                {this.renderShareButton(post)}
+            </div>
+        );
     }
 
     renderPost() {
@@ -127,7 +225,7 @@ class Post extends CSSComponent {
         if (post) {
             return (
                 <PostComponent
-                    header={this.getEditButton()}
+                    header={this.renderHeader()}
                     largerDevice={largerDevice}
                     post={post}
                 />

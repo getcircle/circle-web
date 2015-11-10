@@ -134,7 +134,7 @@ class Post extends CSSComponent {
                     }
                 },
                 contentContainer: {
-                    marginTop: '20px',
+                    marginTop: 0,
                     marginLeft: '16px',
                 },
                 dropzoneTriggerContainer: {
