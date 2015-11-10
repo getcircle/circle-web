@@ -57,7 +57,8 @@ class Post extends CSSComponent {
         editing: false,
         title: '',
         body: '',
-        files: Immutable.OrderedSet(),
+        uploadedFiles: Immutable.Map(),
+        files: Immutable.OrderedMap(),
     }
 
     componentWillMount() {
@@ -103,6 +104,7 @@ class Post extends CSSComponent {
                     paddingBottom: 5,
                 },
                 attachmentsContainer: {
+                    backgroundColor: 'transparent',
                     paddingTop: '10px',
                     paddingBottom: '0',
                     transition: 'all 0.3s ease-out',
@@ -235,6 +237,7 @@ class Post extends CSSComponent {
                     margin: 0,
                 },
                 postContent: {
+                    minHeight: 20,
                     whiteSpace: 'pre-wrap',
                 },
             }
@@ -263,6 +266,29 @@ class Post extends CSSComponent {
 
             this.setState(updatedState);
         }
+
+        // Following logic ensures we handle the files that are
+        // already attached to a post.
+        // This allows us to reuse code and also, make deleting files possible.
+        let uploadedFiles = Immutable.Map();
+        let files = this.state.files;
+        if (props.uploadedFiles) {
+            uploadedFiles = props.uploadedFiles;
+        }
+
+        if (props.post && props.post.files) {
+            uploadedFiles = uploadedFiles.asMutable();
+            props.post.files.forEach((file) => {
+                uploadedFiles.set(file.name, file);
+            });
+
+            files = this.getUpdatedFilesMap(props.post.files);
+        }
+
+        this.setState({
+            files: files,
+            uploadedFiles: uploadedFiles.asImmutable(),
+        });
     }
 
     /**
@@ -294,15 +320,19 @@ class Post extends CSSComponent {
     }
 
     isFileUploaded(fileName) {
-        const { uploadedFiles } = this.props;
-        return !!uploadedFiles.get(fileName);
+        const { uploadedFiles } = this.state;
+        if (uploadedFiles && uploadedFiles.get(fileName)) {
+            return true;
+        }
+
+        return false;
     }
 
     // Getters
 
     getFileUrl(fileName) {
         if (this.isFileUploaded(fileName)) {
-            const { uploadedFiles } = this.props;
+            const { uploadedFiles } = this.state;
             return uploadedFiles.get(fileName).source_url;
         }
 
@@ -311,7 +341,7 @@ class Post extends CSSComponent {
 
     getFileId(fileName) {
         if (this.isFileUploaded(fileName)) {
-            const { uploadedFiles } = this.props;
+            const { uploadedFiles } = this.state;
             return uploadedFiles.get(fileName).id;
         }
 
@@ -374,13 +404,26 @@ class Post extends CSSComponent {
     }
 
     onDrop(files) {
-        let updatedState = {};
-        const existingFiles = this.state.files;
-        const newFilesSet = existingFiles.length ? existingFiles.union(files) : Immutable.OrderedSet(files);
-        updatedState.files = newFilesSet;
         if (files.length > 0) {
-           this.setState(updatedState, () => this.triggerUploads(files));
+            let updatedState = {};
+            updatedState.files = this.getUpdatedFilesMap(files);
+            this.setState(updatedState, () => this.triggerUploads(files));
         }
+    }
+
+    getUpdatedFilesMap(files) {
+        const existingFiles = this.state.files;
+        let newFilesMap = Immutable.OrderedMap();
+        if (existingFiles && existingFiles.size) {
+            newFilesMap = existingFiles;
+        }
+
+        newFilesMap = newFilesMap.withMutations((map) => {
+            files.forEach((file) => {
+                map.set(file.name, file);
+            });
+        });
+        return newFilesMap;
     }
 
     // Render Methods
@@ -414,6 +457,7 @@ class Post extends CSSComponent {
                     dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
                     is="postContent"
                 />
+                {this.renderFiles(post.files)}
             </span>
         );
     }
@@ -426,6 +470,7 @@ class Post extends CSSComponent {
                     <ListItem
                         href={this.getFileUrl(file.name)}
                         is="AttachementListItem"
+                        key={file.name}
                         leftIcon={<IconContainer IconClass={AttachmentIcon} is="IconContainer" stroke="#7c7b7b" />}
                         primaryText={file.name}
                         primaryTextStyle={{...this.styles().attachmentListItemTextStyle}}
@@ -437,6 +482,7 @@ class Post extends CSSComponent {
                     <ListItem
                         disabled={true}
                         is="AttachementListItem"
+                        key={file.name}
                         leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size="0.4" />}
                         primaryText={file.name}
                         primaryTextStyle={{...this.styles().attachmentListItemDisabledTextStyle}}
@@ -444,7 +490,12 @@ class Post extends CSSComponent {
                 );
             }
         });
-        return elements;
+
+        return (
+            <List is="attachmentsContainer">
+                {elements}
+            </List>
+        );
     }
 
     renderFilesContainer() {
@@ -457,11 +508,7 @@ class Post extends CSSComponent {
 
         return (
             <span>
-                <List
-                    is="attachmentsContainer"
-                >
-                    {this.renderFiles(this.state.files)}
-                </List>
+                {this.renderFiles(this.state.files)}
                 <Dropzone
                     className="row"
                     is="Dropzone"
