@@ -173,16 +173,33 @@ class Post extends CSSComponent {
                     },
                     strokeWidth: 1,
                 },
+                inlineImageContainer: {
+                    padding: '25px 10px',
+                    width: '100%',
+                },
+                inlineImageInnerDiv: {
+                    width: '100%',
+                },
+                inlineImage: {
+                    height: 'auto',
+                    objectFit: 'contain',
+                    maxWidth: '100%',
+                },
+                inlineImageCaption: {
+                    ...fontColors.light,
+                    fontSize: 12,
+                    paddingTop: 10,
+                },
                 lastUpdatedText: {
+                    ...fontColors.light,
                     fontSize: 14,
                     margin: '10px 0 5px 0',
                     width: '100%',
-                    ...fontColors.light,
                 },
                 postContent: {
                     background: 'transparent',
                     color: 'rgba(0, 0, 0, 0.8)',
-                    fontSize: '21px',
+                    fontSize: '18px',
                     fontStyle: 'normal',
                     fontWeight: '400',
                     lineHeight: '1.58',
@@ -192,9 +209,9 @@ class Post extends CSSComponent {
                 postTitle: {
                     background: 'transparent',
                     border: '0',
-                    fontWeight: '400',
+                    fontWeight: '600',
                     fontStyle: 'normal',
-                    fontSize: '36px',
+                    fontSize: '30px',
                     lineHeight: '1.5',
                     marginBottom: '20px',
                     outline: 'none',
@@ -211,9 +228,9 @@ class Post extends CSSComponent {
                     textareaStyle: {
                         background: 'transparent',
                         border: '0',
-                        fontWeight: '400',
+                        fontWeight: '600',
                         fontStyle: 'normal',
-                        fontSize: '36px',
+                        fontSize: '30px',
                         lineHeight: '1.5',
                         marginBottom: '20px',
                         minHeight: 49,
@@ -225,7 +242,7 @@ class Post extends CSSComponent {
                         background: 'transparent',
                         border: 0,
                         color: 'rgba(0, 0, 0, 0.8)',
-                        fontSize: '21px',
+                        fontSize: '18px',
                         fontStyle: 'normal',
                         fontWeight: '400',
                         lineHeight: '1.58',
@@ -278,11 +295,10 @@ class Post extends CSSComponent {
         }
 
         // If new files are detected, save to post if its a Draft
-        if ((props.uploadedFiles &&
-             this.props.uploadedFiles &&
-             !props.uploadedFiles.equals(this.props.uploadedFiles)) ||
-            (!this.props.uploadedFiles.size))
-        {
+        if (props.uploadedFiles &&
+            this.props.uploadedFiles &&
+            !props.uploadedFiles.equals(this.props.uploadedFiles)
+        ) {
             this.saveData(false);
         }
 
@@ -459,6 +475,28 @@ class Post extends CSSComponent {
 
         const author = post.by_profile;
         const lastUpdatedText = ` \u2013 ${t('Last updated')} ${moment(post.changed).fromNow()}`;
+
+        let inlineImages = [];
+        let postFilesWithoutImages = [];
+        if (post.files && post.files.length) {
+            post.files.forEach(file => {
+                if (file.content_type && file.content_type.toLowerCase().indexOf('image/') !== -1) {
+                    inlineImages.push(
+                        <div className="row center-xs middle-xs" is="inlineImageContainer">
+                            <div is="inlineImageInnerDiv">
+                                <img alt={t('Post attached image')} is="inlineImage" src={file.source_url} />
+                            </div>
+                            <div is="inlineImageCaption">
+                                {file.name}
+                            </div>
+                        </div>
+                    );
+                } else {
+                    postFilesWithoutImages.push(file);
+                }
+            });
+        }
+
         return (
             <span>
                 <h1 is="postTitle">{post.title}</h1>
@@ -466,6 +504,7 @@ class Post extends CSSComponent {
                 <CardList is="cardList">
                     <CardListItem
                         innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
+                        key={author.id}
                         leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
                         onTouchTap={routeToProfile.bind(null, this.context.router, author)}
                         primaryText={author.full_name}
@@ -477,7 +516,8 @@ class Post extends CSSComponent {
                     dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
                     is="postContent"
                 />
-                {this.renderFiles(post.files)}
+                {inlineImages}
+                {this.renderFiles(postFilesWithoutImages)}
             </span>
         );
     }
