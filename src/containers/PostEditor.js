@@ -12,6 +12,7 @@ import * as selectors from '../selectors';
 import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
 import { routeToPosts } from '../utils/routes';
+import { uploadFile } from '../actions/files';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -26,11 +27,12 @@ const selector = selectors.createImmutableSelector(
     [
         selectors.authenticationSelector,
         selectors.cacheSelector,
+        selectors.filesSelector,
         selectors.postSelector,
         selectors.routerParametersSelector,
         selectors.responsiveSelector
     ],
-    (authenticationState, cacheState, postState, paramsState, responsiveState) => {
+    (authenticationState, cacheState, filesState, postState, paramsState, responsiveState) => {
 
         let post;
         let postId = null;
@@ -57,6 +59,7 @@ const selector = selectors.createImmutableSelector(
             post: post,
             organization: authenticationState.get('organization'),
             shouldAutoSave: !post || (post && (!post.state || post.state === PostStateV1.DRAFT)),
+            uploadedFiles: filesState.get('files'),
         }
     }
 );
@@ -77,6 +80,7 @@ class PostEditor extends CSSComponent {
         }),
         post: PropTypes.instanceOf(services.post.containers.PostV1),
         shouldAutoSave: PropTypes.bool,
+        uploadedFiles: PropTypes.object,
     }
 
     static contextTypes = {
@@ -166,7 +170,7 @@ class PostEditor extends CSSComponent {
         resetScroll();
     }
 
-    onSavePost(title, body, postState) {
+    onSavePost(title, body, fileIds, postState) {
         if (title.trim() === '' || body.trim() === '') {
             return;
         }
@@ -189,8 +193,11 @@ class PostEditor extends CSSComponent {
             logger.log('Creating new post');
             this.postCreationInProgress = true;
             let postV1 = new PostV1({
+                /*eslint-disable camelcase*/
                 content: trimmedBodyValue,
+                file_ids: fileIds,
                 title: trimmedTitleValue,
+                /*eslint-enable camelcase*/
             });
 
             dispatch(createPost(postV1));
@@ -199,8 +206,11 @@ class PostEditor extends CSSComponent {
         else {
             logger.log('Saving existing post');
             let updates = {
+                /*eslint-disable camelcase*/
                 content: trimmedBodyValue,
+                file_ids: fileIds,
                 title: trimmedTitleValue,
+                /*eslint-enable camelcase*/
             };
 
             if (postState !== undefined && postState !== null) {
@@ -213,6 +223,10 @@ class PostEditor extends CSSComponent {
         }
     }
 
+    onFileUpload(file) {
+        this.props.dispatch(uploadFile(file.name, file.type, file));
+    }
+
     onPublishButtonTapped() {
         // TODO: Send error message back
         if (!this.props.post) {
@@ -222,6 +236,7 @@ class PostEditor extends CSSComponent {
         this.onSavePost(
             this.refs.post.getCurrentTitle(),
             this.refs.post.getCurrentBody(),
+            this.refs.post.getCurrentFileIds(),
             PostStateV1.LISTED,
         );
         this.props.dispatch(clearPosts());
@@ -302,6 +317,7 @@ class PostEditor extends CSSComponent {
             params,
             post,
             shouldAutoSave,
+            uploadedFiles,
         } = this.props;
 
         if (params && params.postId && !post) {
@@ -314,9 +330,11 @@ class PostEditor extends CSSComponent {
                 is="Post"
                 isEditable={this.canEdit()}
                 largerDevice={largerDevice}
+                onFileUploadCallback={::this.onFileUpload}
                 onSaveCallback={::this.onSavePost}
                 post={post}
                 ref="post"
+                uploadedFiles={uploadedFiles}
             />
         );
     }

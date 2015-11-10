@@ -54,6 +54,7 @@ export const exploreLocationsIdsSelector = exploreTypeIdsSelectorFactory(explore
 
 export const extendedProfilesSelector = state => state.extendedProfiles;
 export const extendedTeamsSelector = state => state.extendedTeams;
+export const filesSelector = state => state.files;
 export const locationMembersSelector = state => state.locationMembers;
 export const locationsSelector = state => state.locations;
 export const mediaUploadSelector = state => state.mediaUpload;

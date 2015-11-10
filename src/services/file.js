@@ -55,7 +55,7 @@ function completeUpload(fileName, uploadId, uploadKey) {
     let request = new services.file.actions.complete_upload.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-        .then(response => response.finish(resolve, reject))
+        .then(response => resolve(response.result.file))
         .catch(error => reject(error));
     });
 }

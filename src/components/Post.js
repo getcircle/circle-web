@@ -32,9 +32,11 @@ class Post extends CSSComponent {
         header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
-        onSaveCallback: PropTypes.func.isRequired,
+        onFileUploadCallback: PropTypes.func,
+        onSaveCallback: PropTypes.func,
         post: PropTypes.instanceOf(services.post.containers.PostV1),
         style: PropTypes.object,
+        uploadedFiles: PropTypes.object,
     }
 
     static contextTypes = {
@@ -133,6 +135,8 @@ class Post extends CSSComponent {
                     marginLeft: '16px',
                 },
                 dropzoneTriggerContainer: {
+                    height: 250,
+                    paddingTop: 20,
                     width: '100%',
                 },
                 Dropzone: {
@@ -271,18 +275,48 @@ class Post extends CSSComponent {
             }
 
             this.saveTimeout = window.setTimeout(() => {
-                this.props.onSaveCallback(this.state.title, this.state.body);
+                this.props.onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
             }, 500);
         } else if (explicitSave === true) {
-            this.props.onSaveCallback(this.state.title, this.state.body);
+            this.props.onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
         }
     }
 
-    triggerUploads() {
+    triggerUploads(newFiles) {
+        const { onFileUploadCallback } = this.props;
+        if (onFileUploadCallback) {
+            newFiles.forEach((file) => {
+                if (!this.isFileUploaded(file.name)) {
+                    onFileUploadCallback(file);
+                }
+            });
+        }
+    }
 
+    isFileUploaded(fileName) {
+        const { uploadedFiles } = this.props;
+        return !!uploadedFiles.get(fileName);
     }
 
     // Getters
+
+    getFileUrl(fileName) {
+        if (this.isFileUploaded(fileName)) {
+            const { uploadedFiles } = this.props;
+            return uploadedFiles.get(fileName).source_url;
+        }
+
+        return undefined;
+    }
+
+    getFileId(fileName) {
+        if (this.isFileUploaded(fileName)) {
+            const { uploadedFiles } = this.props;
+            return uploadedFiles.get(fileName).id;
+        }
+
+        return '';
+    }
 
     getCurrentTitle() {
         return this.state.title;
@@ -290,6 +324,22 @@ class Post extends CSSComponent {
 
     getCurrentBody() {
         return this.state.body;
+    }
+
+    getCurrentFileIds() {
+        const files = this.state.files.filter((file) => {
+            return this.isFileUploaded(file.name);
+        });
+
+        let fileIds = [];
+        files.forEach((file) => {
+            let fileId = this.getFileId(file.name);
+            if (fileId) {
+                fileIds.push(fileId);
+            }
+        });
+
+        return fileIds;
     }
 
     getReadOnlyContent(content) {
@@ -329,7 +379,7 @@ class Post extends CSSComponent {
         const newFilesSet = existingFiles.length ? existingFiles.union(files) : Immutable.OrderedSet(files);
         updatedState.files = newFilesSet;
         if (files.length > 0) {
-           this.setState(updatedState, () => this.triggerUploads());
+           this.setState(updatedState, () => this.triggerUploads(files));
         }
     }
 
@@ -368,20 +418,20 @@ class Post extends CSSComponent {
         );
     }
 
-    renderFiles() {
+    renderFiles(files) {
         let elements = [];
-        let odd = true;
-        this.state.files.forEach((file) => {
-            if (odd) {
+        files.forEach((file) => {
+            if (this.isFileUploaded(file.name)) {
                 elements.push(
                     <ListItem
+                        href={this.getFileUrl(file.name)}
                         is="AttachementListItem"
                         leftIcon={<IconContainer IconClass={AttachmentIcon} is="IconContainer" stroke="#7c7b7b" />}
                         primaryText={file.name}
                         primaryTextStyle={{...this.styles().attachmentListItemTextStyle}}
+                        target="_blank"
                     />
                 );
-                odd = false;
             } else {
                 elements.push(
                     <ListItem
@@ -392,11 +442,39 @@ class Post extends CSSComponent {
                         primaryTextStyle={{...this.styles().attachmentListItemDisabledTextStyle}}
                     />
                 );
-
-                odd = true;
             }
         });
         return elements;
+    }
+
+    renderFilesContainer() {
+        const { post } = this.props;
+
+        // Do not show file upload until a post has been saved.
+        if (!post) {
+            return;
+        }
+
+        return (
+            <span>
+                <List
+                    is="attachmentsContainer"
+                >
+                    {this.renderFiles(this.state.files)}
+                </List>
+                <Dropzone
+                    className="row"
+                    is="Dropzone"
+                    multiple={true}
+                    onDrop={this.onDrop.bind(this)}
+                    ref="dropzone"
+                >
+                    <div className="row dropzone-trigger" is="dropzoneTriggerContainer">
+                        <div className="row col-xs start-xs">{t('Add attachments by selecting files or dropping them here')}</div>
+                    </div>
+                </Dropzone>
+            </span>
+        );
     }
 
     renderEditableContent() {
@@ -417,22 +495,7 @@ class Post extends CSSComponent {
                     placeholder={t('Contribute Knowledge')}
                     value={this.state.body}
                 />
-                <List
-                    is="attachmentsContainer"
-                >
-                    {this.renderFiles()}
-                </List>
-                <Dropzone
-                    className="row"
-                    is="Dropzone"
-                    multiple={true}
-                    onDrop={this.onDrop.bind(this)}
-                    ref="dropzone"
-                >
-                    <div className="row center-xs middle-xs dropzone-trigger" is="dropzoneTriggerContainer">
-                        <div className="row col-xs start-xs">{t('Add Attachments')}</div>
-                    </div>
-                </Dropzone>
+                {this.renderFilesContainer()}
             </span>
         );
     }
