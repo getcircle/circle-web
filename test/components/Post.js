@@ -150,7 +150,6 @@ describe('PostComponent', () => {
 
             postComponent.refs.publishButton.props.onTouchTap();
             expect(props.onSaveCallback.calls.length).toBe(2);
-            expect(postComponent.context.router.transitionTo.calls.length).toBe(1);
         });
 
     });
