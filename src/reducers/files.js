@@ -18,6 +18,10 @@ export default function fileUpload(state = initialState, action) {
 
     case types.FILE_UPLOAD_FAILURE:
         return state.set('loading', false);
+
+    case types.DELETE_LOCAL_FILE:
+        return state.deleteIn(['files', action.payload.file.name])
+                    .set('loading', false);
     }
 
     return state;

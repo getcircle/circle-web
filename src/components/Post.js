@@ -1,6 +1,6 @@
 import Dropzone from 'react-dropzone';
 import Immutable from 'immutable';
-import { CircularProgress, List, ListItem } from 'material-ui';
+import { CircularProgress, List, ListItem, IconButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -20,6 +20,7 @@ import AutogrowTextarea from './AutogrowTextarea';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
+import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
@@ -32,9 +33,11 @@ class Post extends CSSComponent {
         header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
+        onFileDeleteCallback: PropTypes.func,
         onFileUploadCallback: PropTypes.func,
         onSaveCallback: PropTypes.func,
         post: PropTypes.instanceOf(services.post.containers.PostV1),
+        saveInProgress: PropTypes.bool,
         style: PropTypes.object,
         uploadedFiles: PropTypes.object,
     }
@@ -50,6 +53,7 @@ class Post extends CSSComponent {
         autoSave: true,
         isEditable: false,
         post: null,
+        saveInProgress: false,
         uploadedFiles: Immutable.Map(),
     }
 
@@ -60,6 +64,7 @@ class Post extends CSSComponent {
         body: '',
         uploadedFiles: Immutable.Map(),
         files: Immutable.OrderedMap(),
+        saveAndExit: false,
     }
 
     componentWillMount() {
@@ -69,8 +74,20 @@ class Post extends CSSComponent {
     componentWillReceiveProps(nextProps, nextState) {
         this.mergeStateAndProps(nextProps);
         // Reset editing if a new post is loaded
-        if (this.props.post && nextProps.post && this.props.post.id !== nextProps.post.id) {
+        if (this.props.post &&
+            nextProps.post &&
+            (this.props.post.id !== nextProps.post.id || this.props.post.isEditable !== nextProps.post.isEditable)
+        ) {
             this.setState({editing: false});
+        }
+
+        // Wait for the requested changes to save and then route to a post
+        if (this.state.saveAndExit && !nextProps.saveInProgress) {
+            this.setState({
+                saveAndExit: false,
+            });
+
+            routeToPost(this.context.router, nextProps.post);
         }
     }
 
@@ -157,6 +174,12 @@ class Post extends CSSComponent {
                         backgroundColor: 'rgba(0, 0, 0, 0.1)',
                         border: '1px solid rgba(0, 0, 0, 0.1)',
                         boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
+                    },
+                },
+                IconButton: {
+                    style: {
+                        right: '-10px',
+                        top: '-10px',
                     },
                 },
                 IconContainer: {
@@ -355,6 +378,29 @@ class Post extends CSSComponent {
         }
     }
 
+    deleteFile(file) {
+        const { onFileDeleteCallback } = this.props;
+        let updatedState = {};
+        const existingFiles = this.state.files;
+        const existingUploadedFiles = this.state.uploadedFiles;
+
+        if (existingFiles.size > 0) {
+            updatedState.files = existingFiles.delete(file.name);
+        }
+
+        if (existingUploadedFiles.size > 0) {
+            updatedState.uploadedFiles = existingUploadedFiles.delete(file.name);
+        }
+
+        this.setState(updatedState, () => {
+            this.saveData(false);
+        });
+
+        if (onFileDeleteCallback) {
+            onFileDeleteCallback(file);
+        }
+    }
+
     isFileUploaded(fileName) {
         const { uploadedFiles } = this.state;
         if (uploadedFiles && uploadedFiles.get(fileName)) {
@@ -524,6 +570,23 @@ class Post extends CSSComponent {
         );
     }
 
+    renderDeleteFileButton(file) {
+        if (this.props.isEditable === true) {
+            return (
+                <IconButton
+                    is="IconButton"
+                    onTouchTap={(e) => {
+                        this.deleteFile(file);
+                    }}
+                    tooltip={t('Remove attachment')}
+                    touch={true}
+                >
+                    <DeleteIcon stroke="rgba(0, 0, 0, 0.2)" />
+                </IconButton>
+            );
+        }
+    }
+
     renderFiles(files) {
         let elements = [];
         files.forEach((file) => {
@@ -532,10 +595,11 @@ class Post extends CSSComponent {
                     <ListItem
                         href={this.getFileUrl(file.name)}
                         is="AttachementListItem"
-                        key={file.name}
+                        key={this.getFileId(file.name)}
                         leftIcon={<IconContainer IconClass={AttachmentIcon} is="IconContainer" stroke="#7c7b7b" />}
                         primaryText={file.name}
                         primaryTextStyle={{...this.styles().attachmentListItemTextStyle}}
+                        rightIconButton={this.renderDeleteFileButton(file)}
                         target="_blank"
                     />
                 );
@@ -638,7 +702,9 @@ class Post extends CSSComponent {
                         label={t('Publish')}
                         onTouchTap={() => {
                             this.saveData(true);
-                            routeToPost(this.context.router, post);
+                            this.setState({
+                                saveAndExit: true
+                            });
                         }}
                         ref="publishButton"
                     />

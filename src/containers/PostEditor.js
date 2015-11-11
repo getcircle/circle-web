@@ -12,7 +12,7 @@ import * as selectors from '../selectors';
 import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
 import { routeToPosts } from '../utils/routes';
-import { uploadFile } from '../actions/files';
+import { deleteFile, uploadFile } from '../actions/files';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -227,6 +227,10 @@ class PostEditor extends CSSComponent {
         this.props.dispatch(uploadFile(file.name, file.type, file));
     }
 
+    onFileDelete(file) {
+        this.props.dispatch(deleteFile(file));
+    }
+
     onPublishButtonTapped() {
         // TODO: Send error message back
         if (!this.props.post) {
@@ -313,6 +317,7 @@ class PostEditor extends CSSComponent {
 
     renderPost() {
         const {
+            isSaving,
             largerDevice,
             params,
             post,
@@ -330,10 +335,12 @@ class PostEditor extends CSSComponent {
                 is="Post"
                 isEditable={this.canEdit()}
                 largerDevice={largerDevice}
+                onFileDeleteCallback={::this.onFileDelete}
                 onFileUploadCallback={::this.onFileUpload}
                 onSaveCallback={::this.onSavePost}
                 post={post}
                 ref="post"
+                saveInProgress={isSaving}
                 uploadedFiles={uploadedFiles}
             />
         );
