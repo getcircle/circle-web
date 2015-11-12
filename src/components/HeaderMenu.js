@@ -8,7 +8,7 @@ import autoBind from '../utils/autoBind';
 import CurrentTheme from '../utils/ThemeManager';
 import { logout } from '../actions/authentication';
 import { PostStateURLString } from '../utils/post';
-import { routeToPosts, routeToProfile, routeToTeam } from '../utils/routes';
+import { routeToNewPost, routeToPosts, routeToProfile, routeToTeam } from '../utils/routes';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
@@ -16,6 +16,7 @@ import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
+import RoundedButton from '../components/RoundedButton';
 
 const { TransitionGroup } = React.addons;
 
@@ -36,6 +37,7 @@ class HeaderMenu extends CSSComponent {
         flags: PropTypes.object,
         mixins: PropTypes.object,
         router: PropTypes.object,
+        showCTAsInHeader: PropTypes.bool,
     }
 
     static childContextTypes = {
@@ -87,7 +89,7 @@ class HeaderMenu extends CSSComponent {
                     height: 8,
                     left: 0,
                     position: 'relative',
-                    top: 13,
+                    top: 1,
                     width: 14,
                 },
                 container: {
@@ -106,12 +108,6 @@ class HeaderMenu extends CSSComponent {
                 menuItemDivStyle: {
                     color: 'white',
                 },
-                profileName: {
-                    color: tintColor,
-                    lineHeight: 2,
-                    marginLeft: '10px',
-                    marginRight: '5px',
-                },
                 MenuItemIcon: {
                     height: 28,
                     width: 28,
@@ -125,8 +121,23 @@ class HeaderMenu extends CSSComponent {
                     height: 28,
                     width: 28,
                 },
+                profileName: {
+                    color: tintColor,
+                    lineHeight: 2,
+                    marginLeft: '10px',
+                    marginRight: '5px',
+                },
+                RoundedButton: {
+                    style: {
+                        marginRight: 20,
+                    },
+                },
             },
         };
+    }
+
+    onAddPostTapped() {
+        routeToNewPost(this.context.router);
     }
 
     handleTouchTap(event) {
@@ -245,6 +256,22 @@ class HeaderMenu extends CSSComponent {
         }
     }
 
+    renderAddKnowledgeButton() {
+        console.log(this.context);
+        if (this.context.flags &&
+            this.context.flags.get('posts') &&
+            (this.context.showCTAsInHeader === undefined || this.context.showCTAsInHeader === true)
+        ) {
+            return (
+                <RoundedButton
+                    is="RoundedButton"
+                    label={t('Add Knowledge')}
+                    onTouchTap={::this.onAddPostTapped}
+                />
+            );
+        }
+    }
+
     render() {
         const {
             profile,
@@ -254,11 +281,12 @@ class HeaderMenu extends CSSComponent {
         return (
             <div {...other}>
                 <div
-                    className="row"
+                    className="row middle-xs"
                     is="container"
                     onTouchTap={::this.handleTouchTap}
                     ref="container"
                 >
+                    {this.renderAddKnowledgeButton()}
                     <div>
                         <ProfileAvatar profile={profile} />
                     </div>

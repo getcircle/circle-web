@@ -93,6 +93,7 @@ class PostEditor extends CSSComponent {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         flags: PropTypes.object,
         mobileOS: PropTypes.bool.isRequired,
+        showCTAsInHeader: PropTypes.bool,
     }
 
     static defaultProps = {
@@ -105,6 +106,7 @@ class PostEditor extends CSSComponent {
             authenticatedProfile: this.props.authenticatedProfile,
             flags: this.props.flags,
             mobileOS: this.props.mobileOS,
+            showCTAsInHeader: false,
         };
     }
 

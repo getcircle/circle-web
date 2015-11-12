@@ -15,6 +15,7 @@ class Header extends CSSComponent {
     }
 
     static contextTypes = {
+        flags: PropTypes.object,
         mixins: PropTypes.object.isRequired,
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
