@@ -87,3 +87,17 @@ export function mailtoPost(post) {
     return `mailto:?subject=${subject}&body=${body}${sentFrom()}`;
 }
 
+export function mailToPostFeedback(post, fromProfile) {
+    const subject = encodeURI(t('Thoughts on your Luno post "' + post.title + '"'));
+    const link = `${window.location.host}/post/${post.id}`;
+    const body = encodeURI(t(
+        `Hey ${post.by_profile.first_name},
+        \nI had a few thoughts on your "${post.title}" (${link}) post on Luno:
+        \n
+        \nThanks!\n${fromProfile.first_name}`
+    ));
+
+    return `mailto:?subject=${subject}&body=${body}${sentFrom()}`;
+
+}
+

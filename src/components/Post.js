@@ -1,6 +1,6 @@
 import Dropzone from 'react-dropzone';
 import Immutable from 'immutable';
-import { CircularProgress, List, ListItem, IconButton } from 'material-ui';
+import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -9,6 +9,7 @@ import {
     detectURLsAndAddMarkup,
 } from '../utils/string';
 import { fontColors } from '../constants/styles';
+import { mailToPostFeedback } from '../utils/contact';
 import moment from '../utils/moment';
 import { routeToPost, routeToProfile } from '../utils/routes';
 import { tintColor } from '../constants/styles';
@@ -128,6 +129,12 @@ class Post extends CSSComponent {
                     transition: 'all 0.3s ease-out',
                     width: '100%',
                 },
+                authorAndFeedbackContainer: {
+                    marginBottom: 20,
+                },
+                authorContainer: {
+                    padding: 0,
+                },
                 cardListAvatar: {
                     height: 40,
                     width: 40,
@@ -136,7 +143,6 @@ class Post extends CSSComponent {
                 },
                 cardList: {
                     background: 'transparent',
-                    marginBottom: 20,
                 },
                 cardListItemInnerDivStyle: {
                     height: 72,
@@ -152,7 +158,7 @@ class Post extends CSSComponent {
                 },
                 contentContainer: {
                     marginTop: 0,
-                    marginLeft: '16px',
+                    padding: 0,
                 },
                 dropzoneTriggerContainer: {
                     height: 250,
@@ -174,6 +180,16 @@ class Post extends CSSComponent {
                         backgroundColor: 'rgba(0, 0, 0, 0.1)',
                         border: '1px solid rgba(0, 0, 0, 0.1)',
                         boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
+                    },
+                },
+                feedbackContainer: {
+                    padding: 0,
+                },
+                FlatButton: {
+                    labelStyle: {
+                        color: tintColor,
+                        padding: '0 0 0 16px',
+                        textTransform: 'none',
                     },
                 },
                 IconButton: {
@@ -493,6 +509,10 @@ class Post extends CSSComponent {
         }
     }
 
+    getSuggestImprovementsLink(post) {
+        return mailToPostFeedback(post, this.context.authenticatedProfile);
+    }
+
     getUpdatedFilesMap(files) {
         const existingFiles = this.state.files;
         let newFilesMap = Immutable.OrderedMap();
@@ -509,6 +529,25 @@ class Post extends CSSComponent {
     }
 
     // Render Methods
+
+    renderSuggestImprovementsButton() {
+        const {
+            post,
+            isEditable,
+        } = this.props;
+
+        if (post && post.by_profile_id && post.by_profile_id !== this.context.authenticatedProfile.id) {
+            return (
+                <FlatButton
+                    href={this.getSuggestImprovementsLink(post)}
+                    is="FlatButton"
+                    label={t('Suggest Improvements')}
+                    linkButton={true}
+                    target="_blank"
+                />
+            );
+        }
+    }
 
     renderReadonlyContent() {
         const {
@@ -549,16 +588,23 @@ class Post extends CSSComponent {
             <span>
                 <h1 is="postTitle">{post.title}</h1>
                 <div className="row" is="lastUpdatedText">{lastUpdatedText}</div>
-                <CardList is="cardList">
-                    <CardListItem
-                        innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
-                        key={author.id}
-                        leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
-                        onTouchTap={routeToProfile.bind(null, this.context.router, author)}
-                        primaryText={author.full_name}
-                        secondaryText={author.title}
-                    />
-                </CardList>
+                <div className="row between-xs middle-xs" is="authorAndFeedbackContainer">
+                    <div className="col-xs-8" is="authorContainer">
+                        <CardList is="cardList">
+                            <CardListItem
+                                innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
+                                key={author.id}
+                                leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
+                                onTouchTap={routeToProfile.bind(null, this.context.router, author)}
+                                primaryText={author.full_name}
+                                secondaryText={author.title}
+                            />
+                        </CardList>
+                    </div>
+                    <div className="col-xs-4 end-xs middle-xs" is="feedbackContainer">
+                        {this.renderSuggestImprovementsButton()}
+                    </div>
+                </div>
                 <div
                     className="postContent"
                     dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
@@ -724,8 +770,8 @@ class Post extends CSSComponent {
                 {header}
                 {this.renderActionButtons()}
                 <div className="row">
-                    <div className="col-xs">
-                        <div className="box" is="contentContainer">
+                    <div className="col-xs" is="contentContainer">
+                        <div className="box">
                             {this.renderContent()}
                         </div>
                     </div>
