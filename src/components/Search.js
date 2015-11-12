@@ -65,8 +65,8 @@ const RESULT_TYPES = keymirror({
 });
 
 export const SEARCH_RESULT_HEIGHT = 72;
-export const SEARCH_CONTAINER_WIDTH = 460;
-export const SEARCH_RESULTS_MAX_HEIGHT = 420;
+export const SEARCH_CONTAINER_WIDTH = 660;
+export const SEARCH_RESULTS_MAX_HEIGHT = 620;
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
@@ -822,12 +822,30 @@ class Search extends CSSComponent {
         return items;
     }
 
+    /**
+     * Returns the search results to be displayed.
+     *
+     * The component gets passed in a cache of search results that came from the server
+     * with their associated query strings as keys. For each keystroke, we first look for
+     * results that are for the exact query. If not, we go back one character at a time
+     * and return the results of the previously fetch queries.
+     *
+     * @returns {Array}|{Void} array of result items if we find any
+     */
     getSearchResults() {
-        // TODO handle loading as well
-        const results = this.props.results[this.state.query];
-        if (results && results.length) {
-            return this.getSearchResultItems(results);
-        } else if (!this.props.loading && !this.state.typing) {
+        const { results } = this.props;
+        const querySpecificResults = results[this.state.query];
+
+        // First check if we have actual results
+        if (querySpecificResults && querySpecificResults.length) {
+            return this.getSearchResultItems(querySpecificResults);
+        }
+
+        // Show no results view only when
+        // - no server call is in progress
+        // - user is not typing
+        // - server responded with no search results
+        if (!this.props.loading && !this.state.typing && results.hasOwnProperty(this.state.query) === true) {
             const noResults = [{
                 disabled: true,
                 estimatedHeight: 84,
@@ -852,8 +870,18 @@ class Search extends CSSComponent {
                 noResults.push(...this.getDefaultResults());
             }
             return noResults;
-        } else {
-            return [{type: RESULT_TYPES.LOADING}];
+        }
+
+        // See if we can find any previous search results
+        // - 1 to account for existing query
+        let i = this.state.query.length - 1;
+        while (i > 0) {
+            let previousResults = results[this.state.query.substr(0, i)];
+            if (previousResults && previousResults.length) {
+                return this.getSearchResultItems(previousResults);
+            }
+
+            i--;
         }
     }
 
@@ -945,7 +973,7 @@ class Search extends CSSComponent {
         this.currentSearchTimeout = window.setTimeout(() => {
             this.setState({typing: false});
             this.loadSearchResults(query);
-        }, 300);
+        }, 200);
         this.setState({query: query, typing: true});
     }
 
