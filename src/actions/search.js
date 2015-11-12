@@ -2,9 +2,9 @@ import * as types from '../constants/actionTypes';
 import { SERVICE_REQUEST } from '../middleware/services';
 
 import * as notificationService from '../services/notification';
-import { search } from '../services/search';
+import { search, searchV2 } from '../services/search';
 
-export function loadSearchResults(query, category, attribute, attributeValue) {
+function loadSearchResultsV1(query, category, attribute, attributeValue) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -16,6 +16,21 @@ export function loadSearchResults(query, category, attribute, attributeValue) {
             bailout: (state) => state.search.getIn(['results', query]),
         },
         payload: { query, category, attribute, attributeValue},
+    }
+}
+
+function loadSearchResultsV2(query, category) {
+    const action = loadSearchResultsV1(query, category);
+    action[SERVICE_REQUEST].remote = () =>  searchV2(query, category);
+    return action;
+}
+
+export function loadSearchResults(query, category, attribute, attributeValue) {
+    if (attribute === undefined || attribute === null) {
+        // the search_v2 endpoint doesn't support attirbute and attribute value searches yet
+        return loadSearchResultsV2(query, category);
+    } else {
+        return loadSearchResultsV1(query, category, attribute, attributeValue);
     }
 }
 

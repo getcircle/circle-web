@@ -91,6 +91,36 @@ const getRoutes = (history, store) => {
                         path="/billing"
                     />
                     <Route
+                        component={require('./containers/PostEditor').default}
+                        onEnter={applyMiddleware(
+                            requireAuth,
+                            hideHeader,
+                        )}
+                        path="/new-post"
+                    />
+                    <Route
+                        component={require('./containers/PostEditor').default}
+                        onEnter={applyMiddleware(
+                            requireAuth,
+                            hideHeader,
+                        )}
+                        path="/post/:postId/edit"
+                    />
+                    <Route
+                        component={require('./containers/Post')}
+                        onEnter={applyMiddleware(
+                            ...defaultMiddleware,
+                        )}
+                        path="/post/:postId"
+                    />
+                    <Route
+                        component={require('./containers/Posts')}
+                        onEnter={applyMiddleware(
+                            ...defaultMiddleware,
+                        )}
+                        path="/posts/:postState"
+                    />
+                    <Route
                         component={require('./containers/Search')}
                         onEnter={applyMiddleware(
                             requireAuth,

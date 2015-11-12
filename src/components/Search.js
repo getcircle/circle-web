@@ -37,6 +37,7 @@ import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
+import LightBulbIcon from './LightBulbIcon';
 import MailIcon from './MailIcon';
 import OfficeIcon from './OfficeIcon';
 import ProfileAvatar from './ProfileAvatar';
@@ -60,6 +61,7 @@ const RESULT_TYPES = keymirror({
     TEAM: null,
     LOCATION: null,
     PROFILE_STATUS: null,
+    POST: null,
 });
 
 export const SEARCH_RESULT_HEIGHT = 72;
@@ -396,6 +398,9 @@ class Search extends CSSComponent {
                 statusTextResultText: {
                     lineHeight: '22px',
                 },
+                postTextResultText: {
+                    lineHeight: '22px',
+                },
             },
             'largerDevice-true': {
                 AutoComplete: {
@@ -554,6 +559,9 @@ class Search extends CSSComponent {
             case RESULT_TYPES.PROFILE_STATUS:
                 return SEARCH_RESULT_TYPE.PROFILE_STATUS;
 
+            case RESULT_TYPES.POST:
+                return SEARCH_RESULT_TYPE.POST;
+
             default:
                 console.error('Did not find analytics tracking type for selected RESULT_TYPE');
                 return undefined;
@@ -639,6 +647,27 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
+    getPostResult(post, index, isRecent) {
+        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
+        let numberOfCharacters = post.title ? post.title.length : 0;
+        let estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
+        let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
+
+        const item = {
+            estimatedHeight: estimatedHeight,
+            index: index,
+            leftAvatar: <IconContainer IconClass={LightBulbIcon} is="ResultIcon" stroke="#7c7b7b" />,
+            primaryText: post.title,
+            primaryTextStyle: this.styles().postTextResultText,
+            secondaryText: 'Last edited ' + moment(post.changed).fromNow(),
+            onTouchTap: routes.routeToPost.bind(null, this.context.router, post),
+            type: RESULT_TYPES.POST,
+            instance: post,
+            ...trackingAttributes
+        };
+        return this.trackTouchTap(item);
+    }
+
     getCategoryResultsProfiles() {
         const { profiles } = this.props;
         if (profiles) {
@@ -682,7 +711,9 @@ class Search extends CSSComponent {
             } else if (item instanceof services.organization.containers.LocationV1) {
                 return this.getLocationResult(item, index, true);
             } else if (item instanceof services.profile.containers.ProfileStatusV1) {
-                return this.getProfileStatusResult(item, index, true)
+                return this.getProfileStatusResult(item, index, true);
+            } else if (item instanceof services.post.containers.PostV1) {
+                return this.getPostResult(item, index, true);
             }
         });
     }
@@ -781,6 +812,8 @@ class Search extends CSSComponent {
                 return this.getLocationResult(result.location, index, false, results.length);
             } else if (result.profile_status) {
                 return this.getProfileStatusResult(result.profile_status, index, false, results.length);
+            } else if (result.post) {
+                return this.getPostResult(result.post, index, false, results.length);
             }
         });
         if (results.length === 1) {

@@ -74,3 +74,16 @@ export function mailtoTeamStatus(team, manager, fromProfile) {
 export function mailtoTeamDescription(team, manager, fromProfile) {
     return mailtoTeam(TEAM_DESCRIPTION_ASK_ME, team, manager, fromProfile);
 }
+
+export function mailtoPost(post) {
+    const subject = encodeURI(t('Check out "' + post.title + '" on Luno'));
+    const link = `${window.location.host}/post/${post.id}`;
+    const body = encodeURI(t(
+        `"${post.title}" post by ${post.by_profile.first_name} might be helpful to you. Check it out on Luno!
+        \n${link}
+        \nCheers!`
+    ));
+
+    return `mailto:?subject=${subject}&body=${body}${sentFrom()}`;
+}
+

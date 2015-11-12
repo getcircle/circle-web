@@ -23,6 +23,18 @@ describe('responsive reducer', () => {
         expect(state.get('displayHeader')).toNotExist();
     });
 
+    it('doesn\'t display the header or footer on the new post page', () => {
+        const state = responsive(undefined, deviceResized(Sizes.LARGE, '/new-post'));
+        expect(state.get('displayFooter')).toNotExist();
+        expect(state.get('displayHeader')).toNotExist();
+    });
+
+    it('doesn\'t display the header or footer on the edit post page', () => {
+        const state = responsive(undefined, deviceResized(Sizes.LARGE, '/post/123123/edit'));
+        expect(state.get('displayFooter')).toNotExist();
+        expect(state.get('displayHeader')).toNotExist();
+    });
+
     it('displays the header and not the footer when device is resized to a large device', () => {
         const state = responsive(undefined, deviceResized(Sizes.LARGE, '/profile/123123'));
         expect(state.get('displayFooter')).toNotExist();

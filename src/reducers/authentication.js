@@ -8,12 +8,12 @@ import tracker from '../utils/tracker';
 import { retrieveProfile } from '../reducers/denormalizations';
 import * as types from '../constants/actionTypes';
 
-const { OrganizationV1 } = services.organization.containers;
+const { LocationV1, OrganizationV1, TeamV1 } = services.organization.containers;
 const { ProfileV1 } = services.profile.containers;
 const { UserV1 } = services.user.containers;
 
 const STATE_VERSION = 1;
-const PROTOBUF_KEYS = ['user', 'profile', 'organization'];
+const PROTOBUF_KEYS = ['user', 'profile', 'organization', 'team', 'managesTeam', 'profileLocation'];
 
 function getLocalAuthenticationState() {
     try {
@@ -45,7 +45,10 @@ function getLocalAuthenticationState() {
                 clearState();
                 return initialState;
             }
-            previousState[key] = ProtobufClass.decode64(previousState[key]);
+
+            if (previousState[key]) {
+                previousState[key] = ProtobufClass.decode64(previousState[key]);
+            }
         }
 
         let initialState;
@@ -80,6 +83,7 @@ const getInitialState = (checkCache = true) => {
         team: null,
         managesTeam: null,
         profileLocation: null,
+        flags: null,
     });
 
     let localState;
@@ -95,7 +99,9 @@ const getInitialState = (checkCache = true) => {
 function storeState(state) {
     let nextState = state.toJS();
     for (let key of PROTOBUF_KEYS) {
-        nextState[key] = nextState[key].encode64();
+        if (nextState[key]) {
+            nextState[key] = nextState[key].encode64();
+        }
     }
     localStorage.setItem(AUTHENTICATION_STATE, JSON.stringify(nextState));
 }
@@ -109,15 +115,48 @@ function clearState() {
 }
 
 function handleAuthenticateSuccess(state, action) {
-    const {user, token, profile, team, managesTeam, profileLocation, organization} = action.payload;
-    const nextState = state.merge({user, token, profile, team, managesTeam, profileLocation, organization, authenticated: true});
+    const {
+        user,
+        token,
+        profile,
+        team,
+        managesTeam,
+        profileLocation,
+        organization,
+        flags,
+    } = action.payload;
+    const nextState = state.merge({
+        user,
+        token,
+        profile,
+        team,
+        managesTeam,
+        profileLocation,
+        organization,
+        flags,
+        authenticated: true,
+    });
     storeState(nextState);
     return nextState;
 }
 
 function handleRefreshSuccess(state, action) {
-    const {profile, team, managesTeam, profileLocation, organization} = action.payload;
-    const nextState = state.merge({profile, team, managesTeam, profileLocation, organization});
+    const {
+        profile,
+        team,
+        managesTeam,
+        profileLocation,
+        organization,
+        flags,
+    } = action.payload;
+    const nextState = state.merge({
+        profile,
+        team,
+        managesTeam,
+        profileLocation,
+        organization,
+        flags,
+    });
     storeState(nextState);
     return nextState;
 }

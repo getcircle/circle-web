@@ -89,3 +89,39 @@ export const MEDIA_UPLOAD_FAILURE = 'MEDIA_UPLOAD_FAILURE';
 export const LOAD_STATUS = 'LOAD_STATUS';
 export const LOAD_STATUS_SUCCESS = 'LOAD_STATUS_SUCCESS';
 export const LOAD_STATUS_FAILURE = 'LOAD_STATUS_FAILURE';
+
+// Create Post Actions
+export const CREATE_POST = 'CREATE_POST';
+export const CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS';
+export const CREATE_POST_FAILURE = 'CREATE_POST_FAILURE';
+
+// Update Post Actions
+export const UPDATE_POST = 'UPDATE_POST';
+export const UPDATE_POST_SUCCESS = 'UPDATE_POST_SUCCESS';
+export const UPDATE_POST_FAILURE = 'UPDATE_POST_FAILURE';
+
+// Delete Post Actions
+export const DELETE_POST = 'DELETE_POST';
+export const DELETE_POST_SUCCESS = 'DELETE_POST_SUCCESS';
+export const DELETE_POST_FAILURE = 'DELETE_POST_FAILURE';
+
+// Get Post Actions
+export const GET_POST = 'GET_POST';
+export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
+export const GET_POST_FAILURE = 'GET_POST_FAILURE';
+
+// Get Posts Actions
+export const GET_POSTS = 'GET_POSTS';
+export const GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS';
+export const GET_POSTS_FAILURE = 'GET_POSTS_FAILURE';
+
+// Clear Posts Action
+export const CLEAR_POSTS_CACHE = 'CLEAR_POSTS_CACHE';
+
+// File Upload Actions
+export const FILE_UPLOAD = 'FILE_UPLOAD';
+export const FILE_UPLOAD_SUCCESS = 'FILE_UPLOAD_SUCCESS';
+export const FILE_UPLOAD_FAILURE = 'FILE_UPLOAD_FAILURE';
+
+// Delete file
+export const DELETE_LOCAL_FILE = 'DELETE_LOCAL_FILE';

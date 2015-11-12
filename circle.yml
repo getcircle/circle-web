@@ -1,3 +1,7 @@
+dependencies:
+  override:
+    - npm update -g npm
+    - npm install
 machine:
   node:
     version: iojs-v1.3.0

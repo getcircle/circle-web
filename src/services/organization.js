@@ -170,3 +170,14 @@ export function updateLocation(location) {
             .catch(error => reject(error));
     });
 }
+
+export function setManager(profileId, managerProfileId) {
+    /*eslint-disable camelcase*/
+    let request = new services.organization.actions.set_manager.RequestV1({manager_profile_id: managerProfileId, profile_id: profileId});
+    /*eslint-enable camelcase*/
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.finish(resolve, reject, profileId))
+            .catch(error => reject(error));
+    });
+}

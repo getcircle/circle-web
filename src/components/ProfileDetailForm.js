@@ -4,7 +4,7 @@ import { LinearProgress } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { fontColors, fontWeights } from '../constants/styles';
+import { backgroundColors, fontColors, fontWeights } from '../constants/styles';
 import logger from '../utils/logger';
 import * as messageTypes from '../constants/messageTypes';
 import { PAGE_TYPE } from '../constants/trackerProperties';
@@ -18,34 +18,48 @@ import Dialog from './Dialog';
 import EditProfileCameraIcon from './EditProfileCameraIcon';
 import IconContainer from './IconContainer';
 import Toast from './Toast';
+import ProfilesSelector from './ProfilesSelector'
 
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const mediaSelector = selectors.createImmutableSelector(
-    [selectors.mediaUploadSelector], (mediaUploadState) => {
+const selector = selectors.createImmutableSelector(
+    [
+        selectors.mediaUploadSelector,
+        selectors.updateProfileSelector,
+    ],
+    (
+        mediaUploadState,
+        updateProfileState,
+    ) => {
         return {
             mediaUrl: mediaUploadState.get('mediaUrl'),
+            saveError: updateProfileState.get('error'),
+            saving: updateProfileState.get('saving'),
         };
     }
 );
 
-@connect(mediaSelector)
+@connect(selector)
 class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
         dispatch: PropTypes.func.isRequired,
-        hasManager: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
+        manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        saveError: PropTypes.object,
+        saving: PropTypes.bool,
     }
 
     static defaultProps = {
         mediaUrl: '',
+        saveError: null,
+        saving: false,
     }
 
     state = {
@@ -57,6 +71,7 @@ class ProfileDetailForm extends CSSComponent {
         imageUrl: '',
         imageFiles: [],
         title: '',
+        manager: null,
         saving: false,
     }
 
@@ -99,10 +114,6 @@ class ProfileDetailForm extends CSSComponent {
                     backgroundColor: 'rgba(0, 0, 0, 0.1)',
                     border: '1px solid rgba(0, 0, 0, 0.1)',
                     boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
-                },
-                dropzoneTriggerContainer: {
-                    alignItems: 'center',
-                    display: 'flex',
                 },
                 editProfileCameraIconContainer: {
                     border: 0,
@@ -171,6 +182,107 @@ class ProfileDetailForm extends CSSComponent {
                     ...fontColors.light,
                     ...fontWeights.semiBold,
                 },
+                ProfilesSelector: {
+                    arrowIconContainerStyle: {
+                        border: 0,
+                        height: 8,
+                        width: 14,
+                        position: 'relative',
+                        top: -25,
+                        left: 'calc(100% - 32px)',
+                        pointerEvents: 'none',
+                    },
+                    arrowIconStyle: {
+                        height: 8,
+                        width: 14,
+                    },
+                    fieldInputStyle: {
+                        border: '1px solid rgba(0, 0, 0, 0.1)',
+                        borderRadius: '3px',
+                        boxSizing: 'border-box',
+                        fontSize: 14,
+                        height: '50px',
+                        outline: 'none',
+                        padding: '10px',
+                        width: '100%',
+                        ...fontColors.dark,
+                    },
+                    listDividerStyle: {
+                        backgroundColor: 'rgba(0, 0, 0, .05)',
+                        marginLeft: 58,
+                    },
+                    listItemInnerDivStyle: {
+                        textAlign: 'left',
+                        paddingLeft: 70,
+                    },
+                    listItemPrimaryTextStyle: {
+                        fontSize: 14,
+                        ...fontColors.dark,
+                    },
+                    fieldListStyle: {
+                        borderRadius: '0px 0px 3px 3px',
+                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
+                        textAlign: 'start',
+                        height: 'auto',
+                        width: 'calc(100% - 32px)',
+                        position: 'absolute',
+                        marginTop: '-9px',
+                    },
+                    fieldSearchIconStyle: {
+                        height: 25,
+                        left: 10,
+                        position: 'absolute',
+                        top: 12,
+                        width: 25,
+                    },
+                    fieldSearchInputStyle: {
+                        border: '1px solid rgba(0, 0, 0, 0.1)',
+                        borderRadius: '3px',
+                        boxSizing: 'border-box',
+                        fontSize: 14,
+                        height: '50px',
+                        outline: 'none',
+                        width: '100%',
+                        lineHeight: 'normal',
+                        paddingTop: '10px',
+                        paddingLeft: '40px',
+                        paddingBottom: '10px',
+                        paddingRight: '10px',
+                        ...fontColors.dark,
+                    },
+                    dialogSearchInputContainerStyle: {
+                        boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
+                        width: 'initial',
+                        height: 50,
+                        margin: 10,
+                        ...backgroundColors.light,
+                    },
+                    dialogSearchInputStyle: {
+                        border: 'none',
+                        borderRadius: 4,
+                        fontSize: '14px',
+                        lineHeight: '19px',
+                        outline: 'none',
+                        paddingLeft: 5,
+                        height: '100%',
+                        ...fontColors.light,
+                    },
+                    dialogSearchIconStyle: {
+                        alignSelf: 'center',
+                        height: 25,
+                        marginLeft: 14,
+                        width: 25,
+                    },
+                    dialogListStyle: {
+                        borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                        borderRadius: '0px 0px 3px 3px',
+                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
+                        overflowY: 'hidden',
+                        textAlign: 'start',
+                        height: '100vh',
+                        width: '100vw',
+                    },
+                },
             },
             'error': {
                 textarea: {
@@ -195,18 +307,29 @@ class ProfileDetailForm extends CSSComponent {
             imageUrl: this.getPreviewImageUrl(props),
         };
 
-        if (!this.state.saving) {
+        let wasSaving = this.state.saving;
+        if (!wasSaving) {
             updatedState.title = props ? props.profile.title : '';
             updatedState.cellNumber = this.getCellNumberFromProps(props);
             updatedState.firstName = props ? props.profile.first_name : '';
             updatedState.lastName = props ? props.profile.last_name : '';
+            updatedState.manager = props.manager;
+        } else {
+            updatedState.error = props.saveError ? t('Error updating profile') : '';
         }
+        updatedState.saving = props.saving
 
         this.setState(updatedState, () => {
             // Given our state machine, the only time mediaUrl is present is when a save is in progress.
             // Continue the save action
             if (props && props.mediaUrl !== '') {
                 this.updateProfile();
+            } else if (wasSaving && !this.state.saving) {
+                if (this.state.error === '') {
+                    this.dismiss();
+                } else {
+                    this.refs.modal.setSaveEnabled(true);
+                }
             }
         });
     }
@@ -295,9 +418,7 @@ class ProfileDetailForm extends CSSComponent {
             );
         }
 
-        this.props.onSaveCallback(this.getUpdatedProfile());
-        this.resetState();
-        this.dismiss();
+        this.props.onSaveCallback(this.getUpdatedProfile(), this.state.manager);
     }
 
     getUpdatedProfile() {
@@ -334,6 +455,10 @@ class ProfileDetailForm extends CSSComponent {
             fields.push('cell_number');
         }
 
+        if (this.state.manager !== this.props.manager) {
+            fields.push('manager');
+        }
+
         return fields;
     }
 
@@ -352,6 +477,10 @@ class ProfileDetailForm extends CSSComponent {
         return cellNumber;
     }
 
+    handleManagerSelected(manager) {
+        this.setState({manager}, () => this.detectChangeAndEnableSaving());
+    }
+
     handleSaveTapped() {
         if (!this.validate()) {
             return;
@@ -360,6 +489,9 @@ class ProfileDetailForm extends CSSComponent {
         // Disable Save button to avoid double submission
         this.refs.modal.setSaveEnabled(false);
 
+        // Wait until we hear back that it's saved
+        this.setState({saving: true});
+
         // If an image was added, upload it first
         if (this.state.imageFiles.length > 0 && this.props.mediaUrl === '') {
             this.props.dispatch(uploadMedia(
@@ -367,8 +499,6 @@ class ProfileDetailForm extends CSSComponent {
                 MediaTypeV1.PROFILE,
                 this.props.profile.id
             ));
-            // Wait until media upload is done
-            this.setState({saving: true});
         } else {
             this.updateProfile();
         }
@@ -402,7 +532,7 @@ class ProfileDetailForm extends CSSComponent {
                     messageType={messageTypes.ERROR}
                 />
             );
-        } else if (this.props.hasManager === true && this.state.dataChanged === true) {
+        } else if (!!this.props.manager && this.state.dataChanged === true) {
             return (
                 <Toast
                     message={t('Your manager will be notified of changes when you hit Save.')}
@@ -413,7 +543,13 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     renderContent() {
+        const {
+            dispatch,
+            largerDevice,
+        } = this.props;
+
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
+        let selectFieldValue = !!this.state.manager ? this.state.manager.full_name : '';
 
         return (
             <div className="col-xs center-xs" is="formContainer">
@@ -439,7 +575,7 @@ class ProfileDetailForm extends CSSComponent {
                             onDrop={this.onDrop.bind(this)}
                             ref="dropzone"
                         >
-                            <div className="row center-xs middle-xs dropzone-trigger" is="dropzoneTriggerContainer">
+                            <div className="row center-xs middle-xs dropzone-trigger">
                                 <IconContainer
                                     IconClass={EditProfileCameraIcon}
                                     iconStyle={{...this.styles().editProfileCameraIcon}}
@@ -496,6 +632,16 @@ class ProfileDetailForm extends CSSComponent {
                         type="tel"
                         value={this.state.cellNumber}
                      />
+                    <div is="sectionTitle">{t('Reports to')}</div>
+                    <ProfilesSelector
+                        dialogTitle={t('Change Manager')}
+                        dispatch={dispatch}
+                        is="ProfilesSelector"
+                        largerDevice={largerDevice}
+                        onSelect={::this.handleManagerSelected}
+                        searchInputPlaceholder={t('Search Manager')}
+                        value={selectFieldValue}
+                    />
                 </form>
             </div>
         );
@@ -514,6 +660,7 @@ class ProfileDetailForm extends CSSComponent {
                     dialogSaveLabel={t('Save')}
                     is="Dialog"
                     largerDevice={largerDevice}
+                    modal={this.state.dataChanged}
                     onDismiss={this.resetState.bind(this)}
                     onSave={this.handleSaveTapped.bind(this)}
                     pageType={PAGE_TYPE.EDIT_PROFILE}

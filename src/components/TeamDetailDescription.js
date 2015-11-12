@@ -16,9 +16,9 @@ const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 class TeamDetailDescription extends CSSComponent {
 
     static propTypes = {
-        description: PropTypes.instanceOf(services.common.containers.DescriptionV1),
+        description: PropTypes.instanceOf(services.common.containers.description.DescriptionV1),
         isEditable: PropTypes.bool,
-        manager: PropTypes.instanceOf(services.common.containers.ProfileV1),
+        manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         onEditTapped: PropTypes.func,
         onSaveCallback: PropTypes.func.isRequired,
         style: PropTypes.object,
