@@ -187,31 +187,8 @@ class Post extends CSSComponent {
             );
         }
 
-        if (this.state.voted) {
-            let feedbackMessage = this.state.votedMessageShown ? '' : t('Thanks for your feedback!');
-            return (
-                <div className="row middle-xs end-xs" is="headerContainer">
-                    <div is="feedbackConfirmation">{feedbackMessage}</div>
-                    {this.renderShareButton(post)}
-                </div>
-            );
-        }
-
         return (
             <div className="row middle-xs end-xs" is="headerContainer">
-                <FlatButton
-                    hoverColor="#ccc"
-                    is="FeedbackButton"
-                    label={t('Helpful')}
-                    onTouchTap={::this.recordFeedback}
-                />
-                <div is="feedbackButtonSeparator">{`\u002F`}</div>
-                <FlatButton
-                    hoverColor="#ccc"
-                    is="FeedbackButton"
-                    label={t('Unhelpful')}
-                    onTouchTap={::this.recordFeedback}
-                />
                 {this.renderShareButton(post)}
             </div>
         );
