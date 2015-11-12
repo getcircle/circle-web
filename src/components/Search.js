@@ -65,8 +65,8 @@ const RESULT_TYPES = keymirror({
 });
 
 export const SEARCH_RESULT_HEIGHT = 72;
-export const SEARCH_CONTAINER_WIDTH = 460;
-export const SEARCH_RESULTS_MAX_HEIGHT = 420;
+export const SEARCH_CONTAINER_WIDTH = 660;
+export const SEARCH_RESULTS_MAX_HEIGHT = 620;
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
