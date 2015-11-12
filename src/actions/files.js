@@ -14,3 +14,12 @@ export function uploadFile(fileName, contentType, data) {
         },
     };
 }
+
+export function deleteFile(file) {
+    return {
+        type: types.DELETE_LOCAL_FILE,
+        payload: {
+            file: file,
+        },
+    };
+}

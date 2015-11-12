@@ -275,6 +275,7 @@ class Posts extends CSSComponent {
         return (
             <CardListItem
                 innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
+                key={post.id}
                 onTouchTap={() => this.onPostTapped(post)}
                 primaryText={post.title}
                 primaryTextStyle={{...this.styles().primaryTextStyle}}

@@ -7,6 +7,7 @@ class PostFactory {
     constructor() {
         this._post = new services.post.containers.PostV1({
             /*eslint-disable camelcase*/
+            id: faker.random.uuid(),
             state: services.post.containers.PostStateV1.DRAFT,
             title: 'This is test title of a post',
             content: 'This is test content of a post',

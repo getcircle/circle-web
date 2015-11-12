@@ -1,3 +1,6 @@
+import Dropzone from 'react-dropzone';
+import Immutable from 'immutable';
+import { CircularProgress, List, ListItem, IconButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -8,14 +11,18 @@ import {
 import { fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import { routeToPost, routeToProfile } from '../utils/routes';
+import { tintColor } from '../constants/styles';
 import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
 
+import AttachmentIcon from './AttachmentIcon';
 import AutogrowTextarea from './AutogrowTextarea';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
+import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
+import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from './RoundedButton';
 
@@ -26,9 +33,13 @@ class Post extends CSSComponent {
         header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
-        onSaveCallback: PropTypes.func.isRequired,
+        onFileDeleteCallback: PropTypes.func,
+        onFileUploadCallback: PropTypes.func,
+        onSaveCallback: PropTypes.func,
         post: PropTypes.instanceOf(services.post.containers.PostV1),
+        saveInProgress: PropTypes.bool,
         style: PropTypes.object,
+        uploadedFiles: PropTypes.object,
     }
 
     static contextTypes = {
@@ -42,6 +53,8 @@ class Post extends CSSComponent {
         autoSave: true,
         isEditable: false,
         post: null,
+        saveInProgress: false,
+        uploadedFiles: Immutable.Map(),
     }
 
     state = {
@@ -49,6 +62,9 @@ class Post extends CSSComponent {
         editing: false,
         title: '',
         body: '',
+        uploadedFiles: Immutable.Map(),
+        files: Immutable.OrderedMap(),
+        saveAndExit: false,
     }
 
     componentWillMount() {
@@ -58,8 +74,20 @@ class Post extends CSSComponent {
     componentWillReceiveProps(nextProps, nextState) {
         this.mergeStateAndProps(nextProps);
         // Reset editing if a new post is loaded
-        if (this.props.post && nextProps.post && this.props.post.id !== nextProps.post.id) {
+        if (this.props.post &&
+            nextProps.post &&
+            (this.props.post.id !== nextProps.post.id || this.props.post.isEditable !== nextProps.post.isEditable)
+        ) {
             this.setState({editing: false});
+        }
+
+        // Wait for the requested changes to save and then route to a post
+        if (this.state.saveAndExit && !nextProps.saveInProgress) {
+            this.setState({
+                saveAndExit: false,
+            });
+
+            routeToPost(this.context.router, nextProps.post);
         }
     }
 
@@ -68,6 +96,38 @@ class Post extends CSSComponent {
     classes() {
         return {
             default: {
+                AttachementListItem: {
+                    innerDivStyle: {
+                        marginLeft: 0,
+                        paddingTop: 5,
+                        paddingLeft: 40,
+                        paddingBottom: 5,
+                    },
+                    style: {
+                        marginLeft: 0,
+                        paddingTop: 10,
+                        paddingLeft: 0,
+                        paddingBottom: 10,
+                    },
+                },
+                attachmentListItemTextStyle: {
+                    color: tintColor,
+                    fontSize: '14px',
+                },
+                attachmentListItemDisabledTextStyle: {
+                    ...fontColors.light,
+                    fontSize: '14px',
+                    paddingTop: 5,
+                    paddingLeft: 40,
+                    paddingBottom: 5,
+                },
+                attachmentsContainer: {
+                    backgroundColor: 'transparent',
+                    paddingTop: '10px',
+                    paddingBottom: '0',
+                    transition: 'all 0.3s ease-out',
+                    width: '100%',
+                },
                 cardListAvatar: {
                     height: 40,
                     width: 40,
@@ -84,20 +144,85 @@ class Post extends CSSComponent {
                     paddingTop: 20,
                     paddingBottom: 16,
                 },
+                CircularProgress: {
+                    style: {
+                        top: '-20px',
+                        left: '-30px',
+                    }
+                },
                 contentContainer: {
-                    marginTop: '20px',
+                    marginTop: 0,
                     marginLeft: '16px',
                 },
+                dropzoneTriggerContainer: {
+                    height: 250,
+                    paddingTop: 20,
+                    width: '100%',
+                },
+                Dropzone: {
+                    style: {
+                        borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+                        boxShadow: 'none',
+                        fontSize: 14,
+                        height: '50px',
+                        padding: 0,
+                        outline: 'none',
+                        width: '100%',
+                        ...fontColors.light,
+                    },
+                    activeStyle: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                        border: '1px solid rgba(0, 0, 0, 0.1)',
+                        boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
+                    },
+                },
+                IconButton: {
+                    style: {
+                        right: '-10px',
+                        top: '-10px',
+                    },
+                },
+                IconContainer: {
+                    style: {
+                        border: 0,
+                        left: 0,
+                        height: 24,
+                        top: 0,
+                        width: 24,
+                    },
+                    iconStyle: {
+                        height: 24,
+                        width: 24,
+                    },
+                    strokeWidth: 1,
+                },
+                inlineImageContainer: {
+                    padding: '25px 10px',
+                    width: '100%',
+                },
+                inlineImageInnerDiv: {
+                    width: '100%',
+                },
+                inlineImage: {
+                    height: 'auto',
+                    objectFit: 'cover',
+                    maxWidth: '100%',
+                },
+                inlineImageCaption: {
+                    ...fontColors.light,
+                    fontSize: 12,
+                    paddingTop: 10,
+                },
                 lastUpdatedText: {
+                    ...fontColors.light,
                     fontSize: 14,
                     margin: '10px 0 5px 0',
                     width: '100%',
-                    ...fontColors.light,
                 },
                 postContent: {
                     background: 'transparent',
                     color: 'rgba(0, 0, 0, 0.8)',
-                    fontSize: '21px',
+                    fontSize: '18px',
                     fontStyle: 'normal',
                     fontWeight: '400',
                     lineHeight: '1.58',
@@ -107,9 +232,9 @@ class Post extends CSSComponent {
                 postTitle: {
                     background: 'transparent',
                     border: '0',
-                    fontWeight: '400',
+                    fontWeight: '600',
                     fontStyle: 'normal',
-                    fontSize: '36px',
+                    fontSize: '30px',
                     lineHeight: '1.5',
                     marginBottom: '20px',
                     outline: 'none',
@@ -126,9 +251,9 @@ class Post extends CSSComponent {
                     textareaStyle: {
                         background: 'transparent',
                         border: '0',
-                        fontWeight: '400',
+                        fontWeight: '600',
                         fontStyle: 'normal',
-                        fontSize: '36px',
+                        fontSize: '30px',
                         lineHeight: '1.5',
                         marginBottom: '20px',
                         minHeight: 49,
@@ -140,7 +265,7 @@ class Post extends CSSComponent {
                         background: 'transparent',
                         border: 0,
                         color: 'rgba(0, 0, 0, 0.8)',
-                        fontSize: '21px',
+                        fontSize: '18px',
                         fontStyle: 'normal',
                         fontWeight: '400',
                         lineHeight: '1.58',
@@ -153,6 +278,7 @@ class Post extends CSSComponent {
                     margin: 0,
                 },
                 postContent: {
+                    minHeight: 20,
                     whiteSpace: 'pre-wrap',
                 },
             }
@@ -181,26 +307,128 @@ class Post extends CSSComponent {
 
             this.setState(updatedState);
         }
+
+        // Following logic ensures we handle the files that are
+        // already attached to a post.
+        // This allows us to reuse code and also, make deleting files possible.
+        let uploadedFiles = Immutable.Map();
+        let files = this.state.files;
+        if (props.uploadedFiles) {
+            uploadedFiles = props.uploadedFiles;
+        }
+
+        // If new files are detected, save to post if its a Draft
+        if (props.uploadedFiles &&
+            this.props.uploadedFiles &&
+            !props.uploadedFiles.equals(this.props.uploadedFiles)
+        ) {
+            this.saveData(false);
+        }
+
+        if (props.post && props.post.files) {
+            uploadedFiles = uploadedFiles.asMutable();
+            props.post.files.forEach((file) => {
+                uploadedFiles.set(file.name, file);
+            });
+
+            files = this.getUpdatedFilesMap(props.post.files);
+        }
+
+        this.setState({
+            files: files,
+            uploadedFiles: uploadedFiles.asImmutable(),
+        });
     }
 
     /**
      * If autoSave is true, the value passed in explicitSave is ignored.
      */
     saveData(explicitSave) {
-        if (this.props.autoSave === true) {
+        const {
+            autoSave,
+            isEditable,
+            onSaveCallback,
+        } = this.props;
+
+        if (!isEditable) {
+            return;
+        }
+
+        if (autoSave === true) {
             if (this.saveTimeout !== null) {
                 window.clearTimeout(this.saveTimeout);
             }
 
             this.saveTimeout = window.setTimeout(() => {
-                this.props.onSaveCallback(this.state.title, this.state.body);
+                onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
             }, 500);
         } else if (explicitSave === true) {
-            this.props.onSaveCallback(this.state.title, this.state.body);
+            onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
         }
     }
 
+    triggerUploads(newFiles) {
+        const { onFileUploadCallback } = this.props;
+        if (onFileUploadCallback) {
+            newFiles.forEach((file) => {
+                if (!this.isFileUploaded(file.name)) {
+                    onFileUploadCallback(file);
+                }
+            });
+        }
+    }
+
+    deleteFile(file) {
+        const { onFileDeleteCallback } = this.props;
+        let updatedState = {};
+        const existingFiles = this.state.files;
+        const existingUploadedFiles = this.state.uploadedFiles;
+
+        if (existingFiles.size > 0) {
+            updatedState.files = existingFiles.delete(file.name);
+        }
+
+        if (existingUploadedFiles.size > 0) {
+            updatedState.uploadedFiles = existingUploadedFiles.delete(file.name);
+        }
+
+        this.setState(updatedState, () => {
+            this.saveData(false);
+        });
+
+        if (onFileDeleteCallback) {
+            onFileDeleteCallback(file);
+        }
+    }
+
+    isFileUploaded(fileName) {
+        const { uploadedFiles } = this.state;
+        if (uploadedFiles && uploadedFiles.get(fileName)) {
+            return true;
+        }
+
+        return false;
+    }
+
     // Getters
+
+    getFileUrl(fileName) {
+        if (this.isFileUploaded(fileName)) {
+            const { uploadedFiles } = this.state;
+            return uploadedFiles.get(fileName).source_url;
+        }
+
+        return undefined;
+    }
+
+    getFileId(fileName) {
+        if (this.isFileUploaded(fileName)) {
+            const { uploadedFiles } = this.state;
+            return uploadedFiles.get(fileName).id;
+        }
+
+        return '';
+    }
 
     getCurrentTitle() {
         return this.state.title;
@@ -208,6 +436,28 @@ class Post extends CSSComponent {
 
     getCurrentBody() {
         return this.state.body;
+    }
+
+    getCurrentFileIds() {
+        const files = this.state.files.filter((file) => {
+            return this.isFileUploaded(file.name);
+        });
+
+        let fileIds = [];
+        files.forEach((file) => {
+            let fileId = this.getFileId(file.name);
+            if (fileId) {
+                fileIds.push(fileId);
+            }
+        });
+
+        return fileIds;
+    }
+
+    getReadOnlyContent(content) {
+        return {
+            __html: detectEmailsAndAddMarkup(detectURLsAndAddMarkup(content)),
+        };
     }
 
     // Change Methods
@@ -235,10 +485,27 @@ class Post extends CSSComponent {
         this.setState(modifiedState, () => this.saveData(false));
     }
 
-    getReadOnlyContent(content) {
-        return {
-            __html: detectEmailsAndAddMarkup(detectURLsAndAddMarkup(content)),
-        };
+    onDrop(files) {
+        if (files.length > 0) {
+            let updatedState = {};
+            updatedState.files = this.getUpdatedFilesMap(files);
+            this.setState(updatedState, () => this.triggerUploads(files));
+        }
+    }
+
+    getUpdatedFilesMap(files) {
+        const existingFiles = this.state.files;
+        let newFilesMap = Immutable.OrderedMap();
+        if (existingFiles && existingFiles.size) {
+            newFilesMap = existingFiles;
+        }
+
+        newFilesMap = newFilesMap.withMutations((map) => {
+            files.forEach((file) => {
+                map.set(file.name, file);
+            });
+        });
+        return newFilesMap;
     }
 
     // Render Methods
@@ -254,6 +521,30 @@ class Post extends CSSComponent {
 
         const author = post.by_profile;
         const lastUpdatedText = ` \u2013 ${t('Last updated')} ${moment(post.changed).fromNow()}`;
+
+        let inlineImages = [];
+        let postFilesWithoutImages = [];
+        if (post.files && post.files.length) {
+            post.files.forEach(file => {
+                if (file.content_type && file.content_type.toLowerCase().indexOf('image/') !== -1) {
+                    inlineImages.push(
+                        <div className="row center-xs middle-xs" is="inlineImageContainer">
+                            <div is="inlineImageInnerDiv">
+                                <a href={file.source_url} target="_blank">
+                                    <img alt={t('Post attached image')} is="inlineImage" src={file.source_url} />
+                                </a>
+                            </div>
+                            <div is="inlineImageCaption">
+                                {file.name}
+                            </div>
+                        </div>
+                    );
+                } else {
+                    postFilesWithoutImages.push(file);
+                }
+            });
+        }
+
         return (
             <span>
                 <h1 is="postTitle">{post.title}</h1>
@@ -261,6 +552,7 @@ class Post extends CSSComponent {
                 <CardList is="cardList">
                     <CardListItem
                         innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
+                        key={author.id}
                         leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
                         onTouchTap={routeToProfile.bind(null, this.context.router, author)}
                         primaryText={author.full_name}
@@ -272,6 +564,88 @@ class Post extends CSSComponent {
                     dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
                     is="postContent"
                 />
+                {inlineImages}
+                {this.renderFiles(postFilesWithoutImages)}
+            </span>
+        );
+    }
+
+    renderDeleteFileButton(file) {
+        if (this.props.isEditable === true) {
+            return (
+                <IconButton
+                    is="IconButton"
+                    onTouchTap={(e) => {
+                        this.deleteFile(file);
+                    }}
+                    tooltip={t('Remove attachment')}
+                    touch={true}
+                >
+                    <DeleteIcon stroke="rgba(0, 0, 0, 0.2)" />
+                </IconButton>
+            );
+        }
+    }
+
+    renderFiles(files) {
+        let elements = [];
+        files.forEach((file) => {
+            if (this.isFileUploaded(file.name)) {
+                elements.push(
+                    <ListItem
+                        href={this.getFileUrl(file.name)}
+                        is="AttachementListItem"
+                        key={this.getFileId(file.name)}
+                        leftIcon={<IconContainer IconClass={AttachmentIcon} is="IconContainer" stroke="#7c7b7b" />}
+                        primaryText={file.name}
+                        primaryTextStyle={{...this.styles().attachmentListItemTextStyle}}
+                        rightIconButton={this.renderDeleteFileButton(file)}
+                        target="_blank"
+                    />
+                );
+            } else {
+                elements.push(
+                    <ListItem
+                        disabled={true}
+                        is="AttachementListItem"
+                        key={file.name}
+                        leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size="0.4" />}
+                        primaryText={file.name}
+                        primaryTextStyle={{...this.styles().attachmentListItemDisabledTextStyle}}
+                    />
+                );
+            }
+        });
+
+        return (
+            <List is="attachmentsContainer">
+                {elements}
+            </List>
+        );
+    }
+
+    renderFilesContainer() {
+        const { post } = this.props;
+
+        // Do not show file upload until a post has been saved.
+        if (!post) {
+            return;
+        }
+
+        return (
+            <span>
+                {this.renderFiles(this.state.files)}
+                <Dropzone
+                    className="row"
+                    is="Dropzone"
+                    multiple={true}
+                    onDrop={this.onDrop.bind(this)}
+                    ref="dropzone"
+                >
+                    <div className="row dropzone-trigger" is="dropzoneTriggerContainer">
+                        <div className="row col-xs start-xs">{t('Add attachments by selecting files or dropping them here')}</div>
+                    </div>
+                </Dropzone>
             </span>
         );
     }
@@ -294,6 +668,7 @@ class Post extends CSSComponent {
                     placeholder={t('Contribute Knowledge')}
                     value={this.state.body}
                 />
+                {this.renderFilesContainer()}
             </span>
         );
     }
@@ -327,7 +702,9 @@ class Post extends CSSComponent {
                         label={t('Publish')}
                         onTouchTap={() => {
                             this.saveData(true);
-                            routeToPost(this.context.router, post);
+                            this.setState({
+                                saveAndExit: true
+                            });
                         }}
                         ref="publishButton"
                     />

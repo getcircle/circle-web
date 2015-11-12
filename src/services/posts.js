@@ -20,7 +20,7 @@ export function updatePost(post) {
     let request = new services.post.actions.update_post.RequestV1({post: post});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.finish(resolve, reject, post))
+            .then(response => response.finish(resolve, reject, post.id))
             .catch(error => reject(error));
     });
 }
@@ -47,9 +47,7 @@ export function getPost(postId) {
     let request = new services.post.actions.get_post.RequestV1({id: postId});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => {
-                response.finish(resolve, reject, postId);
-            })
+            .then(response => response.finish(resolve, reject, postId))
             .catch(error => reject(error));
     });
 }

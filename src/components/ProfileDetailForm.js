@@ -115,10 +115,6 @@ class ProfileDetailForm extends CSSComponent {
                     border: '1px solid rgba(0, 0, 0, 0.1)',
                     boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
                 },
-                dropzoneTriggerContainer: {
-                    alignItems: 'center',
-                    display: 'flex',
-                },
                 editProfileCameraIconContainer: {
                     border: 0,
                     left: 0,
@@ -579,7 +575,7 @@ class ProfileDetailForm extends CSSComponent {
                             onDrop={this.onDrop.bind(this)}
                             ref="dropzone"
                         >
-                            <div className="row center-xs middle-xs dropzone-trigger" is="dropzoneTriggerContainer">
+                            <div className="row center-xs middle-xs dropzone-trigger">
                                 <IconContainer
                                     IconClass={EditProfileCameraIcon}
                                     iconStyle={{...this.styles().editProfileCameraIcon}}
