@@ -1,3 +1,4 @@
+import faker from 'faker';
 import { services } from 'protobufs';
 
 import ProfileFactory from './ProfileFactory';
