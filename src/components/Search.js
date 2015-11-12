@@ -973,7 +973,7 @@ class Search extends CSSComponent {
         this.currentSearchTimeout = window.setTimeout(() => {
             this.setState({typing: false});
             this.loadSearchResults(query);
-        }, 300);
+        }, 200);
         this.setState({query: query, typing: true});
     }
 
