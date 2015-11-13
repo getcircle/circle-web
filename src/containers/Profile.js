@@ -43,6 +43,9 @@ const profileSelector = selectors.createImmutableSelector(
             profileId,
             authenticatedProfile,
             isLoggedInUser,
+            // TODO with react 0.14 we should be able to pull authenticated
+            // profile from the context
+            isAdminUser: authenticatedProfile.is_admin,
             organization: authenticationState.get('organization'),
         };
     }
@@ -113,6 +116,7 @@ class Profile extends PureComponent {
     renderProfile() {
         const {
             extendedProfile,
+            isAdminUser,
             isLoggedInUser,
             largerDevice,
             organization,
@@ -121,6 +125,7 @@ class Profile extends PureComponent {
             return (
                 <ProfileDetail
                     extendedProfile={extendedProfile}
+                    isAdminUser={isAdminUser}
                     isLoggedInUser={isLoggedInUser}
                     largerDevice={largerDevice}
                     onUpdateProfile={::this.onUpdateProfile}

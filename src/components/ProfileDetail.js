@@ -30,6 +30,7 @@ class ProfileDetail extends StyleableComponent {
 
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
+        isAdminUser: PropTypes.bool.isRequired,
         isLoggedInUser: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         onUpdateProfile: PropTypes.func.isRequired,
@@ -178,12 +179,13 @@ class ProfileDetail extends StyleableComponent {
 
     renderProfileDetailForm(profile, manager) {
         const {
+            isAdminUser,
             isLoggedInUser,
             largerDevice,
             onUpdateProfile,
         } = this.props;
 
-        if (isLoggedInUser) {
+        if (isLoggedInUser || isAdminUser) {
             return (
                 <ProfileDetailForm
                     contactMethods={this.getContactMethods()}
@@ -211,14 +213,15 @@ class ProfileDetail extends StyleableComponent {
         } = this.props.extendedProfile;
 
         const {
-            organization,
+            isAdminUser,
             isLoggedInUser,
+            organization,
         } = this.props;
 
         return (
             <div>
                 <ProfileDetailHeader
-                    isEditable={isLoggedInUser}
+                    isEditable={isLoggedInUser || isAdminUser}
                     largerDevice={this.props.largerDevice}
                     onEditTapped={this.editButtonTapped.bind(this)}
                     organization={organization}
