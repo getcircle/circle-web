@@ -257,8 +257,8 @@ class HeaderMenu extends CSSComponent {
     }
 
     renderAddKnowledgeButton() {
-        console.log(this.context);
         if (this.context.flags &&
+            false &&
             this.context.flags.get('posts') &&
             (this.context.showCTAsInHeader === undefined || this.context.showCTAsInHeader === true)
         ) {

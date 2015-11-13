@@ -533,7 +533,6 @@ class Post extends CSSComponent {
     renderSuggestImprovementsButton() {
         const {
             post,
-            isEditable,
         } = this.props;
 
         if (post && post.by_profile_id && post.by_profile_id !== this.context.authenticatedProfile.id) {
