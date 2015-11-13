@@ -5,6 +5,9 @@ if (!global.document || !global.window) {
   global.document = jsdom.jsdom('<!doctype html><html><body></body></html>');
   global.window = document.defaultView;
   global.navigator = window.navigator;
+  global.mixpanel = {
+      init: () => {},
+  };
 
   ExecutionEnvironment.canUseDOM = true;
 
