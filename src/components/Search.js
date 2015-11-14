@@ -209,7 +209,7 @@ class Search extends CSSComponent {
         onCancel() {},
         onFocus() {},
         onSelectItem() {},
-        placeholder: t('Search people, #projects, & teams'),
+        placeholder: t('Search people, knowledge, & teams'),
         showCancel: false,
     }
 
