@@ -186,8 +186,8 @@ class HeaderMenu extends CSSComponent {
                         onTouchTap={(e) => this.handleViewProfile(e)}
                         primaryText={t('My Profile')}
                     />
-                    {this.renderMyTeamMenuItem()}
                     {this.renderMyKnowledgeMenuItem()}
+                    {this.renderMyTeamMenuItem()}
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
