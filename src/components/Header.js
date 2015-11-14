@@ -20,6 +20,7 @@ class Header extends CSSComponent {
         router: PropTypes.shape({
             transitionTo: PropTypes.func.isRequired,
         }).isRequired,
+        showCTAsInHeader: PropTypes.bool,
     }
 
     shouldComponentUpdate(nextProps) {
@@ -88,19 +89,27 @@ class Header extends CSSComponent {
 
     renderHeader() {
         const { router } = this.context;
+        let actionsContainerClasses = 'col-xs-4 col-sm-6 col-md-7 col-lg-8 center-xs';
+        let menuContainerClasses = 'col-xs-6 col-sm-4 col-md-3 col-lg-2 end-xs';
+
+        if (this.context.showCTAsInHeader === false) {
+            menuContainerClasses = 'col-xs-2 end-xs';
+            actionsContainerClasses = 'col-xs-8 center-xs';
+        }
+
         return (
             <div className="row" is="root">
-                <div className="col-xs-2" is="logoContainer">
+                <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2" is="logoContainer">
                     <img
                         is="image"
                         onTouchTap={() => router.transitionTo('/')}
                         src={this.getImageUrl()}
                     />
                 </div>
-                <div className="col-xs-8 center-xs" is="headerActionsContainer">
+                <div className={actionsContainerClasses} is="headerActionsContainer">
                     {this.props.actionsContainer}
                 </div>
-                <div className="col-xs-2 end-xs" is="menuContainer">
+                <div className={menuContainerClasses} is="menuContainer">
                     <HeaderMenu
                         dispatch={this.props.dispatch}
                         expandedView={false}

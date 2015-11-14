@@ -128,8 +128,12 @@ class HeaderMenu extends CSSComponent {
                     marginRight: '5px',
                 },
                 RoundedButton: {
+                    labelStyle: {
+                        padding: '0 6px',
+                    },
                     style: {
-                        marginRight: 20,
+                        marginRight: 12,
+                        whiteSpace: 'nowrap',
                     },
                 },
             },
@@ -258,7 +262,6 @@ class HeaderMenu extends CSSComponent {
 
     renderAddKnowledgeButton() {
         if (this.context.flags &&
-            false &&
             this.context.flags.get('posts') &&
             (this.context.showCTAsInHeader === undefined || this.context.showCTAsInHeader === true)
         ) {

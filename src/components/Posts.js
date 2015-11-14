@@ -7,7 +7,7 @@ import CurrentTheme from '../utils/ThemeManager';
 import { fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
 import { PostStateURLString } from '../utils/post';
-import { routeToNewPost, routeToEditPost, routeToPosts, routeToPost } from '../utils/routes';
+import { routeToEditPost, routeToPosts, routeToPost } from '../utils/routes';
 import t from '../utils/gettext';
 
 import CardList from './CardList';
@@ -17,7 +17,6 @@ import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
 import MoreVerticalIcon from './MoreVerticalIcon';
-import RoundedButton from './RoundedButton';
 
 const { PostStateV1 } = services.post.containers;
 
@@ -157,10 +156,6 @@ class Posts extends CSSComponent {
     }
 
     // Event Handlers
-
-    onAddPostTapped() {
-        routeToNewPost(this.context.router);
-    }
 
     onPostTapped(post) {
         if (post.state === PostStateV1.DRAFT || !post.state) {
@@ -322,12 +317,6 @@ class Posts extends CSSComponent {
                     <div className="row start-xs between-xs" is="pageHeaderContainer">
                         <div>
                             <h3 is="pageHeaderText">{t('My Knowledge')}</h3>
-                        </div>
-                        <div>
-                            <RoundedButton
-                                label={t('Add Knowledge')}
-                                onTouchTap={::this.onAddPostTapped}
-                            />
                         </div>
                     </div>
                     <div className="row" is="tabsContainer">
