@@ -14,6 +14,7 @@ const SharedConstants = {
 export const EVENTS = {
     CONTACT_TAP: 'Contact Tap',
     PAGE_VIEW: 'Page View',
+    POST_PUBLISHED: 'Post Published',
     PROFILE_UPDATE: 'Profile Update',
     SEARCH_RESULT_TAP: 'Search Result Tap',
     SEARCH_START: 'Search Start',
@@ -104,4 +105,12 @@ export const CONTACT_LOCATION = {
     TEAM_DETAIL_STATUS: 'Team Detail Status',
     TEAM_DETAIL_DESCRIPTION: 'Team Detail Description',
     SEARCH_SMART_ACTION: 'Search Smart Action',
+};
+
+// Post creation source
+// This will track where the post was originally created. For e.g., Slack
+// or Email or Bookmarklet.
+export const POST_SOURCE = {
+    WEB_APP: 'Web App',
+    SLACK: 'Slack',
 };

@@ -3,16 +3,18 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
+import { deleteFile, uploadFile } from '../actions/files';
 import { getPostStateURLString } from '../utils/post';
 import logger from '../utils/logger';
+import { POST_SOURCE } from '../constants/trackerProperties';
 import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
+import { routeToPosts } from '../utils/routes';
 import * as selectors from '../selectors';
+import tracker from '../utils/tracker';
 import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
-import { routeToPosts } from '../utils/routes';
-import { deleteFile, uploadFile } from '../actions/files';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -238,6 +240,17 @@ class PostEditor extends CSSComponent {
         if (!this.props.post) {
             return;
         }
+
+        const { params, post } = this.props;
+
+        // Track publish action
+        tracker.trackPostPublished(
+            post.id,
+            post.state,
+            !(params && params.postId),
+            post.file_ids.length,
+            POST_SOURCE.WEB_APP,
+        );
 
         this.onSavePost(
             this.refs.post.getCurrentTitle(),

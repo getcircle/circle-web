@@ -8,6 +8,8 @@ import {
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 const { AttributeV1, CategoryV1 } = services.search.containers.search;
+const { PostStateV1 } = services.post.containers;
+
 const LUNO_SOURCE = 'ls';
 
 export function getTrackingParameter(source) {
@@ -394,6 +396,35 @@ class Tracker {
             mixpanel.track(EVENTS.TEAM_UPDATE, {
                 'Team ID': teamId,
                 'Fields': fields,
+            });
+        });
+    }
+
+    /**
+     * Tracks the action of publishing posts.
+     *
+     * @param {string} postId ID of the post being published
+     * @param {PostStateV1} postState State of the post at the time of publishing
+     * @param {bool} publishedImmediately Boolean indicating whether a post was created and immediately published
+     * @param {number} totalAttachments Number of attachments post had at the time of publishing
+     * @param {source} source Source indicating where the post was originally created
+     */
+    trackPostPublished(postId, postState, publishedImmediately, totalAttachments, source) {
+        this.withMixpanel(() => {
+            if (!postId) {
+                logger.error('Post ID needs to be set for tracking publishing of a post.');
+                return;
+            }
+
+            const postStateValue = postState === null || postState === undefined ? PostStateV1.DRAFT : postState;
+            const postStateString = this.getStringKeyValue(PostStateV1, postStateValue);
+
+            mixpanel.track(EVENTS.POST_PUBLISHED, {
+                'Post ID': postId,
+                'Post State': postStateString,
+                'Published Immediately': publishedImmediately,
+                'Total Attachments': totalAttachments ? totalAttachments : 0,
+                'Post Source': source,
             });
         });
     }

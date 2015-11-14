@@ -11,8 +11,10 @@ import {
 import { fontColors } from '../constants/styles';
 import { mailToPostFeedback } from '../utils/contact';
 import moment from '../utils/moment';
+import { POST_SOURCE } from '../constants/trackerProperties';
 import { routeToPost, routeToProfile } from '../utils/routes';
 import { tintColor } from '../constants/styles';
+import tracker from '../utils/tracker';
 import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
 
@@ -750,6 +752,16 @@ class Post extends CSSComponent {
                             this.setState({
                                 saveAndExit: true
                             });
+
+                            // Track publish action
+                            tracker.trackPostPublished(
+                                post.id,
+                                post.state,
+                                false,
+                                this.state.files.length,
+                                POST_SOURCE.WEB_APP,
+                            );
+
                         }}
                         ref="publishButton"
                     />
