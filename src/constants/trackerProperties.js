@@ -24,14 +24,17 @@ export const EVENTS = {
 export const PAGE_TYPE = {
     // Global pages
     HOME: 'Home',
-    SETTINGS: 'Settings',
     BILLING: 'Billing',
+    MY_KNOWLEDGE: 'My Knowledge',
+    NEW_POST: 'New Post',
+    SETTINGS: 'Settings',
 
     // Detail pages
-    PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
-    TEAM_DETAIL: 'Team Detail',
     LOCATION_DETAIL: 'Location Detail',
+    POST_DETAIL: 'Post Detail',
+    PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
     PROFILE_STATUS_DETAIL: 'Profile Status Detail',
+    TEAM_DETAIL: 'Team Detail',
 
     // List pages
     PEERS: 'Peers',
@@ -42,6 +45,7 @@ export const PAGE_TYPE = {
     TEAM_SUBTEAMS: SharedConstants.TEAM_SUBTEAMS,
 
     // Editable Form
+    EDIT_POST: 'Edit Post',
     EDIT_PROFILE: 'Edit Profile',
     EDIT_TEAM: 'Edit Team',
 

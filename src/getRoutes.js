@@ -95,6 +95,7 @@ const getRoutes = (history, store) => {
                         onEnter={applyMiddleware(
                             requireAuth,
                             hideHeader,
+                            trackPageView(PAGE_TYPE.NEW_POST, '')
                         )}
                         path="/new-post"
                     />
@@ -103,6 +104,7 @@ const getRoutes = (history, store) => {
                         onEnter={applyMiddleware(
                             requireAuth,
                             hideHeader,
+                            trackPageView(PAGE_TYPE.EDIT_POST, 'postId')
                         )}
                         path="/post/:postId/edit"
                     />
@@ -110,6 +112,7 @@ const getRoutes = (history, store) => {
                         component={require('./containers/Post')}
                         onEnter={applyMiddleware(
                             ...defaultMiddleware,
+                            trackPageView(PAGE_TYPE.POST_DETAIL, 'postId')
                         )}
                         path="/post/:postId"
                     />
@@ -117,6 +120,7 @@ const getRoutes = (history, store) => {
                         component={require('./containers/Posts')}
                         onEnter={applyMiddleware(
                             ...defaultMiddleware,
+                            trackPageView(PAGE_TYPE.MY_KNOWLEDGE, 'postState')
                         )}
                         path="/posts/:postState"
                     />
