@@ -18,6 +18,7 @@ export const EVENTS = {
     PROFILE_UPDATE: 'Profile Update',
     SEARCH_RESULT_TAP: 'Search Result Tap',
     SEARCH_START: 'Search Start',
+    SHARE: 'Share',
     TEAM_UPDATE: 'Team Update',
 };
 
@@ -114,4 +115,14 @@ export const CONTACT_LOCATION = {
 export const POST_SOURCE = {
     WEB_APP: 'Web App',
     SLACK: 'Slack',
+};
+
+// Type of content being shared
+export const SHARE_CONTENT_TYPE = {
+    POST: 'Post',
+};
+
+// Method use to share content
+export const SHARE_METHOD = {
+    EMAIL: 'Email',
 };

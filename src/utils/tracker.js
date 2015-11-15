@@ -428,6 +428,28 @@ class Tracker {
             });
         });
     }
+
+    /**
+     * Tracks the share action on all content.
+     *
+     * @param {string} contentId ID of the underlying content
+     * @param {SHARE_CONTENT_TYPE} contentType Type of the content being shared
+     * @param {SHARE_METHOD} sharedMethod method used for sharing
+     */
+    trackShareContent(contentId, contentType, shareMethod) {
+        this.withMixpanel(() => {
+            if (!contentId) {
+                logger.error('Content ID needs to be set for tracking shares.');
+                return;
+            }
+
+            mixpanel.track(EVENTS.SHARE, {
+                'Content ID': contentId,
+                'Content Type': contentType,
+                'Share Method': shareMethod,
+            });
+        });
+    }
 }
 
 // NOTE: This is not a singleton and a new instance is generated each time.

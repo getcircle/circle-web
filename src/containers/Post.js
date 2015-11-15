@@ -10,6 +10,8 @@ import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import { routeToEditPost } from '../utils/routes';
 import * as selectors from '../selectors';
+import { SHARE_CONTENT_TYPE, SHARE_METHOD } from '../constants/trackerProperties';
+import tracker from '../utils/tracker';
 import t from '../utils/gettext';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -45,8 +47,6 @@ const selector = selectors.createImmutableSelector(
         };
     }
 );
-
-const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 @connect(selector)
 class Post extends CSSComponent {
@@ -167,6 +167,13 @@ class Post extends CSSComponent {
                 is="ShareButton"
                 label={t('Share')}
                 linkButton={true}
+                onTouchTap={() => {
+                    tracker.trackShareContent(
+                        post.id,
+                        SHARE_CONTENT_TYPE.POST,
+                        SHARE_METHOD.EMAIL,
+                    );
+                }}
                 target="_blank"
             />
         );
