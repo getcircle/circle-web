@@ -1,12 +1,11 @@
 import { connect } from 'react-redux';
-import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { canvasColor, fontColors } from '../constants/styles';
+import CurrentTheme from '../utils/ThemeManager';
 import { getPost } from '../actions/posts';
-import { mailtoPost } from '../utils/contact';
+import { mailtoSharePost } from '../utils/contact';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import { routeToEditPost } from '../utils/routes';
@@ -46,6 +45,8 @@ const selector = selectors.createImmutableSelector(
         };
     }
 );
+
+const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 @connect(selector)
 class Post extends CSSComponent {
@@ -162,7 +163,7 @@ class Post extends CSSComponent {
         return (
             <RoundedButton
                 className="center-xs"
-                href={mailtoPost(post)}
+                href={mailtoSharePost(post, this.props.authenticatedProfile)}
                 is="ShareButton"
                 label={t('Share')}
                 linkButton={true}

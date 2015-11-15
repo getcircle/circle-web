@@ -4,6 +4,8 @@ import t from './gettext';
 const PROFILE_STATUS_ASK_ME = 'profile_status_askme';
 const TEAM_STATUS_ASK_ME = 'team_status_askme';
 const TEAM_DESCRIPTION_ASK_ME = 'team_description_askme';
+const POST_SHARE = 'post_share';
+const POST_FEEDBACK = 'post_feedback';
 
 function sentFrom() {
     return encodeURI(t(`\n\n\nSent from ${window.location.host}`));
@@ -75,13 +77,14 @@ export function mailtoTeamDescription(team, manager, fromProfile) {
     return mailtoTeam(TEAM_DESCRIPTION_ASK_ME, team, manager, fromProfile);
 }
 
-export function mailtoPost(post) {
+export function mailtoSharePost(post, fromProfile) {
     const subject = encodeURI(t('Check out "' + post.title + '" on Luno'));
-    const link = `${window.location.host}/post/${post.id}`;
+    const sourceParameter = getTrackingParameter(POST_SHARE);
+    const link = `${window.location.host}/post/${post.id}?${sourceParameter}`;
     const body = encodeURI(t(
         `"${post.title}" post by ${post.by_profile.first_name} might be helpful to you. Check it out on Luno!
         \n${link}
-        \nCheers!`
+        \nCheers!\n${fromProfile.first_name}`
     ));
 
     return `mailto:?subject=${subject}&body=${body}${sentFrom()}`;
@@ -89,7 +92,8 @@ export function mailtoPost(post) {
 
 export function mailToPostFeedback(post, fromProfile) {
     const subject = encodeURI(t('Thoughts on your Luno post "' + post.title + '"'));
-    const link = `${window.location.host}/post/${post.id}`;
+    const sourceParameter = getTrackingParameter(POST_FEEDBACK);
+    const link = `${window.location.host}/post/${post.id}?${sourceParameter}`;
     const body = encodeURI(t(
         `Hey ${post.by_profile.first_name},
         \nI had a few thoughts on your "${post.title}" (${link}) post on Luno:

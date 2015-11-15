@@ -100,11 +100,12 @@ export const SEARCH_LOCATION = {
 // Contact Location (Convention: Titlecase, Separator - Space)
 // Where the contact method was tapped
 export const CONTACT_LOCATION = {
+    POST_FEEDBACK: 'Post Detail Feedback',
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
     PROFILE_DETAIL_STATUS: 'Profile Detail Status',
+    SEARCH_SMART_ACTION: 'Search Smart Action',
     TEAM_DETAIL_STATUS: 'Team Detail Status',
     TEAM_DETAIL_DESCRIPTION: 'Team Detail Description',
-    SEARCH_SMART_ACTION: 'Search Smart Action',
 };
 
 // Post creation source

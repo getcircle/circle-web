@@ -11,7 +11,7 @@ import {
 import { fontColors } from '../constants/styles';
 import { mailToPostFeedback } from '../utils/contact';
 import moment from '../utils/moment';
-import { POST_SOURCE } from '../constants/trackerProperties';
+import { CONTACT_LOCATION, POST_SOURCE } from '../constants/trackerProperties';
 import { routeToPost, routeToProfile } from '../utils/routes';
 import { tintColor } from '../constants/styles';
 import tracker from '../utils/tracker';
@@ -28,6 +28,8 @@ import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from './RoundedButton';
+
+const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
 class Post extends CSSComponent {
 
@@ -544,6 +546,13 @@ class Post extends CSSComponent {
                     is="FlatButton"
                     label={t('Suggest Improvements')}
                     linkButton={true}
+                    onTouchTap={() => {
+                        tracker.trackContactTap(
+                            ContactMethodTypeV1.EMAIL,
+                            post.by_profile,
+                            CONTACT_LOCATION.POST_FEEDBACK
+                        );
+                    }}
                     target="_blank"
                 />
             );
