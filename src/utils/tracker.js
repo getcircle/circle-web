@@ -430,6 +430,29 @@ class Tracker {
     }
 
     /**
+     * Tracks the action of removing posts.
+     *
+     * @param {string} postId ID of the post being removed
+     * @param {PostStateV1} postState State of the post at the time of removing a post
+     */
+    trackPostRemoved(postId, postState) {
+        this.withMixpanel(() => {
+            if (!postId) {
+                logger.error('Post ID needs to be set for tracking the action of removing a post.');
+                return;
+            }
+
+            const postStateValue = postState === null || postState === undefined ? PostStateV1.DRAFT : postState;
+            const postStateString = this.getStringKeyValue(PostStateV1, postStateValue);
+
+            mixpanel.track(EVENTS.POST_REMOVED, {
+                'Post ID': postId,
+                'Post State': postStateString,
+            });
+        });
+    }
+
+    /**
      * Tracks the share action on all content.
      *
      * @param {string} contentId ID of the underlying content

@@ -15,6 +15,7 @@ export const EVENTS = {
     CONTACT_TAP: 'Contact Tap',
     PAGE_VIEW: 'Page View',
     POST_PUBLISHED: 'Post Published',
+    POST_REMOVED: 'Post Removed',
     PROFILE_UPDATE: 'Profile Update',
     SEARCH_RESULT_TAP: 'Search Result Tap',
     SEARCH_START: 'Search Start',

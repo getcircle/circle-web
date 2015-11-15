@@ -8,6 +8,7 @@ import { fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
 import { PostStateURLString } from '../utils/post';
 import { routeToEditPost, routeToPosts, routeToPost } from '../utils/routes';
+import tracker from '../utils/tracker';
 import t from '../utils/gettext';
 
 import CardList from './CardList';
@@ -195,6 +196,10 @@ class Posts extends CSSComponent {
     onModalDeleteTapped() {
         if (this.state.postToBeDeleted) {
             this.props.onDeletePostCallback(this.state.postToBeDeleted);
+            tracker.trackPostRemoved(
+                this.state.postToBeDeleted.id,
+                this.state.postToBeDeleted.state
+            );
         }
 
         this.resetDeleteState();
