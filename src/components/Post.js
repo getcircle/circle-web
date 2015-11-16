@@ -529,7 +529,7 @@ class Post extends CSSComponent {
         }, () => {
             this.saveData(false);
         });
-        this.refs.changeOwnerModal.hide();
+        this.refs.changeOwnerModal.dismiss();
     }
 
     getSuggestImprovementsLink(post) {
