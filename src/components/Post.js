@@ -150,6 +150,7 @@ class Post extends CSSComponent {
                         fontWeight: '600',
                         fontStyle: 'normal',
                         fontSize: '30px',
+                        letterSpacing: '0.4px',
                         lineHeight: '1.5',
                         marginBottom: '20px',
                         minHeight: 49,
@@ -296,6 +297,7 @@ class Post extends CSSComponent {
                     fontWeight: '600',
                     fontStyle: 'normal',
                     fontSize: '30px',
+                    letterSpacing: '0.4px',
                     lineHeight: '1.5',
                     marginBottom: '20px',
                     outline: 'none',
@@ -576,9 +578,9 @@ class Post extends CSSComponent {
         } = this.props;
 
         // Only admin users can see the change_owner button
-        return authenticatedProfile &&
-            authenticatedProfile.is_admin &&
-            post &&
+        return !!authenticatedProfile &&
+            !!authenticatedProfile.is_admin &&
+            !!post &&
             post.state === PostStateV1.LISTED;
     }
 
