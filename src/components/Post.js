@@ -148,11 +148,13 @@ class Post extends CSSComponent {
                 cardList: {
                     background: 'transparent',
                 },
-                cardListItemInnerDivStyle: {
-                    height: 72,
-                    paddingLeft: 56,
-                    paddingTop: 20,
-                    paddingBottom: 16,
+                CardListItem: {
+                    innerDivStyle: {
+                        height: 72,
+                        paddingLeft: 56,
+                        paddingTop: 20,
+                        paddingBottom: 16,
+                    },
                 },
                 CircularProgress: {
                     style: {
@@ -602,7 +604,7 @@ class Post extends CSSComponent {
                     <div className="col-xs-8" is="authorContainer">
                         <CardList is="cardList">
                             <CardListItem
-                                innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
+                                is="CardListItem"
                                 key={author.id}
                                 leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
                                 onTouchTap={routeToProfile.bind(null, this.context.router, author)}
@@ -707,8 +709,24 @@ class Post extends CSSComponent {
     }
 
     renderEditableContent() {
+        const {
+            post,
+        } = this.props;
+
+        let author = post && post.by_profile ? post.by_profile : this.context.authenticatedProfile;
         return (
             <span>
+                <div className="row col-xs" is="authorContainer">
+                    <CardList is="cardList">
+                        <CardListItem
+                            is="CardListItem"
+                            key={author.id}
+                            leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
+                            primaryText={author.full_name}
+                            secondaryText={author.title}
+                        />
+                    </CardList>
+                </div>
                 <AutogrowTextarea
                     autoFocus="true"
                     is="AutogrowTitleTextarea"
