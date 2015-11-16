@@ -9,6 +9,7 @@ import AutogrowTextarea from '../../src/components/AutogrowTextarea';
 import CSSComponent from '../../src/components/CSSComponent';
 import Post from '../../src/components/Post';
 
+const { PostStateV1 } = services.post.containers;
 const { TestUtils } = React.addons;
 
 function setup(propsOverrides, contextOverrides) {
@@ -150,6 +151,46 @@ describe('PostComponent', () => {
 
             postComponent.refs.publishButton.props.onTouchTap();
             expect(props.onSaveCallback.calls.length).toBe(2);
+        });
+
+        it('does not allows changing owner if post is in draft state', () => {
+            const adminProfile = ProfileFactory.getAdminProfile();
+            const { postComponent, props } = setup({
+                autoSave: false,
+                isEditable: true,
+            }, {
+                authenticatedProfile: adminProfile,
+            });
+
+            expect(props.post.state).toBe(PostStateV1.DRAFT);
+            expect(postComponent.shouldAllowChangingOwner()).toBe(false);
+            expect(adminProfile.is_admin).toBe(true);
+        });
+
+        it('does not allows changing owner if logged in user is not an admin user', () => {
+            const { postComponent, props } = setup({
+                autoSave: false,
+                isEditable: true,
+                post: PostFactory.getPostWithState(PostStateV1.LISTED),
+            });
+
+            expect(postComponent.shouldAllowChangingOwner()).toBe(false);
+            expect(props.post.state).toBe(PostStateV1.LISTED);
+        });
+
+        it('allows changing owner if logged in user is an admin user and post is published', () => {
+            const adminProfile = ProfileFactory.getAdminProfile();
+            const { postComponent, props } = setup({
+                autoSave: false,
+                isEditable: true,
+                post: PostFactory.getPostWithState(PostStateV1.LISTED),
+            }, {
+                authenticatedProfile: adminProfile,
+            });
+
+            expect(postComponent.shouldAllowChangingOwner()).toBe(true);
+            expect(props.post.state).toBe(PostStateV1.LISTED);
+            expect(adminProfile.is_admin).toBe(true);
         });
 
     });
