@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
+import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { canvasColor, fontColors } from '../constants/styles';
+import { canvasColor, fontColors, tintColor } from '../constants/styles';
 import CurrentTheme from '../utils/ThemeManager';
 import { getPost } from '../actions/posts';
 import { mailtoSharePost } from '../utils/contact';
@@ -122,6 +123,13 @@ class Post extends CSSComponent {
                     fontSize: 14,
                     padding: '0 20px',
                 },
+                EditButton: {
+                    labelStyle: {
+                        color: tintColor,
+                        fontSize: 15,
+                        textTransform: 'none',
+                    },
+                },
                 ShareButton: {
                     style: {
                         marginLeft: '20px',
@@ -184,19 +192,20 @@ class Post extends CSSComponent {
             post
         } = this.props;
 
+        let editButton = '';
         if (post && post.permissions && post.permissions.can_edit) {
-            return (
-                <div className="row end-xs" is="headerContainer">
-                    <RoundedButton
-                        label={t('Edit')}
-                        onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
-                    />
-                </div>
+            editButton = (
+                <FlatButton
+                    is="EditButton"
+                    label={t('Edit')}
+                    onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
+                />
             );
         }
 
         return (
             <div className="row middle-xs end-xs" is="headerContainer">
+                {editButton}
                 {this.renderShareButton(post)}
             </div>
         );

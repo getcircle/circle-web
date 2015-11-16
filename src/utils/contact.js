@@ -81,8 +81,9 @@ export function mailtoSharePost(post, fromProfile) {
     const subject = encodeURI(t('Check out "' + post.title + '" on Luno'));
     const sourceParameter = getTrackingParameter(POST_SHARE);
     const link = `${window.location.host}/post/${post.id}?${sourceParameter}`;
+    const byAuthorString = post.by_profile.id === fromProfile.id ? '' : ' by ' + post.by_profile.first_name;
     const body = encodeURI(t(
-        `"${post.title}" post by ${post.by_profile.first_name} might be helpful to you. Check it out on Luno!
+        `"${post.title}" post${byAuthorString} might be helpful to you. Check it out on Luno!
         \n${link}
         \nCheers!\n${fromProfile.first_name}`
     ));
