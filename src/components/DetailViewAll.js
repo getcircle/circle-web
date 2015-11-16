@@ -115,6 +115,7 @@ class DetailViewAll extends CSSComponent {
             searchAttribute,
             searchAttributeValue,
             searchCategory,
+            ...other,
         } = this.props;
         return (
             <div >
@@ -140,6 +141,7 @@ class DetailViewAll extends CSSComponent {
                             searchAttributeValue={searchAttributeValue}
                             searchCategory={searchCategory}
                             searchLocation={SEARCH_LOCATION.MODAL}
+                            {...other}
                         />
                     </div>
                 </Dialog>

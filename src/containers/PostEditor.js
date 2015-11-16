@@ -94,6 +94,7 @@ class PostEditor extends CSSComponent {
     static childContextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         flags: PropTypes.object,
+        largerDevice: PropTypes.bool,
         mobileOS: PropTypes.bool.isRequired,
         showCTAsInHeader: PropTypes.bool,
     }
@@ -174,7 +175,7 @@ class PostEditor extends CSSComponent {
         resetScroll();
     }
 
-    onSavePost(title, body, fileIds, postState) {
+    onSavePost(title, body, fileIds, postState, postOwner) {
         if (title.trim() === '' || body.trim() === '') {
             return;
         }
@@ -219,6 +220,12 @@ class PostEditor extends CSSComponent {
 
             if (postState !== undefined && postState !== null) {
                 updates.state = postState;
+            }
+
+            if (postOwner !== undefined && postOwner !== null) {
+                /*eslint-disable camelcase*/
+                updates.by_profile_id = postOwner.id
+                /*eslint-enable camelcase*/
             }
 
             let postV1 = Object.assign({}, post, updates);

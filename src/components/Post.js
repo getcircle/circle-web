@@ -12,6 +12,7 @@ import { fontColors } from '../constants/styles';
 import { mailToPostFeedback } from '../utils/contact';
 import moment from '../utils/moment';
 import { CONTACT_LOCATION, POST_SOURCE } from '../constants/trackerProperties';
+import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToPost, routeToProfile } from '../utils/routes';
 import { tintColor } from '../constants/styles';
 import tracker from '../utils/tracker';
@@ -25,11 +26,13 @@ import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
 import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
+import DetailViewAll from './DetailViewAll';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from './RoundedButton';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
+const { PostStateV1 } = services.post.containers;
 
 class Post extends CSSComponent {
 
@@ -63,13 +66,14 @@ class Post extends CSSComponent {
     }
 
     state = {
+        body: '',
         derivedTitle: false,
         editing: false,
-        title: '',
-        body: '',
-        uploadedFiles: Immutable.Map(),
         files: Immutable.OrderedMap(),
+        owner: null,
         saveAndExit: false,
+        title: '',
+        uploadedFiles: Immutable.Map(),
     }
 
     componentWillMount() {
@@ -327,6 +331,10 @@ class Post extends CSSComponent {
                 body: props.post.content,
             };
 
+            if (this.state.owner === null) {
+                updatedState.owner = props.post.by_profile;
+            }
+
             this.setState(updatedState);
         }
 
@@ -382,10 +390,10 @@ class Post extends CSSComponent {
             }
 
             this.saveTimeout = window.setTimeout(() => {
-                onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
+                onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds(), null, this.state.owner);
             }, 500);
         } else if (explicitSave === true) {
-            onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds());
+            onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds(), null, this.state.owner);
         }
     }
 
@@ -515,6 +523,15 @@ class Post extends CSSComponent {
         }
     }
 
+    onOwnerSelected(newOwnerProfileItem) {
+        this.setState({
+            owner: newOwnerProfileItem.instance,
+        }, () => {
+            this.saveData(false);
+        });
+        this.refs.changeOwnerModal.hide();
+    }
+
     getSuggestImprovementsLink(post) {
         return mailToPostFeedback(post, this.context.authenticatedProfile);
     }
@@ -532,6 +549,22 @@ class Post extends CSSComponent {
             });
         });
         return newFilesMap;
+    }
+
+    shouldAllowChangingOwner() {
+        const {
+            authenticatedProfile,
+        } = this.context;
+
+        const {
+            post,
+        } = this.props;
+
+        // Only admin users can see the change_owner button
+        return authenticatedProfile &&
+            authenticatedProfile.is_admin &&
+            post &&
+            post.state === PostStateV1.LISTED;
     }
 
     // Render Methods
@@ -708,24 +741,64 @@ class Post extends CSSComponent {
         );
     }
 
-    renderEditableContent() {
-        const {
-            post,
-        } = this.props;
+    renderChangeOwnerModal() {
+        if (this.shouldAllowChangingOwner()) {
+            return (
+                <DetailViewAll
+                    filterPlaceholder={t('Search People')}
+                    largerDevice={this.props.largerDevice}
+                    onSelectItem={::this.onOwnerSelected}
+                    pageType={PAGE_TYPE.CHANGE_POST_OWNER}
+                    ref="changeOwnerModal"
+                    searchCategory={services.search.containers.search.CategoryV1.PROFILES}
+                    showExpandedResults={false}
+                    title={t('Change Owner')}
+                    useDefaultClickHandlers={false}
+                />
+            );
+        }
+    }
 
-        let author = post && post.by_profile ? post.by_profile : this.context.authenticatedProfile;
+    renderChangeOwnerButton() {
+        if (this.shouldAllowChangingOwner()) {
+            return (
+                <FlatButton
+                    is="FlatButton"
+                    label={t('Change Owner')}
+                    onTouchTap={() => {
+                        if (this.refs.changeOwnerModal) {
+                            this.refs.changeOwnerModal.show();
+                        }
+                    }}
+                />
+            );
+        }
+    }
+
+    renderEditableContent() {
+        let author = this.state.owner;
+        if (author === null || author === undefined) {
+            author = this.context.authenticatedProfile;
+        }
+
         return (
             <span>
-                <div className="row col-xs" is="authorContainer">
-                    <CardList is="cardList">
-                        <CardListItem
-                            is="CardListItem"
-                            key={author.id}
-                            leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
-                            primaryText={author.full_name}
-                            secondaryText={author.title}
-                        />
-                    </CardList>
+                <div className="row between-xs middle-xs">
+                    <div className="col-xs-8" is="authorContainer">
+                        <CardList is="cardList">
+                            <CardListItem
+                                disabled={true}
+                                is="CardListItem"
+                                key={author.id}
+                                leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
+                                primaryText={author.full_name}
+                                secondaryText={author.title}
+                            />
+                        </CardList>
+                    </div>
+                    <div className="col-xs-4 end-xs middle-xs" is="feedbackContainer">
+                        {this.renderChangeOwnerButton()}
+                    </div>
                 </div>
                 <AutogrowTextarea
                     autoFocus="true"
@@ -743,6 +816,7 @@ class Post extends CSSComponent {
                     value={this.state.body}
                 />
                 {this.renderFilesContainer()}
+                {this.renderChangeOwnerModal()}
             </span>
         );
     }

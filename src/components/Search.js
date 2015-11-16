@@ -184,11 +184,13 @@ class Search extends CSSComponent {
         searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
         searchLocation: PropTypes.string.isRequired,
         showCancel: PropTypes.bool,
+        showExpandedResults: PropTypes.bool,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         teamsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        useDefaultClickHandlers: PropTypes.bool,
     }
 
     static contextTypes = {
@@ -211,6 +213,8 @@ class Search extends CSSComponent {
         onSelectItem() {},
         placeholder: t('Search people, knowledge, & teams'),
         showCancel: false,
+        showExpandedResults: true,
+        useDefaultClickHandlers: true,
     }
 
     state = {
@@ -514,7 +518,10 @@ class Search extends CSSComponent {
                     this.props.searchAttribute,
                     this.props.searchAttributeValue,
                 );
-                onTouchTap();
+
+                if (this.props.useDefaultClickHandlers) {
+                    onTouchTap();
+                }
             }
         }
         return item;
@@ -816,7 +823,7 @@ class Search extends CSSComponent {
                 return this.getPostResult(result.post, index, false, results.length);
             }
         });
-        if (results.length === 1) {
+        if (results.length === 1 && this.props.showExpandedResults) {
             items = this.getExpandedResults(items[0], results[0]);
         }
         return items;
