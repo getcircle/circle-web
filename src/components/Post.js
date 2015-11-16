@@ -8,13 +8,13 @@ import {
     detectEmailsAndAddMarkup,
     detectURLsAndAddMarkup,
 } from '../utils/string';
-import { fontColors } from '../constants/styles';
-import { mailToPostFeedback } from '../utils/contact';
+import { fontColors, tintColor } from '../constants/styles';
+import { mailToPostFeedback, mailtoSharePost } from '../utils/contact';
 import moment from '../utils/moment';
 import { CONTACT_LOCATION, POST_SOURCE } from '../constants/trackerProperties';
 import { PAGE_TYPE } from '../constants/trackerProperties';
-import { routeToPost, routeToProfile } from '../utils/routes';
-import { tintColor } from '../constants/styles';
+import { routeToEditPost, routeToPost, routeToProfile } from '../utils/routes';
+import { SHARE_CONTENT_TYPE, SHARE_METHOD } from '../constants/trackerProperties';
 import tracker from '../utils/tracker';
 import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
@@ -143,6 +143,31 @@ class Post extends CSSComponent {
                 authorContainer: {
                     padding: 0,
                 },
+                AutogrowTitleTextarea: {
+                    textareaStyle: {
+                        background: 'transparent',
+                        border: '0',
+                        fontWeight: '600',
+                        fontStyle: 'normal',
+                        fontSize: '30px',
+                        lineHeight: '1.5',
+                        marginBottom: '20px',
+                        minHeight: 49,
+                        ...fontColors.dark,
+                    },
+                },
+                AutogrowTextarea: {
+                    textareaStyle: {
+                        background: 'transparent',
+                        border: 0,
+                        color: 'rgba(0, 0, 0, 0.8)',
+                        fontSize: '18px',
+                        fontStyle: 'normal',
+                        fontWeight: '400',
+                        lineHeight: '1.58',
+                        minHeight: '50px',
+                    },
+                },
                 cardListAvatar: {
                     height: 40,
                     width: 40,
@@ -192,6 +217,13 @@ class Post extends CSSComponent {
                         boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
                     },
                 },
+                EditButton: {
+                    labelStyle: {
+                        color: tintColor,
+                        fontSize: 15,
+                        textTransform: 'none',
+                    },
+                },
                 feedbackContainer: {
                     padding: 0,
                 },
@@ -201,6 +233,9 @@ class Post extends CSSComponent {
                         padding: '0 0 0 16px',
                         textTransform: 'none',
                     },
+                },
+                headerContainer: {
+                    width: '100%',
                 },
                 IconButton: {
                     style: {
@@ -273,29 +308,9 @@ class Post extends CSSComponent {
                 section: {
                     marginTop: 5,
                 },
-                AutogrowTitleTextarea: {
-                    textareaStyle: {
-                        background: 'transparent',
-                        border: '0',
-                        fontWeight: '600',
-                        fontStyle: 'normal',
-                        fontSize: '30px',
-                        lineHeight: '1.5',
-                        marginBottom: '20px',
-                        minHeight: 49,
-                        ...fontColors.dark,
-                    },
-                },
-                AutogrowTextarea: {
-                    textareaStyle: {
-                        background: 'transparent',
-                        border: 0,
-                        color: 'rgba(0, 0, 0, 0.8)',
-                        fontSize: '18px',
-                        fontStyle: 'normal',
-                        fontWeight: '400',
-                        lineHeight: '1.58',
-                        minHeight: '50px',
+                ShareButton: {
+                    style: {
+                        marginLeft: 5,
                     },
                 },
             },
@@ -594,6 +609,44 @@ class Post extends CSSComponent {
         }
     }
 
+    renderEditAndShareButton() {
+        const {
+            post
+        } = this.props;
+
+        let editButton = '';
+        if (post && post.permissions && post.permissions.can_edit) {
+            editButton = (
+                <FlatButton
+                    is="EditButton"
+                    label={t('Edit')}
+                    onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
+                />
+            );
+        }
+
+        return (
+            <div className="row middle-xs end-xs" is="headerContainer">
+                {editButton}
+                <RoundedButton
+                    className="center-xs"
+                    href={mailtoSharePost(post, this.context.authenticatedProfile)}
+                    is="ShareButton"
+                    label={t('Share')}
+                    linkButton={true}
+                    onTouchTap={() => {
+                        tracker.trackShareContent(
+                            post.id,
+                            SHARE_CONTENT_TYPE.POST,
+                            SHARE_METHOD.EMAIL,
+                        );
+                    }}
+                    target="_blank"
+                />
+            </div>
+        );
+    }
+
     renderReadonlyContent() {
         const {
             post
@@ -631,6 +684,7 @@ class Post extends CSSComponent {
 
         return (
             <span>
+                {this.renderEditAndShareButton()}
                 <h1 is="postTitle">{post.title}</h1>
                 <div className="row" is="lastUpdatedText">{lastUpdatedText}</div>
                 <div className="row between-xs middle-xs" is="authorAndFeedbackContainer">
