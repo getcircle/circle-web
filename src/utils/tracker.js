@@ -407,9 +407,10 @@ class Tracker {
      * @param {PostStateV1} postState State of the post at the time of publishing
      * @param {bool} publishedImmediately Boolean indicating whether a post was created and immediately published
      * @param {number} totalAttachments Number of attachments post had at the time of publishing
-     * @param {source} source Source indicating where the post was originally created
+     * @param {POST_SOURCE} source Source indicating where the post was originally created
+     * @param {bool} ownerChanged Boolean indicating whether a post's owner was changed
      */
-    trackPostPublished(postId, postState, publishedImmediately, totalAttachments, source) {
+    trackPostPublished(postId, postState, publishedImmediately, totalAttachments, source, ownerChanged) {
         this.withMixpanel(() => {
             if (!postId) {
                 logger.error('Post ID needs to be set for tracking publishing of a post.');
@@ -425,6 +426,7 @@ class Tracker {
                 'Published Immediately': publishedImmediately,
                 'Total Attachments': totalAttachments ? totalAttachments : 0,
                 'Post Source': source,
+                'Post Owner Changed': ownerChanged,
             });
         });
     }

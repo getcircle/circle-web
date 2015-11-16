@@ -40,6 +40,7 @@ export const PAGE_TYPE = {
     TEAM_DETAIL: 'Team Detail',
 
     // List pages
+    CHANGE_POST_OWNER: 'Change Post Owner',
     PEERS: 'Peers',
     DIRECT_REPORTS: SharedConstants.DIRECT_REPORTS,
     TEAM_MEMBERS: SharedConstants.TEAM_MEMBERS,
