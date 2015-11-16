@@ -752,6 +752,7 @@ class Post extends CSSComponent {
                     ref="changeOwnerModal"
                     searchCategory={services.search.containers.search.CategoryV1.PROFILES}
                     showExpandedResults={false}
+                    showRecents={false}
                     title={t('Change Owner')}
                     useDefaultClickHandlers={false}
                 />

@@ -185,6 +185,7 @@ class Search extends CSSComponent {
         searchLocation: PropTypes.string.isRequired,
         showCancel: PropTypes.bool,
         showExpandedResults: PropTypes.bool,
+        showRecents: PropTypes.bool,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
@@ -213,6 +214,7 @@ class Search extends CSSComponent {
         onSelectItem() {},
         placeholder: t('Search people, knowledge, & teams'),
         showCancel: false,
+        showRecents: true,
         showExpandedResults: true,
         useDefaultClickHandlers: true,
     }
@@ -900,7 +902,7 @@ class Search extends CSSComponent {
                 return this.getCategoryResults();
             } else if (this.props.defaults) {
                 return this.resolveDefaults(this.props.defaults);
-            } else if (this.props.recents && !this.props.canExplore) {
+            } else if (this.props.recents && !this.props.canExplore && this.props.showRecents) {
                 return this.getRecentResults();
             } else if (this.props.canExplore) {
                 return this.getDefaultResults();
