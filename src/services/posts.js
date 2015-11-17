@@ -52,19 +52,23 @@ export function getPost(postId) {
     });
 }
 
-export function getPosts(postStateURLString, byProfile, nextRequest=null) {
+export function getPosts(postStateURLString, byProfile, nextRequest=null, key=null) {
 
     let parameters = {
         /*eslint-disable camelcase*/
-        by_profile_id: byProfile.id,
+        by_profile_id: byProfile ? byProfile.id : undefined,
         state: getPostStateFromURLString(postStateURLString),
         /*eslint-enable camelcase*/
     };
 
+    if (key === null) {
+        key = postStateURLString;
+    }
+
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.send(request)
-            .then(response => response.finish(resolve, reject, postStateURLString))
+            .then(response => response.finish(resolve, reject, key))
             .catch(error => reject(error));
     });
 }

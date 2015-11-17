@@ -52,6 +52,10 @@ export const exploreLocationsSelector = exploreSelectorFactory(EXPLORE_TYPES.LOC
 export const exploreLocationsLoadingSelector = exploreTypeLoadingSelectorFactory(exploreLocationsSelector);
 export const exploreLocationsIdsSelector = exploreTypeIdsSelectorFactory(exploreLocationsSelector);
 
+export const explorePostsSelector = exploreSelectorFactory(EXPLORE_TYPES.POSTS);
+export const explorePostsLoadingSelector = exploreTypeLoadingSelectorFactory(explorePostsSelector);
+export const explorePostsIdsSelector = exploreTypeIdsSelectorFactory(explorePostsSelector);
+
 export const extendedProfilesSelector = state => state.extendedProfiles;
 export const extendedTeamsSelector = state => state.extendedTeams;
 export const filesSelector = state => state.files;
