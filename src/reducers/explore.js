@@ -1,5 +1,6 @@
 import {
     getLocationNormalizations,
+    getPostsNormalizations,
     getProfileNormalizations,
     getTeamNormalizations,
 } from './normalizations';
@@ -13,6 +14,8 @@ const explore = paginate({
         switch(action.meta.paginateBy) {
         case EXPLORE_TYPES.LOCATIONS:
             return getLocationNormalizations(action);
+        case EXPLORE_TYPES.POSTS:
+            return getPostsNormalizations(action);
         case EXPLORE_TYPES.PROFILES:
             return getProfileNormalizations(action);
         case EXPLORE_TYPES.TEAMS:

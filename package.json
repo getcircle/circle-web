@@ -88,7 +88,7 @@
     "node-notifier": "~4.2.3",
     "node-sass": "^3.2.0",
     "protobuf-normalizr": "git+https://c9b60542c1a793a1bcc0b1e95ce3ab3d2da148c4:x-oauth-basic@github.com/mhahn/protobuf-normalizr.git#v0.0.17",
-    "protobufs": "git+https://c9b60542c1a793a1bcc0b1e95ce3ab3d2da148c4:x-oauth-basic@github.com/getcircle/protobuf-registry.git#2.50.28",
+    "protobufs": "git+https://c9b60542c1a793a1bcc0b1e95ce3ab3d2da148c4:x-oauth-basic@github.com/getcircle/protobuf-registry.git#2.50.30",
     "q": "~1.2.0",
     "qs": "^3.1.0",
     "radium": "^0.13.7",

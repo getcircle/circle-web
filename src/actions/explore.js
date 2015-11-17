@@ -3,11 +3,13 @@ import keymirror from 'keymirror';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 
+import { getPosts } from '../services/posts';
 import { getProfiles } from '../services/profile';
 import {
     getLocations,
     getTeams,
 } from '../services/organization';
+import { PostStateURLString } from '../utils/post';
 
 const exploreActionTypes = [
     types.EXPLORE,
@@ -16,6 +18,7 @@ const exploreActionTypes = [
 ];
 
 export const EXPLORE_TYPES = keymirror({
+    POSTS: null,
     PROFILES: null,
     TEAMS: null,
     LOCATIONS: null,
@@ -74,6 +77,23 @@ export function exploreLocations(nextRequest) {
         },
         meta: {
             paginateBy: LOCATIONS,
+        },
+    }
+}
+
+export function explorePosts(nextRequest) {
+    const { POSTS } = EXPLORE_TYPES;
+    return {
+        [SERVICE_REQUEST]: {
+            types: exploreActionTypes,
+            remote: () => getPosts(PostStateURLString.LISTED, null, nextRequest, POSTS),
+            bailout: (state) => {
+                const postsState = state.explore.get(POSTS);
+                return shouldBail(postsState, nextRequest);
+            },
+        },
+        meta: {
+            paginateBy: POSTS,
         },
     }
 }

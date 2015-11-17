@@ -21,7 +21,7 @@ import {
     fontWeights,
     tintColor,
 } from '../constants/styles';
-import { retrieveLocations, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
+import { retrieveLocations, retrievePosts, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
 import {
     CONTACT_LOCATION,
@@ -76,9 +76,11 @@ const cacheSelector = selectors.createImmutableSelector(
         selectors.exploreProfilesIdsSelector,
         selectors.exploreTeamsIdsSelector,
         selectors.exploreLocationsIdsSelector,
+        selectors.explorePostsIdsSelector,
     ],
-    (cacheState, profilesState, teamsState, locationsState) => {
+    (cacheState, profilesState, teamsState, locationsState, postsState) => {
         let profiles, profilesNextRequest, teams, teamsNextRequest, locations, locationsNextRequest;
+        let posts, postsNextRequest;
         const cache = cacheState.toJS();
         if (profilesState) {
             const ids = profilesState.get('ids').toJS();
@@ -87,6 +89,7 @@ const cacheSelector = selectors.createImmutableSelector(
             }
             profilesNextRequest = profilesState.get('nextRequest');
         }
+
         if (teamsState) {
             const ids = teamsState.get('ids').toJS();
             if (ids.length) {
@@ -94,6 +97,7 @@ const cacheSelector = selectors.createImmutableSelector(
             }
             teamsNextRequest = teamsState.get('nextRequest');
         }
+
         if (locationsState) {
             const ids = locationsState.get('ids').toJS();
             if (ids.length) {
@@ -101,9 +105,20 @@ const cacheSelector = selectors.createImmutableSelector(
             }
             locationsNextRequest = locationsState.get('nextRequest');
         }
+
+        if (postsState) {
+            const ids = postsState.get('ids').toJS();
+            if (ids.length) {
+                posts = retrievePosts(ids, cache);
+            }
+            postsNextRequest = postsState.get('nextRequest');
+        }
+
         return Immutable.fromJS({
             locations,
             locationsNextRequest,
+            posts,
+            postsNextRequest,
             profiles,
             profilesNextRequest,
             teams,
@@ -118,6 +133,7 @@ const selector = selectors.createImmutableSelector(
         selectors.exploreProfilesLoadingSelector,
         selectors.exploreTeamsLoadingSelector,
         selectors.exploreLocationsLoadingSelector,
+        selectors.explorePostsLoadingSelector,
         selectors.searchSelector,
     ],
     (
@@ -125,6 +141,7 @@ const selector = selectors.createImmutableSelector(
         profilesLoadingState,
         teamsLoadingState,
         locationsLoadingState,
+        postsLoadingState,
         searchState,
     ) => {
         const recentsState = searchState.get('recents');
@@ -136,6 +153,7 @@ const selector = selectors.createImmutableSelector(
                 profilesLoadingState ||
                 teamsLoadingState ||
                 locationsLoadingState ||
+                postsLoadingState ||
                 searchState.get('loading')
             ),
             results: searchState.get('results').toJS(),
@@ -171,6 +189,10 @@ class Search extends CSSComponent {
         onSelectItem: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         placeholder: PropTypes.string,
+        posts: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.post.containers.PostV1)
+        ),
+        postsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         profiles: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
@@ -472,6 +494,8 @@ class Search extends CSSComponent {
             return this.props.teamsNextRequest;
         case CategoryV1.LOCATIONS:
             return this.props.locationsNextRequest;
+        case CategoryV1.POSTS:
+            return this.props.postsNextRequest;
         }
     }
 
@@ -487,6 +511,9 @@ class Search extends CSSComponent {
             break;
         case CategoryV1.LOCATIONS:
             results = this.getCategoryResultsLocations();
+            break;
+        case CategoryV1.POSTS:
+            results = this.getCategoryResultsPosts();
             break;
         }
         return results ? results : [];
@@ -698,6 +725,13 @@ class Search extends CSSComponent {
         }
     }
 
+    getCategoryResultsPosts() {
+        const { posts } = this.props;
+        if (posts) {
+            return posts.map((post, index) => this.getPostResult(post, index));
+        }
+    }
+
     resolveDefaults() {
         const { defaults } = this.props;
         return defaults.map((item, index) => {
@@ -731,6 +765,10 @@ class Search extends CSSComponent {
         const { organization } = this.props;
         const { CategoryV1 } = services.search.containers.search;
         const items = [
+            {
+                onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.POSTS),
+                primaryText: t(`Knowledge (${organization.post_count})`),
+            },
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.PROFILES),
                 primaryText: t(`People (${organization.profile_count})`),
@@ -924,6 +962,8 @@ class Search extends CSSComponent {
         case CategoryV1.LOCATIONS:
             action = exploreActions.exploreLocations;
             break;
+        case CategoryV1.POSTS:
+            action = exploreActions.explorePosts;
         }
         if (action) {
             this.props.dispatch(action(nextRequest));
@@ -943,6 +983,9 @@ class Search extends CSSComponent {
             break;
         case CategoryV1.LOCATIONS:
             token = t('Locations');
+            break;
+        case CategoryV1.POSTS:
+            token = t('Knowledge');
             break;
         }
         if (token) {
