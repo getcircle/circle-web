@@ -102,7 +102,7 @@ export function mailToPostFeedback(post, fromProfile) {
         \nThanks!\n${fromProfile.first_name}`
     ));
 
-    return `mailto:?subject=${subject}&body=${body}${sentFrom()}`;
+    return `mailto:${post.by_profile.email}?subject=${subject}&body=${body}${sentFrom()}`;
 
 }
 
