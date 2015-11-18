@@ -578,9 +578,9 @@ class Post extends CSSComponent {
         } = this.props;
 
         // Only admin users can see the change_owner button
-        return !!authenticatedProfile &&
+        return authenticatedProfile &&
             !!authenticatedProfile.is_admin &&
-            !!post &&
+            post &&
             post.state === PostStateV1.LISTED;
     }
 

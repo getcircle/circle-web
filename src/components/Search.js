@@ -1213,6 +1213,10 @@ class Search extends CSSComponent {
             containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
         }
 
+        if (!containerHeight) {
+            return;
+        }
+
         return (
             <Paper
                 key="menu"

@@ -11,8 +11,10 @@ class CenterLoadingIndicator extends CSSComponent {
                 container: {
                     display: 'table',
                     height: '100%',
+                    left: 0,
                     minHeight: '100vh',
                     position: 'absolute',
+                    top: 0,
                     width: '100%',
                 },
                 innerDiv: {

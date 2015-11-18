@@ -298,7 +298,9 @@ class AutoComplete extends CSSComponent {
             });
         });
         const menu = this.props.renderMenu(items, this.state.value, this.styles().menu);
-        return React.cloneElement(menu, {ref: 'menu'});
+        if (menu) {
+            return React.cloneElement(menu, {ref: 'menu'});
+        }
     }
 
     renderCancelButton(showCancel) {

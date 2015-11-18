@@ -1,4 +1,5 @@
-import { Dialog, FlatButton, IconButton, IconMenu, Tabs, Tab } from 'material-ui';
+import { CircularProgress, Dialog, FlatButton, IconButton, IconMenu, ListItem, Tabs, Tab } from 'material-ui';
+import Infinite from 'react-infinite';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
@@ -11,10 +12,9 @@ import { routeToEditPost, routeToPosts, routeToPost } from '../utils/routes';
 import tracker from '../utils/tracker';
 import t from '../utils/gettext';
 
-import CardList from './CardList';
-import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
+import CenterLoadingIndicator from './CenterLoadingIndicator';
 import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
 import MoreVerticalIcon from './MoreVerticalIcon';
@@ -25,11 +25,13 @@ class Posts extends CSSComponent {
 
     static propTypes = {
         largerDevice: PropTypes.bool.isRequired,
+        loading: PropTypes.bool,
         onDeletePostCallback: PropTypes.func.isRequired,
         postState: PropTypes.string,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
         ),
+        postsLoadMore: PropTypes.func.isRequired,
     }
 
     static contextTypes = {
@@ -44,6 +46,7 @@ class Posts extends CSSComponent {
 
     state = {
         confirmDelete: false,
+        loading: false,
         muiTheme: CurrentTheme,
         postToBeDeleted: null,
     }
@@ -66,7 +69,6 @@ class Posts extends CSSComponent {
         return {
             default: {
                 cardListItemInnerDivStyle: {
-                    background: 'transparent',
                     borderBottom: '1px solid rgba(0, 0, 0, .1)',
                     padding: 30,
                 },
@@ -93,6 +95,9 @@ class Posts extends CSSComponent {
                     stroke: 'rgba(0, 0, 0, 0.1)',
                     strokeWidth: 1,
                 },
+                infiniteListContainer: {
+                    backgroundColor: '#FFF',
+                },
                 MenuItem: {
                     innerDivStyle: {
                         fontSize: 12,
@@ -115,9 +120,6 @@ class Posts extends CSSComponent {
                     fontSize: 36,
                     fontWeight: 300,
                     ...fontColors.dark,
-                },
-                listInnerContainer: {
-                    padding: 0,
                 },
                 primaryTextStyle: {
                     lineHeight: '25px',
@@ -205,6 +207,16 @@ class Posts extends CSSComponent {
         this.resetDeleteState();
     }
 
+    handleInfiniteLoad() {
+        const {
+            postsLoadMore,
+        } = this.props;
+
+        if (postsLoadMore) {
+            postsLoadMore();
+        }
+    }
+
     resetDeleteState() {
         this.setState({
             confirmDelete: false,
@@ -270,10 +282,20 @@ class Posts extends CSSComponent {
         );
     }
 
+    renderLoadingIndicator() {
+        if (this.props.loading) {
+            return (
+                <div className="row center-xs" key="loading-indicator">
+                    <CircularProgress mode="indeterminate" size={0.5} />
+                </div>
+            );
+        }
+    }
+
     renderPost(post) {
         const lastUpdatedText = `${t('Last updated')} ${moment(post.changed).fromNow()}`;
         return (
-            <CardListItem
+            <ListItem
                 innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
                 key={post.id}
                 onTouchTap={() => this.onPostTapped(post)}
@@ -287,6 +309,7 @@ class Posts extends CSSComponent {
 
     renderPosts() {
         const {
+            loading,
             posts,
         } = this.props;
 
@@ -296,12 +319,23 @@ class Posts extends CSSComponent {
             });
 
             return (
-                <CardList className="row">
-                    <div className="col-xs" is="listInnerContainer">
+                <div className="row full-width" is="infiniteListContainer">
+                    <Infinite
+                        className="col-xs no-padding"
+                        elementHeight={107}
+                        infiniteLoadBeginEdgeOffset={20}
+                        isInfiniteLoading={this.props.loading}
+                        key="infinite-results"
+                        loadingSpinnerDelegate={::this.renderLoadingIndicator()}
+                        onInfiniteLoad={::this.handleInfiniteLoad}
+                        useWindowAsScrollContainer={true}
+                    >
                         {postElements}
-                    </div>
-                </CardList>
+                    </Infinite>
+                </div>
             );
+        } else if (loading) {
+            return <CenterLoadingIndicator />;
         } else {
             return (
                 <p className="row center-xs middle-xs" is="emptyStateMessageContainer">
