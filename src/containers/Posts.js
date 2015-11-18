@@ -23,16 +23,19 @@ const selector = createSelector(
     (authenticationState, cacheState, responsiveState, parametersSelector, postsState) => {
         let posts, postsNextRequest;
         let postState = parametersSelector.postState
+        let loading = false;
         const cache = cacheState.toJS();
         if (postsState.has(postState)) {
             const ids = postsState.get(postState).get('ids').toJS();
             posts = retrievePosts(ids, cache);
             postsNextRequest = postsState.get(postState).get('nextRequest');
+            loading = postsState.get(postState).get('loading');
         }
 
         return {
             authenticatedProfile: authenticationState.get('profile'),
             largerDevice: responsiveState.get('largerDevice'),
+            loading: loading,
             postState: postState,
             posts: posts,
             postsNextRequest: postsNextRequest,
@@ -47,6 +50,7 @@ class Posts extends PureComponent {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
         largerDevice: PropTypes.bool.isRequired,
+        loading: PropTypes.bool,
         postState: PropTypes.string.isRequired,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
@@ -69,36 +73,45 @@ class Posts extends PureComponent {
     }
 
     componentWillMount() {
-        this.loadPosts(this.props);
+        this.loadPosts(this.props, true);
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.postState !== this.props.postState) {
-            this.loadPosts(nextProps);
+            this.loadPosts(nextProps, true);
         }
     }
 
-    loadPosts(props) {
+    loadPosts(props, shouldResetScroll) {
         this.props.dispatch(getPosts(props.postState, props.authenticatedProfile, props.postsNextRequest));
-        resetScroll();
+        if (shouldResetScroll) {
+            resetScroll();
+        }
     }
 
     onDeletePostTapped(post) {
         this.props.dispatch(deletePost(post));
     }
 
+    onPostsLoadMore() {
+        this.loadPosts(this.props, false);
+    }
+
     renderPosts() {
         const {
             largerDevice,
+            loading,
             postState,
             posts,
         } = this.props;
         return (
             <PostsComponent
                 largerDevice={largerDevice}
+                loading={loading}
                 onDeletePostCallback={::this.onDeletePostTapped}
                 postState={postState}
                 posts={posts}
+                postsLoadMore={::this.onPostsLoadMore}
             />
         );
     }
