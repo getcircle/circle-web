@@ -14,6 +14,7 @@ import t from '../utils/gettext';
 
 import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
+import CenterLoadingIndicator from './CenterLoadingIndicator';
 import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
 import MoreVerticalIcon from './MoreVerticalIcon';
@@ -308,6 +309,7 @@ class Posts extends CSSComponent {
 
     renderPosts() {
         const {
+            loading,
             posts,
         } = this.props;
 
@@ -332,6 +334,8 @@ class Posts extends CSSComponent {
                     </Infinite>
                 </div>
             );
+        } else if (loading) {
+            return <CenterLoadingIndicator />;
         } else {
             return (
                 <p className="row center-xs middle-xs" is="emptyStateMessageContainer">

@@ -104,6 +104,7 @@ class Posts extends PureComponent {
             postState,
             posts,
         } = this.props;
+
         return (
             <PostsComponent
                 largerDevice={largerDevice}
