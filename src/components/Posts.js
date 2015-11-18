@@ -68,7 +68,6 @@ class Posts extends CSSComponent {
         return {
             default: {
                 cardListItemInnerDivStyle: {
-                    background: '#FFF',
                     borderBottom: '1px solid rgba(0, 0, 0, .1)',
                     padding: 30,
                 },
@@ -95,10 +94,8 @@ class Posts extends CSSComponent {
                     stroke: 'rgba(0, 0, 0, 0.1)',
                     strokeWidth: 1,
                 },
-                InfiniteList: {
-                    style: {
-                        overflowY: 'visible',
-                    },
+                infiniteListContainer: {
+                    backgroundColor: '#FFF',
                 },
                 MenuItem: {
                     innerDivStyle: {
@@ -320,7 +317,7 @@ class Posts extends CSSComponent {
             });
 
             return (
-                <div className="row full-width">
+                <div className="row full-width" is="infiniteListContainer">
                     <Infinite
                         className="col-xs no-padding"
                         elementHeight={107}
