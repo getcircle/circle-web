@@ -22,7 +22,12 @@ import {
     fontWeights,
     tintColor,
 } from '../constants/styles';
-import { retrieveLocations, retrievePosts, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
+import {
+    retrieveLocations,
+    retrievePosts,
+    retrieveProfiles,
+    retrieveTeams,
+} from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
 import {
     CONTACT_LOCATION,
@@ -1114,6 +1119,9 @@ class Search extends CSSComponent {
                     disableFocusRipple={true}
                     is="ListItem"
                     leftAvatar={<IconContainer IconClass={SearchIcon} is="ResultIcon" />}
+                    onTouchTap={() => {
+                        routes.routeToSearch(this.context.router, this.state.query);
+                    }}
                     primaryText={<span>{t('Search')}&nbsp;<span is="searchTerm">&ldquo;{this.state.query}&rdquo;</span></span>}
                     ref={(component) => {
                         ((highlighted) =>  {

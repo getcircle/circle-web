@@ -28,6 +28,10 @@ export function routeToPost(history, post) {
     history.pushState(null, `/post/${post.id}`);
 }
 
+export function routeToSearch(router, query) {
+    router.transitionTo(`/search/${query}`);
+}
+
 export function routeToURL(url, nextPathname = null) {
     if (nextPathname !== null) {
         localStorage.setItem(NEXT_PATHNAME_KEY, nextPathname);

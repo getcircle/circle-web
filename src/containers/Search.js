@@ -5,7 +5,6 @@ import { services } from 'protobufs';
 
 import { fontColors } from '../constants/styles';
 import { getAuthenticatedProfile } from '../reducers/authentication';
-import { loadSearchResults } from '../actions/search';
 import { resetScroll } from '../utils/window';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
