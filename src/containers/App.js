@@ -71,6 +71,7 @@ class App extends CSSComponent {
         location: PropTypes.object,
         managesTeam: PropTypes.object,
         organization: PropTypes.object,
+        params: PropTypes.object,
         profile: PropTypes.object,
         profileLocation: PropTypes.object,
         team: PropTypes.object,
@@ -195,6 +196,7 @@ class App extends CSSComponent {
                 onBlur={::this.handleBlurSearch}
                 onFocus={::this.handleFocusSearch}
                 organization={this.props.organization}
+                params={this.props.params}
                 searchLocation={SEARCH_LOCATION.PAGE_HEADER}
             />
         );

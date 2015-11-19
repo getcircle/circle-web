@@ -159,6 +159,12 @@ class AutoComplete extends CSSComponent {
         return this.props.items || [];
     }
 
+    setValue(value) {
+        this.setState({
+            value: value,
+        });
+    }
+
     selectItem(item) {
         if (this.props.clearValueOnSelection) {
             this.setState({value: ''});

@@ -196,6 +196,9 @@ class Search extends CSSComponent {
         onFocus: PropTypes.func,
         onSelectItem: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
+        params: PropTypes.shape({
+            query: PropTypes.string,
+        }),
         placeholder: PropTypes.string,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
@@ -279,9 +282,20 @@ class Search extends CSSComponent {
         // Resets tracked bit for new searches
         this.checkAndResetSearchTracked(this.state.query);
         this.customizeTheme();
-        if (nextProps.query !== null && nextProps.query.trim().length > 0 && !nextProps.loading) {
+
+        // See if a query parameter was explicitly passed in.
+        // If yes, trigger an explicit search.
+        if (nextProps.query !== null &&
+            nextProps.query.trim().length > 0 &&
+            !nextProps.loading
+        ) {
             this.loadSearchResults(nextProps.query);
             this.setState({query: nextProps.query});
+        }
+
+        // If the URL has a query parameter, set it as a default input value
+        if (nextProps.params && nextProps.params.query && this.state.query === '') {
+            this.setValue(nextProps.params.query);
         }
     }
 
@@ -1106,6 +1120,21 @@ class Search extends CSSComponent {
         );
     }
 
+    /**
+     * Simply sets the value of the search input.
+     *
+     * It does not trigger a search. The purpose of this function to to simply give user
+     * a hint of what search term was used when transitioning to a page.
+     *
+     * @param {String} value Value to show in the search input.
+     * @return void
+     */
+    setValue(value) {
+        if (this.refs.autoComplete) {
+            this.refs.autoComplete.setValue(value);
+        }
+    }
+
     shouldShowFullSearchTrigger() {
         return this.state.query.trim() !== '' &&
             this.numberOfRealResults > 1 &&
@@ -1340,6 +1369,7 @@ class Search extends CSSComponent {
                     onFocus={onFocus}
                     onSelect={::this.handleSelection}
                     placeholderText={placeholder}
+                    ref="autoComplete"
                     renderItem={::this.renderItem}
                     renderMenu={::this.renderMenu}
                     showCancel={showCancel}
