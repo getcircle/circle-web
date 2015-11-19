@@ -61,6 +61,7 @@ const RESULT_TYPES = keymirror({
     TEAM: null,
     LOCATION: null,
     POST: null,
+    SEARCH_TRIGGER: null,
 });
 
 export const EXPLORE_SEARCH_RESULT_HEIGHT = 64;
@@ -676,6 +677,14 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
+    getSearchTriggerResult() {
+        const item = {
+            estimatedHeight: EXPLORE_SEARCH_RESULT_HEIGHT,
+            type: RESULT_TYPES.SEARCH_TRIGGER,
+        };
+        return item;
+    }
+
     getCategoryResultsProfiles() {
         const { profiles } = this.props;
         if (profiles) {
@@ -835,17 +844,27 @@ class Search extends CSSComponent {
     }
 
     getSearchResultItems(results) {
-        let items = results.map((result, index) => {
+        let items = [];
+        if (this.shouldShowFullSearchTrigger()) {
+            items.push(this.getSearchTriggerResult());
+        }
+
+        results.map((result, index) => {
+            let searchResult = null;
             if (result.profile) {
-                return this.getProfileResult(result.profile, index, false, results.length);
+                searchResult = this.getProfileResult(result.profile, index, false, results.length);
             } else if (result.team) {
-                return this.getTeamResult(result.team, index, false, results.length);
+                searchResult = this.getTeamResult(result.team, index, false, results.length);
             } else if (result.location) {
-                return this.getLocationResult(result.location, index, false, results.length);
+                searchResult = this.getLocationResult(result.location, index, false, results.length);
             } else if (result.post) {
-                return this.getPostResult(result.post, index, false, results.length);
+                searchResult = this.getPostResult(result.post, index, false, results.length);
             }
+
+            items.push(searchResult);
+            return searchResult;
         });
+
         if (results.length === 1 && this.props.showExpandedResults) {
             items = this.getExpandedResults(items[0], results[0]);
         }
@@ -1080,9 +1099,8 @@ class Search extends CSSComponent {
             this.numberOfRealResults > 1;
     }
 
-    renderSearchTrigger() {
+    renderSearchTrigger(item, highlighted) {
         if (this.shouldShowFullSearchTrigger()) {
-            let highlighted = false;
             return (
                 <ListItem
                     is="ListItem"
@@ -1146,6 +1164,9 @@ class Search extends CSSComponent {
         case RESULT_TYPES.EXPANDED_PROFILE:
             element = this.renderExpandedProfile(item, highlighted, style);
             break;
+        case RESULT_TYPES.SEARCH_TRIGGER:
+            element = this.renderSearchTrigger(item, highlighted);
+            break;
         default:
             element = this.renderDefaultResult(item, highlighted, style);
         }
@@ -1191,18 +1212,9 @@ class Search extends CSSComponent {
     renderMenu(items, value, style) {
         let containerHeight = 0;
         let currentSubHeader = null;
-        let searchTriggerPresent = false;
         const elementHeights = [];
-        const elements = [];
 
-        if (this.shouldShowFullSearchTrigger()) {
-            containerHeight = EXPLORE_SEARCH_RESULT_HEIGHT;
-            elementHeights.push(EXPLORE_SEARCH_RESULT_HEIGHT);
-            elements.push(this.renderSearchTrigger());
-            searchTriggerPresent = true;
-        }
-
-        items.map((item, index) => {
+        const elements = items.map((item, index) => {
             let addSubHeader = false;
             let height = item.props.estimatedHeight || SEARCH_RESULT_HEIGHT;
             if (item.props.subheader && item.props.subheader !== currentSubHeader) {
@@ -1212,10 +1224,7 @@ class Search extends CSSComponent {
             }
             containerHeight += height;
             elementHeights.push(height);
-            let realIndex = searchTriggerPresent ? index + 1 : index;
-            let renderedItem = this.renderItemInMenu(item, realIndex, addSubHeader);
-            elements.push(renderedItem);
-            return renderedItem;
+            return this.renderItemInMenu(item, index, addSubHeader);;
         });
 
         const { resultsListStyle, resultsHeight } = this.props;
