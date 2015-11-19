@@ -1103,6 +1103,7 @@ class Search extends CSSComponent {
         if (this.shouldShowFullSearchTrigger()) {
             return (
                 <ListItem
+                    disableFocusRipple={true}
                     is="ListItem"
                     leftAvatar={<IconContainer IconClass={SearchIcon} is="ResultIcon" />}
                     primaryText={<span>{t('Search')}&nbsp;<span is="searchTerm">&ldquo;{this.state.query}&rdquo;</span></span>}
@@ -1127,6 +1128,7 @@ class Search extends CSSComponent {
         return (
             <ListItem
                 {...item}
+                disableFocusRipple={true}
                 is="ListItem"
                 onTouchTap={item.onTouchTap}
                 primaryText={item.primaryText}
