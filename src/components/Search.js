@@ -63,6 +63,7 @@ const RESULT_TYPES = keymirror({
     POST: null,
 });
 
+export const EXPLORE_SEARCH_RESULT_HEIGHT = 64;
 export const SEARCH_RESULT_HEIGHT = 72;
 export const SEARCH_CONTAINER_WIDTH = 660;
 export const SEARCH_RESULTS_MAX_HEIGHT = 620;
@@ -285,6 +286,7 @@ class Search extends CSSComponent {
 
     currentSearchTimeout = null
     searchTracked = false
+    numberOfRealResults = 0
 
     trackingAttributesForRecentResults = {
         subheader: 'recents',
@@ -414,6 +416,9 @@ class Search extends CSSComponent {
                     alignSelf: 'center',
                     display: 'flex',
                     paddingLeft: 18,
+                },
+                searchTerm: {
+                    fontWeight: 600,
                 },
                 postTextResultText: {
                     lineHeight: '22px',
@@ -766,7 +771,7 @@ class Search extends CSSComponent {
         const recents = this.getRecentResults();
         const exploreResults = items.map((item) => {
             return {
-                estimatedHeight: 64,
+                estimatedHeight: EXPLORE_SEARCH_RESULT_HEIGHT,
                 innerDivStyle: this.styles().searchResult,
                 leftAvatar: <SearchIcon is="SearchIcon" />,
                 type: RESULT_TYPES.EXPLORE,
@@ -780,7 +785,7 @@ class Search extends CSSComponent {
     expandProfile(profile) {
         const expansions = [];
         expansions.push({
-            estimatedHeight: 64,
+            estimatedHeight: EXPLORE_SEARCH_RESULT_HEIGHT,
             type: RESULT_TYPES.CONTACT_METHOD,
             leftAvatar: <IconContainer IconClass={MailIcon} is="ActionIcon" stroke="rgba(0, 0, 0, 0.4)" />,
             primaryText: this.getPrimaryTextContainer(
@@ -860,9 +865,11 @@ class Search extends CSSComponent {
     getSearchResults() {
         const { results } = this.props;
         const querySpecificResults = results[this.state.query];
+        this.numberOfRealResults = 0;
 
         // First check if we have actual results
         if (querySpecificResults && querySpecificResults.length) {
+            this.numberOfRealResults = querySpecificResults.length;
             return this.getSearchResultItems(querySpecificResults);
         }
 
@@ -904,6 +911,7 @@ class Search extends CSSComponent {
         while (i > 0) {
             let previousResults = results[this.state.query.substr(0, i)];
             if (previousResults && previousResults.length) {
+                this.numberOfRealResults = previousResults.length;
                 return this.getSearchResultItems(previousResults);
             }
 
@@ -1067,6 +1075,36 @@ class Search extends CSSComponent {
         );
     }
 
+    shouldShowFullSearchTrigger() {
+        return this.state.query.trim() !== '' &&
+            this.numberOfRealResults > 1;
+    }
+
+    renderSearchTrigger() {
+        if (this.shouldShowFullSearchTrigger()) {
+            let highlighted = false;
+            return (
+                <ListItem
+                    is="ListItem"
+                    leftAvatar={<IconContainer IconClass={SearchIcon} is="ResultIcon" />}
+                    primaryText={<span>{t('Search')}&nbsp;<span is="searchTerm">&ldquo;{this.state.query}&rdquo;</span></span>}
+                    ref={(component) => {
+                        ((highlighted) =>  {
+                            // NB: Component will be null in some cases (unmounting and on change)
+                            if (component) {
+                                if (highlighted) {
+                                    // NB: We don't want to pass "none" to apply focus if it isn't highlighted because it
+                                    // will blur the element which can prevent "mailto" links from working properly
+                                    component.applyFocusState('keyboard-focused');
+                                }
+                            }
+                        })(highlighted);
+                    }}
+                />
+            );
+        }
+    }
+
     renderDefaultResult(item, highlighted, style) {
         return (
             <ListItem
@@ -1153,8 +1191,18 @@ class Search extends CSSComponent {
     renderMenu(items, value, style) {
         let containerHeight = 0;
         let currentSubHeader = null;
+        let searchTriggerPresent = false;
         const elementHeights = [];
-        const elements = items.map((item, index) => {
+        const elements = [];
+
+        if (this.shouldShowFullSearchTrigger()) {
+            containerHeight = EXPLORE_SEARCH_RESULT_HEIGHT;
+            elementHeights.push(EXPLORE_SEARCH_RESULT_HEIGHT);
+            elements.push(this.renderSearchTrigger());
+            searchTriggerPresent = true;
+        }
+
+        items.map((item, index) => {
             let addSubHeader = false;
             let height = item.props.estimatedHeight || SEARCH_RESULT_HEIGHT;
             if (item.props.subheader && item.props.subheader !== currentSubHeader) {
@@ -1164,9 +1212,11 @@ class Search extends CSSComponent {
             }
             containerHeight += height;
             elementHeights.push(height);
-            return this.renderItemInMenu(item, index, addSubHeader);
+            let realIndex = searchTriggerPresent ? index + 1 : index;
+            let renderedItem = this.renderItemInMenu(item, realIndex, addSubHeader);
+            elements.push(renderedItem);
+            return renderedItem;
         });
-
 
         const { resultsListStyle, resultsHeight } = this.props;
         if (resultsHeight !== null && resultsHeight !== undefined) {
