@@ -74,7 +74,7 @@ export default function (store) {
     return (
         <Route component={require('./containers/App')} path="/">
             <IndexRoute
-                component={require('./containers/Search')}
+                component={require('./containers/Home')}
                 onEnter={applyMiddleware(
                     requireAuth,
                     hideHeader,
