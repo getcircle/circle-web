@@ -169,6 +169,7 @@ class Search extends CSSComponent {
 
     static propTypes = {
         alwaysActive: PropTypes.bool,
+        autoCompleteStyle: PropTypes.object,
         canExplore: PropTypes.bool,
         defaults: PropTypes.arrayOf(PropTypes.oneOfType([
             services.profile.containers.ProfileV1,
@@ -179,6 +180,7 @@ class Search extends CSSComponent {
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
         largerDevice: PropTypes.bool,
+        limitResultsListHeight: PropTypes.bool,
         loading: PropTypes.bool,
         locations: PropTypes.arrayOf(
             PropTypes.instanceOf(services.organization.containers.LocationV1)
@@ -198,6 +200,7 @@ class Search extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        query: PropTypes.string,
         recents: PropTypes.arrayOf(PropTypes.object),
         results: PropTypes.object,
         resultsHeight: PropTypes.number,
@@ -234,15 +237,17 @@ class Search extends CSSComponent {
         defaultsLoadMore() {},
         focused: false,
         largerDevice: false,
+        limitResultsListHeight: true,
         loading: false,
         onBlur() {},
         onCancel() {},
         onFocus() {},
         onSelectItem() {},
         placeholder: t('Search people, knowledge, & teams'),
+        query: null,
         showCancel: false,
-        showRecents: true,
         showExpandedResults: true,
+        showRecents: true,
         useDefaultClickHandlers: true,
     }
 
@@ -269,6 +274,10 @@ class Search extends CSSComponent {
         // Resets tracked bit for new searches
         this.checkAndResetSearchTracked(this.state.query);
         this.customizeTheme();
+        if (nextProps.query !== null && nextProps.query.trim().length > 0 && !nextProps.loading) {
+            this.loadSearchResults(nextProps.query);
+            this.setState({query: nextProps.query});
+        }
     }
 
     componentWillUnmount() {
@@ -426,10 +435,8 @@ class Search extends CSSComponent {
                 },
             },
             'largerDevice-true': {
-                AutoComplete: {
-                    style: {
-                        maxWidth: SEARCH_CONTAINER_WIDTH,
-                    },
+                autoComplete: {
+                    maxWidth: SEARCH_CONTAINER_WIDTH,
                 },
                 resultsList: {
                     width: SEARCH_CONTAINER_WIDTH,
@@ -1081,7 +1088,7 @@ class Search extends CSSComponent {
                 searchCategory,
                 this.props.searchAttribute,
                 this.props.searchAttributeValue,
-            ]
+            ];
             this.props.dispatch(loadSearchResults(...parameters));
         }
     }
@@ -1096,7 +1103,8 @@ class Search extends CSSComponent {
 
     shouldShowFullSearchTrigger() {
         return this.state.query.trim() !== '' &&
-            this.numberOfRealResults > 1;
+            this.numberOfRealResults > 1 &&
+            this.props.showExpandedResults;
     }
 
     renderSearchTrigger(item, highlighted) {
@@ -1212,6 +1220,10 @@ class Search extends CSSComponent {
     }
 
     renderMenu(items, value, style) {
+        const {
+            limitResultsListHeight,
+        } = this.props;
+
         let containerHeight = 0;
         let currentSubHeader = null;
         const elementHeights = [];
@@ -1232,7 +1244,7 @@ class Search extends CSSComponent {
         const { resultsListStyle, resultsHeight } = this.props;
         if (resultsHeight !== null && resultsHeight !== undefined) {
             containerHeight = resultsHeight;
-        } else {
+        } else if (limitResultsListHeight) {
             containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
         }
 
@@ -1292,6 +1304,7 @@ class Search extends CSSComponent {
     render() {
         const {
             alwaysActive,
+            autoCompleteStyle,
             canExplore,
             inputContainerStyle,
             focused,
@@ -1311,7 +1324,6 @@ class Search extends CSSComponent {
                     focusOnSelect={canExplore}
                     focused={focused}
                     inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
-                    is="AutoComplete"
                     items={this.getResults()}
                     onBlur={::this.handleBlur}
                     onCancel={::this.handleCancel}
@@ -1323,6 +1335,7 @@ class Search extends CSSComponent {
                     renderItem={::this.renderItem}
                     renderMenu={::this.renderMenu}
                     showCancel={showCancel}
+                    style={{...this.styles().autoComplete, ...autoCompleteStyle}}
                     tokens={this.getSearchTokens()}
                 />
                 {this.renderDialog()}

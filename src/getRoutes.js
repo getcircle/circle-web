@@ -150,6 +150,14 @@ export default function (store) {
                 path="/profile/:profileId"
             />
             <Route
+                component={require('./containers/Search')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.SEARCH, 'query')
+                )}
+                path="/search/:query"
+            />
+            <Route
                 component={require('./containers/Team')}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
