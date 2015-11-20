@@ -20,10 +20,6 @@ export function routeToNewPost(router) {
     router.transitionTo('/new-post');
 }
 
-export function routeToStatus(router, status) {
-    router.transitionTo(`/status/${status.id}`);
-}
-
 export function routeToPosts(router, postState) {
     router.transitionTo(`/posts/${postState}`);
 }

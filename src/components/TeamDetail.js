@@ -5,7 +5,6 @@ import { services } from 'protobufs';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToProfile, routeToTeam } from '../utils/routes';
 import t from '../utils/gettext';
-import tracker from '../utils/tracker';
 
 import Card from './Card';
 import CardList from './CardList';
@@ -18,11 +17,9 @@ import ProfileAvatar from './ProfileAvatar';
 import TeamDetailDescription from './TeamDetailDescription';
 import TeamDetailForm from './TeamDetailForm';
 import TeamDetailHeader from './TeamDetailHeader';
-import TeamDetailStatus from './TeamDetailStatus';
 import TeamDetailTeams from './TeamDetailTeams';
 
 const { DescriptionV1 } = services.common.containers.description;
-const { TeamStatusV1 } = services.organization.containers;
 
 class TeamDetail extends CSSComponent {
 
@@ -78,37 +75,6 @@ class TeamDetail extends CSSComponent {
         onUpdateTeamCallback(updatedTeam);
     }
 
-    onUpdateStatus(statusText, isNew) {
-        const {
-            extendedTeam,
-            onUpdateTeamCallback,
-        } = this.props;
-
-        let team = extendedTeam.team;
-        let teamStatusV1;
-        if (isNew) {
-            teamStatusV1 = new TeamStatusV1({
-                value: statusText,
-            });
-        } else {
-            teamStatusV1 = Object.assign({}, team.status, {
-                value: statusText,
-            });
-        }
-
-        if ((team.status && team.status.value !== statusText) || !team.status) {
-            tracker.trackTeamUpdate(
-                team.id,
-                [isNew ? 'new_status' : 'status']
-            );
-        }
-
-        let updatedTeam = Object.assign({}, team, {
-            status:  teamStatusV1,
-        });
-        onUpdateTeamCallback(updatedTeam);
-    }
-
     editButtonTapped() {
         if (this.refs.teamDetailForm) {
             this.refs.teamDetailForm.show();
@@ -122,19 +88,6 @@ class TeamDetail extends CSSComponent {
     }
 
     // Render Methods
-
-    renderStatus(status, manager, team) {
-        return (
-            <TeamDetailStatus
-                is="section"
-                isEditable={this.canEdit()}
-                manager={manager}
-                onSaveCallback={this.onUpdateStatus.bind(this)}
-                status={status}
-                team={team}
-            />
-        );
-    }
 
     renderDescription(manager, team) {
         return (
@@ -249,7 +202,6 @@ class TeamDetail extends CSSComponent {
                     team={team}
                 />
                 <DetailContent>
-                    {this.renderStatus(team.status, manager, team)}
                     {this.renderDescription(manager, team)}
                     {this.renderManager(manager)}
                     {this.renderChildTeams(childTeams, team.child_team_count)}

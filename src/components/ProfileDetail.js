@@ -7,18 +7,16 @@ import {
     routeToTeam,
 } from '../utils/routes';
 import t from '../utils/gettext';
-import tracker from '../utils/tracker';
 
 import DetailContent from './DetailContent';
 import ProfileDetailContactInfo from './ProfileDetailContactInfo';
 import ProfileDetailForm from './ProfileDetailForm';
 import ProfileDetailHeader from './ProfileDetailHeader';
 import ProfileDetailManages from './ProfileDetailManages';
-import ProfileDetailStatus from './ProfileDetailStatus';
 import ProfileDetailTeam from './ProfileDetailTeam';
 import StyleableComponent from './StyleableComponent';
 
-const { ContactMethodV1, ProfileStatusV1 } = services.profile.containers;
+const { ContactMethodV1 } = services.profile.containers;
 
 const styles = {
     section: {
@@ -43,53 +41,7 @@ class ProfileDetail extends StyleableComponent {
         }).isRequired,
     }
 
-    // Update Methods
-
-    onUpdateStatus(statusText, isNew) {
-        const {
-            extendedProfile,
-            onUpdateProfile,
-        } = this.props;
-
-        let profile = extendedProfile.profile;
-        let profileStatusV1;
-        if (isNew) {
-            profileStatusV1 = new ProfileStatusV1({
-                value: statusText,
-            });
-        } else {
-            profileStatusV1 = Object.assign({}, profile.status, {
-                value: statusText,
-            });
-        }
-
-        // Track status change
-        if ((profile.status && profile.status.value !== statusText) || !profile.status) {
-            tracker.trackProfileUpdate(
-                profile.id,
-                [isNew ? 'new_status' : 'status']
-            );
-        }
-
-        let updatedProfile = Object.assign({}, profile, {
-            status: profileStatusV1,
-        });
-        onUpdateProfile(updatedProfile);
-    }
-
     // Render Methods
-
-    renderStatus(status, isEditable) {
-        return (
-            <ProfileDetailStatus
-                isEditable={isEditable}
-                onSaveCallback={this.onUpdateStatus.bind(this)}
-                profile={this.props.extendedProfile.profile}
-                status={status}
-                style={this.mergeAndPrefix(styles.section)}
-            />
-        );
-    }
 
     renderContactInfo(contactMethods=[], locations=[], isLoggedInUser = false) {
         return (
@@ -228,7 +180,6 @@ class ProfileDetail extends StyleableComponent {
                     profile={profile}
                 />
                 <DetailContent>
-                    {this.renderStatus(profile.status, isLoggedInUser)}
                     {this.renderContactInfo(this.getContactMethods(), locations, isLoggedInUser)}
                     {this.renderTeam(manager, peers, team)}
                     {this.renderManages(manages_team, direct_reports)}

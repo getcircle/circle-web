@@ -60,7 +60,6 @@ const RESULT_TYPES = keymirror({
     EXPANDED_PROFILE: null,
     TEAM: null,
     LOCATION: null,
-    PROFILE_STATUS: null,
     POST: null,
 });
 
@@ -389,43 +388,6 @@ class Search extends CSSComponent {
                     display: 'flex',
                     paddingLeft: 18,
                 },
-                statusTextContainer: {
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginLeft: 70,
-                    paddingBottom: 8,
-                },
-                statusTextTimestamp: {
-                    display: 'flex',
-                    flexDirection: 'row',
-                    fontSize: '10px',
-                    marginTop: '2px',
-                    ...fontColors.light,
-                },
-                statusTextTitle: {
-                    fontSize: '10px',
-                    lineHeight: '14px',
-                    letterSpacing: '1px',
-                    textTransform: 'uppercase',
-                    ...fontWeights.semiBold,
-                    ...fontColors.light,
-                },
-                statusTextValueContainer: {
-                    display: 'flex',
-                    flexDirection: 'row',
-                    marginTop: '2px',
-                },
-                statusTextValue: {
-                    display: 'flex',
-                    alignSelf: 'center',
-                    fontStyle: 'italic',
-                    fontSize: '12px',
-                    ...fontColors.dark,
-                    lineHeight: '20px',
-                },
-                statusTextResultText: {
-                    lineHeight: '22px',
-                },
                 postTextResultText: {
                     lineHeight: '22px',
                 },
@@ -592,9 +554,6 @@ class Search extends CSSComponent {
             case RESULT_TYPES.LOCATION:
                 return SEARCH_RESULT_TYPE.LOCATION;
 
-            case RESULT_TYPES.PROFILE_STATUS:
-                return SEARCH_RESULT_TYPE.PROFILE_STATUS;
-
             case RESULT_TYPES.POST:
                 return SEARCH_RESULT_TYPE.POST;
 
@@ -657,27 +616,6 @@ class Search extends CSSComponent {
             onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
-            ...trackingAttributes
-        };
-        return this.trackTouchTap(item);
-    }
-
-    getProfileStatusResult(status, index, isRecent) {
-        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
-        let numberOfCharacters = status.value ? status.value.length : 0;
-        let estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
-        let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
-
-        const item = {
-            estimatedHeight: estimatedHeight,
-            index: index,
-            leftAvatar: <IconContainer IconClass={QuoteIcon} is="ResultIcon" stroke="#7c7b7b" />,
-            primaryText: '"' + status.value + '"',
-            primaryTextStyle: this.styles().statusTextResultText,
-            secondaryText: status.profile.full_name + ', ' + moment(status.changed).fromNow(),
-            onTouchTap: routes.routeToStatus.bind(null, this.context.router, status),
-            type: RESULT_TYPES.PROFILE_STATUS,
-            instance: status,
             ...trackingAttributes
         };
         return this.trackTouchTap(item);
@@ -753,8 +691,6 @@ class Search extends CSSComponent {
                 return this.getTeamResult(item, index, true);
             } else if (item instanceof services.organization.containers.LocationV1) {
                 return this.getLocationResult(item, index, true);
-            } else if (item instanceof services.profile.containers.ProfileStatusV1) {
-                return this.getProfileStatusResult(item, index, true);
             } else if (item instanceof services.post.containers.PostV1) {
                 return this.getPostResult(item, index, true);
             }
@@ -857,8 +793,6 @@ class Search extends CSSComponent {
                 return this.getTeamResult(result.team, index, false, results.length);
             } else if (result.location) {
                 return this.getLocationResult(result.location, index, false, results.length);
-            } else if (result.profile_status) {
-                return this.getProfileStatusResult(result.profile_status, index, false, results.length);
             } else if (result.post) {
                 return this.getPostResult(result.post, index, false, results.length);
             }
@@ -1105,34 +1039,9 @@ class Search extends CSSComponent {
 
     renderExpandedProfile(item, highlighted, style) {
         const defaultResult = this.renderDefaultResult(item, highlighted, style);
-        // TODO:
-        // Terrible hack to deduce how many lines status is and to size
-        // the container appropriately
-        let delta = status && status.value.trim().length <= 60 ? 42 : 42*2;
         return (
-            <div estimatedHeight={SEARCH_RESULT_HEIGHT + delta}>
+            <div estimatedHeight={SEARCH_RESULT_HEIGHT}>
                 {defaultResult}
-                {(() => {
-                    const { status } = item.instance;
-                    if (status && status.value.trim() !== '') {
-                        const changed = moment(status.changed).fromNow()
-                        return (
-                            <div is="statusTextContainer">
-                                <span className="row start-xs" is="statusTextTitle">
-                                    {t('Currently Working On')}
-                                </span>
-                                <div is="statusTextValueContainer">
-                                    <span is="statusTextValue">
-                                        {`"${status.value}"`}
-                                    </span>
-                                </div>
-                                <div is="statusTextTimestamp">
-                                    &nbsp;&mdash;&nbsp;{changed}
-                                </div>
-                            </div>
-                        );
-                    }
-                })()}
             </div>
         )
     }

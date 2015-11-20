@@ -12,6 +12,5 @@ export { default as posts } from './posts';
 export { default as profiles } from './profiles';
 export { default as responsive } from './responsive';
 export { default as search } from './search';
-export { default as statuses } from './statuses';
 export { default as teamMembers } from './teamMembers';
 export { default as updateProfile } from './profile';

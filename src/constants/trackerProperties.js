@@ -36,7 +36,6 @@ export const PAGE_TYPE = {
     LOCATION_DETAIL: 'Location Detail',
     POST_DETAIL: 'Post Detail',
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
-    PROFILE_STATUS_DETAIL: 'Profile Status Detail',
     TEAM_DETAIL: 'Team Detail',
 
     // List pages
@@ -74,7 +73,6 @@ export const SEARCH_RESULT_TYPE = {
     PROFILE : 'Profile',
     TEAM : 'Team',
     LOCATION : 'Location',
-    PROFILE_STATUS: 'Profile Status',
     POST: 'Post',
 
     // Smart Actions (NOTE: Contact methods are captured separately)
@@ -105,9 +103,7 @@ export const SEARCH_LOCATION = {
 export const CONTACT_LOCATION = {
     POST_FEEDBACK: 'Post Detail Feedback',
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
-    PROFILE_DETAIL_STATUS: 'Profile Detail Status',
     SEARCH_SMART_ACTION: 'Search Smart Action',
-    TEAM_DETAIL_STATUS: 'Team Detail Status',
     TEAM_DETAIL_DESCRIPTION: 'Team Detail Description',
 };
 
