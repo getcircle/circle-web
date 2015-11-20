@@ -1,8 +1,6 @@
 import { getTrackingParameter } from './tracker';
 import t from './gettext';
 
-const PROFILE_STATUS_ASK_ME = 'profile_status_askme';
-const TEAM_STATUS_ASK_ME = 'team_status_askme';
 const TEAM_DESCRIPTION_ASK_ME = 'team_description_askme';
 const POST_SHARE = 'post_share';
 const POST_FEEDBACK = 'post_feedback';
@@ -13,21 +11,6 @@ function sentFrom() {
 
 export function mailto(email) {
     return `mailto:${email}?body=${sentFrom()}`;
-}
-
-export function mailtoProfileStatus(profile, fromProfile) {
-    const subject = encodeURI(t('Working on in Luno'));
-    const sourceParameter = getTrackingParameter(PROFILE_STATUS_ASK_ME);
-    const link = `${window.location.host}/profile/${profile.id}?${sourceParameter}`;
-    const body = encodeURI(t(
-        `Hey ${profile.first_name},
-        \nCan you update what you're working on in Luno?
-        \n${link}
-        \nThanks!
-        \n${fromProfile.first_name}`
-    ));
-
-    return `mailto:${profile.email}?subject=${subject}&body=${body}${sentFrom()}`;
 }
 
 function getEmptyTeamFields(team) {
@@ -67,10 +50,6 @@ function mailtoTeam(source, team, manager, fromProfile) {
 
     return `mailto:${manager.email}?subject=${subject}&body=${body}${sentFrom()}`;
 
-}
-
-export function mailtoTeamStatus(team, manager, fromProfile) {
-    return mailtoTeam(TEAM_STATUS_ASK_ME, team, manager, fromProfile);
 }
 
 export function mailtoTeamDescription(team, manager, fromProfile) {

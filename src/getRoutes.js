@@ -163,14 +163,6 @@ const getRoutes = (history, store) => {
                         path="/team/:teamId"
                     />
                     <Route
-                        component={require('./containers/Status')}
-                        onEnter={applyMiddleware(
-                            ...defaultMiddleware,
-                            trackPageView(PAGE_TYPE.PROFILE_STATUS_DETAIL, 'statusId')
-                        )}
-                        path="/status/:statusId"
-                    />
-                    <Route
                         component={require('./containers/NoMatch')}
                         onEnter={applyMiddleware(...defaultMiddleware)}
                         path="*"
