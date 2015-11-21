@@ -22,16 +22,19 @@ const selector = createSelector(
         selectors.cacheSelector,
         selectors.responsiveSelector,
         selectors.routerParametersSelector,
+        selectors.searchSelector,
     ],
-    (authenticationState, cacheState, responsiveState, routerParamsState) => {
+    (authenticationState, cacheState, responsiveState, routerParamsState, searchState) => {
         const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
             authenticatedProfile: profile,
             flags: authenticationState.get('flags'),
             largerDevice: responsiveState.get('largerDevice'),
+            loading: searchState.get('loading'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
             organization: authenticationState.get('organization'),
+            results: searchState.get('results').toJS(),
         }
     },
 );
@@ -50,7 +53,7 @@ class Search extends CSSComponent {
         params: PropTypes.shape({
             query: PropTypes.string.isRequired,
         }).isRequired,
-        profile: PropTypes.object.isRequired,
+        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
     }
 
     static contextTypes = {
@@ -107,20 +110,25 @@ class Search extends CSSComponent {
                         boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
                     },
                     resultsListStyle: {
-                        height: 'initial',
-                        marginTop: 1,
-                        maxWidth: '800px',
-                        opacity: 1,
-                        position: 'absolute',
-                        top: '205px',
-                        width: '100%',
-                        ...backgroundColors.light,
+                        display: 'none',
                     },
                     style: {
                         alignSelf: 'center',
                         justifyContent: 'center',
                         flex: 1,
                     }
+                },
+                SearchResultsComponent: {
+                    autoCompleteStyle: {
+                        maxWidth: '100%',
+                    },
+                    inputContainerStyle: {
+                        display: 'none',
+                    },
+                    resultsListStyle: {
+                        maxHeight: '100%',
+                        width: '100%',
+                    },
                 },
                 searchTerm: {
                     fontStyle: 'italic',
@@ -132,51 +140,41 @@ class Search extends CSSComponent {
                         borderRadius: '0px',
                     },
                     focused: true,
-                    resultsListStyle: {
-                        height: 'initial',
-                        marginTop: 1,
-                        maxWidth: '800px',
-                        opacity: 1,
-                        position: 'absolute',
-                        top: '205px',
-                        width: '100%',
-                        ...backgroundColors.light,
-                    },
                 },
             },
         };
     }
 
     styles() {
-        console.log('Focused CSS ' + this.state.focused);
         return this.css({
             focused: this.state.focused,
         });
     }
 
     handleFocusSearch() {
-        console.log('set focus');
         this.setState({focused: true});
     }
 
     handleBlurSearch() {
-        console.log('resetting');
         this.setState({focused: false});
     }
 
     renderHeaderActionsContainer() {
-        console.log('Focused '  + this.state.focused);
+        const {
+            largerDevice,
+        } = this.props;
 
         return (
             <SearchComponent
                 canExplore={false}
                 className="center-xs"
                 is="Search"
-                largerDevice={true}
+                largerDevice={largerDevice}
                 onBlur={::this.handleBlurSearch}
                 onFocus={::this.handleFocusSearch}
                 organization={this.props.organization}
                 params={this.props.params}
+                ref="headerSearch"
                 retainResultsOnBlur={true}
                 searchLocation={SEARCH_LOCATION.PAGE_HEADER}
             />
@@ -186,9 +184,18 @@ class Search extends CSSComponent {
     render() {
         const {
             authenticatedProfile,
+            largerDevice,
+            organization,
             params,
+            results,
         } = this.props;
 
+        let query = params.query;
+        if (this.refs.headerSearch) {
+            query = this.refs.headerSearch.getWrappedInstance().getCurrentQuery();
+        }
+
+        console.log(results);
         return (
             <Container>
                 <Header
@@ -203,6 +210,21 @@ class Search extends CSSComponent {
                             &nbsp;&ndash;&nbsp;<span is="searchTerm">&ldquo;{params.query}&rdquo;</span>
                         </h3>
                     </div>
+                    <SearchComponent
+                        canExplore={false}
+                        className="row center-xs"
+                        focused={true}
+                        is="SearchResultsComponent"
+                        largerDevice={largerDevice}
+                        limitResultsListHeight={false}
+                        organization={organization}
+                        query={query}
+                        results={results}
+                        retainResultsOnBlur={true}
+                        searchLocation={SEARCH_LOCATION.SEARCH}
+                        showExpandedResults={false}
+                        showRecents={false}
+                    />
                 </DetailContent>
             </Container>
         );

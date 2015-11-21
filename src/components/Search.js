@@ -288,13 +288,12 @@ class Search extends CSSComponent {
 
         // See if a query parameter was explicitly passed in.
         // If yes, trigger an explicit search.
-        // if (nextProps.query !== null &&
-        //     nextProps.query.trim().length > 0 &&
-        //     !nextProps.loading
-        // ) {
-        //     this.loadSearchResults(nextProps.query);
-        //     this.setState({query: nextProps.query});
-        // }
+        if (nextProps.query !== null &&
+            nextProps.query.trim().length > 0 &&
+            !nextProps.loading
+        ) {
+            this.setState({query: nextProps.query});
+        }
 
         // // If the URL has a query parameter, set it as a default input value
         // if (nextProps.params && nextProps.params.query && this.state.query === '') {
@@ -507,6 +506,10 @@ class Search extends CSSComponent {
                 this.props.searchAttributeValue,
             );
         }
+    }
+
+    getCurrentQuery() {
+        return this.state.query;
     }
 
     getCategoryNextRequest() {
