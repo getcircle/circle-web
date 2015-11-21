@@ -71,7 +71,7 @@ const RESULT_TYPES = keymirror({
 
 export const EXPLORE_SEARCH_RESULT_HEIGHT = 64;
 export const SEARCH_RESULT_HEIGHT = 72;
-export const SEARCH_CONTAINER_WIDTH = 660;
+export const SEARCH_CONTAINER_WIDTH = 800;
 export const SEARCH_RESULTS_MAX_HEIGHT = 620;
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
@@ -253,6 +253,9 @@ class Search extends CSSComponent {
         onSelectItem() {},
         placeholder: t('Search people, knowledge, & teams'),
         query: null,
+        // This controls whether a cleanup is called on blur
+        // and whether search results should be hidden on blur
+        retainResultsOnBlur: false,
         showCancel: false,
         showExpandedResults: true,
         showRecents: true,
@@ -285,18 +288,18 @@ class Search extends CSSComponent {
 
         // See if a query parameter was explicitly passed in.
         // If yes, trigger an explicit search.
-        if (nextProps.query !== null &&
-            nextProps.query.trim().length > 0 &&
-            !nextProps.loading
-        ) {
-            this.loadSearchResults(nextProps.query);
-            this.setState({query: nextProps.query});
-        }
+        // if (nextProps.query !== null &&
+        //     nextProps.query.trim().length > 0 &&
+        //     !nextProps.loading
+        // ) {
+        //     this.loadSearchResults(nextProps.query);
+        //     this.setState({query: nextProps.query});
+        // }
 
-        // If the URL has a query parameter, set it as a default input value
-        if (nextProps.params && nextProps.params.query && this.state.query === '') {
-            this.setValue(nextProps.params.query);
-        }
+        // // If the URL has a query parameter, set it as a default input value
+        // if (nextProps.params && nextProps.params.query && this.state.query === '') {
+        //     this.setValue(nextProps.params.query);
+        // }
     }
 
     componentWillUnmount() {
@@ -965,7 +968,7 @@ class Search extends CSSComponent {
     }
 
     getResults() {
-        if (this.props.focused) {
+        if (this.props.focused || this.props.retainResultsOnBlur) {
             if (this.state.query) {
                 return this.getSearchResults();
             } else if (this.state.category !== null) {
@@ -1025,10 +1028,12 @@ class Search extends CSSComponent {
         }
     }
 
-    cleanup() {
-        this.setState({query: ''});
-        this.props.dispatch(clearSearchResults());
-        this.props.onBlur();
+    cleanup(forced) {
+        if (forced === true || !this.props.retainResultsOnBlur) {
+            this.setState({query: ''});
+            this.props.dispatch(clearSearchResults());
+            this.props.onBlur();
+        }
     }
 
     handleInfiniteLoad() {
@@ -1058,6 +1063,7 @@ class Search extends CSSComponent {
             this.setState({typing: false});
             this.loadSearchResults(query);
         }, 200);
+
         this.setState({query: query, typing: true});
     }
 
