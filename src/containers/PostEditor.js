@@ -86,8 +86,8 @@ class PostEditor extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -266,7 +266,7 @@ class PostEditor extends CSSComponent {
             PostStateV1.LISTED,
         );
         this.props.dispatch(clearPosts());
-        routeToPosts(this.context.router, PostStateURLString.LISTED);
+        routeToPosts(this.context.history, PostStateURLString.LISTED);
     }
 
     canEdit() {

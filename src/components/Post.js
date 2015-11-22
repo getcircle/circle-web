@@ -52,8 +52,8 @@ class Post extends CSSComponent {
 
     static contextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -96,7 +96,7 @@ class Post extends CSSComponent {
                 saveAndExit: false,
             });
 
-            routeToPost(this.context.router, nextProps.post);
+            routeToPost(this.context.history, nextProps.post);
         }
     }
 
@@ -622,7 +622,7 @@ class Post extends CSSComponent {
                 <FlatButton
                     is="EditButton"
                     label={t('Edit')}
-                    onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
+                    onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
                 />
             );
         }
@@ -696,7 +696,7 @@ class Post extends CSSComponent {
                                 is="CardListItem"
                                 key={author.id}
                                 leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
-                                onTouchTap={routeToProfile.bind(null, this.context.router, author)}
+                                onTouchTap={routeToProfile.bind(null, this.context.history, author)}
                                 primaryText={author.full_name}
                                 secondaryText={author.title}
                             />

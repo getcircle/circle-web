@@ -25,8 +25,8 @@ function setup(propsOverrides, contextOverrides) {
     // Context
     const defaultContext = {
         authenticatedProfile: ProfileFactory.getProfile(),
-        router: {
-            transitionTo: expect.createSpy(),
+        history: {
+            pushState: expect.createSpy(),
         },
     };
     const context = Object.assign({}, defaultContext, contextOverrides);
@@ -35,8 +35,8 @@ function setup(propsOverrides, contextOverrides) {
 
         static childContextTypes = {
             authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-            router: PropTypes.shape({
-                transitionTo: PropTypes.func.isRequired,
+            history: PropTypes.shape({
+                pushState: PropTypes.func.isRequired,
             }).isRequired,
         }
 

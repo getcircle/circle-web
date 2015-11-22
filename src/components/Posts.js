@@ -35,8 +35,8 @@ class Posts extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -162,14 +162,14 @@ class Posts extends CSSComponent {
 
     onPostTapped(post) {
         if (post.state === PostStateV1.DRAFT || !post.state) {
-            routeToEditPost(this.context.router, post);
+            routeToEditPost(this.context.history, post);
         } else if (post.state === PostStateV1.LISTED) {
-            routeToPost(this.context.router, post);
+            routeToPost(this.context.history, post);
         }
     }
 
     onTabChange(value, event, tab) {
-        routeToPosts(this.context.router, value);
+        routeToPosts(this.context.history, value);
     }
 
     getEmptyStateMessage() {
@@ -270,7 +270,7 @@ class Posts extends CSSComponent {
             <IconMenu iconButtonElement={this.renderMoreButton()}>
                 <MenuItem
                     is="MenuItem"
-                    onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
+                    onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
                     primaryText={t('Edit')}
                 />
                 <MenuItem

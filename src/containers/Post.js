@@ -60,8 +60,8 @@ class Post extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 

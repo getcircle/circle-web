@@ -661,7 +661,7 @@ class Search extends CSSComponent {
             primaryText: post.title,
             primaryTextStyle: this.styles().postTextResultText,
             secondaryText: 'Last edited ' + moment(post.changed).fromNow(),
-            onTouchTap: routes.routeToPost.bind(null, this.context.router, post),
+            onTouchTap: routes.routeToPost.bind(null, this.context.history, post),
             type: RESULT_TYPES.POST,
             instance: post,
             ...trackingAttributes

@@ -142,7 +142,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     onAddPostTapped() {
-        routeToNewPost(this.context.router);
+        routeToNewPost(this.context.history);
     }
 
     handleTouchTap(event) {
@@ -158,7 +158,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewKnowledge(event) {
-        routeToPosts(this.context.router, PostStateURLString.LISTED);
+        routeToPosts(this.context.history, PostStateURLString.LISTED);
     }
 
     handleLogout(event) {
