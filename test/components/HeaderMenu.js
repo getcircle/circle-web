@@ -2,8 +2,9 @@ import expect from 'expect';
 import Immutable from 'immutable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import React, { PropTypes } from 'react/addons';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import TestUtils from 'react-addons-test-utils';
 
 import ProfileFactory from '../factories/ProfileFactory';
 import TeamFactory from '../factories/TeamFactory';
@@ -11,8 +12,6 @@ import TeamFactory from '../factories/TeamFactory';
 import CSSComponent from '../../src/components/CSSComponent';
 import HeaderMenu from '../../src/components/HeaderMenu';
 import ProfileAvatar from '../../src/components/ProfileAvatar';
-
-const { TestUtils } = React.addons;
 
 function setup(propOverrides, contextOverrides) {
     const defaultProps = {

@@ -1,6 +1,7 @@
 import expect from 'expect';
-import React, { PropTypes } from 'react/addons';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import TestUtils from 'react-addons-test-utils';
 
 import PostFactory from '../factories/PostFactory';
 import ProfileFactory from '../factories/ProfileFactory';
@@ -10,7 +11,6 @@ import CSSComponent from '../../src/components/CSSComponent';
 import Post from '../../src/components/Post';
 
 const { PostStateV1 } = services.post.containers;
-const { TestUtils } = React.addons;
 
 function setup(propsOverrides, contextOverrides) {
 

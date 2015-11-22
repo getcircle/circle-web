@@ -709,7 +709,7 @@ class Post extends CSSComponent {
                 <div
                     className="postContent"
                     dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
-                    is="postContent"
+                    style={{...this.styles().postContent}}
                 />
                 {inlineImages}
                 {this.renderFiles(postFilesWithoutImages)}
