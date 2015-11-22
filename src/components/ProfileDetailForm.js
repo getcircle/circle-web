@@ -23,7 +23,7 @@ import ProfilesSelector from './ProfilesSelector'
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const selector = selectors.createImmutableSelector(
+const mediaSelector = selectors.createImmutableSelector(
     [
         selectors.mediaUploadSelector,
         selectors.updateProfileSelector,
