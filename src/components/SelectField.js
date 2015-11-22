@@ -21,7 +21,7 @@ class SelectField extends CSSComponent {
     static propTypes = {
         arrowIconContainerStyle: PropTypes.object,
         arrowIconStyle: PropTypes.object,
-        infiniteLoadBeginBottomOffset: PropTypes.number,
+        infiniteLoadBeginEdgeOffset: PropTypes.number,
         inputStyle: PropTypes.object,
         isInfiniteLoading: PropTypes.bool,
         items: PropTypes.array,

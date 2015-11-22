@@ -1166,7 +1166,7 @@ class Search extends CSSComponent {
                     className="col-xs no-padding"
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}
-                    infiniteLoadBeginBottomOffset={200}
+                    infiniteLoadBeginEdgeOffset={200}
                     isInfiniteLoading={this.props.loading}
                     key="infinite-results"
                     loadingSpinnerDelegate={::this.renderLoadingIndicator()}

@@ -166,7 +166,7 @@ class ProfilesSelector extends CSSComponent {
 
         return (
             <SelectField
-                infiniteLoadBeginBottomOffset={140}
+                infiniteLoadBeginEdgeOffset={140}
                 inputStyle={fieldInputStyle}
                 items={this.getItems()}
                 listItemHeight={70}
@@ -200,7 +200,7 @@ class ProfilesSelector extends CSSComponent {
                     value={this.props.value}
                 />
                 <SelectDialog
-                    infiniteLoadBeginBottomOffset={100}
+                    infiniteLoadBeginEdgeOffset={100}
                     items={this.getItems()}
                     listItemHeight={50}
                     listStyle={dialogListStyle}

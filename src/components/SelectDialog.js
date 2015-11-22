@@ -18,7 +18,7 @@ const {
 class SelectDialog extends CSSComponent {
 
     static propTypes = {
-        infiniteLoadBeginBottomOffset: PropTypes.number,
+        infiniteLoadBeginEdgeOffset: PropTypes.number,
         isInfiniteLoading: PropTypes.bool,
         items: PropTypes.object,
         largerDevice: PropTypes.bool.isRequired,
