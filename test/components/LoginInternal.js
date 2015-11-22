@@ -1,5 +1,6 @@
 import mui from 'material-ui';
 import expect from 'expect';
+import ReactDOM from 'react-dom';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
@@ -71,7 +72,7 @@ describe('LoginInternal', () => {
         it('updates the state of "password" on change', () => {
             const { output } = setup();
             const passwordInput = TestUtils.scryRenderedComponentsWithType(output, TextField)[1];
-            const node = React.findDOMNode(passwordInput.refs.input);
+            const node = ReactDOM.findDOMNode(passwordInput.refs.input);
             node.value = 'password';
             TestUtils.Simulate.change(node);
             expect(output.state.password).toBe('password');

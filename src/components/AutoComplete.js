@@ -1,4 +1,5 @@
 import mui from 'material-ui';
+import ReactDOM from 'react-dom';
 import React, { PropTypes } from 'react';
 
 import { backgroundColors, fontColors, iconColors } from '../constants/styles';
@@ -135,18 +136,18 @@ class AutoComplete extends CSSComponent {
     }
 
     focusInput() {
-        const node = React.findDOMNode(this.refs.input);
+        const node = ReactDOM.findDOMNode(this.refs.input);
         if (node) {
             node.select();
         }
     }
 
     blurInput() {
-        React.findDOMNode(this.refs.input).blur();
+        ReactDOM.findDOMNode(this.refs.input).blur();
     }
 
     blurInput() {
-        React.findDOMNode(this.refs.input).blur();
+        ReactDOM.findDOMNode(this.refs.input).blur();
     }
 
     setIgnoreBlur(ignoreBlur) {

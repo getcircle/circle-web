@@ -1,4 +1,5 @@
 import expect from 'expect';
+import ReactDOM from 'react-dom';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import TestUtils from 'react-addons-test-utils';
@@ -81,7 +82,7 @@ describe('PostComponent', () => {
             const postContentComponent = TestUtils.findRenderedDOMComponentWithClass(postComponent, 'postContent');
             expect(TestUtils.isDOMComponent(postContentComponent)).toBe(true);
 
-            expect((React.findDOMNode(postContentComponent)).innerHTML).toBe(
+            expect((ReactDOM.findDOMNode(postContentComponent)).innerHTML).toBe(
                 'This is a sample post content. For more details checkout - ' +
                 '<a href="https://lunohq.com" target="_blank">https://lunohq.com</a> ' +
                 'If you have any questions, contact <a href="mailto:ravi@lunohq.com">ravi@lunohq.com</a> or ' +
@@ -111,12 +112,12 @@ describe('PostComponent', () => {
             const testBody = 'This is test body';
             let textareas = TestUtils.scryRenderedComponentsWithType(postComponent, AutogrowTextarea);
 
-            const titleInput = React.findDOMNode(textareas[0].refs.input);
+            const titleInput = ReactDOM.findDOMNode(textareas[0].refs.input);
             titleInput.value = testTitle;
             TestUtils.Simulate.change(titleInput);
             expect(postComponent.getCurrentTitle()).toBe(testTitle);
 
-            const bodyInput = React.findDOMNode(textareas[1].refs.input);
+            const bodyInput = ReactDOM.findDOMNode(textareas[1].refs.input);
             bodyInput.value = testBody;
             TestUtils.Simulate.change(bodyInput);
             expect(postComponent.getCurrentBody()).toBe(testBody);

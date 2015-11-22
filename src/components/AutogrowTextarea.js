@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import React, { PropTypes } from 'react';
 
 import { trimNewLines } from '../utils/string';
@@ -67,7 +68,7 @@ class AutogrowTextarea extends CSSComponent {
     }
 
     syncHeight(newValue) {
-        const shadow = React.findDOMNode(this.refs.shadow);
+        const shadow = ReactDOM.findDOMNode(this.refs.shadow);
         const currentHeight = this.state.height;
         let newHeight;
 

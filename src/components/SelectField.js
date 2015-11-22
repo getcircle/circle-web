@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import Infinite from 'react-infinite';
@@ -51,7 +52,7 @@ class SelectField extends CSSComponent {
     }
 
     componentDidUpdate() {
-        let searchInput = React.findDOMNode(this.refs.searchInput);
+        let searchInput = ReactDOM.findDOMNode(this.refs.searchInput);
         if (!!searchInput) {
             searchInput.focus();
         }
