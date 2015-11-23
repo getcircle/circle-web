@@ -27,9 +27,9 @@ class SelectDialog extends CSSComponent {
         listItemInnerDivStyle: PropTypes.object,
         listStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
-        onDismiss: PropTypes.func,
         onInfiniteLoad: PropTypes.func,
         onInputChange: PropTypes.func,
+        onRequestClose: PropTypes.func,
         pageType: PropTypes.string.isRequired,
         searchIconStyle: PropTypes.object,
         searchInputContainerStyle: PropTypes.object,
@@ -40,7 +40,7 @@ class SelectDialog extends CSSComponent {
 
     static defaultProps = {
         maxListHeight: 200,
-        onDismiss: () => {},
+        onRequestClose: () => {},
         onInputChange: () => {},
     }
 
@@ -86,7 +86,7 @@ class SelectDialog extends CSSComponent {
     handleItemTapped(item, index) {
         item.onTouchTap();
         this.dismiss();
-        this.props.onDismiss();
+        this.props.onRequestClose();
     }
 
     renderResult(item, index) {

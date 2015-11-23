@@ -246,6 +246,7 @@ class Search extends CSSComponent {
 
     state = {
         category: null,
+        feedbackDialogOpen: false,
         infoRequest: '',
         muiTheme: CurrentTheme,
         query: '',
@@ -884,7 +885,7 @@ class Search extends CSSComponent {
                         </span>
                         <span
                             is="requestInfoLabel"
-                            onTouchTap={() => this.refs.modal.show()}
+                            onTouchTap={() => this.setState({feedbackDialogOpen: true})}
                         >
                             {t('Request missing info')}
                         </span>
@@ -1017,7 +1018,15 @@ class Search extends CSSComponent {
         this.props.dispatch(
             noSearchResults(this.state.query, this.state.infoRequest)
         );
-        this.refs.modal.dismiss();
+        this.setState({
+            feedbackDialogOpen: false,
+        });
+    }
+
+    handleDialogCancel() {
+        this.setState({
+            feedbackDialogOpen: false,
+        });
     }
 
     handleSelection(item) {
@@ -1197,14 +1206,14 @@ class Search extends CSSComponent {
 
     renderDialog() {
         const standardActions = [
-            {text: 'Cancel'},
+            {text: 'Cancel', onTouchTap: ::this.handleDialogCancel},
             {text: 'Submit', onTouchTap: ::this.handleDialogSubmit}
         ];
         return (
             <Dialog
                 actions={standardActions}
                 is="Dialog"
-                ref="modal"
+                open={this.state.feedbackDialogOpen}
                 title={t('What were you trying to find?')}
             >
                 <textarea

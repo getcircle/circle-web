@@ -230,12 +230,14 @@ class Posts extends CSSComponent {
         if (this.state.confirmDelete) {
             const dialogActions = [
                 (<FlatButton
+                    key="cancel"
                     label={t('Cancel')}
                     onTouchTap={::this.onModalCancelTapped}
                     secondary={true}
                 />),
                 (<FlatButton
                     is="ModalPrimaryActionButton"
+                    key="delete"
                     label={t('Delete')}
                     onTouchTap={::this.onModalDeleteTapped}
                     primary={true}
@@ -244,8 +246,8 @@ class Posts extends CSSComponent {
             return (
                 <Dialog
                     actions={dialogActions}
-                    modal={true}
-                    openImmediately={true}
+                    defaultOpen={true}
+                    open={true}
                     title={t('Delete Post?')}
                 >
                     {t('Please confirm you want to delete this post. This action cannot be undone.')}

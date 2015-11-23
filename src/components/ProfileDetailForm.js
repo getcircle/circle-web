@@ -657,9 +657,9 @@ class ProfileDetailForm extends CSSComponent {
                     dialogSaveLabel={t('Save')}
                     is="Dialog"
                     largerDevice={largerDevice}
-                    modal={this.state.dataChanged}
-                    onDismiss={this.resetState.bind(this)}
+                    onRequestClose={this.resetState.bind(this)}
                     onSave={this.handleSaveTapped.bind(this)}
+                    open={this.state.dataChanged}
                     pageType={PAGE_TYPE.EDIT_PROFILE}
                     ref="modal"
                     repositionOnUpdate={false}
