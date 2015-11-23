@@ -84,7 +84,7 @@ class ProfilesSelector extends CSSComponent {
         profiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         profilesLoading: PropTypes.bool,
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
-        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
+        results: PropTypes.object,
         searchInputPlaceholder: PropTypes.string,
         value: PropTypes.string,
     }

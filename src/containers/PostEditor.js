@@ -307,7 +307,7 @@ class PostEditor extends CSSComponent {
         }
 
         if (this.refs.headerMessageText) {
-            this.refs.headerMessageText.getDOMNode().value = postType;
+            this.refs.headerMessageText.value = postType;
         }
     }
 

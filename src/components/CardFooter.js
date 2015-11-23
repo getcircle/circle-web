@@ -1,7 +1,7 @@
 import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { tintColor, fontWeights } from '../constants/styles';
+import { tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
 

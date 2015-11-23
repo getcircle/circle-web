@@ -916,7 +916,7 @@ class Post extends CSSComponent {
                                 post.id,
                                 post.state,
                                 false,
-                                this.state.files.length,
+                                this.state.files.count,
                                 POST_SOURCE.WEB_APP,
                                 this.state.owner && this.context.authenticatedProfile.id !== this.state.owner.id,
                             );

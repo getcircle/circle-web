@@ -112,7 +112,7 @@ class LocationDetail extends CSSComponent {
 
         return (
             <div>
-                <LocationDetailHeader office={office} />
+                <LocationDetailHeader largerDevice={largerDevice} office={office} />
                 <DetailContent>
                     <LocationDetailLocation largerDevice={largerDevice} office={office} />
                     {this.renderPointsOfContact(office)}
