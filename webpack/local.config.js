@@ -57,4 +57,10 @@ module.exports = {
     node: {
       fs: 'empty'
     },
+    resolve: {
+        alias: {
+            'Long': 'long',
+            'ByteBuffer': 'bytebuffer'
+        },
+    },
 };
