@@ -756,7 +756,7 @@ class Post extends CSSComponent {
                         disabled={true}
                         is="AttachementListItem"
                         key={file.name}
-                        leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size="0.4" />}
+                        leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size={0.4} />}
                         primaryText={file.name}
                         primaryTextStyle={{...this.styles().attachmentListItemDisabledTextStyle}}
                     />

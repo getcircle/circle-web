@@ -43,7 +43,6 @@ import MailIcon from './MailIcon';
 import OfficeIcon from './OfficeIcon';
 import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
-import QuoteIcon from './QuoteIcon';
 
 const {
     CircularProgress,

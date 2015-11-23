@@ -16,7 +16,6 @@ const { DescriptionV1 } = services.common.containers.description;
 
 class TeamDetailForm extends CSSComponent {
     static propTypes = {
-        dispatch: PropTypes.func.isRequired,
         isManager: PropTypes.bool.isRequired,
         largerDevice: PropTypes.bool.isRequired,
         onSaveCallback: PropTypes.func.isRequired,
