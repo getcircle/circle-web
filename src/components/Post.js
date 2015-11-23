@@ -744,8 +744,7 @@ class Post extends CSSComponent {
                         is="AttachementListItem"
                         key={this.getFileId(file.name)}
                         leftIcon={<IconContainer IconClass={AttachmentIcon} is="IconContainer" stroke="#7c7b7b" />}
-                        primaryText={file.name}
-                        primaryTextStyle={{...this.styles().attachmentListItemTextStyle}}
+                        primaryText={<span style={{...this.styles().attachmentListItemTextStyle}}>{file.name}</span>}
                         rightIconButton={this.renderDeleteFileButton(file)}
                         target="_blank"
                     />
@@ -757,8 +756,7 @@ class Post extends CSSComponent {
                         is="AttachementListItem"
                         key={file.name}
                         leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size={0.4} />}
-                        primaryText={file.name}
-                        primaryTextStyle={{...this.styles().attachmentListItemDisabledTextStyle}}
+                        primaryText={<span style={{...this.styles().attachmentListItemDisabledTextStyle}}>{file.name}</span>}
                     />
                 );
             }

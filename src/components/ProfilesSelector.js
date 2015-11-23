@@ -79,7 +79,6 @@ class ProfilesSelector extends CSSComponent {
         largerDevice: PropTypes.bool.isRequired,
         listDividerStyle: PropTypes.object,
         listItemInnerDivStyle: PropTypes.object,
-        listItemPrimaryTextStyle: PropTypes.object,
         onSelect: PropTypes.func,
         profiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         profilesLoading: PropTypes.bool,

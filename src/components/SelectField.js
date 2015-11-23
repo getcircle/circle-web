@@ -29,7 +29,6 @@ class SelectField extends CSSComponent {
         listDividerStyle: PropTypes.object,
         listItemHeight: PropTypes.number,
         listItemInnerDivStyle: PropTypes.object,
-        listItemPrimaryTextStyle: PropTypes.object,
         listStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
         onBlur: PropTypes.func,
@@ -132,7 +131,6 @@ class SelectField extends CSSComponent {
                 key={index}
                 name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
-                primaryTextStyle={{...this.props.listItemPrimaryTextStyle}}
             />
         );
     }

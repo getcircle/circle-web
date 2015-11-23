@@ -299,8 +299,7 @@ class Posts extends CSSComponent {
                 innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
                 key={post.id}
                 onTouchTap={() => this.onPostTapped(post)}
-                primaryText={post.title}
-                primaryTextStyle={{...this.styles().primaryTextStyle}}
+                primaryText={<span style={{...this.styles().primaryTextStyle}}>{post.title}</span>}
                 rightIconButton={this.renderRightMenu(post)}
                 secondaryText={lastUpdatedText}
             />

@@ -25,7 +25,6 @@ class SelectDialog extends CSSComponent {
         listDividerStyle: PropTypes.object,
         listItemHeight: PropTypes.number,
         listItemInnerDivStyle: PropTypes.object,
-        listItemPrimaryTextStyle: PropTypes.object,
         listStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
         onDismiss: PropTypes.func,
@@ -93,7 +92,6 @@ class SelectDialog extends CSSComponent {
     renderResult(item, index) {
         const {
             listItemInnerDivStyle,
-            listItemPrimaryTextStyle,
         } = this.props;
 
         return (
@@ -103,7 +101,6 @@ class SelectDialog extends CSSComponent {
                 key={index}
                 name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
-                primaryTextStyle={listItemPrimaryTextStyle}
             />
         );
     }

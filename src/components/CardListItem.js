@@ -16,6 +16,10 @@ class CardListItem extends CSSComponent {
         secondaryText: PropTypes.string,
     }
 
+    static defaultProps = {
+        secondaryText: '',
+    }
+
     styles() {
         return this.css({
             singleLine: !this.props.secondaryText || this.props.secondaryText.trim() === '',
@@ -63,10 +67,26 @@ class CardListItem extends CSSComponent {
         return React.cloneElement(element, {style: styles});
     }
 
+    renderSecondaryText() {
+        const {
+            secondaryText,
+        } = this.props;
+
+        const secondaryStyle = {...this.styles().secondaryTextStyle};
+        if (secondaryText && secondaryText.trim().length > 0) {
+            return (
+                <div style={secondaryStyle}>
+                    {secondaryText}
+                </div>
+            );
+        }
+    }
+
     render() {
         const {
             innerDivStyle,
             leftAvatar,
+            primaryText,
             primaryTextStyle,
             ...other,
         } = this.props;
@@ -75,17 +95,18 @@ class CardListItem extends CSSComponent {
         if (leftAvatar) {
             avatar = this.mergeAvatarStyles(leftAvatar, this.styles().avatar);
         }
+
         const innerStyle = {...this.styles().innerDivStyle, ...innerDivStyle};
         const primaryStyle = {...this.styles().primaryTextStyle, ...primaryTextStyle};
-        const secondaryStyle = {...this.styles().secondaryTextStyle};
+
         return (
             <ListItem
                 className="middle-xs"
                 {...other}
                 innerDivStyle={innerStyle}
                 leftAvatar={avatar}
-                primaryTextStyle={primaryStyle}
-                secondaryTextStyle={secondaryStyle}
+                primaryText={<div style={primaryStyle}>{primaryText}</div>}
+                secondaryText={this.renderSecondaryText()}
             />
         );
     }

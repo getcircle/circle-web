@@ -657,8 +657,10 @@ class Search extends CSSComponent {
             estimatedHeight: estimatedHeight,
             index: index,
             leftAvatar: <IconContainer IconClass={LightBulbIcon} is="ResultIcon" stroke="#7c7b7b" />,
-            primaryText: post.title,
-            primaryTextStyle: this.styles().postTextResultText,
+            primaryText: this.getPrimaryTextContainer(
+                post.title,
+                this.styles().postTextResultText
+            ),
             secondaryText: 'Last edited ' + moment(post.changed).fromNow(),
             onTouchTap: routes.routeToPost.bind(null, this.context.history, post),
             type: RESULT_TYPES.POST,
@@ -723,25 +725,41 @@ class Search extends CSSComponent {
         });
     }
 
+    getPrimaryTextContainer(text, style) {
+        return <span style={{...style}}>{text}</span>;
+    }
+
     getDefaultResults() {
         const { organization } = this.props;
         const { CategoryV1 } = services.search.containers.search;
         const items = [
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.POSTS),
-                primaryText: t(`Knowledge (${organization.post_count})`),
+                primaryText: this.getPrimaryTextContainer(
+                    t(`Knowledge (${organization.post_count})`),
+                    this.styles().searchResultText
+                ),
             },
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.PROFILES),
-                primaryText: t(`People (${organization.profile_count})`),
+                primaryText: this.getPrimaryTextContainer(
+                    t(`People (${organization.profile_count})`),
+                    this.styles().searchResultText
+                ),
             },
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.TEAMS),
-                primaryText: t(`Teams (${organization.team_count})`),
+                primaryText: this.getPrimaryTextContainer(
+                    t(`Teams (${organization.team_count})`),
+                    this.styles().searchResultText
+                ),
             },
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.LOCATIONS),
-                primaryText: t(`Locations (${organization.location_count})`),
+                primaryText: this.getPrimaryTextContainer(
+                    t(`Locations (${organization.location_count})`),
+                    this.styles().searchResultText
+                ),
             },
         ];
         const recents = this.getRecentResults();
@@ -749,9 +767,7 @@ class Search extends CSSComponent {
             return {
                 estimatedHeight: 64,
                 innerDivStyle: this.styles().searchResult,
-                leftAvatar: <SearchIcon />,
-                leftAvatarStyle: this.styles().SearchIcon.style,
-                primaryTextStyle: this.styles().searchResultText,
+                leftAvatar: <SearchIcon is="SearchIcon" />,
                 type: RESULT_TYPES.EXPLORE,
                 subheader: 'explore',
                 ...item,
@@ -766,12 +782,13 @@ class Search extends CSSComponent {
             estimatedHeight: 64,
             type: RESULT_TYPES.CONTACT_METHOD,
             leftAvatar: <IconContainer IconClass={MailIcon} is="ActionIcon" stroke="rgba(0, 0, 0, 0.4)" />,
-            primaryText: t(`Email ${profile.first_name}`),
-            primaryTextStyle: {
-                fontSize: '12px',
-                lineHeight: '17px',
-                ...fontColors.dark,
-            },
+            primaryText: this.getPrimaryTextContainer(
+                t(`Email ${profile.first_name}`), {
+                    fontSize: '12px',
+                    lineHeight: '17px',
+                    ...fontColors.dark,
+                }
+            ),
             innerDivStyle: {
                 paddingLeft: 40,
                 marginLeft: 58,
@@ -856,10 +873,12 @@ class Search extends CSSComponent {
             const noResults = [{
                 disabled: true,
                 estimatedHeight: 84,
-                primaryText: t(`No results for "${this.state.query}"!`),
-                primaryTextStyle: this.styles().searchResultText,
+                primaryText: this.getPrimaryTextContainer(
+                    t(`No results for "${this.state.query}"!`),
+                    this.styles().searchResultText
+                ),
                 secondaryText: (
-                    <div>
+                    <div style={{...this.styles().requestInfo}}>
                         <span is="requestInfoLabelPrimary">
                             {t('Can\'t find what you\'re looking for?')}
                         </span>
@@ -871,7 +890,6 @@ class Search extends CSSComponent {
                         </span>
                     </div>
                 ),
-                secondaryTextStyle: this.styles().requestInfo,
             }];
             if (this.props.canExplore) {
                 noResults.push(...this.getDefaultResults());

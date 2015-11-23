@@ -216,10 +216,6 @@ class ProfileDetailForm extends CSSComponent {
                         textAlign: 'left',
                         paddingLeft: 70,
                     },
-                    listItemPrimaryTextStyle: {
-                        fontSize: 14,
-                        ...fontColors.dark,
-                    },
                     fieldListStyle: {
                         borderRadius: '0px 0px 3px 3px',
                         boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
