@@ -667,7 +667,7 @@ class Post extends CSSComponent {
             post.files.forEach(file => {
                 if (file.content_type && file.content_type.toLowerCase().indexOf('image/') !== -1) {
                     inlineImages.push(
-                        <div className="row center-xs middle-xs" is="inlineImageContainer">
+                        <div className="row center-xs middle-xs" is="inlineImageContainer" key={file.id}>
                             <div is="inlineImageInnerDiv">
                                 <a href={file.source_url} target="_blank">
                                     <img alt={t('Post attached image')} is="inlineImage" src={file.source_url} />

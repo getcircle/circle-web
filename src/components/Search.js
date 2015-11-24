@@ -168,10 +168,10 @@ class Search extends CSSComponent {
     static propTypes = {
         alwaysActive: PropTypes.bool,
         canExplore: PropTypes.bool,
-        defaults: PropTypes.arrayOf(PropTypes.oneOf(
+        defaults: PropTypes.arrayOf(PropTypes.oneOfType([
             services.profile.containers.ProfileV1,
             services.organization.containers.TeamV1,
-        )),
+        ])),
         defaultsLoadMore: PropTypes.func,
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
@@ -209,7 +209,7 @@ class Search extends CSSComponent {
         showRecents: PropTypes.bool,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
-            PropTypes.instanceOf(services.profile.containers.ProfileV1)
+            PropTypes.instanceOf(services.organization.containers.TeamV1)
         ),
         teamsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         useDefaultClickHandlers: PropTypes.bool,
