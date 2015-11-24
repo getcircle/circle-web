@@ -21,8 +21,8 @@ class StatusDetail extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -76,7 +76,7 @@ class StatusDetail extends CSSComponent {
                                 <CardListItem
                                     innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
                                     leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
-                                    onTouchTap={routeToProfile.bind(null, this.context.router, author)}
+                                    onTouchTap={routeToProfile.bind(null, this.context.history, author)}
                                     primaryText={author.full_name}
                                     secondaryText={author.title}
                                 />

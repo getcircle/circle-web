@@ -2,7 +2,8 @@ import { decorate } from 'react-mixin';
 import ClickAwayable from 'material-ui/lib/mixins/click-awayable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import React, { PropTypes } from 'react/addons';
+import React, { PropTypes } from 'react';
+import ReactTransitionGroup from 'react-addons-transition-group';
 
 import autoBind from '../utils/autoBind';
 import CurrentTheme from '../utils/ThemeManager';
@@ -17,8 +18,6 @@ import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from '../components/RoundedButton';
-
-const { TransitionGroup } = React.addons;
 
 const BACKGROUND_COLOR = 'rgb(42, 42, 42)';
 
@@ -36,8 +35,10 @@ class HeaderMenu extends CSSComponent {
     static contextTypes = {
         flags: PropTypes.object,
         mixins: PropTypes.object,
-        router: PropTypes.object,
         showCTAsInHeader: PropTypes.bool,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
+        }).isRequired,
     }
 
     static childContextTypes = {
@@ -141,7 +142,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     onAddPostTapped() {
-        routeToNewPost(this.context.router);
+        routeToNewPost(this.context.history);
     }
 
     handleTouchTap(event) {
@@ -149,15 +150,15 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewProfile(event) {
-        routeToProfile(this.context.router, this.props.profile);
+        routeToProfile(this.context.history, this.props.profile);
     }
 
     handleViewTeam(event) {
-        routeToTeam(this.context.router, this.props.managesTeam);
+        routeToTeam(this.context.history, this.props.managesTeam);
     }
 
     handleViewKnowledge(event) {
-        routeToPosts(this.context.router, PostStateURLString.LISTED);
+        routeToPosts(this.context.history, PostStateURLString.LISTED);
     }
 
     handleLogout(event) {
@@ -297,9 +298,9 @@ class HeaderMenu extends CSSComponent {
                     {this.renderDownArrow()}
                 </div>
                 <div className="row start-xs">
-                    <TransitionGroup>
+                    <ReactTransitionGroup>
                         {this.renderMenu()}
-                    </TransitionGroup>
+                    </ReactTransitionGroup>
                 </div>
             </div>
         );

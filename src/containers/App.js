@@ -78,7 +78,7 @@ class App extends CSSComponent {
 
     static contextTypes = {
         muiTheme: PropTypes.object.isRequired,
-        router: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
@@ -109,7 +109,7 @@ class App extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         if (!nextProps.authenticated && UNAUTHENTICATED_ROUTES.indexOf(nextProps.location.pathname) === -1) {
-            this.context.router.transitionTo('/login');
+            this.context.history.pushState(null, '/login');
         }
 
         this.initTrackerSession();

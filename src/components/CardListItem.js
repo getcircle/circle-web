@@ -1,4 +1,5 @@
 import { ListItem } from 'material-ui';
+import merge from 'merge';
 import React, { PropTypes } from 'react';
 
 import { fontColors } from '../constants/styles';
@@ -13,6 +14,10 @@ class CardListItem extends CSSComponent {
         primaryText: PropTypes.string,
         primaryTextStyle: PropTypes.object,
         secondaryText: PropTypes.string,
+    }
+
+    static defaultProps = {
+        secondaryText: '',
     }
 
     styles() {
@@ -58,14 +63,30 @@ class CardListItem extends CSSComponent {
     }
 
     mergeAvatarStyles(element, baseStyles) {
-        const styles = this.merge.recursive(baseStyles, element.props.style);
+        const styles = merge.recursive(baseStyles, element.props.style);
         return React.cloneElement(element, {style: styles});
+    }
+
+    renderSecondaryText() {
+        const {
+            secondaryText,
+        } = this.props;
+
+        const secondaryStyle = {...this.styles().secondaryTextStyle};
+        if (secondaryText && secondaryText.trim().length > 0) {
+            return (
+                <div style={secondaryStyle}>
+                    {secondaryText}
+                </div>
+            );
+        }
     }
 
     render() {
         const {
             innerDivStyle,
             leftAvatar,
+            primaryText,
             primaryTextStyle,
             ...other,
         } = this.props;
@@ -74,17 +95,18 @@ class CardListItem extends CSSComponent {
         if (leftAvatar) {
             avatar = this.mergeAvatarStyles(leftAvatar, this.styles().avatar);
         }
+
         const innerStyle = {...this.styles().innerDivStyle, ...innerDivStyle};
         const primaryStyle = {...this.styles().primaryTextStyle, ...primaryTextStyle};
-        const secondaryStyle = {...this.styles().secondaryTextStyle};
+
         return (
             <ListItem
                 className="middle-xs"
                 {...other}
                 innerDivStyle={innerStyle}
                 leftAvatar={avatar}
-                primaryTextStyle={primaryStyle}
-                secondaryTextStyle={secondaryStyle}
+                primaryText={<div style={primaryStyle}>{primaryText}</div>}
+                secondaryText={this.renderSecondaryText()}
             />
         );
     }

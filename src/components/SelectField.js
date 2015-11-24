@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import Infinite from 'react-infinite';
@@ -21,14 +22,13 @@ class SelectField extends CSSComponent {
     static propTypes = {
         arrowIconContainerStyle: PropTypes.object,
         arrowIconStyle: PropTypes.object,
-        infiniteLoadBeginBottomOffset: PropTypes.number,
+        infiniteLoadBeginEdgeOffset: PropTypes.number,
         inputStyle: PropTypes.object,
         isInfiniteLoading: PropTypes.bool,
         items: PropTypes.array,
         listDividerStyle: PropTypes.object,
         listItemHeight: PropTypes.number,
         listItemInnerDivStyle: PropTypes.object,
-        listItemPrimaryTextStyle: PropTypes.object,
         listStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
         onBlur: PropTypes.func,
@@ -51,7 +51,7 @@ class SelectField extends CSSComponent {
     }
 
     componentDidUpdate() {
-        let searchInput = React.findDOMNode(this.refs.searchInput);
+        let searchInput = ReactDOM.findDOMNode(this.refs.searchInput);
         if (!!searchInput) {
             searchInput.focus();
         }
@@ -131,7 +131,6 @@ class SelectField extends CSSComponent {
                 key={index}
                 name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
-                primaryTextStyle={{...this.props.listItemPrimaryTextStyle}}
             />
         );
     }

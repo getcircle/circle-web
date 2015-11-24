@@ -1,5 +1,5 @@
 import * as messageTypes from '../constants/messageTypes';
-import React, { PropTypes } from 'react/addons';
+import React, { PropTypes } from 'react';
 
 import CSSComponent from './CSSComponent';
 

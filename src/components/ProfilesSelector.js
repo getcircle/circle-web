@@ -79,12 +79,11 @@ class ProfilesSelector extends CSSComponent {
         largerDevice: PropTypes.bool.isRequired,
         listDividerStyle: PropTypes.object,
         listItemInnerDivStyle: PropTypes.object,
-        listItemPrimaryTextStyle: PropTypes.object,
         onSelect: PropTypes.func,
         profiles: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         profilesLoading: PropTypes.bool,
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
-        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
+        results: PropTypes.object,
         searchInputPlaceholder: PropTypes.string,
         value: PropTypes.string,
     }
@@ -166,7 +165,7 @@ class ProfilesSelector extends CSSComponent {
 
         return (
             <SelectField
-                infiniteLoadBeginBottomOffset={140}
+                infiniteLoadBeginEdgeOffset={140}
                 inputStyle={fieldInputStyle}
                 items={this.getItems()}
                 listItemHeight={70}
@@ -200,7 +199,7 @@ class ProfilesSelector extends CSSComponent {
                     value={this.props.value}
                 />
                 <SelectDialog
-                    infiniteLoadBeginBottomOffset={100}
+                    infiniteLoadBeginEdgeOffset={100}
                     items={this.getItems()}
                     listItemHeight={50}
                     listStyle={dialogListStyle}

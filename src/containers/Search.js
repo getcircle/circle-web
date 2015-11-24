@@ -47,7 +47,6 @@ class Search extends CSSComponent {
     static contextTypes = {
         mixins: PropTypes.object,
         muiTheme: PropTypes.object.isRequired,
-        router: PropTypes.object.isRequired,
     }
 
     static childContextTypes = {

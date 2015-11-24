@@ -11,20 +11,14 @@ const {
     FlatButton,
 } = mui;
 
-const common = {
-    background: {
-        backgroundColor: 'rgb(249, 245, 244)',
-    },
-};
-
 class Dialog extends CSSComponent {
 
     static propTypes = {
-        children: PropTypes.object,
+        children: PropTypes.node,
         dialogDismissLabel: PropTypes.string,
         dialogSaveLabel: PropTypes.string,
-        largerDevice: PropTypes.object.isRequired,
-        onDismiss: PropTypes.func,
+        largerDevice: PropTypes.bool.isRequired,
+        onRequestClose: PropTypes.func,
         onSave: PropTypes.func,
         pageType: PropTypes.string.isRequired,
         title: PropTypes.string,
@@ -38,11 +32,12 @@ class Dialog extends CSSComponent {
         // TODO this should be an icon
         dialogDismissLabel: 'x',
         dialogSaveLabel: '',
-        onDismiss() {},
+        onRequestClose() {},
         onSave() {},
     }
 
     state = {
+        open: false,
         muiTheme: CurrentTheme,
         saveEnabled: true,
     }
@@ -65,7 +60,7 @@ class Dialog extends CSSComponent {
 
     customizeTheme(props) {
         let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
-            canvasColor: common.background.backgroundColor,
+            canvasColor: 'rgb(242, 242, 242)',
         });
 
         customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(customDialogTheme, {
@@ -165,12 +160,16 @@ class Dialog extends CSSComponent {
 
     show() {
         tracker.trackPageView(this.props.pageType, '');
-        this.refs.modal.show();
+        this.setState({
+            open: true,
+        });
     }
 
     dismiss() {
-        this.props.onDismiss();
-        this.refs.modal.dismiss();
+        this.props.onRequestClose();
+        this.setState({
+            open: false,
+        });
     }
 
     setSaveEnabled(enabled) {
@@ -212,8 +211,14 @@ class Dialog extends CSSComponent {
             title,
             ...other,
         } = this.props;
+
         return (
-            <mui.Dialog {...other} is="Dialog" ref="modal">
+            <mui.Dialog
+                {...other}
+                is="Dialog"
+                open={this.state.open}
+                ref="modal"
+            >
                 <header className="row between-xs" is="DialogHeader">
                     <div is="DialogClose">
                         <FlatButton

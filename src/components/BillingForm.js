@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { RaisedButton } from 'material-ui';
-import React, { PropTypes } from 'react/addons';
+import React, { PropTypes } from 'react';
 import StripeCheckout from 'react-stripe-checkout';
 
 import { fontColors, fontWeights } from '../constants/styles';

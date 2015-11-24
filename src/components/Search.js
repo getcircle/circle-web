@@ -7,6 +7,7 @@ import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
+import CurrentTheme from '../utils/ThemeManager';
 import {
     loadSearchResults,
     clearSearchResults,
@@ -42,7 +43,6 @@ import MailIcon from './MailIcon';
 import OfficeIcon from './OfficeIcon';
 import ProfileAvatar from './ProfileAvatar';
 import SearchIcon from './SearchIcon';
-import QuoteIcon from './QuoteIcon';
 
 const {
     CircularProgress,
@@ -168,10 +168,10 @@ class Search extends CSSComponent {
     static propTypes = {
         alwaysActive: PropTypes.bool,
         canExplore: PropTypes.bool,
-        defaults: PropTypes.arrayOf(PropTypes.oneOf(
+        defaults: PropTypes.arrayOf(PropTypes.oneOfType([
             services.profile.containers.ProfileV1,
             services.organization.containers.TeamV1,
-        )),
+        ])),
         defaultsLoadMore: PropTypes.func,
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
@@ -197,7 +197,7 @@ class Search extends CSSComponent {
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         recents: PropTypes.arrayOf(PropTypes.object),
-        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
+        results: PropTypes.object,
         resultsHeight: PropTypes.number,
         resultsListStyle: PropTypes.object,
         searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
@@ -209,17 +209,21 @@ class Search extends CSSComponent {
         showRecents: PropTypes.bool,
         style: PropTypes.object,
         teams: PropTypes.arrayOf(
-            PropTypes.instanceOf(services.profile.containers.ProfileV1)
+            PropTypes.instanceOf(services.organization.containers.TeamV1)
         ),
         teamsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         useDefaultClickHandlers: PropTypes.bool,
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
         mixins: PropTypes.object.isRequired,
+    }
+
+    static childContextTypes = {
+        muiTheme: PropTypes.object,
     }
 
     static defaultProps = {
@@ -242,18 +246,41 @@ class Search extends CSSComponent {
 
     state = {
         category: null,
+        feedbackDialogOpen: false,
         infoRequest: '',
+        muiTheme: CurrentTheme,
         query: '',
         typing: false,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: this.state.muiTheme,
+        };
+    }
+
+    componentWillMount() {
+        this.customizeTheme();
     }
 
     componentWillReceiveProps(nextProps) {
         // Resets tracked bit for new searches
         this.checkAndResetSearchTracked(this.state.query);
+        this.customizeTheme();
     }
 
     componentWillUnmount() {
         this.props.dispatch(clearSearchResults());
+    }
+
+    customizeTheme() {
+        let customTheme = mui.Styles.ThemeManager.modifyRawThemePalette(
+            CurrentTheme,
+            {
+                canvasColor: '#ffffff',
+            },
+        );
+        this.setState({muiTheme: customTheme});
     }
 
     currentSearchTimeout = null
@@ -570,7 +597,7 @@ class Search extends CSSComponent {
             leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: profile.full_name,
             secondaryText: `${profile.display_title}`,
-            onTouchTap: routes.routeToProfile.bind(null, this.context.router, profile),
+            onTouchTap: routes.routeToProfile.bind(null, this.context.history, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
             ...trackingAttributes,
@@ -598,7 +625,7 @@ class Search extends CSSComponent {
             leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
             primaryText: team.display_name,
             secondaryText: subTextParts.join(', '),
-            onTouchTap: routes.routeToTeam.bind(null, this.context.router, team),
+            onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
             type: RESULT_TYPES.TEAM,
             instance: team,
             ...trackingAttributes
@@ -613,7 +640,7 @@ class Search extends CSSComponent {
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
             primaryText: location.name,
             secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
-            onTouchTap: routes.routeToLocation.bind(null, this.context.router, location),
+            onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
             ...trackingAttributes
@@ -631,10 +658,12 @@ class Search extends CSSComponent {
             estimatedHeight: estimatedHeight,
             index: index,
             leftAvatar: <IconContainer IconClass={LightBulbIcon} is="ResultIcon" stroke="#7c7b7b" />,
-            primaryText: post.title,
-            primaryTextStyle: this.styles().postTextResultText,
+            primaryText: this.getPrimaryTextContainer(
+                post.title,
+                this.styles().postTextResultText
+            ),
             secondaryText: 'Last edited ' + moment(post.changed).fromNow(),
-            onTouchTap: routes.routeToPost.bind(null, this.context.router, post),
+            onTouchTap: routes.routeToPost.bind(null, this.context.history, post),
             type: RESULT_TYPES.POST,
             instance: post,
             ...trackingAttributes
@@ -697,25 +726,41 @@ class Search extends CSSComponent {
         });
     }
 
+    getPrimaryTextContainer(text, style) {
+        return <span style={{...style}}>{text}</span>;
+    }
+
     getDefaultResults() {
         const { organization } = this.props;
         const { CategoryV1 } = services.search.containers.search;
         const items = [
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.POSTS),
-                primaryText: t(`Knowledge (${organization.post_count})`),
+                primaryText: this.getPrimaryTextContainer(
+                    t(`Knowledge (${organization.post_count})`),
+                    this.styles().searchResultText
+                ),
             },
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.PROFILES),
-                primaryText: t(`People (${organization.profile_count})`),
+                primaryText: this.getPrimaryTextContainer(
+                    t(`People (${organization.profile_count})`),
+                    this.styles().searchResultText
+                ),
             },
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.TEAMS),
-                primaryText: t(`Teams (${organization.team_count})`),
+                primaryText: this.getPrimaryTextContainer(
+                    t(`Teams (${organization.team_count})`),
+                    this.styles().searchResultText
+                ),
             },
             {
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.LOCATIONS),
-                primaryText: t(`Locations (${organization.location_count})`),
+                primaryText: this.getPrimaryTextContainer(
+                    t(`Locations (${organization.location_count})`),
+                    this.styles().searchResultText
+                ),
             },
         ];
         const recents = this.getRecentResults();
@@ -723,9 +768,7 @@ class Search extends CSSComponent {
             return {
                 estimatedHeight: 64,
                 innerDivStyle: this.styles().searchResult,
-                leftAvatar: <SearchIcon />,
-                leftAvatarStyle: this.styles().SearchIcon.style,
-                primaryTextStyle: this.styles().searchResultText,
+                leftAvatar: <SearchIcon is="SearchIcon" />,
                 type: RESULT_TYPES.EXPLORE,
                 subheader: 'explore',
                 ...item,
@@ -740,12 +783,13 @@ class Search extends CSSComponent {
             estimatedHeight: 64,
             type: RESULT_TYPES.CONTACT_METHOD,
             leftAvatar: <IconContainer IconClass={MailIcon} is="ActionIcon" stroke="rgba(0, 0, 0, 0.4)" />,
-            primaryText: t(`Email ${profile.first_name}`),
-            primaryTextStyle: {
-                fontSize: '12px',
-                lineHeight: '17px',
-                ...fontColors.dark,
-            },
+            primaryText: this.getPrimaryTextContainer(
+                t(`Email ${profile.first_name}`), {
+                    fontSize: '12px',
+                    lineHeight: '17px',
+                    ...fontColors.dark,
+                }
+            ),
             innerDivStyle: {
                 paddingLeft: 40,
                 marginLeft: 58,
@@ -830,22 +874,23 @@ class Search extends CSSComponent {
             const noResults = [{
                 disabled: true,
                 estimatedHeight: 84,
-                primaryText: t(`No results for "${this.state.query}"!`),
-                primaryTextStyle: this.styles().searchResultText,
+                primaryText: this.getPrimaryTextContainer(
+                    t(`No results for "${this.state.query}"!`),
+                    this.styles().searchResultText
+                ),
                 secondaryText: (
-                    <div>
+                    <div style={{...this.styles().requestInfo}}>
                         <span is="requestInfoLabelPrimary">
                             {t('Can\'t find what you\'re looking for?')}
                         </span>
                         <span
                             is="requestInfoLabel"
-                            onTouchTap={() => this.refs.modal.show()}
+                            onTouchTap={() => this.setState({feedbackDialogOpen: true})}
                         >
                             {t('Request missing info')}
                         </span>
                     </div>
                 ),
-                secondaryTextStyle: this.styles().requestInfo,
             }];
             if (this.props.canExplore) {
                 noResults.push(...this.getDefaultResults());
@@ -973,7 +1018,15 @@ class Search extends CSSComponent {
         this.props.dispatch(
             noSearchResults(this.state.query, this.state.infoRequest)
         );
-        this.refs.modal.dismiss();
+        this.setState({
+            feedbackDialogOpen: false,
+        });
+    }
+
+    handleDialogCancel() {
+        this.setState({
+            feedbackDialogOpen: false,
+        });
     }
 
     handleSelection(item) {
@@ -1139,7 +1192,7 @@ class Search extends CSSComponent {
                     className="col-xs no-padding"
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}
-                    infiniteLoadBeginBottomOffset={200}
+                    infiniteLoadBeginEdgeOffset={200}
                     isInfiniteLoading={this.props.loading}
                     key="infinite-results"
                     loadingSpinnerDelegate={::this.renderLoadingIndicator()}
@@ -1153,14 +1206,14 @@ class Search extends CSSComponent {
 
     renderDialog() {
         const standardActions = [
-            {text: 'Cancel'},
+            {text: 'Cancel', onTouchTap: ::this.handleDialogCancel},
             {text: 'Submit', onTouchTap: ::this.handleDialogSubmit}
         ];
         return (
             <Dialog
                 actions={standardActions}
                 is="Dialog"
-                ref="modal"
+                open={this.state.feedbackDialogOpen}
                 title={t('What were you trying to find?')}
             >
                 <textarea

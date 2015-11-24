@@ -18,8 +18,8 @@ class EditProfileCameraIcon extends PureComponent {
             ...other,
         } = this.props;
         return (
-            <svg {...other} width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <g id="Feedback-Incorporated---AW-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <svg {...other} width="50px" height="50px" viewBox="0 0 50 50">
+                <g id="Feedback-Incorporated---AW-2" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g id="icons" transform="translate(-890.000000, -319.000000)">
                         <ellipse id="Oval-587-Copy-21" stroke={stroke} opacity="0" cx="915" cy="344" rx="25" ry="25"></ellipse>
                         <g id="Rectangle-1285-+-Rectangle-1284-+-Oval-481-Copy-2" transform="translate(905.000000, 336.000000)">

@@ -36,8 +36,8 @@ class TeamDetail extends CSSComponent {
 
     static contextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -110,7 +110,7 @@ class TeamDetail extends CSSComponent {
                     <CardList>
                         <CardListItem
                             leftAvatar={<ProfileAvatar profile={manager} />}
-                            onTouchTap={routeToProfile.bind(null, this.context.router, manager)}
+                            onTouchTap={routeToProfile.bind(null, this.context.history, manager)}
                             primaryText={manager.full_name}
                             secondaryText={manager.title}
                         />
@@ -126,7 +126,7 @@ class TeamDetail extends CSSComponent {
                 <TeamDetailTeams
                     is="section"
                     largerDevice={this.props.largerDevice}
-                    onClickTeam={routeToTeam.bind(null, this.context.router)}
+                    onClickTeam={routeToTeam.bind(null, this.context.history)}
                     teams={childTeams}
                     totalTeamsCount={totalTeamsCount}
                 />
@@ -155,7 +155,7 @@ class TeamDetail extends CSSComponent {
                     largerDevice={this.props.largerDevice}
                     members={members}
                     membersLoadMore={this.props.membersLoadMore}
-                    onClickMember={routeToProfile.bind(null, this.context.router)}
+                    onClickMember={routeToProfile.bind(null, this.context.history)}
                     pageType={PAGE_TYPE.TEAM_MEMBERS}
                     title={title}
                     viewAllAttribute={services.search.containers.search.AttributeV1.TEAM_ID}

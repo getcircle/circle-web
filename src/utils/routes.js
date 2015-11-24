@@ -1,31 +1,31 @@
 const NEXT_PATHNAME_KEY = 'n:p';
 
-export function routeToProfile(router, profile) {
-    router.transitionTo(`/profile/${profile.id}`);
+export function routeToProfile(history, profile) {
+    history.pushState(null, `/profile/${profile.id}`);
 }
 
-export function routeToTeam(router, team) {
-    router.transitionTo(`/team/${team.id}`);
+export function routeToTeam(history, team) {
+    history.pushState(null, `/team/${team.id}`);
 }
 
-export function routeToLocation(router, location) {
-    router.transitionTo(`/location/${location.id}`);
+export function routeToLocation(history, location) {
+    history.pushState(null, `/location/${location.id}`);
 }
 
-export function routeToEditPost(router, post) {
-    router.transitionTo(`/post/${post.id}/edit`);
+export function routeToEditPost(history, post) {
+    history.pushState(null, `/post/${post.id}/edit`);
 }
 
-export function routeToNewPost(router) {
-    router.transitionTo('/new-post');
+export function routeToNewPost(history) {
+    history.pushState(null, '/new-post');
 }
 
-export function routeToPosts(router, postState) {
-    router.transitionTo(`/posts/${postState}`);
+export function routeToPosts(history, postState) {
+    history.pushState(null, `/posts/${postState}`);
 }
 
-export function routeToPost(router, post) {
-    router.transitionTo(`/post/${post.id}`);
+export function routeToPost(history, post) {
+    history.pushState(null, `/post/${post.id}`);
 }
 
 export function routeToURL(url, nextPathname = null) {

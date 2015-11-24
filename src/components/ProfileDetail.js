@@ -36,8 +36,8 @@ class ProfileDetail extends StyleableComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -50,7 +50,7 @@ class ProfileDetail extends StyleableComponent {
                 isLoggedInUser={isLoggedInUser}
                 largerDevice={this.props.largerDevice}
                 locations={locations}
-                onClickLocation={routeToLocation.bind(null, this.context.router)}
+                onClickLocation={routeToLocation.bind(null, this.context.history)}
                 profile={this.props.extendedProfile.profile}
                 style={this.mergeAndPrefix(styles.section)}
             />
@@ -63,9 +63,9 @@ class ProfileDetail extends StyleableComponent {
                 <ProfileDetailTeam
                     largerDevice={this.props.largerDevice}
                     manager={manager}
-                    onClickManager={routeToProfile.bind(null, this.context.router, manager)}
-                    onClickPeer={routeToProfile.bind(null, this.context.router)}
-                    onClickTeam={routeToTeam.bind(null, this.context.router, team)}
+                    onClickManager={routeToProfile.bind(null, this.context.history, manager)}
+                    onClickPeer={routeToProfile.bind(null, this.context.history)}
+                    onClickTeam={routeToTeam.bind(null, this.context.history, team)}
                     peers={peers}
                     style={this.mergeAndPrefix(styles.section)}
                     team={team}
@@ -80,8 +80,8 @@ class ProfileDetail extends StyleableComponent {
                 <ProfileDetailManages
                     directReports={directReports}
                     largerDevice={this.props.largerDevice}
-                    onClickDirectReport={routeToProfile.bind(null, this.context.router)}
-                    onClickTeam={routeToTeam.bind(null, this.context.router, team)}
+                    onClickDirectReport={routeToProfile.bind(null, this.context.history)}
+                    onClickTeam={routeToTeam.bind(null, this.context.history, team)}
                     style={this.mergeAndPrefix(styles.section)}
                     team={team}
                 />
@@ -90,12 +90,7 @@ class ProfileDetail extends StyleableComponent {
     }
 
     editButtonTapped() {
-        // XXX: Hack
-        // ProfileDetailForm connects directly to the Redux store
-        // For these kind of components, Redux creates a Connect wrapper
-        // component and there are no good solutions to
-        // access the original instance.
-        this.refs.profileDetailForm.refs.wrappedInstance.show();
+        this.refs.profileDetailForm.getWrappedInstance().show();
     }
 
     // Helpers

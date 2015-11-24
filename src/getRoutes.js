@@ -1,58 +1,56 @@
 import _ from 'lodash';
 import React from 'react';
-import { Route, Router } from 'react-router';
-import { reduxRouteComponent } from 'redux-react-router';
+import { IndexRoute, Route } from 'react-router';
 
 import { PAGE_TYPE } from './constants/trackerProperties';
 import { toggleHeader } from './actions/header';
 import tracker from './utils/tracker';
 
-const applyMiddleware = (...middleWares) => {
+function applyMiddleware(...middleWares) {
     const finish = _.noop;
     const handler = _.compose(...middleWares)(finish);
-    return (nextState, transition) => handler(nextState, transition);
+    return (nextState, replaceState) => {
+        return handler(nextState, replaceState);
+    }
 }
 
-const getRoutes = (history, store) => {
+export default function (store) {
 
-    const loginOnce = (next) => {
-        return (nextState, transition) => {
+    function loginOnce(next) {
+        return (nextState, replaceState) => {
             if (store.getState().authentication.get('authenticated')) {
-                transition.to('/');
-                return;
+                return replaceState(null, '/');
             }
-            next(nextState, transition);
+            next(nextState, replaceState);
         };
-    };
+    }
 
-    const requireAuth = (next) => {
-        return (nextState, transition) => {
+    function requireAuth(next) {
+        return (nextState, replaceState) => {
             if (!store.getState().authentication.get('authenticated')) {
-                transition.to('/login', null, {nextPathname: nextState.location.pathname});
-                return;
+                return replaceState({nextPathname: nextState.location.pathname}, '/login');
             }
-
-            next(nextState, transition);
-        };
-    };
-
-    const displayHeader = (next) => {
-        return (nextState, transition) => {
-            store.dispatch(toggleHeader(true));
-            next(nextState, transition);
+            next(nextState, replaceState);
         }
     }
 
-    const hideHeader = (next) => {
-        return (nextState, transition) => {
+    function displayHeader(next) {
+        return (nextState, replaceState) => {
+            store.dispatch(toggleHeader(true));
+            next(nextState, replaceState);
+        }
+    }
+
+    function hideHeader(next) {
+        return (nextState, replaceState) => {
             store.dispatch(toggleHeader(false));
-            next(nextState, transition);
+            next(nextState, replaceState);
         }
     }
 
     const trackPageView = (pageType, paramKey) => {
         return (next) => {
-            return (nextState, transition) => {
+            return (nextState, replaceState) => {
                 let storeState = store.getState();
                 if (storeState.authentication && storeState.authentication.get('authenticated')) {
                     let pageId = paramKey !== '' ? nextState.params[paramKey] : '';
@@ -66,7 +64,7 @@ const getRoutes = (history, store) => {
                     );
                     tracker.trackPageView(pageType, pageId);
                 }
-                next(nextState, transition);
+                next(nextState, replaceState);
             }
         }
     }
@@ -74,103 +72,96 @@ const getRoutes = (history, store) => {
     const defaultMiddleware = [requireAuth, displayHeader];
 
     return (
-        <Router history={history}>
-            <Route component={reduxRouteComponent(store)}>
-                <Route component={require('./containers/App')}>
-                    <Route
-                        component={require('./containers/AuthorizationHandler')}
-                        onEnter={applyMiddleware(loginOnce)}
-                        path="/auth"
-                    />
-                    <Route
-                        component={require('./containers/Billing')}
-                        onEnter={applyMiddleware(
-                            displayHeader,
-                            trackPageView(PAGE_TYPE.BILLING, '')
-                        )}
-                        path="/billing"
-                    />
-                    <Route
-                        component={require('./containers/PostEditor').default}
-                        onEnter={applyMiddleware(
-                            requireAuth,
-                            hideHeader,
-                            trackPageView(PAGE_TYPE.NEW_POST, '')
-                        )}
-                        path="/new-post"
-                    />
-                    <Route
-                        component={require('./containers/PostEditor').default}
-                        onEnter={applyMiddleware(
-                            requireAuth,
-                            hideHeader,
-                            trackPageView(PAGE_TYPE.EDIT_POST, 'postId')
-                        )}
-                        path="/post/:postId/edit"
-                    />
-                    <Route
-                        component={require('./containers/Post')}
-                        onEnter={applyMiddleware(
-                            ...defaultMiddleware,
-                            trackPageView(PAGE_TYPE.POST_DETAIL, 'postId')
-                        )}
-                        path="/post/:postId"
-                    />
-                    <Route
-                        component={require('./containers/Posts')}
-                        onEnter={applyMiddleware(
-                            ...defaultMiddleware,
-                            trackPageView(PAGE_TYPE.MY_KNOWLEDGE, 'postState')
-                        )}
-                        path="/posts/:postState"
-                    />
-                    <Route
-                        component={require('./containers/Search')}
-                        onEnter={applyMiddleware(
-                            requireAuth,
-                            hideHeader,
-                            trackPageView(PAGE_TYPE.HOME, '')
-                        )}
-                        path="/"
-                    />
-                    <Route
-                        component={require('./containers/Location')}
-                        onEnter={applyMiddleware(
-                            ...defaultMiddleware,
-                            trackPageView(PAGE_TYPE.LOCATION_DETAIL, 'locationId')
-                        )}
-                        path="/location/:locationId"
-                    />
-                    <Route
-                        component={require('./containers/Login')}
-                        onEnter={applyMiddleware(loginOnce)}
-                        path="/login"
-                    />
-                    <Route
-                        component={require('./containers/Profile')}
-                        onEnter={applyMiddleware(
-                            ...defaultMiddleware,
-                            trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
-                        )}
-                        path="/profile/:profileId"
-                    />
-                    <Route
-                        component={require('./containers/Team')}
-                        onEnter={applyMiddleware(
-                            ...defaultMiddleware,
-                            trackPageView(PAGE_TYPE.TEAM_DETAIL, 'teamId')
-                        )}
-                        path="/team/:teamId"
-                    />
-                    <Route
-                        component={require('./containers/NoMatch')}
-                        onEnter={applyMiddleware(...defaultMiddleware)}
-                        path="*"
-                    />
-                </Route>
-            </Route>
-        </Router>
+        <Route component={require('./containers/App')} path="/">
+            <IndexRoute
+                component={require('./containers/Search')}
+                onEnter={applyMiddleware(
+                    requireAuth,
+                    hideHeader,
+                    trackPageView(PAGE_TYPE.HOME, '')
+                )}
+            />
+            <Route
+                component={require('./containers/AuthorizationHandler')}
+                onEnter={applyMiddleware(loginOnce)}
+                path="/auth"
+            />
+            <Route
+                component={require('./containers/Billing')}
+                onEnter={applyMiddleware(
+                    displayHeader,
+                    trackPageView(PAGE_TYPE.BILLING, '')
+                )}
+                path="/billing"
+            />
+            <Route
+                component={require('./containers/PostEditor').default}
+                onEnter={applyMiddleware(
+                    requireAuth,
+                    hideHeader,
+                    trackPageView(PAGE_TYPE.NEW_POST, '')
+                )}
+                path="/new-post"
+            />
+            <Route
+                component={require('./containers/PostEditor').default}
+                onEnter={applyMiddleware(
+                    requireAuth,
+                    hideHeader,
+                    trackPageView(PAGE_TYPE.EDIT_POST, 'postId')
+                )}
+                path="/post/:postId/edit"
+            />
+            <Route
+                component={require('./containers/Post')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.POST_DETAIL, 'postId')
+                )}
+                path="/post/:postId"
+            />
+            <Route
+                component={require('./containers/Posts')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.MY_KNOWLEDGE, 'postState')
+                )}
+                path="/posts/:postState"
+            />
+            <Route
+                component={require('./containers/Location')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.LOCATION_DETAIL, 'locationId')
+                )}
+                path="/location/:locationId"
+            />
+            <Route
+                component={require('./containers/Login')}
+                onEnter={applyMiddleware(loginOnce)}
+                path="/login"
+            />
+            <Route
+                component={require('./containers/Profile')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
+                )}
+                path="/profile/:profileId"
+            />
+            <Route
+                component={require('./containers/Team')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.TEAM_DETAIL, 'teamId')
+                )}
+                path="/team/:teamId"
+            />
+            <Route
+                component={require('./containers/NoMatch')}
+                onEnter={applyMiddleware(...defaultMiddleware)}
+                path="*"
+            />
+        </Route>
     );
 };
-
-export default getRoutes;

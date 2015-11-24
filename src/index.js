@@ -1,9 +1,9 @@
 require('babel/register');
 
 import FastClick from 'fastclick';
-import history from 'react-router/lib/BrowserHistory';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import './styles/app.scss';
 
@@ -19,9 +19,8 @@ import Root from './Root';
 
     // Touch related
     injectTapEventPlugin();
-    React.initializeTouchEvents(true);
     FastClick.attach(document.body);
 
-    React.render(<Root history={history} />, getBody());
+    ReactDOM.render(<Root />, getBody());
 
 })();

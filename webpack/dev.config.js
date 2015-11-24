@@ -60,6 +60,12 @@ module.exports = {
         ]
     },
     node: {
-      fs: "empty"
-    }
+      fs: 'empty',
+    },
+    resolve: {
+        alias: {
+            'Long': 'long',
+            'ByteBuffer': 'bytebuffer'
+        },
+    },
 };

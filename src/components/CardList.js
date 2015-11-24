@@ -6,7 +6,7 @@ import CSSComponent from './CSSComponent';
 class CardList extends CSSComponent {
 
     static propTypes = {
-        children: PropTypes.arrayOf(PropTypes.element),
+        children: PropTypes.node,
         className: PropTypes.string,
         style: PropTypes.object,
     }
@@ -19,6 +19,7 @@ class CardList extends CSSComponent {
         return {
             default: {
                 root: {
+                    backgroundColor: '#ffffff',
                     paddingTop: 0,
                     paddingBottom: 0,
                     width: '100%',

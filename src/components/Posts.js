@@ -35,8 +35,8 @@ class Posts extends CSSComponent {
     }
 
     static contextTypes = {
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -162,14 +162,14 @@ class Posts extends CSSComponent {
 
     onPostTapped(post) {
         if (post.state === PostStateV1.DRAFT || !post.state) {
-            routeToEditPost(this.context.router, post);
+            routeToEditPost(this.context.history, post);
         } else if (post.state === PostStateV1.LISTED) {
-            routeToPost(this.context.router, post);
+            routeToPost(this.context.history, post);
         }
     }
 
     onTabChange(value, event, tab) {
-        routeToPosts(this.context.router, value);
+        routeToPosts(this.context.history, value);
     }
 
     getEmptyStateMessage() {
@@ -230,12 +230,14 @@ class Posts extends CSSComponent {
         if (this.state.confirmDelete) {
             const dialogActions = [
                 (<FlatButton
+                    key="cancel"
                     label={t('Cancel')}
                     onTouchTap={::this.onModalCancelTapped}
                     secondary={true}
                 />),
                 (<FlatButton
                     is="ModalPrimaryActionButton"
+                    key="delete"
                     label={t('Delete')}
                     onTouchTap={::this.onModalDeleteTapped}
                     primary={true}
@@ -244,8 +246,8 @@ class Posts extends CSSComponent {
             return (
                 <Dialog
                     actions={dialogActions}
-                    modal={true}
-                    openImmediately={true}
+                    defaultOpen={true}
+                    open={true}
                     title={t('Delete Post?')}
                 >
                     {t('Please confirm you want to delete this post. This action cannot be undone.')}
@@ -270,7 +272,7 @@ class Posts extends CSSComponent {
             <IconMenu iconButtonElement={this.renderMoreButton()}>
                 <MenuItem
                     is="MenuItem"
-                    onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
+                    onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
                     primaryText={t('Edit')}
                 />
                 <MenuItem
@@ -299,8 +301,7 @@ class Posts extends CSSComponent {
                 innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
                 key={post.id}
                 onTouchTap={() => this.onPostTapped(post)}
-                primaryText={post.title}
-                primaryTextStyle={{...this.styles().primaryTextStyle}}
+                primaryText={<span style={{...this.styles().primaryTextStyle}}>{post.title}</span>}
                 rightIconButton={this.renderRightMenu(post)}
                 secondaryText={lastUpdatedText}
             />

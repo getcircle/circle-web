@@ -1,7 +1,7 @@
 import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { tintColor, fontWeights } from '../constants/styles';
+import { tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
 
@@ -9,7 +9,7 @@ class CardFooter extends CSSComponent {
 
     static propTypes = {
         actionText: PropTypes.string,
-        children: PropTypes.arrayOf(PropTypes.element),
+        children: PropTypes.node,
         onClick: PropTypes.func,
     }
 

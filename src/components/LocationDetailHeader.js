@@ -13,6 +13,7 @@ import OfficeIcon from './OfficeIcon';
 class LocationDetailHeader extends CSSComponent {
 
     static propTypes = {
+        largerDevice: PropTypes.bool.isRequired,
         office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
     }
 
@@ -106,11 +107,14 @@ class LocationDetailHeader extends CSSComponent {
     }
 
     render() {
-        const { office } = this.props;
+        const {
+            largerDevice,
+            office,
+        } = this.props;
         let iconColor = {...this.styles().icon}.color;
         let iconStrokeWidth = {...this.styles().icon}.strokeWidth;
         return (
-            <DetailHeader>
+            <DetailHeader largerDevice={largerDevice}>
                 <div className="row center-xs" is="iconSection">
                     <IconContainer
                         IconClass={OfficeIcon}

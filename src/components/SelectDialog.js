@@ -18,19 +18,18 @@ const {
 class SelectDialog extends CSSComponent {
 
     static propTypes = {
-        infiniteLoadBeginBottomOffset: PropTypes.number,
+        infiniteLoadBeginEdgeOffset: PropTypes.number,
         isInfiniteLoading: PropTypes.bool,
         items: PropTypes.object,
         largerDevice: PropTypes.bool.isRequired,
         listDividerStyle: PropTypes.object,
         listItemHeight: PropTypes.number,
         listItemInnerDivStyle: PropTypes.object,
-        listItemPrimaryTextStyle: PropTypes.object,
         listStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
-        onDismiss: PropTypes.func,
         onInfiniteLoad: PropTypes.func,
         onInputChange: PropTypes.func,
+        onRequestClose: PropTypes.func,
         pageType: PropTypes.string.isRequired,
         searchIconStyle: PropTypes.object,
         searchInputContainerStyle: PropTypes.object,
@@ -41,7 +40,7 @@ class SelectDialog extends CSSComponent {
 
     static defaultProps = {
         maxListHeight: 200,
-        onDismiss: () => {},
+        onRequestClose: () => {},
         onInputChange: () => {},
     }
 
@@ -87,13 +86,12 @@ class SelectDialog extends CSSComponent {
     handleItemTapped(item, index) {
         item.onTouchTap();
         this.dismiss();
-        this.props.onDismiss();
+        this.props.onRequestClose();
     }
 
     renderResult(item, index) {
         const {
             listItemInnerDivStyle,
-            listItemPrimaryTextStyle,
         } = this.props;
 
         return (
@@ -103,7 +101,6 @@ class SelectDialog extends CSSComponent {
                 key={index}
                 name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
-                primaryTextStyle={listItemPrimaryTextStyle}
             />
         );
     }

@@ -1,13 +1,12 @@
 import expect from 'expect';
 import faker from 'faker';
-import React from 'react/addons';
+import React from 'react';
+import TestUtils from 'react-addons-test-utils';
 
 import PostFactory from '../factories/PostFactory';
 import ProfileFactory from '../factories/ProfileFactory';
 
 import { PostEditor } from '../../src/containers/PostEditor';
-
-const { TestUtils } = React.addons;
 
 function setup(propOverrides) {
     const defaultProps = {

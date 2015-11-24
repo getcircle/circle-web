@@ -23,7 +23,7 @@ import ProfilesSelector from './ProfilesSelector'
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const selector = selectors.createImmutableSelector(
+const mediaSelector = selectors.createImmutableSelector(
     [
         selectors.mediaUploadSelector,
         selectors.updateProfileSelector,
@@ -40,7 +40,8 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-@connect(selector)
+
+@connect(mediaSelector, undefined, undefined, {withRef: true})
 class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
@@ -214,10 +215,6 @@ class ProfileDetailForm extends CSSComponent {
                     listItemInnerDivStyle: {
                         textAlign: 'left',
                         paddingLeft: 70,
-                    },
-                    listItemPrimaryTextStyle: {
-                        fontSize: 14,
-                        ...fontColors.dark,
                     },
                     fieldListStyle: {
                         borderRadius: '0px 0px 3px 3px',
@@ -660,9 +657,9 @@ class ProfileDetailForm extends CSSComponent {
                     dialogSaveLabel={t('Save')}
                     is="Dialog"
                     largerDevice={largerDevice}
-                    modal={this.state.dataChanged}
-                    onDismiss={this.resetState.bind(this)}
+                    onRequestClose={this.resetState.bind(this)}
                     onSave={this.handleSaveTapped.bind(this)}
+                    open={this.state.dataChanged}
                     pageType={PAGE_TYPE.EDIT_PROFILE}
                     ref="modal"
                     repositionOnUpdate={false}

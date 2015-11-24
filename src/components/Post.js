@@ -52,8 +52,8 @@ class Post extends CSSComponent {
 
     static contextTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
-        router: PropTypes.shape({
-            transitionTo: PropTypes.func.isRequired,
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -96,7 +96,7 @@ class Post extends CSSComponent {
                 saveAndExit: false,
             });
 
-            routeToPost(this.context.router, nextProps.post);
+            routeToPost(this.context.history, nextProps.post);
         }
     }
 
@@ -622,7 +622,7 @@ class Post extends CSSComponent {
                 <FlatButton
                     is="EditButton"
                     label={t('Edit')}
-                    onTouchTap={routeToEditPost.bind(null, this.context.router, post)}
+                    onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
                 />
             );
         }
@@ -667,7 +667,7 @@ class Post extends CSSComponent {
             post.files.forEach(file => {
                 if (file.content_type && file.content_type.toLowerCase().indexOf('image/') !== -1) {
                     inlineImages.push(
-                        <div className="row center-xs middle-xs" is="inlineImageContainer">
+                        <div className="row center-xs middle-xs" is="inlineImageContainer" key={file.id}>
                             <div is="inlineImageInnerDiv">
                                 <a href={file.source_url} target="_blank">
                                     <img alt={t('Post attached image')} is="inlineImage" src={file.source_url} />
@@ -696,7 +696,7 @@ class Post extends CSSComponent {
                                 is="CardListItem"
                                 key={author.id}
                                 leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
-                                onTouchTap={routeToProfile.bind(null, this.context.router, author)}
+                                onTouchTap={routeToProfile.bind(null, this.context.history, author)}
                                 primaryText={author.full_name}
                                 secondaryText={author.title}
                             />
@@ -709,7 +709,7 @@ class Post extends CSSComponent {
                 <div
                     className="postContent"
                     dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
-                    is="postContent"
+                    style={{...this.styles().postContent}}
                 />
                 {inlineImages}
                 {this.renderFiles(postFilesWithoutImages)}
@@ -744,8 +744,7 @@ class Post extends CSSComponent {
                         is="AttachementListItem"
                         key={this.getFileId(file.name)}
                         leftIcon={<IconContainer IconClass={AttachmentIcon} is="IconContainer" stroke="#7c7b7b" />}
-                        primaryText={file.name}
-                        primaryTextStyle={{...this.styles().attachmentListItemTextStyle}}
+                        primaryText={<span style={{...this.styles().attachmentListItemTextStyle}}>{file.name}</span>}
                         rightIconButton={this.renderDeleteFileButton(file)}
                         target="_blank"
                     />
@@ -756,9 +755,8 @@ class Post extends CSSComponent {
                         disabled={true}
                         is="AttachementListItem"
                         key={file.name}
-                        leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size="0.4" />}
-                        primaryText={file.name}
-                        primaryTextStyle={{...this.styles().attachmentListItemDisabledTextStyle}}
+                        leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size={0.4} />}
+                        primaryText={<span style={{...this.styles().attachmentListItemDisabledTextStyle}}>{file.name}</span>}
                     />
                 );
             }
@@ -916,7 +914,7 @@ class Post extends CSSComponent {
                                 post.id,
                                 post.state,
                                 false,
-                                this.state.files.length,
+                                this.state.files.count,
                                 POST_SOURCE.WEB_APP,
                                 this.state.owner && this.context.authenticatedProfile.id !== this.state.owner.id,
                             );

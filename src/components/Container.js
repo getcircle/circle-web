@@ -5,7 +5,7 @@ import CSSComponent from './CSSComponent';
 class Container extends CSSComponent {
 
     static propTypes = {
-        children: PropTypes.arrayOf(PropTypes.element),
+        children: PropTypes.node,
         style: PropTypes.object,
     }
 

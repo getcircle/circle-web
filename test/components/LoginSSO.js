@@ -1,9 +1,8 @@
 import expect from 'expect';
-import React from 'react/addons';
+import React from 'react';
+import TestUtils from 'react-addons-test-utils';
 
 import LoginSSO from '../../src/components/LoginSSO';
-
-const { TestUtils } = React.addons;
 
 function setup(overrides) {
     const defaults = {

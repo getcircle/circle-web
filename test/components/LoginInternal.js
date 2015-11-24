@@ -1,6 +1,8 @@
 import mui from 'material-ui';
 import expect from 'expect';
-import React from 'react/addons';
+import ReactDOM from 'react-dom';
+import React from 'react';
+import TestUtils from 'react-addons-test-utils';
 
 import { AUTH_BACKENDS } from '../../src/services/user';
 
@@ -11,8 +13,6 @@ const {
     RaisedButton,
     TextField,
 } = mui;
-
-const { TestUtils } = React.addons;
 
 function setup(overrides) {
     const defaults = {
@@ -72,7 +72,7 @@ describe('LoginInternal', () => {
         it('updates the state of "password" on change', () => {
             const { output } = setup();
             const passwordInput = TestUtils.scryRenderedComponentsWithType(output, TextField)[1];
-            const node = React.findDOMNode(passwordInput.refs.input);
+            const node = ReactDOM.findDOMNode(passwordInput.refs.input);
             node.value = 'password';
             TestUtils.Simulate.change(node);
             expect(output.state.password).toBe('password');
