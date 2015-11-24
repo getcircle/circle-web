@@ -152,7 +152,8 @@ export default function (store) {
             <Route
                 component={require('./containers/Search')}
                 onEnter={applyMiddleware(
-                    ...defaultMiddleware,
+                    requireAuth,
+                    hideHeader,
                     trackPageView(PAGE_TYPE.SEARCH, 'query')
                 )}
                 path="/search/:query"

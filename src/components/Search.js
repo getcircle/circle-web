@@ -169,7 +169,7 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-@connect(selector)
+@connect(selector, undefined, undefined, {withRef: true})
 class Search extends CSSComponent {
 
     static propTypes = {
