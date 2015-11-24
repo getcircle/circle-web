@@ -9,6 +9,7 @@ import getRoutes from './getRoutes';
 import CurrentTheme from './utils/ThemeManager';
 
 const store = createStore();
+const history = createHistory();
 
 export default class Root extends Component {
 
@@ -27,7 +28,7 @@ export default class Root extends Component {
     render() {
         const elements = [
             <Provider key="provider" store={store}>
-                <Router history={createHistory()} routes={getRoutes(store)} />
+                <Router history={history} routes={getRoutes(store)} />
             </Provider>
         ];
         if (__DEVTOOLS__) {
