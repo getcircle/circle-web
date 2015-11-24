@@ -62,6 +62,11 @@ class LocationDetailLocation extends CSSComponent {
         if (office.address_2) {
             parts.push(office.address_2);
         }
+        return parts.join(', ');
+    }
+
+    getCityAndRegion(office) {
+        let parts = [];
         if (office.city) {
             parts.push(office.city);
         }
@@ -76,13 +81,23 @@ class LocationDetailLocation extends CSSComponent {
     }
 
     renderAddressDetails(office) {
+        let primaryText = this.getAddress(office);
+        let secondaryText = this.getCityAndRegion(office);
+
+        if (primaryText.trim().length === 0) {
+            primaryText = secondaryText;
+            secondaryText = undefined;
+        }
+
+
         return (
             <CardList is="AddressCardList">
                 <CardListItem
                     disabled={true}
                     key={0}
                     leftAvatar={<IconContainer IconClass={LocationIcon} is="IconContainer" />}
-                    primaryText={this.getAddress(office)}
+                    primaryText={primaryText}
+                    secondaryText={secondaryText}
                 />
             </CardList>
         );
