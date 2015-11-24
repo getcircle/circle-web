@@ -28,8 +28,8 @@ export function routeToPost(history, post) {
     history.pushState(null, `/post/${post.id}`);
 }
 
-export function routeToSearch(router, query) {
-    router.transitionTo(`/search/${query}`);
+export function routeToSearch(history, query) {
+    history.pushState(`/search/${query}`);
 }
 
 export function routeToURL(url, nextPathname = null) {

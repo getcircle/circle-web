@@ -1158,7 +1158,7 @@ class Search extends CSSComponent {
                     is="ListItem"
                     leftAvatar={<IconContainer IconClass={SearchIcon} is="ResultIcon" />}
                     onTouchTap={() => {
-                        routes.routeToSearch(this.context.router, this.state.query);
+                        routes.routeToSearch(this.context.history, this.state.query);
                     }}
                     primaryText={<span>{t('Search')}&nbsp;<span is="searchTerm">&ldquo;{this.state.query}&rdquo;</span></span>}
                     ref={(component) => {
