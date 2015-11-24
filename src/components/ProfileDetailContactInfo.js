@@ -154,7 +154,8 @@ class ProfileDetailContactInfo extends CSSComponent {
                         target="_blank"
                     />
                 );
-            case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
+            case ContactMethodTypeV1.CELL_PHONE:
+            case ContactMethodTypeV1.PHONE:
                 return (
                     <CardListItem
                         disabled={!this.canCall(item)}
