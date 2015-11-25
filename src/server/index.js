@@ -13,6 +13,7 @@ import getRoutes from '../common/getRoutes';
 import { Provider } from 'react-redux';
 import { match, RoutingContext } from 'react-router';
 import renderFullPage from './renderFullPage';
+import Root from '../common/Root';
 
 const pretty = new PrettyError();
 const app = new Express();
@@ -50,11 +51,12 @@ app.use((req, res) => {
             res.redirect(302, redirectLocation.pathname + redirectLocation.search);
         } else if (renderProps) {
             const content = ReactDOM.renderToString(
-                <Provider key="provider" store={store}>
-                    <RoutingContext {...renderProps} />
-                </Provider>
+                <Root>
+                    <Provider key="provider" store={store}>
+                        <RoutingContext {...renderProps} />
+                    </Provider>
+                </Root>
             );
-            console.log(content);
             res.status(200).send(renderFullPage(content, store, webpackIsomorphicTools.assets()));
         }
     });

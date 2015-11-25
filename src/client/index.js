@@ -11,6 +11,7 @@ import { Router } from 'react-router';
 import createStore from '../common/createStore';
 import getRoutes from '../common/getRoutes';
 import { getBody } from '../common/utils/render';
+import Root from '../common/Root';
 
 // import styles so webpack includes them
 import '../common/styles/app.scss';
@@ -46,4 +47,4 @@ if (__DEVTOOLS__) {
 injectTapEventPlugin();
 FastClick.attach(document.body);
 
-ReactDOM.render(<div>{elements}</div>, dest);
+ReactDOM.render(<Root children={elements} />, dest);
