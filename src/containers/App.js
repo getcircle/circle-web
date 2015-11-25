@@ -90,6 +90,8 @@ class App extends CSSComponent {
         focused: false,
     }
 
+    historyListener = null
+
     getChildContext() {
         return {
             flags: this.props.flags,
@@ -114,6 +116,9 @@ class App extends CSSComponent {
         }
 
         this.initTrackerSession();
+        if (!this.historyListener) {
+            this.historyListener = this.context.history.listen(location => this.locationChanged(location));
+        }
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -176,6 +181,14 @@ class App extends CSSComponent {
         return this.css({
             focused: this.state.focused,
         });
+    }
+
+    locationChanged(newLocation) {
+        // This ensures search results are reset correctly
+        // and do not carry over across pages.
+        if (this.props.displayHeader) {
+           this.setState({focused: false});
+        }
     }
 
     handleFocusSearch() {
