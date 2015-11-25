@@ -22,7 +22,12 @@ import {
     fontWeights,
     tintColor,
 } from '../constants/styles';
-import { retrieveLocations, retrievePosts, retrieveProfiles, retrieveTeams } from '../reducers/denormalizations';
+import {
+    retrieveLocations,
+    retrievePosts,
+    retrieveProfiles,
+    retrieveTeams,
+} from '../reducers/denormalizations';
 import * as routes from '../utils/routes';
 import {
     CONTACT_LOCATION,
@@ -61,10 +66,12 @@ const RESULT_TYPES = keymirror({
     TEAM: null,
     LOCATION: null,
     POST: null,
+    SEARCH_TRIGGER: null,
 });
 
+export const EXPLORE_SEARCH_RESULT_HEIGHT = 64;
 export const SEARCH_RESULT_HEIGHT = 72;
-export const SEARCH_CONTAINER_WIDTH = 660;
+export const SEARCH_CONTAINER_WIDTH = 800;
 export const SEARCH_RESULTS_MAX_HEIGHT = 620;
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
@@ -162,11 +169,12 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-@connect(selector)
+@connect(selector, undefined, undefined, {withRef: true})
 class Search extends CSSComponent {
 
     static propTypes = {
         alwaysActive: PropTypes.bool,
+        autoCompleteStyle: PropTypes.object,
         canExplore: PropTypes.bool,
         defaults: PropTypes.arrayOf(PropTypes.oneOfType([
             services.profile.containers.ProfileV1,
@@ -177,6 +185,7 @@ class Search extends CSSComponent {
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
         largerDevice: PropTypes.bool,
+        limitResultsListHeight: PropTypes.bool,
         loading: PropTypes.bool,
         locations: PropTypes.arrayOf(
             PropTypes.instanceOf(services.organization.containers.LocationV1)
@@ -192,10 +201,12 @@ class Search extends CSSComponent {
             PropTypes.instanceOf(services.post.containers.PostV1)
         ),
         postsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        processResults: PropTypes.bool,
         profiles: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
         profilesNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        query: PropTypes.string,
         recents: PropTypes.arrayOf(PropTypes.object),
         results: PropTypes.object,
         resultsHeight: PropTypes.number,
@@ -203,6 +214,7 @@ class Search extends CSSComponent {
         searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
         searchAttributeValue: PropTypes.string,
         searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
+        searchContainerWidth: PropTypes.number,
         searchLocation: PropTypes.string.isRequired,
         showCancel: PropTypes.bool,
         showExpandedResults: PropTypes.bool,
@@ -232,15 +244,27 @@ class Search extends CSSComponent {
         defaultsLoadMore() {},
         focused: false,
         largerDevice: false,
+        limitResultsListHeight: true,
         loading: false,
         onBlur() {},
         onCancel() {},
         onFocus() {},
         onSelectItem() {},
         placeholder: t('Search people, knowledge, & teams'),
+        // This isn't good component design and there are ways to archive
+        // hiding of results (by simply hiding the container).
+        // But, the logic to process results has a big performance cost.
+        // Given our full search temporarily uses the same component as AutoComplete,
+        // adding this property allows us to bypass all the processing.
+        processResults: true,
+        query: null,
+        // This controls whether a cleanup is called on blur
+        // and whether search results should be hidden on blur
+        retainResultsOnBlur: false,
+        searchContainerWidth: SEARCH_CONTAINER_WIDTH,
         showCancel: false,
-        showRecents: true,
         showExpandedResults: true,
+        showRecents: true,
         useDefaultClickHandlers: true,
     }
 
@@ -267,6 +291,14 @@ class Search extends CSSComponent {
         // Resets tracked bit for new searches
         this.checkAndResetSearchTracked(this.state.query);
         this.customizeTheme();
+
+        // See if a query parameter was explicitly passed in.
+        // If yes, set it in the internal state
+        if (nextProps.query !== null &&
+            nextProps.query.trim().length > 0
+        ) {
+            this.setValue(nextProps.query);
+        }
     }
 
     componentWillUnmount() {
@@ -285,6 +317,7 @@ class Search extends CSSComponent {
 
     currentSearchTimeout = null
     searchTracked = false
+    numberOfRealResults = 0
 
     trackingAttributesForRecentResults = {
         subheader: 'recents',
@@ -415,18 +448,19 @@ class Search extends CSSComponent {
                     display: 'flex',
                     paddingLeft: 18,
                 },
+                searchTerm: {
+                    fontWeight: 600,
+                },
                 postTextResultText: {
                     lineHeight: '22px',
                 },
             },
             'largerDevice-true': {
-                AutoComplete: {
-                    style: {
-                        maxWidth: SEARCH_CONTAINER_WIDTH,
-                    },
+                autoComplete: {
+                    maxWidth: this.props.searchContainerWidth,
                 },
                 resultsList: {
-                    width: SEARCH_CONTAINER_WIDTH,
+                    width: this.props.searchContainerWidth,
                     maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                 },
             },
@@ -472,6 +506,10 @@ class Search extends CSSComponent {
                 this.props.searchAttributeValue,
             );
         }
+    }
+
+    getCurrentQuery() {
+        return this.state.query;
     }
 
     getCategoryNextRequest() {
@@ -634,7 +672,7 @@ class Search extends CSSComponent {
     }
 
     getLocationResult(location, index, isRecent) {
-        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
+        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const item = {
             index: index,
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
@@ -649,7 +687,7 @@ class Search extends CSSComponent {
     }
 
     getPostResult(post, index, isRecent) {
-        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
+        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         let numberOfCharacters = post.title ? post.title.length : 0;
         let estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
         let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
@@ -669,6 +707,14 @@ class Search extends CSSComponent {
             ...trackingAttributes
         };
         return this.trackTouchTap(item);
+    }
+
+    getSearchTriggerResult() {
+        const item = {
+            estimatedHeight: EXPLORE_SEARCH_RESULT_HEIGHT,
+            type: RESULT_TYPES.SEARCH_TRIGGER,
+        };
+        return item;
     }
 
     getCategoryResultsProfiles() {
@@ -766,7 +812,7 @@ class Search extends CSSComponent {
         const recents = this.getRecentResults();
         const exploreResults = items.map((item) => {
             return {
-                estimatedHeight: 64,
+                estimatedHeight: EXPLORE_SEARCH_RESULT_HEIGHT,
                 innerDivStyle: this.styles().searchResult,
                 leftAvatar: <SearchIcon is="SearchIcon" />,
                 type: RESULT_TYPES.EXPLORE,
@@ -780,7 +826,7 @@ class Search extends CSSComponent {
     expandProfile(profile) {
         const expansions = [];
         expansions.push({
-            estimatedHeight: 64,
+            estimatedHeight: EXPLORE_SEARCH_RESULT_HEIGHT,
             type: RESULT_TYPES.CONTACT_METHOD,
             leftAvatar: <IconContainer IconClass={MailIcon} is="ActionIcon" stroke="rgba(0, 0, 0, 0.4)" />,
             primaryText: this.getPrimaryTextContainer(
@@ -830,17 +876,28 @@ class Search extends CSSComponent {
     }
 
     getSearchResultItems(results) {
-        let items = results.map((result, index) => {
+        let items = [];
+        if (this.shouldShowFullSearchTrigger()) {
+            items.push(this.getSearchTriggerResult());
+        }
+
+        results.map((result, index) => {
+            let searchResult = null;
             if (result.profile) {
-                return this.getProfileResult(result.profile, index, false, results.length);
+                searchResult = this.getProfileResult(result.profile, index, false, results.length);
             } else if (result.team) {
-                return this.getTeamResult(result.team, index, false, results.length);
+                searchResult = this.getTeamResult(result.team, index, false, results.length);
             } else if (result.location) {
-                return this.getLocationResult(result.location, index, false, results.length);
+                searchResult = this.getLocationResult(result.location, index, false, results.length);
             } else if (result.post) {
-                return this.getPostResult(result.post, index, false, results.length);
+                searchResult = this.getPostResult(result.post, index, false, results.length);
             }
+
+            searchResult.score = result.score;
+            items.push(searchResult);
+            return searchResult;
         });
+
         if (results.length === 1 && this.props.showExpandedResults) {
             items = this.getExpandedResults(items[0], results[0]);
         }
@@ -860,9 +917,11 @@ class Search extends CSSComponent {
     getSearchResults() {
         const { results } = this.props;
         const querySpecificResults = results[this.state.query];
+        this.numberOfRealResults = 0;
 
         // First check if we have actual results
         if (querySpecificResults && querySpecificResults.length) {
+            this.numberOfRealResults = querySpecificResults.length;
             return this.getSearchResultItems(querySpecificResults);
         }
 
@@ -904,6 +963,7 @@ class Search extends CSSComponent {
         while (i > 0) {
             let previousResults = results[this.state.query.substr(0, i)];
             if (previousResults && previousResults.length) {
+                this.numberOfRealResults = previousResults.length;
                 return this.getSearchResultItems(previousResults);
             }
 
@@ -912,7 +972,7 @@ class Search extends CSSComponent {
     }
 
     getResults() {
-        if (this.props.focused) {
+        if (this.props.processResults && (this.props.focused || this.props.retainResultsOnBlur)) {
             if (this.state.query) {
                 return this.getSearchResults();
             } else if (this.state.category !== null) {
@@ -972,10 +1032,12 @@ class Search extends CSSComponent {
         }
     }
 
-    cleanup() {
-        this.setState({query: ''});
-        this.props.dispatch(clearSearchResults());
-        this.props.onBlur();
+    cleanup(forced) {
+        if (forced === true || !this.props.retainResultsOnBlur) {
+            this.setState({query: ''});
+            this.props.dispatch(clearSearchResults());
+            this.props.onBlur();
+        }
     }
 
     handleInfiniteLoad() {
@@ -1005,6 +1067,7 @@ class Search extends CSSComponent {
             this.setState({typing: false});
             this.loadSearchResults(query);
         }, 200);
+
         this.setState({query: query, typing: true});
     }
 
@@ -1027,6 +1090,12 @@ class Search extends CSSComponent {
         this.setState({
             feedbackDialogOpen: false,
         });
+    }
+
+    handleEnter() {
+        if (this.shouldShowFullSearchTrigger()) {
+            routes.routeToSearch(this.context.history, this.state.query);
+        }
     }
 
     handleSelection(item) {
@@ -1054,7 +1123,7 @@ class Search extends CSSComponent {
                 searchCategory,
                 this.props.searchAttribute,
                 this.props.searchAttributeValue,
-            ]
+            ];
             this.props.dispatch(loadSearchResults(...parameters));
         }
     }
@@ -1067,10 +1136,74 @@ class Search extends CSSComponent {
         );
     }
 
+    /**
+     * Simply sets the value of the search input.
+     *
+     * It does not trigger a search. The purpose of this function to to simply give user
+     * a hint of what search term was used when transitioning to a page.
+     *
+     * @param {String} value Value to show in the search input.
+     * @param {function} optionalCallback Callback when the value has been set and internal state has been updated.
+     * @return void
+     */
+    setValue(value, optionalCallback) {
+        if (this.refs.autoComplete) {
+            this.refs.autoComplete.setValue(value);
+            this.setState({
+                query: value
+            }, optionalCallback);
+        }
+    }
+
+    focus() {
+        if (this.refs.autoComplete) {
+            this.refs.autoComplete.focusInput();
+        }
+    }
+
+    shouldShowFullSearchTrigger() {
+        return this.state.query.trim() !== '' &&
+            this.numberOfRealResults > 1 &&
+            this.props.showExpandedResults;
+    }
+
+    renderSearchTrigger(item, highlighted) {
+        if (this.shouldShowFullSearchTrigger()) {
+            return (
+                <ListItem
+                    disableFocusRipple={true}
+                    is="ListItem"
+                    leftAvatar={<IconContainer IconClass={SearchIcon} is="ResultIcon" />}
+                    onTouchTap={() => {
+                        routes.routeToSearch(this.context.history, this.state.query);
+                    }}
+                    primaryText={<span>{t('Search')}&nbsp;<span is="searchTerm">&ldquo;{this.state.query}&rdquo;</span></span>}
+                    ref={(component) => {
+                        ((highlighted) =>  {
+                            // NB: Component will be null in some cases (unmounting and on change)
+                            if (component) {
+                                if (highlighted) {
+                                    // NB: We don't want to pass "none" to apply focus if it isn't highlighted because it
+                                    // will blur the element which can prevent "mailto" links from working properly
+                                    component.applyFocusState('keyboard-focused');
+                                }
+                            }
+                        })(highlighted);
+                    }}
+                />
+            );
+        }
+    }
+
     renderDefaultResult(item, highlighted, style) {
+        if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
+            item.secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
+        }
+
         return (
             <ListItem
                 {...item}
+                disableFocusRipple={true}
                 is="ListItem"
                 onTouchTap={item.onTouchTap}
                 primaryText={item.primaryText}
@@ -1107,6 +1240,9 @@ class Search extends CSSComponent {
             break;
         case RESULT_TYPES.EXPANDED_PROFILE:
             element = this.renderExpandedProfile(item, highlighted, style);
+            break;
+        case RESULT_TYPES.SEARCH_TRIGGER:
+            element = this.renderSearchTrigger(item, highlighted);
             break;
         default:
             element = this.renderDefaultResult(item, highlighted, style);
@@ -1151,9 +1287,14 @@ class Search extends CSSComponent {
     }
 
     renderMenu(items, value, style) {
+        const {
+            limitResultsListHeight,
+        } = this.props;
+
         let containerHeight = 0;
         let currentSubHeader = null;
         const elementHeights = [];
+
         const elements = items.map((item, index) => {
             let addSubHeader = false;
             let height = item.props.estimatedHeight || SEARCH_RESULT_HEIGHT;
@@ -1164,14 +1305,13 @@ class Search extends CSSComponent {
             }
             containerHeight += height;
             elementHeights.push(height);
-            return this.renderItemInMenu(item, index, addSubHeader);
+            return this.renderItemInMenu(item, index, addSubHeader);;
         });
-
 
         const { resultsListStyle, resultsHeight } = this.props;
         if (resultsHeight !== null && resultsHeight !== undefined) {
             containerHeight = resultsHeight;
-        } else {
+        } else if (limitResultsListHeight) {
             containerHeight = Math.min(containerHeight, SEARCH_RESULTS_MAX_HEIGHT);
         }
 
@@ -1231,6 +1371,7 @@ class Search extends CSSComponent {
     render() {
         const {
             alwaysActive,
+            autoCompleteStyle,
             canExplore,
             inputContainerStyle,
             focused,
@@ -1250,18 +1391,20 @@ class Search extends CSSComponent {
                     focusOnSelect={canExplore}
                     focused={focused}
                     inputContainerStyle={{...this.styles().inputContainerStyle, ...inputContainerStyle}}
-                    is="AutoComplete"
                     items={this.getResults()}
                     onBlur={::this.handleBlur}
                     onCancel={::this.handleCancel}
                     onChange={::this.handleChange}
                     onClearToken={::this.handleClearCategory}
+                    onEnter={::this.handleEnter}
                     onFocus={onFocus}
                     onSelect={::this.handleSelection}
                     placeholderText={placeholder}
+                    ref="autoComplete"
                     renderItem={::this.renderItem}
                     renderMenu={::this.renderMenu}
                     showCancel={showCancel}
+                    style={{...this.styles().autoComplete, ...autoCompleteStyle}}
                     tokens={this.getSearchTokens()}
                 />
                 {this.renderDialog()}

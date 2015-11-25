@@ -28,6 +28,14 @@ export function routeToPost(history, post) {
     history.pushState(null, `/post/${post.id}`);
 }
 
+export function routeToSearch(history, query) {
+    history.pushState(null, `/search/${query}`);
+}
+
+export function replaceSearchQuery(history, query) {
+    history.replaceState(null, `/search/${query}`);
+}
+
 export function routeToURL(url, nextPathname = null) {
     if (nextPathname !== null) {
         localStorage.setItem(NEXT_PATHNAME_KEY, nextPathname);

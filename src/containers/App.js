@@ -71,6 +71,7 @@ class App extends CSSComponent {
         location: PropTypes.object,
         managesTeam: PropTypes.object,
         organization: PropTypes.object,
+        params: PropTypes.object,
         profile: PropTypes.object,
         profileLocation: PropTypes.object,
         team: PropTypes.object,
@@ -88,6 +89,8 @@ class App extends CSSComponent {
     state = {
         focused: false,
     }
+
+    historyListener = null
 
     getChildContext() {
         return {
@@ -113,6 +116,9 @@ class App extends CSSComponent {
         }
 
         this.initTrackerSession();
+        if (!this.historyListener) {
+            this.historyListener = this.context.history.listen(location => this.locationChanged(location));
+        }
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -177,6 +183,14 @@ class App extends CSSComponent {
         });
     }
 
+    locationChanged(newLocation) {
+        // This ensures search results are reset correctly
+        // and do not carry over across pages.
+        if (this.props.displayHeader) {
+           this.setState({focused: false});
+        }
+    }
+
     handleFocusSearch() {
         this.setState({focused: true});
     }
@@ -195,6 +209,7 @@ class App extends CSSComponent {
                 onBlur={::this.handleBlurSearch}
                 onFocus={::this.handleFocusSearch}
                 organization={this.props.organization}
+                params={this.props.params}
                 searchLocation={SEARCH_LOCATION.PAGE_HEADER}
             />
         );

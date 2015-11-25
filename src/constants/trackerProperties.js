@@ -30,6 +30,7 @@ export const PAGE_TYPE = {
     BILLING: 'Billing',
     MY_KNOWLEDGE: 'My Knowledge',
     NEW_POST: 'New Post',
+    SEARCH: 'Search',
     SETTINGS: 'Settings',
 
     // Detail pages
@@ -96,6 +97,8 @@ export const SEARCH_LOCATION = {
     // but 'modal' can imply that and is a cleaner way to represent
     // it even if we can how the visuals work.
     MODAL: 'Modal',
+    // Full search page
+    SEARCH: 'Search',
 };
 
 // Contact Location (Convention: Titlecase, Separator - Space)

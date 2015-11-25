@@ -74,7 +74,7 @@ export default function (store) {
     return (
         <Route component={require('./containers/App')} path="/">
             <IndexRoute
-                component={require('./containers/Search')}
+                component={require('./containers/Home')}
                 onEnter={applyMiddleware(
                     requireAuth,
                     hideHeader,
@@ -148,6 +148,23 @@ export default function (store) {
                     trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
                 )}
                 path="/profile/:profileId"
+            />
+            <Route
+                component={require('./containers/Search')}
+                onEnter={applyMiddleware(
+                    requireAuth,
+                    hideHeader,
+                    trackPageView(PAGE_TYPE.SEARCH, 'query')
+                )}
+                path="/search/:query"
+            />
+            <Route
+                component={require('./containers/Search')}
+                onEnter={applyMiddleware(
+                    requireAuth,
+                    hideHeader,
+                )}
+                path="/search"
             />
             <Route
                 component={require('./containers/Team')}

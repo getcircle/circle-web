@@ -1,32 +1,42 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
-import { fontColors, fontWeights, } from '../constants/styles';
+import { canvasColor, fontColors } from '../constants/styles';
 import { getAuthenticatedProfile } from '../reducers/authentication';
+import { loadSearchResults } from '../actions/search';
 import { resetScroll } from '../utils/window';
+import { replaceSearchQuery } from '../utils/routes';
+import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
-import HeaderMenu from '../components/HeaderMenu';
+import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
-import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/Search';
-import { SEARCH_LOCATION } from '../constants/trackerProperties';
-
-const ORGANIZATION_LOGO_HEIGHT = 200;
+import DetailContent from '../components/DetailContent';
+import Header from '../components/Header';
+import { default as SearchComponent } from '../components/Search';
 
 const selector = createSelector(
-    [selectors.cacheSelector, selectors.authenticationSelector, selectors.responsiveSelector],
-    (cacheState, authenticationState, responsiveState) => {
+    [
+        selectors.authenticationSelector,
+        selectors.cacheSelector,
+        selectors.responsiveSelector,
+        selectors.routerParametersSelector,
+        selectors.searchSelector,
+    ],
+    (authenticationState, cacheState, responsiveState, routerParamsState, searchState) => {
         const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
-            authenticated: authenticationState.get('authenticated'),
+            authenticatedProfile: profile,
             flags: authenticationState.get('flags'),
             largerDevice: responsiveState.get('largerDevice'),
+            loading: searchState.get('loading'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
             organization: authenticationState.get('organization'),
-            profile: profile,
+            results: searchState.get('results').toJS(),
         }
     },
 );
@@ -35,22 +45,27 @@ const selector = createSelector(
 class Search extends CSSComponent {
 
     static propTypes = {
+        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
         flags: PropTypes.object,
         largerDevice: PropTypes.bool.isRequired,
         managesTeam: PropTypes.object,
         mobileOS: PropTypes.bool.isRequired,
         organization: PropTypes.object.isRequired,
-        profile: PropTypes.object.isRequired,
+        params: PropTypes.object.isRequired,
+        results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
     }
 
     static contextTypes = {
         mixins: PropTypes.object,
         muiTheme: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
+        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         flags: PropTypes.object,
+        mobileOS: PropTypes.bool.isRequired,
     }
 
     state = {
@@ -59,196 +74,201 @@ class Search extends CSSComponent {
 
     getChildContext() {
         return {
+            authenticatedProfile: this.props.authenticatedProfile,
             flags: this.props.flags,
+            mobileOS: this.props.mobileOS,
         };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (!nextProps.authenticated) {
-            return false;
-        }
-        return true;
+    componentWillMount() {
+        this.loadSearchResults(this.props);
     }
 
-    styles() {
-        return this.css({
-            focused: this.state.focused || this.props.largerDevice,
-            smallerDeviceFocused: this.state.focused && !this.props.largerDevice && this.props.mobileOS,
-            searchHeader: this.props.largerDevice || !this.props.mobileOS,
-        });
+    componentWillReceiveProps(nextProps) {
+        // Always load search results. This is to guarantee freshest results and also
+        // just results because we are aggresive about clearing cache.
+        this.loadSearchResults(nextProps);
+    }
+
+    loadSearchResults(props) {
+        let query = this.getQueryFromURL(props);
+        if (this.refs.headerSearch) {
+            let headerSearch = this.refs.headerSearch.getWrappedInstance();
+            let currentQuery = headerSearch.getCurrentQuery();
+
+            // If header search is loaded but not focused with no query,
+            // add the query parameter if we have one in the URL
+            if (!this.state.focused && !currentQuery && query) {
+                headerSearch.setValue(query, () => {
+                    headerSearch.focus();
+                    this.setState({
+                        focused: true
+                    });
+                });
+            }
+
+            // When the component is focused, update URL for all queries entered here
+            if (currentQuery !== query && this.state.focused) {
+                replaceSearchQuery(this.context.history, currentQuery);
+            }
+
+        } else if (query && props.results.hasOwnProperty(this.state.query) !== true) {
+            // First load. Dispatch search action
+            this.props.dispatch(loadSearchResults(query));
+        }
+
+        resetScroll();
     }
 
     classes() {
         return {
-            'default': {
-                header: {
-                    display: 'none',
+            default: {
+                canvasContainer: {
+                    backgroundColor: canvasColor,
                 },
-                organizationLogo: {
-                    alignSelf: 'center',
-                    maxHeight: ORGANIZATION_LOGO_HEIGHT,
-                    maxWidth: SEARCH_CONTAINER_WIDTH,
+                pageHeaderText: {
+                    ...fontColors.dark,
+                    fontSize: 28,
+                    fontWeight: 300,
+                    padding: '20px 0 40px 0',
                 },
-                organizationLogoSection: {
-                    paddingTop: '20vh',
-                    paddingBottom: '2vh',
-                },
-                organizationLogoPlaceholder: {
-                    height: ORGANIZATION_LOGO_HEIGHT,
-                },
-                poweredBy: {
-                    fontSize: '10px',
-                    lineHeight: '14px',
-                    letterSpacing: '1px',
-                    textTransform: 'uppercase',
-                    ...fontColors.extraLight,
-                    ...fontWeights.semiBold,
-                },
-                poweredBySection: {
-                    paddingTop: 20,
-                },
-                root: {
-                    height: '100%',
-                    paddingBottom: 20,
-                    width: '100%',
-                },
-                searchSection: {
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                },
-                SearchComponent: {
+                Search: {
                     inputContainerStyle: {
-                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, .09)',
+                        boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
+                    },
+                    resultsListStyle: {
+                        display: 'none',
+                    },
+                    style: {
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        flex: 1,
+                    }
+                },
+                SearchResultsComponent: {
+                    autoCompleteStyle: {
+                        maxWidth: '100%',
+                    },
+                    inputContainerStyle: {
+                        display: 'none',
+                    },
+                    resultsListStyle: {
+                        maxHeight: '100%',
+                        width: '100%',
                     },
                 },
-                wrap: {
-                    position: 'relative',
+                searchTerm: {
+                    fontStyle: 'italic',
                 },
             },
             focused: {
-                SearchComponent: {
+                Search: {
                     inputContainerStyle: {
                         borderRadius: '0px',
                     },
                     focused: true,
-                    resultsListStyle: {
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    },
-                },
-            },
-            'smallerDeviceFocused': {
-                organizationLogoSection: {
-                    display: 'none',
-                },
-                poweredBySection: {
-                    display: 'none',
-                },
-                'root': {
-                    paddingBottom: 0,
-                },
-                'searchSection': {
-                    paddingTop: 0,
-                    paddingLeft: 0,
-                    paddingRight: 0,
-                },
-                SearchComponent: {
-                    inputContainerStyle: {
-                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
-                    },
-                    resultsHeight: document.body.offsetHeight - 50,
-                    showCancel: true,
-                    style: {
-                        paddingLeft: 0,
-                        paddingRight: 0,
-                    },
-                },
-                wrap: {
-                    marginBottom: 0,
-                },
-            },
-            'searchHeader': {
-                header: {
-                    display: 'initial',
-                    position: 'relative',
-                },
-                HeaderMenu: {
-                    style: {
-                        paddingTop: 22,
-                        paddingRight: 22,
-                    },
-                },
-                organizationLogoSection: {
-                    paddingTop: '2vh',
-                },
-                SearchComponent: {
-                    alwaysActive: true,
                 },
             },
         };
     }
 
-    getOrganizationImage() {
-        const imageUrl = this.props.organization.image_url;
-        if (imageUrl) {
-            return <img className="row" is="organizationLogo" src={imageUrl} />;
-        } else {
-            return <div is="organizationLogoPlaceholder" />;
-        }
+    styles() {
+        return this.css({
+            focused: this.state.focused,
+        });
     }
 
-    handleFocusSearch(event) {
+    handleFocusSearch() {
         this.setState({focused: true});
-        // Offset mobile browsers trying to scroll to focus the element.
-        if (this.props.mobileOS) {
-            resetScroll();
-        }
     }
 
-    handleCancelSearch() {
+    handleBlurSearch() {
         this.setState({focused: false});
     }
 
-    render() {
-        return (
-            <div is="root">
-                <header is="header">
-                    <div className="row end-xs">
-                        <HeaderMenu
-                            dispatch={this.props.dispatch}
-                            is="HeaderMenu"
-                            managesTeam={this.props.managesTeam}
-                            profile={this.props.profile}
-                        />
+    getQueryFromURL(props) {
+        let query = props.params.query ? props.params.query : '';
+        if (props.params.hasOwnProperty('query') === false && props.location && props.location.hash) {
+            // replaceSearchQuery(this.context.history, props.location.hash);
+            query = props.location.hash;
+        }
+
+        return query;
+    }
+
+    renderContent() {
+        const {
+            largerDevice,
+            organization,
+            results,
+        } = this.props;
+
+        let query = this.getQueryFromURL(this.props);
+        if (query) {
+            return (
+                <DetailContent>
+                    <div>
+                        <h3 is="pageHeaderText">
+                            {t('Search Results')}
+                            &nbsp;&ndash;&nbsp;<span is="searchTerm">&ldquo;{query}&rdquo;</span>
+                        </h3>
                     </div>
-                </header>
-                <section className="wrap" is="wrap">
-                    <section is="organizationLogoSection">
-                        <div>
-                            <div className="row center-xs">
-                                {this.getOrganizationImage()}
-                            </div>
-                        </div>
-                    </section>
-                    <section is="searchSection">
-                        <div>
-                            <SearchComponent
-                                className="row center-xs"
-                                is="SearchComponent"
-                                largerDevice={this.props.largerDevice}
-                                onCancel={::this.handleCancelSearch}
-                                onFocus={::this.handleFocusSearch}
-                                organization={this.props.organization}
-                                searchLocation={SEARCH_LOCATION.HOME}
-                            />
-                        </div>
-                    </section>
-                    <section is="poweredBySection">
-                        <div className="row center-xs">
-                            <span is="poweredBy">{t('Built by Luno. Powered by you.')}</span>
-                        </div>
-                    </section>
-                </section>
-            </div>
+                    <SearchComponent
+                        canExplore={false}
+                        className="row center-xs"
+                        focused={true}
+                        is="SearchResultsComponent"
+                        largerDevice={largerDevice}
+                        limitResultsListHeight={false}
+                        organization={organization}
+                        query={query}
+                        results={results}
+                        retainResultsOnBlur={true}
+                        searchLocation={SEARCH_LOCATION.SEARCH}
+                        showExpandedResults={false}
+                        showRecents={false}
+                    />
+                </DetailContent>
+            );
+        }
+    }
+
+    renderHeaderActionsContainer() {
+        const {
+            largerDevice,
+        } = this.props;
+
+        return (
+            <SearchComponent
+                canExplore={false}
+                className="center-xs"
+                is="Search"
+                largerDevice={largerDevice}
+                onBlur={::this.handleBlurSearch}
+                onFocus={::this.handleFocusSearch}
+                organization={this.props.organization}
+                processResults={false}
+                ref="headerSearch"
+                retainResultsOnBlur={true}
+                searchLocation={SEARCH_LOCATION.PAGE_HEADER}
+            />
+        );
+    }
+
+    render() {
+        const {
+            authenticatedProfile,
+        } = this.props;
+
+        return (
+            <Container>
+                <Header
+                    actionsContainer={this.renderHeaderActionsContainer()}
+                    profile={authenticatedProfile}
+                    {...this.props}
+                />
+                {this.renderContent()}
+            </Container>
         );
     }
 }
