@@ -26,6 +26,7 @@ class AutoComplete extends CSSComponent {
         onCancel: PropTypes.func,
         onChange: PropTypes.func,
         onClearToken: PropTypes.func,
+        onEnter: PropTypes.func,
         onFocus: PropTypes.func,
         onSelect: PropTypes.func,
         placeholderText: PropTypes.string,
@@ -47,6 +48,7 @@ class AutoComplete extends CSSComponent {
         onBlur() {},
         onCancel() {},
         onChange() {},
+        onEnter() {},
         onFocus() {},
         onSelect() {},
         placeholderText: '',
@@ -262,12 +264,18 @@ class AutoComplete extends CSSComponent {
 
         Enter(event) {
             if (this.state.isActive === false) {
+                if (this.props.onEnter) {
+                    this.props.onEnter(event);
+                }
                 // already selected, do nothing
                 return;
             } else if (this.state.highlightedIndex === null) {
                 // hit enter after focus but before typing anything
                 this.setState({isActive: false}, () => {
                     this.focusInput();
+                    if (this.props.onEnter) {
+                        this.props.onEnter(event);
+                    }
                 });
             } else {
                 this.setState({

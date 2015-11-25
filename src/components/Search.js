@@ -1089,6 +1089,12 @@ class Search extends CSSComponent {
         });
     }
 
+    handleEnter() {
+        if (this.shouldShowFullSearchTrigger()) {
+            routes.routeToSearch(this.context.history, this.state.query);
+        }
+    }
+
     handleSelection(item) {
         if (!this.props.canExplore) {
             if (item.type === RESULT_TYPES.CONTACT_METHOD) {
@@ -1383,6 +1389,7 @@ class Search extends CSSComponent {
                     onCancel={::this.handleCancel}
                     onChange={::this.handleChange}
                     onClearToken={::this.handleClearCategory}
+                    onEnter={::this.handleEnter}
                     onFocus={onFocus}
                     onSelect={::this.handleSelection}
                     placeholderText={placeholder}
