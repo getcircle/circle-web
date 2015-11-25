@@ -2,7 +2,7 @@ import expect from 'expect';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import LoginEmailInput from '../../src/components/LoginEmailInput';
+import LoginEmailInput from '../../../src/common/components/LoginEmailInput';
 
 function setup(overrides) {
     const defaults = {

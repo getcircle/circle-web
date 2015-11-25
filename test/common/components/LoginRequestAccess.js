@@ -3,7 +3,7 @@ import expect from 'expect';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import LoginRequestAccess from '../../src/components/LoginRequestAccess';
+import LoginRequestAccess from '../../../src/common/components/LoginRequestAccess';
 
 const { RaisedButton } = mui;
 

@@ -30,3 +30,4 @@ export default function () {
     const store = finalCreateStore(reducer);
     return store;
 }
+

@@ -1,7 +1,7 @@
 import expect from 'expect.js';
 import sinon from 'sinon'
 
-import servicesMiddleware, { SERVICE_REQUEST } from '../../src/middleware/services';
+import servicesMiddleware, { SERVICE_REQUEST } from '../../../src/common/middleware/services';
 
 describe('services middleware', function () {
 

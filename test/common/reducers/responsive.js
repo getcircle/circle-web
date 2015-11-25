@@ -1,8 +1,8 @@
 import expect from 'expect';
 
-import { deviceResized } from '../../src/actions/device';
-import { Sizes } from '../../src/decorators/resizable';
-import responsive from '../../src/reducers/responsive';
+import { deviceResized } from '../../../src/common/actions/device';
+import { Sizes } from '../../../src/common/decorators/resizable';
+import responsive from '../../../src/common/reducers/responsive';
 
 describe('responsive reducer', () => {
 

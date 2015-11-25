@@ -181,4 +181,5 @@ export default function (store) {
             />
         </Route>
     );
-};
+}
+

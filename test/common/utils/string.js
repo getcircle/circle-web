@@ -3,7 +3,7 @@ import expect from 'expect';
 import {
     detectEmailsAndAddMarkup,
     detectURLsAndAddMarkup
-} from '../../src/utils/string';
+} from '../../../src/common/utils/string';
 
 describe('string utils', () => {
 

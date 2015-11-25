@@ -4,10 +4,10 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import { AUTH_BACKENDS } from '../../src/services/user';
+import { AUTH_BACKENDS } from '../../../src/common/services/user';
 
-import LoginEmailInput from '../../src/components/LoginEmailInput';
-import LoginInternal from '../../src/components/LoginInternal';
+import LoginEmailInput from '../../../src/common/components/LoginEmailInput';
+import LoginInternal from '../../../src/common/components/LoginInternal';
 
 const {
     RaisedButton,

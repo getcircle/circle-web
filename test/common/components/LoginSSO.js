@@ -2,7 +2,7 @@ import expect from 'expect';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import LoginSSO from '../../src/components/LoginSSO';
+import LoginSSO from '../../../src/common/components/LoginSSO';
 
 function setup(overrides) {
     const defaults = {

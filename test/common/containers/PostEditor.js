@@ -3,10 +3,10 @@ import faker from 'faker';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import PostFactory from '../factories/PostFactory';
-import ProfileFactory from '../factories/ProfileFactory';
+import PostFactory from '../../factories/PostFactory';
+import ProfileFactory from '../../factories/ProfileFactory';
 
-import { PostEditor } from '../../src/containers/PostEditor';
+import { PostEditor } from '../../../src/common/containers/PostEditor';
 
 function setup(propOverrides) {
     const defaultProps = {

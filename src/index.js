@@ -5,10 +5,10 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import './styles/app.scss';
+import './common/styles/app.scss';
 
-import { getBody } from './utils/render';
-import Root from './Root';
+import { getBody } from './common/utils/render';
+import Root from './common/Root';
 
 (async () => {
 

@@ -4,12 +4,12 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import TestUtils from 'react-addons-test-utils';
 
-import PostFactory from '../factories/PostFactory';
-import ProfileFactory from '../factories/ProfileFactory';
+import PostFactory from '../../factories/PostFactory';
+import ProfileFactory from '../../factories/ProfileFactory';
 
-import AutogrowTextarea from '../../src/components/AutogrowTextarea';
-import CSSComponent from '../../src/components/CSSComponent';
-import Post from '../../src/components/Post';
+import AutogrowTextarea from '../../../src/common/components/AutogrowTextarea';
+import CSSComponent from '../../../src/common/components/CSSComponent';
+import Post from '../../../src/common/components/Post';
 
 const { PostStateV1 } = services.post.containers;
 
