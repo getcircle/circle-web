@@ -37,10 +37,13 @@ class Tracker {
         this._mixpanelLoaded = false;
         this._callbacks = [];
         this._sessionInitialized = false;
-        mixpanel.init(process.env.MIXPANEL_TOKEN, {loaded: () => {
-            this._mixpanelLoaded = true;
-            this.flushQueue();
-        }});
+        // mixpanel won't be present during server side rendering
+        if (__CLIENT__) {
+            mixpanel.init(process.env.MIXPANEL_TOKEN, {loaded: () => {
+                this._mixpanelLoaded = true;
+                this.flushQueue();
+            }});
+        }
     }
 
     // Session methods
