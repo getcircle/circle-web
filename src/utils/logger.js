@@ -13,6 +13,14 @@ class Logger {
         this._console.error(message);
     }
 
+    timeStart(key) {
+        this._console.time(key);
+    }
+
+    timeEnd(key) {
+        this._console.timeEnd(key);
+    }
+
 }
 
 export default new Logger();

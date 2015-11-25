@@ -891,6 +891,7 @@ class Search extends CSSComponent {
                 searchResult = this.getPostResult(result.post, index, false, results.length);
             }
 
+            searchResult.score = result.score;
             items.push(searchResult);
             return searchResult;
         });
@@ -1193,6 +1194,10 @@ class Search extends CSSComponent {
     }
 
     renderDefaultResult(item, highlighted, style) {
+        if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
+            item.secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
+        }
+
         return (
             <ListItem
                 {...item}
