@@ -214,6 +214,7 @@ class Search extends CSSComponent {
         searchAttribute: PropTypes.instanceOf(services.search.containers.search.AttributeV1),
         searchAttributeValue: PropTypes.string,
         searchCategory: PropTypes.instanceOf(services.search.containers.search.CategoryV1),
+        searchContainerWidth: PropTypes.number,
         searchLocation: PropTypes.string.isRequired,
         showCancel: PropTypes.bool,
         showExpandedResults: PropTypes.bool,
@@ -260,6 +261,7 @@ class Search extends CSSComponent {
         // This controls whether a cleanup is called on blur
         // and whether search results should be hidden on blur
         retainResultsOnBlur: false,
+        searchContainerWidth: SEARCH_CONTAINER_WIDTH,
         showCancel: false,
         showExpandedResults: true,
         showRecents: true,
@@ -455,10 +457,10 @@ class Search extends CSSComponent {
             },
             'largerDevice-true': {
                 autoComplete: {
-                    maxWidth: SEARCH_CONTAINER_WIDTH,
+                    maxWidth: this.props.searchContainerWidth,
                 },
                 resultsList: {
-                    width: SEARCH_CONTAINER_WIDTH,
+                    width: this.props.searchContainerWidth,
                     maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                 },
             },

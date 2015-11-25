@@ -238,6 +238,7 @@ class Home extends CSSComponent {
                                 onCancel={::this.handleCancelSearch}
                                 onFocus={::this.handleFocusSearch}
                                 organization={this.props.organization}
+                                searchContainerWidth={660}
                                 searchLocation={SEARCH_LOCATION.HOME}
                             />
                         </div>
