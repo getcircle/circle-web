@@ -91,7 +91,7 @@ class Search extends CSSComponent {
     }
 
     loadSearchResults(props) {
-        let query = props.params.query ? props.params.query : '';
+        let query = this.getQueryFromURL(props);
         if (this.refs.headerSearch) {
             let headerSearch = this.refs.headerSearch.getWrappedInstance();
             let currentQuery = headerSearch.getCurrentQuery();
@@ -186,21 +186,31 @@ class Search extends CSSComponent {
         this.setState({focused: false});
     }
 
+    getQueryFromURL(props) {
+        let query = props.params.query ? props.params.query : '';
+        if (props.params.hasOwnProperty('query') === false && props.location && props.location.hash) {
+            // replaceSearchQuery(this.context.history, props.location.hash);
+            query = props.location.hash;
+        }
+
+        return query;
+    }
+
     renderContent() {
         const {
             largerDevice,
             organization,
-            params,
             results,
         } = this.props;
 
-        if (params.query) {
+        let query = this.getQueryFromURL(this.props);
+        if (query) {
             return (
                 <DetailContent>
                     <div>
                         <h3 is="pageHeaderText">
                             {t('Search Results')}
-                            &nbsp;&ndash;&nbsp;<span is="searchTerm">&ldquo;{params.query}&rdquo;</span>
+                            &nbsp;&ndash;&nbsp;<span is="searchTerm">&ldquo;{query}&rdquo;</span>
                         </h3>
                     </div>
                     <SearchComponent
@@ -211,7 +221,7 @@ class Search extends CSSComponent {
                         largerDevice={largerDevice}
                         limitResultsListHeight={false}
                         organization={organization}
-                        query={params.query}
+                        query={query}
                         results={results}
                         retainResultsOnBlur={true}
                         searchLocation={SEARCH_LOCATION.SEARCH}
