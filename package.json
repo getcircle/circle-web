@@ -119,7 +119,6 @@
     "redux-devtools-dock-monitor": "^1.0.0-beta-3",
     "redux-devtools-log-monitor": "^1.0.0-beta-3",
     "redux-logger": "0.0.3",
-    "redux-react-router": "^0.2.1",
     "redux-router": "1.0.0-beta3",
     "require-dir": "~0.1.0",
     "reselect": "2.0.0",
