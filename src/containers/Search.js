@@ -3,9 +3,11 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { backgroundColors, canvasColor, fontColors } from '../constants/styles';
+import { canvasColor, fontColors } from '../constants/styles';
 import { getAuthenticatedProfile } from '../reducers/authentication';
+import { loadSearchResults } from '../actions/search';
 import { resetScroll } from '../utils/window';
+import { replaceSearchQuery } from '../utils/routes';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
@@ -50,15 +52,14 @@ class Search extends CSSComponent {
         managesTeam: PropTypes.object,
         mobileOS: PropTypes.bool.isRequired,
         organization: PropTypes.object.isRequired,
-        params: PropTypes.shape({
-            query: PropTypes.string.isRequired,
-        }).isRequired,
+        params: PropTypes.object.isRequired,
         results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
     }
 
     static contextTypes = {
         mixins: PropTypes.object,
         muiTheme: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
@@ -79,19 +80,39 @@ class Search extends CSSComponent {
         };
     }
 
-    // componentWillMount() {
-    //     this.loadSearchResults(this.props);
-    // }
+    componentWillMount() {
+        this.loadSearchResults(this.props);
+    }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if (nextProps.params.query !== this.props.params.query) {
-    //         this.loadSearchResults(nextProps);
-    //     }
-    // }
+    componentWillReceiveProps(nextProps) {
+        // Always load search results. This is to guarantee freshest results and also
+        // just results because we are aggresive about clearing cache.
+        this.loadSearchResults(nextProps);
+    }
 
-    // loadSearchResults(props) {
-    //     resetScroll();
-    // }
+    loadSearchResults(props) {
+        let query = props.params.query ? props.params.query : '';
+        if (this.refs.headerSearch) {
+            let currentQuery = this.refs.headerSearch.getWrappedInstance().getCurrentQuery();
+
+            // If header search is loaded but not focused with no query,
+            // add the query parameter if we have one in the URL
+            if (!this.state.focused && !currentQuery && query) {
+                this.refs.headerSearch.getWrappedInstance().setValue(query);
+            }
+
+            // When the component is focused, update URL for all queries entered here
+            if (currentQuery !== query && this.state.focused) {
+                replaceSearchQuery(this.context.history, currentQuery);
+            }
+
+        } else if (query && props.results.hasOwnProperty(this.state.query) !== true) {
+            // First load. Dispatch search action
+            this.props.dispatch(loadSearchResults(query));
+        }
+
+        resetScroll();
+    }
 
     classes() {
         return {
@@ -159,50 +180,16 @@ class Search extends CSSComponent {
         this.setState({focused: false});
     }
 
-    renderHeaderActionsContainer() {
+    renderContent() {
         const {
-            largerDevice,
-        } = this.props;
-
-        return (
-            <SearchComponent
-                canExplore={false}
-                className="center-xs"
-                is="Search"
-                largerDevice={largerDevice}
-                onBlur={::this.handleBlurSearch}
-                onFocus={::this.handleFocusSearch}
-                organization={this.props.organization}
-                params={this.props.params}
-                ref="headerSearch"
-                retainResultsOnBlur={true}
-                searchLocation={SEARCH_LOCATION.PAGE_HEADER}
-            />
-        );
-    }
-
-    render() {
-        const {
-            authenticatedProfile,
             largerDevice,
             organization,
             params,
             results,
         } = this.props;
 
-        let query = params.query;
-        if (this.refs.headerSearch) {
-            query = this.refs.headerSearch.getWrappedInstance().getCurrentQuery();
-        }
-
-        console.log(results);
-        return (
-            <Container>
-                <Header
-                    actionsContainer={this.renderHeaderActionsContainer()}
-                    profile={authenticatedProfile}
-                    {...this.props}
-                />
+        if (params.query) {
+            return (
                 <DetailContent>
                     <div>
                         <h3 is="pageHeaderText">
@@ -218,7 +205,7 @@ class Search extends CSSComponent {
                         largerDevice={largerDevice}
                         limitResultsListHeight={false}
                         organization={organization}
-                        query={query}
+                        query={params.query}
                         results={results}
                         retainResultsOnBlur={true}
                         searchLocation={SEARCH_LOCATION.SEARCH}
@@ -226,6 +213,45 @@ class Search extends CSSComponent {
                         showRecents={false}
                     />
                 </DetailContent>
+            );
+        }
+    }
+
+    renderHeaderActionsContainer() {
+        const {
+            largerDevice,
+        } = this.props;
+
+        return (
+            <SearchComponent
+                canExplore={false}
+                className="center-xs"
+                is="Search"
+                largerDevice={largerDevice}
+                onBlur={::this.handleBlurSearch}
+                onFocus={::this.handleFocusSearch}
+                organization={this.props.organization}
+                processResults={false}
+                ref="headerSearch"
+                retainResultsOnBlur={true}
+                searchLocation={SEARCH_LOCATION.PAGE_HEADER}
+            />
+        );
+    }
+
+    render() {
+        const {
+            authenticatedProfile,
+        } = this.props;
+
+        return (
+            <Container>
+                <Header
+                    actionsContainer={this.renderHeaderActionsContainer()}
+                    profile={authenticatedProfile}
+                    {...this.props}
+                />
+                {this.renderContent()}
             </Container>
         );
     }

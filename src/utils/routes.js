@@ -31,6 +31,9 @@ export function routeToPost(history, post) {
 export function routeToSearch(history, query) {
     history.pushState(null, `/search/${query}`);
 }
+
+export function replaceSearchQuery(history, query) {
+    history.replaceState(null, `/search/${query}`);
 }
 
 export function routeToURL(url, nextPathname = null) {

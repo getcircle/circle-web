@@ -196,14 +196,12 @@ class Search extends CSSComponent {
         onFocus: PropTypes.func,
         onSelectItem: PropTypes.func,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
-        params: PropTypes.shape({
-            query: PropTypes.string,
-        }),
         placeholder: PropTypes.string,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
         ),
         postsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
+        processResults: PropTypes.bool,
         profiles: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1)
         ),
@@ -252,6 +250,12 @@ class Search extends CSSComponent {
         onFocus() {},
         onSelectItem() {},
         placeholder: t('Search people, knowledge, & teams'),
+        // This isn't good component design and there are ways to archive
+        // hiding of results (by simply hiding the container).
+        // But, the logic to process results has a big performance cost.
+        // Given our full search temporarily uses the same component as AutoComplete,
+        // adding this property allows us to bypass all the processing.
+        processResults: true,
         query: null,
         // This controls whether a cleanup is called on blur
         // and whether search results should be hidden on blur
@@ -287,18 +291,13 @@ class Search extends CSSComponent {
         this.customizeTheme();
 
         // See if a query parameter was explicitly passed in.
-        // If yes, trigger an explicit search.
+        // If yes, set it in the internal state
         if (nextProps.query !== null &&
-            nextProps.query.trim().length > 0 &&
-            !nextProps.loading
+            nextProps.query.trim().length > 0
         ) {
             this.setState({query: nextProps.query});
+            this.setValue(nextProps.query);
         }
-
-        // // If the URL has a query parameter, set it as a default input value
-        // if (nextProps.params && nextProps.params.query && this.state.query === '') {
-        //     this.setValue(nextProps.params.query);
-        // }
     }
 
     componentWillUnmount() {
@@ -971,7 +970,7 @@ class Search extends CSSComponent {
     }
 
     getResults() {
-        if (this.props.focused || this.props.retainResultsOnBlur) {
+        if (this.props.processResults && (this.props.focused || this.props.retainResultsOnBlur)) {
             if (this.state.query) {
                 return this.getSearchResults();
             } else if (this.state.category !== null) {
