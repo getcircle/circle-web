@@ -20,38 +20,42 @@ const initialState = Immutable.fromJS({
 // (C) viazenetti GmbH (Christian Ludwig)
 // http://jsfiddle.net/ChristianL/AVyND/
 function checkOS() {
-  const clientStrings = [{
-    s:'Windows',
-    r:/(Windows)/
-  }, {
-    s:'Android',
-    r:/Android/
-  }, {
-    s:'Open BSD',
-    r:/OpenBSD/
-  }, {
-    s:'Linux',
-    r:/(Linux|X11)/
-  }, {
-    s:'iOS',
-    r:/(iPhone|iPad|iPod)/
-  }, {
-    s:'Mac',
-    r:/Mac/
-  }, {
-    s:'UNIX',
-    r:/UNIX/
-  }, {
-    s:'Robot',
-    r:/(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/
-  }];
-
-  for (let i = 0; i < clientStrings.length; i++) {
-    let cs = clientStrings[i];
-    if (cs.r.test(navigator.userAgent)) {
-      return cs.s;
+    if (!__CLIENT__) {
+        return '';
     }
-  }
+
+    const clientStrings = [{
+        s:'Windows',
+        r:/(Windows)/
+    }, {
+        s:'Android',
+        r:/Android/
+    }, {
+        s:'Open BSD',
+        r:/OpenBSD/
+    }, {
+        s:'Linux',
+        r:/(Linux|X11)/
+    }, {
+        s:'iOS',
+        r:/(iPhone|iPad|iPod)/
+    }, {
+        s:'Mac',
+        r:/Mac/
+    }, {
+        s:'UNIX',
+        r:/UNIX/
+    }, {
+        s:'Robot',
+        r:/(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/
+    }];
+
+    for (let i = 0; i < clientStrings.length; i++) {
+        let cs = clientStrings[i];
+        if (cs.r.test(navigator.userAgent)) {
+            return cs.s;
+        }
+    }
 };
 
 function shouldPathHaveNoHeaderAndFooter(pathname) {

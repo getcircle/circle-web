@@ -25,14 +25,24 @@ export default function resizable(WrappedComponent) {
         }
 
         bindResize() {
-            Events.on(window, 'resize', this.updateDeviceSize.bind(this));
+            if (__CLIENT__) {
+                Events.on(window, 'resize', this.updateDeviceSize.bind(this));
+            }
         }
 
         unbindResize() {
-            Events.off(window, 'resize', this.updateDeviceSize.bind(this));
+            if (__CLIENT__) {
+                Events.off(window, 'resize', this.updateDeviceSize.bind(this));
+            }
         }
 
         getDeviceSize() {
+            // TODO should try and see if there is a way to detect device size
+            // or guess at some default based on the user agent
+            if (!__CLIENT__) {
+                return Sizes.LARGE;
+            }
+
             const width = window.innerWidth;
             if (width >= 992) {
                 return Sizes.LARGE;
