@@ -18,8 +18,6 @@ import '../common/styles/app.scss';
 const dest = getBody();
 const store = createStore();
 
-debugger;
-
 const elements = [
     <Provider key="provider" store={store}>
         <Router history={createHistory()} routes={getRoutes(store)} />
