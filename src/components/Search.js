@@ -670,7 +670,7 @@ class Search extends CSSComponent {
     }
 
     getLocationResult(location, index, isRecent) {
-        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
+        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const item = {
             index: index,
             leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
@@ -685,7 +685,7 @@ class Search extends CSSComponent {
     }
 
     getPostResult(post, index, isRecent) {
-        let trackingAttributes = isRecent ? this.attributesForRecentResults : {};
+        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         let numberOfCharacters = post.title ? post.title.length : 0;
         let estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
         let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
