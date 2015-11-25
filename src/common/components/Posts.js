@@ -74,7 +74,9 @@ class Posts extends CSSComponent {
                 },
                 emptyStateMessageContainer: {
                     height: '100%',
+                    lineHeight: '25px',
                     minHeight: '50vh',
+                    whiteSpace: 'pre-wrap',
                     width: '100%',
                     ...fontColors.light,
                 },

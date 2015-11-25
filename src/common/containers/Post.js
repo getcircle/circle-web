@@ -4,11 +4,13 @@ import { services } from 'protobufs';
 
 import { canvasColor } from '../constants/styles';
 import CurrentTheme from '../utils/ThemeManager';
+import { fontColors } from '../constants/styles';
 import { getPost } from '../actions/posts';
 
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
+import t from '../utils/gettext';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -33,6 +35,7 @@ const selector = selectors.createImmutableSelector(
 
         return {
             authenticatedProfile: authenticationState.get('profile'),
+            errorDetails: postState.get('errorDetails'),
             largerDevice: responsiveState.get('largerDevice'),
             managesTeam: authenticationState.get('managesTeam'),
             mobileOS: responsiveState.get('mobileOS'),
@@ -49,6 +52,7 @@ class Post extends CSSComponent {
     static propTypes = {
         authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
+        errorDetails: PropTypes.object,
         largerDevice: PropTypes.bool.isRequired,
         mobileOS: PropTypes.bool.isRequired,
         organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
@@ -57,6 +61,10 @@ class Post extends CSSComponent {
         }).isRequired,
         post: PropTypes.instanceOf(services.post.containers.PostV1),
         postId: PropTypes.string,
+    }
+
+    static defaultProps = {
+        errorDetails: {},
     }
 
     static contextTypes = {
@@ -96,6 +104,14 @@ class Post extends CSSComponent {
     classes() {
         return {
             default: {
+                emptyStateMessageContainer: {
+                    height: '100%',
+                    lineHeight: '25px',
+                    minHeight: '50vh',
+                    whiteSpace: 'pre-wrap',
+                    width: '100%',
+                    ...fontColors.light,
+                },
             },
         };
     }
@@ -112,8 +128,34 @@ class Post extends CSSComponent {
         this.setState({muiTheme: customTheme});
     }
 
+    renderErrorMessage() {
+        const {
+            errorDetails,
+        } = this.props;
+
+        let message = '';
+        errorDetails.forEach(error => {
+            switch (error.detail) {
+                case 'INVALID':
+                case 'DOES_NOT_EXIST':
+                    message = t('No knowledge post found.\nThe post has either been deleted by the author or you have an incorrect URL.');
+                    break;
+            }
+        });
+
+        if (message) {
+            return (
+                <p className="row center-xs middle-xs" style={this.styles().emptyStateMessageContainer}>
+                    {message}
+                </p>
+            );
+        }
+
+    }
+
     renderPost() {
         const {
+            errorDetails,
             largerDevice,
             post,
         } = this.props;
@@ -124,7 +166,9 @@ class Post extends CSSComponent {
                     post={post}
                 />
             );
-        } else {
+        } else if (errorDetails) {
+            return this.renderErrorMessage();
+        } else  {
             return <CenterLoadingIndicator />;
         }
     }

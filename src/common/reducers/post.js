@@ -6,6 +6,8 @@ const initialState = Immutable.fromJS({
     ids: Immutable.Set(),
     loading: false,
     draftPost: null,
+    errors: [],
+    errorDetails: [],
 });
 
 export default function post(state = initialState, action) {
@@ -27,10 +29,27 @@ export default function post(state = initialState, action) {
             loading: false,
         });
 
+    case types.GET_POST:
+        return state.merge({
+            loading: true,
+            errors: [],
+            errorDetails: [],
+        });
+
     case types.UPDATE_POST_SUCCESS:
     case types.GET_POST_SUCCESS:
         return state.updateIn(['ids'], set => set.add(action.payload.result))
-                    .merge({loading: false});
+                    .merge({
+                        loading: false,
+                        errors: [],
+                        errorDetails: [],
+                    });
+
+    case types.GET_POST_FAILURE:
+        return state.merge({
+            errors: action.payload.errors,
+            errorDetails: action.payload.errorDetails,
+        });
 
     case '@@reduxReactRouter/locationDidChange':
         return state.merge({
