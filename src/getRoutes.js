@@ -159,6 +159,14 @@ export default function (store) {
                 path="/search/:query"
             />
             <Route
+                component={require('./containers/Search')}
+                onEnter={applyMiddleware(
+                    requireAuth,
+                    hideHeader,
+                )}
+                path="/search"
+            />
+            <Route
                 component={require('./containers/Team')}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
