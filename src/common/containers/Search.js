@@ -208,7 +208,7 @@ class Search extends CSSComponent {
             return (
                 <DetailContent>
                     <div>
-                        <h3 style={...this.styles().pageHeaderText}>
+                        <h3 style={this.styles().pageHeaderText}>
                             {t('Search Results')}
                             &nbsp;&ndash;&nbsp;<span style={this.styles().searchTerm}>&ldquo;{query}&rdquo;</span>
                         </h3>
