@@ -4,7 +4,7 @@ var path = require('path');
 var rootDir = path.resolve(__dirname, '..');
 
 /**
- * Define isomorphic constants.
+ * Define universal constants.
  */
 global.__CLIENT__ = false;
 global.__SERVER__ = true;
