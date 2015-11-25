@@ -185,20 +185,20 @@ class Dialog extends CSSComponent {
 
         if (dialogSaveLabel !== '') {
             return (
-                <div is="DialogSave">
+                <div {...this.styles().DialogSave}>
                     <FlatButton
                         disabled={!this.state.saveEnabled}
-                        is="DialogSaveButton"
                         label={dialogSaveLabel}
                         onTouchTap={() => this.props.onSave()}
                         ref="saveButton"
+                        {...this.styles().DialogSaveButton}
                     />
                 </div>
             );
         }
         else {
             return (
-                <div is="placeholder">
+                <div style={this.styles().placeholder}>
                 </div>
             );
         }
@@ -211,23 +211,23 @@ class Dialog extends CSSComponent {
             title,
             ...other,
         } = this.props;
+        const dialogProps = {...this.styles.Dialog, ...other};
 
         return (
             <mui.Dialog
-                {...other}
-                is="Dialog"
                 open={this.state.open}
                 ref="modal"
+                {...dialogProps}
             >
-                <header className="row between-xs" is="DialogHeader">
-                    <div is="DialogClose">
+                <header className="row between-xs" {...this.styles().DialogHeader}>
+                    <div {...this.styles().DialogClose}>
                         <FlatButton
-                            is="DialogCloseButton"
                             label={dialogDismissLabel}
                             onTouchTap={() => this.dismiss()}
+                            {...this.styles().DialogCloseButton}
                         />
                     </div>
-                    <span is="DialogTitle">
+                    <span {...this.styles().DialogTitle}>
                         {title}
                     </span>
                     {this.renderSaveButton()}

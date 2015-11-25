@@ -208,16 +208,15 @@ class Search extends CSSComponent {
             return (
                 <DetailContent>
                     <div>
-                        <h3 is="pageHeaderText">
+                        <h3 style={...this.styles().pageHeaderText}>
                             {t('Search Results')}
-                            &nbsp;&ndash;&nbsp;<span is="searchTerm">&ldquo;{query}&rdquo;</span>
+                            &nbsp;&ndash;&nbsp;<span style={this.styles().searchTerm}>&ldquo;{query}&rdquo;</span>
                         </h3>
                     </div>
                     <SearchComponent
                         canExplore={false}
                         className="row center-xs"
                         focused={true}
-                        is="SearchResultsComponent"
                         largerDevice={largerDevice}
                         limitResultsListHeight={false}
                         organization={organization}
@@ -227,6 +226,7 @@ class Search extends CSSComponent {
                         searchLocation={SEARCH_LOCATION.SEARCH}
                         showExpandedResults={false}
                         showRecents={false}
+                        {...this.styles().SearchResultsComponent}
                     />
                 </DetailContent>
             );
@@ -242,7 +242,6 @@ class Search extends CSSComponent {
             <SearchComponent
                 canExplore={false}
                 className="center-xs"
-                is="Search"
                 largerDevice={largerDevice}
                 onBlur={::this.handleBlurSearch}
                 onFocus={::this.handleFocusSearch}
@@ -251,6 +250,7 @@ class Search extends CSSComponent {
                 ref="headerSearch"
                 retainResultsOnBlur={true}
                 searchLocation={SEARCH_LOCATION.PAGE_HEADER}
+                {...this.styles().Search}
             />
         );
     }

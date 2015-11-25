@@ -93,11 +93,11 @@ class TeamDetail extends CSSComponent {
         return (
             <TeamDetailDescription
                 description={team.description}
-                is="section"
                 isEditable={this.canEdit()}
                 manager={manager}
                 onEditTapped={this.editButtonTapped.bind(this)}
                 onSaveCallback={this.onUpdateDescription.bind(this)}
+                style={this.styles().section}
                 team={team}
             />
         );
@@ -105,7 +105,7 @@ class TeamDetail extends CSSComponent {
 
     renderManager(manager) {
         return (
-            <Card is="section" title="Manager">
+            <Card style={this.styles().section} title="Manager">
                 <CardRow>
                     <CardList>
                         <CardListItem
@@ -124,9 +124,9 @@ class TeamDetail extends CSSComponent {
         if (childTeams && childTeams.length) {
             return (
                 <TeamDetailTeams
-                    is="section"
                     largerDevice={this.props.largerDevice}
                     onClickTeam={routeToTeam.bind(null, this.context.history)}
+                    style={this.styles().section}
                     teams={childTeams}
                     totalTeamsCount={totalTeamsCount}
                 />
@@ -151,12 +151,12 @@ class TeamDetail extends CSSComponent {
             return (
                 <DetailMembers
                     actionText={actionText}
-                    is="section"
                     largerDevice={this.props.largerDevice}
                     members={members}
                     membersLoadMore={this.props.membersLoadMore}
                     onClickMember={routeToProfile.bind(null, this.context.history)}
                     pageType={PAGE_TYPE.TEAM_MEMBERS}
+                    style={this.styles().section}
                     title={title}
                     viewAllAttribute={services.search.containers.search.AttributeV1.TEAM_ID}
                     viewAllAttributeValue={this.props.extendedTeam.team.id}

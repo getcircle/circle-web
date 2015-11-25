@@ -190,9 +190,9 @@ class Home extends CSSComponent {
     getOrganizationImage() {
         const imageUrl = this.props.organization.image_url;
         if (imageUrl) {
-            return <img className="row" is="organizationLogo" src={imageUrl} />;
+            return <img className="row" src={imageUrl} style={this.styles().organizationLogo} />;
         } else {
-            return <div is="organizationLogoPlaceholder" />;
+            return <div style={this.styles().organizationLogoPlaceholder} />;
         }
     }
 
@@ -210,42 +210,42 @@ class Home extends CSSComponent {
 
     render() {
         return (
-            <div is="root">
-                <header is="header">
+            <div style={this.styles().root}>
+                <header style={this.styles().header}>
                     <div className="row end-xs">
                         <HeaderMenu
                             dispatch={this.props.dispatch}
-                            is="HeaderMenu"
                             managesTeam={this.props.managesTeam}
                             profile={this.props.profile}
+                            {...this.styles().HeaderMenu}
                         />
                     </div>
                 </header>
-                <section className="wrap" is="wrap">
-                    <section is="organizationLogoSection">
+                <section className="wrap" style={this.styles().wrap}>
+                    <section style={this.styles().organizationLogoSection}>
                         <div>
                             <div className="row center-xs">
                                 {this.getOrganizationImage()}
                             </div>
                         </div>
                     </section>
-                    <section is="searchSection">
+                    <section style={this.styles().searchSection}>
                         <div>
                             <SearchComponent
                                 className="row center-xs"
-                                is="SearchComponent"
                                 largerDevice={this.props.largerDevice}
                                 onCancel={::this.handleCancelSearch}
                                 onFocus={::this.handleFocusSearch}
                                 organization={this.props.organization}
                                 searchContainerWidth={660}
                                 searchLocation={SEARCH_LOCATION.HOME}
+                                {...this.styles().SearchComponent}
                             />
                         </div>
                     </section>
-                    <section is="poweredBySection">
+                    <section style={this.styles().poweredBySection}>
                         <div className="row center-xs">
-                            <span is="poweredBy">{t('Built by Luno. Powered by you.')}</span>
+                            <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
                         </div>
                     </section>
                 </section>

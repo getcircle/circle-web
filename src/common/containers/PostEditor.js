@@ -327,9 +327,9 @@ class PostEditor extends CSSComponent {
     renderHeaderActionsContainer() {
         if (this.canEdit()) {
             return (
-                <div className="row middle-xs between-xs" is="headerActionContainer">
+                <div className="row middle-xs between-xs" style={this.styles().headerActionContainer}>
                     <div>
-                        <input disabled={true} is="headerMessageText" ref="headerMessageText" />
+                        <input disabled={true} ref="headerMessageText" style={this.styles().headerMessageText} />
                     </div>
                     {this.renderPublishButton()}
                 </div>
@@ -354,7 +354,6 @@ class PostEditor extends CSSComponent {
         return (
             <Post
                 autoSave={shouldAutoSave}
-                is="Post"
                 isEditable={this.canEdit()}
                 largerDevice={largerDevice}
                 onFileDeleteCallback={::this.onFileDelete}
@@ -364,6 +363,7 @@ class PostEditor extends CSSComponent {
                 ref="post"
                 saveInProgress={isSaving}
                 uploadedFiles={uploadedFiles}
+                {...this.styles().Post}
             />
         );
     }
@@ -375,7 +375,7 @@ class PostEditor extends CSSComponent {
         } = this.props;
 
         return (
-            <Container is="Container">
+            <Container {...this.styles().Container}>
                 <Header
                     actionsContainer={this.renderHeaderActionsContainer()}
                     profile={authenticatedProfile}

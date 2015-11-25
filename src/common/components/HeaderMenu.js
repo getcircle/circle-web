@@ -175,10 +175,10 @@ class HeaderMenu extends CSSComponent {
                 <Menu
                     animated={true}
                     desktop={true}
-                    is="menu"
                     listStyle={this.styles().menuListStyle}
                     onEscKeyDown={::this.hideMenu}
                     onItemTouchTap={::this.hideMenu}
+                    style={this.styles().menu}
                     width={110}
                 >
                     <MenuItem
@@ -203,7 +203,7 @@ class HeaderMenu extends CSSComponent {
     renderProfileName() {
         if (this.props.expandedView) {
             return (
-                <div is="profileName">
+                <div style={this.styles().profileName}>
                     <span>{this.props.profile.first_name}</span>
                 </div>
             );
@@ -217,7 +217,7 @@ class HeaderMenu extends CSSComponent {
                     IconClass={DownArrowIcon}
                     iconStyle={{...this.styles().arrowIcon}}
                     stroke={tintColor}
-                    style={{...this.styles().arrowContainer}}
+                    style={this.styles().arrowContainer}
                 />
             );
         }
@@ -268,9 +268,9 @@ class HeaderMenu extends CSSComponent {
         ) {
             return (
                 <RoundedButton
-                    is="RoundedButton"
                     label={t('Add Knowledge')}
                     onTouchTap={::this.onAddPostTapped}
+                    {...this.styles().RoundedButton}
                 />
             );
         }
@@ -286,9 +286,9 @@ class HeaderMenu extends CSSComponent {
             <div {...other}>
                 <div
                     className="row middle-xs"
-                    is="container"
                     onTouchTap={::this.handleTouchTap}
                     ref="container"
+                    style={this.styles().container}
                 >
                     {this.renderAddKnowledgeButton()}
                     <div>

@@ -101,13 +101,13 @@ class TeamDetailHeader extends CSSComponent {
         }
 
         return (
-            <div className="row end-xs" is="editButtonContainer">
+            <div className="row end-xs" style={this.styles().editButtonContainer}>
                 <FlatButton
-                    is="editButton"
                     label={t('Edit Team')}
                     onTouchTap={() => {
                         this.props.onEditTapped();
                     }}
+                    style={this.styles().editButton}
                 />
             </div>
         );
@@ -121,19 +121,19 @@ class TeamDetailHeader extends CSSComponent {
         return (
             <DetailHeader largerDevice={this.props.largerDevice}>
                 {this.renderEditButton()}
-                <div className="row center-xs" is="iconSection">
+                <div className="row center-xs" style={this.styles().iconSection}>
                     <IconContainer
                         IconClass={GroupIcon}
                         iconStyle={{...this.styles().icon}}
-                        is="iconContainer"
+                        style={this.styles().iconContainer}
                         stroke={iconColor}
                         strokeWidth={iconStrokeWidth}
                     />
                 </div>
-                <div className="row center-xs" is="nameSection">
+                <div className="row center-xs" style={this.styles().nameSection}>
                     <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>{team.display_name}</span>
                 </div>
-                <div className="row center-xs" is="infoSection">
+                <div className="row center-xs" style={this.styles().infoSection}>
                     <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>{this._getTeamInfo(team)}</span>
                 </div>
             </DetailHeader>

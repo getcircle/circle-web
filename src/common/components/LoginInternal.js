@@ -129,12 +129,12 @@ class LoginInternal extends CSSComponent {
     renderUseAlternativeSection() {
         if (this.props.hasAlternative) {
             return (
-                <div is="alternativeDiv">
-                    <span is="alternative">
+                <div style={this.styles().alternativeDiv}>
+                    <span style={this.styles().alternative}>
                         {t('Or, ')}
                         <a
-                            is="alternativeLink"
                             onTouchTap={this.props.onUseAlternative}
+                            style={this.styles().alternativeLink}
                         >
                             {t('use your team\'s Single Sign-On authentication.')}
                         </a>
@@ -147,28 +147,28 @@ class LoginInternal extends CSSComponent {
     render() {
         return (
             <section>
-                <div is="headerDiv">
-                    <span is="header">{this.renderHeader()}</span>
+                <div style={this.styles().headerDiv}>
+                    <span style={this.styles().header}>{this.renderHeader()}</span>
                 </div>
                 <section>
                     <div className="col-xs-12">
                         <LoginEmailInput
-                            is="input"
                             onChange={(event) => this.setState({email: event.target.value})}
                             onEnter={::this.handleEnter}
+                            style={this.styles().input}
                             value={this.state.email}
                         />
                     </div>
-                    <div className="col-xs-12" is="passwordDiv">
+                    <div className="col-xs-12" style={this.styles().passwordDiv}>
                         <TextField
                             hintText={t('password')}
-                            is="input"
                             onEnterKeyDown={::this.handleSubmit}
                             ref={(input) => {
                                 if (input !== null && this.state.email !== '' && this.state.password === '') {
                                     input.focus();
                                 }
                             }}
+                            style={this.styles().input}
                             type="password"
                             valueLink={{
                                 value: this.state.password,
@@ -179,11 +179,11 @@ class LoginInternal extends CSSComponent {
                     <div className="col-xs-12">
                         <RaisedButton
                             disabled={!this.canSubmit()}
-                            is="button"
                             label={t('Sign in')}
                             onTouchTap={::this.handleSubmit}
                             primary={true}
                             ref="primary"
+                            style={this.styles().button}
                         />
                     </div>
                 </section>

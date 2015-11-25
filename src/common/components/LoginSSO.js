@@ -66,20 +66,20 @@ class LoginSSO extends CSSComponent {
             <section>
                 <section>
                     <div>
-                        <span is="header">{t(`Your team uses ${providerName} for Single Sign-On.`)}</span>
+                        <span style={this.styles().header}>{t(`Your team uses ${providerName} for Single Sign-On.`)}</span>
                     </div>
                     <RaisedButton
-                        is="button"
                         label={t(`Sign in with ${providerName}`)}
                         onTouchTap={() => routeToURL(this.props.authorizationUrl, nextPathname)}
                         primary={true}
+                        style={this.styles().button}
                     />
                 </section>
                 <section>
                     <div>
-                        <span is="guest">
+                        <span style={this.styles().guest}>
                             {t('Or sign in using a ')}
-                            <a is="guestLink" onTouchTap={onGuestLogin}>{t('guest account')}</a>.
+                            <a onTouchTap={onGuestLogin} style={this.styles().guestLink}>{t('guest account')}</a>.
                         </span>
                     </div>
                 </section>

@@ -236,11 +236,11 @@ class Posts extends CSSComponent {
                     secondary={true}
                 />),
                 (<FlatButton
-                    is="ModalPrimaryActionButton"
                     key="delete"
                     label={t('Delete')}
                     onTouchTap={::this.onModalDeleteTapped}
                     primary={true}
+                    {...this.styles().ModalPrimaryActionButton}
                 />)
             ];
             return (
@@ -261,7 +261,7 @@ class Posts extends CSSComponent {
             <IconButton tooltip={t('More Actions')} touch={true}>
                 <IconContainer
                     IconClass={MoreVerticalIcon}
-                    is="IconContainer"
+                    {...this.styles().IconContainer}
                 />
             </IconButton>
         );
@@ -271,14 +271,14 @@ class Posts extends CSSComponent {
         return (
             <IconMenu iconButtonElement={this.renderMoreButton()}>
                 <MenuItem
-                    is="MenuItem"
                     onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
                     primaryText={t('Edit')}
+                    {...this.styles().MenuItem}
                 />
                 <MenuItem
-                    is="MenuItem"
                     onTouchTap={() => this.onDeleteButtonTapped(post)}
                     primaryText={t('Delete')}
+                    {...this.styles().MenuItem}
                 />
             </IconMenu>
         );
@@ -320,7 +320,7 @@ class Posts extends CSSComponent {
             });
 
             return (
-                <div className="row full-width" is="infiniteListContainer">
+                <div className="row full-width" style={this.styles().infiniteListContainer}>
                     <Infinite
                         className="col-xs no-padding"
                         elementHeight={107}
@@ -339,7 +339,7 @@ class Posts extends CSSComponent {
             return <CenterLoadingIndicator />;
         } else {
             return (
-                <p className="row center-xs middle-xs" is="emptyStateMessageContainer">
+                <p className="row center-xs middle-xs" style={this.styles().emptyStateMessageContainer}>
                     {this.getEmptyStateMessage()}
                 </p>
             );
@@ -354,12 +354,12 @@ class Posts extends CSSComponent {
         return (
             <DetailContent>
                 <CardRow>
-                    <div className="row start-xs between-xs" is="pageHeaderContainer">
+                    <div className="row start-xs between-xs" style={this.styles().pageHeaderContainer}>
                         <div>
-                            <h3 is="pageHeaderText">{t('My Knowledge')}</h3>
+                            <h3 style={this.styles().pageHeaderText}>{t('My Knowledge')}</h3>
                         </div>
                     </div>
-                    <div className="row" is="tabsContainer">
+                    <div className="row" style={this.styles().tabsContainer}>
                         <Tabs
                             inkBarStyle={{...this.styles().tabInkBarStyle}}
                             valueLink={{value: postState, requestChange: this.onTabChange.bind(this)}}

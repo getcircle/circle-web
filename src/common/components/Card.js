@@ -90,7 +90,7 @@ class Card extends CSSComponent {
 
         if (subTitle && subTitle.trim() !== '') {
             return (
-                <div className="col-xs end-xs" is="subTitleText">
+                <div className="col-xs end-xs" style={this.styles().subTitleText}>
                     <div className="box">
                         {subTitle}
                     </div>
@@ -106,8 +106,8 @@ class Card extends CSSComponent {
 
         if (title) {
             return (
-                <header className="row middle-xs" is="header">
-                    <div className="col-xs start-xs" is="headerText">
+                <header className="row middle-xs" style={this.styles().header}>
+                    <div className="col-xs start-xs" style={this.styles().headerText}>
                         <div className="box">
                             {title}
                         </div>
@@ -127,7 +127,7 @@ class Card extends CSSComponent {
         } = this.props;
 
         return (
-            <div className="col-xs end-xs" is="headerActionButton">
+            <div className="col-xs end-xs" style={this.styles().headerActionButton}>
                 <div className="box">
                     <FlatButton
                         label={t('Cancel')}
@@ -151,7 +151,7 @@ class Card extends CSSComponent {
         } = this.props;
 
         return (
-            <div className="col-xs end-xs" is="headerActionButton">
+            <div className="col-xs end-xs" style={this.styles().headerActionButton}>
                 <div className="box">
                     <FlatButton
                         label={editTitle}

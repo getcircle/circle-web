@@ -66,16 +66,16 @@ class StatusDetail extends CSSComponent {
 
         return (
             <DetailContent>
-                <Card is="section" title={cardTitle}>
+                <Card style={this.styles().section} title={cardTitle}>
                     <div>
-                        <div is="statusText">
+                        <div style={this.styles().statusText}>
                             {statusText}
                         </div>
                         <CardRow>
                             <CardList>
                                 <CardListItem
                                     innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
-                                    leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
+                                    leftAvatar={<ProfileAvatar profile={author} style={this.styles().cardListAvatar} />}
                                     onTouchTap={routeToProfile.bind(null, this.context.history, author)}
                                     primaryText={author.full_name}
                                     secondaryText={author.title}

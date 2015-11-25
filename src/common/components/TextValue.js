@@ -218,7 +218,7 @@ class TextValue extends CSSComponent {
         let authorName = this.state.authorName ? ' by ' + this.state.authorName : '';
         if (createdString !== '') {
             return (
-                <span is="timestamp">
+                <span style={this.styles().timestamp}>
                     &nbsp;&ndash;&nbsp;{createdString}{authorName}
                 </span>
             );
@@ -242,13 +242,13 @@ class TextValue extends CSSComponent {
         if (!hasStatus) {
             statusValue = t('Add details');
         }
-        content = <span is="text">{statusValue}</span>;
+        content = <span style={this.styles().text}>{statusValue}</span>;
         if (!hasStatus && defaultContent) {
             content = defaultContent;
         }
 
         return (
-            <div is="textContainer">
+            <div style={this.styles().textContainer}>
                 {content}
                 <div className="row middle-xs start-xs">
                     <div>
@@ -270,10 +270,10 @@ class TextValue extends CSSComponent {
         if (isEditable === true && this.props.editedTimestamp !== '') {
             return (
                 <FlatButton
-                    is="editButton"
                     label={t('Edit')}
                     labelStyle={this.styles().editButtonLabel}
                     onTouchTap={this.handleEditTapped.bind(this)}
+                    style={this.styles().editButton}
                 />
             );
         }
@@ -303,16 +303,16 @@ class TextValue extends CSSComponent {
         } = this.props;
 
         return (
-            <div is="textareaContainer">
+            <div style={this.styles().textareaContainer}>
                 <textarea
                     autoFocus={true}
-                    is="textarea"
                     onChange={this.handleChange.bind(this)}
                     placeholder={placeholder}
+                    style={this.styles().textarea}
                     value={value}
                  />
-                 <div is="errorContainer">
-                    <span is="errorMessage">
+                 <div style={this.styles().errorContainer}>
+                    <span style={this.styles().errorMessage}>
                         {error}
                     </span>
                     {this.renderCharacterCounter(value)}

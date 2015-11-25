@@ -29,8 +29,8 @@ class CenterLoadingIndicator extends CSSComponent {
 
     render() {
         return (
-            <div is="container">
-                <div is="innerDiv">
+            <div style={this.styles().container}>
+                <div style={this.styles().innerDiv}>
                     <CircularProgress mode="indeterminate" size={1} />
                 </div>
             </div>

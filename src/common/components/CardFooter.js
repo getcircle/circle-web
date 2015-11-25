@@ -49,13 +49,13 @@ class CardFooter extends CSSComponent {
             ...other,
         } = this.props;
         return (
-            <footer {...other} className="row middle-xs" is="root">
-                <div is="buttonContainer">
+            <footer {...other} className="row middle-xs" style={this.styles().root}>
+                <div style={this.styles().buttonContainer}>
                     <FlatButton
-                        is="button"
                         label={actionText}
                         labelStyle={this.styles().footerButtonLabel}
                         onTouchTap={onClick}
+                        style={this.styles().button}
                     />
                 </div>
                 {children}

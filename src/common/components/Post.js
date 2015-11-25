@@ -595,7 +595,6 @@ class Post extends CSSComponent {
             return (
                 <FlatButton
                     href={this.getSuggestImprovementsLink(post)}
-                    is="FlatButton"
                     label={t('Suggest Improvements')}
                     linkButton={true}
                     onTouchTap={() => {
@@ -606,6 +605,7 @@ class Post extends CSSComponent {
                         );
                     }}
                     target="_blank"
+                    {...this.styles().FlatButton}
                 />
             );
         }
@@ -620,20 +620,19 @@ class Post extends CSSComponent {
         if (post && post.permissions && post.permissions.can_edit) {
             editButton = (
                 <FlatButton
-                    is="EditButton"
                     label={t('Edit')}
                     onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
+                    {...this.styles().EditButton}
                 />
             );
         }
 
         return (
-            <div className="row middle-xs end-xs" is="headerContainer">
+            <div className="row middle-xs end-xs" style={this.styles().headerContainer}>
                 {editButton}
                 <RoundedButton
                     className="center-xs"
                     href={mailtoSharePost(post, this.context.authenticatedProfile)}
-                    is="ShareButton"
                     label={t('Share')}
                     linkButton={true}
                     onTouchTap={() => {
@@ -644,6 +643,7 @@ class Post extends CSSComponent {
                         );
                     }}
                     target="_blank"
+                    {...this.styles().ShareButton}
                 />
             </div>
         );
@@ -667,13 +667,13 @@ class Post extends CSSComponent {
             post.files.forEach(file => {
                 if (file.content_type && file.content_type.toLowerCase().indexOf('image/') !== -1) {
                     inlineImages.push(
-                        <div className="row center-xs middle-xs" is="inlineImageContainer" key={file.id}>
-                            <div is="inlineImageInnerDiv">
+                        <div className="row center-xs middle-xs" style={this.styles().inlineImageContainer} key={file.id}>
+                            <div style={this.styles().inlineImageInnerDiv}>
                                 <a href={file.source_url} target="_blank">
-                                    <img alt={t('Post attached image')} is="inlineImage" src={file.source_url} />
+                                    <img alt={t('Post attached image')} src={file.source_url} style={this.styles().inlineImage}/>
                                 </a>
                             </div>
-                            <div is="inlineImageCaption">
+                            <div style={this.styles().inlineImageCaption}>
                                 {file.name}
                             </div>
                         </div>
@@ -687,22 +687,22 @@ class Post extends CSSComponent {
         return (
             <span>
                 {this.renderEditAndShareButton()}
-                <h1 is="postTitle">{post.title}</h1>
-                <div className="row" is="lastUpdatedText">{lastUpdatedText}</div>
-                <div className="row between-xs middle-xs" is="authorAndFeedbackContainer">
-                    <div className="col-xs-8" is="authorContainer">
-                        <CardList is="cardList">
+                <h1 style={this.styles().postTitle}>{post.title}</h1>
+                <div className="row" style={this.styles().lastUpdatedText}>{lastUpdatedText}</div>
+                <div className="row between-xs middle-xs" style={this.styles().authorAndFeedbackContainer}>
+                    <div className="col-xs-8" style={this.styles().authorContainer}>
+                        <CardList style={this.styles().cardList}>
                             <CardListItem
-                                is="CardListItem"
                                 key={author.id}
-                                leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
+                                leftAvatar={<ProfileAvatar profile={author} style={this.styles().cardListAvatar} />}
                                 onTouchTap={routeToProfile.bind(null, this.context.history, author)}
                                 primaryText={author.full_name}
                                 secondaryText={author.title}
+                                {...this.styles().CardListItem}
                             />
                         </CardList>
                     </div>
-                    <div className="col-xs-4 end-xs middle-xs" is="feedbackContainer">
+                    <div className="col-xs-4 end-xs middle-xs" style={this.styles().feedbackContainer}>
                         {this.renderSuggestImprovementsButton()}
                     </div>
                 </div>
@@ -721,12 +721,12 @@ class Post extends CSSComponent {
         if (this.props.isEditable === true) {
             return (
                 <IconButton
-                    is="IconButton"
                     onTouchTap={(e) => {
                         this.deleteFile(file);
                     }}
                     tooltip={t('Remove attachment')}
                     touch={true}
+                    {...this.styles().IconButton}
                 >
                     <DeleteIcon stroke="rgba(0, 0, 0, 0.2)" />
                 </IconButton>
@@ -741,29 +741,29 @@ class Post extends CSSComponent {
                 elements.push(
                     <ListItem
                         href={this.getFileUrl(file.name)}
-                        is="AttachementListItem"
                         key={this.getFileId(file.name)}
-                        leftIcon={<IconContainer IconClass={AttachmentIcon} is="IconContainer" stroke="#7c7b7b" />}
+                        leftIcon={<IconContainer IconClass={AttachmentIcon} stroke="#7c7b7b" {...this.styles().IconContainer} />}
                         primaryText={<span style={{...this.styles().attachmentListItemTextStyle}}>{file.name}</span>}
                         rightIconButton={this.renderDeleteFileButton(file)}
                         target="_blank"
+                        {...this.styles().AttachementListItem}
                     />
                 );
             } else {
                 elements.push(
                     <ListItem
                         disabled={true}
-                        is="AttachementListItem"
                         key={file.name}
-                        leftIcon={<CircularProgress is="CircularProgress" mode="indeterminate" size={0.4} />}
+                        leftIcon={<CircularProgress mode="indeterminate" size={0.4} {...this.styles().CircularProgress} />}
                         primaryText={<span style={{...this.styles().attachmentListItemDisabledTextStyle}}>{file.name}</span>}
+                        {...this.styles().AttachementListItem}
                     />
                 );
             }
         });
 
         return (
-            <List is="attachmentsContainer">
+            <List style={this.styles().attachmentsContainer}>
                 {elements}
             </List>
         );
@@ -782,12 +782,12 @@ class Post extends CSSComponent {
                 {this.renderFiles(this.state.files)}
                 <Dropzone
                     className="row"
-                    is="Dropzone"
                     multiple={true}
                     onDrop={this.onDrop.bind(this)}
                     ref="dropzone"
+                    {...this.styles().Dropzone}
                 >
-                    <div className="row dropzone-trigger" is="dropzoneTriggerContainer">
+                    <div className="row dropzone-trigger" style={this.styles().dropzoneTriggerContainer}>
                         <div className="row col-xs start-xs">{t('Add attachments by selecting files or dropping them here')}</div>
                     </div>
                 </Dropzone>
@@ -818,13 +818,13 @@ class Post extends CSSComponent {
         if (this.shouldAllowChangingOwner()) {
             return (
                 <FlatButton
-                    is="FlatButton"
                     label={t('Change Owner')}
                     onTouchTap={() => {
                         if (this.refs.changeOwnerModal) {
                             this.refs.changeOwnerModal.show();
                         }
                     }}
+                    {...this.styles().FlatButton}
                 />
             );
         }
@@ -839,36 +839,36 @@ class Post extends CSSComponent {
         return (
             <span>
                 <div className="row between-xs middle-xs">
-                    <div className="col-xs-8" is="authorContainer">
-                        <CardList is="cardList">
+                    <div className="col-xs-8" style={this.styles().authorContainer}>
+                        <CardList style={this.styles().cardList}>
                             <CardListItem
                                 disabled={true}
-                                is="CardListItem"
                                 key={author.id}
-                                leftAvatar={<ProfileAvatar is="cardListAvatar" profile={author} />}
+                                leftAvatar={<ProfileAvatar style={this.styles().cardListAvatar} profile={author} />}
                                 primaryText={author.full_name}
                                 secondaryText={author.title}
+                                {...this.styles().CardListItem}
                             />
                         </CardList>
                     </div>
-                    <div className="col-xs-4 end-xs middle-xs" is="feedbackContainer">
+                    <div className="col-xs-4 end-xs middle-xs" style={this.styles().feedbackContainer}>
                         {this.renderChangeOwnerButton()}
                     </div>
                 </div>
                 <AutogrowTextarea
                     autoFocus="true"
-                    is="AutogrowTitleTextarea"
                     onChange={::this.handleTitleChange}
                     placeholder={t('Title')}
                     singleLine={true}
                     value={this.state.title}
+                    {...this.styles().AutogrowTitleTextarea}
                 />
                 <AutogrowTextarea
                     additionalHeightDelta={50}
-                    is="AutogrowTextarea"
                     onChange={::this.handleBodyChange}
                     placeholder={t('Contribute Knowledge')}
                     value={this.state.body}
+                    {...this.styles().AutogrowTextarea}
                 />
                 {this.renderFilesContainer()}
                 {this.renderChangeOwnerModal()}
@@ -900,7 +900,7 @@ class Post extends CSSComponent {
         // show explicit controls.
         if (autoSave === false && isEditable === true && !header && post) {
             return (
-                <div className="row end-xs" is="publishButtonContainer">
+                <div className="row end-xs" style={this.styles().publishButtonContainer}>
                     <RoundedButton
                         label={t('Publish')}
                         onTouchTap={() => {
@@ -938,7 +938,7 @@ class Post extends CSSComponent {
                 {header}
                 {this.renderActionButtons()}
                 <div className="row">
-                    <div className="col-xs" is="contentContainer">
+                    <div className="col-xs" style={this.styles().contentContainer}>
                         <div className="box">
                             {this.renderContent()}
                         </div>

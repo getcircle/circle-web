@@ -165,7 +165,7 @@ class SelectDialog extends CSSComponent {
                     <div className="col-xs">
                         <div
                             className="box"
-                            is="loadingIndicatorContainer"
+                            style={this.styles().loadingIndicatorContainer}
                             key="loading-indicator"
                         >
                             <CircularProgress mode="indeterminate" size={0.5} />
@@ -181,15 +181,15 @@ class SelectDialog extends CSSComponent {
             searchInputPlaceholder,
             searchInputContainerStyle,
             searchInputStyle,
+            ...other,
         } = this.props;
-
+        const dialogProps = {...this.styles().Dialog, ...other};
         return (
             <div >
                 <Dialog
-                    is="Dialog"
                     ref="modal"
                     repositionOnUpdate={false}
-                    {...this.props}
+                    {...dialogProps}
                 >
                     <div
                         className="col-xs"
@@ -199,7 +199,7 @@ class SelectDialog extends CSSComponent {
                             className="row middle-xs"
                             style={searchInputContainerStyle}
                         >
-                            <SearchIcon is="SearchIcon" />
+                            <SearchIcon {...this.styles().SearchIcon} />
                             <input
                                 onChange={::this.handleChange}
                                 placeholder={searchInputPlaceholder}

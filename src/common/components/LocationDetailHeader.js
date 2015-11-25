@@ -115,22 +115,22 @@ class LocationDetailHeader extends CSSComponent {
         let iconStrokeWidth = {...this.styles().icon}.strokeWidth;
         return (
             <DetailHeader largerDevice={largerDevice}>
-                <div className="row center-xs" is="iconSection">
+                <div className="row center-xs" style={this.styles().iconSection}>
                     <IconContainer
                         IconClass={OfficeIcon}
                         iconStyle={{...this.styles().icon}}
-                        is="iconContainer"
                         stroke={iconColor}
                         strokeWidth={iconStrokeWidth}
+                        style={this.styles().iconContainer}
                     />
                 </div>
-                <div className="row center-xs" is="nameSection">
+                <div className="row center-xs" style={this.styles().nameSection}>
                     <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>{office.name}</span>
                 </div>
-                <div className="row center-xs" is="infoSection">
+                <div className="row center-xs" style={this.styles().infoSection}>
                     <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>{this.getLocationInfo(office)}</span>
                 </div>
-                <div className="row center-xs" is="timeSection">
+                <div className="row center-xs" style={this.styles().timeSection}>
                     <span style={this.context.muiTheme.commonStyles.headerTertiaryText}>
                         {t('Local Time')}&nbsp;{'\u2013'}&nbsp;
                         {this.state.currentTime.calendar()}

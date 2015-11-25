@@ -52,7 +52,7 @@ class TeamDetailTeams extends CSSComponent {
             return (
                 <CardListItem
                     key={index}
-                    leftAvatar={<IconContainer IconClass={GroupIcon} is="IconContainer" />}
+                    leftAvatar={<IconContainer IconClass={GroupIcon} {...this.styles().IconContainer} />}
                     onTouchTap={this.props.onClickTeam.bind(null, item)}
                     primaryText={item.display_name}
                     secondaryText={getTeamLabel(item)}

@@ -48,9 +48,14 @@ class AutoCompleteToken extends CSSComponent {
             label,
             ...other,
         } = this.props;
+        const buttonProps = {...this.styles().FlatButton, ...other};
         return (
-            <div is="root">
-                <FlatButton className="content--center--h" {...other} is="FlatButton" label={label} />
+            <div style={this.styles().root}>
+                <FlatButton
+                    className="content--center--h"
+                    label={label}
+                    {...buttonProps}
+                />
             </div>
         );
     }

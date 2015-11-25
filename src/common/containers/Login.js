@@ -185,7 +185,7 @@ class Login extends CSSComponent {
         if (organizationImageUrl) {
             return (
                 <div className="row center-xs">
-                    <img is="organizationImage" src={organizationImageUrl} />
+                    <img src={organizationImageUrl} style={this.styles().organizationImage} />
                 </div>
             );
         } else {
@@ -233,16 +233,16 @@ class Login extends CSSComponent {
 
     render() {
         return (
-            <div is="root">
-                <div className="wrap" is="wrap">
+            <div style={this.styles().root}>
+                <div className="wrap" style={this.styles().wrap}>
                     {this.renderOrganizationImage()}
                     <div className="row center-xs">
-                        <Paper is="container">
+                        <Paper style={this.styles().container}>
                             <div className="row center-xs">
-                                <h1 is="header">{this.getHeaderText()}</h1>
+                                <h1 style={this.styles().header}>{this.getHeaderText()}</h1>
                             </div>
                             <div className="row center-xs">
-                                <div className="col-xs-12" is="form">
+                                <div className="col-xs-12" style={this.styles().form}>
                                     {this.renderLoginForm()}
                                 </div>
                             </div>

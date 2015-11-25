@@ -98,14 +98,14 @@ class TabBar extends CSSComponent {
         return (
             <footer {...other} className="row" style={{...this.styles().footer, ...style}}>
                 <Tabs
-                    is="Tabs"
                     valueLink={{
                         value: this.state.tabValue,
                         requestChange: ::this.handleChange,
                     }}
+                    {...this.styles().Tabs}
                 >
-                    <Tab is="tab" label="Search" value={TABS.SEARCH} />
-                    <Tab is="tab" label="Profile" value={TABS.USER_PROFILE} />
+                    <Tab label="Search" style={this.styles().tab} value={TABS.SEARCH} />
+                    <Tab label="Profile" style={this.styles().tab} value={TABS.USER_PROFILE} />
                 </Tabs>
             </footer>
         );

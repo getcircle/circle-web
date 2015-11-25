@@ -95,24 +95,24 @@ class Header extends CSSComponent {
         }
 
         return (
-            <div className="row" is="root">
-                <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2" is="logoContainer">
+            <div className="row" style={this.styles().root}>
+                <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2" style={this.styles().logoContainer}>
                     <img
-                        is="image"
                         onTouchTap={() => history.pushState(null, '/')}
                         src={this.getImageUrl()}
+                        style={this.styles().image}
                     />
                 </div>
-                <div className={actionsContainerClasses} is="headerActionsContainer">
+                <div className={actionsContainerClasses} style={this.styles().headerActionsContainer}>
                     {this.props.actionsContainer}
                 </div>
-                <div className={menuContainerClasses} is="menuContainer">
+                <div className={menuContainerClasses} style={this.styles().menuContainer}>
                     <HeaderMenu
                         dispatch={this.props.dispatch}
                         expandedView={false}
-                        is="HeaderMenu"
                         managesTeam={this.props.managesTeam}
                         profile={this.props.profile}
+                        {...this.styles().HeaderMenu}
                     />
                 </div>
             </div>
@@ -121,11 +121,11 @@ class Header extends CSSComponent {
 
     render() {
         return (
-            <header is="headerContainer">
+            <header style={this.styles().headerContainer}>
                 <AppBar
-                    is="AppBar"
                     showMenuIconButton={false}
                     title={this.renderHeader()}
+                    {...this.styles().AppBar}
                 />
             </header>
         );

@@ -141,7 +141,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                     <CardListItem
                         href={mailto(item.value)}
                         key={index}
-                        leftAvatar={<IconContainer IconClass={MailIcon} is="IconContainer" />}
+                        leftAvatar={<IconContainer IconClass={MailIcon} {...this.styles().IconContainer} />}
                         onTouchTap={() => {
                             tracker.trackContactTap(
                                 ContactMethodTypeV1.EMAIL,
@@ -160,7 +160,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                     <CardListItem
                         disabled={!this.canCall(item)}
                         key={index}
-                        leftAvatar={<IconContainer IconClass={PhoneIcon} is="IconContainer" />}
+                        leftAvatar={<IconContainer IconClass={PhoneIcon} {...this.styles().IconContainer} />}
                         onTouchTap={() => {
                             if (this.canCall(item)) {
                                 tracker.trackContactTap(
@@ -203,7 +203,7 @@ class ProfileDetailContactInfo extends CSSComponent {
                 return (
                     <CardListItem
                         key={index}
-                        leftAvatar={<IconContainer IconClass={OfficeIcon} is="IconContainer" />}
+                        leftAvatar={<IconContainer IconClass={OfficeIcon} {...this.styles().IconContainer} />}
                         onTouchTap={this.props.onClickLocation.bind(null, item)}
                         primaryText={item.name}
                         secondaryText={secondaryText}

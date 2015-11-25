@@ -77,13 +77,13 @@ class ProfileDetailHeader extends CSSComponent {
         }
 
         return (
-            <div className="row end-xs" is="editButtonContainer">
+            <div className="row end-xs" style={this.styles().editButtonContainer}>
                 <FlatButton
-                    is="editButton"
                     label={t('Edit Profile')}
                     onTouchTap={() => {
                         this.props.onEditTapped();
                     }}
+                    style={this.styles().editButton}
                 />
             </div>
         );
@@ -116,20 +116,20 @@ class ProfileDetailHeader extends CSSComponent {
                 largerDevice={this.props.largerDevice}
             >
                 {this.renderEditButton()}
-                <div className="row center-xs" is="avatarSection">
-                    <ProfileAvatar is="avatar" profile={profile} />
+                <div className="row center-xs" style={this.styles().avatarSection}>
+                    <ProfileAvatar profile={profile} style={this.styles().avatar} />
                 </div>
-                <div className="row center-xs" is="nameSection">
+                <div className="row center-xs" style={this.styles().nameSection}>
                     <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>
                         {profile.full_name}
                     </span>
                 </div>
-                <div className="row center-xs" is="titleSection">
+                <div className="row center-xs" style={this.styles().titleSection}>
                     <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>
                         {profile.display_title}
                     </span>
                 </div>
-                <div className="row center-xs" is="tenureSection">
+                <div className="row center-xs" style={this.styles().tenureSection}>
                     <span style={this.context.muiTheme.commonStyles.headerTertiaryText}>
                         {tenureText}
                     </span>

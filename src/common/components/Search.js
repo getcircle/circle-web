@@ -660,7 +660,7 @@ class Search extends CSSComponent {
         let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const item = {
             index: index,
-            leftAvatar: <IconContainer IconClass={GroupIcon} is="ResultIcon" />,
+            leftAvatar: <IconContainer IconClass={GroupIcon} {...this.styles().ResultIcon} />,
             primaryText: team.display_name,
             secondaryText: subTextParts.join(', '),
             onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
@@ -675,7 +675,7 @@ class Search extends CSSComponent {
         let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const item = {
             index: index,
-            leftAvatar: <IconContainer IconClass={OfficeIcon} is="ResultIcon" />,
+            leftAvatar: <IconContainer IconClass={OfficeIcon} {...this.styles().ResultIcon} />,
             primaryText: location.name,
             secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
             onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
@@ -695,7 +695,7 @@ class Search extends CSSComponent {
         const item = {
             estimatedHeight: estimatedHeight,
             index: index,
-            leftAvatar: <IconContainer IconClass={LightBulbIcon} is="ResultIcon" stroke="#7c7b7b" />,
+            leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" {...this.styles().ResultIcon}/>,
             primaryText: this.getPrimaryTextContainer(
                 post.title,
                 this.styles().postTextResultText
@@ -814,7 +814,7 @@ class Search extends CSSComponent {
             return {
                 estimatedHeight: EXPLORE_SEARCH_RESULT_HEIGHT,
                 innerDivStyle: this.styles().searchResult,
-                leftAvatar: <SearchIcon is="SearchIcon" />,
+                leftAvatar: <SearchIcon {...this.styles().SearchIcon} />,
                 type: RESULT_TYPES.EXPLORE,
                 subheader: 'explore',
                 ...item,
@@ -828,7 +828,7 @@ class Search extends CSSComponent {
         expansions.push({
             estimatedHeight: EXPLORE_SEARCH_RESULT_HEIGHT,
             type: RESULT_TYPES.CONTACT_METHOD,
-            leftAvatar: <IconContainer IconClass={MailIcon} is="ActionIcon" stroke="rgba(0, 0, 0, 0.4)" />,
+            leftAvatar: <IconContainer IconClass={MailIcon} stroke="rgba(0, 0, 0, 0.4)" {...this.styles().ActionIcon} />,
             primaryText: this.getPrimaryTextContainer(
                 t(`Email ${profile.first_name}`), {
                     fontSize: '12px',
@@ -939,12 +939,12 @@ class Search extends CSSComponent {
                 ),
                 secondaryText: (
                     <div style={{...this.styles().requestInfo}}>
-                        <span is="requestInfoLabelPrimary">
+                        <span style={this.styles().requestInfoLabelPrimary}>
                             {t('Can\'t find what you\'re looking for?')}
                         </span>
                         <span
-                            is="requestInfoLabel"
                             onTouchTap={() => this.setState({feedbackDialogOpen: true})}
+                            style={this.styles().requestInfoLabel}
                         >
                             {t('Request missing info')}
                         </span>
@@ -1130,7 +1130,7 @@ class Search extends CSSComponent {
 
     getLoadingIndicator() {
         return (
-            <div is="loadingIndicatorContainer" key="loading-indicator">
+            <div key="loading-indicator" style={this.styles().loadingIndicatorContainer}>
                 <CircularProgress mode="indeterminate" size={0.5} />
             </div>
         );
@@ -1172,12 +1172,11 @@ class Search extends CSSComponent {
             return (
                 <ListItem
                     disableFocusRipple={true}
-                    is="ListItem"
-                    leftAvatar={<IconContainer IconClass={SearchIcon} is="ResultIcon" />}
+                    leftAvatar={<IconContainer IconClass={SearchIcon} {...this.styles().ResultIcon} />}
                     onTouchTap={() => {
                         routes.routeToSearch(this.context.history, this.state.query);
                     }}
-                    primaryText={<span>{t('Search')}&nbsp;<span is="searchTerm">&ldquo;{this.state.query}&rdquo;</span></span>}
+                    primaryText={<span>{t('Search')}&nbsp;<span style={this.styles().searchTerm}>&ldquo;{this.state.query}&rdquo;</span></span>}
                     ref={(component) => {
                         ((highlighted) =>  {
                             // NB: Component will be null in some cases (unmounting and on change)
@@ -1190,21 +1189,20 @@ class Search extends CSSComponent {
                             }
                         })(highlighted);
                     }}
+                    {...this.styles().ListItem}
                 />
             );
         }
     }
 
     renderDefaultResult(item, highlighted, style) {
+        const listProps = {...this.styles().ListItem, ...item};
         if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
             item.secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
         }
-
         return (
             <ListItem
-                {...item}
                 disableFocusRipple={true}
-                is="ListItem"
                 onTouchTap={item.onTouchTap}
                 primaryText={item.primaryText}
                 ref={(component) => {
@@ -1219,6 +1217,7 @@ class Search extends CSSComponent {
                         }
                     })(highlighted);
                 }}
+                {...listProps}
             />
         );
     }
@@ -1254,7 +1253,7 @@ class Search extends CSSComponent {
         // TODO: look into why infinite isn't catching this for us
         if (this.props.loading) {
             return (
-                <div is="loadingIndicatorContainer" key="loading-indicator">
+                <div key="loading-indicator" style={this.styles().loadingIndicatorContainer}>
                     <CircularProgress mode="indeterminate" size={0.5} />
                 </div>
             );
@@ -1266,14 +1265,14 @@ class Search extends CSSComponent {
         if (index !== 0 && !addSubHeader) {
             element = (
                 <div key={`item-with-divider-${index}`}>
-                    <ListDivider inset={true} is="ListDivider" />
+                    <ListDivider inset={true} {...this.styles().ListDivider} />
                     {item}
                 </div>
             );
         } else if (addSubHeader) {
             element = (
                 <div key={`item-with-subheader-${index}`}>
-                    <div is="resultsListSubHeader">
+                    <div style={this.styles().resultsListSubHeader}>
                         <span>{item.props.subheader}</span>
                     </div>
                     {item}
@@ -1352,13 +1351,13 @@ class Search extends CSSComponent {
         return (
             <Dialog
                 actions={standardActions}
-                is="Dialog"
                 open={this.state.feedbackDialogOpen}
                 title={t('What were you trying to find?')}
+                {...this.styles().Dialog}
             >
                 <textarea
                     autoFocus={true}
-                    is="dialogTextArea"
+                    style={this.styles().dialogTextArea}
                     valueLink={{
                         value: this.state.infoRequest,
                         requestChange: newValue => this.setState({infoRequest: newValue}),
@@ -1406,6 +1405,7 @@ class Search extends CSSComponent {
                     showCancel={showCancel}
                     style={{...this.styles().autoComplete, ...autoCompleteStyle}}
                     tokens={this.getSearchTokens()}
+                    {...this.styles().AutoComplete}
                 />
                 {this.renderDialog()}
             </div>

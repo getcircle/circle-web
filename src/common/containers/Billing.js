@@ -44,8 +44,8 @@ class Billing extends CSSComponent {
 
     render() {
         return (
-            <div is="root">
-                <div className="wrap" is="wrap">
+            <div style={this.styles().root}>
+                <div className="wrap" style={this.styles().wrap}>
                     <BillingForm />
                 </div>
             </div>

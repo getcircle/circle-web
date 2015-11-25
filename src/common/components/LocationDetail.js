@@ -62,11 +62,11 @@ class LocationDetail extends CSSComponent {
             return (
                 <DetailMembers
                     actionText={actionText}
-                    is="section"
                     itemsPerColumn={1}
                     members={office.points_of_contact}
                     onClickMember={routeToProfile.bind(null, this.context.history)}
                     pageType={PAGE_TYPE.LOCATION_POINTS_OF_CONTACT}
+                    style={this.styles().section}
                     title={title}
                 />
             );
@@ -87,12 +87,12 @@ class LocationDetail extends CSSComponent {
             return (
                 <DetailMembers
                     actionText={actionText}
-                    is="section"
                     largerDevice={this.props.largerDevice}
                     members={members}
                     membersLoadMore={this.props.membersLoadMore}
                     onClickMember={routeToProfile.bind(null, this.context.history)}
                     pageType={PAGE_TYPE.LOCATION_MEMBERS}
+                    style={this.styles().section}
                     title={title}
                     viewAllAttribute={services.search.containers.search.AttributeV1.LOCATION_ID}
                     viewAllAttributeValue={this.props.office.id}

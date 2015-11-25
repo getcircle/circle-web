@@ -91,11 +91,11 @@ class LocationDetailLocation extends CSSComponent {
 
 
         return (
-            <CardList is="AddressCardList">
+            <CardList {...this.styles().AddressCardList}>
                 <CardListItem
                     disabled={true}
                     key={0}
-                    leftAvatar={<IconContainer IconClass={LocationIcon} is="IconContainer" />}
+                    leftAvatar={<IconContainer IconClass={LocationIcon} {...this.styles().IconContainer} />}
                     primaryText={primaryText}
                     secondaryText={secondaryText}
                 />
@@ -106,11 +106,11 @@ class LocationDetailLocation extends CSSComponent {
 
     renderMap(office) {
         return (
-            <CardList is="MapCardList">
+            <CardList {...this.styles().MapCardList}>
                 <EmbeddedGoogleMap
                     height="100%"
-                    is="map"
                     office={office}
+                    style={this.styles().map}
                     width="100%"
                 />
             </CardList>

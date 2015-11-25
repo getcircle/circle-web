@@ -60,8 +60,8 @@ class Toast extends CSSComponent {
         }
 
         return (
-            <div className={classes.trim()} is="messageContainer">
-                <span is="messageText">
+            <div className={classes.trim()} style={this.styles().messageContainer}>
+                <span style={this.styles().messageText}>
                     {message}
                 </span>
             </div>

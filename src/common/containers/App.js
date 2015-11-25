@@ -204,13 +204,13 @@ class App extends CSSComponent {
             <Search
                 canExplore={false}
                 className="center-xs"
-                is="Search"
                 largerDevice={true}
                 onBlur={::this.handleBlurSearch}
                 onFocus={::this.handleFocusSearch}
                 organization={this.props.organization}
                 params={this.props.params}
                 searchLocation={SEARCH_LOCATION.PAGE_HEADER}
+                {...this.styles().Search}
             />
         );
     }
@@ -218,7 +218,7 @@ class App extends CSSComponent {
     render() {
         let footer;
         if (this.props.authenticated && this.props.displayFooter) {
-            footer = <TabBar is="TabBar" profile={this.props.profile} />;
+            footer = <TabBar profile={this.props.profile} {...this.styles().TabBar} />;
         }
         let header;
         if (this.props.authenticated && this.props.displayHeader) {
@@ -230,9 +230,9 @@ class App extends CSSComponent {
             );
         }
         return (
-            <div is="root">
+            <div style={this.styles().root}>
                 <AppCanvas>
-                    <div is="canvasContainer">
+                    <div style={this.styles().canvasContainer}>
                         {header}
                         {this.props.children}
                         {footer}

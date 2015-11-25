@@ -118,31 +118,31 @@ class DetailViewAll extends CSSComponent {
             searchCategory,
             ...other,
         } = this.props;
+        const searchProps = {...this.styles().Search, ...other};
         return (
             <div >
                 <Dialog
-                    is="Dialog"
                     largerDevice={largerDevice}
                     pageType={pageType}
                     ref="modal"
                     repositionOnUpdate={false}
                     title={title}
+                    {...this.styles().Dialog}
                 >
-                    <div className="row center-xs" is="searchContainer">
+                    <div className="row center-xs" style={this.styles().searchContainer}>
                         <Search
                             alwaysActive={!this.shouldHideFilterInput()}
                             canExplore={false}
                             defaults={items}
                             defaultsLoadMore={itemsLoadMore}
                             focused={true}
-                            is="Search"
                             onSelectItem={() => this.refs.modal.dismiss()}
                             placeholder={filterPlaceholder}
                             searchAttribute={searchAttribute}
                             searchAttributeValue={searchAttributeValue}
                             searchCategory={searchCategory}
                             searchLocation={SEARCH_LOCATION.MODAL}
-                            {...other}
+                            {...searchProps}
                         />
                     </div>
                 </Dialog>

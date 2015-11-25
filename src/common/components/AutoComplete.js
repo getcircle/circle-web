@@ -322,10 +322,10 @@ class AutoComplete extends CSSComponent {
         if (showCancel) {
             return (
                 <FlatButton
-                    is="cancelButton"
                     label="Cancel"
                     onTouchTap={::this.handleCancel}
                     primary={true}
+                    style={this.styles().cancelButton}
                 />
             );
         }
@@ -367,14 +367,14 @@ class AutoComplete extends CSSComponent {
                 style={{...this.styles().root, ...style}}
             >
                 <div className="row middle-xs" style={{...this.styles().inputContainer, ...inputContainerStyle}}>
-                    <SearchIcon is="SearchIcon" />
+                    <SearchIcon {...this.styles().SearchIcon} />
                     {this.renderTokens(tokens, onClearToken)}
                     <input
-                        is="input"
                         onChange={::this.handleChange}
                         onFocus={::this.handleFocus}
                         placeholder={!this.props.tokens ? placeholderText : ''}
                         ref="input"
+                        style={this.styles().input}
                         type="text"
                         value={this.state.value}
                     />

@@ -55,7 +55,6 @@ class TeamDetailDescription extends CSSComponent {
             defaultContent = (
                 <FlatButton
                     href={mailtoTeamDescription(team, manager, this.context.authenticatedProfile)}
-                    is="link"
                     linkButton={true}
                     onTouchTap={() => {
                         tracker.trackContactTap(
@@ -65,6 +64,7 @@ class TeamDetailDescription extends CSSComponent {
                         );
                     }}
                     primary={true}
+                    style={this.styles().link}
                     target="_blank"
                 >
                     {t('Ask Me!')}
@@ -73,9 +73,9 @@ class TeamDetailDescription extends CSSComponent {
         } else if (this.props.onEditTapped) {
             defaultContent = (
                 <FlatButton
-                    is="link"
                     onTouchTap={() => this.props.onEditTapped()}
                     primary={true}
+                    style={this.styles().link}
                 >
                     {t('Add details')}
                 </FlatButton>

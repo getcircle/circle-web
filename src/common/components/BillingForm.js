@@ -54,14 +54,14 @@ class BillingForm extends CSSComponent {
 
     render() {
         return (
-            <div className="row" is="container">
-                <section className="col-xs" is="section">
+            <div className="row" style={this.styles().container}>
+                <section className="col-xs" style={this.styles().section}>
                     <div>
                         <div className="row center-xs">
-                            <h1 is="header">luno</h1>
+                            <h1 style={this.styles().header}>luno</h1>
                         </div>
                         <div className="row center-xs">
-                            <h2 is="subHeader">{t('organizing your company\'s knowledge')}</h2>
+                            <h2 style={this.styles().subHeader}>{t('organizing your company\'s knowledge')}</h2>
                         </div>
                         <div className="row center-xs">
                             <StripeCheckout
@@ -73,10 +73,10 @@ class BillingForm extends CSSComponent {
                                 token={(token) => this.props.dispatch(storeToken(token))}
                             >
                                 <RaisedButton
-                                    is="button"
                                     label={`${ t('ENTER YOUR CREDIT CARD') }`}
                                     labelStyle={this.styles().label}
                                     primary={true}
+                                    style={this.styles().button}
                                 />
                              </StripeCheckout>
                         </div>

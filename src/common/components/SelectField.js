@@ -112,8 +112,8 @@ class SelectField extends CSSComponent {
                     <div className="col-xs">
                         <div
                             className="box"
-                            is="loadingIndicatorContainer"
                             key="loading-indicator"
+                            style={this.styles().loadingIndicatorContainer}
                         >
                             <CircularProgress mode="indeterminate" size={0.5} />
                         </div>
@@ -170,7 +170,7 @@ class SelectField extends CSSComponent {
                 onBlur={::this.handleBlur}
                 style={{...this.props.listStyle}}
             >
-                <SearchIcon is="SearchIcon" />
+                <SearchIcon {...this.styles().SearchIcon} />
                 <input
                     name={this.props.searchInputName}
                     onChange={::this.handleChange}

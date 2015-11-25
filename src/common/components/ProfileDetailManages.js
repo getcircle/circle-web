@@ -40,7 +40,7 @@ class ProfileDetailManages extends CSSComponent {
         return (
             <CardList>
                 <CardListItem
-                    leftAvatar={<IconContainer IconClass={GroupIcon} is="IconContainer" />}
+                    leftAvatar={<IconContainer IconClass={GroupIcon} {...this.styles().IconContainer} />}
                     onTouchTap={this.props.onClickTeam}
                     primaryText={team.display_name}
                     secondaryText={getTeamLabel(team)}

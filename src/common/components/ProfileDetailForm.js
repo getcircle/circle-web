@@ -549,95 +549,95 @@ class ProfileDetailForm extends CSSComponent {
         let selectFieldValue = !!this.state.manager ? this.state.manager.full_name : '';
 
         return (
-            <div className="col-xs center-xs" is="formContainer">
+            <div className="col-xs center-xs" style={this.styles().formContainer}>
                 {this.renderProgressIndicator()}
                 {this.renderToast()}
-                <form is="form">
-                    <div is="sectionTitle">{t('Photo')}</div>
-                    <div className="row start-xs" is="profileImageUploadContainer">
+                <form style={this.styles().form}>
+                    <div style={this.styles().sectionTitle}>{t('Photo')}</div>
+                    <div className="row start-xs" style={this.styles().profileImageUploadContainer}>
                         <button
                             className="dropzone-trigger"
                             disabled={this.state.saving}
-                            is="profileImageButton"
                             onClick={this.onOpenClick.bind(this)}
+                            style={this.styles().profileImageButton}
                             type="button"
                         >
-                            <img alt={t('Image')} is="profileImage" src={imageUrl} />
+                            <img alt={t('Image')} src={imageUrl} style={this.styles().profileImage} />
                         </button>
                         <Dropzone
                             activeStyle={{...this.styles().dropzoneActive}}
                             className="col-xs"
-                            is="dropzone"
                             multiple={false}
                             onDrop={this.onDrop.bind(this)}
                             ref="dropzone"
+                            style={this.styles().dropzone}
                         >
                             <div className="row center-xs middle-xs dropzone-trigger">
                                 <IconContainer
                                     IconClass={EditProfileCameraIcon}
                                     iconStyle={{...this.styles().editProfileCameraIcon}}
-                                    is="editProfileCameraIconContainer"
                                     stroke='rgba(0, 0, 0, 0.4)'
+                                    style={this.styles().editProfileCameraIconContainer}
                                 />
                                 <div className="row col-xs start-xs">{t('Update Photo')}</div>
                             </div>
                         </Dropzone>
                     </div>
                     <div className="row">
-                        <div className="col-xs" is="firstField">
-                            <div is="sectionTitle">{t('First Name')}</div>
+                        <div className="col-xs" style={this.styles().firstField}>
+                            <div style={this.styles().sectionTitle}>{t('First Name')}</div>
                             <input
                                 disabled={this.state.saving}
-                                is="input"
                                 name="firstName"
                                 onChange={this.handleChange.bind(this)}
                                 placeholder={t('First Name')}
+                                style={this.styles().input}
                                 type="text"
                                 value={this.state.firstName}
                              />
                         </div>
-                        <div className="col-xs" is="lastField">
-                            <div is="sectionTitle">{t('Last Name')}</div>
+                        <div className="col-xs" style={this.styles().lastField}>
+                            <div style={this.styles().sectionTitle}>{t('Last Name')}</div>
                             <input
                                 disabled={this.state.saving}
-                                is="input"
                                 name="lastName"
                                 onChange={this.handleChange.bind(this)}
                                 placeholder={t('Last Name')}
+                                style={this.styles().input}
                                 type="text"
                                 value={this.state.lastName}
                              />
                         </div>
                     </div>
-                    <div is="sectionTitle">{t('Title')}</div>
+                    <div style={this.styles().sectionTitle}>{t('Title')}</div>
                     <input
                         disabled={this.state.saving}
-                        is="input"
                         name="title"
                         onChange={this.handleChange.bind(this)}
                         placeholder={t('Job Title')}
+                        style={this.styles().input}
                         type="text"
                         value={this.state.title}
                      />
-                    <div is="sectionTitle">{t('Contact')}</div>
+                    <div style={this.styles().sectionTitle}>{t('Contact')}</div>
                     <input
                         disabled={this.state.saving}
-                        is="input"
                         name="cellNumber"
                         onChange={this.handleChange.bind(this)}
                         placeholder={t('Add your cell number')}
+                        style={this.styles().input}
                         type="tel"
                         value={this.state.cellNumber}
                      />
-                    <div is="sectionTitle">{t('Reports to')}</div>
+                    <div style={this.styles().sectionTitle}>{t('Reports to')}</div>
                     <ProfilesSelector
                         dialogTitle={t('Change Manager')}
                         dispatch={dispatch}
-                        is="ProfilesSelector"
                         largerDevice={largerDevice}
                         onSelect={::this.handleManagerSelected}
                         searchInputPlaceholder={t('Search Manager')}
                         value={selectFieldValue}
+                        {...this.styles().ProfilesSelector}
                     />
                 </form>
             </div>
@@ -655,7 +655,6 @@ class ProfileDetailForm extends CSSComponent {
                 <Dialog
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={t('Save')}
-                    is="Dialog"
                     largerDevice={largerDevice}
                     onRequestClose={this.resetState.bind(this)}
                     onSave={this.handleSaveTapped.bind(this)}
@@ -664,6 +663,7 @@ class ProfileDetailForm extends CSSComponent {
                     ref="modal"
                     repositionOnUpdate={false}
                     title={t('Edit Profile')}
+                    {...this.styles().Dialog}
                 >
                     <div className="row center-xs">
                         {this.renderContent()}

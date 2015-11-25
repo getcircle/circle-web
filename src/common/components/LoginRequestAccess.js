@@ -63,24 +63,24 @@ class LoginRequestAccess extends CSSComponent {
     render() {
         return (
             <section>
-                <div is="headerDiv">
-                    <span is="header">{t('You don\'t have access to Luno yet.')}</span>
+                <div style={this.styles().headerDiv}>
+                    <span style={this.styles().header}>{t('You don\'t have access to Luno yet.')}</span>
                 </div>
                 <div className="col-xs-12">
                     <RaisedButton
                         disabled={!this.state.canRequestAccess}
-                        is="button"
                         label={this.getLabel()}
                         onTouchTap={() => {
                             this.setState({canRequestAccess: false});
                             this.props.onRequestAccess()
                         }}
                         primary={true}
+                        style={this.styles().button}
                     />
-                    <div is="retrySection">
+                    <div style={this.styles().retrySection}>
                         <a
-                            is="retry"
                             onTouchTap={() => {this.context.history.pushState(null, '/login')}}
+                            style={this.styles().retry}
                         >
                             {t('Try Again')}
                         </a>

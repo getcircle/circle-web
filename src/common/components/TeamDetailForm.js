@@ -241,38 +241,38 @@ class TeamDetailForm extends CSSComponent {
         let error = '';
 
         return (
-            <div is="formContainer">
+            <div style={this.styles().formContainer}>
                 {this.renderProgressIndicator()}
                 {this.renderToast()}
-                <form is="form">
-                    <div is="sectionTitle">{t('Team Name')}</div>
+                <form style={this.styles().form}>
+                    <div style={this.styles().sectionTitle}>{t('Team Name')}</div>
                     <input
                         disabled={this.state.saving}
-                        is="input"
                         name="teamName"
                         onChange={this.handleChange.bind(this)}
                         placeholder={t('Add a name for your team')}
                         type="text"
+                        style={this.styles().input}
                         value={this.state.name}
                      />
-                     <div is="errorContainer">
-                        <span is="errorMessage">
+                     <div style={this.styles().errorContainer}>
+                        <span style={this.styles().errorMessage}>
                             {error}
                         </span>
                     </div>
-                    <div is="sectionTitle">{t('Description')}</div>
+                    <div style={this.styles().sectionTitle}>{t('Description')}</div>
                     <textarea
                         disabled={this.state.saving}
-                        is="textarea"
                         name="teamDescription"
                         onChange={this.handleChange.bind(this)}
                         placeholder={t('What is your team responsible for? Your team description should help your' +
                          ' fellow coworkers understand if members of your team can answer their questions.')}
+                        style={this.styles().textarea}
                         type="text"
                         value={this.state.description}
                      />
-                     <div is="errorContainer">
-                        <span is="errorMessage">
+                     <div style={this.styles().errorContainer}>
+                        <span style={this.styles().errorMessage}>
                             {error}
                         </span>
                     </div>
@@ -292,13 +292,13 @@ class TeamDetailForm extends CSSComponent {
                 <Dialog
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={t('Save')}
-                    is="Dialog"
                     largerDevice={largerDevice}
                     onSave={this.handleSaveTapped.bind(this)}
                     pageType={PAGE_TYPE.EDIT_TEAM}
                     ref="modal"
                     repositionOnUpdate={false}
                     title={t('Edit Team')}
+                    {...this.styles().Dialog}
                 >
                     <div className="row center-xs">
                         {this.renderContent()}
