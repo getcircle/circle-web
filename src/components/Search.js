@@ -295,7 +295,6 @@ class Search extends CSSComponent {
         if (nextProps.query !== null &&
             nextProps.query.trim().length > 0
         ) {
-            this.setState({query: nextProps.query});
             this.setValue(nextProps.query);
         }
     }
@@ -1135,11 +1134,21 @@ class Search extends CSSComponent {
      * a hint of what search term was used when transitioning to a page.
      *
      * @param {String} value Value to show in the search input.
+     * @param {function} optionalCallback Callback when the value has been set and internal state has been updated.
      * @return void
      */
-    setValue(value) {
+    setValue(value, optionalCallback) {
         if (this.refs.autoComplete) {
             this.refs.autoComplete.setValue(value);
+            this.setState({
+                query: value
+            }, optionalCallback);
+        }
+    }
+
+    focus() {
+        if (this.refs.autoComplete) {
+            this.refs.autoComplete.focusInput();
         }
     }
 

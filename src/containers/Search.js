@@ -93,12 +93,18 @@ class Search extends CSSComponent {
     loadSearchResults(props) {
         let query = props.params.query ? props.params.query : '';
         if (this.refs.headerSearch) {
-            let currentQuery = this.refs.headerSearch.getWrappedInstance().getCurrentQuery();
+            let headerSearch = this.refs.headerSearch.getWrappedInstance();
+            let currentQuery = headerSearch.getCurrentQuery();
 
             // If header search is loaded but not focused with no query,
             // add the query parameter if we have one in the URL
             if (!this.state.focused && !currentQuery && query) {
-                this.refs.headerSearch.getWrappedInstance().setValue(query);
+                headerSearch.setValue(query, () => {
+                    headerSearch.focus();
+                    this.setState({
+                        focused: true
+                    });
+                });
             }
 
             // When the component is focused, update URL for all queries entered here
