@@ -251,7 +251,7 @@ class Search extends CSSComponent {
         onFocus() {},
         onSelectItem() {},
         placeholder: t('Search people, knowledge, & teams'),
-        // This isn't good component design and there are ways to archive
+        // This isn't good component design and there are ways to achieve
         // hiding of results (by simply hiding the container).
         // But, the logic to process results has a big performance cost.
         // Given our full search temporarily uses the same component as AutoComplete,
@@ -1305,7 +1305,7 @@ class Search extends CSSComponent {
             }
             containerHeight += height;
             elementHeights.push(height);
-            return this.renderItemInMenu(item, index, addSubHeader);;
+            return this.renderItemInMenu(item, index, addSubHeader);
         });
 
         const { resultsListStyle, resultsHeight } = this.props;

@@ -86,7 +86,7 @@ class Search extends CSSComponent {
 
     componentWillReceiveProps(nextProps) {
         // Always load search results. This is to guarantee freshest results and also
-        // just results because we are aggresive about clearing cache.
+        // because we are aggresive about clearing cache.
         this.loadSearchResults(nextProps);
     }
 
