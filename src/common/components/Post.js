@@ -1,7 +1,6 @@
 import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import Dropzone from 'react-dropzone';
 import Immutable from 'immutable';
-import { default as MediumEditor } from 'react-medium-editor';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -29,6 +28,7 @@ import CSSComponent from './CSSComponent';
 import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
+import Editor from './Editor';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import Share from './Share';
@@ -926,7 +926,7 @@ class Post extends CSSComponent {
                     value={this.state.title}
                     {...this.styles().AutogrowTitleTextarea}
                 />
-                <MediumEditor
+                <Editor
                     className="leditor"
                     onChange={(text, medium) => {
                         this.handleBodyChange(null, text);
