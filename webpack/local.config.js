@@ -10,7 +10,8 @@ var port = parseInt(process.env.PORT) + 1 || 3001;
 
 // https://github.com/halt-hammerzeit/webpack-isomorphic-tools
 var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'))
+    .development();
 
 var babelrc = fs.readFileSync('./.babelrc');
 var babelrcObject = {};
@@ -75,13 +76,13 @@ module.exports = {
                 MIXPANEL_TOKEN: JSON.stringify('c9e956923929efeeebcfbce0b9198656'),
             }
         }),
-        webpackIsomorphicToolsPlugin.development()
+        webpackIsomorphicToolsPlugin
     ],
     module: {
         loaders: [
             { test: /\.js$/, loaders: ['babel?' + JSON.stringify(babelLoaderQuery)], exclude: /node_modules/ },
             { test: /\.json$/, loaders: ['json-loader']},
-            { test: /\.scss$/, loader: 'style!css?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap' },
+            { test: /\.scss$/, loader: 'style!css!sass' },
             { test: webpackIsomorphicToolsPlugin.regular_expression('images'), loader: 'url-loader?limit=10240' },
             { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' }
         ]

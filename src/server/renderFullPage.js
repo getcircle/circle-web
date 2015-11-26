@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/server';
 import serialize from 'serialize-javascript';
 
 export default function (content, store, assets) {
-    const styleAssets = Object.keys(assets.styles).map((style, key) =>
+    const styleAssets = Object.keys(assets.styles).map((style, key) => {
         <link
             charSet="UTF-8"
             href={assets.styles[style]}
@@ -12,8 +12,11 @@ export default function (content, store, assets) {
             rel="stylesheet"
             type="text/css"
         />
-    );
-    const styles = styleAssets.length !== 0 ? ReactDOM.renderToString(styleAssets) : '';
+    });
+    let styles = styleAssets.length !== 0 ? ReactDOM.renderToString(styleAssets) : '';
+    if (!styles) {
+        styles = `<style>${require('../common/styles/app.scss')}</style>`;
+    }
     return `
     <!doctype html>
     <html lang="en-us">

@@ -13,9 +13,6 @@ import getRoutes from '../common/getRoutes';
 import { getBody } from '../common/utils/render';
 import Root from '../common/Root';
 
-// import styles so webpack includes them
-import '../common/styles/app.scss';
-
 const dest = getBody();
 const store = createStore();
 

@@ -3,6 +3,9 @@ import React, { Component, PropTypes } from 'react';
 import CSSMixins from './CSSMixins';
 import CurrentTheme from './utils/ThemeManager';
 
+// import styles so webpack includes them
+import './styles/app.scss';
+
 export default class Root extends Component {
 
     static childContextTypes = {
