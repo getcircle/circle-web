@@ -23,23 +23,23 @@
     "dev": "concurrent --kill-others \"npm run watch-client\" \"npm run start-dev\""
   },
   "betterScripts": {
-      "start-dev": {
-          "command": "node ./bin/server.js",
-          "env": {
-              "NODE_PATH": "./src",
-              "NODE_ENV": "development",
-              "PORT": 3000,
-              "DEVHOST": "`docker-machine ip dev`"
-          }
-      },
-      "watch-client": {
-          "command": "node webpack/webpack-dev-server.js",
-          "env": {
-              "UV_THREADPOOL_SIZE": 100,
-              "NODE_PATH": "./src",
-              "DEVHOST": "`docker-machine ip dev`"
-          }
+    "start-dev": {
+      "command": "node ./bin/server.js",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "development",
+        "PORT": 3000,
+        "DEVHOST": "`docker-machine ip dev`"
       }
+    },
+    "watch-client": {
+      "command": "node webpack/webpack-dev-server.js",
+      "env": {
+        "UV_THREADPOOL_SIZE": 100,
+        "NODE_PATH": "./src",
+        "DEVHOST": "`docker-machine ip dev`"
+      }
+    }
   },
   "repository": {
     "type": "git",
