@@ -1197,11 +1197,13 @@ class Search extends CSSComponent {
 
     renderDefaultResult(item, highlighted, style) {
         const listProps = {...this.styles().ListItem, ...item};
+        let secondaryText = item.secondaryText;
         if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
-            item.secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
+            secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
         }
         return (
             <ListItem
+                {...listProps}
                 disableFocusRipple={true}
                 onTouchTap={item.onTouchTap}
                 primaryText={item.primaryText}
@@ -1217,7 +1219,7 @@ class Search extends CSSComponent {
                         }
                     })(highlighted);
                 }}
-                {...listProps}
+                secondaryText={secondaryText}
             />
         );
     }
