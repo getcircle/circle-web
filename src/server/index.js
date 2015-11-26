@@ -7,7 +7,6 @@ import path from 'path';
 import PrettyError from 'pretty-error';
 import http from 'http';
 
-import createHistory from 'history/lib/createMemoryHistory';
 import createStore from '../common/createStore';
 import getRoutes from '../common/getRoutes';
 import { Provider } from 'react-redux';
