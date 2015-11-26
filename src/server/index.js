@@ -30,6 +30,10 @@ app.use((req, res) => {
         webpackIsomorphicTools.refresh();
     }
 
+    global.navigator = {
+        userAgent: req.headers['user-agent'],
+    };
+
     const store = createStore();
 
     function hydrateOnClient() {

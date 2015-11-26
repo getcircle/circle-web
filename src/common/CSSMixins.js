@@ -19,7 +19,7 @@ export default {
     display: (value) => {
 
         if (value === 'flex') {
-            let browser = UAParser(window.navigator.userAgent).browser;
+            let browser = UAParser(navigator.userAgent).browser;
             if (!!browser.name.match('Safari')) {
                 value = '-webkit-flex';
             } else if (!!browser.name.match('IE') && !!browser.version.match('10')) {
