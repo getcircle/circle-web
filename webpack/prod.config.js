@@ -3,7 +3,6 @@ var path = require('path');
 var webpack = require('webpack');
 var CleanPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
 var strip = require('strip-loader');
 
 var relativeAssetsPath = '../static/dist';
@@ -29,12 +28,6 @@ module.exports = {
         new CleanPlugin([relativeAssetsPath]),
 
         new ExtractTextPlugin('[name]-[chunkhash].css', { allChunks: true }),
-        new HtmlWebpackPlugin({
-            title: 'Luno',
-            filename: 'index.html',
-            template: 'index.template.html',
-            favicon: path.join(__dirname, '..', 'static', 'images', 'favicon.ico'),
-        }),
         new webpack.DefinePlugin({
             __CLIENT__: true,
             __SERVER__: false,
