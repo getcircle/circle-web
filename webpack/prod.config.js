@@ -17,7 +17,7 @@ module.exports = {
     context: path.resolve(__dirname, '..'),
     entry: {
         main: ['./src/client']
-    }
+    },
     output: {
         path: assetsPath,
         filename: '[name]-[chunkhash].js',
