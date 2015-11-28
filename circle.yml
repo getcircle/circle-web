@@ -1,3 +1,7 @@
+general:
+  branches:
+    ignore:
+      - editor
 dependencies:
   override:
     - npm update -g npm
