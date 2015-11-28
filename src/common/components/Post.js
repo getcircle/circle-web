@@ -890,9 +890,13 @@ class Post extends CSSComponent {
         const mediumEditorOptions = {
             autoLink: true,
             imageDragging: false,
+            paste: {
+                forcePlainText: true,
+            },
             placeholder: {
                 text: t('Contribute Knowledge'),
             },
+            targetBlank: true,
             toolbar: {
                 buttons: ['bold', 'italic', 'anchor'],
             },

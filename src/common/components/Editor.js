@@ -2,51 +2,9 @@ import ReactDOM from 'react-dom';
 import React, { PropTypes } from 'react';
 import MediumEditor from 'medium-editor';
 
-import { trimNewLines } from '../utils/string';
+import logger from '../utils/logger';
 
 import CSSComponent from './CSSComponent';
-
-const DEFAULT_ROW_HEIGHT = 24;
-
-/*
-  componentDidMount() {
-    var dom = ReactDOM.findDOMNode(this);
-    this.medium = new MediumEditor(dom, this.props.options);
-    this.medium.subscribe('editableInput', (e) => {
-      this._updated = true;
-      this.change(dom.innerHTML);
-    });
-  },
-
-  componentWillUnmount() {
-    this.medium.destroy();
-  },
-
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.text !== this.state.text && !this._updated) {
-      this.setState({text: nextProps.text});
-    }
-
-    if(this._updated) this._updated = false;
-  },
-
-  render() {
-    var tag = this.props.tag;
-    var props = blacklist(this.props, 'tag', 'contentEditable', 'dangerouslySetInnerHTML');
-
-    assign(props, {
-      contentEditable: true,
-      dangerouslySetInnerHTML: {__html: this.state.text}
-    });
-
-    return React.createElement(tag, props);
-  },
-
-  change(text) {
-    if(this.props.onChange) this.props.onChange(text, this.medium);
-  }
-});
-*/
 
 class Editor extends CSSComponent {
 
@@ -68,10 +26,15 @@ class Editor extends CSSComponent {
 
         const dom = ReactDOM.findDOMNode(this);
         this.medium = new MediumEditor(dom, options);
-        this.medium.subscribe('editableInput', (e) => {
+        this.medium.subscribe('editableInput', (event, editable) => {
+            logger.log('onChange');
             this._updated = true;
             this.onChange(dom.innerHTML);
         });
+        this.medium.subscribe('editableKeypress', (event) => this.onKeyPress(event));
+        this.medium.subscribe('editableKeyup', (event) => this.onKeyUp(event));
+        this.medium.on(dom, 'mousedown', (event) => this.onMouseDown(event));
+        logger.log(this.medium.getExtensionByName('bold'));
     }
 
     componentWillUnmount() {
@@ -121,6 +84,31 @@ class Editor extends CSSComponent {
         if (this.props.onChange) {
             this.props.onChange(text, this.medium);
         }
+    }
+
+    onKeyPress(event) {
+        logger.log('onKeyPress - Pressed ' + String.fromCharCode(event.keyCode));
+    }
+
+    onKeyUp(event) {
+        logger.log('onKeyUp' + (this.hasSelection() ? ' - Has selection' : ''));
+        logger.log(event.keyCode);
+    }
+
+    onMouseDown(event) {
+        logger.log('onMouseDown' + (this.hasSelection() ? ' - Has selection' : ''));
+        logger.log('onMouseDown');
+        logger.log(event);
+    }
+
+    hasSelection() {
+        const selectionState = this.medium.exportSelection();
+        if (!selectionState) {
+            return false;
+        }
+
+        const hasSelection = (selectionState.end - selectionState.start) > 0;
+        return hasSelection;
     }
 
     render() {
