@@ -887,21 +887,6 @@ class Post extends CSSComponent {
             author = this.context.authenticatedProfile;
         }
 
-        const mediumEditorOptions = {
-            autoLink: true,
-            imageDragging: false,
-            paste: {
-                forcePlainText: true,
-            },
-            placeholder: {
-                text: t('Contribute Knowledge'),
-            },
-            targetBlank: true,
-            toolbar: {
-                buttons: ['bold', 'italic', 'anchor'],
-            },
-        };
-
         console.log(this.state.body);
         return (
             <span>
@@ -935,7 +920,6 @@ class Post extends CSSComponent {
                     onChange={(text, medium) => {
                         this.handleBodyChange(null, text);
                     }}
-                    options={mediumEditorOptions}
                 />
                 {this.renderFilesContainer()}
                 {this.renderChangeOwnerModal()}

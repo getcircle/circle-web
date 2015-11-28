@@ -9,7 +9,6 @@ import CSSComponent from './CSSComponent';
 class Editor extends CSSComponent {
 
     static propTypes = {
-        options: PropTypes.object,
     }
 
     static defaultProps = {
@@ -20,12 +19,24 @@ class Editor extends CSSComponent {
     }
 
     componentDidMount() {
-        const {
-            options,
-        } = this.props;
+        const mediumEditorOptions = {
+            autoLink: true,
+            imageDragging: false,
+            paste: {
+                forcePlainText: true,
+            },
+            placeholder: {
+                text: t('Contribute Knowledge'),
+            },
+            targetBlank: true,
+            toolbar: {
+                buttons: ['bold', 'italic', 'anchor'],
+            },
+        };
+
 
         const dom = ReactDOM.findDOMNode(this);
-        this.medium = new MediumEditor(dom, options);
+        this.medium = new MediumEditor(dom, mediumEditorOptions);
         this.medium.subscribe('editableInput', (event, editable) => {
             logger.log('onChange');
             this._updated = true;
