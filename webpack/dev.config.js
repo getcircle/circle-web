@@ -39,6 +39,7 @@ module.exports = {
                 MIXPANEL_TOKEN: JSON.stringify('cfe0bd17e174c984714d5996b6a04606'),
             }
         }),
+        webpackIsomorphicToolsPlugin,
 
         // ignore dev config
         new webpack.IgnorePlugin(/\.\/dev/, /\/config$/),
