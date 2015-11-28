@@ -7,7 +7,7 @@
     "build-prod": "npm run clean && webpack --progress --config webpack/prod.config.js",
     "build-dev": "npm run clean && webpack --progress --config webpack/dev.config.js",
     "build-staging": "npm run clean && webpack --progress --config webpack/staging.config.js",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf static/dist",
     "deploy-prod": "npm test && npm run build-prod && divshot deploy production",
     "deploy-staging": "npm test && npm run build-staging && divshot deploy staging",
     "deploy": "npm test && npm run build-dev && divshot deploy",
