@@ -887,7 +887,6 @@ class Post extends CSSComponent {
             author = this.context.authenticatedProfile;
         }
 
-        console.log(this.state.body);
         return (
             <span>
                 <div className="row between-xs middle-xs">
