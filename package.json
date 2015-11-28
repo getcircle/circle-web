@@ -27,7 +27,7 @@
       "command": "node ./bin/server.js",
       "env": {
         "NODE_PATH": "./src",
-        "NODE_ENV": "development",
+        "NODE_ENV": "local",
         "PORT": 3000,
         "DEVHOST": "`docker-machine ip dev`"
       }

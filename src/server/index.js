@@ -24,7 +24,7 @@ app.use(favicon(path.join(__dirname, '../..', 'static', 'images', 'favicon.ico')
 app.use(require('serve-static')(path.join(__dirname, '../..', 'static')));
 
 app.use((req, res) => {
-    if (__DEVELOPMENT__) {
+    if (__LOCAL__) {
         // Do not cache webpack stats: the script file would change since
         // hot module replacement is enabled in the development env
         webpackIsomorphicTools.refresh();
