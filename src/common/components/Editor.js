@@ -132,9 +132,6 @@ class Editor extends CSSComponent {
     }
 
     onToolbarButtonClicked(event, extension, actionName) {
-        logger.log('onToolbarButtonClicked' + (this.hasSelection() ? ' - Has selection' : '') + ' ' + actionName);
-        logger.log(extension);
-        logger.log(event.target);
         // Identify paragrah and update with markup.
         // AddMarkup of type to a particular paragraph and capture any meta data.
 
@@ -144,10 +141,85 @@ class Editor extends CSSComponent {
         // 4. If not add a new entry
         // 5. When removing, see if its part (or middle of) of an existing range. If yes, remove entry and create two entries.
         // 6. If exact match with the range update it directly
+        const selection = this.getSelection();
+        if (!selection) {
+            logger.log('Selection not found.');
+            return;
+        }
+
+        const isActive = extension.isActive();
+        logger.log((isActive ? 'added' : 'removed') + ' ' + actionName
+            + ' to range (' + selection.start + ',' + selection.end + ')'
+        );
+
+        // Figure our which elements and what text inside of those was selected
+        let childNode, previousLength = 0, range, contentLength;
+        for (let i = 0; i < this.rootElement.childNodes.length; i++) {
+            childNode = this.rootElement.childNodes[i];
+            range = new Range(0,0);
+            range.selectNodeContents(childNode);
+            contentLength = range.toString().length;
+            if (contentLength === 0) {
+                continue;
+            }
+
+            let start = previousLength, end = contentLength + previousLength;
+            logger.log('childNode ID ' + childNode.id + ' Range (' + start + ',' + end + ')');
+            let selectedText = null, matchedAlgo = 0;
+            if (selection.start >= start && end >= selection.end) {
+                // Entire selection is within range
+                selectedText = range.toString().substr(selection.start - start, selection.end - selection.start);
+                matchedAlgo = 1;
+            }
+            else if (start >= selection.start && end <= selection.end) {
+                // Entire selection contains range
+                selectedText = range.toString();
+                matchedAlgo = 2;
+            }
+            else if (selection.end > start && selection.end < end && start > selection.start) {
+                // Selection ends partially within this range
+                selectedText = range.toString().substr(0, selection.end - start);
+                matchedAlgo = 3;
+            }
+            else if (selection.start >= start && selection.start < end && end < selection.end) {
+                // Selection starts partially within this range
+                selectedText = range.toString().substr(selection.start - start);
+                matchedAlgo = 4;
+            }
+
+            if (selectedText !== null) {
+                logger.log('FOUND SELECTION - ' + selectedText + ' (' + matchedAlgo + ')');
+            }
+            previousLength = end;
+        }
     }
 
     getRandomId() {
         return Math.round(1E6 * Math.random()).toString(36);
+    }
+
+    /**
+     * Get the ID of the current element in which selection happened
+     *
+     * This function finds the one level deep child of the main editor element
+     * in which the selection happened. It also specifically looks for the element with "p"
+     * tag because of our own internal restriction at this time.
+     *
+     * @return {String} ID of the current element.
+     */
+    getCurrentElementIdentifier() {
+        let currentElement = MediumEditor.selection.getSelectionStart(this.medium.options.ownerDocument);
+        if (currentElement.nodeType !== 1 ||
+            currentElement.tagName.toLowerCase !== 'p' ||
+            currentElement.parentNode !== this.rootElement
+        ) {
+            let parentNode = currentElement.parentNode;
+            while (parentNode !== this.rootElement) {
+                currentElement = parentNode;
+                parentNode = parentNode.parentNode;
+            };
+        }
+        return currentElement.id;
     }
 
     ensureCurrentElementHasAnIdentifier() {
@@ -155,7 +227,7 @@ class Editor extends CSSComponent {
         if (!currentElement.id) {
             this.assignIdentifiersToChildren(event.target);
         }
-        console.log(currentElement.id + ' ' + currentElement.innerText);
+        logger.log(currentElement.id + ' ' + currentElement.innerText);
     }
 
     assignIdentifiersToChildren(rootNode) {
@@ -203,14 +275,17 @@ class Editor extends CSSComponent {
 
     }
 
-    hasSelection() {
+    getSelection() {
         const selectionState = this.medium.exportSelection();
-        if (!selectionState) {
-            return false;
+        if ((selectionState.end - selectionState.start) <= 0) {
+            return null;
         }
 
-        const hasSelection = (selectionState.end - selectionState.start) > 0;
-        return hasSelection;
+        return selectionState;
+    }
+
+    hasSelection() {
+        return !!this.getSelection();
     }
 
     render() {
