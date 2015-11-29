@@ -13,7 +13,7 @@ function loadSearchResultsV1(query, category, attribute, attributeValue) {
                 types.SEARCH_FAILURE,
             ],
             remote: () => search(query, category, attribute, attributeValue),
-            bailout: (state) => state.search.getIn(['results', query]),
+            bailout: (state) => state.get('search').getIn(['results', query]),
         },
         payload: { query, category, attribute, attributeValue},
     }

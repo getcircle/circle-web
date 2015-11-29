@@ -1,4 +1,5 @@
-import { applyMiddleware, createStore, compose, combineReducers } from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
+import { combineReducers } from 'redux-immutablejs';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 

@@ -5,15 +5,15 @@ import { EXPLORE_TYPES } from '../actions/explore';
 
 export const createImmutableSelector = createSelectorCreator(defaultMemoize, Immutable.is);
 
-export const authenticationSelector = state => state.authentication;
+export const authenticationSelector = state => state.get('authentication');
 
 export const authenticatedSelector = createImmutableSelector(
     [authenticationSelector],
     (authenticationState) => { return { authenticated: authenticationState.get('authenticated') } },
 );
 
-export const cacheSelector = state => state.cache;
-export const exploreSelector = state => state.explore;
+export const cacheSelector = state => state.get('cache');
+export const exploreSelector = state => state.get('explore');
 
 export const exploreSelectorFactory = exploreType => {
     return createImmutableSelector(
@@ -56,17 +56,17 @@ export const explorePostsSelector = exploreSelectorFactory(EXPLORE_TYPES.POSTS);
 export const explorePostsLoadingSelector = exploreTypeLoadingSelectorFactory(explorePostsSelector);
 export const explorePostsIdsSelector = exploreTypeIdsSelectorFactory(explorePostsSelector);
 
-export const extendedProfilesSelector = state => state.extendedProfiles;
-export const extendedTeamsSelector = state => state.extendedTeams;
-export const filesSelector = state => state.files;
-export const locationMembersSelector = state => state.locationMembers;
-export const locationsSelector = state => state.locations;
-export const mediaUploadSelector = state => state.mediaUpload;
-export const postSelector = state => state.post;
-export const postsSelector = state => state.posts;
-export const profilesSelector = state => state.profiles;
-export const responsiveSelector = state => state.responsive;
+export const extendedProfilesSelector = state => state.get('extendedProfiles');
+export const extendedTeamsSelector = state => state.get('extendedTeams');
+export const filesSelector = state => state.get('files');
+export const locationMembersSelector = state => state.get('locationMembers');
+export const locationsSelector = state => state.get('locations');
+export const mediaUploadSelector = state => state.get('mediaUpload');
+export const postSelector = state => state.get('post');
+export const postsSelector = state => state.get('posts');
+export const profilesSelector = state => state.get('profiles');
+export const responsiveSelector = state => state.get('responsive');
 export const routerParametersSelector = (_, props) => props.params;
-export const searchSelector = state => state.search;
-export const teamMembersSelector = state => state.teamMembers;
-export const updateProfileSelector = state => state.updateProfile;
+export const searchSelector = state => state.get('search');
+export const teamMembersSelector = state => state.get('teamMembers');
+export const updateProfileSelector = state => state.get('updateProfile');

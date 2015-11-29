@@ -18,7 +18,7 @@ export default function (store) {
 
     function loginOnce(next) {
         return (nextState, replaceState) => {
-            if (store.getState().authentication.get('authenticated')) {
+            if (store.getState().get('authentication').get('authenticated')) {
                 return replaceState(null, '/');
             }
             next(nextState, replaceState);
@@ -27,7 +27,7 @@ export default function (store) {
 
     function requireAuth(next) {
         return (nextState, replaceState) => {
-            if (!store.getState().authentication.get('authenticated')) {
+            if (!store.getState().get('authentication').get('authenticated')) {
                 return replaceState({nextPathname: nextState.location.pathname}, '/login');
             }
             next(nextState, replaceState);
@@ -52,10 +52,10 @@ export default function (store) {
         return (next) => {
             return (nextState, replaceState) => {
                 let storeState = store.getState();
-                if (storeState.authentication && storeState.authentication.get('authenticated')) {
+                if (storeState.get('authentication') && storeState.get('authentication').get('authenticated')) {
                     let pageId = paramKey !== '' ? nextState.params[paramKey] : '';
                     // Init session is idempotent
-                    let authenticationState = store.getState().authentication;
+                    let authenticationState = store.getState().get('authentication');
                     tracker.initSession(
                         authenticationState.get('profile'),
                         authenticationState.get('organization'),

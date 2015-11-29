@@ -12,7 +12,7 @@ export function loadLocation(locationId) {
                 types.LOAD_LOCATION_FAILURE,
             ],
             remote: () => organizationRequests.getLocation(locationId),
-            bailout: state => state.locations.get('ids').has(locationId),
+            bailout: state => state.get('locations').get('ids').has(locationId),
         },
     };
 }
@@ -29,8 +29,8 @@ export function loadLocationMembers(locationId, nextRequest=null) {
             remote: () => getProfiles({location_id: locationId}, nextRequest),
             /*eslint-enable camelcase */
             bailout: (state) => {
-                if (state.locationMembers.has(locationId) && nextRequest === null) {
-                    return state.locationMembers.get(locationId).get('ids').size > 0;
+                if (state.get('locationMembers').has(locationId) && nextRequest === null) {
+                    return state.get('locationMembers').get(locationId).get('ids').size > 0;
                 }
             },
         },

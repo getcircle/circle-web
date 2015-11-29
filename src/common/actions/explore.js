@@ -37,7 +37,7 @@ export function exploreProfiles(nextRequest) {
             types: exploreActionTypes,
             remote: () => getProfiles(null, nextRequest, PROFILES),
             bailout: (state) => {
-                const profilesState = state.explore.get(PROFILES);
+                const profilesState = state.get('explore').get(PROFILES);
                 return shouldBail(profilesState, nextRequest);
             }
         },
@@ -54,7 +54,7 @@ export function exploreTeams(nextRequest) {
             types: exploreActionTypes,
             remote: () => getTeams(null, nextRequest, TEAMS),
             bailout: (state) => {
-                const teamsState = state.explore.get(TEAMS);
+                const teamsState = state.get('explore').get(TEAMS);
                 return shouldBail(teamsState, nextRequest);
             },
         },
@@ -71,7 +71,7 @@ export function exploreLocations(nextRequest) {
             types: exploreActionTypes,
             remote: () => getLocations(null, nextRequest, LOCATIONS),
             bailout: (state) => {
-                const locationsState = state.explore.get(LOCATIONS);
+                const locationsState = state.get('explore').get(LOCATIONS);
                 return shouldBail(locationsState, nextRequest);
             },
         },
@@ -88,7 +88,7 @@ export function explorePosts(nextRequest) {
             types: exploreActionTypes,
             remote: () => getPosts(PostStateURLString.LISTED, null, nextRequest, POSTS),
             bailout: (state) => {
-                const postsState = state.explore.get(POSTS);
+                const postsState = state.get('explore').get(POSTS);
                 return shouldBail(postsState, nextRequest);
             },
         },

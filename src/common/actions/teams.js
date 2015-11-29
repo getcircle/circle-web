@@ -28,8 +28,8 @@ export function loadTeamMembers(teamId, nextRequest=null) {
             remote: () => getProfiles({team_id: teamId}, nextRequest),
             /*eslint-enable camelcase */
             bailout: (state) => {
-                if (state.teamMembers.has(teamId) && nextRequest === null) {
-                    return state.teamMembers.get(teamId).get('ids').size > 0;
+                if (state.get('teamMembers').has(teamId) && nextRequest === null) {
+                    return state.get('teamMembers').get(teamId).get('ids').size > 0;
                 }
             },
         },
