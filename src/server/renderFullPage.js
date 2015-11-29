@@ -41,7 +41,7 @@ export default function (content, store, assets) {
         <body class="layout">
             <div class="js-content">${content}</div>
             <script>
-                window.__INITIAL_STATE=${serialize(store.getState())};
+                window.__INITIAL_STATE=${serialize(store.getState().toJS())};
             </script>
             <script src="${assets.javascript.main}"></script>
         </body>
