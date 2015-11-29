@@ -11,6 +11,7 @@ import {
 import { AUTH_BACKENDS } from '../services/user';
 import { fontColors, fontWeights } from '../constants/styles';
 import * as selectors from '../selectors';
+import { getNextPathname } from '../utils/routes';
 import { getSubdomain } from '../utils/subdomains';
 import t from '../utils/gettext';
 
@@ -83,14 +84,8 @@ class Login extends CSSComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
-            const {
-                location,
-            } = this.props;
-            let nextPathname = '/';
-            if (location && location.state && location.state.nextPathname) {
-                nextPathname = location.state.nextPathname;
-            }
-            this.context.history.pushState(null, nextPathname);
+            const pathname = getNextPathname(this.props.location.query, '/');
+            this.context.history.pushState(null, pathname);
             return false;
         }
         return true;

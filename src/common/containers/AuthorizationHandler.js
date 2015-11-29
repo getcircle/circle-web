@@ -56,7 +56,7 @@ class AuthorizationHandler extends CSSComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated || nextProps.authError) {
-            const nextPathname = getNextPathname() || '/';
+            const nextPathname = getNextPathname(null, '/');
             this.context.history.replaceState(null, nextPathname);
             return false;
         }

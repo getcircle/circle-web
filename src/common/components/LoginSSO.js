@@ -2,7 +2,7 @@ import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { fontWeights, tintColor } from '../constants/styles';
-import { routeToURL } from '../utils/routes';
+import { getNextPathname, routeToURL } from '../utils/routes';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -50,18 +50,12 @@ class LoginSSO extends CSSComponent {
         };
     }
 
-    getNextPathname() {
-        if (this.context.location && this.context.location.state) {
-            return this.context.location.state.nextPathname;
-        }
-    }
-
     render() {
         const {
             onGuestLogin,
             providerName,
         } = this.props;
-        const nextPathname = this.getNextPathname();
+        const nextPathname = getNextPathname(this.context.location.query, '/');
         return (
             <section>
                 <section>

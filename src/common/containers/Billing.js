@@ -20,14 +20,6 @@ class Billing extends CSSComponent {
         }),
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (nextProps.authenticated) {
-            this.context.history.pushState(null, this.props.location.nextPathname || '/');
-            return false;
-        }
-        return true;
-    }
-
     classes() {
         return {
             default: {

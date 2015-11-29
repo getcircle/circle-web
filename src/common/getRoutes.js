@@ -28,7 +28,7 @@ export default function (store) {
     function requireAuth(next) {
         return (nextState, replaceState) => {
             if (!store.getState().get('authentication').get('authenticated')) {
-                return replaceState({nextPathname: nextState.location.pathname}, '/login');
+                return replaceState(null, '/login', {next: nextState.location.pathname});
             }
             next(nextState, replaceState);
         }

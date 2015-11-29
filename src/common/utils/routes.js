@@ -43,8 +43,15 @@ export function routeToURL(url, nextPathname = null) {
     window.location = url;
 }
 
-export function getNextPathname() {
-    const nextPathname = localStorage.getItem(NEXT_PATHNAME_KEY);
-    localStorage.removeItem(NEXT_PATHNAME_KEY);
-    return nextPathname;
+export function getNextPathname(query, defaultValue) {
+    let next = defaultValue || '/';
+    if (query === null || query === undefined) {
+        next = localStorage.getItem(NEXT_PATHNAME_KEY);
+        localStorage.removeItem(NEXT_PATHNAME_KEY);
+    } else {
+        if (query.next !== undefined || query.next !== null) {
+            next = query.next;
+        }
+    }
+    return next;
 }
