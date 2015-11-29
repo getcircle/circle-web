@@ -27,7 +27,7 @@ export default function (initialState) {
         finalCreateStore = applyMiddleware(...middleware)(createStore);
     }
     const reducer = combineReducers(reducers);
-    const store = finalCreateStore(reducer, reducer(initialState));
+    const store = finalCreateStore(reducer, initialState);
     return store;
 }
 
