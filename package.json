@@ -92,6 +92,8 @@
     "serve-favicon": "^2.3.0",
     "serve-static": "^1.10.0",
     "superagent": "git+https://github.com/mhahn/superagent.git",
+    "transit-immutable-js": "^0.4.0",
+    "transit-js": "^0.8.837",
     "ua-parser-js": "^0.7.9",
     "url-loader": "0.5.6",
     "vinyl-buffer": "~1.0.0",

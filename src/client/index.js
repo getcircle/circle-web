@@ -2,12 +2,12 @@ import 'babel/polyfill';
 
 import createHistory from 'history/lib/createBrowserHistory';
 import FastClick from 'fastclick';
-import Immutable from 'immutable';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router';
+import transit from 'transit-immutable-js';
 
 import createStore from '../common/createStore';
 import getRoutes from '../common/getRoutes';
@@ -15,7 +15,7 @@ import { getBody } from '../common/utils/render';
 import Root from '../common/Root';
 
 const dest = getBody();
-const initialState = Immutable.fromJS(window.__INITIAL_STATE);
+const initialState = transit.fromJSON(window.__INITIAL_STATE);
 const store = createStore(initialState);
 
 const elements = [

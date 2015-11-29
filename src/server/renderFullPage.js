@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import serialize from 'serialize-javascript';
+import transit from 'transit-immutable-js';
 
 export default function (content, store, assets) {
     const styleAssets = Object.keys(assets.styles).map((style, key) => {
@@ -41,7 +41,7 @@ export default function (content, store, assets) {
         <body class="layout">
             <div class="js-content">${content}</div>
             <script>
-                window.__INITIAL_STATE=${serialize(store.getState().toJS())};
+                window.__INITIAL_STATE=${transit(store.getState()).toJSON()};
             </script>
             <script src="${assets.javascript.main}"></script>
         </body>
