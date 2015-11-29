@@ -55,7 +55,7 @@ class LoginSSO extends CSSComponent {
             onGuestLogin,
             providerName,
         } = this.props;
-        const nextPathname = getNextPathname(this.context.location.query, '/');
+        const nextPathname = getNextPathname(this.context.location, '/');
         return (
             <section>
                 <section>

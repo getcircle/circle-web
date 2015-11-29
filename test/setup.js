@@ -9,8 +9,9 @@ if (!global.document || !global.window) {
     global.mixpanel = {
       init: () => {},
     };
+    global.localStorage = null;
 
     window.addEventListener('load', () => {
-    console.log('JSDom setup completed: document, window and navigator are now on global scope.');
+        console.log('JSDom setup completed: document, window and navigator are now on global scope.');
     });
 }

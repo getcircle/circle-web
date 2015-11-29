@@ -12,6 +12,7 @@ global.__DISABLE_SSR__ = false;  // <----- DISABLES SERVER SIDE RENDERING FOR ER
 global.__DEVELOPMENT__ = process.env.NODE_ENV !== 'production';
 global.__LOCAL__ = process.env.NODE_ENV === 'local';
 global.__DEVTOOLS__ = false;
+global.localStorage = null;
 
 if (__LOCAL__) {
     if (!require('piping')({

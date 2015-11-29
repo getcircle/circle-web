@@ -84,7 +84,7 @@ class Login extends CSSComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
-            const pathname = getNextPathname(this.props.location.query, '/');
+            const pathname = getNextPathname(this.props.location, '/');
             this.context.history.pushState(null, pathname);
             return false;
         }
