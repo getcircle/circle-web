@@ -4,16 +4,17 @@ import serialize from 'serialize-javascript';
 
 export default function (content, store, assets) {
     const styleAssets = Object.keys(assets.styles).map((style, key) => {
-        <link
-            charSet="UTF-8"
-            href={assets.styles[style]}
-            key={key}
-            media="screen, projection"
-            rel="stylesheet"
-            type="text/css"
-        />
+        return (
+            `<link
+                charSet="UTF-8"
+                href=${assets.styles[style]}
+                media="screen, projection"
+                rel="stylesheet"
+                type="text/css"
+            />`
+        );
     });
-    let styles = styleAssets.length !== 0 ? ReactDOM.renderToString(styleAssets) : '';
+    let styles = styleAssets.length !== 0 ? styleAssets : '';
     if (!styles) {
         styles = `<style>${require('../common/styles/app.scss')}</style>`;
     }
