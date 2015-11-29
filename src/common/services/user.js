@@ -19,8 +19,8 @@ export function authenticate(backend, key, secret) {
         client.sendRequest(request)
             .then((response) => {
                 if (response.isSuccess()) {
-                    let {user, token} = response.result;
-                    resolve({user, token});
+                    let { user } = response.result;
+                    resolve({user});
                 } else {
                     reject(response.reject());
                 }

@@ -4,8 +4,7 @@ import Transport from './Transport';
 
 class Client {
 
-    constructor(token) {
-        this._token = token;
+    constructor() {
         this.transport = new Transport();
     }
 
@@ -14,7 +13,7 @@ class Client {
         let service = params.$type.fqn().split('.')[2];
         let actionExtensionName = this._getRequestExtensionName(service, action);
 
-        let serviceControl = new protobufs.soa.ControlV1({service: service, token: this._token});
+        let serviceControl = new protobufs.soa.ControlV1({service: service});
         let serviceRequest = new protobufs.soa.ServiceRequestV1({control: serviceControl});
 
         let actionControl = new protobufs.soa.ActionControlV1({service: service, action: action});
@@ -51,16 +50,6 @@ class Client {
     _getRequestExtensionName(service, action) {
         let basePath = protobufs.services.registry.requests.$type.fqn();
         return [basePath, _.capitalize(service), action].join('.');
-    }
-
-    authenticate(token) {
-        this._token = token;
-        this.transport.token = token;
-    }
-
-    logout() {
-        this._token = null;
-        this.transport.token = null;
     }
 
 }

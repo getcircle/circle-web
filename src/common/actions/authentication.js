@@ -37,10 +37,8 @@ export function authenticate(backend, key, secret) {
                 let payload = {};
                 return userService.authenticate(backend, key, secret)
                     .then((response) => {
-                        const { user, token } = response;
+                        const { user } = response;
                         payload.user = user;
-                        payload.token = token;
-                        client.authenticate(token);
                         return Promise.resolve(user);
                     })
                     .then(() => getAuthenticatedObjectsPayload(payload));
