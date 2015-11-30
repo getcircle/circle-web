@@ -628,13 +628,34 @@ class Search extends CSSComponent {
         }
     }
 
-    getProfileResult(profile, index, isRecent, numberOfResults) {
+    getProfileTexts(profile, highlight) {
+        const texts = {
+            primaryText: profile.full_name,
+            secondaryText: profile.display_title,
+        };
+
+        if (highlight && highlight.get('full_name')) {
+            texts.primaryText = (<div
+                dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} />);
+        }
+
+        if (highlight && highlight.get('display_title')) {
+            texts.secondaryText = (<div
+                dangerouslySetInnerHTML={{__html: highlight.get('display_title')}} />);
+        }
+
+        return texts;
+    }
+
+    getProfileResult(profile, index, isRecent, numberOfResults, highlight) {
         let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
+
+        const profileTexts = this.getProfileTexts(profile, highlight);
         const item = {
             index: index,
             leftAvatar: <ProfileAvatar profile={profile} />,
-            primaryText: profile.full_name,
-            secondaryText: `${profile.display_title}`,
+            primaryText: profileTexts.primaryText,
+            secondaryText: profileTexts.secondaryText,
             onTouchTap: routes.routeToProfile.bind(null, this.context.history, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
@@ -884,13 +905,13 @@ class Search extends CSSComponent {
         results.map((result, index) => {
             let searchResult = null;
             if (result.profile) {
-                searchResult = this.getProfileResult(result.profile, index, false, results.length);
+                searchResult = this.getProfileResult(result.profile, index, false, results.length, result.highlight);
             } else if (result.team) {
-                searchResult = this.getTeamResult(result.team, index, false, results.length);
+                searchResult = this.getTeamResult(result.team, index, false, results.length, result.highlight);
             } else if (result.location) {
-                searchResult = this.getLocationResult(result.location, index, false, results.length);
+                searchResult = this.getLocationResult(result.location, index, false, results.length, result.highlight);
             } else if (result.post) {
-                searchResult = this.getPostResult(result.post, index, false, results.length);
+                searchResult = this.getPostResult(result.post, index, false, results.length, result.highlight);
             }
 
             searchResult.score = result.score;
@@ -1198,9 +1219,9 @@ class Search extends CSSComponent {
     renderDefaultResult(item, highlighted, style) {
         const listProps = {...this.styles().ListItem, ...item};
         let secondaryText = item.secondaryText;
-        if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
-            secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
-        }
+        // if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
+        //     secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
+        // }
         return (
             <ListItem
                 {...listProps}
@@ -1330,7 +1351,7 @@ class Search extends CSSComponent {
                 }}
             >
                 <Infinite
-                    className="col-xs no-padding"
+                    className="col-xs no-padding search-results"
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}
                     infiniteLoadBeginEdgeOffset={200}
