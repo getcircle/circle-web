@@ -4,8 +4,8 @@ import Transport from './Transport';
 
 class Client {
 
-    constructor() {
-        this.transport = new Transport();
+    constructor(req) {
+        this.transport = new Transport(req);
     }
 
     buildRequest(action, params) {
@@ -54,4 +54,4 @@ class Client {
 
 }
 
-export default new Client();
+export default Client;
