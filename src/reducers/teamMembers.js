@@ -10,5 +10,15 @@ const teamMembers = paginate({
         types.LOAD_TEAM_MEMBERS_SUCCESS,
         types.LOAD_TEAM_MEMBERS_FAILURE,
     ],
+    additionalTypesCallback: (state = Immutable.Map(), action) => {
+        switch (action.type) {
+        case types.CLEAR_TEAM_MEMBERS_CACHE:
+            if (action.payload.teamId) {
+                return state.deleteIn([action.payload.teamId]);
+            }
+            break;
+        }
+        return state;
+    },
 });
 export default teamMembers;

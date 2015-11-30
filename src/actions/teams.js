@@ -51,3 +51,12 @@ export function updateTeam(team) {
         },
     };
 }
+
+export function clearTeamMembers(teamId) {
+    return {
+        type: types.CLEAR_TEAM_MEMBERS_CACHE,
+        payload: {
+            teamId: teamId,
+        },
+    };
+}
