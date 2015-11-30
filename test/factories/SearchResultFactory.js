@@ -2,6 +2,7 @@ import faker from 'faker';
 import { services } from 'protobufs';
 
 import ProfileFactory from './ProfileFactory';
+import TeamFactory from './TeamFactory';
 
 class SearchResultFactory {
 
@@ -35,6 +36,22 @@ class SearchResultFactory {
         return new services.search.containers.SearchResultV1({
             highlight: highlightedProperties,
             profile: profile,
+            score: faker.random.number(),
+        });
+    }
+
+    getSearchResultWithTeam(highlightName) {
+        const team = TeamFactory.getTeam();
+        const highlightedProperties = {};
+        if (highlightName) {
+            /*eslint-disable camelcase*/
+            highlightedProperties['display_name'] = '<em>' + team.display_name.substr(0, 2) + '</em>' + team.display_name.substr(2);
+            /*eslint-enable camelcase*/
+        }
+
+        return new services.search.containers.SearchResultV1({
+            highlight: highlightedProperties,
+            team: team,
             score: faker.random.number(),
         });
     }

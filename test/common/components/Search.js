@@ -127,4 +127,28 @@ describe('SearchComponent', () => {
 
     });
 
+    it('does not show highlighted term if its not available for teams', () => {
+        let teamSearchResult = SearchResultFactory.getSearchResultWithTeam();
+        const { searchComponent } = setup({results: [
+            teamSearchResult,
+        ]});
+
+        expect(searchComponent.getTeamPrimaryText(teamSearchResult.team))
+        .toBe(teamSearchResult.team.display_name);
+    });
+
+    it('shows highlighted full name when matched for profiles', () => {
+        let teamSearchResultWithHighlightedName = SearchResultFactory.getSearchResultWithTeam(true);
+        const { searchComponent } = setup({results: [
+            teamSearchResultWithHighlightedName,
+        ]});
+
+        expect(searchComponent.getTeamPrimaryText(
+            teamSearchResultWithHighlightedName.team,
+            teamSearchResultWithHighlightedName.highlight
+        )).toEqual((<div
+            dangerouslySetInnerHTML={{__html: teamSearchResultWithHighlightedName.highlight.get('display_name')}} />
+        ));
+    });
+
 });

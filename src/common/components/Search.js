@@ -664,7 +664,15 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
-    getTeamResult(team, index, isRecent) {
+    getTeamPrimaryText(team, highlight) {
+        if (highlight && highlight.get('display_name')) {
+            return (<div dangerouslySetInnerHTML={{__html: highlight.get('display_name')}} />);
+        }
+
+        return team.display_name;
+    }
+
+    getTeamResult(team, index, isRecent, highlight) {
         let subTextParts = [];
         if (team.child_team_count > 1) {
             subTextParts.push(`${team.child_team_count} Teams`);
@@ -679,10 +687,11 @@ class Search extends CSSComponent {
         }
 
         let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
+        const teamPrimaryText = this.getTeamPrimaryText(team, highlight);
         const item = {
             index: index,
             leftAvatar: <IconContainer IconClass={GroupIcon} {...this.styles().ResultIcon} />,
-            primaryText: team.display_name,
+            primaryText: teamPrimaryText,
             secondaryText: subTextParts.join(', '),
             onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
             type: RESULT_TYPES.TEAM,
@@ -907,7 +916,7 @@ class Search extends CSSComponent {
             if (result.profile) {
                 searchResult = this.getProfileResult(result.profile, index, false, results.length, result.highlight);
             } else if (result.team) {
-                searchResult = this.getTeamResult(result.team, index, false, results.length, result.highlight);
+                searchResult = this.getTeamResult(result.team, index, false, result.highlight);
             } else if (result.location) {
                 searchResult = this.getLocationResult(result.location, index, false, results.length, result.highlight);
             } else if (result.post) {
