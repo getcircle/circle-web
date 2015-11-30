@@ -707,9 +707,9 @@ class Search extends CSSComponent {
             secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
         };
 
-        if (highlight && highlight.get('location_name')) {
+        if (highlight && highlight.get('name')) {
             texts.primaryText = (<div
-                dangerouslySetInnerHTML={{__html: highlight.get('location_name')}} />);
+                dangerouslySetInnerHTML={{__html: highlight.get('name')}} />);
         }
 
         if (highlight && highlight.get('full_address')) {

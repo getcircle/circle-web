@@ -62,7 +62,7 @@ class SearchResultFactory {
         const highlightedProperties = {};
         if (highlightName) {
             /*eslint-disable camelcase*/
-            highlightedProperties['location_name'] = '<em>' + location.name.substr(0, 2) + '</em>' + location.name.substr(2);
+            highlightedProperties.name = '<em>' + location.name.substr(0, 2) + '</em>' + location.name.substr(2);
             /*eslint-enable camelcase*/
         }
 

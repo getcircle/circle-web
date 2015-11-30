@@ -152,7 +152,7 @@ describe('SearchComponent', () => {
 
         expect(searchComponent.getLocationTexts(location, highlight)).toExist();
         expect(searchComponent.getLocationTexts(location, highlight).primaryText).toEqual((<div
-            dangerouslySetInnerHTML={{__html: highlight.get('location_name')}} />
+            dangerouslySetInnerHTML={{__html: highlight.get('name')}} />
         ));
         expect(searchComponent.getLocationTexts(location, highlight).secondaryText).toBe(locationSecondaryText);
     });
