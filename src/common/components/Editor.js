@@ -26,6 +26,24 @@ class Editor extends CSSComponent {
     mediumEditorOptions = {
         autoLink: true,
         imageDragging: false,
+        keyboardCommands: {
+            commands: [
+                {
+                    command: 'bold',
+                    key: 'B',
+                    meta: true,
+                    shift: false,
+                    alt: false
+                },
+                {
+                    command: 'italic',
+                    key: 'I',
+                    meta: true,
+                    shift: false,
+                    alt: false
+                },
+            ],
+        },
         paste: {
             forcePlainText: true,
         },
@@ -277,7 +295,7 @@ class Editor extends CSSComponent {
 
     getSelection() {
         const selectionState = this.medium.exportSelection();
-        if ((selectionState.end - selectionState.start) <= 0) {
+        if (!selectionState || (selectionState.end - selectionState.start) <= 0) {
             return null;
         }
 
