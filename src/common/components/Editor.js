@@ -2,8 +2,10 @@ import ReactDOM from 'react-dom';
 import React, { PropTypes } from 'react';
 import MediumEditor from 'medium-editor';
 
+import BlockElement from '../models/BlockElement';
 import logger from '../utils/logger';
 import t from '../utils/gettext';
+
 
 import CSSComponent from './CSSComponent';
 
@@ -19,7 +21,7 @@ class Editor extends CSSComponent {
         text: '',
     }
 
-    paragraphs = {}
+    blockElements = {}
     medium = null
     rootElement = null
     numberOfChildNodes = 0
@@ -116,6 +118,10 @@ class Editor extends CSSComponent {
 
             this.numberOfChildNodes = editable.childNodes.length;
             this._updated = true;
+
+            for (let key in this.blockElements) {
+                logger.log(this.blockElements[key].getObject());
+            }
             this.onChange(this.rootElement.innerHTML);
         });
 
@@ -151,12 +157,13 @@ class Editor extends CSSComponent {
 
     onKeyPress(event) {
         // Find the paragraph where things have changed and request its contents to be updated
-        // logger.log('onKeyPress - Pressed ' + String.fromCharCode(event.keyCode));
-        this.ensureCurrentElementHasAnIdentifier();
+        const identifier = this.getCurrentElementIdentifier();
+        if (identifier && this.blockElements[identifier]) {
+           this.blockElements[identifier].update();
+        }
     }
 
     onKeyUp(event) {
-        // logger.log('onKeyUp - ' + event.keyCode + (this.hasSelection() ? ' - Has selection' : ''));
         this.ensureCurrentElementHasAnIdentifier();
     }
 
@@ -218,13 +225,15 @@ class Editor extends CSSComponent {
 
             if (selectedText !== null) {
                 logger.log('FOUND SELECTION - ' + selectedText + ' (' + matchedAlgo + ')');
+                this.blockElements[childNode.id].updateMarkups();
+            }
+
+            if (matchedAlgo === 1) {
+                // If we have found the selection, stop traversing
+                break;
             }
             previousLength = end;
         }
-    }
-
-    getRandomId() {
-        return Math.round(1E6 * Math.random()).toString(36);
     }
 
     /**
@@ -238,6 +247,10 @@ class Editor extends CSSComponent {
      */
     getCurrentElementIdentifier() {
         let currentElement = MediumEditor.selection.getSelectionStart(this.medium.options.ownerDocument);
+        if (!currentElement || currentElement === this.rootElement) {
+            return null;
+        }
+
         if (currentElement.nodeType !== 1 ||
             currentElement.tagName.toLowerCase !== 'p' ||
             currentElement.parentNode !== this.rootElement
@@ -248,22 +261,30 @@ class Editor extends CSSComponent {
                 parentNode = parentNode.parentNode;
             };
         }
+
+        if (!currentElement.id) {
+            this.assignIdentifiersToChildren(event.target);
+        }
         return currentElement.id;
     }
 
     ensureCurrentElementHasAnIdentifier() {
         let currentElement = MediumEditor.selection.getSelectionStart(this.medium.options.ownerDocument);
-        if (!currentElement.id) {
+        if (!currentElement || currentElement === this.rootElement) {
+            return null;
+        } else if (!currentElement.id) {
             this.assignIdentifiersToChildren(event.target);
         }
         logger.log(currentElement.id + ' ' + currentElement.innerText);
+        return currentElement.id;
     }
 
     assignIdentifiersToChildren(rootNode) {
         const ilen = rootNode.childNodes.length;
         let i = 0;
+        let blockElement;
         let childNode;
-        let processedIDs = {};
+        let processedElements = {};
 
         for (i = 0; i < ilen; i++) {
 
@@ -277,33 +298,25 @@ class Editor extends CSSComponent {
             // if the element either does not have an ID or
             // the ID has already been taken.
             if (childNode.tagName.toLowerCase() === 'p') {
-                if (childNode.id && this.paragraphs.hasOwnProperty(childNode.id) && !processedIDs.hasOwnProperty(childNode.id)) {
-                    processedIDs[childNode.id] = true;
-                } else if (childNode.id && processedIDs.hasOwnProperty(childNode.id)) {
-                    childNode.id = this.getRandomId();
-                    this.paragraphs[childNode.id] = true;
-                    processedIDs[childNode.id] = true;
+                if (childNode.id && this.blockElements.hasOwnProperty(childNode.id) && !processedElements.hasOwnProperty(childNode.id)) {
+                    processedElements[childNode.id] = this.blockElements[childNode.id];
+                } else if (childNode.id && processedElements.hasOwnProperty(childNode.id)) {
+                    blockElement = new BlockElement(childNode);
+                    this.blockElements[blockElement.id] = blockElement;
+                    processedElements[blockElement.id] = blockElement;
                 } else {
-                    childNode.id = this.getRandomId();
-                    this.paragraphs[childNode.id] = true;
-                    processedIDs[childNode.id] = true;
+                    blockElement = new BlockElement(childNode);
+                    this.blockElements[blockElement.id] = blockElement;
+                    processedElements[blockElement.id] = blockElement;
                 }
             }
         }
+
+        // Cleanup other blockElements
+        this.blockElements = processedElements;
     }
 
-    addParagraph(identifier, type) {
-
-    }
-
-    updateParagraph(identifier) {
-        // Read the plain text version of the node
-    }
-
-    removeParagraph(identifier) {
-
-    }
-
+    // Note: this returns start, end offsets relative to the root editor element.
     getSelection() {
         const selectionState = this.medium.exportSelection();
         if (!selectionState || (selectionState.end - selectionState.start) <= 0) {
@@ -311,10 +324,6 @@ class Editor extends CSSComponent {
         }
 
         return selectionState;
-    }
-
-    hasSelection() {
-        return !!this.getSelection();
     }
 
     render() {
