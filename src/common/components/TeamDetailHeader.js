@@ -1,0 +1,145 @@
+import { FlatButton } from 'material-ui';
+import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
+
+import { fontColors, fontWeights } from '../constants/styles';
+import t from '../utils/gettext';
+
+import CSSComponent from './CSSComponent';
+import DetailHeader from './DetailHeader';
+import GroupIcon from './GroupIcon'
+import IconContainer from './IconContainer';
+
+class TeamDetailHeader extends CSSComponent {
+
+    static propTypes = {
+        isEditable: PropTypes.bool,
+        largerDevice: PropTypes.bool.isRequired,
+        onEditTapped: PropTypes.func,
+        team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
+    }
+
+    static contextTypes = {
+        muiTheme: PropTypes.object.isRequired,
+    }
+
+    classes() {
+        return {
+            default: {
+                editButtonContainer: {
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    maxWidth: 800,
+                    margin: '0 auto',
+                    padding: '0 10px',
+                },
+                editButton: {
+                    backgroundColor: 'transparent',
+                    border: '1px solid white',
+                    marginTop: '16px',
+                    fontSize: 11,
+                    letterSpacing: '1px',
+                    ...fontColors.white,
+                    ...fontWeights.semiBold,
+                },
+                icon: {
+                    height: 80,
+                    width: 80,
+                    color: 'white',
+                    strokeWidth: 1,
+                },
+                iconSection: {
+                    position: 'relative',
+                },
+                iconContainer: {
+                    position: 'relative',
+                    height: 120,
+                    width: 120,
+                    border: '1px solid white',
+                    top: 0,
+                    left: 0,
+                },
+                infoSection: {
+                    paddingTop: 10,
+                },
+                nameSection: {
+                    paddingTop: 20,
+                },
+            },
+            'isEditable-false': {
+                iconSection: {
+                    paddingTop: 60,
+                },
+            },
+        };
+    }
+
+    _getTeamInfo(team) {
+        let parts = [];
+        if (team.child_team_count > 1) {
+            parts.push(`${team.child_team_count} teams`);
+        } else if (team.child_team_count === 1) {
+            parts.push(`${team.child_team_count} team`);
+        }
+
+        if (team.profile_count > 1) {
+            parts.push(`${team.profile_count} people`);
+        } else if (team.profile_count === 1) {
+            parts.push(`${team.profile_count} person`);
+        }
+
+        return parts.join(' | ');
+    }
+
+    renderEditButton() {
+        const {
+            isEditable,
+        } = this.props;
+
+        if (!isEditable) {
+            return;
+        }
+
+        return (
+            <div className="row end-xs" style={this.styles().editButtonContainer}>
+                <FlatButton
+                    label={t('Edit Team')}
+                    onTouchTap={() => {
+                        this.props.onEditTapped();
+                    }}
+                    style={this.styles().editButton}
+                />
+            </div>
+        );
+
+    }
+
+    render() {
+        const { team } = this.props;
+        let iconColor = {...this.styles().icon}.color;
+        let iconStrokeWidth = {...this.styles().icon}.strokeWidth;
+        return (
+            <DetailHeader largerDevice={this.props.largerDevice}>
+                {this.renderEditButton()}
+                <div className="row center-xs" style={this.styles().iconSection}>
+                    <IconContainer
+                        IconClass={GroupIcon}
+                        iconStyle={{...this.styles().icon}}
+                        style={this.styles().iconContainer}
+                        stroke={iconColor}
+                        strokeWidth={iconStrokeWidth}
+                    />
+                </div>
+                <div className="row center-xs" style={this.styles().nameSection}>
+                    <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>{team.display_name}</span>
+                </div>
+                <div className="row center-xs" style={this.styles().infoSection}>
+                    <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>{this._getTeamInfo(team)}</span>
+                </div>
+            </DetailHeader>
+        );
+    }
+
+}
+
+export default TeamDetailHeader;

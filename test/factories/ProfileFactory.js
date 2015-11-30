@@ -22,6 +22,14 @@ class ProfileFactory {
     getProfile() {
         return this._profile;
     }
+
+    getAdminProfile() {
+        return Object.assign({}, this._profile, {
+            /*eslint-disable camelcase*/
+            is_admin: true,
+            /*eslint-enable camelcase*/
+        });
+    }
 }
 
 export default new ProfileFactory();

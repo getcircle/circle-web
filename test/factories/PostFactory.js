@@ -39,6 +39,12 @@ class PostFactory {
             /*eslint-enable camelcase*/
         });
     }
+
+    getPostWithState(state) {
+        return Object.assign({}, this._post, {
+            state: state,
+        });
+    }
 }
 
 export default new PostFactory();

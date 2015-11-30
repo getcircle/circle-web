@@ -49,12 +49,17 @@ module.exports = {
                 ]
             },
             { test: /\.js$/, loaders: ['react-hot', 'babel?stage=0&optional=runtime&cacheDirectory'], exclude: /node_modules/ },
-            { test: /(components|containers).*\.js$/, loaders: ['react-map-styles'], exclude: /node_modules/ },
             { test: /\.scss$/, loaders: ['style', 'css', 'sass'] },
             { test: /\.json$/, loaders: ['json-loader']}
         ]
     },
     node: {
       fs: 'empty'
+    },
+    resolve: {
+        alias: {
+            'Long': 'long',
+            'ByteBuffer': 'bytebuffer'
+        },
     },
 };
