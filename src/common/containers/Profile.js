@@ -4,6 +4,7 @@ import { services } from 'protobufs';
 
 import { getAuthenticatedProfile } from '../reducers/authentication';
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
+import { clearTeamMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
@@ -97,6 +98,13 @@ class Profile extends PureComponent {
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
             this.loadProfile(nextProps);
+        }
+        else if (this.props.extendedProfile && nextProps.extendedProfile) {
+            if (nextProps.extendedProfile.team !== this.props.extendedProfile.team) {
+                // When user switches teams, clear cached team members for old & new team
+                nextProps.dispatch(clearTeamMembers(this.props.extendedProfile.team.id));
+                nextProps.dispatch(clearTeamMembers(nextProps.extendedProfile.team.id));
+            }
         }
     }
 
