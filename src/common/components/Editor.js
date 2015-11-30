@@ -24,7 +24,10 @@ class Editor extends CSSComponent {
     rootElement = null
     numberOfChildNodes = 0
     mediumEditorOptions = {
-        autoLink: true,
+        anchor: {
+            linkValidation: true,
+        },
+        autoLink: false,
         imageDragging: false,
         keyboardCommands: {
             commands: [
@@ -104,6 +107,7 @@ class Editor extends CSSComponent {
         };
     }
 
+    // Medium editor specific events
     attachEventHandlers() {
         this.medium.subscribe('editableInput', (event, editable) => {
             if (this.numberOfChildNodes !== editable.childNodes.length) {
@@ -128,6 +132,13 @@ class Editor extends CSSComponent {
                 this.medium.on(buttonDOMElement, 'click', (event) => {
                     this.onToolbarButtonClicked(event, extension, buttonName);
                 });
+
+                if (buttonName === 'anchor') {
+                    let anchorFormSaveButton = extension.getForm().querySelector('.medium-editor-toolbar-save');
+                    this.medium.on(anchorFormSaveButton, 'click', (event) => {
+                        this.onToolbarButtonClicked(event, extension, buttonName);
+                    });
+                }
             }
         });
     }
@@ -174,7 +185,7 @@ class Editor extends CSSComponent {
         let childNode, previousLength = 0, range, contentLength;
         for (let i = 0; i < this.rootElement.childNodes.length; i++) {
             childNode = this.rootElement.childNodes[i];
-            range = new Range(0,0);
+            range = new Range(0, 0);
             range.selectNodeContents(childNode);
             contentLength = range.toString().length;
             if (contentLength === 0) {
