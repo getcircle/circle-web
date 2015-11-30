@@ -1,8 +1,6 @@
 import {services} from 'protobufs';
 
-import client from './client';
-
-export function noSearchResults(query, comment) {
+export function noSearchResults(client, query, comment) {
     let request = new services.notification.actions.no_search_results.RequestV1({
         query,
         comment,

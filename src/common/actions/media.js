@@ -10,7 +10,7 @@ export function uploadMedia(data, mediaType, mediaKey) {
                 types.MEDIA_UPLOAD_SUCCESS,
                 types.MEDIA_UPLOAD_FAILURE,
             ],
-            remote: () => requests.uploadMedia(data, mediaType, mediaKey),
+            remote: (client) => requests.uploadMedia(client, data, mediaType, mediaKey),
         },
     };
 }

@@ -11,7 +11,7 @@ export function loadExtendedTeam(teamId) {
                 types.LOAD_EXTENDED_TEAM_SUCCESS,
                 types.LOAD_EXTENDED_TEAM_FAILURE,
             ],
-            remote: () => organizationRequests.getExtendedTeam(teamId),
+            remote: (client) => organizationRequests.getExtendedTeam(client, teamId),
         },
     };
 }
@@ -25,7 +25,7 @@ export function loadTeamMembers(teamId, nextRequest=null) {
                 types.LOAD_TEAM_MEMBERS_FAILURE,
             ],
             /*eslint-disable camelcase */
-            remote: () => getProfiles({team_id: teamId}, nextRequest),
+            remote: (client) => getProfiles(client, {team_id: teamId}, nextRequest),
             /*eslint-enable camelcase */
             bailout: (state) => {
                 if (state.get('teamMembers').has(teamId) && nextRequest === null) {
@@ -47,7 +47,7 @@ export function updateTeam(team) {
                 types.UPDATE_TEAM_SUCCESS,
                 types.UPDATE_TEAM_FAILURE,
             ],
-            remote: () => organizationRequests.updateTeam(team),
+            remote: (client) => organizationRequests.updateTeam(client, team),
         },
     };
 }

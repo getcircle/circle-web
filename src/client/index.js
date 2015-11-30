@@ -9,14 +9,16 @@ import ReactDOM from 'react-dom';
 import { Router } from 'react-router';
 import transit from 'transit-immutable-js';
 
+import Client from '../common/services/Client';
 import createStore from '../common/createStore';
 import getRoutes from '../common/getRoutes';
 import { getBody } from '../common/utils/render';
 import Root from '../common/Root';
 
+const client = new Client();
 const dest = getBody();
 const initialState = transit.fromJSON(window.__INITIAL_STATE);
-const store = createStore(initialState);
+const store = createStore(client, initialState);
 
 const elements = [
     <Provider key="provider" store={store}>

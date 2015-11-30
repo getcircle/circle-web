@@ -10,7 +10,7 @@ export function createPost(post) {
                 types.CREATE_POST_SUCCESS,
                 types.CREATE_POST_FAILURE,
             ],
-            remote: () => requests.createPost(post),
+            remote: (client) => requests.createPost(client, post),
         },
     };
 }
@@ -23,7 +23,7 @@ export function updatePost(post) {
                 types.UPDATE_POST_SUCCESS,
                 types.UPDATE_POST_FAILURE,
             ],
-            remote: () => requests.updatePost(post),
+            remote: (client) => requests.updatePost(client, post),
         },
     };
 }
@@ -36,7 +36,7 @@ export function getPosts(postStateURLString, byProfile, nextRequest) {
                 types.GET_POSTS_SUCCESS,
                 types.GET_POSTS_FAILURE,
             ],
-            remote: () => requests.getPosts(postStateURLString, byProfile, nextRequest),
+            remote: (client) => requests.getPosts(client, postStateURLString, byProfile, nextRequest),
         },
         meta: {
             paginateBy: postStateURLString,
@@ -61,7 +61,7 @@ export function getPost(postId) {
                 types.GET_POST_SUCCESS,
                 types.GET_POST_FAILURE,
             ],
-            remote: () => requests.getPost(postId),
+            remote: (client) => requests.getPost(client, postId),
         },
     };
 }
@@ -74,7 +74,7 @@ export function deletePost(post) {
                 types.DELETE_POST_SUCCESS,
                 types.DELETE_POST_FAILURE,
             ],
-            remote: () => requests.deletePost(post),
+            remote: (client) => requests.deletePost(client, post),
         },
     };
 }

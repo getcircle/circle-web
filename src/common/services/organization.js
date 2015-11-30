@@ -1,10 +1,9 @@
 import merge from 'lodash/object/merge';
 import { services } from 'protobufs';
 
-import client from './client';
 import logger from '../utils/logger';
 
-export function getOrganization() {
+export function getOrganization(client) {
     let request = new services.organization.actions.get_organization.RequestV1();
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -19,9 +18,9 @@ export function getOrganization() {
     });
 }
 
-export function getExtendedTeam(teamId) {
-    const reportingDetails = getTeamReportingDetails(teamId);
-    const team = getTeam(teamId);
+export function getExtendedTeam(client, teamId) {
+    const reportingDetails = getTeamReportingDetails(client, teamId);
+    const team = getTeam(client, teamId);
     return new Promise((resolve, reject) => {
         // we merge the two responses, preferring the team objects. merge will do a deep merge on the entities and
         // normalizations
@@ -31,7 +30,7 @@ export function getExtendedTeam(teamId) {
     });
 }
 
-export function getTeamReportingDetails(teamId) {
+export function getTeamReportingDetails(client, teamId) {
     /*eslint-disable camelcase*/
     let request = new services.organization.actions.get_team_reporting_details.RequestV1({team_id: teamId});
     /*eslint-enable camelcase*/
@@ -42,7 +41,7 @@ export function getTeamReportingDetails(teamId) {
     });
 }
 
-export function getTeam(teamId) {
+export function getTeam(client, teamId) {
     /*eslint-disable camelcase*/
     let parameters = {team_id: teamId};
     /*eslint-enable camelcase*/
@@ -54,7 +53,7 @@ export function getTeam(teamId) {
     });
 }
 
-export function getTeamDescendants(teamId) {
+export function getTeamDescendants(client, teamId) {
     let parameters = {
         'team_ids': [teamId],
     };
@@ -73,7 +72,7 @@ export function getTeamDescendants(teamId) {
     });
 }
 
-export function getLocation(locationId) {
+export function getLocation(client, locationId) {
     let parameters = {
         'location_id': locationId,
     };
@@ -86,7 +85,7 @@ export function getLocation(locationId) {
     });
 }
 
-export function getTeamsForLocationId(locationId, nextRequest) {
+export function getTeamsForLocationId(client, locationId, nextRequest) {
     let parameters = {
         'location_id': locationId,
     };
@@ -111,7 +110,7 @@ export function getTeamsForLocationId(locationId, nextRequest) {
     });
 }
 
-export function getLocations(parameters, nextRequest=null, key=null) {
+export function getLocations(client, parameters, nextRequest=null, key=null) {
     parameters = Object.assign({}, parameters);
     let request = nextRequest ? nextRequest : new services.organization.actions.get_locations.RequestV1(parameters);
     if (key === null) {
@@ -124,7 +123,7 @@ export function getLocations(parameters, nextRequest=null, key=null) {
     });
 }
 
-export function getTeams(parameters, nextRequest=null, key=null) {
+export function getTeams(client, parameters, nextRequest=null, key=null) {
     parameters = Object.assign({}, parameters);
     const request = nextRequest ? nextRequest : new services.organization.actions.get_teams.RequestV1(parameters);
     if (key === null) {
@@ -153,7 +152,7 @@ export function getTeamLabel(team) {
     return parts.join(', ');
 }
 
-export function updateTeam(team) {
+export function updateTeam(client, team) {
     let request = new services.organization.actions.update_team.RequestV1({team: team});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -162,7 +161,7 @@ export function updateTeam(team) {
     });
 }
 
-export function updateLocation(location) {
+export function updateLocation(client, location) {
     let request = new services.organization.actions.update_location.RequestV1({location: location});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -171,7 +170,7 @@ export function updateLocation(location) {
     });
 }
 
-export function setManager(profileId, managerProfileId) {
+export function setManager(client, profileId, managerProfileId) {
     /*eslint-disable camelcase*/
     let request = new services.organization.actions.set_manager.RequestV1({manager_profile_id: managerProfileId, profile_id: profileId});
     /*eslint-enable camelcase*/

@@ -7,6 +7,7 @@ import path from 'path';
 import PrettyError from 'pretty-error';
 import http from 'http';
 
+import Client from '../common/services/client';
 import createStore from '../common/createStore';
 import getRoutes from '../common/getRoutes';
 import { Provider } from 'react-redux';
@@ -34,7 +35,8 @@ app.use((req, res) => {
         userAgent: req.headers['user-agent'],
     };
 
-    const store = createStore();
+    const client = new Client(req);
+    const store = createStore(client);
 
     function hydrateOnClient() {
         res.status(200).send(renderFullPage('', store, webpackIsomorphicTools.assets()));

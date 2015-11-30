@@ -2,9 +2,7 @@ import {services} from 'protobufs';
 
 import logger from '../utils/logger';
 
-import client from './client';
-
-function handleSearchResponse(query, request) {
+function handleSearchResponse(client, query, request) {
     return new Promise((resolve, reject) => {
         if (query === null || query.trim() === '') {
             resolve({results: []});
@@ -24,7 +22,7 @@ function handleSearchResponse(query, request) {
     });
 }
 
-export function search(query, category, attribute, attributeValue) {
+export function search(client, query, category, attribute, attributeValue) {
     logger.timeStart('search-service-' + query);
     let request = new services.search.actions.search.RequestV1({
         query,
@@ -34,14 +32,14 @@ export function search(query, category, attribute, attributeValue) {
         attribute_value: attributeValue,
         /*eslint-enable camelcase*/
     });
-    return handleSearchResponse(query, request);
+    return handleSearchResponse(client, query, request);
 }
 
-export function searchV2(query, category) {
+export function searchV2(client, query, category) {
     logger.timeStart('search-service-' + query);
     let request = new services.search.actions.search_v2.RequestV1({
         query,
         category,
     });
-    return handleSearchResponse(query, request);
+    return handleSearchResponse(client, query, request);
 }

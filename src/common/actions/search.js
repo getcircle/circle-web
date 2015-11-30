@@ -12,7 +12,7 @@ function loadSearchResultsV1(query, category, attribute, attributeValue) {
                 types.SEARCH_SUCCESS,
                 types.SEARCH_FAILURE,
             ],
-            remote: () => search(query, category, attribute, attributeValue),
+            remote: (client) => search(client, query, category, attribute, attributeValue),
             bailout: (state) => state.get('search').getIn(['results', query]),
         },
         payload: { query, category, attribute, attributeValue},
@@ -21,7 +21,7 @@ function loadSearchResultsV1(query, category, attribute, attributeValue) {
 
 function loadSearchResultsV2(query, category) {
     const action = loadSearchResultsV1(query, category);
-    action[SERVICE_REQUEST].remote = () =>  searchV2(query, category);
+    action[SERVICE_REQUEST].remote = (client) =>  searchV2(client, query, category);
     return action;
 }
 
@@ -55,7 +55,7 @@ export function noSearchResults(query, comment) {
                 types.NO_SEARCH_RESULTS_SUCCESS,
                 types.NO_SEARCH_RESULTS_FAILURE,
             ],
-            remote: () => notificationService.noSearchResults(query, comment),
+            remote: (client) => notificationService.noSearchResults(client, query, comment),
         }
     }
 }

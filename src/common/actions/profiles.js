@@ -10,7 +10,7 @@ export function getProfiles(parameters, nextRequest) {
                 types.LOAD_PROFILES_SUCCESS,
                 types.LOAD_PROFILES_FAILURE,
             ],
-            remote: () => requests.getProfiles(parameters, nextRequest),
+            remote: (client) => requests.getProfiles(client, parameters, nextRequest),
         },
     };
 }
@@ -23,7 +23,7 @@ export function getExtendedProfile(profileId) {
                 types.LOAD_EXTENDED_PROFILE_SUCCESS,
                 types.LOAD_EXTENDED_PROFILE_FAILURE,
             ],
-            remote: () => requests.getExtendedProfile(profileId),
+            remote: (client) => requests.getExtendedProfile(client, profileId),
         },
     };
 }
@@ -36,7 +36,7 @@ export function updateProfile(profile, manager) {
                 types.UPDATE_PROFILE_SUCCESS,
                 types.UPDATE_PROFILE_FAILURE,
             ],
-            remote: () => requests.updateProfile(profile, manager),
+            remote: (client) => requests.updateProfile(client, profile, manager),
         },
     };
 }

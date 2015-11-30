@@ -1,10 +1,9 @@
 import { services } from 'protobufs';
 import requests from 'superagent';
 
-import client from './client';
 import logger from '../utils/logger';
 
-export function uploadFile(fileName, contentType, data) {
+export function uploadFile(client, fileName, contentType, data) {
     return new Promise((resolve, reject) => {
         let instructionsRef;
         startUpload(fileName, contentType)
@@ -21,7 +20,7 @@ export function uploadFile(fileName, contentType, data) {
         });
 }
 
-function startUpload(fileName, contentType) {
+function startUpload(client, fileName, contentType) {
     /*eslint-disable camelcase*/
     let parameters = {
         file_name: fileName,
@@ -43,7 +42,7 @@ function startUpload(fileName, contentType) {
     });
 }
 
-function completeUpload(fileName, uploadId, uploadKey) {
+function completeUpload(client, fileName, uploadId, uploadKey) {
      /*eslint-disable camelcase*/
     let parameters = {
         file_name: fileName,

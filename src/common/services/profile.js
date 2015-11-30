@@ -2,9 +2,7 @@ import _ from 'lodash';
 import { services } from 'protobufs';
 import * as organizationRequests from '../services/organization';
 
-import client from './client';
-
-export function getProfile(parameters={}) {
+export function getProfile(client, parameters={}) {
     let key = Object.values(parameters)[0];
 	let request = new services.profile.actions.get_profile.RequestV1(parameters);
 	return new Promise((resolve, reject) => {
@@ -19,7 +17,7 @@ export function getProfile(parameters={}) {
 	});
 }
 
-export function getProfiles(parameters, nextRequest=null, key=null) {
+export function getProfiles(client, parameters, nextRequest=null, key=null) {
     parameters = Object.assign({}, parameters);
     const request = nextRequest ? nextRequest : new services.profile.actions.get_profiles.RequestV1(parameters);
     if (key === null) {
@@ -32,7 +30,7 @@ export function getProfiles(parameters, nextRequest=null, key=null) {
     });
 }
 
-export function getExtendedProfile(profileId) {
+export function getExtendedProfile(client, profileId) {
     let parameters = {}
     if (profileId !== undefined) {
         /*eslint-disable camelcase*/
@@ -59,7 +57,7 @@ export function getInitialsForProfile(profile) {
     return [profile.first_name[0], profile.last_name[0]].map((character) => _.capitalize(character)).join('');
 }
 
-export function updateProfile(profile, manager) {
+export function updateProfile(client, profile, manager) {
     let request = new services.profile.actions.update_profile.RequestV1({profile: profile});
     let updateProfile = new Promise((resolve, reject) => {
         client.sendRequest(request)

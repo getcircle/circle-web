@@ -2,9 +2,7 @@ import { services } from 'protobufs';
 
 import { getPostStateURLString, getPostStateFromURLString } from '../utils/post';
 
-import client from './client';
-
-export function createPost(post) {
+export function createPost(client, post) {
     let request = new services.post.actions.create_post.RequestV1({post: post});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -16,7 +14,7 @@ export function createPost(post) {
     });
 }
 
-export function updatePost(post) {
+export function updatePost(client, post) {
     let request = new services.post.actions.update_post.RequestV1({post: post});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -25,7 +23,7 @@ export function updatePost(post) {
     });
 }
 
-export function deletePost(post) {
+export function deletePost(client, post) {
     let request = new services.post.actions.delete_post.RequestV1({id: post.id});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -43,7 +41,7 @@ export function deletePost(post) {
     });
 }
 
-export function getPost(postId) {
+export function getPost(client, postId) {
     let request = new services.post.actions.get_post.RequestV1({id: postId});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
@@ -52,7 +50,7 @@ export function getPost(postId) {
     });
 }
 
-export function getPosts(postStateURLString, byProfile, nextRequest=null, key=null) {
+export function getPosts(client, postStateURLString, byProfile, nextRequest=null, key=null) {
 
     let parameters = {
         /*eslint-disable camelcase*/

@@ -3,13 +3,13 @@ import { combineReducers } from 'redux-immutablejs';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 
-import servicesMiddleware from './middleware/services';
+import createServicesMiddleware from './middleware/services';
 import * as reducers from './reducers';
 
-export default function (initialState) {
+export default function (client, initialState) {
 
     // NB: "thunk" middleware should be first
-    const middleware = [thunk, servicesMiddleware];
+    const middleware = [thunk, createServicesMiddleware(client)];
     if (__DEVELOPMENT__ && !__DEVTOOLS__) {
         middleware.push(logger);
     }

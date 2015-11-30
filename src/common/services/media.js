@@ -1,10 +1,9 @@
 import { services } from 'protobufs';
 import requests from 'superagent';
 
-import client from './client';
 import logger from '../utils/logger';
 
-export function uploadMedia(data, mediaType, mediaKey) {
+export function uploadMedia(client, data, mediaType, mediaKey) {
     return new Promise((resolve, reject) => {
         let instructionsRef;
         startMediaUpload(mediaType, mediaKey)
@@ -21,7 +20,7 @@ export function uploadMedia(data, mediaType, mediaKey) {
         });
 }
 
-function startMediaUpload(mediaType, mediaKey) {
+function startMediaUpload(client, mediaType, mediaKey) {
     /*eslint-disable camelcase*/
     let parameters = {
         media_type: mediaType,
@@ -43,7 +42,7 @@ function startMediaUpload(mediaType, mediaKey) {
     });
 }
 
-function completeMediaUpload(mediaType, mediaKey, uploadId, uploadKey) {
+function completeMediaUpload(client, mediaType, mediaKey, uploadId, uploadKey) {
      /*eslint-disable camelcase*/
     let parameters = {
         media_type: mediaType,

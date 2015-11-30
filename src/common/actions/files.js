@@ -10,7 +10,7 @@ export function uploadFile(fileName, contentType, data) {
                 types.FILE_UPLOAD_SUCCESS,
                 types.FILE_UPLOAD_FAILURE,
             ],
-            remote: () => requests.uploadFile(fileName, contentType, data),
+            remote: (client) => requests.uploadFile(client, fileName, contentType, data),
         },
     };
 }

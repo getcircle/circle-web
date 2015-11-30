@@ -1,11 +1,10 @@
 import {services} from 'protobufs';
 
-import client from './client';
 import logger from '../utils/logger';
 
 export const AUTH_BACKENDS = services.user.actions.authenticate_user.RequestV1.AuthBackendV1;
 
-export function authenticate(backend, key, secret) {
+export function authenticate(client, backend, key, secret) {
     /*eslint-disable camelcase*/
     let parameters = {
         backend: backend,
@@ -32,7 +31,7 @@ export function authenticate(backend, key, secret) {
     });
 }
 
-export function getAuthenticationInstructions(email, subdomain) {
+export function getAuthenticationInstructions(client, email, subdomain) {
     const parameters = {
         email,
         /*eslint-disable camelcase*/
@@ -65,7 +64,7 @@ export function getAuthenticationInstructions(email, subdomain) {
     });
 }
 
-export function logout() {
+export function logout(client) {
     /*eslint-disable camelcase*/
     let parameters = {client_type: services.user.containers.token.ClientTypeV1.WEB};
     /*elsint-enable camelcase*/
@@ -80,7 +79,7 @@ export function logout() {
     });
 }
 
-export function requestAccess(domain, userInfo) {
+export function requestAccess(client, domain, userInfo) {
     /*eslint-disable camelcase*/
     const parameters = {
         anonymous_user: {

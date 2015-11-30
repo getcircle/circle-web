@@ -35,7 +35,7 @@ export function exploreProfiles(nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: () => getProfiles(null, nextRequest, PROFILES),
+            remote: (client) => getProfiles(client, null, nextRequest, PROFILES),
             bailout: (state) => {
                 const profilesState = state.get('explore').get(PROFILES);
                 return shouldBail(profilesState, nextRequest);
@@ -52,7 +52,7 @@ export function exploreTeams(nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: () => getTeams(null, nextRequest, TEAMS),
+            remote: (client) => getTeams(client, null, nextRequest, TEAMS),
             bailout: (state) => {
                 const teamsState = state.get('explore').get(TEAMS);
                 return shouldBail(teamsState, nextRequest);
@@ -69,7 +69,7 @@ export function exploreLocations(nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: () => getLocations(null, nextRequest, LOCATIONS),
+            remote: (client) => getLocations(client, null, nextRequest, LOCATIONS),
             bailout: (state) => {
                 const locationsState = state.get('explore').get(LOCATIONS);
                 return shouldBail(locationsState, nextRequest);
@@ -86,7 +86,7 @@ export function explorePosts(nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: () => getPosts(PostStateURLString.LISTED, null, nextRequest, POSTS),
+            remote: (client) => getPosts(client, PostStateURLString.LISTED, null, nextRequest, POSTS),
             bailout: (state) => {
                 const postsState = state.get('explore').get(POSTS);
                 return shouldBail(postsState, nextRequest);

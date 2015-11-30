@@ -11,7 +11,7 @@ export function loadLocation(locationId) {
                 types.LOAD_LOCATION_SUCCESS,
                 types.LOAD_LOCATION_FAILURE,
             ],
-            remote: () => organizationRequests.getLocation(locationId),
+            remote: (client) => organizationRequests.getLocation(client, locationId),
             bailout: state => state.get('locations').get('ids').has(locationId),
         },
     };
@@ -26,7 +26,7 @@ export function loadLocationMembers(locationId, nextRequest=null) {
                 types.LOAD_LOCATION_MEMBERS_FAILURE,
             ],
             /*eslint-disable camelcase */
-            remote: () => getProfiles({location_id: locationId}, nextRequest),
+            remote: (client) => getProfiles(client, {location_id: locationId}, nextRequest),
             /*eslint-enable camelcase */
             bailout: (state) => {
                 if (state.get('locationMembers').has(locationId) && nextRequest === null) {
@@ -48,7 +48,7 @@ export function updateLocation(location) {
                 types.UPDATE_LOCATION_SUCCESS,
                 types.UPDATE_LOCATION_FAILURE,
             ],
-            remote: () => organizationRequests.updateLocation(location),
+            remote: (client) => organizationRequests.updateLocation(client, location),
         },
     };
 }

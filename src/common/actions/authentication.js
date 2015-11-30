@@ -1,15 +1,14 @@
 import * as types from '../constants/actionTypes';
 import * as userService from '../services/user';
-import client from '../services/client';
 import { getFlags } from '../services/feature';
 import { getOrganization } from '../services/organization';
 import { getExtendedProfile } from '../services/profile';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
 import { SERVICE_REQUEST } from '../middleware/services';
 
-function getAuthenticatedObjectsPayload(payload = {}) {
+function getAuthenticatedObjectsPayload(client, payload = {}) {
     return new Promise((resolve, reject) => {
-        Promise.all([getExtendedProfile(), getOrganization(), getFlags()])
+        Promise.all([getExtendedProfile(client), getOrganization(client), getFlags(client)])
             .then(([extendedProfileResponse, organization, flags]) => {
                 payload = Object.assign({}, payload, extendedProfileResponse);
                 const extendedProfile = retrieveExtendedProfile(extendedProfileResponse.result, extendedProfileResponse);
@@ -33,15 +32,15 @@ export function authenticate(backend, key, secret) {
                 types.AUTHENTICATE_SUCCESS,
                 types.AUTHENTICATE_FAILURE,
             ],
-            remote: () => {
+            remote: (client) => {
                 let payload = {};
-                return userService.authenticate(backend, key, secret)
+                return userService.authenticate(client, backend, key, secret)
                     .then((response) => {
                         const { user } = response;
                         payload.user = user;
                         return Promise.resolve(user);
                     })
-                    .then(() => getAuthenticatedObjectsPayload(payload));
+                    .then(() => getAuthenticatedObjectsPayload(client, payload));
             },
         }
     };
@@ -55,7 +54,7 @@ export function logout() {
                 types.LOGOUT_SUCCESS,
                 types.LOGOUT_FAILURE,
             ],
-            remote: () => userService.logout(),
+            remote: (client) => userService.logout(client),
         },
     };
 }
@@ -68,7 +67,7 @@ export function refresh() {
                 types.REFRESH_SUCCESS,
                 types.REFRESH_FAILURE,
             ],
-            remote: state => getAuthenticatedObjectsPayload(),
+            remote: (client) => getAuthenticatedObjectsPayload(client),
         }
     };
 }
@@ -81,7 +80,7 @@ export function getAuthenticationInstructions(email, subdomain) {
                 types.GET_AUTHENTICATION_INSTRUCTIONS_SUCCESS,
                 types.GET_AUTHENTICATION_INSTRUCTIONS_FAILURE,
             ],
-            remote: (state) => userService.getAuthenticationInstructions(email, subdomain),
+            remote: (client) => userService.getAuthenticationInstructions(client, email, subdomain),
         },
     };
 }
@@ -94,7 +93,7 @@ export function requestAccess(domain, userInfo) {
                 types.REQUEST_ACCESS_SUCCESS,
                 types.REQUEST_ACCESS_FAILURE,
             ],
-            remote: (state) => userService.requestAccess(domain, userInfo),
+            remote: (client) => userService.requestAccess(client, domain, userInfo),
         },
     };
 }

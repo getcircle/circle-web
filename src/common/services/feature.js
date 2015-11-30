@@ -1,8 +1,6 @@
 import { services } from 'protobufs';
 
-import client from './client';
-
-export function getFlags() {
+export function getFlags(client) {
     let request = new services.feature.actions.get_flags.RequestV1();
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
