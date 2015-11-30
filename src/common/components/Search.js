@@ -701,13 +701,33 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
-    getLocationResult(location, index, isRecent) {
+    getLocationTexts(location, highlight) {
+        const texts = {
+            primaryText: location.name,
+            secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
+        };
+
+        if (highlight && highlight.get('location_name')) {
+            texts.primaryText = (<div
+                dangerouslySetInnerHTML={{__html: highlight.get('location_name')}} />);
+        }
+
+        if (highlight && highlight.get('full_address')) {
+            texts.secondaryText = (<div
+                dangerouslySetInnerHTML={{__html: highlight.get('full_address')}} />);
+        }
+
+        return texts;
+    }
+
+    getLocationResult(location, index, isRecent, highlight) {
         let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
+        const locationTexts = this.getLocationTexts(location, highlight);
         const item = {
             index: index,
             leftAvatar: <IconContainer IconClass={OfficeIcon} {...this.styles().ResultIcon} />,
-            primaryText: location.name,
-            secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
+            primaryText: locationTexts.primaryText,
+            secondaryText: locationTexts.secondaryText,
             onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
@@ -918,7 +938,7 @@ class Search extends CSSComponent {
             } else if (result.team) {
                 searchResult = this.getTeamResult(result.team, index, false, result.highlight);
             } else if (result.location) {
-                searchResult = this.getLocationResult(result.location, index, false, results.length, result.highlight);
+                searchResult = this.getLocationResult(result.location, index, false, result.highlight);
             } else if (result.post) {
                 searchResult = this.getPostResult(result.post, index, false, results.length, result.highlight);
             }
