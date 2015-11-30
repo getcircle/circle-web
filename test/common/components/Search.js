@@ -168,7 +168,7 @@ describe('SearchComponent', () => {
         expect(searchComponent.getLocationTexts(location, highlight)).toExist();
         expect(searchComponent.getLocationTexts(location, highlight).primaryText).toBe(location.name);
         expect(searchComponent.getLocationTexts(location, highlight).secondaryText).toEqual((<div
-            dangerouslySetInnerHTML={{__html: highlight.get('full_address')}} />
+            dangerouslySetInnerHTML={{__html: highlight.get('full_address') + ' (' + location.profile_count + ')'}} />
         ));
 
     });

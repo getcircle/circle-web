@@ -714,7 +714,7 @@ class Search extends CSSComponent {
 
         if (highlight && highlight.get('full_address')) {
             texts.secondaryText = (<div
-                dangerouslySetInnerHTML={{__html: highlight.get('full_address')}} />);
+                dangerouslySetInnerHTML={{__html: highlight.get('full_address') + ' (' + location.profile_count + ')'}} />);
         }
 
         return texts;
