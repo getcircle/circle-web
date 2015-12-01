@@ -18,6 +18,7 @@ function getInitialState() {
         managesTeam: null,
         profileLocation: null,
         flags: null,
+        loaded: false,
     });
 }
 
@@ -44,7 +45,7 @@ function handleAuthenticateSuccess(state, action) {
     return nextState;
 }
 
-function handleRefreshSuccess(state, action) {
+function handleLoadAuthSuccess(state, action) {
     const {
         profile,
         team,
@@ -60,6 +61,8 @@ function handleRefreshSuccess(state, action) {
         profileLocation,
         organization,
         flags,
+        loaded: true,
+        authenticated: true,
     });
     return nextState;
 }
@@ -83,6 +86,14 @@ export function getAuthenticatedProfile(state, cache) {
     return profile;
 }
 
+export function isLoaded(globalState) {
+    return globalState.get('authentication') && globalState.get('authentication').get('loaded');
+}
+
+export function isAuthenticated(globalState) {
+    return globalState.get('authentication') && globalState.get('authentication').get('authenticated');
+}
+
 const initialState = getInitialState();
 
 export default function authentication(state = initialState, action) {
@@ -103,8 +114,8 @@ export default function authentication(state = initialState, action) {
         return handleGetAuthenticationInstructionsSuccess(state, action);
     case types.LOGOUT_SUCCESS:
         return getInitialState();
-    case types.REFRESH_SUCCESS:
-        return handleRefreshSuccess(state, action);
+    case types.LOAD_AUTH_SUCCESS:
+        return handleLoadAuthSuccess(state, action);
     default:
         return state;
     }

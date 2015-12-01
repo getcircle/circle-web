@@ -10,7 +10,6 @@ import {
 import { deviceResized } from '../actions/device';
 import { getAuthenticatedProfile } from '../reducers/authentication';
 import { locationChanged } from '../actions/app';
-import { refresh } from '../actions/authentication';
 import resizable from '../decorators/resizable';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
@@ -100,11 +99,7 @@ class App extends CSSComponent {
     }
 
     componentWillMount() {
-        // refresh any cached authentication objects
         this.initTrackerSession();
-        if (this.props.authenticated) {
-            this.props.dispatch(refresh());
-        }
     }
 
     componentDidMount() {

@@ -3,59 +3,73 @@ import React from 'react';
 import { IndexRoute, Route } from 'react-router';
 
 import { PAGE_TYPE } from './constants/trackerProperties';
+import { loadAuth } from './actions/authentication';
+import { isAuthenticated, isLoaded as isAuthLoaded } from './reducers/authentication';
 import { toggleHeader } from './actions/header';
 import tracker from './utils/tracker';
 
 function applyMiddleware(...middleWares) {
-    const finish = _.noop;
-    const handler = _.compose(...middleWares)(finish);
-    return (nextState, replaceState) => {
-        return handler(nextState, replaceState);
+    return (nextState, replaceState, cb) => {
+        function last(nextState, replaceState, exit) {
+            exit();
+        };
+        const handler = _.flowRight(...middleWares)(last);
+        return handler(nextState, replaceState, cb);
     }
 }
 
 export default function (store) {
 
     function loginOnce(next) {
-        return (nextState, replaceState) => {
-            if (store.getState().get('authentication').get('authenticated')) {
-                return replaceState(null, '/');
+        return (nextState, replaceState, exit) => {
+            if (isAuthLoaded(store.getState())) {
+                replaceState(null, '/');
+                return exit();
             }
-            next(nextState, replaceState);
+            next(nextState, replaceState, exit);
         };
     }
 
     function requireAuth(next) {
-        return (nextState, replaceState) => {
-            if (!store.getState().get('authentication').get('authenticated')) {
-                return replaceState(null, '/login', {next: nextState.location.pathname});
+        return (nextState, replaceState, exit) => {
+            function checkAuth() {
+                if (!isAuthenticated(store.getState())) {
+                    replaceState(null, '/login', {next: nextState.location.pathname});
+                    return exit();
+                }
+                next(nextState, replaceState, exit);
             }
-            next(nextState, replaceState);
+
+            if (!isAuthLoaded(store.getState())) {
+                store.dispatch(loadAuth()).then(checkAuth);
+            } else {
+                checkAuth();
+            }
         }
     }
 
     function displayHeader(next) {
-        return (nextState, replaceState) => {
+        return (nextState, replaceState, exit) => {
             store.dispatch(toggleHeader(true));
-            next(nextState, replaceState);
+            next(nextState, replaceState, exit);
         }
     }
 
     function hideHeader(next) {
-        return (nextState, replaceState) => {
+        return (nextState, replaceState, exit) => {
             store.dispatch(toggleHeader(false));
-            next(nextState, replaceState);
+            next(nextState, replaceState, exit);
         }
     }
 
     const trackPageView = (pageType, paramKey) => {
         return (next) => {
-            return (nextState, replaceState) => {
-                let storeState = store.getState();
-                if (storeState.get('authentication') && storeState.get('authentication').get('authenticated')) {
+            return (nextState, replaceState, exit) => {
+                let state = store.getState();
+                if (isAuthenticated(state)) {
                     let pageId = paramKey !== '' ? nextState.params[paramKey] : '';
                     // Init session is idempotent
-                    let authenticationState = store.getState().get('authentication');
+                    let authenticationState = state.get('authentication');
                     tracker.initSession(
                         authenticationState.get('profile'),
                         authenticationState.get('organization'),
@@ -64,7 +78,7 @@ export default function (store) {
                     );
                     tracker.trackPageView(pageType, pageId);
                 }
-                next(nextState, replaceState);
+                next(nextState, replaceState, exit);
             }
         }
     }

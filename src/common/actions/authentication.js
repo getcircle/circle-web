@@ -59,13 +59,13 @@ export function logout() {
     };
 }
 
-export function refresh() {
+export function loadAuth() {
     return {
         [SERVICE_REQUEST]: {
             types: [
-                types.REFRESH,
-                types.REFRESH_SUCCESS,
-                types.REFRESH_FAILURE,
+                types.LOAD_AUTH,
+                types.LOAD_AUTH_SUCCESS,
+                types.LOAD_AUTH_FAILURE,
             ],
             remote: (client) => getAuthenticatedObjectsPayload(client),
         }
