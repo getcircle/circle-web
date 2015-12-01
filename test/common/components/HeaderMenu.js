@@ -6,6 +6,8 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import TestUtils from 'react-addons-test-utils';
 
+import then from '../utils/then';
+
 import ProfileFactory from '../../factories/ProfileFactory';
 import TeamFactory from '../../factories/TeamFactory';
 
@@ -72,20 +74,27 @@ describe('HeaderMenu', () => {
     it('menu toggles state on click', () => {
         const { headerMenu } = setup();
 
-        headerMenu.refs.container.props.onTouchTap();
-        expect(headerMenu.state.menuDisplayed).toBe(true);
+        TestUtils.Simulate.click(headerMenu.refs.container);
+        then(() => {
+            expect(headerMenu.state.menuDisplayed).toBe(true);
+        });
 
-        headerMenu.refs.container.props.onTouchTap();
-        expect(headerMenu.state.menuDisplayed).toBe(false);
+        TestUtils.Simulate.click(headerMenu.refs.container);
+        then(() => {
+            expect(headerMenu.state.menuDisplayed).toBe(false);
+        });
     });
 
     it('menu dismisses on esc', () => {
         const { headerMenu } = setup();
 
-        headerMenu.refs.container.props.onTouchTap();
-        let menu = TestUtils.findRenderedComponentWithType(headerMenu, Menu);
-        menu.props.onEscKeyDown();
-        expect(headerMenu.state.menuDisplayed).toBe(false);
+        TestUtils.Simulate.click(headerMenu.refs.container);
+        then(() => {
+            let menu = TestUtils.findRenderedComponentWithType(headerMenu, Menu);
+            menu.props.onEscKeyDown();
+        }).then(() => {
+            expect(headerMenu.state.menuDisplayed).toBe(false);
+        }, 100);
     });
 
     it('renders a profile avatar', () => {
@@ -112,60 +121,68 @@ describe('HeaderMenu', () => {
 
     it('shows two menu items (My Profile and Logout) by default for everyone', () => {
         const { headerMenu } = setup();
-        headerMenu.refs.container.props.onTouchTap();
+        TestUtils.Simulate.click(headerMenu.refs.container);
 
-        const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-        expect(menuItems.length).toBe(2);
+        then(() => {
+            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
+            expect(menuItems.length).toBe(2);
 
-        const viewProfileHandlerSpy = expect.spyOn(headerMenu, 'handleViewProfile');
-        const logoutHandlerSpy = expect.spyOn(headerMenu, 'handleLogout');
-        menuItems.map((item) => {
-            item.props.onTouchTap();
+            const viewProfileHandlerSpy = expect.spyOn(headerMenu, 'handleViewProfile');
+            const logoutHandlerSpy = expect.spyOn(headerMenu, 'handleLogout');
+            menuItems.map((item) => {
+                item.props.onTouchTap();
+            });
+
+            expect(viewProfileHandlerSpy.calls.length).toBe(1);
+            expect(logoutHandlerSpy.calls.length).toBe(1);
         });
-
-        expect(viewProfileHandlerSpy.calls.length).toBe(1);
-        expect(logoutHandlerSpy.calls.length).toBe(1);
     });
 
     it('shows team menu item if user manages a team', () => {
         const { headerMenu } = setup({
             managesTeam: TeamFactory.getTeam(),
         });
-        headerMenu.refs.container.props.onTouchTap();
 
-        const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-        expect(menuItems.length).toBe(3);
+        TestUtils.Simulate.click(headerMenu.refs.container);
+        then(() => {
+            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
+            expect(menuItems.length).toBe(3);
 
-        const viewTeamHandlerSpy = expect.spyOn(headerMenu, 'handleViewTeam');
-        menuItems[1].props.onTouchTap();
-        expect(viewTeamHandlerSpy.calls.length).toBe(1);
+            const viewTeamHandlerSpy = expect.spyOn(headerMenu, 'handleViewTeam');
+            menuItems[1].props.onTouchTap();
+            expect(viewTeamHandlerSpy.calls.length).toBe(1);
+        });
     });
 
     it('shows my knowledge if feature flag is set', () => {
         const { headerMenu } = setup({}, {
             flags: Immutable.Map({posts: true}),
         });
-        headerMenu.refs.container.props.onTouchTap();
+        TestUtils.Simulate.click(headerMenu.refs.container);
 
-        const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-        expect(menuItems.length).toBe(3);
+        then(() => {
+            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
+            expect(menuItems.length).toBe(3);
 
-        const viewKnowledgeHandlerSpy = expect.spyOn(headerMenu, 'handleViewKnowledge');
-        menuItems[1].props.onTouchTap();
-        expect(viewKnowledgeHandlerSpy.calls.length).toBe(1);
+            const viewKnowledgeHandlerSpy = expect.spyOn(headerMenu, 'handleViewKnowledge');
+            menuItems[1].props.onTouchTap();
+            expect(viewKnowledgeHandlerSpy.calls.length).toBe(1);
+        });
     });
 
     it('hides my knowledge if feature flag is there but set to false', () => {
         const { headerMenu } = setup({}, {
             flags: Immutable.Map({posts: false}),
         });
-        headerMenu.refs.container.props.onTouchTap();
+        TestUtils.Simulate.click(headerMenu.refs.container);
 
-        const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-        expect(menuItems.length).toBe(2);
+        then(() => {
+            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
+            expect(menuItems.length).toBe(2);
 
-        const output = headerMenu.renderMyKnowledgeMenuItem();
-        expect(output.type).toBe('span');
+            const output = headerMenu.renderMyKnowledgeMenuItem();
+            expect(output.type).toBe('span');
+        });
     });
 
 });
