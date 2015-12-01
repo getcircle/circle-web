@@ -7,7 +7,8 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router';
-import transit from 'transit-immutable-js';
+import transit from 'transit-immutable-protobuf-js';
+import protobufs from 'protobufs';
 
 import Client from '../common/services/Client';
 import createStore from '../common/createStore';
@@ -17,7 +18,11 @@ import Root from '../common/Root';
 
 const client = new Client();
 const dest = getBody();
-const initialState = transit.fromJSON(window.__INITIAL_STATE);
+const nameSpaces = transit.withNameSpaces(
+    [protobufs.soa, protobufs.services],
+    new protobufs.services.$type.clazz().constructor,
+);
+const initialState = nameSpaces.fromJSON(window.__INITIAL_STATE);
 const store = createStore(client, initialState);
 
 const elements = [

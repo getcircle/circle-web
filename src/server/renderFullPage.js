@@ -1,6 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import transit from 'transit-immutable-js';
+import protobufs from 'protobufs';
+import transit from 'transit-immutable-protobuf-js';
+
+const nameSpaces = transit.withNameSpaces(
+    [protobufs.soa, protobufs.services],
+    new protobufs.services.$type.clazz().constructor,
+);
 
 export default function (content, store, assets) {
     const styleAssets = Object.keys(assets.styles).map((style, key) => {
@@ -18,6 +24,7 @@ export default function (content, store, assets) {
     if (!styles) {
         styles = `<style>${require('../common/styles/app.scss')}</style>`;
     }
+    const serializedState = nameSpaces.toJSON(store.getState());
     return `
     <!doctype html>
     <html lang="en-us">
@@ -41,7 +48,7 @@ export default function (content, store, assets) {
         <body class="layout">
             <div class="js-content">${content}</div>
             <script>
-                window.__INITIAL_STATE='${transit.toJSON(store.getState())}';
+                window.__INITIAL_STATE='${serializedState}';
             </script>
             <script src="${assets.javascript.main}"></script>
         </body>

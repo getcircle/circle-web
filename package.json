@@ -92,7 +92,7 @@
     "serve-favicon": "^2.3.0",
     "serve-static": "^1.10.0",
     "superagent": "git+https://github.com/mhahn/superagent.git",
-    "transit-immutable-js": "^0.4.0",
+    "transit-immutable-protobuf-js": "git+https://github.com/lunohq/transit-immutable-protobuf-js.git#b40244346d6055714ae70c46c1f5b53f573de4e6",
     "transit-js": "^0.8.837",
     "ua-parser-js": "^0.7.9",
     "url-loader": "0.5.6",
