@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import protobufs from 'protobufs';
 
 import Transport from './Transport';
