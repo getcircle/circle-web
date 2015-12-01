@@ -55,14 +55,29 @@ app.use((req, res) => {
         } else if (redirectLocation) {
             res.redirect(302, redirectLocation.pathname + redirectLocation.search);
         } else if (renderProps) {
-            const content = ReactDOM.renderToString(
-                <Root>
-                    <Provider key="provider" store={store}>
-                        <RoutingContext {...renderProps} />
-                    </Provider>
-                </Root>
-            );
-            res.status(200).send(renderFullPage(content, store, webpackIsomorphicTools.assets()));
+            let content;
+            try {
+                content = ReactDOM.renderToString(
+                    <Root>
+                        <Provider key="provider" store={store}>
+                            <RoutingContext {...renderProps} />
+                        </Provider>
+                    </Root>
+                );
+            } catch (e) {
+                console.error('REACT RENDER ERROR:', pretty.render(e));
+                hydrateOnClient();
+                return;
+            }
+            let page;
+            try {
+                page = renderFullPage(content, store, webpackIsomorphicTools.assets());
+            } catch (e) {
+                console.error('RENDER ERROR:', pretty.render(e));
+                hydrateOnClient();
+                return;
+            }
+            res.status(200).send(page);
         }
     });
 });
