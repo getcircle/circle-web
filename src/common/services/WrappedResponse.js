@@ -11,10 +11,10 @@ export const getResponseExtensionName = (action) => {
 
 export default class WrappedResponse {
 
-    constructor(request, httpResponse) {
+    constructor(request, httpResponse, body) {
         this.request = request;
         this.httpResponse = httpResponse;
-        this.response = protobufs.soa.ServiceResponseV1.decode(this.httpResponse.xhr.response);
+        this.response = protobufs.soa.ServiceResponseV1.decode(body);
         this.action = this._getFirstAction();
         this.result = this._getResult();
         this.errors = this._getErrors();
