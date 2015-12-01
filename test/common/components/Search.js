@@ -102,7 +102,7 @@ describe('SearchComponent', () => {
 
         expect(searchComponent.getProfileTexts(profile, highlight)).toExist();
         expect(searchComponent.getProfileTexts(profile, highlight).primaryText).toBe(profile.full_name);
-        expect(searchComponent.getProfileTexts(profile, highlight).secondaryText).toEqual((<div
+        expect(searchComponent.getProfileTexts(profile, highlight).secondaryText).toEqual((<span
             dangerouslySetInnerHTML={{__html: highlight.get('display_title')}} />
         ));
     });
@@ -167,7 +167,7 @@ describe('SearchComponent', () => {
 
         expect(searchComponent.getLocationTexts(location, highlight)).toExist();
         expect(searchComponent.getLocationTexts(location, highlight).primaryText).toBe(location.name);
-        expect(searchComponent.getLocationTexts(location, highlight).secondaryText).toEqual((<div
+        expect(searchComponent.getLocationTexts(location, highlight).secondaryText).toEqual((<span
             dangerouslySetInnerHTML={{__html: highlight.get('full_address') + ' (' + location.profile_count + ')'}} />
         ));
 

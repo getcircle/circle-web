@@ -640,7 +640,7 @@ class Search extends CSSComponent {
         }
 
         if (highlight && highlight.get('display_title')) {
-            texts.secondaryText = (<div
+            texts.secondaryText = (<span
                 dangerouslySetInnerHTML={{__html: highlight.get('display_title')}} />);
         }
 
@@ -713,7 +713,7 @@ class Search extends CSSComponent {
         }
 
         if (highlight && highlight.get('full_address')) {
-            texts.secondaryText = (<div
+            texts.secondaryText = (<span
                 dangerouslySetInnerHTML={{__html: highlight.get('full_address') + ' (' + location.profile_count + ')'}} />);
         }
 
@@ -1248,9 +1248,14 @@ class Search extends CSSComponent {
     renderDefaultResult(item, highlighted, style) {
         const listProps = {...this.styles().ListItem, ...item};
         let secondaryText = item.secondaryText;
-        // if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
-        //     secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
-        // }
+        if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
+            const score = item.score.toPrecision(2);
+            if (typeof secondaryText === 'string') {
+                secondaryText = item.secondaryText + ` [${score}]`;
+            } else {
+                secondaryText = [item.secondaryText, <span>&nbsp;[{score}]</span>];
+            }
+        }
         return (
             <ListItem
                 {...listProps}
