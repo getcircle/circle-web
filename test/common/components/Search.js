@@ -1,13 +1,13 @@
-import faker from 'faker';
 import expect from 'expect';
+import faker from 'faker';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import TestUtils from 'react-addons-test-utils';
 
-import createStore from '../../../src/common/createStore';
 import SearchResultFactory from '../../factories/SearchResultFactory';
 import ProfileFactory from '../../factories/ProfileFactory';
 
+import createStore from '../../../src/common/createStore';
 import CSSComponent from '../../../src/common/components/CSSComponent';
 import Search from '../../../src/common/components/Search';
 

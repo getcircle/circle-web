@@ -77,6 +77,7 @@ class PostEditor extends CSSComponent {
         largerDevice: PropTypes.bool.isRequired,
         managesTeam: PropTypes.object,
         mobileOS: PropTypes.bool.isRequired,
+        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
         params: PropTypes.shape({
             postId: PropTypes.string,
         }),
