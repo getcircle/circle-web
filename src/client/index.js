@@ -13,8 +13,9 @@ import protobufs from 'protobufs';
 import Client from '../common/services/Client';
 import createStore from '../common/createStore';
 import getRoutes from '../common/getRoutes';
-import { getBody } from '../common/utils/render';
 import Root from '../common/Root';
+
+import { getBody } from './utils/render';
 
 const client = new Client();
 const dest = getBody();
