@@ -29,14 +29,21 @@ function getBody(response) {
     }
 }
 
+function getApiEndpoint(req) {
+    let origin;
+    if (__CLIENT__) {
+        origin = window.location.origin;
+    } else {
+        origin = `${req.protocol}://${req.get('host')}`;
+    }
+    return origin + '/api/';
+}
+
 export default class Transport {
 
     constructor(req) {
         this.req = req;
-    }
-
-    get _endpoint() {
-        return process.env.API_ENDPOINT;
+        this._endpoint = getApiEndpoint(req);
     }
 
     sendRequest(request) {
