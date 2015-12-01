@@ -29,7 +29,7 @@
         "NODE_PATH": "./src",
         "NODE_ENV": "local",
         "PORT": 3000,
-        "DEVHOST": "`docker-machine ip dev`"
+        "REMOTE_API_ENDPOINT": "http://`docker-machine ip dev`:8000/v1/"
       }
     },
     "watch-client": {

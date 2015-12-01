@@ -9,6 +9,8 @@ if (!global.document || !global.window) {
     global.mixpanel = {
       init: () => {},
     };
+    global.__CLIENT__ = true;
+    global.__SERVER__ = false;
     global.localStorage = null;
 
     window.addEventListener('load', () => {

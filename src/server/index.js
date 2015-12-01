@@ -1,11 +1,10 @@
 import Express from 'express';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import favicon from 'serve-favicon';
-import compression from 'compression';
 import path from 'path';
 import PrettyError from 'pretty-error';
 import http from 'http';
+import httpProxy from 'http-proxy';
 
 import Client from '../common/services/client';
 import createStore from '../common/createStore';
@@ -19,10 +18,15 @@ const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
 
-// Serve static assets
-app.use(compression());
-app.use(favicon(path.join(__dirname, '../..', 'static', 'images', 'favicon.ico')));
-app.use(require('serve-static')(path.join(__dirname, '../..', 'static')));
+if (__LOCAL__) {
+    // in dev/production we use nginx as a proxy
+    const proxy = httpProxy.createProxyServer({
+        target: process.env.REMOTE_API_ENDPOINT,
+    });
+    app.use('/api', (req, res) => {
+        proxy.web(req, res);
+    });
+}
 
 app.use((req, res) => {
     if (__LOCAL__) {
@@ -86,5 +90,5 @@ server.listen(3000, (err) => {
     if (err) {
         console.error(err);
     }
-    console.info('==> Open http://localhost:%s in a browser to view the app.', 3000);
+    console.info('--> Starting server at: http://0.0.0.0:%s', 3000);
 });
