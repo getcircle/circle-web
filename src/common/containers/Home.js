@@ -155,7 +155,6 @@ class Home extends CSSComponent {
                     inputContainerStyle: {
                         boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
                     },
-                    resultsHeight: document.body.offsetHeight - 50,
                     showCancel: true,
                     style: {
                         paddingLeft: 0,
