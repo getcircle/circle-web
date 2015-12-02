@@ -73,7 +73,7 @@ class SelectField extends CSSComponent {
                     style: {
                         ...this.props.searchIconStyle
                     },
-                    strokeWidth: '3px',
+                    strokeWidth: 3,
                     ...iconColors.medium,
                 }
             }
