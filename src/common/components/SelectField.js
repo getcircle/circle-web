@@ -82,7 +82,9 @@ class SelectField extends CSSComponent {
 
     handleChange(event) {
         // Reset scroll position of the list when search query changes
-        this.refs.list.getDOMNode().scrollTop = 0;
+        if (this.refs.list) {
+            ReactDOM.findDOMNode(this.refs.list).scrollTop = 0;
+        }
         this.props.onInputChange(event);
     }
 
@@ -153,7 +155,7 @@ class SelectField extends CSSComponent {
         return element;
     }
 
-    renderMenu() {
+    renderInfinite() {
         let containerHeight = 0;
         let height = this.props.listItemHeight;
         const elementHeights = [];
@@ -164,6 +166,23 @@ class SelectField extends CSSComponent {
         });
 
         containerHeight = Math.min(containerHeight, this.props.maxListHeight);
+        if (containerHeight) {
+            return (
+                <Infinite
+                    containerHeight={containerHeight}
+                    elementHeight={elementHeights}
+                    loadingSpinnerDelegate={::this.renderLoadingIndicator()}
+                    ref="list"
+                    {...this.props}
+                >
+                    {elements}
+                </Infinite>
+            );
+        }
+    }
+
+
+    renderMenu() {
 
         return (
             <Paper
@@ -178,15 +197,7 @@ class SelectField extends CSSComponent {
                     ref="searchInput"
                     style={this.props.searchInputStyle}
                 />
-                <Infinite
-                    containerHeight={containerHeight}
-                    elementHeight={elementHeights}
-                    loadingSpinnerDelegate={::this.renderLoadingIndicator()}
-                    ref="list"
-                    {...this.props}
-                >
-                    {elements}
-                </Infinite>
+                {this.renderInfinite()}
             </Paper>
         );
     }
