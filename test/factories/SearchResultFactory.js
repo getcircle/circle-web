@@ -24,13 +24,13 @@ class SearchResultFactory {
         const highlightedProperties = {};
         if (highlightName) {
             /*eslint-disable camelcase*/
-            highlightedProperties['full_name'] = '<em>' + profile.full_name.substr(0, 2) + '</em>' + profile.full_name.substr(2);
+            highlightedProperties['full_name'] = '<mark>' + profile.full_name.substr(0, 2) + '</mark>' + profile.full_name.substr(2);
             /*eslint-enable camelcase*/
         }
 
         if (highlightTitle) {
             /*eslint-disable camelcase*/
-            highlightedProperties['display_title'] = '<em>' + profile.display_title.substr(0, 2) + '</em>' + profile.display_title.substr(2);
+            highlightedProperties['display_title'] = '<mark>' + profile.display_title.substr(0, 2) + '</mark>' + profile.display_title.substr(2);
             /*eslint-enable camelcase*/
         }
 
@@ -46,7 +46,7 @@ class SearchResultFactory {
         const highlightedProperties = {};
         if (highlightName) {
             /*eslint-disable camelcase*/
-            highlightedProperties['display_name'] = '<em>' + team.display_name.substr(0, 2) + '</em>' + team.display_name.substr(2);
+            highlightedProperties['display_name'] = '<mark>' + team.display_name.substr(0, 2) + '</mark>' + team.display_name.substr(2);
             /*eslint-enable camelcase*/
         }
 
@@ -62,14 +62,14 @@ class SearchResultFactory {
         const highlightedProperties = {};
         if (highlightName) {
             /*eslint-disable camelcase*/
-            highlightedProperties.name = '<em>' + location.name.substr(0, 2) + '</em>' + location.name.substr(2);
+            highlightedProperties.name = '<mark>' + location.name.substr(0, 2) + '</mark>' + location.name.substr(2);
             /*eslint-enable camelcase*/
         }
 
         if (highlightAddress) {
             const fullAddress = [location.address_1, location.address_2, location.city, location.region, location.postal_code, location.country_code].join(', ');
             /*eslint-disable camelcase*/
-            highlightedProperties['full_address'] = '<em>' + fullAddress.substr(0, 2) + '</em>' + fullAddress.substr(2);
+            highlightedProperties['full_address'] = '<mark>' + fullAddress.substr(0, 2) + '</mark>' + fullAddress.substr(2);
             /*eslint-enable camelcase*/
         }
 
