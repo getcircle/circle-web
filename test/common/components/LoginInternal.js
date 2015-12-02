@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
+import then from '../utils/then';
+
 import { AUTH_BACKENDS } from '../../../src/common/services/user';
 
 import LoginEmailInput from '../../../src/common/components/LoginEmailInput';
@@ -160,8 +162,10 @@ describe('LoginInternal', () => {
         it('should be called when selecting alternative', () => {
             const { output, props } = setup({hasAlternative: true});
             const link = TestUtils.findRenderedDOMComponentWithTag(output, 'a');
-            link.props.onTouchTap();
-            expect(props.onUseAlternative.calls.length).toBe(1);
+            TestUtils.Simulate.click(link);
+            then(() => {
+                expect(props.onUseAlternative.calls.length).toBe(1);
+            });
         });
 
         it('should not render if `hasAlternative` is false', () => {
@@ -175,13 +179,13 @@ describe('LoginInternal', () => {
         it('prompts for just email when guest account', () => {
             const { output } = setup({guest: true});
             const header = TestUtils.scryRenderedDOMComponentsWithTag(output, 'span')[0];
-            expect(header.props.children).toExclude('password');
+            expect(header.innerHTML).toExclude('password');
         });
 
         it('prompts for email and password when guest', () => {
             const { output } = setup({guest: false});
             const header = TestUtils.scryRenderedDOMComponentsWithTag(output, 'span')[0];
-            expect(header.props.children).toInclude('password');
+            expect(header.innerHTML).toInclude('email address and password');
         });
     });
 

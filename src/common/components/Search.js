@@ -38,6 +38,7 @@ import * as selectors from '../selectors';
 import moment from '../utils/moment';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
+import { trimNewLinesAndWhitespace } from '../utils/string';
 
 import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
@@ -73,6 +74,7 @@ export const EXPLORE_SEARCH_RESULT_HEIGHT = 64;
 export const SEARCH_RESULT_HEIGHT = 72;
 export const SEARCH_CONTAINER_WIDTH = 800;
 export const SEARCH_RESULTS_MAX_HEIGHT = 620;
+const POST_CONTENT_CHAR_LIMIT = 70;
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
@@ -454,6 +456,17 @@ class Search extends CSSComponent {
                 postTextResultText: {
                     lineHeight: '22px',
                 },
+                postSecondaryTextContainer: {
+                    lineHeight: '18px',
+                },
+                postSecondaryText: {
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                },
+                postLastEdited: {
+                    fontSize: '12px',
+                },
             },
             'largerDevice-true': {
                 autoComplete: {
@@ -628,13 +641,34 @@ class Search extends CSSComponent {
         }
     }
 
-    getProfileResult(profile, index, isRecent, numberOfResults) {
+    getProfileTexts(profile, highlight) {
+        const texts = {
+            primaryText: profile.full_name,
+            secondaryText: profile.display_title,
+        };
+
+        if (highlight && highlight.get('full_name')) {
+            texts.primaryText = (<div
+                dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} />);
+        }
+
+        if (highlight && highlight.get('display_title')) {
+            texts.secondaryText = (<span
+                dangerouslySetInnerHTML={{__html: highlight.get('display_title')}} />);
+        }
+
+        return texts;
+    }
+
+    getProfileResult(profile, index, isRecent, numberOfResults, highlight) {
         let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
+
+        const profileTexts = this.getProfileTexts(profile, highlight);
         const item = {
             index: index,
             leftAvatar: <ProfileAvatar profile={profile} />,
-            primaryText: profile.full_name,
-            secondaryText: `${profile.display_title}`,
+            primaryText: profileTexts.primaryText,
+            secondaryText: profileTexts.secondaryText,
             onTouchTap: routes.routeToProfile.bind(null, this.context.history, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
@@ -643,7 +677,15 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
-    getTeamResult(team, index, isRecent) {
+    getTeamPrimaryText(team, highlight) {
+        if (highlight && highlight.get('display_name')) {
+            return (<div dangerouslySetInnerHTML={{__html: highlight.get('display_name')}} />);
+        }
+
+        return team.display_name;
+    }
+
+    getTeamResult(team, index, isRecent, highlight) {
         let subTextParts = [];
         if (team.child_team_count > 1) {
             subTextParts.push(`${team.child_team_count} Teams`);
@@ -658,10 +700,11 @@ class Search extends CSSComponent {
         }
 
         let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
+        const teamPrimaryText = this.getTeamPrimaryText(team, highlight);
         const item = {
             index: index,
             leftAvatar: <IconContainer IconClass={GroupIcon} {...this.styles().ResultIcon} />,
-            primaryText: team.display_name,
+            primaryText: teamPrimaryText,
             secondaryText: subTextParts.join(', '),
             onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
             type: RESULT_TYPES.TEAM,
@@ -671,13 +714,33 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
-    getLocationResult(location, index, isRecent) {
+    getLocationTexts(location, highlight) {
+        const texts = {
+            primaryText: location.name,
+            secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
+        };
+
+        if (highlight && highlight.get('name')) {
+            texts.primaryText = (<div
+                dangerouslySetInnerHTML={{__html: highlight.get('name')}} />);
+        }
+
+        if (highlight && highlight.get('full_address')) {
+            texts.secondaryText = (<span
+                dangerouslySetInnerHTML={{__html: highlight.get('full_address') + ' (' + location.profile_count + ')'}} />);
+        }
+
+        return texts;
+    }
+
+    getLocationResult(location, index, isRecent, highlight) {
         let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
+        const locationTexts = this.getLocationTexts(location, highlight);
         const item = {
             index: index,
             leftAvatar: <IconContainer IconClass={OfficeIcon} {...this.styles().ResultIcon} />,
-            primaryText: location.name,
-            secondaryText: `${location.city}, ${location.region} (${location.profile_count})`,
+            primaryText: locationTexts.primaryText,
+            secondaryText: locationTexts.secondaryText,
             onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
@@ -686,21 +749,72 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
-    getPostResult(post, index, isRecent) {
-        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
-        let numberOfCharacters = post.title ? post.title.length : 0;
-        let estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
-        let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
+    getPostTexts(post, highlight) {
+        const lastEditedText = `${t('Last edited')} ${moment(post.changed).fromNow()}`;
+        const defaultSecondaryText = (
+            <span style={this.styles().postSecondaryTextContainer}>
+                <span
+                    key="matched-content"
+                    style={this.styles().postSecondaryText}
+                >
+                    {trimNewLinesAndWhitespace(post.content).substr(0, POST_CONTENT_CHAR_LIMIT) + (post.content.length > POST_CONTENT_CHAR_LIMIT ? `\u2026` : '')}
+                </span>
+                <br key="line-break" />
+                <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
+            </span>
+        );
 
-        const item = {
-            estimatedHeight: estimatedHeight,
-            index: index,
-            leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" {...this.styles().ResultIcon}/>,
+        const texts = {
             primaryText: this.getPrimaryTextContainer(
                 post.title,
                 this.styles().postTextResultText
             ),
-            secondaryText: 'Last edited ' + moment(post.changed).fromNow(),
+            secondaryText: defaultSecondaryText,
+        };
+
+        if (highlight && highlight.get('title')) {
+            texts.primaryText = (<div
+                dangerouslySetInnerHTML={{__html: highlight.get('title')}}
+                style={this.styles().postTextResultText}
+            />);
+        }
+
+        if (highlight && highlight.get('content')) {
+            let highlightedContent = trimNewLinesAndWhitespace(highlight.get('content'));
+            const startsWithCapitalLetter = 'A'.charCodeAt(0) <= highlightedContent.charCodeAt(0) && highlightedContent.charCodeAt(0) <= 'Z'.charCodeAt(0);
+            if (!startsWithCapitalLetter) {
+                highlightedContent = `\u2026${highlightedContent}`;
+            }
+            const secondaryText = (
+                <span style={this.styles().postSecondaryTextContainer}>
+                    <span
+                        dangerouslySetInnerHTML={{__html: `${highlightedContent}\u2026`}}
+                        key="matched-content"
+                        style={this.styles().postSecondaryText}
+                    />
+                    <br key="line-break" />
+                    <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
+                </span>
+            );
+            texts.secondaryText = secondaryText;
+        }
+
+        return texts;
+    }
+
+    getPostResult(post, index, isRecent, highlight) {
+        const trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
+        const numberOfCharacters = post.title ? post.title.length : 0;
+        const estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
+        const estimatedHeight = estNumberOfLines*22 + 27 /* for two secondary lines */ + 36 /* top & bottom padding */;
+        const postTexts = this.getPostTexts(post, highlight);
+        const item = {
+            estimatedHeight: estimatedHeight,
+            index: index,
+            leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" {...this.styles().ResultIcon}/>,
+            primaryText: postTexts.primaryText,
+            secondaryText: postTexts.secondaryText,
+            secondaryTextLines: 2,
             onTouchTap: routes.routeToPost.bind(null, this.context.history, post),
             type: RESULT_TYPES.POST,
             instance: post,
@@ -884,13 +998,13 @@ class Search extends CSSComponent {
         results.map((result, index) => {
             let searchResult = null;
             if (result.profile) {
-                searchResult = this.getProfileResult(result.profile, index, false, results.length);
+                searchResult = this.getProfileResult(result.profile, index, false, results.length, result.highlight);
             } else if (result.team) {
-                searchResult = this.getTeamResult(result.team, index, false, results.length);
+                searchResult = this.getTeamResult(result.team, index, false, result.highlight);
             } else if (result.location) {
-                searchResult = this.getLocationResult(result.location, index, false, results.length);
+                searchResult = this.getLocationResult(result.location, index, false, result.highlight);
             } else if (result.post) {
-                searchResult = this.getPostResult(result.post, index, false, results.length);
+                searchResult = this.getPostResult(result.post, index, false, result.highlight);
             }
 
             searchResult.score = result.score;
@@ -1199,7 +1313,12 @@ class Search extends CSSComponent {
         const listProps = {...this.styles().ListItem, ...item};
         let secondaryText = item.secondaryText;
         if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
-            secondaryText = item.secondaryText + ` [${item.score.toPrecision(2)}]`;
+            const score = item.score.toPrecision(2);
+            if (typeof secondaryText === 'string') {
+                secondaryText = item.secondaryText + ` [${score}]`;
+            } else {
+                secondaryText = [item.secondaryText, <span>&nbsp;[{score}]</span>];
+            }
         }
         return (
             <ListItem
@@ -1330,7 +1449,7 @@ class Search extends CSSComponent {
                 }}
             >
                 <Infinite
-                    className="col-xs no-padding"
+                    className="col-xs no-padding search-results"
                     containerHeight={containerHeight}
                     elementHeight={elementHeights}
                     infiniteLoadBeginEdgeOffset={200}
