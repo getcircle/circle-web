@@ -806,7 +806,7 @@ class Search extends CSSComponent {
         const trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
         const numberOfCharacters = post.title ? post.title.length : 0;
         const estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
-        const estimatedHeight = estNumberOfLines*22 + 27 /* for two secondary lines */ + 36 /* top & bottom padding */;
+        const estimatedHeight = estNumberOfLines*22 + 18 /* for two secondary lines */ + 36 /* top & bottom padding */;
         const postTexts = this.getPostTexts(post, highlight);
         const item = {
             estimatedHeight: estimatedHeight,
