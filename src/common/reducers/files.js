@@ -22,6 +22,9 @@ export default function fileUpload(state = initialState, action) {
     case types.DELETE_LOCAL_FILE:
         return state.deleteIn(['files', action.payload.file.name])
                     .set('loading', false);
+
+    case types.CLEAR_FILE_UPLOADS:
+        return initialState;
     }
 
     return state;

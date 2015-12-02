@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
-import { deleteFile, uploadFile } from '../actions/files';
+import { deleteFile, uploadFile, clearFileUploads } from '../actions/files';
 import { getPostStateURLString } from '../utils/post';
 import logger from '../utils/logger';
 import { POST_SOURCE } from '../constants/trackerProperties';
@@ -118,6 +118,10 @@ class PostEditor extends CSSComponent {
 
     componentWillMount() {
         this.loadPost(this.props);
+    }
+
+    componentWillUnmount() {
+        this.props.dispatch(clearFileUploads());
     }
 
     componentWillReceiveProps(nextProps) {
