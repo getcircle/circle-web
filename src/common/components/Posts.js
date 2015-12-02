@@ -1,6 +1,7 @@
 import { CircularProgress, Dialog, FlatButton, IconButton, IconMenu, ListItem, Tabs, Tab } from 'material-ui';
 import Infinite from 'react-infinite';
 import MenuItem from 'material-ui/lib/menus/menu-item';
+import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -147,7 +148,12 @@ class Posts extends CSSComponent {
     }
 
     customizeTheme(props) {
-        let customTabsTheme = Object.assign({}, CurrentTheme, {
+        let customTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
+            canvasColor: 'rgb(255, 255, 255)',
+        });
+
+
+        customTheme = Object.assign({}, customTheme, {
             tab: {
                 textColor: CurrentTheme.tab.textColor,
                 selectedTextColor: 'rgba(0, 0, 0, 0.8)',
@@ -157,7 +163,7 @@ class Posts extends CSSComponent {
             },
         });
 
-        this.setState({muiTheme: customTabsTheme});
+        this.setState({muiTheme: customTheme});
     }
 
     // Event Handlers
