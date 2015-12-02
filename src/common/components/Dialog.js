@@ -211,7 +211,7 @@ class Dialog extends CSSComponent {
             title,
             ...other,
         } = this.props;
-        const dialogProps = {...this.styles.Dialog, ...other};
+        const dialogProps = {...this.styles().Dialog, ...other};
 
         return (
             <mui.Dialog
