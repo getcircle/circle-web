@@ -128,7 +128,6 @@ class SelectField extends CSSComponent {
             <ListItem
                 {...item}
                 innerDivStyle={{...this.props.listItemInnerDivStyle}}
-                key={index}
                 name="listItem"
                 onTouchTap={this.handleItemTapped.bind(this, item, index)}
             />
@@ -139,7 +138,7 @@ class SelectField extends CSSComponent {
         let element;
         if (index !== 0) {
             element = (
-                <div>
+                <div key={index}>
                     <ListDivider
                         style={{...this.props.listDividerStyle}}
                     />
@@ -147,6 +146,7 @@ class SelectField extends CSSComponent {
                 </div>
             );
         } else {
+            item.key = index;
             element = this.renderResult(item);
         }
 
