@@ -59,7 +59,7 @@ class ProfileDetailTeam extends CSSComponent {
                     leftAvatar={<ProfileAvatar profile={manager} />}
                     onTouchTap={this.props.onClickManager}
                     primaryText={manager.full_name}
-                    secondaryText={manager.title}
+                    secondaryText={manager.display_title}
                 />
             </CardList>
         );
