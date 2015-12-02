@@ -658,7 +658,6 @@ class ProfileDetailForm extends CSSComponent {
                     largerDevice={largerDevice}
                     onRequestClose={this.resetState.bind(this)}
                     onSave={this.handleSaveTapped.bind(this)}
-                    open={this.state.dataChanged}
                     pageType={PAGE_TYPE.EDIT_PROFILE}
                     ref="modal"
                     repositionOnUpdate={false}
