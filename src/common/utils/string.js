@@ -29,3 +29,15 @@ export function detectURLsAndAddMarkup(stringValue) {
     var emailRegex = /((([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,}))/gi;
     return stringValue.replace(emailRegex, '<a href="mailto:$1">$1</a>');
  }
+
+/**
+ * NOTE:
+ * Replaces hash tags with search URLs.
+ * Because these are supposed to be internal URLs and this markup is directly injected
+ * as innerHTML there is no way to use the router, so the components are expected to add
+ * click event listeners.
+ */
+export function detectHashtagsAndAddMarkup(stringValue) {
+    const urlRegex = /(#\w+)/gi;
+    return stringValue.replace(urlRegex, '<a class="hashtag">$1</a>');
+}

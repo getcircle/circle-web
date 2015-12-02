@@ -2,6 +2,7 @@ import expect from 'expect';
 
 import {
     detectEmailsAndAddMarkup,
+    detectHashtagsAndAddMarkup,
     detectURLsAndAddMarkup
 } from '../../../src/common/utils/string';
 
@@ -44,7 +45,6 @@ describe('string utils', () => {
         );
     });
 
-
     it('detects multiple emails and adds markup', () => {
         let contentWithMultipleEmails = 'Luno Support - support@lunohq.com \n Luno Sales - sales@lunohq.com';
         expect(detectEmailsAndAddMarkup(contentWithMultipleEmails)).toBe(
@@ -53,4 +53,30 @@ describe('string utils', () => {
         );
     });
 
+    it('detects hash tags and replaces with search URLs', () => {
+        let content = 'This post answers all my questions #GoLuno';
+        expect(detectHashtagsAndAddMarkup(content)).toBe(
+            'This post answers all my questions <a class="hashtag">#GoLuno</a>'
+        );
+
+        content = 'This post answers all my questions #GoLuno\n';
+        expect(detectHashtagsAndAddMarkup(content)).toBe(
+            'This post answers all my questions <a class="hashtag">#GoLuno</a>\n'
+        );
+
+        content = 'This post answers all my questions #GoLuno #Awesome';
+        expect(detectHashtagsAndAddMarkup(content)).toBe(
+            'This post answers all my questions <a class="hashtag">#GoLuno</a> <a class="hashtag">#Awesome</a>'
+        );
+
+        content = 'This post answers all my questions #GoLuno-That';
+        expect(detectHashtagsAndAddMarkup(content)).toBe(
+            'This post answers all my questions <a class="hashtag">#GoLuno</a>-That'
+        );
+
+        content = 'This post answers all my questions #GoLuno_That';
+        expect(detectHashtagsAndAddMarkup(content)).toBe(
+            'This post answers all my questions <a class="hashtag">#GoLuno_That</a>'
+        );
+    });
 });

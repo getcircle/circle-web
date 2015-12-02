@@ -6,6 +6,7 @@ import { services } from 'protobufs';
 
 import {
     detectEmailsAndAddMarkup,
+    detectHashtagsAndAddMarkup,
     detectURLsAndAddMarkup,
 } from '../utils/string';
 import { fontColors, tintColor } from '../constants/styles';
@@ -13,7 +14,7 @@ import { mailToPostFeedback, mailtoSharePost } from '../utils/contact';
 import moment from '../utils/moment';
 import { CONTACT_LOCATION, POST_SOURCE } from '../constants/trackerProperties';
 import { PAGE_TYPE } from '../constants/trackerProperties';
-import { routeToEditPost, routeToPost, routeToProfile } from '../utils/routes';
+import { routeToEditPost, routeToPost, routeToProfile, routeToSearch } from '../utils/routes';
 import { SHARE_CONTENT_TYPE, SHARE_METHOD } from '../constants/trackerProperties';
 import tracker from '../utils/tracker';
 import { trimNewLines } from '../utils/string';
@@ -99,6 +100,17 @@ class Post extends CSSComponent {
             });
 
             routeToPost(this.context.history, nextProps.post);
+        }
+    }
+
+    componentDidMount() {
+        const hashtags = document.getElementsByClassName('hashtag');
+        let i = 0;
+        const ilen = hashtags.length;
+        for (i = 0; i < ilen; i++) {
+            hashtags[i].addEventListener('click', (event) => {
+                routeToSearch(this.context.history, event.target.innerText);
+            });
         }
     }
 
@@ -505,7 +517,13 @@ class Post extends CSSComponent {
 
     getReadOnlyContent(content) {
         return {
-            __html: detectEmailsAndAddMarkup(detectURLsAndAddMarkup(content)),
+            __html: detectHashtagsAndAddMarkup(
+                detectEmailsAndAddMarkup(
+                    detectURLsAndAddMarkup(
+                        content
+                    )
+                )
+            ),
         };
     }
 
