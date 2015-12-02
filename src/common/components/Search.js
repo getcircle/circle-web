@@ -1312,7 +1312,7 @@ class Search extends CSSComponent {
     renderDefaultResult(item, highlighted, style) {
         const listProps = {...this.styles().ListItem, ...item};
         let secondaryText = item.secondaryText;
-        if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score')) {
+        if (__DEVELOPMENT__ && item.hasOwnProperty('secondaryText') && item.hasOwnProperty('score') && item.score) {
             const score = item.score.toPrecision(2);
             if (typeof secondaryText === 'string') {
                 secondaryText = item.secondaryText + ` [${score}]`;
