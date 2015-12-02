@@ -58,25 +58,47 @@ describe('string utils', () => {
         expect(detectHashtagsAndAddMarkup(content)).toBe(
             'This post answers all my questions <a class="hashtag">#GoLuno</a>'
         );
+    });
 
-        content = 'This post answers all my questions #GoLuno\n';
+    it('detects hash tags when they end with a line break', () => {
+        let content = 'This post answers all my questions #GoLuno\n';
         expect(detectHashtagsAndAddMarkup(content)).toBe(
             'This post answers all my questions <a class="hashtag">#GoLuno</a>\n'
         );
+    });
 
-        content = 'This post answers all my questions #GoLuno #Awesome';
+    it('detects multiple hash tags with a space', () => {
+        let content = 'This post answers all my questions #GoLuno #Awesome';
         expect(detectHashtagsAndAddMarkup(content)).toBe(
             'This post answers all my questions <a class="hashtag">#GoLuno</a> <a class="hashtag">#Awesome</a>'
         );
+    });
 
-        content = 'This post answers all my questions #GoLuno-That';
+    it('detects hash tags only when they are letters numbers or underscores', () => {
+        let content = 'This post answers all my questions #GoLuno-That';
         expect(detectHashtagsAndAddMarkup(content)).toBe(
             'This post answers all my questions <a class="hashtag">#GoLuno</a>-That'
         );
+    });
 
-        content = 'This post answers all my questions #GoLuno_That';
+    it('detects hash tags with underscores', () => {
+        let content = 'This post answers all my questions #GoLuno_That';
         expect(detectHashtagsAndAddMarkup(content)).toBe(
             'This post answers all my questions <a class="hashtag">#GoLuno_That</a>'
+        );
+    });
+
+    it('does not detect multiple hash tags without a space', () => {
+        let content = 'This post answers all my questions #GoLuno#Awesome';
+        expect(detectHashtagsAndAddMarkup(content)).toBe(
+            'This post answers all my questions <a class="hashtag">#GoLuno</a>#Awesome'
+        );
+    });
+
+    it('does not detect hash tags as part of URLs', () => {
+        let content = 'This post answers all my questions https://lunohq.com/search/#meeting';
+        expect(detectHashtagsAndAddMarkup(content)).toBe(
+            'This post answers all my questions https://lunohq.com/search/#meeting'
         );
     });
 });

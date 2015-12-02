@@ -38,6 +38,6 @@ export function detectURLsAndAddMarkup(stringValue) {
  * click event listeners.
  */
 export function detectHashtagsAndAddMarkup(stringValue) {
-    const urlRegex = /(#\w+)/gi;
-    return stringValue.replace(urlRegex, '<a class="hashtag">$1</a>');
+    const urlRegex = /(\s)(#\w+)/gi;
+    return stringValue.replace(urlRegex, '$1<a class="hashtag">$2</a>');
 }
