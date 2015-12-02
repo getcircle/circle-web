@@ -23,3 +23,9 @@ export function deleteFile(file) {
         },
     };
 }
+
+export function clearFileUploads() {
+    return {
+        type: types.CLEAR_FILE_UPLOADS,
+    }
+}

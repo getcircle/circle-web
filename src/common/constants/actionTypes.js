@@ -121,3 +121,6 @@ export const FILE_UPLOAD_FAILURE = 'FILE_UPLOAD_FAILURE';
 
 // Delete file
 export const DELETE_LOCAL_FILE = 'DELETE_LOCAL_FILE';
+
+// Clear file uploads
+export const CLEAR_FILE_UPLOADS = 'CLEAR_FILE_UPLOADS';

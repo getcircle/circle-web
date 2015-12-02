@@ -48,6 +48,7 @@ class Post extends CSSComponent {
         saveInProgress: PropTypes.bool,
         style: PropTypes.object,
         uploadedFiles: PropTypes.object,
+        uploadingFiles: PropTypes.bool,
     }
 
     static contextTypes = {
@@ -63,6 +64,7 @@ class Post extends CSSComponent {
         post: null,
         saveInProgress: false,
         uploadedFiles: Immutable.Map(),
+        uploadingFiles: false
     }
 
     state = {
@@ -894,6 +896,7 @@ class Post extends CSSComponent {
             header,
             isEditable,
             post,
+            uploadingFiles,
         } = this.props;
 
         // If auto-save is false but the content is editable
@@ -902,6 +905,7 @@ class Post extends CSSComponent {
             return (
                 <div className="row end-xs" style={this.styles().publishButtonContainer}>
                     <RoundedButton
+                        disabled={uploadingFiles}
                         label={t('Publish')}
                         onTouchTap={() => {
                             this.saveData(true);
