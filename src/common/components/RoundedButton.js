@@ -8,8 +8,13 @@ import CSSComponent from './CSSComponent';
 class RoundedButton extends CSSComponent {
 
     static propTypes = {
+        disabled: PropTypes.bool,
         labelStyle: PropTypes.object,
         style: PropTypes.object,
+    }
+
+    static defaultProps = {
+        disabled: false,
     }
 
     classes() {
@@ -24,6 +29,14 @@ class RoundedButton extends CSSComponent {
                 buttonStyle: {
                     backgroundColor: 'transparent',
                     border: '1px solid #7A8EFF',
+                },
+            },
+            'disabled-true': {
+                labelStyle: {
+                    color: '#bfbfbf',
+                },
+                buttonStyle: {
+                    border: '1px solid #bfbfbf',
                 },
             },
         };

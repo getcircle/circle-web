@@ -62,6 +62,7 @@ const selector = selectors.createImmutableSelector(
             organization: authenticationState.get('organization'),
             shouldAutoSave: !post || (post && (!post.state || post.state === PostStateV1.DRAFT)),
             uploadedFiles: filesState.get('files'),
+            uploadingFiles: filesState.get('loading'),
         }
     }
 );
@@ -83,6 +84,7 @@ class PostEditor extends CSSComponent {
         post: PropTypes.instanceOf(services.post.containers.PostV1),
         shouldAutoSave: PropTypes.bool,
         uploadedFiles: PropTypes.object,
+        uploadingFiles: PropTypes.bool,
     }
 
     static contextTypes = {
@@ -102,6 +104,7 @@ class PostEditor extends CSSComponent {
     static defaultProps = {
         shouldAutoSave: true,
         post: null,
+        uploadingFiles: false,
     }
 
     getChildContext() {
@@ -316,6 +319,7 @@ class PostEditor extends CSSComponent {
             return (
                 <div>
                     <RoundedButton
+                        disabled={this.props.uploadingFiles}
                         label={t('Publish')}
                         onTouchTap={::this.onPublishButtonTapped}
                     />
@@ -345,6 +349,7 @@ class PostEditor extends CSSComponent {
             post,
             shouldAutoSave,
             uploadedFiles,
+            uploadingFiles,
         } = this.props;
 
         if (params && params.postId && !post) {
@@ -363,6 +368,7 @@ class PostEditor extends CSSComponent {
                 ref="post"
                 saveInProgress={isSaving}
                 uploadedFiles={uploadedFiles}
+                uploadingFiles={uploadingFiles}
                 {...this.styles().Post}
             />
         );
