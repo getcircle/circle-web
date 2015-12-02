@@ -38,6 +38,7 @@ import * as selectors from '../selectors';
 import moment from '../utils/moment';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
+import { trimNewLinesAndWhitespace } from '../utils/string';
 
 import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
@@ -73,6 +74,7 @@ export const EXPLORE_SEARCH_RESULT_HEIGHT = 64;
 export const SEARCH_RESULT_HEIGHT = 72;
 export const SEARCH_CONTAINER_WIDTH = 800;
 export const SEARCH_RESULTS_MAX_HEIGHT = 620;
+const POST_CONTENT_CHAR_LIMIT = 70;
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
@@ -454,6 +456,17 @@ class Search extends CSSComponent {
                 postTextResultText: {
                     lineHeight: '22px',
                 },
+                postSecondaryTextContainer: {
+                    lineHeight: '18px',
+                },
+                postSecondaryText: {
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                },
+                postLastEdited: {
+                    fontSize: '12px',
+                },
             },
             'largerDevice-true': {
                 autoComplete: {
@@ -736,21 +749,72 @@ class Search extends CSSComponent {
         return this.trackTouchTap(item);
     }
 
-    getPostResult(post, index, isRecent) {
-        let trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
-        let numberOfCharacters = post.title ? post.title.length : 0;
-        let estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
-        let estimatedHeight = estNumberOfLines*22 + 36 /* top & bottom padding */;
+    getPostTexts(post, highlight) {
+        const lastEditedText = `${t('Last edited')} ${moment(post.changed).fromNow()}`;
+        const defaultSecondaryText = (
+            <span style={this.styles().postSecondaryTextContainer}>
+                <span
+                    key="matched-content"
+                    style={this.styles().postSecondaryText}
+                >
+                    {trimNewLinesAndWhitespace(post.content).substr(0, POST_CONTENT_CHAR_LIMIT) + (post.content.length > POST_CONTENT_CHAR_LIMIT ? `\u2026` : '')}
+                </span>
+                <br key="line-break" />
+                <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
+            </span>
+        );
 
-        const item = {
-            estimatedHeight: estimatedHeight,
-            index: index,
-            leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" {...this.styles().ResultIcon}/>,
+        const texts = {
             primaryText: this.getPrimaryTextContainer(
                 post.title,
                 this.styles().postTextResultText
             ),
-            secondaryText: 'Last edited ' + moment(post.changed).fromNow(),
+            secondaryText: defaultSecondaryText,
+        };
+
+        if (highlight && highlight.get('title')) {
+            texts.primaryText = (<div
+                dangerouslySetInnerHTML={{__html: highlight.get('title')}}
+                style={this.styles().postTextResultText}
+            />);
+        }
+
+        if (highlight && highlight.get('content')) {
+            let highlightedContent = trimNewLinesAndWhitespace(highlight.get('content'));
+            const startsWithCapitalLetter = 'A'.charCodeAt(0) <= highlightedContent.charCodeAt(0) && highlightedContent.charCodeAt(0) <= 'Z'.charCodeAt(0);
+            if (!startsWithCapitalLetter) {
+                highlightedContent = `\u2026${highlightedContent}`;
+            }
+            const secondaryText = (
+                <span style={this.styles().postSecondaryTextContainer}>
+                    <span
+                        dangerouslySetInnerHTML={{__html: `${highlightedContent}\u2026`}}
+                        key="matched-content"
+                        style={this.styles().postSecondaryText}
+                    />
+                    <br key="line-break" />
+                    <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
+                </span>
+            );
+            texts.secondaryText = secondaryText;
+        }
+
+        return texts;
+    }
+
+    getPostResult(post, index, isRecent, highlight) {
+        const trackingAttributes = isRecent ? this.trackingAttributesForRecentResults : {};
+        const numberOfCharacters = post.title ? post.title.length : 0;
+        const estNumberOfLines = Math.floor(numberOfCharacters/44) + 2; // 1 for author and 1 for correct math
+        const estimatedHeight = estNumberOfLines*22 + 27 /* for two secondary lines */ + 36 /* top & bottom padding */;
+        const postTexts = this.getPostTexts(post, highlight);
+        const item = {
+            estimatedHeight: estimatedHeight,
+            index: index,
+            leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" {...this.styles().ResultIcon}/>,
+            primaryText: postTexts.primaryText,
+            secondaryText: postTexts.secondaryText,
+            secondaryTextLines: 2,
             onTouchTap: routes.routeToPost.bind(null, this.context.history, post),
             type: RESULT_TYPES.POST,
             instance: post,
@@ -940,7 +1004,7 @@ class Search extends CSSComponent {
             } else if (result.location) {
                 searchResult = this.getLocationResult(result.location, index, false, result.highlight);
             } else if (result.post) {
-                searchResult = this.getPostResult(result.post, index, false, results.length, result.highlight);
+                searchResult = this.getPostResult(result.post, index, false, result.highlight);
             }
 
             searchResult.score = result.score;
