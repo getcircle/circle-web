@@ -12,9 +12,9 @@ import {
 import { fontColors, tintColor } from '../constants/styles';
 import { mailToPostFeedback, mailtoSharePost } from '../utils/contact';
 import moment from '../utils/moment';
-import { CONTACT_LOCATION, POST_SOURCE } from '../constants/trackerProperties';
+import { CONTACT_LOCATION } from '../constants/trackerProperties';
 import { PAGE_TYPE } from '../constants/trackerProperties';
-import { routeToEditPost, routeToPost, routeToProfile, routeToSearch } from '../utils/routes';
+import { routeToEditPost, routeToProfile, routeToSearch } from '../utils/routes';
 import { SHARE_CONTENT_TYPE, SHARE_METHOD } from '../constants/trackerProperties';
 import tracker from '../utils/tracker';
 import { trimNewLines } from '../utils/string';
@@ -49,7 +49,6 @@ class Post extends CSSComponent {
         saveInProgress: PropTypes.bool,
         style: PropTypes.object,
         uploadedFiles: PropTypes.object,
-        uploadingFiles: PropTypes.bool,
     }
 
     static contextTypes = {
@@ -65,7 +64,6 @@ class Post extends CSSComponent {
         post: null,
         saveInProgress: false,
         uploadedFiles: Immutable.Map(),
-        uploadingFiles: false
     }
 
     state = {
@@ -74,7 +72,6 @@ class Post extends CSSComponent {
         editing: false,
         files: Immutable.OrderedMap(),
         owner: null,
-        saveAndExit: false,
         title: '',
         uploadedFiles: Immutable.Map(),
     }
@@ -91,15 +88,6 @@ class Post extends CSSComponent {
             (this.props.post.id !== nextProps.post.id || this.props.post.isEditable !== nextProps.post.isEditable)
         ) {
             this.setState({editing: false});
-        }
-
-        // Wait for the requested changes to save and then route to a post
-        if (this.state.saveAndExit && !nextProps.saveInProgress) {
-            this.setState({
-                saveAndExit: false,
-            });
-
-            routeToPost(this.context.history, nextProps.post);
         }
     }
 
@@ -318,9 +306,6 @@ class Post extends CSSComponent {
                     width: '100%',
                     ...fontColors.dark,
                 },
-                publishButtonContainer: {
-                    width: '100%',
-                },
                 section: {
                     marginTop: 5,
                 },
@@ -421,10 +406,10 @@ class Post extends CSSComponent {
             }
 
             this.saveTimeout = window.setTimeout(() => {
-                onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds(), null, this.state.owner);
+                onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), this.getCurrentFileIds(), null, this.getCurrentOwner());
             }, 500);
         } else if (explicitSave === true) {
-            onSaveCallback(this.state.title, this.state.body, this.getCurrentFileIds(), null, this.state.owner);
+            onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), this.getCurrentFileIds(), null, this.getCurrentOwner());
         }
     }
 
@@ -513,6 +498,10 @@ class Post extends CSSComponent {
         });
 
         return fileIds;
+    }
+
+    getCurrentOwner() {
+        return this.state.owner;
     }
 
     getReadOnlyContent(content) {
@@ -908,47 +897,6 @@ class Post extends CSSComponent {
         }
     }
 
-    renderActionButtons() {
-        const {
-            autoSave,
-            header,
-            isEditable,
-            post,
-            uploadingFiles,
-        } = this.props;
-
-        // If auto-save is false but the content is editable
-        // show explicit controls.
-        if (autoSave === false && isEditable === true && !header && post) {
-            return (
-                <div className="row end-xs" style={this.styles().publishButtonContainer}>
-                    <RoundedButton
-                        disabled={uploadingFiles}
-                        label={t('Publish')}
-                        onTouchTap={() => {
-                            this.saveData(true);
-                            this.setState({
-                                saveAndExit: true
-                            });
-
-                            // Track publish action
-                            tracker.trackPostPublished(
-                                post.id,
-                                post.state,
-                                false,
-                                this.state.files.count,
-                                POST_SOURCE.WEB_APP,
-                                this.state.owner && this.context.authenticatedProfile.id !== this.state.owner.id,
-                            );
-
-                        }}
-                        ref="publishButton"
-                    />
-                </div>
-            );
-        }
-    }
-
     render() {
         const {
             header,
@@ -958,7 +906,6 @@ class Post extends CSSComponent {
         return (
             <DetailContent style={{...style}}>
                 {header}
-                {this.renderActionButtons()}
                 <div className="row">
                     <div className="col-xs" style={this.styles().contentContainer}>
                         <div className="box">

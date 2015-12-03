@@ -10,7 +10,7 @@ import { POST_SOURCE } from '../constants/trackerProperties';
 import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
-import { routeToPosts } from '../utils/routes';
+import { routeToPost, routeToPosts } from '../utils/routes';
 import * as selectors from '../selectors';
 import tracker from '../utils/tracker';
 import { trimNewLinesAndWhitespace } from '../utils/string';
@@ -257,6 +257,7 @@ class PostEditor extends CSSComponent {
         }
 
         const { params, post } = this.props;
+        const owner = this.refs.post.getCurrentOwner();
 
         // Track publish action
         tracker.trackPostPublished(
@@ -265,6 +266,7 @@ class PostEditor extends CSSComponent {
             !(params && params.postId),
             post.file_ids.length,
             POST_SOURCE.WEB_APP,
+            owner && this.props.authenticatedProfile.id !== owner.id
         );
 
         this.onSavePost(
@@ -274,7 +276,12 @@ class PostEditor extends CSSComponent {
             PostStateV1.LISTED,
         );
         this.props.dispatch(clearPosts());
-        routeToPosts(this.context.history, PostStateURLString.LISTED);
+
+        if (params && params.postId) {
+            routeToPost(this.context.history, post);
+        } else {
+            routeToPosts(this.context.history, PostStateURLString.LISTED);
+        }
     }
 
     canEdit() {
@@ -320,11 +327,11 @@ class PostEditor extends CSSComponent {
     }
 
     renderPublishButton() {
-        if (this.props.shouldAutoSave) {
+        if (this.canEdit()) {
             return (
                 <div>
                     <RoundedButton
-                        disabled={this.props.uploadingFiles}
+                        disabled={this.props.uploadingFiles && !this.props.post}
                         label={t('Publish')}
                         onTouchTap={::this.onPublishButtonTapped}
                     />
