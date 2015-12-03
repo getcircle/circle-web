@@ -83,7 +83,14 @@ class Login extends CSSComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
-            this.context.history.pushState(null, this.props.location.state.nextPathname || '/');
+            const {
+                location,
+            } = this.props;
+            let nextPathname = '/';
+            if (location && location.state && location.state.nextPathname) {
+                nextPathname = location.state.nextPathname;
+            }
+            this.context.history.pushState(null, nextPathname);
             return false;
         }
         return true;
