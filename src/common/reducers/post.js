@@ -51,7 +51,7 @@ export default function post(state = initialState, action) {
             errorDetails: action.payload.errorDetails,
         });
 
-    case '@@reduxReactRouter/locationDidChange':
+    case types.LOCATION_CHANGED:
         return state.merge({
             draftPost: null,
             loading: false,

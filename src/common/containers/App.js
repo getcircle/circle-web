@@ -9,6 +9,7 @@ import {
 } from '../constants/styles';
 import { deviceResized } from '../actions/device';
 import { getAuthenticatedProfile } from '../reducers/authentication';
+import { locationChanged } from '../actions/app';
 import { refresh } from '../actions/authentication';
 import resizable from '../decorators/resizable';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
@@ -117,7 +118,9 @@ class App extends CSSComponent {
 
         this.initTrackerSession();
         if (!this.historyListener) {
-            this.historyListener = this.context.history.listen(location => this.locationChanged(location));
+            this.historyListener = this.context.history.listen(location => {
+                this.locationChanged(location)
+            });
         }
     }
 
@@ -189,6 +192,8 @@ class App extends CSSComponent {
         if (this.props.displayHeader) {
            this.setState({focused: false});
         }
+
+        this.props.dispatch(locationChanged());
     }
 
     handleFocusSearch() {
