@@ -160,6 +160,11 @@ class TeamDetailForm extends CSSComponent {
         });
     }
 
+    handleSubmit(event) {
+        // Prevent form from submitting because it will cause the page to refresh
+        event.preventDefault();
+    }
+
     updateTeam() {
         // TODO:
         // Add validation
@@ -244,7 +249,7 @@ class TeamDetailForm extends CSSComponent {
             <div style={this.styles().formContainer}>
                 {this.renderProgressIndicator()}
                 {this.renderToast()}
-                <form style={this.styles().form}>
+                <form onSubmit={::this.handleSubmit} style={this.styles().form}>
                     <div style={this.styles().sectionTitle}>{t('Team Name')}</div>
                     <input
                         disabled={this.state.saving}
