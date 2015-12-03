@@ -94,15 +94,6 @@ describe('PostComponent', () => {
 
     describe('when editingContent', () => {
 
-        it('adds explicit Publish button when editing a post', () => {
-            const { postComponent } = setup({
-                autoSave: false,
-                isEditable: true,
-            });
-
-            expect(postComponent.refs.publishButton).toExist();
-        });
-
         it('correctly returns current title and body', () => {
             const { postComponent } = setup({
                 isEditable: true,
@@ -139,19 +130,6 @@ describe('PostComponent', () => {
             expect(postComponent.state.body).toBe(testBody);
             expect(postComponent.state.editing).toBe(true);
             expect(postComponent.state.derivedTitle).toBe(true);
-        });
-
-        it('calls onSaveCallback when saving explicitly', () => {
-            const { postComponent, props } = setup({
-                autoSave: false,
-                isEditable: true,
-            });
-
-            postComponent.saveData(true);
-            expect(props.onSaveCallback.calls.length).toBe(1);
-
-            postComponent.refs.publishButton.props.onTouchTap();
-            expect(props.onSaveCallback.calls.length).toBe(2);
         });
 
         it('does not allows changing owner if post is in draft state', () => {
