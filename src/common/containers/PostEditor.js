@@ -274,6 +274,7 @@ class PostEditor extends CSSComponent {
             this.refs.post.getCurrentBody(),
             this.refs.post.getCurrentFileIds(),
             PostStateV1.LISTED,
+            this.refs.post.getCurrentOwner(),
         );
         this.props.dispatch(clearPosts());
 
