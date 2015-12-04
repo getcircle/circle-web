@@ -21,6 +21,10 @@ class Logger {
         this._console.timeEnd(key);
     }
 
+    warning(message) {
+        this._console.warn(message);
+    }
+
 }
 
 export default new Logger();

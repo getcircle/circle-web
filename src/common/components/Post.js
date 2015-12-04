@@ -1,9 +1,11 @@
 import Dropzone from 'react-dropzone';
 import Immutable from 'immutable';
-import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
+import { CircularProgress, FlatButton, IconButton, IconMenu, List, ListItem, Snackbar } from 'material-ui';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { copyUrl } from '../utils/clipboard';
 import {
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
@@ -28,9 +30,11 @@ import CSSComponent from './CSSComponent';
 import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
+import MenuGetLinkIcon from './MenuGetLinkIcon';
 import IconContainer from './IconContainer';
+import MenuMailIcon from './MenuMailIcon';
 import ProfileAvatar from './ProfileAvatar';
-import RoundedButton from './RoundedButton';
+import ShareIcon from './ShareIcon';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 const { PostStateV1 } = services.post.containers;
@@ -247,7 +251,7 @@ class Post extends CSSComponent {
                     },
                 },
                 IconContainer: {
-                    style: {
+                    rootStyle: {
                         border: 0,
                         left: 0,
                         height: 24,
@@ -283,6 +287,31 @@ class Post extends CSSComponent {
                     margin: '10px 0 5px 0',
                     width: '100%',
                 },
+                MenuIconContainer: {
+                    style: {
+                        border: 0,
+                        height: 24,
+                        width: 24,
+                        top: 6,
+                        left: 20,
+                    },
+                    iconStyle: {
+                        height: 24,
+                        width: 24,
+                    },
+                    strokeWidth: 1,
+                },
+                MenuItem: {
+                    innerDivStyle: {
+                        fontSize: 14,
+                        padding: '0px 16px 0px 60px',
+                        textAlign: 'left',
+                        ...fontColors.light,
+                    },
+                    style: {
+                        lineHeight: '36px',
+                    }
+                },
                 postContent: {
                     background: 'transparent',
                     color: 'rgba(0, 0, 0, 0.8)',
@@ -306,12 +335,30 @@ class Post extends CSSComponent {
                     width: '100%',
                     ...fontColors.dark,
                 },
+                ShareIconContainer: {
+                    rootStyle: {
+                        border: 0,
+                        height: 24,
+                        position: 'static',
+                        width: 24,
+                    },
+                    iconStyle: {
+                        height: 24,
+                        width: 24,
+                    },
+                    strokeWidth: 1,
+                },
                 section: {
                     marginTop: 5,
                 },
                 ShareButton: {
                     style: {
                         marginLeft: 5,
+                    },
+                },
+                Snackbar: {
+                    bodyStyle: {
+                        minWidth: 'inherit',
                     },
                 },
             },
@@ -620,6 +667,18 @@ class Post extends CSSComponent {
         }
     }
 
+    renderShareButton() {
+        return (
+            <IconButton touch={true}>
+                <IconContainer
+                    IconClass={ShareIcon}
+                    stroke={tintColor}
+                    {...this.styles().ShareIconContainer}
+                />
+            </IconButton>
+        );
+    }
+
     renderEditAndShareButton() {
         const {
             post
@@ -629,6 +688,7 @@ class Post extends CSSComponent {
         if (post && post.permissions && post.permissions.can_edit) {
             editButton = (
                 <FlatButton
+                    key="edit-button"
                     label={t('Edit')}
                     onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
                     {...this.styles().EditButton}
@@ -639,20 +699,50 @@ class Post extends CSSComponent {
         return (
             <div className="row middle-xs end-xs" style={this.styles().headerContainer}>
                 {editButton}
-                <RoundedButton
-                    className="center-xs"
-                    href={mailtoSharePost(post, this.context.authenticatedProfile)}
-                    label={t('Share')}
-                    linkButton={true}
-                    onTouchTap={() => {
-                        tracker.trackShareContent(
-                            post.id,
-                            SHARE_CONTENT_TYPE.POST,
-                            SHARE_METHOD.EMAIL,
-                        );
-                    }}
-                    target="_blank"
-                    {...this.styles().ShareButton}
+                <IconMenu iconButtonElement={this.renderShareButton()} key="share">
+                    <MenuItem
+                        href={mailtoSharePost(post, this.context.authenticatedProfile)}
+                        leftIcon={<IconContainer
+                            IconClass={MenuMailIcon}
+                            stroke='#757575'
+                            {...this.styles().MenuIconContainer}
+                        />}
+                        linkButton={true}
+                        onTouchTap={() => {
+                            tracker.trackShareContent(
+                                post.id,
+                                SHARE_CONTENT_TYPE.POST,
+                                SHARE_METHOD.EMAIL,
+                            );
+                        }}
+                        primaryText={t('Share by Email')}
+                        target="_blank"
+                        {...this.styles().MenuItem}
+                    />
+                    <MenuItem
+                        leftIcon={<IconContainer
+                            IconClass={MenuGetLinkIcon}
+                            stroke='#757575'
+                            {...this.styles().MenuIconContainer}
+                        />}
+                        onTouchTap={() => {
+                            tracker.trackShareContent(
+                                post.id,
+                                SHARE_CONTENT_TYPE.POST,
+                                SHARE_METHOD.COPY_LINK,
+                            );
+                            copyUrl();
+                            this.refs.snackbar.show();
+                        }}
+                        primaryText={t('Copy Link')}
+                        {...this.styles().MenuItem}
+                    />
+                </IconMenu>
+                <Snackbar
+                    autoHideDuration={2000}
+                    message={t('Link copied to clipboard!')}
+                    ref='snackbar'
+                    {...this.styles().Snackbar}
                 />
             </div>
         );
