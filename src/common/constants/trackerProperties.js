@@ -126,4 +126,5 @@ export const SHARE_CONTENT_TYPE = {
 // Method use to share content
 export const SHARE_METHOD = {
     EMAIL: 'Email',
+    COPY_LINK: 'Copy Link',
 };
