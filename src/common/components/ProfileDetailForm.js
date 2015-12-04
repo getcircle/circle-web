@@ -464,7 +464,13 @@ class ProfileDetailForm extends CSSComponent {
         if (props.contactMethods && props.contactMethods.length > 0) {
             for (let key in props.contactMethods) {
                 let contactMethod = props.contactMethods[key];
-                if (contactMethod && contactMethod.contact_method_type === ContactMethodV1.ContactMethodTypeV1.CELL_PHONE) {
+                if (
+                    contactMethod &&
+                    (
+                        contactMethod.contact_method_type === ContactMethodV1.ContactMethodTypeV1.CELL_PHONE ||
+                        contactMethod.contact_method_type === null
+                    )
+                ) {
                     cellNumber = contactMethod.value;
                     break;
                 }
