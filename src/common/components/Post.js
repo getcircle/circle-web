@@ -440,11 +440,10 @@ class Post extends CSSComponent {
 
         this.setState(updatedState, () => {
             this.saveData(false);
+            if (onFileDeleteCallback) {
+                onFileDeleteCallback(file);
+            }
         });
-
-        if (onFileDeleteCallback) {
-            onFileDeleteCallback(file);
-        }
     }
 
     isFileUploaded(fileName) {
