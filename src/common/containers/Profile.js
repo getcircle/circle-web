@@ -100,7 +100,9 @@ class Profile extends PureComponent {
             this.loadProfile(nextProps);
         }
         else if (this.props.extendedProfile && nextProps.extendedProfile) {
-            if (nextProps.extendedProfile.team.id !== this.props.extendedProfile.team.id) {
+            if (this.props.extendedProfile.team &&
+                nextProps.extendedProfile.team &&
+                nextProps.extendedProfile.team.id !== this.props.extendedProfile.team.id) {
                 // When user switches teams, clear cached team members for old & new team
                 nextProps.dispatch(clearTeamMembers(this.props.extendedProfile.team.id));
                 nextProps.dispatch(clearTeamMembers(nextProps.extendedProfile.team.id));
