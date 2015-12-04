@@ -104,7 +104,7 @@ class ProfileDetailHeader extends CSSComponent {
         } = this.props;
 
         let tenureText = '';
-        if (!profile.hire_date) {
+        if (profile.hire_date) {
             if (moment(profile.hire_date).isAfter(moment().subtract(7, 'days'))) {
                 tenureText = t(`\u2B50 New at ${organization.name}. Say hi!`);
             } else {
