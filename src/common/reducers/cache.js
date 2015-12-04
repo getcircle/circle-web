@@ -15,7 +15,18 @@ export default function cache(state = initialState, action) {
 
     if (action.payload && action.payload.entities) {
         return state.withMutations(map => {
-            return map.mergeDeepIn(['entities'], action.payload.entities)
+            // We want to replace rather than merge the normalizations,
+            // the old normalizations may contain fields that don't exist in the new normalizations
+            // and these will remain if merged
+            if (action.payload.normalizations) {
+                Immutable.Map(action.payload.normalizations).map(function (normalizations, normalizationsType) {
+                    Immutable.Map(normalizations).map(function (normalization, normalizationId) {
+                        map.deleteIn(['normalizations', normalizationsType, normalizationId]);
+                    });
+                });
+            }
+
+            map.mergeDeepIn(['entities'], action.payload.entities)
                 .mergeDeepIn(['normalizations'], action.payload.normalizations);
         });
     }
