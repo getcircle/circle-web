@@ -1,7 +1,7 @@
 import logger from './logger';
 
-export function copyUrl() {
-    const textToCopy = window.location.href;
+export function copyUrl(shareSource) {
+    const textToCopy = window.location.origin + window.location.pathname + (shareSource ? '?ls=' + shareSource : '');
     const tempNode = document.createElement('textarea');
     tempNode.appendChild(document.createTextNode(textToCopy));
     document.body.appendChild(tempNode);

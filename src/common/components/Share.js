@@ -26,6 +26,7 @@ class Share extends CSSComponent {
     static propTypes = {
         mailToHref: PropTypes.string.isRequired,
         onShareCallback: PropTypes.func.isRequired,
+        urlShareSource: PropTypes.string,
     }
 
     static defaultProps = {
@@ -154,6 +155,7 @@ class Share extends CSSComponent {
             const {
                 mailToHref,
                 onShareCallback,
+                urlShareSource,
             } = this.props;
 
             return (
@@ -188,7 +190,7 @@ class Share extends CSSComponent {
                             {...this.styles().MenuIconContainer}
                         />}
                         onTouchTap={() => {
-                            copyUrl();
+                            copyUrl(urlShareSource);
                             this.refs.snackbar.show();
                             onShareCallback(SHARE_METHOD.COPY_LINK);
                         }}
