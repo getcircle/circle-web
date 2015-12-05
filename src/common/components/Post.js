@@ -548,9 +548,10 @@ class Post extends CSSComponent {
 
     onDrop(files) {
         if (files.length > 0) {
-            let updatedState = {};
-            updatedState.files = this.getUpdatedFilesMap(files);
-            this.setState(updatedState, () => this.triggerUploads(files));
+            let namesOfNewFiles = files.map(file => file.name);
+            // Filter out deleted files that we're trying to re-upload
+            let namesOfDeletedFiles = this.state.deletedFiles.filter(nameOfDeletedFile => namesOfNewFiles.indexOf(nameOfDeletedFile) < 0);
+            this.setState({'files': this.getUpdatedFilesMap(files, namesOfDeletedFiles)}, () => this.triggerUploads(files));
         }
     }
 
@@ -567,9 +568,8 @@ class Post extends CSSComponent {
         return mailToPostFeedback(post, this.context.authenticatedProfile);
     }
 
-    getUpdatedFilesMap(files) {
+    getUpdatedFilesMap(files, deletedFiles = this.state.deletedFiles) {
         const existingFiles = this.state.files;
-        const deletedFiles = this.state.deletedFiles;
         let newFilesMap = Immutable.OrderedMap();
         if (existingFiles && existingFiles.size) {
             newFilesMap = existingFiles;
