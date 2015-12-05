@@ -74,6 +74,7 @@ class Post extends CSSComponent {
         owner: null,
         title: '',
         uploadedFiles: Immutable.Map(),
+        deletedFiles: [],
     }
 
     componentWillMount() {
@@ -374,7 +375,9 @@ class Post extends CSSComponent {
         if (props.post && props.post.files) {
             uploadedFiles = uploadedFiles.asMutable();
             props.post.files.forEach((file) => {
-                uploadedFiles.set(file.name, file);
+                if (this.state.deletedFiles.indexOf(file.name) < 0) {
+                    uploadedFiles.set(file.name, file);
+                }
             });
 
             files = this.getUpdatedFilesMap(props.post.files);
@@ -437,6 +440,9 @@ class Post extends CSSComponent {
         if (existingUploadedFiles.size > 0) {
             updatedState.uploadedFiles = existingUploadedFiles.delete(file.name);
         }
+
+        updatedState.deletedFiles = this.state.deletedFiles;
+        updatedState.deletedFiles.push(file.name);
 
         this.setState(updatedState, () => {
             this.saveData(false);
@@ -563,6 +569,7 @@ class Post extends CSSComponent {
 
     getUpdatedFilesMap(files) {
         const existingFiles = this.state.files;
+        const deletedFiles = this.state.deletedFiles;
         let newFilesMap = Immutable.OrderedMap();
         if (existingFiles && existingFiles.size) {
             newFilesMap = existingFiles;
@@ -570,7 +577,9 @@ class Post extends CSSComponent {
 
         newFilesMap = newFilesMap.withMutations((map) => {
             files.forEach((file) => {
-                map.set(file.name, file);
+                if (deletedFiles.indexOf(file.name) < 0) {
+                    map.set(file.name, file);
+                }
             });
         });
         return newFilesMap;
