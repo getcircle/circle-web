@@ -74,7 +74,7 @@ class Post extends CSSComponent {
         owner: null,
         title: '',
         uploadedFiles: Immutable.Map(),
-        deletedFiles: [],
+        namesOfDeletedFiles: [],
     }
 
     componentWillMount() {
@@ -375,7 +375,7 @@ class Post extends CSSComponent {
         if (props.post && props.post.files) {
             uploadedFiles = uploadedFiles.asMutable();
             props.post.files.forEach((file) => {
-                if (this.state.deletedFiles.indexOf(file.name) < 0) {
+                if (this.state.namesOfDeletedFiles.indexOf(file.name) < 0) {
                     uploadedFiles.set(file.name, file);
                 }
             });
@@ -441,8 +441,8 @@ class Post extends CSSComponent {
             updatedState.uploadedFiles = existingUploadedFiles.delete(file.name);
         }
 
-        updatedState.deletedFiles = this.state.deletedFiles;
-        updatedState.deletedFiles.push(file.name);
+        updatedState.namesOfDeletedFiles = this.state.namesOfDeletedFiles;
+        updatedState.namesOfDeletedFiles.push(file.name);
 
         this.setState(updatedState, () => {
             this.saveData(false);
@@ -550,7 +550,7 @@ class Post extends CSSComponent {
         if (files.length > 0) {
             let namesOfNewFiles = files.map(file => file.name);
             // Filter out deleted files that we're trying to re-upload
-            let namesOfDeletedFiles = this.state.deletedFiles.filter(nameOfDeletedFile => namesOfNewFiles.indexOf(nameOfDeletedFile) < 0);
+            let namesOfDeletedFiles = this.state.namesOfDeletedFiles.filter(nameOfDeletedFile => namesOfNewFiles.indexOf(nameOfDeletedFile) < 0);
             this.setState({'files': this.getUpdatedFilesMap(files, namesOfDeletedFiles)}, () => this.triggerUploads(files));
         }
     }
@@ -568,7 +568,7 @@ class Post extends CSSComponent {
         return mailToPostFeedback(post, this.context.authenticatedProfile);
     }
 
-    getUpdatedFilesMap(files, deletedFiles = this.state.deletedFiles) {
+    getUpdatedFilesMap(files, namesOfDeletedFiles = this.state.namesOfDeletedFiles) {
         const existingFiles = this.state.files;
         let newFilesMap = Immutable.OrderedMap();
         if (existingFiles && existingFiles.size) {
@@ -577,7 +577,7 @@ class Post extends CSSComponent {
 
         newFilesMap = newFilesMap.withMutations((map) => {
             files.forEach((file) => {
-                if (deletedFiles.indexOf(file.name) < 0) {
+                if (namesOfDeletedFiles.indexOf(file.name) < 0) {
                     map.set(file.name, file);
                 }
             });
