@@ -1,5 +1,7 @@
 import logger from '../utils/logger';
 
+import BlockElement from './BlockElement';
+
 class Editor {
 
     blockElements = {};
@@ -8,7 +10,7 @@ class Editor {
         return ['P'];
     }
 
-    addBlockElement(Node node) {
+    addBlockElement(node) {
         if (node.nodeType !== 1) {
             logger.error('Error adding node. Only block elements are accepted.');
             return null;
@@ -20,14 +22,16 @@ class Editor {
         }
 
         const blockElement = new BlockElement(node);
-        this.blockElements[blockElement.identifier] = blockElement;
+        this.blockElements[blockElement.id] = blockElement;
         return blockElement;
     }
 
     updateBlockElement(identifier, updateMarkup) {
-        this.blockElements[identifier].update();
-        if (updateMarkup) {
-            this.blockElements[identifier].updateMarkups();
+        if (this.blockElements.hasOwnProperty(identifier)) {
+            this.blockElements[identifier].update();
+            if (updateMarkup) {
+                this.blockElements[identifier].updateMarkups();
+            }
         }
     }
 
@@ -44,7 +48,13 @@ class Editor {
     }
 
     getAllElementsIds() {
-        return keys(this.blockElements);
+        return Object.keys(this.blockElements);
+    }
+
+    print() {
+        for (let key in this.blockElements) {
+            logger.log(this.blockElements[key].getObject());
+        }
     }
 }
 

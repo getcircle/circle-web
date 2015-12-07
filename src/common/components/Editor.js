@@ -2,10 +2,9 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import MediumEditor from 'medium-editor';
 
-import { default as EditorModel } from '../models/EditorModel';
+import { default as EditorModel } from '../models/Editor';
 import logger from '../utils/logger';
 import t from '../utils/gettext';
-
 
 import CSSComponent from './CSSComponent';
 
@@ -118,6 +117,7 @@ class Editor extends CSSComponent {
 
             this.numberOfChildNodes = editable.childNodes.length;
             this._updated = true;
+            this.editorModel.print();
             this.onChange(this.rootElement.innerHTML);
         });
 
@@ -154,7 +154,7 @@ class Editor extends CSSComponent {
     onKeyPress(event) {
         // Find the paragraph where things have changed and request its contents to be updated
         const identifier = this.getCurrentElementIdentifier();
-        if (identifier && this.editorMode.getElementById(identifier)) {
+        if (identifier && this.editorModel.getElementById(identifier)) {
             this.editorModel.updateBlockElement(identifier);
         }
     }
@@ -299,18 +299,18 @@ class Editor extends CSSComponent {
                     !processedElements.hasOwnProperty(childNode.id)) {
                     processedElements[childNode.id] = this.editorModel.getElementById(childNode.id);
                 } else {
-                    blockElement = this.editorMode.addBlockElement(childNode);
+                    blockElement = this.editorModel.addBlockElement(childNode);
                     processedElements[blockElement.id] = blockElement;
                 }
             }
         }
 
         // Cleanup other blockElements
-        for (let id in this.editorModel.getAllElementsIds()) {
-            if (!processedElements.hasOwnProperty(id)) {
-                this.editorModel.removeBlockElement(id);
+        this.editorModel.getAllElementsIds().forEach(identifier => {
+            if (!processedElements.hasOwnProperty(identifier)) {
+                this.editorModel.removeBlockElement(identifier);
             }
-        }
+        });
     }
 
     // Note: this returns start, end offsets relative to the root editor element.
