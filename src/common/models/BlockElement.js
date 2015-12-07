@@ -1,30 +1,31 @@
 import logger from '../utils/logger';
 import Markup from '../models/Markup';
 
+const BlockElementType = {
+    PARAGRAPH: 1
+};
+
 class BlockElement {
 
-    element = null;
     id = null;
     markups = [];
     type = null;
     text = '';
 
-    constructor(element) {
-        this.element = element;
-        this.type = this.getTypeByTagName(element.tagName);
-        if (this.type === null) {
+    constructor(type) {
+        if (type === null) {
             logger.error('Invalid block element');
             return;
         }
 
+        this.type = type
         this.id = this.getRandomId();
-        this.element.id = this.id;
     }
 
-    getTypeByTagName(tagName) {
+    static getTypeByTagName(tagName) {
         switch (tagName) {
             case 'P':
-               return 1;
+               return BlockElementType.PARAGRAPH;
         }
 
         return null;
@@ -32,6 +33,43 @@ class BlockElement {
 
     getRandomId() {
         return Math.round(1E6 * Math.random()).toString(36);
+    }
+
+    update(text) {
+        // TODO: Need to replace <BR> with \n when inside a paragraph
+        this.text = text;
+    }
+
+    updateMarkups(element) {
+        this.markups = [];
+        let childNode, i, markup, markupText, startIndex;
+        const ilen = element.childNodes.length;
+        const rootElementText = element.innerText;
+        for (i = 0; i < ilen; i++) {
+            childNode = element.childNodes[i];
+            if (childNode.nodeType !== 1) {
+                continue;
+            }
+
+            markupText = childNode.innerText;
+            startIndex = rootElementText.indexOf(markupText);
+            if (startIndex === -1) {
+                continue;
+            }
+
+            markup = new Markup(
+                Markup.getTypeByTagName(childNode.tagName),
+                startIndex,
+                startIndex + markupText.length
+            );
+
+            if (markup && markup.type !== null) {
+                if (childNode.tagName === 'A') {
+                    markup.addAnchorMetadata(childNode.getAttribute('href'));
+                }
+                this.markups.push(markup);
+            }
+        }
     }
 
     getObject() {
@@ -47,35 +85,54 @@ class BlockElement {
         };
     }
 
-    update() {
-        // TODO: Need to replace <BR> with \n when inside a paragraph
-        this.text = this.element.innerText;
+    getHTML() {
+        let html = '', i = 0, ilen = this.text.length;
+        const markupsByStartIndex = [];
+        const markupsByEndIndex = [];
+        this.markups.forEach(markup => {
+            if (!markupsByStartIndex[markup.start]) {
+                markupsByStartIndex[markup.start] = [];
+            }
+            markupsByStartIndex[markup.start].push(markup);
+
+            if (!markupsByEndIndex[markup.end]) {
+                markupsByEndIndex[markup.end] = [];
+            }
+            markupsByEndIndex[markup.end].push(markup);
+        });
+
+        for (i = 0; i < ilen; i++) {
+
+            if (markupsByStartIndex[i]) {
+                markupsByStartIndex[i].forEach(markup => {
+                    html += markup.getHTMLStartTag();
+                });
+            }
+
+            if (markupsByEndIndex[i]) {
+                markupsByEndIndex[i].forEach(markup => {
+                    html += markup.getHTMLEndTag();
+                });
+            }
+
+            html += this.text[i];
+
+        }
+
+        return this.getHTMLStartTag() + html + this.getHTMLEndTag();
     }
 
-    updateMarkups() {
-        this.markups = [];
-        let childNode, i, markup, markupText, startIndex;
-        const ilen = this.element.childNodes.length;
-        const rootElementText = this.element.innerText;
-        for (i = 0; i < ilen; i++) {
-            childNode = this.element.childNodes[i];
-            if (childNode.nodeType !== 1) {
-                continue;
-            }
+    getHTMLStartTag() {
+        switch (this.type) {
+            case BlockElementType.PARAGRAPH:
+                return '<p id="' + this.id + '">';
+        }
+    }
 
-            markupText = childNode.innerText;
-            startIndex = rootElementText.indexOf(markupText);
-            if (startIndex === -1) {
-                continue;
-            }
-
-            markup = new Markup(childNode, startIndex, startIndex + markupText.length);
-            if (markup && markup.type !== null) {
-                if (childNode.tagName === 'A') {
-                    markup.addAnchorMetadata(childNode.getAttribute('href'));
-                }
-                this.markups.push(markup);
-            }
+    getHTMLEndTag() {
+        switch (this.type) {
+            case BlockElementType.PARAGRAPH:
+                return '</p>';
         }
     }
 }

@@ -1,20 +1,25 @@
 import logger from '../utils/logger';
 
+const MarkupType = {
+    BOLD: 1,
+    ITALIC: 2,
+    ANCHOR: 3,
+};
+
 class Markup {
 
-    element = null;
     end = 0;
     metaData = {};
     start = 0;
+    type = null;
 
-    constructor(element, startIndex, endIndex) {
-        this.element = element;
-        this.type = this.getTypeByTagName(element.tagName);
-        if (this.type === null) {
+    constructor(type, startIndex, endIndex) {
+        if (type === null) {
             logger.error('Invalid markup element');
             return null;
         }
 
+        this.type = type;
         if (startIndex === endIndex) {
             logger.error('Start and end index cannot be the same for markup elements');
             return null;
@@ -28,18 +33,18 @@ class Markup {
         this.metaData.href = href;
     }
 
-    getTypeByTagName(tagName) {
+    static getTypeByTagName(tagName) {
         switch (tagName) {
             case 'STRONG':
             case 'B':
-               return 1;
+               return MarkupType.BOLD;
 
             case 'EM':
             case 'I':
-                return 2;
+                return MarkupType.ITALIC;
 
             case 'A':
-                return 3;
+                return MarkupType.ANCHOR;
         }
 
         return null;
@@ -51,6 +56,32 @@ class Markup {
             end: this.end,
             ...this.metaData,
         };
+    }
+
+    getHTMLStartTag() {
+        switch (this.type) {
+            case MarkupType.BOLD:
+                return '<b>';
+
+            case MarkupType.ITALIC:
+                return '<i>';
+
+            case MarkupType.ANCHOR:
+                return '<a href="' + this.metaData.href + '">';
+        }
+    }
+
+    getHTMLEndTag() {
+        switch (this.type) {
+            case MarkupType.BOLD:
+                return '</b>';
+
+            case MarkupType.ITALIC:
+                return '</i>';
+
+            case MarkupType.ANCHOR:
+                return '</a>';
+        }
     }
 }
 

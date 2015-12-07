@@ -117,7 +117,7 @@ class Editor extends CSSComponent {
 
             this.numberOfChildNodes = editable.childNodes.length;
             this._updated = true;
-            this.editorModel.print();
+            this.editorModel.printHTML();
             this.onChange(this.rootElement.innerHTML);
         });
 

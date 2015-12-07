@@ -6,6 +6,10 @@ class Editor {
 
     blockElements = {};
 
+    constructor(json) {
+        this.setJSON(json);
+    }
+
     acceptableBlockTags() {
         return ['P'];
     }
@@ -21,16 +25,18 @@ class Editor {
             return null;
         }
 
-        const blockElement = new BlockElement(node);
+        const blockElement = new BlockElement(BlockElement.getTypeByTagName(node.tagName));
+        node.id = blockElement.id;
         this.blockElements[blockElement.id] = blockElement;
         return blockElement;
     }
 
     updateBlockElement(identifier, updateMarkup) {
-        if (this.blockElements.hasOwnProperty(identifier)) {
-            this.blockElements[identifier].update();
+        const element = document.getElementById(identifier);
+        if (this.blockElements.hasOwnProperty(identifier) && element) {
+            this.blockElements[identifier].update(element.innerText);
             if (updateMarkup) {
-                this.blockElements[identifier].updateMarkups();
+                this.blockElements[identifier].updateMarkups(element);
             }
         }
     }
@@ -51,10 +57,37 @@ class Editor {
         return Object.keys(this.blockElements);
     }
 
+    setJSON(json) {
+        try {
+            if (json) {
+                this.blockElements = JSON.parse(json);
+            }
+        } catch (e) {
+            logger.error('Error parsing editor model JSON');
+        }
+    }
+
+    getJSON() {
+        return JSON.stringify(this.blockElements);
+    }
+
+    getHTML() {
+        let html = '';
+        for (let identifier in this.blockElements) {
+            html += this.blockElements[identifier].getHTML();
+        }
+
+        return html;
+    }
+
     print() {
         for (let key in this.blockElements) {
             logger.log(this.blockElements[key].getObject());
         }
+    }
+
+    printHTML() {
+        logger.log(this.getHTML());
     }
 }
 
