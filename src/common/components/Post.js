@@ -522,14 +522,14 @@ class Post extends CSSComponent {
         }, () => this.saveData(false));
     }
 
-    handleBodyChange(event, value) {
+    handleBodyChange(event, value, isRichText) {
         const newValue = value;
         let modifiedState = {
             editing: true,
             body: newValue,
         };
 
-        if (this.state.title.trim() === '' || this.state.derivedTitle === true) {
+        if ((this.state.title.trim() === '' || this.state.derivedTitle === true) && !isRichText) {
             modifiedState.title = trimNewLines(newValue.split('.')[0].substring(0, 80));
             modifiedState.derivedTitle = true;
         }
@@ -917,7 +917,7 @@ class Post extends CSSComponent {
                 <Editor
                     className="leditor"
                     onChange={(text, medium) => {
-                        this.handleBodyChange(null, text);
+                        this.handleBodyChange(null, text, true);
                     }}
                 />
                 {this.renderFilesContainer()}
