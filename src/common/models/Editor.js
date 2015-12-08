@@ -10,7 +10,7 @@ class Editor {
         this.setJSON(json);
     }
 
-    acceptableBlockTags() {
+    static acceptableBlockTags() {
         return ['P'];
     }
 
@@ -20,8 +20,8 @@ class Editor {
             return null;
         }
 
-        if (this.acceptableBlockTags().indexOf(node.tagName) === -1) {
-            logger.error('Error adding node. Only ' + this.acceptableBlockTags().toString() + ' are accepted.');
+        if (Editor.acceptableBlockTags().indexOf(node.tagName) === -1) {
+            logger.error('Error adding node. Only ' + Editor.acceptableBlockTags().toString() + ' are accepted.');
             return null;
         }
 

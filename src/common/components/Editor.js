@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import React from 'react';
+import React, { PropTypes } from 'react';
 import MediumEditor from 'medium-editor';
 
 import { default as EditorModel } from '../models/Editor';
@@ -11,9 +11,11 @@ import CSSComponent from './CSSComponent';
 class Editor extends CSSComponent {
 
     static propTypes = {
+        onChange: PropTypes.func,
     }
 
     static defaultProps = {
+        onChange: () => {}
     }
 
     state = {
@@ -24,6 +26,7 @@ class Editor extends CSSComponent {
     medium = null
     rootElement = null
     numberOfChildNodes = 0
+    updateTimeout = null
     mediumEditorOptions = {
         anchor: {
             linkValidation: true,
@@ -71,14 +74,14 @@ class Editor extends CSSComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.text !== this.state.text && !this._updated) {
+        if (nextProps.text !== this.state.text && !this.updated) {
             this.setState({
                 text: nextProps.text
             });
         }
 
-        if (this._updated) {
-            this._updated = false;
+        if (this.updated) {
+            this.updated = false;
         }
     }
 
@@ -110,21 +113,14 @@ class Editor extends CSSComponent {
 
     // Medium editor specific events
     attachEventHandlers() {
-        this.medium.subscribe('editableInput', (event, editable) => {
-            if (this.numberOfChildNodes !== editable.childNodes.length) {
-                this.assignIdentifiersToChildren(event.target);
-            }
-
-            this.numberOfChildNodes = editable.childNodes.length;
-            this._updated = true;
-            this.editorModel.printHTML();
-            this.onChange(this.rootElement.innerHTML);
-        });
-
         // editable* versions are custom events that handle browser inconsistencies
         // For mordern browsers they are just wrappers to native events.
+        // this.medium.subscribe('editableInput', (event, editable) => this.onChange(event, editable));
         this.medium.subscribe('editableKeypress', (event) => this.onKeyPress(event));
         this.medium.subscribe('editableKeyup', (event) => this.onKeyUp(event));
+        this.medium.subscribe('editableKeydownEnter', event => this.onEnter(event));
+        this.medium.subscribe('editableKeydownDelete', event => this.onDelete(event));
+        this.medium.subscribe('editablePaste', event => this.onPaste(event));
 
         // Attach listener for buttons in the toolbar
         this.mediumEditorOptions.toolbar.buttons.forEach((buttonName) => {
@@ -145,9 +141,20 @@ class Editor extends CSSComponent {
         });
     }
 
-    onChange(text) {
-        if (this.props.onChange) {
-            this.props.onChange(text, this.medium);
+    onChange(event, editable) {
+        if (editable) {
+            if (this.numberOfChildNodes !== editable.childNodes.length) {
+                this.assignIdentifiersToChildren(event.target);
+            }
+
+            this.numberOfChildNodes = editable.childNodes.length;
+            this.updated = true;
+        }
+
+        // Check if we have an onChange callback and some text
+        if (this.props.onChange && this.rootElement.innerText.length > 0) {
+            logger.log(this.editorModel.printHTML());
+            this.props.onChange(this.editorModel.getJSON(), this.medium);
         }
     }
 
@@ -155,80 +162,14 @@ class Editor extends CSSComponent {
         // Find the paragraph where things have changed and request its contents to be updated
         const identifier = this.getCurrentElementIdentifier();
         if (identifier && this.editorModel.getElementById(identifier)) {
-            this.editorModel.updateBlockElement(identifier);
-        }
-    }
-
-    onKeyUp(event) {
-        this.ensureCurrentElementHasAnIdentifier();
-    }
-
-    onToolbarButtonClicked(event, extension, actionName) {
-        // Identify paragrah and update with markup.
-        // AddMarkup of type to a particular paragraph and capture any meta data.
-
-        // 1. Detect is it addition or removal
-        // 2. If addition and check range and see if we have a type for that range already
-        // 3. If this type is the same, update the range
-        // 4. If not add a new entry
-        // 5. When removing, see if its part (or middle of) of an existing range. If yes, remove entry and create two entries.
-        // 6. If exact match with the range update it directly
-        const selection = this.getSelection();
-        if (!selection) {
-            logger.log('Selection not found.');
-            return;
-        }
-
-        const isActive = extension.isActive();
-        logger.log((isActive ? 'added' : 'removed') + ' ' + actionName
-            + ' to range (' + selection.start + ',' + selection.end + ')'
-        );
-
-        // Figure our which elements and what text inside of those was selected
-        let childNode, previousLength = 0, range, contentLength;
-        for (let i = 0; i < this.rootElement.childNodes.length; i++) {
-            childNode = this.rootElement.childNodes[i];
-            range = new Range(0, 0);
-            range.selectNodeContents(childNode);
-            contentLength = range.toString().length;
-            if (contentLength === 0) {
-                continue;
+            if (this.updateTimeout) {
+                clearTimeout(this.updateTimeout);
             }
 
-            let start = previousLength, end = contentLength + previousLength;
-            logger.log('childNode ID ' + childNode.id + ' Range (' + start + ',' + end + ')');
-            let selectedText = null, matchedAlgo = 0;
-            if (selection.start >= start && end >= selection.end) {
-                // Entire selection is within range
-                selectedText = range.toString().substr(selection.start - start, selection.end - selection.start);
-                matchedAlgo = 1;
-            }
-            else if (start >= selection.start && end <= selection.end) {
-                // Entire selection contains range
-                selectedText = range.toString();
-                matchedAlgo = 2;
-            }
-            else if (selection.end > start && selection.end < end && start > selection.start) {
-                // Selection ends partially within this range
-                selectedText = range.toString().substr(0, selection.end - start);
-                matchedAlgo = 3;
-            }
-            else if (selection.start >= start && selection.start < end && end < selection.end) {
-                // Selection starts partially within this range
-                selectedText = range.toString().substr(selection.start - start);
-                matchedAlgo = 4;
-            }
-
-            if (selectedText !== null) {
-                logger.log('FOUND SELECTION - ' + selectedText + ' (' + matchedAlgo + ')');
-                this.editorModel.updateBlockElement(childNode.id, true);
-            }
-
-            if (matchedAlgo === 1) {
-                // If we have found the selection, stop traversing
-                break;
-            }
-            previousLength = end;
+            this.updateTimeout = setTimeout(() => {
+                this.editorModel.updateBlockElement(identifier);
+                this.onChange();
+            }, 100);
         }
     }
 
@@ -248,7 +189,7 @@ class Editor extends CSSComponent {
         }
 
         if (currentElement.nodeType !== 1 ||
-            currentElement.tagName.toLowerCase !== 'p' ||
+            EditorModel.acceptableBlockTags().indexOf(currentElement.tagName) === -1 ||
             currentElement.parentNode !== this.rootElement
         ) {
             let parentNode = currentElement.parentNode;
@@ -264,6 +205,109 @@ class Editor extends CSSComponent {
         return currentElement.id;
     }
 
+    onKeyUp(event) {
+        // Key up is called on every keystroke. This is the best place to ensure we have an ID assigned
+        // to the element
+        this.ensureCurrentElementHasAnIdentifier();
+    }
+
+    onEnter(event) {
+        this.assignIdentifiersToChildren(this.rootElement);
+        this.onChange();
+    }
+
+    onDelete(event) {
+        // Cancel any existing scheduled updates
+        if (this.updateTimeout) {
+            clearTimeout(this.updateTimeout);
+        }
+
+        // Full update
+        this.assignIdentifiersToChildren(this.rootElement, true);
+        this.onChange();
+    }
+
+    onPaste(event) {
+        // Cancel any existing scheduled updates
+        if (this.updateTimeout) {
+            clearTimeout(this.updateTimeout);
+        }
+
+        // Full update
+        this.assignIdentifiersToChildren(this.rootElement, true);
+        this.onChange();
+    }
+
+    onToolbarButtonClicked(event, extension, actionName) {
+        // Identify paragrah and update with markup.
+        // AddMarkup of type to a particular paragraph and capture any meta data.
+
+        // 1. Detect is it addition or removal
+        // 2. If addition and check range and see if we have a type for that range already
+        // 3. If this type is the same, update the range
+        // 4. If not add a new entry
+        // 5. When removing, see if its part (or middle of) of an existing range. If yes, remove entry and create two entries.
+        // 6. If exact match with the range update it directly
+        const selection = this.getSelection();
+        if (!selection) {
+            logger.log('Selection not found.');
+            return;
+        }
+
+        // Figure our which elements and what text inside of those was selected
+        let childNode,
+            contentLength,
+            entireSelectionIsWithinRange = false,
+            previousLength = 0,
+            range,
+            updates = false;
+        for (let i = 0; i < this.rootElement.childNodes.length; i++) {
+            childNode = this.rootElement.childNodes[i];
+            range = new Range(0, 0);
+            range.selectNodeContents(childNode);
+            contentLength = range.toString().length;
+            if (contentLength === 0) {
+                continue;
+            }
+
+            let start = previousLength, end = contentLength + previousLength;
+            let selectedText = null;
+            if (selection.start >= start && end >= selection.end) {
+                // Entire selection is within range
+                selectedText = range.toString().substr(selection.start - start, selection.end - selection.start);
+                entireSelectionIsWithinRange = true;
+            }
+            else if (start >= selection.start && end <= selection.end) {
+                // Entire selection contains range
+                selectedText = range.toString();
+            }
+            else if (selection.end > start && selection.end < end && start > selection.start) {
+                // Selection ends partially within this range
+                selectedText = range.toString().substr(0, selection.end - start);
+            }
+            else if (selection.start >= start && selection.start < end && end < selection.end) {
+                // Selection starts partially within this range
+                selectedText = range.toString().substr(selection.start - start);
+            }
+
+            if (selectedText !== null) {
+                logger.log('Updating markup - ' + selectedText);
+                this.editorModel.updateBlockElement(childNode.id, true);
+                updates = true;
+            }
+
+            if (entireSelectionIsWithinRange) {
+                // If we have found the selection, stop traversing
+                break;
+            }
+            previousLength = end;
+        }
+
+        if (updates) {
+            this.onChange();
+        }
+    }
+
     ensureCurrentElementHasAnIdentifier() {
         let currentElement = MediumEditor.selection.getSelectionStart(this.medium.options.ownerDocument);
         if (!currentElement || currentElement === this.rootElement) {
@@ -271,11 +315,11 @@ class Editor extends CSSComponent {
         } else if (!currentElement.id) {
             this.assignIdentifiersToChildren(event.target);
         }
-        logger.log(currentElement.id + ' ' + currentElement.innerText);
+
         return currentElement.id;
     }
 
-    assignIdentifiersToChildren(rootNode) {
+    assignIdentifiersToChildren(rootNode, updateTextAndMarkup) {
         const ilen = rootNode.childNodes.length;
         let i = 0;
         let blockElement;
@@ -293,7 +337,7 @@ class Editor extends CSSComponent {
             // Assign new ID to only paragraph nodes and
             // if the element either does not have an ID or
             // the ID has already been taken.
-            if (childNode.tagName.toLowerCase() === 'p') {
+            if (EditorModel.acceptableBlockTags().indexOf(childNode.tagName) !== -1) {
                 if (childNode.id &&
                     this.editorModel.getElementById(childNode.id) &&
                     !processedElements.hasOwnProperty(childNode.id)) {
@@ -301,6 +345,10 @@ class Editor extends CSSComponent {
                 } else {
                     blockElement = this.editorModel.addBlockElement(childNode);
                     processedElements[blockElement.id] = blockElement;
+                }
+
+                if (updateTextAndMarkup) {
+                    this.editorModel.updateBlockElement(childNode.id, true);
                 }
             }
         }
