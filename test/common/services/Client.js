@@ -6,15 +6,7 @@ import ServiceError from '../../../src/common/services/ServiceError';
 import WrappedResponse, { getResponseExtensionName } from '../../../src/common/services/WrappedResponse';
 
 function mockWrappedResponse(serviceResponse, request = new protobufs.soa.ServiceRequestV1()) {
-    return new WrappedResponse(request, mockHttpResponse(serviceResponse));
-}
-
-function mockHttpResponse(serviceResponse) {
-    return {
-        xhr: {
-            response: serviceResponse.encode(),
-        },
-    };
+    return new WrappedResponse(request, {}, serviceResponse.encode());
 }
 
 function mockServiceResponseError(serviceName, actionName, errors, errorDetails) {
