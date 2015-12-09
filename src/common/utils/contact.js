@@ -2,7 +2,7 @@ import { getTrackingParameter } from './tracker';
 import t from './gettext';
 
 const TEAM_DESCRIPTION_ASK_ME = 'team_description_askme';
-const POST_SHARE = 'post_share';
+const POST_SHARE = 'post_share_email';
 const POST_FEEDBACK = 'post_feedback';
 
 function sentFrom() {

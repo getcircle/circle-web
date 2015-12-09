@@ -40,7 +40,7 @@ class DetailMembers extends StyleableComponent {
                     leftAvatar={<ProfileAvatar profile={item} />}
                     onTouchTap={this.props.onClickMember.bind(null, item)}
                     primaryText={item.full_name}
-                    secondaryText={item.title}
+                    secondaryText={item.display_title}
                 />
             );
         });

@@ -12,11 +12,13 @@
     background-position: 0 22px;
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(122, 142, 255, 0.3);
+    word-wrap: break-word;
 }
 
 .postContent a.hashtag, .leditor a.hashtag {
     background-image: none;
     cursor: pointer;
+    word-wrap: break-word;
 }
 
 .leditor b, .leditor strong {

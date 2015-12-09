@@ -252,7 +252,7 @@ class Search extends CSSComponent {
         onCancel() {},
         onFocus() {},
         onSelectItem() {},
-        placeholder: t('Search people, knowledge, & teams'),
+        placeholder: t('Search knowledge, people, & teams'),
         // This isn't good component design and there are ways to achieve
         // hiding of results (by simply hiding the container).
         // But, the logic to process results has a big performance cost.

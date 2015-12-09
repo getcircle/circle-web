@@ -107,7 +107,7 @@ class ProfileDetailContactInfo extends CSSComponent {
         switch (contactItem.contact_method_type) {
         case ContactMethodTypeV1.EMAIL:
             return t('Email not provided');
-        case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE:
+        case ContactMethodTypeV1.PHONE, ContactMethodTypeV1.CELL_PHONE, null:
             if (this.props.isLoggedInUser) {
                 return t('Add Number');
             } else {
@@ -156,6 +156,10 @@ class ProfileDetailContactInfo extends CSSComponent {
                 );
             case ContactMethodTypeV1.CELL_PHONE:
             case ContactMethodTypeV1.PHONE:
+            // contact method type is null when it is the default value
+            // (which is CELL_PHONE). this is filed here:
+            // https://www.wunderlist.com/#/tasks/1500832524
+            case null:
                 return (
                     <CardListItem
                         disabled={!this.canCall(item)}

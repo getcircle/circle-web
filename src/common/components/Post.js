@@ -1,6 +1,6 @@
+import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import Dropzone from 'react-dropzone';
 import Immutable from 'immutable';
-import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -15,7 +15,7 @@ import moment from '../utils/moment';
 import { CONTACT_LOCATION } from '../constants/trackerProperties';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToEditPost, routeToProfile, routeToSearch } from '../utils/routes';
-import { SHARE_CONTENT_TYPE, SHARE_METHOD } from '../constants/trackerProperties';
+import { SHARE_CONTENT_TYPE } from '../constants/trackerProperties';
 import tracker from '../utils/tracker';
 import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
@@ -30,7 +30,7 @@ import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
-import RoundedButton from './RoundedButton';
+import Share from './Share';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 const { PostStateV1 } = services.post.containers;
@@ -248,7 +248,7 @@ class Post extends CSSComponent {
                     },
                 },
                 IconContainer: {
-                    style: {
+                    rootStyle: {
                         border: 0,
                         left: 0,
                         height: 24,
@@ -309,11 +309,6 @@ class Post extends CSSComponent {
                 },
                 section: {
                     marginTop: 5,
-                },
-                ShareButton: {
-                    style: {
-                        marginLeft: 5,
-                    },
                 },
             },
             'isEditable-false': {
@@ -531,14 +526,14 @@ class Post extends CSSComponent {
         }, () => this.saveData(false));
     }
 
-    handleBodyChange(event, value) {
+    handleBodyChange(event, value, isRichText) {
         const newValue = value;
         let modifiedState = {
             editing: true,
             body: newValue,
         };
 
-        if (this.state.title.trim() === '' || this.state.derivedTitle === true) {
+        if ((this.state.title.trim() === '' || this.state.derivedTitle === true) && !isRichText) {
             modifiedState.title = trimNewLines(newValue.split('.')[0].substring(0, 80));
             modifiedState.derivedTitle = true;
         }
@@ -637,6 +632,7 @@ class Post extends CSSComponent {
         if (post && post.permissions && post.permissions.can_edit) {
             editButton = (
                 <FlatButton
+                    key="edit-button"
                     label={t('Edit')}
                     onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
                     {...this.styles().EditButton}
@@ -645,23 +641,21 @@ class Post extends CSSComponent {
         }
 
         return (
-            <div className="row middle-xs end-xs" style={this.styles().headerContainer}>
-                {editButton}
-                <RoundedButton
-                    className="center-xs"
-                    href={mailtoSharePost(post, this.context.authenticatedProfile)}
-                    label={t('Share')}
-                    linkButton={true}
-                    onTouchTap={() => {
-                        tracker.trackShareContent(
-                            post.id,
-                            SHARE_CONTENT_TYPE.POST,
-                            SHARE_METHOD.EMAIL,
-                        );
-                    }}
-                    target="_blank"
-                    {...this.styles().ShareButton}
-                />
+            <div>
+                <div className="row middle-xs end-xs" key="header-container" style={this.styles().headerContainer}>
+                    {editButton}
+                    <Share
+                        mailToHref={mailtoSharePost(post, this.context.authenticatedProfile)}
+                        onShareCallback={(shareMethod) => {
+                            tracker.trackShareContent(
+                                post.id,
+                                SHARE_CONTENT_TYPE.POST,
+                                shareMethod,
+                            );
+                        }}
+                        urlShareSource='post_share_copy'
+                    />
+                </div>
             </div>
         );
     }
