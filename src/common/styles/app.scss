@@ -18,6 +18,8 @@
 @import 'modules/profile_edit_form';
 @import 'modules/search';
 
+@import '../../../node_modules/trix/dist/trix.css';
+
 body, html {
     margin: 0;
     height: 100%;

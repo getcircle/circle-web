@@ -1,18 +1,25 @@
-.leditor {
-    outline: none;
+$fontSize: 20px;
+
+.leditor, trix-editor.leditor {
+    border: 0;
+    border-radius: 0;
+    color: rgba(0,0,0,0.8);
+    margin: 0;
     min-height: 100px;
+    outline: none;
+    padding: 16px 0;
 }
 
 .postContent a, .leditor a {
-    color: rgb(122, 142, 255);
     background-color: transparent;
     background-image: linear-gradient(to bottom, rgba(122, 142, 255, 0) 50%, rgba(122, 142, 255, 0.6) 50%);
     background-repeat: repeat-x;
     background-size: 2px 2px;
     background-position: 0 22px;
+    color: rgb(122, 142, 255);
     text-decoration: none;
-    -webkit-tap-highlight-color: rgba(122, 142, 255, 0.3);
     word-wrap: break-word;
+    -webkit-tap-highlight-color: rgba(122, 142, 255, 0.3);
 }
 
 .postContent a.hashtag, .leditor a.hashtag {
@@ -26,12 +33,12 @@
 }
 
 .leditor blockquote {
+    border-left: 3px solid rgba(0,0,0,0.8);
     font-weight: 400;
     font-style: italic;
-    font-size: 20px;
+    font-size: $fontSize;
     line-height: 1.58;
     letter-spacing: -0.003em;
-    border-left: 3px solid rgba(0,0,0,0.8);
     padding-left: 20px;
     margin-left: -23px;
     padding-bottom: 3px;
@@ -69,16 +76,71 @@
     margin-top: 39px;
 }
 
-.leditor p:first-child {
+.leditor div:first-child {
     margin-top: 0;
 }
 
-.leditor p {
+.leditor div {
     color: rgba(0, 0, 0, 0.8);
     font-weight: 400;
     font-style: normal;
-    font-size: 20px;
+    font-size: $fontSize;
     line-height: 1.58;
     letter-spacing: -0.003em;
     margin-top: 29px;
+}
+
+.leditor ui, .leditor ol {
+    counter-reset: post;
+    margin-top: 28px;
+}
+
+.leditor li {
+    font-size: $fontSize;
+    font-style: normal;
+    letter-spacing: .01rem;
+    line-height: 1.58;
+    margin-left: 30px;
+}
+
+.leditor ol>li:before {
+    counter-increment: post;
+    content: counter(post) ".";
+    font-feature-settings: "liga" on,"lnum" on;
+    padding-right: 12px;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -moz-font-feature-settings: "liga" on,"lnum" on;
+    -webkit-font-feature-settings: "liga" on,"lnum" on;
+    -webkit-font-smoothing: antialiased;
+}
+
+.leditor li:before {
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: $fontSize;
+    margin-left: -58px;
+    position: absolute;
+    text-align: right;
+    width: 58px;
+}
+
+.leditor ul > li::before {
+    content: "•";
+    padding-top: 4px;
+    padding-right: 15px;
+}
+
+.leditor pre,
+.leditor code,
+.leditor kbd,
+.leditor samp {
+    background: rgba(0,0,0,0.05);
+    font-family: Menlo,Monaco,"Courier New",Courier,monospace;
+    font-size: 16px;
+    line-height: 22px;
+    margin-top: 28px;
+    overflow: auto;
+    padding: 20px;
+    white-space: pre-wrap;
 }

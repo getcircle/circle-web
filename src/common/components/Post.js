@@ -28,6 +28,7 @@ import CSSComponent from './CSSComponent';
 import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
+import Editor from './Editor';
 import IconContainer from './IconContainer';
 import InternalPropTypes from './InternalPropTypes';
 import ProfileAvatar from './ProfileAvatar';
@@ -155,7 +156,7 @@ class Post extends CSSComponent {
                         fontSize: '30px',
                         letterSpacing: '0.4px',
                         lineHeight: '1.5',
-                        marginBottom: '20px',
+                        marginBottom: '10px',
                         minHeight: 49,
                         ...fontColors.dark,
                     },
@@ -836,6 +837,51 @@ class Post extends CSSComponent {
         }
     }
 
+    renderRichEditableContent() {
+        let author = this.state.owner;
+        if (author === null || author === undefined) {
+            author = this.context.authenticatedProfile;
+        }
+
+        return (
+            <span>
+                <div className="row between-xs middle-xs">
+                    <div className="col-xs-8" style={this.styles().authorContainer}>
+                        <CardList style={this.styles().cardList}>
+                            <CardListItem
+                                disabled={true}
+                                key={author.id}
+                                leftAvatar={<ProfileAvatar style={this.styles().cardListAvatar} profile={author} />}
+                                primaryText={author.full_name}
+                                secondaryText={author.title}
+                                {...this.styles().CardListItem}
+                            />
+                        </CardList>
+                    </div>
+                    <div className="col-xs-4 end-xs middle-xs" style={this.styles().feedbackContainer}>
+                        {this.renderChangeOwnerButton()}
+                    </div>
+                </div>
+                <AutogrowTextarea
+                    autoFocus="true"
+                    onChange={::this.handleTitleChange}
+                    placeholder={t('Title')}
+                    singleLine={true}
+                    value={this.state.title}
+                    {...this.styles().AutogrowTitleTextarea}
+                />
+                <Editor
+                    onChange={::this.handleBodyChange}
+                    placeholder={t('Contribute Knowledge')}
+                    value={this.state.body}
+                    {...this.styles().AutogrowTextarea}
+                />
+                {this.renderFilesContainer()}
+                {this.renderChangeOwnerModal()}
+            </span>
+        );
+    }
+
     renderEditableContent() {
         let author = this.state.owner;
         if (author === null || author === undefined) {
@@ -888,7 +934,7 @@ class Post extends CSSComponent {
         } = this.props;
 
         if (isEditable) {
-            return this.renderEditableContent();
+            return this.renderRichEditableContent();
         } else {
             return this.renderReadonlyContent();
         }
