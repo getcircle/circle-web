@@ -1,6 +1,6 @@
+import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import Dropzone from 'react-dropzone';
 import Immutable from 'immutable';
-import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -521,14 +521,14 @@ class Post extends CSSComponent {
         }, () => this.saveData(false));
     }
 
-    handleBodyChange(event, value) {
+    handleBodyChange(event, value, isRichText) {
         const newValue = value;
         let modifiedState = {
             editing: true,
             body: newValue,
         };
 
-        if (this.state.title.trim() === '' || this.state.derivedTitle === true) {
+        if ((this.state.title.trim() === '' || this.state.derivedTitle === true) && !isRichText) {
             modifiedState.title = trimNewLines(newValue.split('.')[0].substring(0, 80));
             modifiedState.derivedTitle = true;
         }
