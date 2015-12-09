@@ -5,7 +5,6 @@ import httpProxy from 'http-proxy';
 
 import main from './routes/main';
 
-
 const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);

@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router';
+import { syncReduxAndRouter } from 'redux-simple-router';
 import transit from 'transit-immutable-protobuf-js';
 import protobufs from 'protobufs';
 
@@ -25,10 +26,25 @@ const nameSpaces = transit.withNameSpaces(
 );
 const initialState = nameSpaces.fromJSON(window.__INITIAL_STATE);
 const store = createStore(client, initialState);
+const history = createHistory();
+
+syncReduxAndRouter(history, store, (state) => state.get('routing'));
+
+function createElement(Component, props) {
+    // XXX what about fetchDataDeferred?
+    if (Component.fetchData) {
+        Component.fetchData(store.getState, store.dispatch, props.location, props.params);
+    }
+    return React.createElement(Component, props);
+}
 
 const elements = [
     <Provider key="provider" store={store}>
-        <Router history={createHistory()} routes={getRoutes(store)} />
+        <Router
+            createElement={createElement}
+            history={history}
+            routes={getRoutes(store)}
+        />
     </Provider>
 ];
 

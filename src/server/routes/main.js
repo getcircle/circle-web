@@ -10,6 +10,7 @@ import createStore from '../../common/createStore';
 import getRoutes from '../../common/getRoutes';
 import Root from '../../common/Root';
 
+import fetchAllData from '../fetchAllData';
 import renderFullPage from '../renderFullPage';
 
 const pretty = new PrettyError();
@@ -47,27 +48,41 @@ export default function (req, res) {
         } else if (renderProps) {
             let content;
             try {
-                content = ReactDOM.renderToString(
-                    <Root>
-                        <Provider key="provider" store={store}>
-                            <RoutingContext {...renderProps} />
-                        </Provider>
-                    </Root>
-                );
+                fetchAllData(
+                    renderProps.components,
+                    store.getState,
+                    store.dispatch,
+                    renderProps.location,
+                    renderProps.params
+                ).then(() => {
+                    try {
+                        content = ReactDOM.renderToString(
+                            <Root>
+                                <Provider key="provider" store={store}>
+                                    <RoutingContext {...renderProps} />
+                                </Provider>
+                            </Root>
+                        );
+                    } catch (e) {
+                        console.error('REACT RENDER ERROR:', pretty.render(e));
+                        hydrateOnClient();
+                        return;
+                    }
+                    let page;
+                    try {
+                        page = renderFullPage(content, store, webpackIsomorphicTools.assets());
+                    } catch (e) {
+                        console.error('RENDER ERROR:', pretty.render(e));
+                        hydrateOnClient();
+                        return;
+                    }
+                    res.status(200).send(page);
+                })
             } catch (e) {
-                console.error('REACT RENDER ERROR:', pretty.render(e));
+                console.error('DATA FETCHING ERROR:', pretty.render(e));
                 hydrateOnClient();
                 return;
             }
-            let page;
-            try {
-                page = renderFullPage(content, store, webpackIsomorphicTools.assets());
-            } catch (e) {
-                console.error('RENDER ERROR:', pretty.render(e));
-                hydrateOnClient();
-                return;
-            }
-            res.status(200).send(page);
         }
     });
 }

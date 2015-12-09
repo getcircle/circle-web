@@ -82,6 +82,7 @@
     "reactcss": "git+https://github.com/lunohq/reactcss.git#9bf0849abd970be71bbddd2aa69fc0540a761285",
     "redux": "^3.0.3",
     "redux-immutablejs": "0.0.7",
+    "redux-simple-router": "0.0.10",
     "redux-thunk": "^0.1.0",
     "reselect": "2.0.0",
     "serialize-javascript": "1.1.2",
