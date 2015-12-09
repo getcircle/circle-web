@@ -28,7 +28,6 @@ import CSSComponent from './CSSComponent';
 import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
-import Editor from './Editor';
 import IconContainer from './IconContainer';
 import ProfileAvatar from './ProfileAvatar';
 import Share from './Share';
@@ -880,59 +879,13 @@ class Post extends CSSComponent {
         );
     }
 
-
-    renderRichEditableContent() {
-        let author = this.state.owner;
-        if (author === null || author === undefined) {
-            author = this.context.authenticatedProfile;
-        }
-
-        return (
-            <span>
-                <div className="row between-xs middle-xs">
-                    <div className="col-xs-8" style={this.styles().authorContainer}>
-                        <CardList style={this.styles().cardList}>
-                            <CardListItem
-                                disabled={true}
-                                key={author.id}
-                                leftAvatar={<ProfileAvatar  profile={author} style={this.styles().cardListAvatar} />}
-                                primaryText={author.full_name}
-                                secondaryText={author.title}
-                                {...this.styles().CardListItem}
-                            />
-                        </CardList>
-                    </div>
-                    <div className="col-xs-4 end-xs middle-xs" style={this.styles().feedbackContainer}>
-                        {this.renderChangeOwnerButton()}
-                    </div>
-                </div>
-                <AutogrowTextarea
-                    autoFocus="true"
-                    onChange={::this.handleTitleChange}
-                    placeholder={t('Title')}
-                    singleLine={true}
-                    value={this.state.title}
-                    {...this.styles().AutogrowTitleTextarea}
-                />
-                <Editor
-                    className="leditor"
-                    onChange={(text, medium) => {
-                        this.handleBodyChange(null, text, true);
-                    }}
-                />
-                {this.renderFilesContainer()}
-                {this.renderChangeOwnerModal()}
-            </span>
-        );
-    }
-
     renderContent() {
         const {
             isEditable,
         } = this.props;
 
         if (isEditable) {
-            return this.renderRichEditableContent();
+            return this.renderEditableContent();
         } else {
             return this.renderReadonlyContent();
         }
