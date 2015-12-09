@@ -1,3 +1,7 @@
+general:
+  branches:
+    ignore:
+      - trix
 dependencies:
   override:
     - npm update -g npm
