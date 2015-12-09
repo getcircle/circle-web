@@ -1,4 +1,82 @@
-$fontSize: 20px;
+$fontSize: 19px;
+$marginTop: 28px;
+$tintColor: rgb(122, 142, 255);
+$toolbarHighlightColor: rgba(122, 142, 255, 0.2);
+
+/* Trix Toolbar */
+
+trix-toolbar {
+    text-align: center;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+trix-toolbar .button_group button.active, trix-toolbar .button_group input[type=button].active {
+    background-color: $toolbarHighlightColor;
+}
+
+trix-toolbar .button_group {
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+}
+
+trix-toolbar .button_groups {
+    height: 35px;
+}
+
+trix-toolbar .button_group button, trix-toolbar .button_group input[type=button] {
+    width: 40px;
+    height: 35px;
+    border: 0;
+    border-radius: 0;
+}
+
+trix-toolbar .dialogs .dialog input[type=button] {
+    font-size: 14px;
+    height: 30px;
+    opacity: 0.5;
+    padding: 1px 10px 0 8px;
+    width: 50px;
+}
+
+trix-toolbar .dialogs .dialog input[type=button]:first-child {
+    color: $tintColor;
+    opacity: 1;
+}
+
+trix-toolbar .dialog.active.link_dialog .link_url_fields input[type=url] {
+    font-size: 15px;
+    height: 32px;
+    line-height: 22px;
+    padding: 10px 6px;
+}
+
+trix-toolbar .button_group button:not(:first-child), trix-toolbar .button_group input[type=button]:not(:first-child) {
+    border: 0;
+}
+
+trix-toolbar .button_group.text_tools > .strike,
+trix-toolbar .button_group.block_tools > .quote,
+trix-toolbar .button_group.block_tools .block-level,
+trix-toolbar .button_group.history_tools {
+    display: none;
+}
+
+trix-toolbar .dialog.active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 3px 10px #bfbfbf;
+    border-top: 3px solid $toolbarHighlightColor;
+    border-radius: 4px;
+    z-index: 5;
+}
+
+/* Editor */
 
 .leditor, trix-editor.leditor {
     border: 0;
@@ -76,7 +154,7 @@ $fontSize: 20px;
     margin-top: 39px;
 }
 
-.leditor div:first-child {
+.leditor *:first-child {
     margin-top: 0;
 }
 
@@ -85,14 +163,14 @@ $fontSize: 20px;
     font-weight: 400;
     font-style: normal;
     font-size: $fontSize;
-    line-height: 1.58;
+    line-height: 1.68;
     letter-spacing: -0.003em;
-    margin-top: 29px;
+    margin-top: $marginTop;
 }
 
 .leditor ui, .leditor ol {
     counter-reset: post;
-    margin-top: 28px;
+    margin-top: $marginTop;
 }
 
 .leditor li {
@@ -139,7 +217,7 @@ $fontSize: 20px;
     font-family: Menlo,Monaco,"Courier New",Courier,monospace;
     font-size: 16px;
     line-height: 22px;
-    margin-top: 28px;
+    margin-top: $marginTop;
     overflow: auto;
     padding: 20px;
     white-space: pre-wrap;

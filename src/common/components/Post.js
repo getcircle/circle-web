@@ -151,12 +151,13 @@ class Post extends CSSComponent {
                     textareaStyle: {
                         background: 'transparent',
                         border: '0',
-                        fontWeight: '600',
+                        fontWeight: '400',
                         fontStyle: 'normal',
-                        fontSize: '30px',
+                        fontSize: '36px',
                         letterSpacing: '0.4px',
                         lineHeight: '1.5',
-                        marginBottom: '10px',
+                        marginTop: '20px',
+                        marginBottom: '16px',
                         minHeight: 49,
                         ...fontColors.dark,
                     },
@@ -871,7 +872,9 @@ class Post extends CSSComponent {
                     {...this.styles().AutogrowTitleTextarea}
                 />
                 <Editor
-                    onChange={::this.handleBodyChange}
+                    onChange={(event) => {
+                        this.handleBodyChange(event, event.target.value, true);
+                    }}
                     placeholder={t('Contribute Knowledge')}
                     value={this.state.body}
                     {...this.styles().AutogrowTextarea}

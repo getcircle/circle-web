@@ -12,6 +12,9 @@ class Editor extends CSSComponent {
     }
 
     static defaultProps = {
+        onChange: () => {},
+        placeholder: '',
+        value: '',
     }
 
     state = {
@@ -32,9 +35,17 @@ class Editor extends CSSComponent {
     }
 
     handleChange(event) {
-    }
+        const {
+            onChange,
+        } = this.props;
 
-    getValue(value) {
+        this.setState({
+            value: event.target.value,
+        });
+
+        if (onChange) {
+            onChange(event);
+        }
     }
 
     render() {
@@ -42,12 +53,19 @@ class Editor extends CSSComponent {
             placeholder,
         } = this.props;
 
-        // const finalValue = this.getValue(value);
-
         return (
             <div>
-                <input id="x" name="content" type="hidden" />
-                <trix-editor class="leditor" placeholder={placeholder} />
+                <input
+                    id="x"
+                    name="content"
+                    onChange={::this.handleChange}
+                    type="hidden"
+                    value={this.state.value}
+                />
+                <trix-editor
+                    class="leditor"
+                    placeholder={placeholder}
+                />
             </div>
         );
     }
