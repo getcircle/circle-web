@@ -168,7 +168,7 @@ trix-toolbar .dialog.active {
     margin-top: $marginTop;
 }
 
-.leditor ui, .leditor ol {
+.leditor ul, .leditor ol {
     counter-reset: post;
     margin-top: $marginTop;
 }
