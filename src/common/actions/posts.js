@@ -37,11 +37,6 @@ export function getPosts(postStateURLString, byProfile, nextRequest) {
                 types.GET_POSTS_FAILURE,
             ],
             remote: () => requests.getPosts(postStateURLString, byProfile, nextRequest),
-            bailout: (state) => {
-                if (state.posts.has(postStateURLString) && nextRequest === null) {
-                    return state.posts.get(postStateURLString).get('ids').size > 0;
-                }
-            },
         },
         meta: {
             paginateBy: postStateURLString,
