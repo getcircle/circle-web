@@ -15,9 +15,9 @@ export default function cache(state = initialState, action) {
 
     if (action.payload && action.payload.entities) {
         return state.withMutations(map => {
-            // We want to replace rather than merge the normalizations,
-            // the old normalizations may contain fields that don't exist in the new normalizations
-            // and these will remain if merged
+            // For normalizations we already have, we want to replace them instead of merging them.
+            // The old normalizations may contain fields that don't exist in the new normalizations
+            // and these will remain if merged.
             if (action.payload.normalizations) {
                 Immutable.Map(action.payload.normalizations).map((normalizations, normalizationsType) => {
                     Immutable.Map(normalizations).map((normalization, normalizationId) => {
