@@ -11,6 +11,7 @@ class AutogrowTextarea extends CSSComponent {
 
     static propTypes = {
         additionalHeightDelta: PropTypes.number,
+        autoFocus: PropTypes.bool,
         onChange: PropTypes.func,
         onHeightChange: PropTypes.func,
         placeholder: PropTypes.string,
@@ -23,6 +24,7 @@ class AutogrowTextarea extends CSSComponent {
 
     static defaultProps = {
         additionalHeightDelta: 0,
+        autoFocus: false,
         rows: 1,
         singleLine: false,
     }
@@ -107,6 +109,7 @@ class AutogrowTextarea extends CSSComponent {
 
     render() {
         const {
+            autoFocus,
             placeholder,
             rows,
             style,
@@ -131,6 +134,7 @@ class AutogrowTextarea extends CSSComponent {
                     */
                 }
                 <textarea
+                    autoFocus={autoFocus}
                     onChange={::this.handleChange}
                     placeholder={placeholder}
                     ref="input"

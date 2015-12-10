@@ -841,7 +841,7 @@ class Post extends CSSComponent {
                     </div>
                 </div>
                 <AutogrowTextarea
-                    autoFocus="true"
+                    autoFocus={true}
                     onChange={::this.handleTitleChange}
                     placeholder={t('Title')}
                     singleLine={true}
@@ -887,7 +887,7 @@ class Post extends CSSComponent {
                     </div>
                 </div>
                 <AutogrowTextarea
-                    autoFocus="true"
+                    autoFocus={true}
                     onChange={::this.handleTitleChange}
                     placeholder={t('Title')}
                     singleLine={true}
