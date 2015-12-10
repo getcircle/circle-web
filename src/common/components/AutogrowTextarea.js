@@ -14,6 +14,7 @@ class AutogrowTextarea extends CSSComponent {
         autoFocus: PropTypes.bool,
         onChange: PropTypes.func,
         onHeightChange: PropTypes.func,
+        onKeyDown: PropTypes.func,
         placeholder: PropTypes.string,
         rows: PropTypes.number,
         singleLine: PropTypes.bool,
@@ -35,6 +36,7 @@ class AutogrowTextarea extends CSSComponent {
 
     componentDidMount() {
         this.syncHeight();
+        this.attachListeners();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -67,6 +69,12 @@ class AutogrowTextarea extends CSSComponent {
                 }
             },
         };
+    }
+
+    attachListeners() {
+        if (this.refs.input && this.props.onKeyDown) {
+            this.refs.input.addEventListener('keydown', (event) => this.props.onKeyDown(event));
+        }
     }
 
     syncHeight(newValue) {

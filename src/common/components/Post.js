@@ -10,6 +10,7 @@ import {
     detectURLsAndAddMarkup,
 } from '../utils/string';
 import { fontColors, tintColor } from '../constants/styles';
+import keyCodes from '../utils/keycodes';
 import { mailToPostFeedback, mailtoSharePost } from '../utils/contact';
 import moment from '../utils/moment';
 import { CONTACT_LOCATION } from '../constants/trackerProperties';
@@ -497,6 +498,13 @@ class Post extends CSSComponent {
 
     // Change Methods
 
+    handleTitleKeyDown(event) {
+        if (event.keyCode && event.keyCode === keyCodes.TAB && this.refs.editor) {
+            this.refs.editor.focus();
+            event.preventDefault();
+        }
+    }
+
     handleTitleChange(event, value) {
         this.setState({
             derivedTitle: false,
@@ -843,6 +851,7 @@ class Post extends CSSComponent {
                 <AutogrowTextarea
                     autoFocus={true}
                     onChange={::this.handleTitleChange}
+                    onKeyDown={::this.handleTitleKeyDown}
                     placeholder={t('Title')}
                     singleLine={true}
                     value={this.state.title}
@@ -853,6 +862,7 @@ class Post extends CSSComponent {
                         this.handleBodyChange(event, event.target.value);
                     }}
                     placeholder={t('Contribute Knowledge')}
+                    ref="editor"
                     value={this.state.body}
                 />
                 {this.renderFilesContainer()}
