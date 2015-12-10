@@ -22,8 +22,14 @@ export default function (req, res) {
         webpackIsomorphicTools.refresh();
     }
 
+    // XXX come up with a better way to do this, possibly context?
     global.navigator = {
         userAgent: req.headers['user-agent'],
+    };
+    global.window = {
+        location: {
+            host: req.get('host'),
+        },
     };
 
     const client = new Client(req);

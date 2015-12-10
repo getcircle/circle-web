@@ -10,6 +10,7 @@ import { getPost } from '../actions/posts';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
+import connectData from '../utils/connectData';
 import t from '../utils/gettext';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -46,6 +47,15 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
+function fetchPost(dispatch, params) {
+    return dispatch(getPost(params.postId));
+}
+
+function fetchData(getState, dispatch, location, params) {
+    return Promise.all([fetchPost(dispatch, params)]);
+}
+
+@connectData(fetchData)
 @connect(selector)
 class Post extends CSSComponent {
 
@@ -92,12 +102,13 @@ class Post extends CSSComponent {
     }
 
     componentWillMount() {
-        this.loadPost(this.props);
+        this.configure(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.postId !== this.props.params.postId) {
-            this.loadPost(nextProps);
+            fetchPost(nextProps.dispatch, nextProps.params);
+            this.configure(nextProps);
         }
     }
 
@@ -116,8 +127,7 @@ class Post extends CSSComponent {
         };
     }
 
-    loadPost(props) {
-        this.props.dispatch(getPost(props.params.postId));
+    configure(props) {
         resetScroll();
         this.customizeTheme();
     }
