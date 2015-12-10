@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import 'script!trix/dist/trix.js';
 
+import keyCodes from '../utils/keycodes';
 import logger from '../utils/logger';
 
 import CSSComponent from './CSSComponent';
@@ -24,10 +25,8 @@ class Editor extends CSSComponent {
     }
 
     componentDidMount() {
-        document.addEventListener('trix-change', (event) => this.handleChange(event));
-        document.addEventListener('trix-file-accept', (event) => {
-            event.preventDefault();
-        });
+        this.setup();
+        this.attachEventListners();
         this.mergeStateAndProps(this.props);
     }
 
@@ -43,12 +42,28 @@ class Editor extends CSSComponent {
             this.setState({
                 value: props.value,
             }, () => {
-                if (document.querySelector) {
-                    const trixEditor = document.querySelector('trix-editor');
-                    trixEditor.editor.insertHTML(props.value);
-                }
+                const trixEditor = document.querySelector('trix-editor');
+                trixEditor.editor.insertHTML(props.value);
             });
         }
+    }
+
+    focus() {
+        document.querySelector('trix-editor').focus();
+    }
+
+    setup() {
+        const codeButton = document.querySelector('.button_group.block_tools .code');
+        if (codeButton) {
+            codeButton.setAttribute('data-key', 'alt+6');
+        }
+    }
+
+    attachEventListners() {
+        document.addEventListener('trix-change', (event) => this.handleChange(event));
+        document.addEventListener('trix-file-accept', (event) => event.preventDefault());
+        // document.querySelector('trix-editor')
+        //     .addEventListener('keydown', (event) => this.handleKeyDown(event));
     }
 
     handleChange(event) {
@@ -62,6 +77,17 @@ class Editor extends CSSComponent {
 
         if (onChange) {
             onChange(event);
+        }
+    }
+
+    handleKeyDown(event) {
+        if (keyCodes.SPACE === event.keyCode) {
+            const trixEditor = document.querySelector('trix-editor');
+            const range = trixEditor.editor.getSelectedRange();
+            if (range[1] - 4 >= 0) {
+                // logger.log(Trix.Text.getTextAtRange([range[1] - 4, range[1]]));
+            }
+            logger.log(range);
         }
     }
 
