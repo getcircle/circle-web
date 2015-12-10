@@ -41,3 +41,9 @@ export function detectHashtagsAndAddMarkup(stringValue) {
     const urlRegex = /(\s)(#\w+)/gi;
     return stringValue.replace(urlRegex, '$1<a class="hashtag">$2</a>');
 }
+
+export function stripTags(html) {
+    const tempElement = document.createElement('dev');
+    tempElement.innerHTML = html;
+    return tempElement.innerText;
+}

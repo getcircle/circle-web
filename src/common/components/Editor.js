@@ -44,7 +44,7 @@ class Editor extends CSSComponent {
                 value: props.value,
             }, () => {
                 if (document.querySelector) {
-                    var trixEditor = document.querySelector('trix-editor');
+                    const trixEditor = document.querySelector('trix-editor');
                     trixEditor.editor.insertHTML(props.value);
                 }
             });

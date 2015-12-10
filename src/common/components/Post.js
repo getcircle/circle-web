@@ -17,7 +17,7 @@ import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToEditPost, routeToProfile, routeToSearch } from '../utils/routes';
 import { SHARE_CONTENT_TYPE } from '../constants/trackerProperties';
 import tracker from '../utils/tracker';
-import { trimNewLines } from '../utils/string';
+import { stripTags, trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
 
 import AttachmentIcon from './AttachmentIcon';
@@ -505,15 +505,16 @@ class Post extends CSSComponent {
         }, () => this.saveData(false));
     }
 
-    handleBodyChange(event, value, isRichText) {
+    handleBodyChange(event, value) {
         const newValue = value;
         let modifiedState = {
             editing: true,
             body: newValue,
         };
 
-        if ((this.state.title.trim() === '' || this.state.derivedTitle === true) && !isRichText) {
-            modifiedState.title = trimNewLines(newValue.split('.')[0].substring(0, 80));
+        if ((this.state.title.trim() === '' || this.state.derivedTitle === true)) {
+            const plainTextValue = stripTags(newValue);
+            modifiedState.title = trimNewLines(plainTextValue.split('.')[0].substring(0, 80));
             modifiedState.derivedTitle = true;
         }
 
@@ -849,7 +850,7 @@ class Post extends CSSComponent {
                 />
                 <Editor
                     onChange={(event) => {
-                        this.handleBodyChange(event, event.target.value, true);
+                        this.handleBodyChange(event, event.target.value);
                     }}
                     placeholder={t('Contribute Knowledge')}
                     value={this.state.body}
