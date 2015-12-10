@@ -7,6 +7,7 @@ import { deletePost, getPosts } from '../actions/posts';
 import { resetScroll } from '../utils/window';
 import { retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
+import connectData from '../utils/connectData';
 
 import Container from '../components/Container';
 import { default as PostsComponent } from '../components/Posts';
@@ -43,6 +44,18 @@ const selector = createSelector(
     }
 );
 
+function fetchPosts(dispatch, postState, authenticatedProfile, postsNextRequest) {
+    return dispatch(getPosts(postState, authenticatedProfile, postsNextRequest));
+}
+
+function fetchData(getState, dispatch, location, params) {
+    const props = selector(getState(), {location, params});
+    return Promise.all([
+        fetchPosts(dispatch, props.postState, props.authenticatedProfile, props.postsNextRequest),
+    ]);
+}
+
+@connectData(fetchData)
 @connect(selector)
 class Posts extends PureComponent {
 
@@ -72,10 +85,6 @@ class Posts extends PureComponent {
         };
     }
 
-    componentWillMount() {
-        this.loadPosts(this.props, true);
-    }
-
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.postState !== this.props.postState) {
             this.loadPosts(nextProps, true);
@@ -83,7 +92,7 @@ class Posts extends PureComponent {
     }
 
     loadPosts(props, shouldResetScroll) {
-        this.props.dispatch(getPosts(props.postState, props.authenticatedProfile, props.postsNextRequest));
+        fetchPosts(this.props.dispatch, props.postState, props.authenticatedProfile, props.postsNextRequest);
         if (shouldResetScroll) {
             resetScroll();
         }
