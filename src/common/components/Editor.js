@@ -25,6 +25,9 @@ class Editor extends CSSComponent {
 
     componentDidMount() {
         document.addEventListener('trix-change', (event) => this.handleChange(event));
+        document.addEventListener('trix-file-accept', (event) => {
+            event.preventDefault();
+        });
         this.mergeStateAndProps(this.props);
     }
 
@@ -41,8 +44,8 @@ class Editor extends CSSComponent {
                 value: props.value,
             }, () => {
                 if (document.querySelector) {
-                    var element = document.querySelector('trix-editor');
-                    element.editor.insertHTML(props.value);
+                    var trixEditor = document.querySelector('trix-editor');
+                    trixEditor.editor.insertHTML(props.value);
                 }
             });
         }
