@@ -30,6 +30,7 @@ export default function (req, res) {
         location: {
             host: req.get('host'),
         },
+        innerHeight: 0,
     };
 
     const client = new Client(req);
