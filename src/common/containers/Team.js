@@ -3,14 +3,11 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
-import {
-    loadExtendedTeam,
-    loadTeamMembers,
-    updateTeam,
-} from '../actions/teams';
+import { loadExtendedTeam, loadTeamMembers, updateTeam } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedTeam, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
+import connectData from '../utils/connectData';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -48,6 +45,22 @@ const selector = createSelector(
     }
 );
 
+function fetchTeam(dispatch, params, membersNextRequest) {
+    return dispatch(loadExtendedTeam(params.teamId));
+}
+
+function fetchTeamMembers(dispatch, params, membersNextRequest) {
+    return dispatch(loadTeamMembers(params.teamId, membersNextRequest));
+}
+
+function fetchData(getState, dispatch, location, params) {
+    return Promise.all([
+        fetchTeam(dispatch, params),
+        fetchTeamMembers(dispatch, params),
+    ]);
+}
+
+@connectData(fetchData)
 @connect(selector)
 class Team extends CSSComponent {
 
@@ -78,24 +91,16 @@ class Team extends CSSComponent {
         };
     }
 
-    componentWillMount() {
-        this.loadTeam(this.props);
-    }
-
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.teamId !== this.props.params.teamId) {
+            resetScroll();
             this.loadTeam(nextProps);
         }
     }
 
     loadTeam(props) {
-        props.dispatch(loadExtendedTeam(props.params.teamId));
-        this.loadTeamMembers(props);
-        resetScroll();
-    }
-
-    loadTeamMembers(props) {
-        props.dispatch(loadTeamMembers(props.params.teamId, props.membersNextRequest));
+        fetchTeam(props.dispatch, props.params);
+        fetchTeamMembers(props.dispatch, props.params, props.membersNextRequest);
     }
 
     onUpdateTeam(team) {
@@ -114,7 +119,11 @@ class Team extends CSSComponent {
                     extendedTeam={extendedTeam}
                     largerDevice={largerDevice}
                     members={members}
-                    membersLoadMore={() => this.loadTeamMembers(this.props)}
+                    membersLoadMore={() => fetchTeamMembers.bind(
+                        this.props.dispatch,
+                        this.props.params,
+                        this.props.membersNextRequest
+                    )}
                     onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
                 />
             );
