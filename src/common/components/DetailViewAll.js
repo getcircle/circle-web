@@ -81,7 +81,6 @@ class DetailViewAll extends CSSComponent {
             },
             'largerDevice-false': {
                 Search: {
-                    resultsHeight: document.body.offsetHeight - 137,
                     resultsListStyle: {
                         height: '100vh',
                         width: '100vw',

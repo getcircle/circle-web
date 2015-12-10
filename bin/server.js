@@ -13,6 +13,7 @@ global.__DEVELOPMENT__ = process.env.NODE_ENV !== 'production';
 global.__LOCAL__ = process.env.NODE_ENV === 'local';
 global.__DEVTOOLS__ = false;
 global.localStorage = null;
+process.env.GOOGLE_MAPS_API_KEY = 'AIzaSyAlKvipmEx76I45QIHP6NAI4pJ0Ybp55u8';
 
 if (__LOCAL__) {
     if (!require('piping')({

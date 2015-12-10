@@ -1,20 +1,17 @@
+import { services, soa } from 'protobufs';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import React, { PropTypes } from 'react';
-import { services, soa } from 'protobufs';
 
-import {
-    loadLocation,
-    loadLocationMembers,
-    updateLocation,
-} from '../actions/locations';
-import { resetScroll } from '../utils/window';
+import { loadLocation, loadLocationMembers, updateLocation } from '../actions/locations';
 import { retrieveLocation, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
+import connectData from '../utils/connectData';
+import { resetScroll } from '../utils/window';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
-import PureComponent from '../components/PureComponent';
+import CSSComponent from '../components/CSSComponent';
 import LocationDetail from '../components/LocationDetail';
 
 const selector = createSelector(
@@ -44,10 +41,23 @@ const selector = createSelector(
             largerDevice: responsiveState.get('largerDevice'),
         };
     }
-) ;
+);
 
+function fetchLocation(dispatch, locationId, membersNextRequest) {
+    return [
+        dispatch(loadLocation(locationId)),
+        dispatch(loadLocationMembers(locationId, membersNextRequest)),
+    ];
+}
+
+function fetchData(getState, dispatch, location, params) {
+    const { locationId } = params;
+    return Promise.all(fetchLocation(dispatch, locationId));
+}
+
+@connectData(fetchData)
 @connect(selector)
-class Location extends PureComponent {
+class Location extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
@@ -63,20 +73,11 @@ class Location extends PureComponent {
         muiTheme: PropTypes.object.isRequired,
     }
 
-    componentWillMount() {
-        this.loadLocation(this.props);
-    }
-
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.locationId !== this.props.params.locationId) {
-            this.loadLocation(nextProps);
+            fetchLocation(nextProps.dispatch, nextProps.params.locationId);
+            resetScroll();
         }
-    }
-
-    loadLocation(props) {
-        props.dispatch(loadLocation(props.params.locationId));
-        this.loadLocationMembers(props);
-        resetScroll();
     }
 
     loadLocationMembers(props) {
