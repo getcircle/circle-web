@@ -8,6 +8,7 @@ import { clearTeamMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
+import connectData from '../utils/connectData';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -63,6 +64,17 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
+function fetchProfile(dispatch, params) {
+    return dispatch(getExtendedProfile(params.profileId));
+}
+
+function fetchData(getState, dispatch, location, params) {
+    return Promise.all([
+        fetchProfile(dispatch, params),
+    ]);
+}
+
+@connectData(fetchData)
 @connect(selector)
 class Profile extends PureComponent {
 
@@ -91,13 +103,10 @@ class Profile extends PureComponent {
         };
     }
 
-    componentWillMount() {
-        this.loadProfile(this.props);
-    }
-
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
-            this.loadProfile(nextProps);
+            fetchProfile(this.props.dispatch, this.props.params);
+            resetScroll();
         }
         else if (this.props.extendedProfile && nextProps.extendedProfile) {
             if (this.props.extendedProfile.team &&
@@ -108,11 +117,6 @@ class Profile extends PureComponent {
                 nextProps.dispatch(clearTeamMembers(nextProps.extendedProfile.team.id));
             }
         }
-    }
-
-    loadProfile(props) {
-        this.props.dispatch(getExtendedProfile(props.params.profileId));
-        resetScroll();
     }
 
     onUpdateProfile(profile, manager) {
