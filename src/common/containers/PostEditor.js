@@ -12,6 +12,7 @@ import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import { routeToPost, routeToPosts } from '../utils/routes';
 import * as selectors from '../selectors';
+import connectData from '../utils/connectData';
 import tracker from '../utils/tracker';
 import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
@@ -67,6 +68,14 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
+function fetchPost(dispatch, params) {
+    return dispatch(getPost(params.postId));
+}
+
+function fetchData(getState, dispatch, location, params) {
+    return Promise.all([fetchPost(dispatch, params)]);
+}
+
 class PostEditor extends CSSComponent {
 
     static propTypes = {
@@ -117,10 +126,6 @@ class PostEditor extends CSSComponent {
         };
     }
 
-    componentWillMount() {
-        this.loadPost(this.props);
-    }
-
     componentWillUnmount() {
         this.props.dispatch(clearFileUploads());
     }
@@ -129,7 +134,8 @@ class PostEditor extends CSSComponent {
         // If this is in edit mode, load another post if we detect a different post ID in the URL
         if (this.props.params.postId && nextProps.params.postId) {
             if (nextProps.params.postId !== this.props.params.postId) {
-                this.loadPost(nextProps);
+                fetchPost(this.props.dispatch, this.props.params);
+                resetScroll();
             }
         } else if (nextProps.post) {
             this.postCreationInProgress = false;
@@ -180,7 +186,6 @@ class PostEditor extends CSSComponent {
         if (props.params && props.params.postId) {
            this.props.dispatch(getPost(props.params.postId));
         }
-        resetScroll();
     }
 
     onSavePost(title, body, fileIds, postState, postOwner) {
@@ -410,4 +415,4 @@ class PostEditor extends CSSComponent {
 // us to test the component individually rather than relying on the store
 // passing down the state.
 export { PostEditor };
-export default connect(selector)(PostEditor);
+export default connectData(fetchData)(connect(selector)(PostEditor));
