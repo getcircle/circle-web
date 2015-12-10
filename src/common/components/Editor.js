@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import 'script!trix/dist/trix.js';
 
+import logger from '../utils/logger';
+
 import CSSComponent from './CSSComponent';
 
 class Editor extends CSSComponent {
@@ -18,13 +20,12 @@ class Editor extends CSSComponent {
     }
 
     state = {
-        value: '',
+        value: null,
     }
 
     componentDidMount() {
-    }
-
-    componentWillReceiveProps(nextProps) {
+        document.addEventListener('trix-change', (event) => this.handleChange(event));
+        this.mergeStateAndProps(this.props);
     }
 
     classes() {
@@ -32,6 +33,19 @@ class Editor extends CSSComponent {
             default: {
             },
         };
+    }
+
+    mergeStateAndProps(props) {
+        if (this.state.value === null && props.value) {
+            this.setState({
+                value: props.value,
+            }, () => {
+                if (document.querySelector) {
+                    var element = document.querySelector('trix-editor');
+                    element.editor.insertHTML(props.value);
+                }
+            });
+        }
     }
 
     handleChange(event) {
@@ -56,7 +70,6 @@ class Editor extends CSSComponent {
         return (
             <div>
                 <input
-                    id="x"
                     name="content"
                     onChange={::this.handleChange}
                     type="hidden"

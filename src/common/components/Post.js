@@ -141,9 +141,6 @@ class Post extends CSSComponent {
                     transition: 'all 0.3s ease-out',
                     width: '100%',
                 },
-                authorAndFeedbackContainer: {
-                    marginBottom: 20,
-                },
                 authorContainer: {
                     padding: 0,
                 },
@@ -286,25 +283,14 @@ class Post extends CSSComponent {
                     margin: '10px 0 5px 0',
                     width: '100%',
                 },
-                postContent: {
-                    background: 'transparent',
-                    color: 'rgba(0, 0, 0, 0.8)',
-                    fontSize: '18px',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    lineHeight: '1.9',
-                    minHeight: '100vh',
-                    width: '100%',
-                },
                 postTitle: {
                     background: 'transparent',
                     border: '0',
-                    fontWeight: '600',
+                    fontWeight: '400',
                     fontStyle: 'normal',
-                    fontSize: '30px',
+                    fontSize: '36px',
                     letterSpacing: '0.4px',
                     lineHeight: '1.5',
-                    marginBottom: '20px',
                     outline: 'none',
                     width: '100%',
                     ...fontColors.dark,
@@ -313,15 +299,6 @@ class Post extends CSSComponent {
                     marginTop: 5,
                 },
             },
-            'isEditable-false': {
-                postTitle: {
-                    margin: 0,
-                },
-                postContent: {
-                    minHeight: 20,
-                    whiteSpace: 'pre-wrap',
-                },
-            }
         };
     }
 
@@ -716,9 +693,8 @@ class Post extends CSSComponent {
                     </div>
                 </div>
                 <div
-                    className="postContent"
+                    className="leditor"
                     dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
-                    style={{...this.styles().postContent}}
                 />
                 {inlineImages}
                 {this.renderFiles(postFilesWithoutImages)}
@@ -877,7 +853,6 @@ class Post extends CSSComponent {
                     }}
                     placeholder={t('Contribute Knowledge')}
                     value={this.state.body}
-                    {...this.styles().AutogrowTextarea}
                 />
                 {this.renderFilesContainer()}
                 {this.renderChangeOwnerModal()}
