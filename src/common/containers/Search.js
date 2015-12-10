@@ -92,12 +92,16 @@ class Search extends CSSComponent {
         };
     }
 
+    componentWillMount() {
+        this.loadSearchResults(this.props);
+    }
+
     componentWillReceiveProps(nextProps) {
-        this.syncQuery(nextProps);
+        this.loadSearchResults(nextProps);
     }
 
     /* Ensure that the header query and the query we're searching with are synced */
-    syncQuery(props) {
+    loadSearchResults(props) {
         const { query } = this.props.params;
         if (this.refs.headerSearch) {
             const headerSearch = this.refs.headerSearch.getWrappedInstance();
@@ -119,6 +123,11 @@ class Search extends CSSComponent {
                 replaceSearchQuery(this.context.history, currentQuery);
             }
 
+        } else {
+            // Given how we clear search results this call is necessary here.
+            // See: https://github.com/jlongster/redux-simple-router/issues/111
+            // for more info.
+            fetchSearchResults(props.dispatch, query);
         }
         resetScroll();
     }
