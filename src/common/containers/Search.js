@@ -8,6 +8,7 @@ import { getAuthenticatedProfile } from '../reducers/authentication';
 import { loadSearchResults } from '../actions/search';
 import { resetScroll } from '../utils/window';
 import { replaceSearchQuery } from '../utils/routes';
+import connectData from '../utils/connectData';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
@@ -41,6 +42,17 @@ const selector = createSelector(
     },
 );
 
+function fetchSearchResults(dispatch, query) {
+    return dispatch(loadSearchResults(query));
+}
+
+function fetchData(getState, dispatch, location, params) {
+    const promises = [];
+    promises.push(fetchSearchResults(dispatch, params.query));
+    return Promise.all(promises);
+}
+
+@connectData(fetchData)
 @connect(selector)
 class Search extends CSSComponent {
 
@@ -80,23 +92,18 @@ class Search extends CSSComponent {
         };
     }
 
-    componentWillMount() {
-        this.loadSearchResults(this.props);
-    }
-
     componentWillReceiveProps(nextProps) {
-        // Always load search results. This is to guarantee freshest results and also
-        // because we are aggresive about clearing cache.
-        this.loadSearchResults(nextProps);
+        this.syncQuery(nextProps);
     }
 
-    loadSearchResults(props) {
-        let query = this.getQueryFromURL(props);
+    /* Ensure that the header query and the query we're searching with are synced */
+    syncQuery(props) {
+        const { query } = this.props.params;
         if (this.refs.headerSearch) {
-            let headerSearch = this.refs.headerSearch.getWrappedInstance();
-            let currentQuery = headerSearch.getCurrentQuery();
+            const headerSearch = this.refs.headerSearch.getWrappedInstance();
+            const currentQuery = headerSearch.getCurrentQuery();
 
-            // If header search is loaded but not focused with no query,
+            // If header search is loaded but not focused with a query,
             // add the query parameter if we have one in the URL
             if (!this.state.focused && !currentQuery && query) {
                 headerSearch.setValue(query, () => {
@@ -112,11 +119,7 @@ class Search extends CSSComponent {
                 replaceSearchQuery(this.context.history, currentQuery);
             }
 
-        } else if (query && props.results.hasOwnProperty(this.state.query) !== true) {
-            // First load. Dispatch search action
-            this.props.dispatch(loadSearchResults(query));
         }
-
         resetScroll();
     }
 
@@ -186,24 +189,14 @@ class Search extends CSSComponent {
         this.setState({focused: false});
     }
 
-    getQueryFromURL(props) {
-        let query = props.params.query ? props.params.query : '';
-        if (props.params.hasOwnProperty('query') === false && props.location && props.location.hash) {
-            // replaceSearchQuery(this.context.history, props.location.hash);
-            query = props.location.hash;
-        }
-
-        return query;
-    }
-
     renderContent() {
         const {
             largerDevice,
             organization,
             results,
+            params: { query },
         } = this.props;
 
-        let query = this.getQueryFromURL(this.props);
         if (query) {
             return (
                 <DetailContent>

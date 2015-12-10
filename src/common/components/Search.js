@@ -287,20 +287,14 @@ class Search extends CSSComponent {
 
     componentWillMount() {
         this.customizeTheme();
+        this.setQuery(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         // Resets tracked bit for new searches
         this.checkAndResetSearchTracked(this.state.query);
         this.customizeTheme();
-
-        // See if a query parameter was explicitly passed in.
-        // If yes, set it in the internal state
-        if (nextProps.query !== null &&
-            nextProps.query.trim().length > 0
-        ) {
-            this.setValue(nextProps.query);
-        }
+        this.setQuery(nextProps);
     }
 
     componentWillUnmount() {
@@ -324,6 +318,14 @@ class Search extends CSSComponent {
     trackingAttributesForRecentResults = {
         subheader: 'recents',
         source: SEARCH_RESULT_SOURCE.RECENTS,
+    }
+
+    setQuery(props) {
+        // See if a query parameter was explicitly passed in.
+        // If yes, set it in the internal state
+        if (props.query !== null && props.query.trim().length > 0) {
+            this.setValue(this.props.query);
+        }
     }
 
     classes() {
@@ -1263,10 +1265,10 @@ class Search extends CSSComponent {
     setValue(value, optionalCallback) {
         if (this.refs.autoComplete) {
             this.refs.autoComplete.setValue(value);
-            this.setState({
-                query: value
-            }, optionalCallback);
         }
+        this.setState({
+            query: value
+        }, optionalCallback);
     }
 
     focus() {

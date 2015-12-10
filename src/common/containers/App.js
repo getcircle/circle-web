@@ -3,10 +3,7 @@ import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import {
-    backgroundColors,
-    canvasColor,
-} from '../constants/styles';
+import { backgroundColors, canvasColor } from '../constants/styles';
 import { deviceResized } from '../actions/device';
 import { getAuthenticatedProfile } from '../reducers/authentication';
 import { locationChanged } from '../actions/app';
