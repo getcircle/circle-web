@@ -3,11 +3,7 @@ import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import {
-    authenticate,
-    getAuthenticationInstructions,
-    requestAccess,
-} from '../actions/authentication';
+import { authenticate, getAuthenticationInstructions, requestAccess, } from '../actions/authentication';
 import { AUTH_BACKENDS } from '../services/user';
 import { fontColors, fontWeights } from '../constants/styles';
 import * as selectors from '../selectors';
