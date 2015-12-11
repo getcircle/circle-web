@@ -8,15 +8,21 @@ import './styles/app.scss';
 
 export default class Root extends Component {
 
+    static propTypes = {
+        subdomain: PropTypes.string.isRequired,
+    }
+
     static childContextTypes = {
         mixins: PropTypes.object,
         muiTheme: PropTypes.object,
+        subdomain: PropTypes.string.isRequired,
     }
 
     getChildContext() {
         return {
             mixins: CSSMixins,
             muiTheme: CurrentTheme,
+            subdomain: this.props.subdomain,
         };
     }
 

@@ -1,11 +1,9 @@
-export function getSubdomain() {
-    // TODO need to figure out a way to do this when server side rendering as
-    // well
-    if (__CLIENT__) {
-        const { host } = window.location;
-        const subdomain = host.split('.')[0];
-        if (subdomain !== 'www') {
-            return subdomain;
-        }
+const SUBDOMAIN_IGNORE_VALUES = ['www', 'local', 'dev', 'staging'];
+
+export function getSubdomain(host) {
+    const parts = host.split('.');
+    const subdomain = parts[0];
+    if (parts.length > 2 && SUBDOMAIN_IGNORE_VALUES.indexOf(subdomain) === -1) {
+        return subdomain;
     }
 }

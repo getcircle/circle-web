@@ -8,6 +8,7 @@ import { match, RoutingContext } from 'react-router';
 import Client from '../../common/services/Client';
 import createStore from '../../common/createStore';
 import getRoutes from '../../common/getRoutes';
+import { getSubdomain } from '../../common/utils/subdomains';
 import Root from '../../common/Root';
 
 import fetchAllData from '../fetchAllData';
@@ -64,7 +65,7 @@ export default function (req, res) {
                 ).then(() => {
                     try {
                         content = ReactDOM.renderToString(
-                            <Root>
+                            <Root subdomain={getSubdomain(req.host)}>
                                 <Provider key="provider" store={store}>
                                     <RoutingContext {...renderProps} />
                                 </Provider>

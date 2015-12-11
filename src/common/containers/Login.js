@@ -8,7 +8,6 @@ import { AUTH_BACKENDS } from '../services/user';
 import { fontColors, fontWeights } from '../constants/styles';
 import * as selectors from '../selectors';
 import { getNextPathname } from '../utils/routes';
-import { getSubdomain } from '../utils/subdomains';
 import t from '../utils/gettext';
 
 import CSSComponent from '../components/CSSComponent';
@@ -51,30 +50,26 @@ class Login extends CSSComponent {
         organizationDomain: PropTypes.string,
         organizationImageUrl: PropTypes.string,
         providerName: PropTypes.string,
-        subdomain: PropTypes.string,
         userExists: PropTypes.bool,
     }
 
     static contextTypes = {
-        muiTheme: PropTypes.object.isRequired,
         history: PropTypes.shape({
             pushState: PropTypes.func.isRequired,
         }),
-    }
-
-    static defaultProps = {
-        subdomain: getSubdomain(),
+        muiTheme: PropTypes.object.isRequired,
+        subdomain: PropTypes.string,
     }
 
     componentWillMount() {
-        if (this.props.subdomain && !this.isAccessRequest()) {
-            this.props.dispatch(getAuthenticationInstructions(null, this.props.subdomain));
+        if (this.context.subdomain && !this.isAccessRequest()) {
+            this.props.dispatch(getAuthenticationInstructions(null, this.context.subdomain));
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!nextProps.backend && this.props.subdomain) {
-            this.props.dispatch(getAuthenticationInstructions(null, this.props.subdomain));
+        if (!nextProps.backend && this.context.subdomain) {
+            this.props.dispatch(getAuthenticationInstructions(null, this.context.subdomain));
         }
     }
 
@@ -151,8 +146,8 @@ class Login extends CSSComponent {
 
     getHeaderText() {
         const isAccessRequest = this.isAccessRequest();
-        if (this.props.subdomain && !isAccessRequest) {
-            return t(`Sign in to ${window.location.host}`);
+        if (this.context.subdomain && !isAccessRequest) {
+            return t(`Sign in to ${this.context.subdomain}.lunohq.com`);
         } else if (isAccessRequest) {
             return t('Security is a little tight around here');
         } else {
@@ -193,7 +188,7 @@ class Login extends CSSComponent {
 
     renderLoginForm() {
         const isAccessRequest = this.isAccessRequest();
-        if (this.props.subdomain && !isAccessRequest && !this.props.email && !this.props.organizationDomain) {
+        if (this.context.subdomain && !isAccessRequest && !this.props.email && !this.props.organizationDomain) {
             return (
                 <div className="row center-xs">
                     <CircularProgress mode="indeterminate" size={0.5} />
@@ -205,7 +200,7 @@ class Login extends CSSComponent {
                 <LoginRequestAccess
                     onRequestAccess={() => {
                         const user = atob(userInfo);
-                        return this.props.dispatch(requestAccess(this.props.subdomain, user));
+                        return this.props.dispatch(requestAccess(this.context.subdomain, user));
                     }}
                 />
             );

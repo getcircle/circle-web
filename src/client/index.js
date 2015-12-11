@@ -15,6 +15,7 @@ import Client from '../common/services/Client';
 import createStore from '../common/createStore';
 import getRoutes from '../common/getRoutes';
 import Root from '../common/Root';
+import { getSubdomain } from '../common/utils/subdomains';
 
 import { getBody } from './utils/render';
 
@@ -70,4 +71,4 @@ if (__DEVTOOLS__) {
 injectTapEventPlugin();
 FastClick.attach(document.body);
 
-ReactDOM.render(<Root children={elements} />, dest);
+ReactDOM.render(<Root children={elements} subdomain={getSubdomain(window.location.host)}/>, dest);
