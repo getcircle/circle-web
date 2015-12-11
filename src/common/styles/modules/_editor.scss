@@ -302,3 +302,8 @@ trix-editor img {
 .leditor .attachment .caption .size {
     display: none;
 }
+
+trix-editor:empty:not(:focus)::before {
+    font-size: $fontSize;
+    color: rgba(0, 0, 0, 0.3);
+}
