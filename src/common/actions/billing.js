@@ -10,7 +10,7 @@ export function storeToken(token) {
                 types.STORE_TOKEN_SUCCESS,
                 types.STORE_TOKEN_FAILURE,
             ],
-            remote: () => requests.storeToken(token),
+            remote: (client) => requests.storeToken(client, token),
         },
     };
 }

@@ -1,8 +1,6 @@
 import {services} from 'protobufs';
 
-import client from './client';
-
-export function storeToken(token) {
+export function storeToken(client, token) {
     let request = new services.payment.actions.store_token.RequestV1({
         token: token.id,
         email: token.email,
