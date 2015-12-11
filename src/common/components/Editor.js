@@ -27,6 +27,7 @@ class Editor extends CSSComponent {
     }
 
     state = {
+        dragStart: false,
         value: null,
     }
 
@@ -77,7 +78,8 @@ class Editor extends CSSComponent {
     attachEventListeners() {
         document.addEventListener('trix-change', (event) => this.handleChange(event));
         document.addEventListener('trix-attachment-add', (event) => this.handleFileAdd(event));
-        // document.addEventListener('trix-file-accept', (event) => event.preventDefault());
+        document.querySelector('trix-editor').addEventListener('dragenter', (event) => this.handleDragEnter(event));
+        document.querySelector('trix-editor').addEventListener('dragend', (event) => this.handleDragLeave(event));
     }
 
     updateFileUploadProgress(props) {
@@ -135,19 +137,47 @@ class Editor extends CSSComponent {
         }
     }
 
+    handleDragEnter(event) {
+        console.log('drag enter');
+        this.setState({
+            dragStart: true,
+        });
+        event.preventDefault();
+    }
+
+    handleDragLeave(event) {
+        console.log('drag leave');
+        this.setState({
+            dragStart: false,
+        });
+        event.preventDefault();
+    }
+
+    renderDropzoneIndicator() {
+        const classNames = 'row middle-xs center-xs drop_zone_indicator' + (this.state.dragStart ? '' : ' hide');
+        console.log('indicator');
+        return (
+            <div className={classNames}>
+                <strong>Drop your files anywhere in this area to begin upload.</strong>
+            </div>
+        );
+    }
+
     render() {
         const {
             placeholder,
         } = this.props;
 
+        const className = 'leditor-container ' + (this.state.dragStart ? 'dropzone' : '');
         return (
-            <div>
+            <div className={className} ref="leditorContainer">
                 <input
                     name="content"
                     onChange={::this.handleChange}
                     type="hidden"
                     value={this.state.value}
                 />
+                {this.renderDropzoneIndicator()}
                 <trix-editor
                     class="leditor"
                     placeholder={placeholder}

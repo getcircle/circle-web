@@ -1,7 +1,8 @@
 $fontSize: 18px;
 $marginTop: 28px;
 $tintColor: rgb(122, 142, 255);
-$toolbarHighlightColor: rgba(122, 142, 255, 0.2);
+$lightTextColor: rgba(0, 0, 0, 0.5);
+$toolbarHighlightColor: rgba($tintColor, 0.2);
 
 /* Trix Toolbar */
 
@@ -258,7 +259,7 @@ trix-editor img {
 }
 
 .leditor .attachment {
-    color: rgba(0, 0, 0, 0.5);
+    color: $lightTextColor;
     display: inline-block;
     font-size: 13px;
     margin: 0;
@@ -340,4 +341,29 @@ trix-editor:empty:not(:focus)::before {
 .leditor .attachment .progress::-moz-progress-bar {
     background: $tintColor;
     border-radius: 3px;
+}
+
+.leditor-container {
+    position: relative;
+}
+
+.leditor-container .drop_zone_indicator {
+    border: 2px dashed $tintColor;
+    background: rgba($tintColor, 0.05);
+    cursor: move;
+    font-size: 1.4rem;
+    height: 100%;
+    position: absolute;
+    z-index: 9;
+    width: 100%;
+}
+
+.leditor-container .drop_zone_indicator strong {
+    color: $lightTextColor;
+    display: inline-block;
+    padding: 1.5rem 2rem 1.5rem 2rem;
+}
+
+.leditor-container.dropzone .leditor {
+    cursor: move;
 }
