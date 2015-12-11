@@ -1,7 +1,6 @@
 require('babel-core/polyfill');
 var path = require('path');
 var webpack = require('webpack');
-var CleanPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var strip = require('strip-loader');
 
@@ -25,8 +24,6 @@ module.exports = {
         publicPath: '/dist/'
     },
     plugins: [
-        new CleanPlugin([relativeAssetsPath]),
-
         new ExtractTextPlugin('[name]-[chunkhash].css', { allChunks: true }),
         new webpack.DefinePlugin({
             __CLIENT__: true,
