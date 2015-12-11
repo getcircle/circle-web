@@ -8,6 +8,8 @@ import favicon from 'serve-favicon';
 
 import main from './routes/main';
 
+const PORT = process.env.PORT || 3000;
+
 const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
@@ -36,9 +38,9 @@ app.use((req, res) => {
     }
 });
 
-server.listen(3000, (err) => {
+server.listen(PORT, (err) => {
     if (err) {
         console.error(err);
     }
-    console.info('--> Starting server at: http://0.0.0.0:%s', 3000);
+    console.info('--> Starting server at: http://0.0.0.0:%s', PORT);
 });
