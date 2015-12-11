@@ -2,6 +2,7 @@ import compression from 'compression';
 import Express from 'express';
 import http from 'http';
 import httpProxy from 'http-proxy';
+import morgan from 'morgan';
 import path from 'path';
 import PrettyError from 'pretty-error';
 import favicon from 'serve-favicon';
@@ -14,6 +15,7 @@ const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
 
+app.use(morgan('combined'));
 app.use(compression());
 app.use(favicon(path.join(__dirname, '..', '..', 'static', 'images', 'favicon.ico')));
 
