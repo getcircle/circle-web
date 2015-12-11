@@ -50,6 +50,7 @@ class Post extends CSSComponent {
         post: InternalPropTypes.PostV1,
         saveInProgress: PropTypes.bool,
         style: PropTypes.object,
+        uploadProgress: PropTypes.object,
         uploadedFiles: PropTypes.object,
     }
 
@@ -65,6 +66,7 @@ class Post extends CSSComponent {
         isEditable: false,
         post: null,
         saveInProgress: false,
+        uploadProgress: Immutable.Map(),
         uploadedFiles: Immutable.Map(),
     }
 
