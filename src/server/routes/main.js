@@ -5,7 +5,7 @@ import PrettyError from 'pretty-error';
 import { Provider } from 'react-redux';
 import { match, RoutingContext } from 'react-router';
 
-import Client from '../../common/services/client';
+import Client from '../../common/services/Client';
 import createStore from '../../common/createStore';
 import getRoutes from '../../common/getRoutes';
 import Root from '../../common/Root';
