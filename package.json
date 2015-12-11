@@ -4,23 +4,22 @@
   "description": "Circle Web App",
   "scripts": {
     "build": "npm run clean && webpack --progress --config webpack/local.config.js",
-    "build-prod": "npm run clean && webpack --progress --config webpack/prod.config.js",
     "build-dev": "npm run clean && webpack --progress --config webpack/dev.config.js",
+    "build-prod": "npm run clean && webpack --progress --config webpack/prod.config.js",
     "build-staging": "npm run clean && webpack --progress --config webpack/staging.config.js",
     "clean": "rm -rf static/dist",
-    "deploy-prod": "npm test && npm run build-prod && divshot deploy production",
-    "deploy-staging": "npm test && npm run build-staging && divshot deploy staging",
-    "deploy": "npm test && npm run build-dev && divshot deploy",
-    "lint": "eslint src",
-    "start": "npm run build && DEVHOST=localhost node webpack/webpack-dev-server",
-    "up": "npm run build && DEVHOST=`docker-machine ip dev` node webpack/webpack-dev-server",
-    "setup-dns": "echo '127.0.0.1 local.lunohq.com' >> /etc/hosts && dscacheutil -flushcache",
+    "dev": "concurrent --kill-others \"npm run watch-client\" \"npm run start-dev\"",
     "open": "open http://local.lunohq.com:9110/",
+    "package": "npm run build && docker build -t lunohq/web-local .",
+    "package-dev": "npm run build-dev && docker build -t lunohq/web-dev .",
+    "package-prod": "npm run build-prod && docker build -t lunohq/web-prod .",
+    "package-staging": "npm run build-staging && docker build -t lunohq/web-staging .",
+    "setup-dns": "echo '127.0.0.1 local.lunohq.com' >> /etc/hosts && dscacheutil -flushcache",
+    "server": "node bin/server.js",
+    "start-dev": "node ./node_modules/better-npm-run start-dev",
     "test": "mocha",
     "test-watch": "npm test -- --watch --growl",
-    "start-dev": "node ./node_modules/better-npm-run start-dev",
-    "watch-client": "node ./node_modules/better-npm-run watch-client",
-    "dev": "concurrent --kill-others \"npm run watch-client\" \"npm run start-dev\""
+    "watch-client": "node ./node_modules/better-npm-run watch-client"
   },
   "betterScripts": {
     "start-dev": {
