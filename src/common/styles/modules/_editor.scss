@@ -118,7 +118,6 @@ trix-editor [data-trix-mutable~=true] {
     color: inherit;
     cursor: pointer;
     display: block;
-    margin-top: $marginTop;
     max-width: 100%;
     text-align: center;
     text-decoration: none;
@@ -263,10 +262,12 @@ trix-editor img {
     display: inline-block;
     font-size: 13px;
     margin: 0;
+    margin-top: $marginTop;
     line-height: 1;
     padding: 0;
     position: relative;
     text-align: center;
+    width: 100%;
 }
 
 .leditor .attachment.attachment-file {
@@ -306,4 +307,37 @@ trix-editor img {
 trix-editor:empty:not(:focus)::before {
     font-size: $fontSize;
     color: rgba(0, 0, 0, 0.3);
+}
+
+.leditor .attachment .progress {
+    appearance: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 0;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15) inset;
+    color: #tintColor;
+    height: 10px;
+    left: 50%;
+    margin: -10px 0 0 -60px;
+    position: absolute;
+    top: 70%;
+    width: 120px;
+    z-index: 2;
+}
+
+.leditor .attachment .progress::-webkit-progress-bar {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15) inset;
+}
+
+.leditor .attachment .progress::-webkit-progress-value {
+    background: $tintColor;
+    border-radius: 3px;
+    position: relative;
+}
+
+.leditor .attachment .progress::-moz-progress-bar {
+    background: $tintColor;
+    border-radius: 3px;
 }
