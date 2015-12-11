@@ -826,6 +826,11 @@ class Post extends CSSComponent {
     }
 
     renderRichEditableContent() {
+        const {
+            uploadProgress,
+            uploadedFiles,
+        } = this.props;
+
         let author = this.state.owner;
         if (author === null || author === undefined) {
             author = this.context.authenticatedProfile;
@@ -863,8 +868,13 @@ class Post extends CSSComponent {
                     onChange={(event) => {
                         this.handleBodyChange(event, event.target.value);
                     }}
+                    onUploadCallback={(file) => {
+                        this.triggerUploads([file]);
+                    }}
                     placeholder={t('Contribute Knowledge')}
                     ref="editor"
+                    uploadProgress={uploadProgress}
+                    uploadedFiles={uploadedFiles}
                     value={this.state.body}
                 />
                 {this.renderFilesContainer()}

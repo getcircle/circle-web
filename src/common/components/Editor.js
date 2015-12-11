@@ -1,7 +1,7 @@
+import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 import 'script!trix/dist/trix.js';
 
-import keyCodes from '../utils/keycodes';
 import logger from '../utils/logger';
 
 import CSSComponent from './CSSComponent';
@@ -9,14 +9,20 @@ import CSSComponent from './CSSComponent';
 class Editor extends CSSComponent {
 
     static propTypes = {
-        onChange: PropTypes.func,
+        onChange: PropTypes.func.isRequired,
+        onUploadCallback: PropTypes.func.isRequired,
         placeholder: PropTypes.string,
+        uploadProgress: PropTypes.object,
+        uploadedFiles: PropTypes.object,
         value: PropTypes.string,
     }
 
     static defaultProps = {
         onChange: () => {},
+        onUploadCallback: () => {},
         placeholder: '',
+        uploadProgress: Immutable.Map(),
+        uploadedFiles: Immutable.Map(),
         value: '',
     }
 
@@ -24,10 +30,19 @@ class Editor extends CSSComponent {
         value: null,
     }
 
+    // This is maintained locally instead of in the state
+    // to guarantee instant mutability rather than async one we get
+    // by using setState. This is also mutated in multiple places.
+    attachmentObjects = {};
+
     componentDidMount() {
         this.setup();
-        this.attachEventListners();
+        this.attachEventListeners();
         this.mergeStateAndProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.updateFileUploadProgress(nextProps);
     }
 
     classes() {
@@ -59,11 +74,51 @@ class Editor extends CSSComponent {
         }
     }
 
-    attachEventListners() {
+    attachEventListeners() {
         document.addEventListener('trix-change', (event) => this.handleChange(event));
-        document.addEventListener('trix-file-accept', (event) => event.preventDefault());
-        // document.querySelector('trix-editor')
-        //     .addEventListener('keydown', (event) => this.handleKeyDown(event));
+        document.addEventListener('trix-attachment-add', (event) => this.handleFileAdd(event));
+        // document.addEventListener('trix-file-accept', (event) => event.preventDefault());
+    }
+
+    updateFileUploadProgress(props) {
+        const {
+            uploadProgress,
+            uploadedFiles,
+        } = props;
+
+        if (Object.keys(this.attachmentObjects).length && (uploadProgress.size || uploadedFiles.size)) {
+            let attachment, fileUrl;
+            const attachmentObjects = this.attachmentObjects;
+
+            for (let fileName in attachmentObjects) {
+                attachment = this.attachmentObjects[fileName];
+
+                // update progress if we have it set
+                if (uploadProgress.get(fileName)) {
+                    attachment.setUploadProgress(uploadProgress.get(fileName));
+                }
+
+                // update URL when upload is completed
+                if (uploadedFiles.get(fileName)) {
+                    fileUrl = uploadedFiles.get(fileName).source_url;
+                    attachment.setAttributes({
+                        url: fileUrl,
+                        href: fileUrl,
+                    });
+
+                    delete this.attachmentObjects[fileName];
+                }
+            }
+        }
+    }
+
+    handleFileAdd(event) {
+        if (event && event.attachment && event.attachment.file) {
+            const { onUploadCallback } = this.props;
+            const file = event.attachment.file;
+            this.attachmentObjects[file.name] = event.attachment;
+            onUploadCallback(file);
+        }
     }
 
     handleChange(event) {
@@ -77,17 +132,6 @@ class Editor extends CSSComponent {
 
         if (onChange) {
             onChange(event);
-        }
-    }
-
-    handleKeyDown(event) {
-        if (keyCodes.SPACE === event.keyCode) {
-            const trixEditor = document.querySelector('trix-editor');
-            const range = trixEditor.editor.getSelectedRange();
-            if (range[1] - 4 >= 0) {
-                // logger.log(Trix.Text.getTextAtRange([range[1] - 4, range[1]]));
-            }
-            logger.log(range);
         }
     }
 
