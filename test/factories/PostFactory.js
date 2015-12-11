@@ -3,10 +3,10 @@ import { services } from 'protobufs';
 
 import ProfileFactory from './ProfileFactory';
 
-class PostFactory {
+export default {
 
-    constructor() {
-        this._post = new services.post.containers.PostV1({
+    getPost(overrides) {
+        return new services.post.containers.PostV1({
             /*eslint-disable camelcase*/
             id: faker.random.uuid(),
             state: services.post.containers.PostStateV1.DRAFT,
@@ -15,36 +15,26 @@ class PostFactory {
             by_profile: ProfileFactory.getProfile(),
             changed: '2015-11-05 01:09:00.099535+00',
             /*eslint-enable camelcase*/
+            ...overrides,
         });
-    }
-
-    getPost() {
-        return this._post;
-    }
+    },
 
     getPostWithTitleAndContent(title, content) {
-        return Object.assign({}, this._post, {
-            title: title,
-            content: content,
-        });
-    }
+        return this.getPost({title, content});
+    },
 
     getPostWithPermissions(canEdit, canDelete) {
-        return Object.assign({}, this._post, {
-            /*eslint-disable camelcase*/
+        return this.getPost({
             permissions: {
+                /*eslint-disable camelcase*/
                 can_edit: canEdit,
                 can_delete: canDelete,
-            },
-            /*eslint-enable camelcase*/
+                /*eslint-enable camelcase*/
+            }
         });
-    }
+    },
 
     getPostWithState(state) {
-        return Object.assign({}, this._post, {
-            state: state,
-        });
-    }
+        return this.getPost({state});
+    },
 }
-
-export default new PostFactory();
