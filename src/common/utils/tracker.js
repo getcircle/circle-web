@@ -38,7 +38,7 @@ class Tracker {
         this._callbacks = [];
         this._sessionInitialized = false;
         // mixpanel won't be present during server side rendering
-        if (__CLIENT__) {
+        if (__CLIENT__ && typeof mixpanel !== 'undefined') {
             mixpanel.init(process.env.MIXPANEL_TOKEN, {loaded: () => {
                 this._mixpanelLoaded = true;
                 this.flushQueue();
