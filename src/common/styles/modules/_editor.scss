@@ -354,6 +354,7 @@ trix-editor:empty:not(:focus)::before {
     font-size: 1.4rem;
     height: 100%;
     position: absolute;
+    pointer-events: none;
     z-index: 9;
     width: 100%;
 }

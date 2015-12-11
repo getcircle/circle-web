@@ -35,11 +35,13 @@ class Editor extends CSSComponent {
     // to guarantee instant mutability rather than async one we get
     // by using setState. This is also mutated in multiple places.
     attachmentObjects = {};
+    dragEventCounter = 0;
 
     componentDidMount() {
         this.setup();
         this.attachEventListeners();
         this.mergeStateAndProps(this.props);
+        this.dragEventCounter = 0;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -78,8 +80,6 @@ class Editor extends CSSComponent {
     attachEventListeners() {
         document.addEventListener('trix-change', (event) => this.handleChange(event));
         document.addEventListener('trix-attachment-add', (event) => this.handleFileAdd(event));
-        document.querySelector('trix-editor').addEventListener('dragenter', (event) => this.handleDragEnter(event));
-        document.querySelector('trix-editor').addEventListener('dragend', (event) => this.handleDragLeave(event));
     }
 
     updateFileUploadProgress(props) {
@@ -138,24 +138,26 @@ class Editor extends CSSComponent {
     }
 
     handleDragEnter(event) {
-        console.log('drag enter');
+        event.preventDefault();
         this.setState({
             dragStart: true,
         });
-        event.preventDefault();
+        ++this.dragEventCounter;
     }
 
     handleDragLeave(event) {
-        console.log('drag leave');
+        event.preventDefault();
+        if (--this.dragEventCounter > 0) {
+            return;
+        }
+
         this.setState({
             dragStart: false,
         });
-        event.preventDefault();
     }
 
     renderDropzoneIndicator() {
         const classNames = 'row middle-xs center-xs drop_zone_indicator' + (this.state.dragStart ? '' : ' hide');
-        console.log('indicator');
         return (
             <div className={classNames}>
                 <strong>Drop your files anywhere in this area to begin upload.</strong>
@@ -180,6 +182,8 @@ class Editor extends CSSComponent {
                 {this.renderDropzoneIndicator()}
                 <trix-editor
                     class="leditor"
+                    onDragEnter={::this.handleDragEnter}
+                    onDragLeave={::this.handleDragLeave}
                     placeholder={placeholder}
                 />
             </div>
