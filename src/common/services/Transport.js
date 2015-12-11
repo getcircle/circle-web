@@ -10,12 +10,12 @@ superagent.parse['application/json'] = function (str) {
 }
 
 if (__SERVER__) {
-    superagent.parse['application/x-protobuf'] = function(res, fn) {
-        var chunks = [];
-        res.on('data', function(chunk) {
+    superagent.parse['application/x-protobuf'] = function (res, fn) {
+        const chunks = [];
+        res.on('data', function (chunk) {
             chunks.push(chunk);
         });
-        res.on('end', function() {
+        res.on('end', function () {
             fn(null, Buffer.concat(chunks));
         });
     }
