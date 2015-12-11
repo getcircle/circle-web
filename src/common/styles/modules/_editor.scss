@@ -1,4 +1,4 @@
-$fontSize: 19px;
+$fontSize: 18px;
 $marginTop: 28px;
 $tintColor: rgb(122, 142, 255);
 $toolbarHighlightColor: rgba(122, 142, 255, 0.2);
@@ -77,6 +77,13 @@ trix-toolbar .dialog.active {
 }
 
 /* Editor */
+
+trix-editor [data-trix-mutable~=true] {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 .leditor, trix-editor.leditor {
     border: 0;
@@ -246,20 +253,13 @@ trix-editor [data-trix-mutable~=true].attachment-file .caption {
     box-shadow: 0 0 0 2px $tintColor;
 }
 
-
-.attachment:not(.attachment-preview) .caption {
-    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cGF0aCBkPSJNMzMgMTJ2MjNjMCA0LjQyLTMuNTggOC04IDhzLTgtMy41OC04LThWMTBjMC0yLjc2IDIuMjQtNSA1LTVzNSAyLjI0IDUgNXYyMWMwIDEuMS0uODkgMi0yIDItMS4xMSAwLTItLjktMi0yVjEyaC0zdjE5YzAgMi43NiAyLjI0IDUgNSA1czUtMi4yNCA1LTVWMTBjMC00LjQyLTMuNTgtOC04LThzLTggMy41OC04IDh2MjVjMCA2LjA4IDQuOTMgMTEgMTEgMTFzMTEtNC45MiAxMS0xMVYxMmgtM3oiIGZpbGw9IiM3YzdiN2IiIC8+PC9zdmc+);
-}
-
-trix-editor [data-trix-mutable~=true] {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+trix-editor img {
+    max-width: 100%;
+    height: auto;
 }
 
 .leditor .attachment {
-    color: #666;
+    color: rgba(0, 0, 0, 0.5);
     display: inline-block;
     font-size: 13px;
     margin: 0;
@@ -270,12 +270,10 @@ trix-editor [data-trix-mutable~=true] {
 }
 
 .leditor .attachment.attachment-file {
-    color: #333;
     line-height: 30px;
 }
 
 .leditor .attachment .caption {
-    color: rgba(0, 0, 0, 0.5);
     display: inline-block;
     margin: 4px auto 0 auto;
     max-width: 100%;
@@ -284,14 +282,20 @@ trix-editor [data-trix-mutable~=true] {
     vertical-align: bottom;
 }
 
-.attachment:not(.attachment-preview) .caption {
-    padding: 10px 10px 10px 50px;
+.leditor .attachment.attachment-preview .caption {
+    display: block;
+    margin-top: 8px;
+}
+
+.leditor .attachment:not(.attachment-preview) .caption {
     background-color: #fff;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cGF0aCBkPSJNMzMgMTJ2MjNjMCA0LjQyLTMuNTggOC04IDhzLTgtMy41OC04LThWMTBjMC0yLjc2IDIuMjQtNSA1LTVzNSAyLjI0IDUgNXYyMWMwIDEuMS0uODkgMi0yIDItMS4xMSAwLTItLjktMi0yVjEyaC0zdjE5YzAgMi43NiAyLjI0IDUgNSA1czUtMi4yNCA1LTVWMTBjMC00LjQyLTMuNTgtOC04LThzLTggMy41OC04IDh2MjVjMCA2LjA4IDQuOTMgMTEgMTEgMTFzMTEtNC45MiAxMS0xMVYxMmgtM3oiIGZpbGw9IiM3YzdiN2IiIC8+PC9zdmc+);
     background-position: 8.5px center;
     background-repeat: no-repeat;
     background-size: 30px;
     border: 1px solid #ddd;
     border-radius: 3px;
+    padding: 10px 10px 10px 50px;
     text-align: left;
 }
 
