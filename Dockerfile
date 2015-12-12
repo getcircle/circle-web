@@ -2,7 +2,7 @@ FROM iojs:3.3
 
 ADD package.json /app/package.json
 WORKDIR /app
-RUN npm install
+RUN npm install --only=prod
 
 ADD . /app
 
