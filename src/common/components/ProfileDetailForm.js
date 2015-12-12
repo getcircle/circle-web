@@ -48,7 +48,6 @@ class ProfileDetailForm extends CSSComponent {
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
         dispatch: PropTypes.func.isRequired,
-        largerDevice: PropTypes.bool.isRequired,
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
@@ -548,7 +547,6 @@ class ProfileDetailForm extends CSSComponent {
     renderContent() {
         const {
             dispatch,
-            largerDevice,
         } = this.props;
 
         let imageUrl = this.state.imageFiles.length > 0 ? this.state.imageFiles[0].preview : this.state.imageUrl;
@@ -639,7 +637,6 @@ class ProfileDetailForm extends CSSComponent {
                     <ProfilesSelector
                         dialogTitle={t('Change Manager')}
                         dispatch={dispatch}
-                        largerDevice={largerDevice}
                         onSelect={::this.handleManagerSelected}
                         searchInputPlaceholder={t('Search Manager')}
                         value={selectFieldValue}
@@ -651,17 +648,11 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     render() {
-        const {
-            largerDevice,
-            ...other
-        } = this.props;
-
         return (
             <div >
                 <Dialog
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={t('Save')}
-                    largerDevice={largerDevice}
                     onRequestClose={this.resetState.bind(this)}
                     onSave={this.handleSaveTapped.bind(this)}
                     pageType={PAGE_TYPE.EDIT_PROFILE}

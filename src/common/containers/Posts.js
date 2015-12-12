@@ -60,9 +60,7 @@ function fetchData(getState, dispatch, location, params) {
 class Posts extends PureComponent {
 
     static propTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
-        largerDevice: PropTypes.bool.isRequired,
         loading: PropTypes.bool,
         postState: PropTypes.string.isRequired,
         posts: PropTypes.arrayOf(
@@ -71,18 +69,8 @@ class Posts extends PureComponent {
         postsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
     }
 
-    static childContextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-    }
-
     static defaultProps = {
         posts: [],
-    }
-
-    getChildContext() {
-        return {
-            authenticatedProfile: this.props.authenticatedProfile,
-        };
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -108,7 +96,6 @@ class Posts extends PureComponent {
 
     renderPosts() {
         const {
-            largerDevice,
             loading,
             postState,
             posts,
@@ -116,7 +103,6 @@ class Posts extends PureComponent {
 
         return (
             <PostsComponent
-                largerDevice={largerDevice}
                 loading={loading}
                 onDeletePostCallback={::this.onDeletePostTapped}
                 postState={postState}

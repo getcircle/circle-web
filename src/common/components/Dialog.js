@@ -6,6 +6,7 @@ import { fontColors, fontWeights } from '../constants/styles';
 import tracker from '../utils/tracker';
 
 import CSSComponent from './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
 
 const {
     FlatButton,
@@ -17,11 +18,14 @@ class Dialog extends CSSComponent {
         children: PropTypes.node,
         dialogDismissLabel: PropTypes.string,
         dialogSaveLabel: PropTypes.string,
-        largerDevice: PropTypes.bool.isRequired,
         onRequestClose: PropTypes.func,
         onSave: PropTypes.func,
         pageType: PropTypes.string.isRequired,
         title: PropTypes.string,
+    }
+
+    static contextTypes = {
+        device: InternalPropTypes.DeviceContext.isRequired,
     }
 
     static childContextTypes = {
@@ -49,16 +53,16 @@ class Dialog extends CSSComponent {
     }
 
     componentWillMount() {
-        this.customizeTheme(this.props);
+        this.customizeTheme(this.props, this.context);
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.customizeTheme(nextProps);
+    componentWillReceiveProps(nextProps, nextContext) {
+        this.customizeTheme(nextProps, nextContext);
     }
 
     originalDesktopKeylineIncrement = CurrentTheme.rawTheme.spacing.desktopKeylineIncrement;
 
-    customizeTheme(props) {
+    customizeTheme(props, context) {
         let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
             canvasColor: 'rgb(242, 242, 242)',
         });
@@ -67,7 +71,7 @@ class Dialog extends CSSComponent {
             alternateTextColor: 'rgb(242, 242, 242)',
         });
 
-        if (!props.largerDevice) {
+        if (!context.device.largerDevice) {
             customDialogTheme = mui.Styles.ThemeManager.modifyRawThemeSpacing(customDialogTheme, {
                 desktopKeylineIncrement: 0,
             });
@@ -78,6 +82,12 @@ class Dialog extends CSSComponent {
         }
 
         this.setState({muiTheme: customDialogTheme});
+    }
+
+    styles() {
+        return this.css({
+            smallDevice: !this.context.device.largerDevice,
+        });
     }
 
     classes() {
@@ -142,7 +152,7 @@ class Dialog extends CSSComponent {
                     width: '40px',
                 },
             },
-            'largerDevice-false': {
+            'smallDevice': {
                 Dialog: {
                     contentStyle: {
                         maxWidth: '100vw',

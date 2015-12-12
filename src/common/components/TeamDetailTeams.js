@@ -20,7 +20,6 @@ const MIN_TEAMS_TO_SHOW_FOOTER = 4;
 class TeamDetailTeams extends CSSComponent {
 
     static propTypes = {
-        largerDevice: PropTypes.bool.isRequired,
         onClickTeam: PropTypes.func.isRequired,
         teams: PropTypes.arrayOf(
             PropTypes.instanceOf(services.organization.containers.TeamV1),
@@ -85,7 +84,6 @@ class TeamDetailTeams extends CSSComponent {
                     <DetailViewAll
                         filterPlaceholder="Search Teams"
                         items={teams}
-                        largerDevice={this.props.largerDevice}
                         pageType={PAGE_TYPE.TEAM_SUBTEAMS}
                         ref="childTeams"
                         title={`Sub Teams (${this.props.teams.length})`}
@@ -96,13 +94,12 @@ class TeamDetailTeams extends CSSComponent {
     }
 
     render() {
-        const { teams, largerDevice } = this.props;
+        const { teams } = this.props;
         return (
             <Card {...this.props} title="Teams">
                 <CardColumns
                     items={teams}
                     itemsPerColumn={2}
-                    largerDevice={largerDevice}
                     numberOfColumns={2}
                     renderColumn={::this.renderColumn}
                 />

@@ -14,7 +14,6 @@ import LocationDetailLocation from './LocationDetailLocation';
 class LocationDetail extends CSSComponent {
 
     static propTypes = {
-        largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         membersLoadMore: PropTypes.func,
         office: PropTypes.instanceOf(services.organization.containers.LocationV1).isRequired,
@@ -87,7 +86,6 @@ class LocationDetail extends CSSComponent {
             return (
                 <DetailMembers
                     actionText={actionText}
-                    largerDevice={this.props.largerDevice}
                     members={members}
                     membersLoadMore={this.props.membersLoadMore}
                     onClickMember={routeToProfile.bind(null, this.context.history)}
@@ -105,16 +103,15 @@ class LocationDetail extends CSSComponent {
 
     render() {
         const {
-            largerDevice,
             members,
             office,
         } = this.props;
 
         return (
             <div>
-                <LocationDetailHeader largerDevice={largerDevice} office={office} />
+                <LocationDetailHeader office={office} />
                 <DetailContent>
-                    <LocationDetailLocation largerDevice={largerDevice} office={office} />
+                    <LocationDetailLocation office={office} />
                     {this.renderPointsOfContact(office)}
                     {this.renderMembers(members, office.profile_count)}
                 </DetailContent>

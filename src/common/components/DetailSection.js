@@ -2,18 +2,23 @@ import merge from 'merge';
 import React, { PropTypes } from 'react';
 
 import CSSComponent from './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
 
 class DetailSection extends CSSComponent {
 
     static propTypes = {
         firstCard: PropTypes.element,
         footer: PropTypes.element,
-        largerDevice: PropTypes.bool.isRequired,
         secondCard: PropTypes.element,
+    }
+
+    static contextTypes = {
+        device: InternalPropTypes.DeviceContext.isRequired,
     }
 
     styles() {
         return this.css({
+            largerDevice: this.context.device.largerDevice,
             missingCard: !this.props.firstCard || !this.props.secondCard,
         });
     }
@@ -39,7 +44,7 @@ class DetailSection extends CSSComponent {
                     },
                 }, common.Card),
             },
-            'largerDevice-true': {
+            'largerDevice': {
                 FirstCard: merge.recursive({
                     style: {
                         borderRadius: '3px 0px 0px 3px',

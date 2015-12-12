@@ -1,64 +1,31 @@
 import expect from 'expect';
 import faker from 'faker';
-import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
+import { PostEditor } from '../../../src/common/containers/PostEditor';
+
+import componentWithContext from '../../componentWithContext';
 import OrganizationFactory from '../../factories/OrganizationFactory';
 import PostFactory from '../../factories/PostFactory';
 import ProfileFactory from '../../factories/ProfileFactory';
 
-import CSSComponent from '../../../src/common/components/CSSComponent';
-import { PostEditor } from '../../../src/common/containers/PostEditor';
 
-function setup(propsOverrides, contextOverrides) {
+function setup(propsOverrides, contextOverrides, post) {
 
     // Props
-    const defaultProps = {
-        authenticated: true,
-        authenticatedProfile: ProfileFactory.getProfile(),
+    const props = {
         dispatch: expect.createSpy(),
-        largerDevice: true,
-        mobileOS: false,
         organization: OrganizationFactory.getOrganization(),
         post: null,
         params: {
             postId: null,
         },
         profile: ProfileFactory.getProfile(),
+        ...propsOverrides,
     }
-    const props = Object.assign({}, defaultProps, propsOverrides);
-
-    // Context
-    const defaultContext = {
-        history: {
-            pushState: expect.createSpy(),
-        },
-        mixins: {},
-    };
-
-    const context = Object.assign({}, defaultContext, contextOverrides);
-    class PostEditorTestContainer extends CSSComponent {
-
-        static childContextTypes = {
-            history: PropTypes.shape({
-                pushState: PropTypes.func.isRequired,
-            }).isRequired,
-            mixins: PropTypes.object.isRequired,
-        }
-
-        getChildContext() {
-            return context;
-        }
-
-        render() {
-            return (
-                <PostEditor {...props} />
-            );
-        }
-    }
-
-    let container = TestUtils.renderIntoDocument(<PostEditorTestContainer />);
+    const Container = componentWithContext(<PostEditor {...props} />);
+    let container = TestUtils.renderIntoDocument(<Container />);
     const postEditorComponent = TestUtils.findRenderedComponentWithType(container, PostEditor);
     return {
         postEditorComponent,

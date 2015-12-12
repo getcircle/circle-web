@@ -16,6 +16,7 @@ import { tintColor } from '../constants/styles';
 import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
+import InternalPropTypes from './InternalPropTypes';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from '../components/RoundedButton';
 
@@ -28,11 +29,10 @@ class HeaderMenu extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         expandedView: PropTypes.bool,
-        managesTeam: PropTypes.object,
-        profile: PropTypes.object,
     }
 
     static contextTypes = {
+        auth: InternalPropTypes.AuthContext.isRequired,
         flags: PropTypes.object,
         mixins: PropTypes.object,
         showCTAsInHeader: PropTypes.bool,
@@ -60,8 +60,8 @@ class HeaderMenu extends CSSComponent {
         };
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (!nextProps.profile) {
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (!nextContext.auth.profile) {
             return false;
         }
         return true;
@@ -150,11 +150,11 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewProfile(event) {
-        routeToProfile(this.context.history, this.props.profile);
+        routeToProfile(this.context.history, this.context.auth.profile);
     }
 
     handleViewTeam(event) {
-        routeToTeam(this.context.history, this.props.managesTeam);
+        routeToTeam(this.context.history, this.context.auth.managesTeam);
     }
 
     handleViewKnowledge(event) {
@@ -204,7 +204,7 @@ class HeaderMenu extends CSSComponent {
         if (this.props.expandedView) {
             return (
                 <div style={this.styles().profileName}>
-                    <span>{this.props.profile.first_name}</span>
+                    <span>{this.context.auth.profile.first_name}</span>
                 </div>
             );
         }
@@ -224,7 +224,8 @@ class HeaderMenu extends CSSComponent {
     }
 
     renderMyTeamMenuItem() {
-        if (this.props.managesTeam && this.props.managesTeam.id) {
+        const { managesTeam } = this.context.auth;
+        if (managesTeam && managesTeam.id) {
             return (
                 <MenuItem
                     desktop={true}
@@ -277,13 +278,10 @@ class HeaderMenu extends CSSComponent {
     }
 
     render() {
-        const {
-            profile,
-            ...other,
-        } = this.props;
+        const { profile } = this.context.auth;
 
         return (
-            <div {...other}>
+            <div {...this.props}>
                 <div
                     className="row middle-xs"
                     onTouchTap={::this.handleTouchTap}

@@ -7,8 +7,9 @@ import { mailtoTeamDescription } from '../utils/contact';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 
-import TextValue from './TextValue';
 import CSSComponent from './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
+import TextValue from './TextValue';
 
 const { FlatButton } = mui;
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
@@ -16,7 +17,7 @@ const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 class TeamDetailDescription extends CSSComponent {
 
     static propTypes = {
-        description: PropTypes.instanceOf(services.common.containers.description.DescriptionV1),
+        description: InternalPropTypes.DescriptionV1,
         isEditable: PropTypes.bool,
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         onEditTapped: PropTypes.func,
@@ -26,7 +27,7 @@ class TeamDetailDescription extends CSSComponent {
     }
 
     static contextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        auth: InternalPropTypes.AuthContext.isRequired,
     }
 
     classes() {
@@ -54,7 +55,7 @@ class TeamDetailDescription extends CSSComponent {
         if (!isEditable) {
             defaultContent = (
                 <FlatButton
-                    href={mailtoTeamDescription(team, manager, this.context.authenticatedProfile)}
+                    href={mailtoTeamDescription(team, manager, this.context.auth.profile)}
                     linkButton={true}
                     onTouchTap={() => {
                         tracker.trackContactTap(

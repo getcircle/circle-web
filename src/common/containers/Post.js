@@ -16,17 +16,16 @@ import t from '../utils/gettext';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
+import InternalPropTypes from '../components/InternalPropTypes';
 import { default as PostComponent } from '../components/Post';
 
 const selector = selectors.createImmutableSelector(
     [
-        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.postSelector,
-        selectors.responsiveSelector,
         selectors.routerParametersSelector,
     ],
-    (authenticationState, cacheState, postState, responsiveState, paramsState) => {
+    (cacheState, postState, paramsState) => {
         let post;
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
@@ -35,14 +34,9 @@ const selector = selectors.createImmutableSelector(
         }
 
         return {
-            authenticatedProfile: authenticationState.get('profile'),
             errorDetails: postState.get('errorDetails'),
-            largerDevice: responsiveState.get('largerDevice'),
-            managesTeam: authenticationState.get('managesTeam'),
-            mobileOS: responsiveState.get('mobileOS'),
             post: post,
             postId: postId,
-            organization: authenticationState.get('organization'),
         };
     }
 );
@@ -60,12 +54,8 @@ function fetchData(getState, dispatch, location, params) {
 class Post extends CSSComponent {
 
     static propTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
         errorDetails: PropTypes.object,
-        largerDevice: PropTypes.bool.isRequired,
-        mobileOS: PropTypes.bool.isRequired,
-        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         params: PropTypes.shape({
             postId: PropTypes.string.isRequired,
         }).isRequired,
@@ -84,8 +74,6 @@ class Post extends CSSComponent {
     }
 
     static childContextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-        mobileOS: PropTypes.bool.isRequired,
         muiTheme: PropTypes.object,
     }
 
@@ -95,8 +83,6 @@ class Post extends CSSComponent {
 
     getChildContext() {
         return {
-            authenticatedProfile: this.props.authenticatedProfile,
-            mobileOS: this.props.mobileOS,
             muiTheme: this.state.muiTheme,
         };
     }
@@ -166,15 +152,11 @@ class Post extends CSSComponent {
     renderPost() {
         const {
             errorDetails,
-            largerDevice,
             post,
         } = this.props;
         if (post) {
             return (
-                <PostComponent
-                    largerDevice={largerDevice}
-                    post={post}
-                />
+                <PostComponent post={post} />
             );
         } else if (errorDetails) {
             return this.renderErrorMessage();

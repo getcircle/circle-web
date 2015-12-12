@@ -3,19 +3,17 @@ import React, { PropTypes } from 'react';
 
 import CSSComponent from '../components/CSSComponent';
 import HeaderMenu from '../components/HeaderMenu';
+import InternalPropTypes from '../components/InternalPropTypes';
 
 class Header extends CSSComponent {
 
     static propTypes = {
         actionsContainer: React.PropTypes.element,
         dispatch: PropTypes.func.isRequired,
-        managesTeam: PropTypes.object,
-        organization: PropTypes.object.isRequired,
-        profile: PropTypes.object.isRequired,
     }
 
     static contextTypes = {
-        flags: PropTypes.object,
+        auth: InternalPropTypes.AuthContext.isRequired,
         mixins: PropTypes.object.isRequired,
         history: PropTypes.shape({
             pushState: PropTypes.func.isRequired,
@@ -77,7 +75,7 @@ class Header extends CSSComponent {
     }
 
     getImageUrl() {
-        const { organization } = this.props;
+        const { organization } = this.context.auth;
         if (organization) {
             return organization.image_url;
         }
@@ -109,8 +107,6 @@ class Header extends CSSComponent {
                     <HeaderMenu
                         dispatch={this.props.dispatch}
                         expandedView={false}
-                        managesTeam={this.props.managesTeam}
-                        profile={this.props.profile}
                         {...this.styles().HeaderMenu}
                     />
                 </div>

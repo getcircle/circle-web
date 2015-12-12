@@ -10,18 +10,24 @@ import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
 import IconContainer from './IconContainer';
+import InternalPropTypes from './InternalPropTypes';
 import EmbeddedGoogleMap from './EmbeddedGoogleMap';
 import LocationIcon from './LocationIcon';
 
 class LocationDetailLocation extends CSSComponent {
 
     static propTypes = {
-        largerDevice: PropTypes.bool.isRequired,
         office: PropTypes.instanceOf(services.organization.containers.LocationV1),
     }
 
-    static defaultProps = {
-        largerDevice: false,
+    static contextTypes = {
+        device: InternalPropTypes.DeviceContext.isRequired,
+    }
+
+    styles() {
+        return this.css({
+            largerDevice: this.context.device.largerDevice,
+        });
     }
 
     classes() {
@@ -40,7 +46,7 @@ class LocationDetailLocation extends CSSComponent {
                     }
                 },
             },
-            'largerDevice-true': {
+            'largerDevice': {
                 map: {
                     position: 'absolute',
                 },

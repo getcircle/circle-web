@@ -8,19 +8,19 @@ import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import DetailHeader from './DetailHeader';
+import InternalPropTypes from './InternalPropTypes';
 import ProfileAvatar from './ProfileAvatar';
 
 class ProfileDetailHeader extends CSSComponent {
 
     static propTypes = {
         isEditable: PropTypes.bool.isRequired,
-        largerDevice: PropTypes.bool.isRequired,
         onEditTapped: PropTypes.func,
-        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
     }
 
     static contextTypes = {
+        auth: InternalPropTypes.AuthContext.isRequired,
         muiTheme: PropTypes.object.isRequired,
     }
 
@@ -99,9 +99,9 @@ class ProfileDetailHeader extends CSSComponent {
 
     render() {
         const {
-            organization,
             profile,
         } = this.props;
+        const { organization } = this.context.auth;
 
         let tenureText = '';
         if (profile.hire_date) {
@@ -113,10 +113,7 @@ class ProfileDetailHeader extends CSSComponent {
         }
 
         return (
-            <DetailHeader
-                img={this.getImageUrl()}
-                largerDevice={this.props.largerDevice}
-            >
+            <DetailHeader img={this.getImageUrl()}>
                 {this.renderEditButton()}
                 <div className="row center-xs" style={this.styles().avatarSection}>
                     <ProfileAvatar profile={profile} style={this.styles().avatar} />

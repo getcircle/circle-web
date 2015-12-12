@@ -13,6 +13,7 @@ import * as selectors from '../selectors';
 import tracker from '../utils/tracker';
 
 import CSSComponent from '../components/CSSComponent';
+import InternalPropTypes from '../components/InternalPropTypes';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
 import Search from '../components/Search';
@@ -48,6 +49,7 @@ const selector = createSelector(
             profileLocation: authenticationState.get('profileLocation'),
             team: authenticationState.get('team'),
             flags: authenticationState.get('flags'),
+            mobileOS: responsiveState.get('mobileOS'),
         }
     }
 );
@@ -81,6 +83,8 @@ class App extends CSSComponent {
 
     static childContextTypes = {
         flags: PropTypes.object,
+        auth: InternalPropTypes.AuthContext,
+        device: InternalPropTypes.DeviceContext,
     }
 
     state = {
@@ -91,6 +95,18 @@ class App extends CSSComponent {
 
     getChildContext() {
         return {
+            auth: {
+                location: this.props.profileLocation,
+                managesTeam: this.props.managesTeam,
+                organization: this.props.organization,
+                profile: this.props.profile,
+                team: this.props.team,
+            },
+            device: {
+                deviceSize: this.props.deviceSize,
+                largerDevice: this.props.largerDevice,
+                mobileOS: this.props.mobileOS,
+            },
             flags: this.props.flags,
         };
     }

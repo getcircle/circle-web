@@ -3,64 +3,34 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
-import { getAuthenticatedProfile } from '../reducers/authentication';
 import { resetScroll } from '../utils/window';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
-import HeaderMenu from '../components/HeaderMenu';
 import CSSComponent from '../components/CSSComponent';
+import InternalPropTypes from '../components/InternalPropTypes';
+import HeaderMenu from '../components/HeaderMenu';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/Search';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
 const ORGANIZATION_LOGO_HEIGHT = 200;
 
-const selector = createSelector(
-    [selectors.cacheSelector, selectors.authenticationSelector, selectors.responsiveSelector],
-    (cacheState, authenticationState, responsiveState) => {
-        const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
-        return {
-            authenticated: authenticationState.get('authenticated'),
-            flags: authenticationState.get('flags'),
-            largerDevice: responsiveState.get('largerDevice'),
-            managesTeam: authenticationState.get('managesTeam'),
-            mobileOS: responsiveState.get('mobileOS'),
-            organization: authenticationState.get('organization'),
-            profile: profile,
-        }
-    },
-);
-
-@connect(selector)
+@connect()
 class Home extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
-        flags: PropTypes.object,
-        largerDevice: PropTypes.bool.isRequired,
-        managesTeam: PropTypes.object,
-        mobileOS: PropTypes.bool.isRequired,
-        organization: PropTypes.object.isRequired,
-        profile: PropTypes.object.isRequired,
     }
 
     static contextTypes = {
+        auth: InternalPropTypes.AuthContext.isRequired,
+        device: InternalPropTypes.DeviceContext.isRequired,
         mixins: PropTypes.object,
         muiTheme: PropTypes.object.isRequired,
     }
 
-    static childContextTypes = {
-        flags: PropTypes.object,
-    }
-
     state = {
         focused: false,
-    }
-
-    getChildContext() {
-        return {
-            flags: this.props.flags,
-        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -71,10 +41,11 @@ class Home extends CSSComponent {
     }
 
     styles() {
+        const { largerDevice, mobileOS } = this.context.device;
         return this.css({
-            focused: this.state.focused || this.props.largerDevice,
-            smallerDeviceFocused: this.state.focused && !this.props.largerDevice && this.props.mobileOS,
-            searchHeader: this.props.largerDevice || !this.props.mobileOS,
+            focused: this.state.focused || largerDevice,
+            smallerDeviceFocused: this.state.focused && !largerDevice && mobileOS,
+            searchHeader: largerDevice || !mobileOS,
         });
     }
 
@@ -187,7 +158,8 @@ class Home extends CSSComponent {
     }
 
     getOrganizationImage() {
-        const imageUrl = this.props.organization.image_url;
+        const { organization } = this.context.auth;
+        const imageUrl = organization.image_url;
         if (imageUrl) {
             return <img className="row" src={imageUrl} style={this.styles().organizationLogo} />;
         } else {
@@ -198,7 +170,7 @@ class Home extends CSSComponent {
     handleFocusSearch(event) {
         this.setState({focused: true});
         // Offset mobile browsers trying to scroll to focus the element.
-        if (this.props.mobileOS) {
+        if (this.context.device.mobileOS) {
             resetScroll();
         }
     }
@@ -214,8 +186,6 @@ class Home extends CSSComponent {
                     <div className="row end-xs">
                         <HeaderMenu
                             dispatch={this.props.dispatch}
-                            managesTeam={this.props.managesTeam}
-                            profile={this.props.profile}
                             {...this.styles().HeaderMenu}
                         />
                     </div>
@@ -232,10 +202,8 @@ class Home extends CSSComponent {
                         <div>
                             <SearchComponent
                                 className="row center-xs"
-                                largerDevice={this.props.largerDevice}
                                 onCancel={::this.handleCancelSearch}
                                 onFocus={::this.handleFocusSearch}
-                                organization={this.props.organization}
                                 searchContainerWidth={660}
                                 searchLocation={SEARCH_LOCATION.HOME}
                                 {...this.styles().SearchComponent}

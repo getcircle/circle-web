@@ -1,8 +1,6 @@
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
 
-import { getAuthenticatedProfile } from '../reducers/authentication';
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
 import { clearTeamMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
@@ -15,7 +13,7 @@ import Container from '../components/Container';
 import ProfileDetail from '../components/ProfileDetail';
 import PureComponent from '../components/PureComponent';
 
-const profileSelector = selectors.createImmutableSelector(
+const selector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
         selectors.extendedProfilesSelector,
@@ -30,7 +28,7 @@ const profileSelector = selectors.createImmutableSelector(
             extendedProfile = retrieveExtendedProfile(profileId, cache);
         }
 
-        const authenticatedProfile = getAuthenticatedProfile(authenticationState, cache);
+        const authenticatedProfile = authenticationState.get('profile');
         let isLoggedInUser;
         if (authenticatedProfile && authenticatedProfile.id === profileId) {
             isLoggedInUser = true;
@@ -43,24 +41,8 @@ const profileSelector = selectors.createImmutableSelector(
         return {
             extendedProfile,
             profileId,
-            authenticatedProfile,
             isLoggedInUser,
-            // TODO with react 0.14 we should be able to pull authenticated
-            // profile from the context
-            isAdminUser: authenticatedProfile.is_admin,
-            organization: authenticationState.get('organization'),
         };
-    }
-);
-
-const selector = selectors.createImmutableSelector(
-    [profileSelector, selectors.responsiveSelector],
-    (profileState, responsiveState) => {
-        return {
-            largerDevice: responsiveState.get('largerDevice'),
-            mobileOS: responsiveState.get('mobileOS'),
-            ...profileState
-        }
     }
 );
 
@@ -79,28 +61,12 @@ function fetchData(getState, dispatch, location, params) {
 class Profile extends PureComponent {
 
     static propTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object,
         isLoggedInUser: PropTypes.bool.isRequired,
-        largerDevice: PropTypes.bool.isRequired,
-        mobileOS: PropTypes.bool.isRequired,
-        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         params: PropTypes.shape({
             profileId: PropTypes.string.isRequired,
         }).isRequired,
-    }
-
-    static childContextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-        mobileOS: PropTypes.bool.isRequired,
-    }
-
-    getChildContext() {
-        return {
-            authenticatedProfile: this.props.authenticatedProfile,
-            mobileOS: this.props.mobileOS,
-        };
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -130,20 +96,14 @@ class Profile extends PureComponent {
     renderProfile() {
         const {
             extendedProfile,
-            isAdminUser,
             isLoggedInUser,
-            largerDevice,
-            organization,
         } = this.props;
         if (extendedProfile) {
             return (
                 <ProfileDetail
                     extendedProfile={extendedProfile}
-                    isAdminUser={isAdminUser}
                     isLoggedInUser={isLoggedInUser}
-                    largerDevice={largerDevice}
                     onUpdateProfile={::this.onUpdateProfile}
-                    organization={organization}
                 />
             );
         } else {

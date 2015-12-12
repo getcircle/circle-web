@@ -16,6 +16,7 @@ import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
 import DetailSection from './DetailSection';
 import IconContainer from './IconContainer';
+import InternalPropTypes from './InternalPropTypes';
 import OfficeIcon from './OfficeIcon';
 import MailIcon from './MailIcon';
 import PhoneIcon from './PhoneIcon';
@@ -33,11 +34,11 @@ class ProfileDetailContactInfo extends CSSComponent {
             PropTypes.instanceOf(services.organization.containers.LocationV1),
         ),
         onClickLocation: PropTypes.func,
-        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        profile: InternalPropTypes.ProfileV1.isRequired,
     }
 
     static contextTypes = {
-        mobileOS: PropTypes.bool.isRequired,
+        device: InternalPropTypes.DeviceContext.isRequired,
     }
 
     state = {
@@ -121,7 +122,7 @@ class ProfileDetailContactInfo extends CSSComponent {
     }
 
     canCall(contactItem) {
-        return this.context.mobileOS && contactItem.value.trim() !== ''
+        return this.context.device.mobileOS && contactItem.value.trim() !== ''
     }
 
     // Render Methods

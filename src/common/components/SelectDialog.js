@@ -4,8 +4,9 @@ import Infinite from 'react-infinite';
 
 import { iconColors } from '../constants/styles';
 
-import Dialog from './Dialog';
 import CSSComponent from './CSSComponent';
+import Dialog from './Dialog';
+import InternalPropTypes from './InternalPropTypes';
 import SearchIcon from './SearchIcon';
 
 const {
@@ -21,7 +22,6 @@ class SelectDialog extends CSSComponent {
         infiniteLoadBeginEdgeOffset: PropTypes.number,
         isInfiniteLoading: PropTypes.bool,
         items: PropTypes.object,
-        largerDevice: PropTypes.bool.isRequired,
         listDividerStyle: PropTypes.object,
         listItemHeight: PropTypes.number,
         listItemInnerDivStyle: PropTypes.object,
@@ -38,10 +38,20 @@ class SelectDialog extends CSSComponent {
         title: PropTypes.string.isRequired,
     }
 
+    static contextTypes = {
+        device: InternalPropTypes.DeviceContext.isRequired,
+    }
+
     static defaultProps = {
         maxListHeight: 200,
         onRequestClose: () => {},
         onInputChange: () => {},
+    }
+
+    styles() {
+        return this.css({
+            largerDevice: this.context.device.largerDevice,
+        });
     }
 
     classes() {
@@ -63,7 +73,7 @@ class SelectDialog extends CSSComponent {
                 },
                 listHeight: this.props.maxListHeight,
             },
-            'largerDevice-false': {
+            'largerDevice': {
                 listHeight: document.body.offsetHeight - 137,
             }
         };

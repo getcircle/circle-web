@@ -11,6 +11,7 @@ import CardListItem from './CardListItem';
 import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
 import DetailViewAll from './DetailViewAll';
+import InternalPropTypes from './InternalPropTypes';
 
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
@@ -18,11 +19,10 @@ import IconContainer from './IconContainer';
 class ProfileDetailManages extends CSSComponent {
 
     static propTypes = {
-        directReports: PropTypes.arrayOf(services.profile.containers.ProfileV1),
-        largerDevice: PropTypes.bool.isRequired,
+        directReports: PropTypes.arrayOf(InternalPropTypes.ProfileV1),
         onClickDirectReport: PropTypes.func,
         onClickTeam: PropTypes.func,
-        team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
+        team: InternalPropTypes.TeamV1.isRequired,
     }
 
     classes() {
@@ -69,7 +69,6 @@ class ProfileDetailManages extends CSSComponent {
                     <DetailViewAll
                         filterPlaceholder="Search Direct Reports"
                         items={directReports}
-                        largerDevice={this.props.largerDevice}
                         pageType={PAGE_TYPE.DIRECT_REPORTS}
                         ref="directReports"
                         searchAttribute={services.search.containers.search.AttributeV1.TEAM_ID}

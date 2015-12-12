@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
 
 import Dialog from './Dialog';
 import CSSComponent from './CSSComponent';
@@ -24,12 +23,15 @@ class DetailViewAll extends CSSComponent {
             services.organization.containers.TeamV1,
         ])),
         itemsLoadMore: PropTypes.func,
-        largerDevice: PropTypes.bool.isRequired,
         pageType: PropTypes.string.isRequired,
         searchAttribute: InternalPropTypes.SearchAttributeV1,
         searchAttributeValue: PropTypes.string,
         searchCategory: InternalPropTypes.SearchCategoryV1,
         title: PropTypes.string.isRequired,
+    }
+
+    static contextTypes = {
+        device: InternalPropTypes.DeviceContext.isRequired,
     }
 
     shouldHideFilterInput() {
@@ -39,6 +41,7 @@ class DetailViewAll extends CSSComponent {
     styles() {
         return this.css({
             hideFilterInput: this.shouldHideFilterInput(),
+            smallDevice: !this.context.device.largerDevice,
         });
     }
 
@@ -79,7 +82,7 @@ class DetailViewAll extends CSSComponent {
                     },
                 },
             },
-            'largerDevice-false': {
+            'smallDevice': {
                 Search: {
                     resultsListStyle: {
                         height: '100vh',
@@ -109,7 +112,6 @@ class DetailViewAll extends CSSComponent {
             filterPlaceholder,
             items,
             itemsLoadMore,
-            largerDevice,
             pageType,
             title,
             searchAttribute,
@@ -121,7 +123,6 @@ class DetailViewAll extends CSSComponent {
         return (
             <div >
                 <Dialog
-                    largerDevice={largerDevice}
                     pageType={pageType}
                     ref="modal"
                     repositionOnUpdate={false}

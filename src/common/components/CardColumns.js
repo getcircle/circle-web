@@ -4,6 +4,7 @@ import React, { PropTypes } from 'react';
 import CardRow from './CardRow';
 import CardVerticalDivider from './CardVerticalDivider';
 import CSSComponent from './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
 
 class CardColumns extends CSSComponent {
 
@@ -11,9 +12,12 @@ class CardColumns extends CSSComponent {
         items: PropTypes.array.isRequired,
         itemsPerCollapsedColumn: PropTypes.number,
         itemsPerColumn: PropTypes.number,
-        largerDevice: PropTypes.bool.isRequired,
         numberOfColumns: PropTypes.number,
         renderColumn: PropTypes.func.isRequired,
+    }
+
+    static contextTypes = {
+        device: InternalPropTypes.DeviceContext.isRequired,
     }
 
     static defaultProps = {
@@ -44,8 +48,9 @@ class CardColumns extends CSSComponent {
             perCollapsedColumn = itemsPerColumn + 1;
         }
 
-        let resolvedNumberOfColumns = this.props.largerDevice ? numberOfColumns : 1;
-        let resolvedItemsPerColumn = this.props.largerDevice ? itemsPerColumn : perCollapsedColumn;
+        const largerDevice = this.context.device;
+        const resolvedNumberOfColumns = largerDevice ? numberOfColumns : 1;
+        const resolvedItemsPerColumn = largerDevice ? itemsPerColumn : perCollapsedColumn;
         const columns = _.range(resolvedNumberOfColumns).map((value) => {
             return items.slice(value * resolvedItemsPerColumn, (value + 1) * resolvedItemsPerColumn);
         });

@@ -2,61 +2,27 @@ import expect from 'expect';
 import Immutable from 'immutable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
 import then from '../utils/then';
 
-import ProfileFactory from '../../factories/ProfileFactory';
-import TeamFactory from '../../factories/TeamFactory';
-
-import CSSComponent from '../../../src/common/components/CSSComponent';
 import HeaderMenu from '../../../src/common/components/HeaderMenu';
 import ProfileAvatar from '../../../src/common/components/ProfileAvatar';
 
+import componentWithContext from '../../componentWithContext';
+import AuthContextFactory from '../../factories/AuthContextFactory';
+import TeamFactory from '../../factories/TeamFactory';
+
 function setup(propOverrides, contextOverrides) {
     const defaultProps = {
-        profile: ProfileFactory.getProfile(),
-        managesTeam: null,
         dispatch: expect.createSpy(),
     }
-
     const props = Object.assign({}, defaultProps, propOverrides);
 
-    // Context
-    const defaultContext = {
-        authenticatedProfile: ProfileFactory.getProfile(),
-        history: {
-            pushState: expect.createSpy(),
-        },
-    };
-    const context = Object.assign({}, defaultContext, contextOverrides);
-
-    class HeaderMenuContainer extends CSSComponent {
-
-        static childContextTypes = {
-            authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-            flags: PropTypes.object,
-            history: PropTypes.shape({
-                pushState: PropTypes.func.isRequired,
-            }).isRequired,
-        }
-
-        getChildContext() {
-            return context;
-        }
-
-        render() {
-            return (
-                <HeaderMenu {...props} />
-            );
-        }
-    }
-
-    const container = TestUtils.renderIntoDocument(<HeaderMenuContainer />);
+    const Container = componentWithContext(<HeaderMenu {...props} />, contextOverrides);
+    const container = TestUtils.renderIntoDocument(<Container />);
     const headerMenu = TestUtils.findRenderedComponentWithType(container, HeaderMenu);
-
     return {
         headerMenu,
         props,
@@ -98,10 +64,10 @@ describe('HeaderMenu', () => {
     });
 
     it('renders a profile avatar', () => {
-        const { headerMenu, props } = setup();
+        const { headerMenu } = setup();
         const profileAvatar = TestUtils.findRenderedComponentWithType(headerMenu, ProfileAvatar);
         expect(profileAvatar).toExist();
-        expect(profileAvatar.props.profile.id).toBe(props.profile.id);
+        expect(profileAvatar.props.profile.id).toBe(headerMenu.context.auth.profile.id);
     });
 
     it('shows profile name in expanded mode and defaults to it', () => {
@@ -139,10 +105,8 @@ describe('HeaderMenu', () => {
     });
 
     it('shows team menu item if user manages a team', () => {
-        const { headerMenu } = setup({
-            managesTeam: TeamFactory.getTeam(),
-        });
-
+        const auth = AuthContextFactory.getContext(undefined, TeamFactory.getTeam());
+        const { headerMenu } = setup({}, {auth});
         TestUtils.Simulate.click(headerMenu.refs.container);
         then(() => {
             const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);

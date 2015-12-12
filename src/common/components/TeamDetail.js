@@ -13,6 +13,7 @@ import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import DetailMembers from './DetailMembers';
+import InternalPropTypes from './InternalPropTypes';
 import ProfileAvatar from './ProfileAvatar';
 import TeamDetailDescription from './TeamDetailDescription';
 import TeamDetailForm from './TeamDetailForm';
@@ -28,14 +29,13 @@ class TeamDetail extends CSSComponent {
             reportingDetails: PropTypes.object.isRequired,
             team: PropTypes.object.isRequired,
         }),
-        largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(services.profile.containers.ProfileV1),
         membersLoadMore: PropTypes.func,
         onUpdateTeamCallback: PropTypes.func.isRequired,
     }
 
     static contextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        auth: InternalPropTypes.AuthContext.isRequired,
         history: PropTypes.shape({
             pushState: PropTypes.func.isRequired,
         }).isRequired,
@@ -124,7 +124,6 @@ class TeamDetail extends CSSComponent {
         if (childTeams && childTeams.length) {
             return (
                 <TeamDetailTeams
-                    largerDevice={this.props.largerDevice}
                     onClickTeam={routeToTeam.bind(null, this.context.history)}
                     style={this.styles().section}
                     teams={childTeams}
@@ -151,7 +150,6 @@ class TeamDetail extends CSSComponent {
             return (
                 <DetailMembers
                     actionText={actionText}
-                    largerDevice={this.props.largerDevice}
                     members={members}
                     membersLoadMore={this.props.membersLoadMore}
                     onClickMember={routeToProfile.bind(null, this.context.history)}
@@ -169,7 +167,6 @@ class TeamDetail extends CSSComponent {
 
     renderTeamDetailForm(team, isManager) {
         const {
-            largerDevice,
             onUpdateTeamCallback,
         } = this.props;
 
@@ -177,7 +174,6 @@ class TeamDetail extends CSSComponent {
             return (
                 <TeamDetailForm
                     isManager={isManager}
-                    largerDevice={largerDevice}
                     onSaveCallback={onUpdateTeamCallback}
                     ref="teamDetailForm"
                     team={team}
@@ -190,14 +186,13 @@ class TeamDetail extends CSSComponent {
         const { extendedTeam, members } = this.props;
         const { team, reportingDetails } = extendedTeam;
         const { manager } = reportingDetails;
-        const { authenticatedProfile } = this.context;
+        const { profile } = this.context.auth;
         const childTeams = reportingDetails.child_teams;
 
         return (
             <div>
                 <TeamDetailHeader
                     isEditable={this.canEdit()}
-                    largerDevice={this.props.largerDevice}
                     onEditTapped={this.editButtonTapped.bind(this)}
                     team={team}
                 />
@@ -207,7 +202,7 @@ class TeamDetail extends CSSComponent {
                     {this.renderChildTeams(childTeams, team.child_team_count)}
                     {this.renderTeamMembers(manager, members, team.profile_count)}
                 </DetailContent>
-                {this.renderTeamDetailForm(team, authenticatedProfile.id === manager.id)}
+                {this.renderTeamDetailForm(team, profile.id === manager.id)}
             </div>
         );
     }

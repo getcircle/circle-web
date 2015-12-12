@@ -4,55 +4,34 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import TestUtils from 'react-addons-test-utils';
 
+import AutogrowTextarea from '../../../src/common/components/AutogrowTextarea';
+import Post from '../../../src/common/components/Post';
+
+import componentWithContext from '../../componentWithContext';
+import AuthContextFactory from '../../factories/AuthContextFactory';
 import PostFactory from '../../factories/PostFactory';
 import ProfileFactory from '../../factories/ProfileFactory';
 
-import AutogrowTextarea from '../../../src/common/components/AutogrowTextarea';
-import CSSComponent from '../../../src/common/components/CSSComponent';
-import Post from '../../../src/common/components/Post';
-
 const { PostStateV1 } = services.post.containers;
 
-function setup(propsOverrides, contextOverrides) {
+function setup(propsOverrides, adminProfile) {
 
     // Props
     const defaultProps = {
-        largerDevice: true,
         onSaveCallback: expect.createSpy(),
         post: PostFactory.getPostWithTitleAndContent('', ''),
     }
     const props = Object.assign({}, defaultProps, propsOverrides);
 
-    // Context
-    const defaultContext = {
-        authenticatedProfile: ProfileFactory.getProfile(),
-        history: {
-            pushState: expect.createSpy(),
-        },
-    };
-    const context = Object.assign({}, defaultContext, contextOverrides);
-
-    class PostTestContainer extends CSSComponent {
-
-        static childContextTypes = {
-            authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-            history: PropTypes.shape({
-                pushState: PropTypes.func.isRequired,
-            }).isRequired,
-        }
-
-        getChildContext() {
-            return context;
-        }
-
-        render() {
-            return (
-                <Post {...props} />
-            );
-        }
+    let contextOverrides;
+    if (typeof adminProfile !== 'undefined') {
+        contextOverrides = {
+            auth: AuthContextFactory.getContext(undefined, undefined, undefined, adminProfile),
+        };
     }
 
-    let container = TestUtils.renderIntoDocument(<PostTestContainer />);
+    const Container = componentWithContext(<Post {...props} />, contextOverrides);
+    let container = TestUtils.renderIntoDocument(<Container />);
     const postComponent = TestUtils.findRenderedComponentWithType(container, Post);
     return {
         postComponent,
@@ -137,9 +116,7 @@ describe('PostComponent', () => {
             const { postComponent, props } = setup({
                 autoSave: false,
                 isEditable: true,
-            }, {
-                authenticatedProfile: adminProfile,
-            });
+            }, adminProfile);
 
             expect(props.post.state).toBe(PostStateV1.DRAFT);
             expect(postComponent.shouldAllowChangingOwner()).toBe(false);
@@ -163,9 +140,7 @@ describe('PostComponent', () => {
                 autoSave: false,
                 isEditable: true,
                 post: PostFactory.getPostWithState(PostStateV1.LISTED),
-            }, {
-                authenticatedProfile: adminProfile,
-            });
+            }, adminProfile);
 
             expect(postComponent.shouldAllowChangingOwner()).toBe(true);
             expect(props.post.state).toBe(PostStateV1.LISTED);

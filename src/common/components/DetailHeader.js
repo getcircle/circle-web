@@ -2,14 +2,18 @@ import React, { PropTypes } from 'react';
 
 import Blur from './Blur';
 import CSSComponent from './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
 
 class DetailHeader extends CSSComponent {
 
     static propTypes = {
         children: PropTypes.node,
         img: PropTypes.string,
-        largerDevice: PropTypes.bool.isRequired,
         style: PropTypes.object,
+    }
+
+    static contextTypes = {
+        device: InternalPropTypes.DeviceContext.isRequired,
     }
 
     classes() {
@@ -33,12 +37,12 @@ class DetailHeader extends CSSComponent {
     render() {
         const {
             img,
-            largerDevice,
             style,
             ...other,
         } = this.props;
+        const { largerDevice } = this.context.device;
 
-        let headerImage = img && img !== '' ? img : '';
+        const headerImage = img && img !== '' ? img : '';
         if (headerImage) {
             return (
                 <Blur

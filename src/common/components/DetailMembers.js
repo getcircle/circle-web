@@ -19,7 +19,6 @@ class DetailMembers extends StyleableComponent {
         actionText: PropTypes.string,
         itemsPerCollapsedColumn: PropTypes.number,
         itemsPerColumn: PropTypes.number,
-        largerDevice: PropTypes.bool,
         members: PropTypes.arrayOf(InternalPropTypes.ProfileV1),
         membersLoadMore: PropTypes.func,
         numberOfColumns: PropTypes.number,
@@ -66,7 +65,6 @@ class DetailMembers extends StyleableComponent {
                         filterPlaceholder={this.props.viewAllFilterPlaceholderText}
                         items={this.props.members}
                         itemsLoadMore={this.props.membersLoadMore}
-                        largerDevice={this.props.largerDevice}
                         pageType={this.props.pageType}
                         ref="modal"
                         searchAttribute={this.props.viewAllAttribute}
@@ -84,7 +82,6 @@ class DetailMembers extends StyleableComponent {
             actionText,
             itemsPerCollapsedColumn,
             itemsPerColumn,
-            largerDevice,
             members,
             onClickMember,
             ...other,
@@ -95,7 +92,6 @@ class DetailMembers extends StyleableComponent {
                     items={members}
                     itemsPerCollapsedColumn={itemsPerCollapsedColumn}
                     itemsPerColumn={itemsPerColumn}
-                    largerDevice={largerDevice}
                     renderColumn={::this.renderColumn}
                 />
                 {this.renderFooter()}

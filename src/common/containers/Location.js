@@ -18,11 +18,10 @@ const selector = createSelector(
     [
         selectors.cacheSelector,
         selectors.locationsSelector,
-        selectors.responsiveSelector,
         selectors.routerParametersSelector,
         selectors.locationMembersSelector,
     ],
-    (cacheState, locationsState, responsiveState, paramsState, membersState) => {
+    (cacheState, locationsState, paramsState, membersState) => {
         let office, members, membersNextRequest;
         const locationId = paramsState.locationId;
         const cache = cacheState.toJS();
@@ -38,7 +37,6 @@ const selector = createSelector(
             members,
             membersNextRequest,
             office,
-            largerDevice: responsiveState.get('largerDevice'),
         };
     }
 );
@@ -61,7 +59,6 @@ class Location extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
-        largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(PropTypes.instanceOf(services.profile.containers.ProfileV1)),
         membersNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         // NB: This is named "office" bc "location" is used by react-router >.<
@@ -96,7 +93,6 @@ class Location extends CSSComponent {
         if (office && members) {
             return (
                 <LocationDetail
-                    largerDevice={this.props.largerDevice}
                     members={members}
                     membersLoadMore={() => this.loadLocationMembers(this.props)}
                     office={office}

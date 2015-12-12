@@ -18,7 +18,6 @@ import ProfileAvatar from './ProfileAvatar';
 class ProfileDetailTeam extends CSSComponent {
 
     static propTypes = {
-        largerDevice: PropTypes.bool.isRequired,
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         onClickManager: PropTypes.func,
         onClickPeer: PropTypes.func,
@@ -107,7 +106,6 @@ class ProfileDetailTeam extends CSSComponent {
                 <DetailViewAll
                     filterPlaceholder="Search Peers"
                     items={this.props.peers}
-                    largerDevice={this.props.largerDevice}
                     pageType={PAGE_TYPE.PEERS}
                     ref="peers"
                     searchAttribute={services.search.containers.search.AttributeV1.TEAM_ID}

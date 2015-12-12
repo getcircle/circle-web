@@ -16,7 +16,6 @@ import ProfileAvatar from './ProfileAvatar';
 class StatusDetail extends CSSComponent {
 
     static propTypes = {
-        largerDevice: PropTypes.bool.isRequired,
         status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
     }
 

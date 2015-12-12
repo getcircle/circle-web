@@ -10,9 +10,10 @@ import * as selectors from '../selectors';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 
 import CSSComponent from  './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
+import ProfileAvatar from './ProfileAvatar';
 import SelectField from './SelectField';
 import SelectDialog from './SelectDialog';
-import ProfileAvatar from './ProfileAvatar';
 
 const cacheSelector = selectors.createImmutableSelector(
     [
@@ -76,7 +77,6 @@ class ProfilesSelector extends CSSComponent {
         fieldListStyle: PropTypes.object,
         fieldSearchIconStyle: PropTypes.object,
         fieldSearchInputStyle: PropTypes.object,
-        largerDevice: PropTypes.bool.isRequired,
         listDividerStyle: PropTypes.object,
         listItemInnerDivStyle: PropTypes.object,
         onSelect: PropTypes.func,
@@ -86,6 +86,10 @@ class ProfilesSelector extends CSSComponent {
         results: PropTypes.object,
         searchInputPlaceholder: PropTypes.string,
         value: PropTypes.string,
+    }
+
+    static contextTypes = {
+        device: InternalPropTypes.DeviceContext.isRequired,
     }
 
     static defaultProps = {
@@ -221,7 +225,7 @@ class ProfilesSelector extends CSSComponent {
     render() {
         let field;
         let dialog;
-        if (this.props.largerDevice) {
+        if (this.context.device.largerDevice) {
             field = this.renderField();
         } else {
             dialog = this.renderDialog();

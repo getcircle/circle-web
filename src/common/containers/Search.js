@@ -4,7 +4,6 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { canvasColor, fontColors } from '../constants/styles';
-import { getAuthenticatedProfile } from '../reducers/authentication';
 import { loadSearchResults } from '../actions/search';
 import { resetScroll } from '../utils/window';
 import { replaceSearchQuery } from '../utils/routes';
@@ -21,22 +20,11 @@ import { default as SearchComponent } from '../components/Search';
 
 const selector = createSelector(
     [
-        selectors.authenticationSelector,
-        selectors.cacheSelector,
-        selectors.responsiveSelector,
-        selectors.routerParametersSelector,
         selectors.searchSelector,
     ],
-    (authenticationState, cacheState, responsiveState, routerParamsState, searchState) => {
-        const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
+    (searchState) => {
         return {
-            authenticatedProfile: profile,
-            flags: authenticationState.get('flags'),
-            largerDevice: responsiveState.get('largerDevice'),
             loading: searchState.get('loading'),
-            managesTeam: authenticationState.get('managesTeam'),
-            mobileOS: responsiveState.get('mobileOS'),
-            organization: authenticationState.get('organization'),
             results: searchState.get('results').toJS(),
         }
     },
@@ -57,39 +45,19 @@ function fetchData(getState, dispatch, location, params) {
 class Search extends CSSComponent {
 
     static propTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         dispatch: PropTypes.func.isRequired,
-        flags: PropTypes.object,
-        largerDevice: PropTypes.bool.isRequired,
-        managesTeam: PropTypes.object,
-        mobileOS: PropTypes.bool.isRequired,
-        organization: PropTypes.object.isRequired,
         params: PropTypes.object.isRequired,
         results: PropTypes.arrayOf(PropTypes.instanceOf(services.search.containers.SearchResultV1)),
     }
 
     static contextTypes = {
+        history: PropTypes.object.isRequired,
         mixins: PropTypes.object,
         muiTheme: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired,
-    }
-
-    static childContextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-        flags: PropTypes.object,
-        mobileOS: PropTypes.bool.isRequired,
     }
 
     state = {
         focused: false,
-    }
-
-    getChildContext() {
-        return {
-            authenticatedProfile: this.props.authenticatedProfile,
-            flags: this.props.flags,
-            mobileOS: this.props.mobileOS,
-        };
     }
 
     componentWillMount() {
@@ -200,8 +168,6 @@ class Search extends CSSComponent {
 
     renderContent() {
         const {
-            largerDevice,
-            organization,
             results,
             params: { query },
         } = this.props;
@@ -219,9 +185,7 @@ class Search extends CSSComponent {
                         canExplore={false}
                         className="row center-xs"
                         focused={true}
-                        largerDevice={largerDevice}
                         limitResultsListHeight={false}
-                        organization={organization}
                         query={query}
                         results={results}
                         retainResultsOnBlur={true}
@@ -236,18 +200,12 @@ class Search extends CSSComponent {
     }
 
     renderHeaderActionsContainer() {
-        const {
-            largerDevice,
-        } = this.props;
-
         return (
             <SearchComponent
                 canExplore={false}
                 className="center-xs"
-                largerDevice={largerDevice}
                 onBlur={::this.handleBlurSearch}
                 onFocus={::this.handleFocusSearch}
-                organization={this.props.organization}
                 processResults={false}
                 ref="headerSearch"
                 retainResultsOnBlur={true}
@@ -258,15 +216,10 @@ class Search extends CSSComponent {
     }
 
     render() {
-        const {
-            authenticatedProfile,
-        } = this.props;
-
         return (
             <Container>
                 <Header
                     actionsContainer={this.renderHeaderActionsContainer()}
-                    profile={authenticatedProfile}
                     {...this.props}
                 />
                 {this.renderContent()}

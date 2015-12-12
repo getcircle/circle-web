@@ -1,15 +1,13 @@
 import expect from 'expect';
 import faker from 'faker';
-import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import SearchResultFactory from '../../factories/SearchResultFactory';
-import ProfileFactory from '../../factories/ProfileFactory';
-
 import createStore from '../../../src/common/createStore';
-import CSSComponent from '../../../src/common/components/CSSComponent';
 import Search from '../../../src/common/components/Search';
+
+import componentWithContext from '../../componentWithContext';
+import SearchResultFactory from '../../factories/SearchResultFactory';
 
 const store = createStore();
 
@@ -19,44 +17,13 @@ function setup(propsOverrides, contextOverrides) {
     const defaultProps = {
         canExplore: false,
         focused: true,
-        largerDevice: true,
         searchLocation: faker.hacker.verb(),
         store: store,
     }
     const props = Object.assign({}, defaultProps, propsOverrides);
 
-    // Context
-    const defaultContext = {
-        authenticatedProfile: ProfileFactory.getProfile(),
-        history: {
-            pushState: expect.createSpy(),
-        },
-        mixins: {},
-    };
-    const context = Object.assign({}, defaultContext, contextOverrides);
-
-    class SearchTestContainer extends CSSComponent {
-
-        static childContextTypes = {
-            authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-            history: PropTypes.shape({
-                pushState: PropTypes.func.isRequired,
-            }).isRequired,
-            mixins: PropTypes.object.isRequired,
-        }
-
-        getChildContext() {
-            return context;
-        }
-
-        render() {
-            return (
-                <Search {...props} />
-            );
-        }
-    }
-
-    let container = TestUtils.renderIntoDocument(<SearchTestContainer />);
+    const Container = componentWithContext(<Search {...props} />, contextOverrides);
+    let container = TestUtils.renderIntoDocument(<Container />);
     const searchComponent = TestUtils.findRenderedComponentWithType(container, Search).getWrappedInstance();
     return {
         searchComponent,

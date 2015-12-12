@@ -20,6 +20,7 @@ import t from '../utils/gettext';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
+import InternalPropTypes from '../components/InternalPropTypes';
 import Post from '../components/Post';
 import Header from '../components/Header';
 import RoundedButton from '../components/RoundedButton';
@@ -28,14 +29,12 @@ const { PostV1, PostStateV1 } = services.post.containers;
 
 const selector = selectors.createImmutableSelector(
     [
-        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.filesSelector,
         selectors.postSelector,
         selectors.routerParametersSelector,
-        selectors.responsiveSelector
     ],
-    (authenticationState, cacheState, filesState, postState, paramsState, responsiveState) => {
+    (cacheState, filesState, postState, paramsState) => {
 
         let post;
         let postId = null;
@@ -52,15 +51,8 @@ const selector = selectors.createImmutableSelector(
         }
 
         return {
-            authenticated: authenticationState.get('authenticated'),
-            authenticatedProfile: authenticationState.get('profile'),
-            flags: authenticationState.get('flags'),
             isSaving: postState.get('loading'),
-            largerDevice: responsiveState.get('largerDevice'),
-            managesTeam: authenticationState.get('managesTeam'),
-            mobileOS: responsiveState.get('mobileOS'),
             post: post,
-            organization: authenticationState.get('organization'),
             shouldAutoSave: !post || (post && (!post.state || post.state === PostStateV1.DRAFT)),
             uploadedFiles: filesState.get('files'),
             uploadingFiles: filesState.get('loading'),
@@ -79,35 +71,25 @@ function fetchData(getState, dispatch, location, params) {
 class PostEditor extends CSSComponent {
 
     static propTypes = {
-        authenticated: PropTypes.bool.isRequired,
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         dispatch: PropTypes.func.isRequired,
-        flags: PropTypes.object,
         isSaving: PropTypes.bool,
-        largerDevice: PropTypes.bool.isRequired,
-        managesTeam: PropTypes.object,
-        mobileOS: PropTypes.bool.isRequired,
-        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1).isRequired,
         params: PropTypes.shape({
             postId: PropTypes.string,
         }),
-        post: PropTypes.instanceOf(services.post.containers.PostV1),
+        post: InternalPropTypes.PostV1,
         shouldAutoSave: PropTypes.bool,
         uploadedFiles: PropTypes.object,
         uploadingFiles: PropTypes.bool,
     }
 
     static contextTypes = {
+        auth: InternalPropTypes.AuthContext.isRequired,
         history: PropTypes.shape({
             pushState: PropTypes.func.isRequired,
         }).isRequired,
     }
 
     static childContextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-        flags: PropTypes.object,
-        largerDevice: PropTypes.bool,
-        mobileOS: PropTypes.bool.isRequired,
         showCTAsInHeader: PropTypes.bool,
     }
 
@@ -119,9 +101,6 @@ class PostEditor extends CSSComponent {
 
     getChildContext() {
         return {
-            authenticatedProfile: this.props.authenticatedProfile,
-            flags: this.props.flags,
-            mobileOS: this.props.mobileOS,
             showCTAsInHeader: false,
         };
     }
@@ -271,7 +250,7 @@ class PostEditor extends CSSComponent {
             !(params && params.postId),
             post.file_ids.length,
             POST_SOURCE.WEB_APP,
-            owner && this.props.authenticatedProfile.id !== owner.id
+            owner && this.context.auth.profile.id !== owner.id
         );
 
         this.onSavePost(
@@ -362,7 +341,6 @@ class PostEditor extends CSSComponent {
     renderPost() {
         const {
             isSaving,
-            largerDevice,
             params,
             post,
             shouldAutoSave,
@@ -378,7 +356,6 @@ class PostEditor extends CSSComponent {
             <Post
                 autoSave={shouldAutoSave}
                 isEditable={this.canEdit()}
-                largerDevice={largerDevice}
                 onFileDeleteCallback={::this.onFileDelete}
                 onFileUploadCallback={::this.onFileUpload}
                 onSaveCallback={::this.onSavePost}
@@ -393,18 +370,9 @@ class PostEditor extends CSSComponent {
     }
 
     render() {
-        const {
-            authenticatedProfile,
-            ...other,
-        } = this.props;
-
         return (
             <Container {...this.styles().Container}>
-                <Header
-                    actionsContainer={this.renderHeaderActionsContainer()}
-                    profile={authenticatedProfile}
-                    {...other}
-                />
+                <Header actionsContainer={this.renderHeaderActionsContainer()} {...this.props} />
                 {this.renderPost()}
             </Container>
         );

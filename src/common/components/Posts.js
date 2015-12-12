@@ -25,7 +25,6 @@ const { PostStateV1 } = services.post.containers;
 class Posts extends CSSComponent {
 
     static propTypes = {
-        largerDevice: PropTypes.bool.isRequired,
         loading: PropTypes.bool,
         onDeletePostCallback: PropTypes.func.isRequired,
         postState: PropTypes.string,

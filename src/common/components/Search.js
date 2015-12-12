@@ -44,6 +44,7 @@ import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
+import InternalPropTypes from './InternalPropTypes';
 import LightBulbIcon from './LightBulbIcon';
 import MailIcon from './MailIcon';
 import OfficeIcon from './OfficeIcon';
@@ -186,7 +187,6 @@ class Search extends CSSComponent {
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
-        largerDevice: PropTypes.bool,
         limitResultsListHeight: PropTypes.bool,
         loading: PropTypes.bool,
         locations: PropTypes.arrayOf(
@@ -197,7 +197,6 @@ class Search extends CSSComponent {
         onCancel: PropTypes.func,
         onFocus: PropTypes.func,
         onSelectItem: PropTypes.func,
-        organization: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
         placeholder: PropTypes.string,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
@@ -230,6 +229,8 @@ class Search extends CSSComponent {
     }
 
     static contextTypes = {
+        auth: InternalPropTypes.AuthContext.isRequired,
+        device: InternalPropTypes.DeviceContext.isRequired,
         history: PropTypes.shape({
             pushState: PropTypes.func.isRequired,
         }).isRequired,
@@ -245,7 +246,6 @@ class Search extends CSSComponent {
         canExplore: true,
         defaultsLoadMore() {},
         focused: false,
-        largerDevice: false,
         limitResultsListHeight: true,
         loading: false,
         onBlur() {},
@@ -326,6 +326,12 @@ class Search extends CSSComponent {
         if (props.query !== null && props.query.trim().length > 0) {
             this.setValue(this.props.query);
         }
+    }
+
+    styles() {
+        return this.css({
+            'largerDevice': this.context.device.largerDevice,
+        });
     }
 
     classes() {
@@ -470,7 +476,7 @@ class Search extends CSSComponent {
                     fontSize: '12px',
                 },
             },
-            'largerDevice-true': {
+            'largerDevice': {
                 autoComplete: {
                     maxWidth: this.props.searchContainerWidth,
                 },
@@ -893,7 +899,7 @@ class Search extends CSSComponent {
     }
 
     getDefaultResults() {
-        const { organization } = this.props;
+        const { organization } = this.context.auth;
         const { CategoryV1 } = services.search.containers.search;
         const items = [
             {

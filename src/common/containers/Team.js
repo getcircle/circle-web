@@ -16,14 +16,12 @@ import TeamDetail from '../components/TeamDetail';
 
 const selector = createSelector(
     [
-        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.extendedTeamsSelector,
-        selectors.responsiveSelector,
         selectors.routerParametersSelector,
         selectors.teamMembersSelector,
     ],
-    (authenticationState, cacheState, extendedTeamsState, responsiveState, parametersSelector, membersState) => {
+    (cacheState, extendedTeamsState, parametersSelector, membersState) => {
         let extendedTeam, members, membersNextRequest;
         const teamId = parametersSelector.teamId;
         const cache = cacheState.toJS();
@@ -37,8 +35,6 @@ const selector = createSelector(
         }
         return {
             extendedTeam: extendedTeam,
-            largerDevice: responsiveState.get('largerDevice'),
-            authenticatedProfile: authenticationState.get('profile'),
             members: members,
             membersNextRequest: membersNextRequest,
         };
@@ -65,13 +61,11 @@ function fetchData(getState, dispatch, location, params) {
 class Team extends CSSComponent {
 
     static propTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         dispatch: PropTypes.func.isRequired,
         extendedTeam: PropTypes.shape({
             reportingDetails: PropTypes.object.isRequired,
             team: PropTypes.object.isRequired,
         }),
-        largerDevice: PropTypes.bool.isRequired,
         members: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ProfileV1),
         ),
@@ -79,16 +73,6 @@ class Team extends CSSComponent {
         params: PropTypes.shape({
             teamId: PropTypes.string,
         }),
-    }
-
-    static childContextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-    }
-
-    getChildContext() {
-        return {
-            authenticatedProfile: this.props.authenticatedProfile,
-        };
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -110,16 +94,15 @@ class Team extends CSSComponent {
     renderTeam() {
         const {
             extendedTeam,
-            largerDevice,
             members,
         } = this.props;
         if (extendedTeam) {
             return (
                 <TeamDetail
                     extendedTeam={extendedTeam}
-                    largerDevice={largerDevice}
                     members={members}
-                    membersLoadMore={() => fetchTeamMembers.bind(
+                    membersLoadMore={fetchTeamMembers.bind(
+                        null,
                         this.props.dispatch,
                         this.props.params,
                         this.props.membersNextRequest

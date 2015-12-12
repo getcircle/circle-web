@@ -29,6 +29,7 @@ import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
 import IconContainer from './IconContainer';
+import InternalPropTypes from './InternalPropTypes';
 import ProfileAvatar from './ProfileAvatar';
 import Share from './Share';
 
@@ -41,18 +42,17 @@ class Post extends CSSComponent {
         autoSave: PropTypes.bool,
         header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
-        largerDevice: PropTypes.bool.isRequired,
         onFileDeleteCallback: PropTypes.func,
         onFileUploadCallback: PropTypes.func,
         onSaveCallback: PropTypes.func,
-        post: PropTypes.instanceOf(services.post.containers.PostV1),
+        post: InternalPropTypes.PostV1,
         saveInProgress: PropTypes.bool,
         style: PropTypes.object,
         uploadedFiles: PropTypes.object,
     }
 
     static contextTypes = {
-        authenticatedProfile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        auth: InternalPropTypes.AuthContext.isRequired,
         history: PropTypes.shape({
             pushState: PropTypes.func.isRequired,
         }).isRequired,
@@ -560,7 +560,7 @@ class Post extends CSSComponent {
     }
 
     getSuggestImprovementsLink(post) {
-        return mailToPostFeedback(post, this.context.authenticatedProfile);
+        return mailToPostFeedback(post, this.context.auth.profile);
     }
 
     getUpdatedFilesMap(files, namesOfDeletedFiles = this.state.namesOfDeletedFiles) {
@@ -581,17 +581,13 @@ class Post extends CSSComponent {
     }
 
     shouldAllowChangingOwner() {
-        const {
-            authenticatedProfile,
-        } = this.context;
+        const { profile } = this.context.auth;
 
-        const {
-            post,
-        } = this.props;
+        const { post } = this.props;
 
         // Only admin users can see the change_owner button
-        return authenticatedProfile &&
-            !!authenticatedProfile.is_admin &&
+        return profile &&
+            !!profile.is_admin &&
             post &&
             post.state === PostStateV1.LISTED;
     }
@@ -603,7 +599,7 @@ class Post extends CSSComponent {
             post,
         } = this.props;
 
-        if (post && post.by_profile_id && post.by_profile_id !== this.context.authenticatedProfile.id) {
+        if (post && post.by_profile_id && post.by_profile_id !== this.context.auth.profile.id) {
             return (
                 <FlatButton
                     href={this.getSuggestImprovementsLink(post)}
@@ -645,7 +641,7 @@ class Post extends CSSComponent {
                 <div className="row middle-xs end-xs" key="header-container" style={this.styles().headerContainer}>
                     {editButton}
                     <Share
-                        mailToHref={mailtoSharePost(post, this.context.authenticatedProfile)}
+                        mailToHref={mailtoSharePost(post, this.context.auth.profile)}
                         onShareCallback={(shareMethod) => {
                             tracker.trackShareContent(
                                 post.id,
@@ -811,7 +807,6 @@ class Post extends CSSComponent {
             return (
                 <DetailViewAll
                     filterPlaceholder={t('Search People')}
-                    largerDevice={this.props.largerDevice}
                     onSelectItem={::this.onOwnerSelected}
                     pageType={PAGE_TYPE.CHANGE_POST_OWNER}
                     ref="changeOwnerModal"
@@ -844,7 +839,7 @@ class Post extends CSSComponent {
     renderEditableContent() {
         let author = this.state.owner;
         if (author === null || author === undefined) {
-            author = this.context.authenticatedProfile;
+            author = this.context.auth.profile;
         }
 
         return (

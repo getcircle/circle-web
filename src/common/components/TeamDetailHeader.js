@@ -14,7 +14,6 @@ class TeamDetailHeader extends CSSComponent {
 
     static propTypes = {
         isEditable: PropTypes.bool,
-        largerDevice: PropTypes.bool.isRequired,
         onEditTapped: PropTypes.func,
         team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
     }
@@ -119,7 +118,7 @@ class TeamDetailHeader extends CSSComponent {
         let iconColor = {...this.styles().icon}.color;
         let iconStrokeWidth = {...this.styles().icon}.strokeWidth;
         return (
-            <DetailHeader largerDevice={this.props.largerDevice}>
+            <DetailHeader>
                 {this.renderEditButton()}
                 <div className="row center-xs" style={this.styles().iconSection}>
                     <IconContainer
