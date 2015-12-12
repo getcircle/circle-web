@@ -77,6 +77,10 @@ trix-toolbar .dialog.active {
     z-index: 5;
 }
 
+trix-toolbar .button_group button.attach::before {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTYuNSA2djExLjVjMCAyLjIxLTEuNzkgNC00IDRzLTQtMS43OS00LTRWNWMwLTEuMzggMS4xMi0yLjUgMi41LTIuNXMyLjUgMS4xMiAyLjUgMi41djEwLjVjMCAuNTUtLjQ1IDEtMSAxcy0xLS40NS0xLTFWNkgxMHY5LjVjMCAxLjM4IDEuMTIgMi41IDIuNSAyLjVzMi41LTEuMTIgMi41LTIuNVY1YzAtMi4yMS0xLjc5LTQtNC00UzcgMi43OSA3IDV2MTIuNWMwIDMuMDQgMi40NiA1LjUgNS41IDUuNXM1LjUtMi40NiA1LjUtNS41VjZoLTEuNXoiLz48L3N2Zz4=);
+}
+
 /* Editor */
 
 trix-editor [data-trix-mutable~=true] {
@@ -90,6 +94,7 @@ trix-editor [data-trix-mutable~=true] {
     border: 0;
     border-radius: 0;
     color: rgba(0,0,0,0.8);
+    font-size: 1.8rem;
     margin: 0;
     min-height: 100px;
     outline: none;
@@ -271,6 +276,10 @@ trix-editor img {
     width: 100%;
 }
 
+.leditor a[data-trix-attachment] .attachment {
+    width: initial;
+}
+
 .leditor .attachment.attachment-file {
     line-height: 30px;
 }
@@ -367,4 +376,12 @@ trix-editor:empty:not(:focus)::before {
 
 .leditor-container.dropzone .leditor {
     cursor: move;
+}
+
+.leditor-container .hidden-file-picker {
+    height: 0;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 0;
 }

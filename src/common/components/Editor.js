@@ -2,8 +2,6 @@ import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 import 'script!trix/dist/trix.js';
 
-import logger from '../utils/logger';
-
 import CSSComponent from './CSSComponent';
 
 class Editor extends CSSComponent {
@@ -56,7 +54,7 @@ class Editor extends CSSComponent {
     }
 
     mergeStateAndProps(props) {
-        if (this.state.value === null && props.value) {
+        if (this.state.value === null && props.value && this.refs.leditorContainer) {
             this.setState({
                 value: props.value,
             }, () => {
@@ -71,15 +69,29 @@ class Editor extends CSSComponent {
     }
 
     setup() {
+        // Add keyboard short-cut to code block
         const codeButton = document.querySelector('.button_group.block_tools .code');
         if (codeButton) {
             codeButton.setAttribute('data-key', 'alt+6');
+        }
+
+        // Add attach button in toolbar
+        const attachButton = document.querySelector('.button_group.block_tools .attach');
+        if (!attachButton) {
+            const attachButtonElement = document.createElement('button');
+            attachButtonElement.setAttribute('type', 'button');
+            attachButtonElement.setAttribute('class', 'attach');
+            attachButtonElement.setAttribute('data-action', 'x-attach');
+            attachButtonElement.innerHTML = 'Attach Files';
+            document.querySelector('.button_group.block_tools').appendChild(attachButtonElement);
+            document.addEventListener('trix-action-invoke', (event) => this.handleAttachButtonClicked(event));
         }
     }
 
     attachEventListeners() {
         document.addEventListener('trix-change', (event) => this.handleChange(event));
         document.addEventListener('trix-attachment-add', (event) => this.handleFileAdd(event));
+        document.addEventListener('trix-file-accept', (event) => this.handleFileVerification(event));
     }
 
     updateFileUploadProgress(props) {
@@ -114,12 +126,39 @@ class Editor extends CSSComponent {
         }
     }
 
+    handleAttachButtonClicked(trixEvent) {
+        if (trixEvent.actionName === 'x-attach' && this.refs.filePicker) {
+            const editorElement = trixEvent.target;
+            editorElement.focus();
+            this.refs.filePicker.click();
+            trixEvent.preventDefault();
+        }
+    }
+
+    handleSelectedFiles(event) {
+        if (event.target && event.target.files) {
+            event.preventDefault();
+            const files = event.target.files;
+            for (let fileKey in files) {
+                document.querySelector('trix-editor').editor.insertFile(files[fileKey]);
+            }
+        }
+    }
+
+    handleFileVerification(event) {
+        if (!event || !event.file || typeof event.file !== 'object') {
+            event.preventDefault();
+        }
+    }
+
     handleFileAdd(event) {
-        if (event && event.attachment && event.attachment.file) {
+        if (event && event.attachment && event.attachment.file && typeof event.attachment.file === 'object') {
             const { onUploadCallback } = this.props;
             const file = event.attachment.file;
-            this.attachmentObjects[file.name] = event.attachment;
-            onUploadCallback(file);
+            if (file.name) {
+                this.attachmentObjects[file.name] = event.attachment;
+                onUploadCallback(file);
+            }
         }
     }
 
@@ -185,6 +224,13 @@ class Editor extends CSSComponent {
                     onDragEnter={::this.handleDragEnter}
                     onDragLeave={::this.handleDragLeave}
                     placeholder={placeholder}
+                />
+                <input
+                    className="hidden-file-picker"
+                    multiple={true}
+                    onChange={::this.handleSelectedFiles}
+                    ref="filePicker"
+                    type="file"
                 />
             </div>
         );
