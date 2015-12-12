@@ -5,7 +5,7 @@ import faker from 'faker';
 import cache from '../../../src/common/reducers/cache';
 
 function mockPayloadWithPost(postId = faker.random.uuid(), postFields = Immutable.Map()) {
-    let posts = {};
+    const posts = {};
     posts[postId] = Immutable.Map(postFields);
     return {
         normalizations: Immutable.Map({
