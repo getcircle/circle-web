@@ -19,19 +19,28 @@ describe('cache reducer', () => {
 
     it('replaces normalizations for objects already in cache instead of merging them', () => {
         const postId = faker.random.uuid();
+        const fileId = faker.random.uuid();
         const initialState = Immutable.Map(mockPayloadWithPost(
             postId,
             {
-                'by_profile_id': faker.random.uuid()
+                'by_profile_id': faker.random.uuid(),
+                'files': [fileId, faker.random.uuid(), faker.random.uuid()],
             }
         ));
         const state = cache(
             initialState,
             {
-                payload: mockPayloadWithPost(postId)
+                payload: mockPayloadWithPost(
+                    postId,
+                    {
+                        'files': [fileId],
+                    }
+                )
             }
         );
         expect(state.get('normalizations').get('.services.post.containers.postv1').get(postId).has('by_profile_id')).to.not.be.ok();
+        expect(state.get('normalizations').get('.services.post.containers.postv1').get(postId).get('files').length).to.be(1);
+        expect(state.get('normalizations').get('.services.post.containers.postv1').get(postId).get('files')[0]).to.be(fileId);
     });
 
     it('keeps existing normalizations after adding in new ones', () => {
