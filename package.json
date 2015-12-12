@@ -75,6 +75,7 @@
     "protobuf-normalizr": "git+https://c9b60542c1a793a1bcc0b1e95ce3ab3d2da148c4:x-oauth-basic@github.com/mhahn/protobuf-normalizr.git#v0.0.17",
     "protobufs": "git+https://c9b60542c1a793a1bcc0b1e95ce3ab3d2da148c4:x-oauth-basic@github.com/getcircle/protobuf-registry.git#2.54.0",
     "react": "^0.14.0",
+    "react-addons-transition-group": "^0.14.3",
     "react-dom": "^0.14.0",
     "react-dropzone": "^3.0.0",
     "react-infinite": "^0.7.1",
