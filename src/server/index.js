@@ -15,6 +15,17 @@ const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
 
+// Setup basic http auth for our dev environment to restrict access to admins
+if (process.env.NODE_ENV === 'development') {
+    const auth = require('http-auth');
+    const basic = auth.basic({
+        realm: 'luno'
+    }, (username, password, callback) => {
+        callback(username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD);
+    });
+    app.use(auth.connect(basic));
+}
+
 app.use(morgan(':remote-addr :method :url HTTP/:http-version :status :res[content-length] ":referrer" ":user-agent" - :response-time ms'));
 app.use(compression());
 app.use(favicon(path.join(__dirname, '..', '..', 'static', 'images', 'favicon.ico')));
