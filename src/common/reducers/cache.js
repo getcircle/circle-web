@@ -19,8 +19,8 @@ export default function cache(state = initialState, action) {
             // The old normalizations may contain fields that don't exist in the new normalizations
             // and these will remain if merged.
             if (action.payload.normalizations) {
-                Immutable.Map(action.payload.normalizations).map((normalizations, normalizationsType) => {
-                    Immutable.Map(normalizations).map((normalization, normalizationId) => {
+                action.payload.normalizations.forEach((normalizations, normalizationsType) => {
+                    normalizations.forEach((normalization, normalizationId) => {
                         map.deleteIn(['normalizations', normalizationsType, normalizationId]);
                     });
                 });
