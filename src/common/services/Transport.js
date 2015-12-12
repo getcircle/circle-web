@@ -30,13 +30,11 @@ function getBody(response) {
 }
 
 function getApiEndpoint(req) {
-    let origin;
     if (__CLIENT__) {
-        origin = window.location.origin;
+        return `${window.location.origin}/api/`;
     } else {
-        origin = `${req.protocol}://${req.get('host')}`;
+        return process.env.REMOTE_API_ENDPOINT;
     }
-    return origin + '/api/';
 }
 
 export default class Transport {
