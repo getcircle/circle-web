@@ -7,13 +7,6 @@ import Search from './Search';
 
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
-// Spec:
-
-// [x] taking an array of objects and displays them in a modal
-// [x] has a filter box at the top for filtering the content
-    // [ ] needs to take CategoryV1, AttributeV1 and the attribute value so we can filter the searchk
-// [x] exposes a "show" and "dismiss" dialog
-
 class DetailViewAll extends CSSComponent {
 
     static propTypes = {
