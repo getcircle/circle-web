@@ -7,4 +7,4 @@ RUN npm install --only=prod
 ADD . /app
 
 EXPOSE 3000
-CMD ["npm", "run", "server]
+CMD ["npm", "run", "start"]
