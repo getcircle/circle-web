@@ -19,11 +19,12 @@ export default function cache(state = initialState, action) {
             // The old normalizations may contain fields that don't exist in the new normalizations
             // and these will remain if merged.
             if (action.payload.normalizations) {
-                action.payload.normalizations.forEach((normalizations, normalizationsType) => {
-                    normalizations.forEach((normalization, normalizationId) => {
+                for (var normalizationsType in action.payload.normalizations) {
+                    const normalizations = action.payload.normalizations[normalizationsType];
+                    for (var normalizationId in normalizations) {
                         map.deleteIn(['normalizations', normalizationsType, normalizationId]);
-                    });
-                });
+                    }
+                }
             }
 
             map.mergeDeepIn(['entities'], action.payload.entities)
