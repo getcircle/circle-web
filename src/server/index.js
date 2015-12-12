@@ -15,7 +15,7 @@ const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
 
-app.use(morgan('combined'));
+app.use(morgan(':remote-addr :method :url HTTP/:http-version :status :res[content-length] ":referrer" ":user-agent" - :response-time ms'));
 app.use(compression());
 app.use(favicon(path.join(__dirname, '..', '..', 'static', 'images', 'favicon.ico')));
 
