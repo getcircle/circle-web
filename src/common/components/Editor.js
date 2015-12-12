@@ -34,12 +34,18 @@ class Editor extends CSSComponent {
     // by using setState. This is also mutated in multiple places.
     attachmentObjects = {};
     dragEventCounter = 0;
+    headerOffsetHeight = 0;
+    toolbar = null;
+    editorElement = null;
 
     componentDidMount() {
         this.setup();
         this.attachEventListeners();
         this.mergeStateAndProps(this.props);
         this.dragEventCounter = 0;
+        this.headerOffsetHeight = document.querySelector('header').offsetHeight;
+        this.toolbar = document.querySelector('trix-toolbar');
+        this.editorElement = document.querySelector('trix-editor');
     }
 
     componentWillReceiveProps(nextProps) {
@@ -58,14 +64,13 @@ class Editor extends CSSComponent {
             this.setState({
                 value: props.value,
             }, () => {
-                const trixEditor = document.querySelector('trix-editor');
-                trixEditor.editor.insertHTML(props.value);
+                this.editorElement.editor.insertHTML(props.value);
             });
         }
     }
 
     focus() {
-        document.querySelector('trix-editor').focus();
+        this.editorElement.focus();
     }
 
     setup() {
@@ -92,6 +97,7 @@ class Editor extends CSSComponent {
         document.addEventListener('trix-change', (event) => this.handleChange(event));
         document.addEventListener('trix-attachment-add', (event) => this.handleFileAdd(event));
         document.addEventListener('trix-file-accept', (event) => this.handleFileVerification(event));
+        document.addEventListener('scroll', (event) => this.handleScroll(event));
     }
 
     updateFileUploadProgress(props) {
@@ -140,7 +146,7 @@ class Editor extends CSSComponent {
             event.preventDefault();
             const files = event.target.files;
             for (let fileKey in files) {
-                document.querySelector('trix-editor').editor.insertFile(files[fileKey]);
+                this.editorElement.editor.insertFile(files[fileKey]);
             }
         }
     }
@@ -193,6 +199,19 @@ class Editor extends CSSComponent {
         this.setState({
             dragStart: false,
         });
+    }
+
+    handleScroll(event) {
+        const elementToCompare = this.toolbar.classList.contains('sticky') ? this.toolbar.parentNode : this.toolbar;
+        if (elementToCompare.getBoundingClientRect().top <= this.headerOffsetHeight) {
+            if (!this.toolbar.classList.contains('sticky')) {
+                this.toolbar.classList.add('sticky');
+                this.toolbar.style.width = window.getComputedStyle(this.editorElement).width;
+            }
+        } else if (this.toolbar.classList.contains('sticky')) {
+            this.toolbar.classList.remove('sticky');
+            this.toolbar.style.width = '100%';
+        }
     }
 
     renderDropzoneIndicator() {
