@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import {services} from 'protobufs';
 
 import Dialog from './Dialog';
 import CSSComponent from './CSSComponent';
