@@ -17,7 +17,7 @@
     "setup-dns": "echo '127.0.0.1 local.lunohq.com' >> /etc/hosts && dscacheutil -flushcache",
     "start": "node bin/server.js",
     "start-dev": "node ./node_modules/better-npm-run start-dev",
-    "start-docker": "npm run build-dev && docker-compose up -d",
+    "start-docker": "npm run package-dev && docker-compose up -d",
     "test": "mocha",
     "test-watch": "npm test -- --watch --growl",
     "watch-client": "node ./node_modules/better-npm-run watch-client"
