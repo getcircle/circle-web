@@ -74,6 +74,7 @@ class Post extends CSSComponent {
         owner: null,
         title: '',
         uploadedFiles: Immutable.Map(),
+        namesOfDeletedFiles: [],
     }
 
     componentWillMount() {
@@ -369,7 +370,9 @@ class Post extends CSSComponent {
         if (props.post && props.post.files) {
             uploadedFiles = uploadedFiles.asMutable();
             props.post.files.forEach((file) => {
-                uploadedFiles.set(file.name, file);
+                if (this.state.namesOfDeletedFiles.indexOf(file.name) < 0) {
+                    uploadedFiles.set(file.name, file);
+                }
             });
 
             files = this.getUpdatedFilesMap(props.post.files);
@@ -433,13 +436,15 @@ class Post extends CSSComponent {
             updatedState.uploadedFiles = existingUploadedFiles.delete(file.name);
         }
 
+        updatedState.namesOfDeletedFiles = this.state.namesOfDeletedFiles;
+        updatedState.namesOfDeletedFiles.push(file.name);
+
         this.setState(updatedState, () => {
             this.saveData(false);
+            if (onFileDeleteCallback) {
+                onFileDeleteCallback(file);
+            }
         });
-
-        if (onFileDeleteCallback) {
-            onFileDeleteCallback(file);
-        }
     }
 
     isFileUploaded(fileName) {
@@ -538,9 +543,10 @@ class Post extends CSSComponent {
 
     onDrop(files) {
         if (files.length > 0) {
-            let updatedState = {};
-            updatedState.files = this.getUpdatedFilesMap(files);
-            this.setState(updatedState, () => this.triggerUploads(files));
+            let namesOfNewFiles = files.map(file => file.name);
+            // Filter out deleted files that we're trying to re-upload
+            let namesOfDeletedFiles = this.state.namesOfDeletedFiles.filter(nameOfDeletedFile => namesOfNewFiles.indexOf(nameOfDeletedFile) < 0);
+            this.setState({'files': this.getUpdatedFilesMap(files, namesOfDeletedFiles)}, () => this.triggerUploads(files));
         }
     }
 
@@ -557,7 +563,7 @@ class Post extends CSSComponent {
         return mailToPostFeedback(post, this.context.authenticatedProfile);
     }
 
-    getUpdatedFilesMap(files) {
+    getUpdatedFilesMap(files, namesOfDeletedFiles = this.state.namesOfDeletedFiles) {
         const existingFiles = this.state.files;
         let newFilesMap = Immutable.OrderedMap();
         if (existingFiles && existingFiles.size) {
@@ -566,7 +572,9 @@ class Post extends CSSComponent {
 
         newFilesMap = newFilesMap.withMutations((map) => {
             files.forEach((file) => {
-                map.set(file.name, file);
+                if (namesOfDeletedFiles.indexOf(file.name) < 0) {
+                    map.set(file.name, file);
+                }
             });
         });
         return newFilesMap;
