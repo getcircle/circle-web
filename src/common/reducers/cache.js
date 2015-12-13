@@ -19,9 +19,9 @@ export default function cache(state = initialState, action) {
             // The old normalizations may contain fields that don't exist in the new normalizations
             // and these will remain if merged.
             if (action.payload.normalizations) {
-                for (var normalizationsType in action.payload.normalizations) {
+                for (let normalizationsType in action.payload.normalizations) {
                     const normalizations = action.payload.normalizations[normalizationsType];
-                    for (var normalizationId in normalizations) {
+                    for (let normalizationId in normalizations) {
                         map.deleteIn(['normalizations', normalizationsType, normalizationId]);
                     }
                 }
