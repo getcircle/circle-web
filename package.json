@@ -122,6 +122,7 @@
     "file-loader": "^0.8.5",
     "jsdom": "~4.4.0",
     "json-loader": "^0.5.2",
+    "js-tokens": "^1.0.2",
     "method-override": "~2.1.2",
     "node-notifier": "~4.2.3",
     "node-sass": "^3.2.0",
