@@ -25,15 +25,14 @@ other global concerns
 - `npm install`
 - `npm test`
 - `sudo npm run-script setup-dns`
-- `npm start`
-- `npm run open`
+- `npm run dev`
 
 Development
 ===========
 
 ## Start up the watcher while developing
 
-- Run `npm start` to constantly compile js and scss changes
+- Run `npm run dev` to constantly compile js and scss changes
 
 ## Architecture
 
