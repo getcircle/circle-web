@@ -74,23 +74,28 @@ class Editor extends CSSComponent {
     }
 
     setup() {
-        // Add keyboard short-cut to code block
-        const codeButton = document.querySelector('.button_group.block_tools .code');
-        if (codeButton) {
-            codeButton.setAttribute('data-key', 'alt+6');
-        }
 
-        // Add attach button in toolbar
-        const attachButton = document.querySelector('.button_group.block_tools .attach');
-        if (!attachButton) {
-            const attachButtonElement = document.createElement('button');
-            attachButtonElement.setAttribute('type', 'button');
-            attachButtonElement.setAttribute('class', 'attach');
-            attachButtonElement.setAttribute('data-action', 'x-attach');
-            attachButtonElement.innerHTML = 'Attach Files';
-            document.querySelector('.button_group.block_tools').appendChild(attachButtonElement);
-            document.addEventListener('trix-action-invoke', (event) => this.handleAttachButtonClicked(event));
-        }
+        // In some browsers, the elements are not attached by the time
+        // the control gets here. Delay execution.
+        setTimeout(() => {
+            // Add keyboard short-cut to code block
+            const codeButton = document.querySelector('.button_group.block_tools .code');
+            if (codeButton) {
+                codeButton.setAttribute('data-key', 'alt+6');
+            }
+
+            // Add attach button in toolbar
+            const attachButton = document.querySelector('.button_group.block_tools .attach');
+            if (!attachButton) {
+                const attachButtonElement = document.createElement('button');
+                attachButtonElement.setAttribute('type', 'button');
+                attachButtonElement.setAttribute('class', 'attach');
+                attachButtonElement.setAttribute('data-action', 'x-attach');
+                attachButtonElement.innerHTML = 'Attach Files';
+                document.querySelector('.button_group.block_tools').appendChild(attachButtonElement);
+                document.addEventListener('trix-action-invoke', (event) => this.handleAttachButtonClicked(event));
+            }
+        }, 10);
     }
 
     attachEventListeners() {
