@@ -26,7 +26,7 @@ export function detectURLsAndAddMarkup(stringValue) {
  * http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
  */
  export function detectEmailsAndAddMarkup(stringValue) {
-    var emailRegex = /(^|\s+|\>)((([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,}))/gi;
+    const emailRegex = /(^|\s+|\>)((([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,}))/gi;
     return stringValue.replace(emailRegex, '$1<a href="mailto:$2">$2</a>');
  }
 
@@ -46,4 +46,15 @@ export function stripTags(html) {
     const tempElement = document.createElement('dev');
     tempElement.innerHTML = html;
     return tempElement.innerText;
+}
+
+export function detectCodeMarkdownAndAddMarkup(stringValue) {
+    const backTicksRegex = new RegExp(/(```)([^`]*)(```)/gi);
+    return stringValue.replace(backTicksRegex, '<pre>$2</pre>');
+}
+
+export function hasHTML(stringValue) {
+    const tempElement = document.createElement('dev');
+    tempElement.innerHTML = stringValue;
+    return tempElement.childNodes.length > 1;
 }

@@ -5,6 +5,8 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import {
+    hasHTML,
+    detectCodeMarkdownAndAddMarkup,
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
     detectURLsAndAddMarkup,
@@ -487,14 +489,20 @@ class Post extends CSSComponent {
     }
 
     getReadOnlyContent(content) {
-        return {
-            __html: detectHashtagsAndAddMarkup(
-                detectEmailsAndAddMarkup(
-                    detectURLsAndAddMarkup(
+        const containsHTML = hasHTML(content);
+        let finalContent = detectHashtagsAndAddMarkup(
+            detectEmailsAndAddMarkup(
+                detectURLsAndAddMarkup(
+                    detectCodeMarkdownAndAddMarkup(
                         content
                     )
                 )
-            ),
+            )
+        );
+
+        finalContent = containsHTML ? finalContent : '<div>' + finalContent + '</div>';
+        return {
+            __html: finalContent,
         };
     }
 
