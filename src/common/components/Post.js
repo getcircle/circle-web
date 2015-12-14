@@ -500,9 +500,12 @@ class Post extends CSSComponent {
         );
 
         finalContent = containsHTML ? finalContent : '<div>' + finalContent + '</div>';
-        return {
-            __html: finalContent,
-        };
+        return (
+            <div
+                className="leditor"
+                dangerouslySetInnerHTML={{__html: finalContent}}
+            />
+        );
     }
 
     // Change Methods
@@ -710,10 +713,7 @@ class Post extends CSSComponent {
                         {this.renderSuggestImprovementsButton()}
                     </div>
                 </div>
-                <div
-                    className="leditor"
-                    dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
-                />
+                {this.getReadOnlyContent(post.content)}
                 {inlineImages}
                 {this.renderFiles(postFilesWithoutImages)}
             </span>
@@ -832,24 +832,40 @@ class Post extends CSSComponent {
         }
     }
 
-    renderRichEditableContent() {
-        const {
-            uploadProgress,
-            uploadedFiles,
-        } = this.props;
+    renderEditor() {
+        if (__CLIENT__) {
+            const {
+                uploadProgress,
+                uploadedFiles,
+            } = this.props;
+            const Editor = require('./Editor');
 
+            return (
+                <Editor
+                    onChange={(event) => {
+                        this.handleBodyChange(event, event.target.value);
+                    }}
+                    onUploadCallback={(file) => {
+                        this.triggerUploads([file]);
+                    }}
+                    placeholder={t('Contribute Knowledge')}
+                    ref="editor"
+                    uploadProgress={uploadProgress}
+                    uploadedFiles={uploadedFiles}
+                    value={this.state.body}
+                />
+            );
+        } else {
+            return this.getReadOnlyContent(this.state.body);
+        }
+    }
+
+    renderRichEditableContent() {
         let author = this.state.owner;
         if (author === null || author === undefined) {
             author = this.context.auth.profile;
         }
 
-        if (!__CLIENT__) {
-            return (
-                <span />
-            );
-        }
-
-        const Editor = require('./Editor');
         return (
             <span>
                 <div className="row between-xs middle-xs">
@@ -858,7 +874,7 @@ class Post extends CSSComponent {
                             <CardListItem
                                 disabled={true}
                                 key={author.id}
-                                leftAvatar={<ProfileAvatar style={this.styles().cardListAvatar} profile={author} />}
+                                leftAvatar={<ProfileAvatar profile={author} style={this.styles().cardListAvatar} />}
                                 primaryText={author.full_name}
                                 secondaryText={author.title}
                                 {...this.styles().CardListItem}
@@ -878,19 +894,7 @@ class Post extends CSSComponent {
                     value={this.state.title}
                     {...this.styles().AutogrowTitleTextarea}
                 />
-                <Editor
-                    onChange={(event) => {
-                        this.handleBodyChange(event, event.target.value);
-                    }}
-                    onUploadCallback={(file) => {
-                        this.triggerUploads([file]);
-                    }}
-                    placeholder={t('Contribute Knowledge')}
-                    ref="editor"
-                    uploadProgress={uploadProgress}
-                    uploadedFiles={uploadedFiles}
-                    value={this.state.body}
-                />
+                {this.renderEditor()}
                 {this.renderFilesContainer()}
                 {this.renderChangeOwnerModal()}
             </span>
