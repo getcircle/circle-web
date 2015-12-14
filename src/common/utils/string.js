@@ -43,6 +43,10 @@ export function detectHashtagsAndAddMarkup(stringValue) {
 }
 
 export function stripTags(html) {
+    if (!document) {
+        // SSR
+        return html;
+    }
     const tempElement = document.createElement('dev');
     tempElement.innerHTML = html;
     return tempElement.innerText;
@@ -54,6 +58,13 @@ export function detectCodeMarkdownAndAddMarkup(stringValue) {
 }
 
 export function hasHTML(stringValue) {
+    if (!document) {
+        // SSR - Worst case assume HTML exists. Typically such functions
+        // would return false but we use it to determine whether the
+        // text should have enclosing tags or not, which is quite safe even
+        // when this returns true.
+        return true;
+    }
     const tempElement = document.createElement('dev');
     tempElement.innerHTML = stringValue;
     return tempElement.childNodes.length > 1;
