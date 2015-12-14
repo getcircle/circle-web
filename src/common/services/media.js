@@ -6,12 +6,18 @@ import logger from '../utils/logger';
 export function uploadMedia(client, data, mediaType, mediaKey) {
     return new Promise((resolve, reject) => {
         let instructionsRef;
-        startMediaUpload(mediaType, mediaKey)
+        startMediaUpload(client, mediaType, mediaKey)
             .then((instructions) => {
                 instructionsRef = instructions;
                 return upload(instructions.upload_url, data);
             })
-            .then((response) => completeMediaUpload(mediaType, mediaKey, instructionsRef.upload_id, instructionsRef.upload_key))
+            .then((response) => completeMediaUpload(
+                client,
+                mediaType,
+                mediaKey,
+                instructionsRef.upload_id,
+                instructionsRef.upload_key
+            ))
             .then((mediaUploadCompleteResponse) => resolve(mediaUploadCompleteResponse))
             .catch((error) => {
                 logger.log(`Error uploading media: ${error}`);
