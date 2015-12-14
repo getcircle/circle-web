@@ -98,6 +98,11 @@ trix-editor [data-trix-mutable~=true] {
     user-select: none;
 }
 
+trix-editor:empty:not(:focus)::before {
+    font-size: $fontSize;
+    color: rgba(0, 0, 0, 0.3);
+}
+
 .leditor, trix-editor.leditor {
     border: 0;
     border-radius: 0;
@@ -322,9 +327,9 @@ trix-editor img {
     display: none;
 }
 
-trix-editor:empty:not(:focus)::before {
-    font-size: $fontSize;
-    color: rgba(0, 0, 0, 0.3);
+.leditor .attachment img {
+    max-width: 100%;
+    object-fit: cover;
 }
 
 .leditor .attachment .progress {
