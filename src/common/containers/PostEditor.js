@@ -44,7 +44,7 @@ const selector = selectors.createImmutableSelector(
         if (paramsState && paramsState.postId) {
             postId = paramsState.postId;
             if (postState.get('ids').has(postId)) {
-                post = retrievePost(postId, cache);
+                post = retrievePost(postId, cache, ['permissions']);
             }
         } else {
             post = postState.get('draftPost');

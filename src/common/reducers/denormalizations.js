@@ -35,8 +35,8 @@ export function retrieveStatus(statusId, cache) {
     return denormalize(statusId, services.profile.containers.ProfileStatusV1, cache);
 }
 
-export function retrievePost(postId, cache) {
-    return denormalize(postId, services.post.containers.PostV1, cache);
+export function retrievePost(postId, cache, requiredFields) {
+    return denormalize(postId, services.post.containers.PostV1, cache, requiredFields);
 }
 
 export function retrievePosts(postIds, cache) {
