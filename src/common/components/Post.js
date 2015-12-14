@@ -31,7 +31,6 @@ import CSSComponent from './CSSComponent';
 import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
-import Editor from './Editor';
 import IconContainer from './IconContainer';
 import InternalPropTypes from './InternalPropTypes';
 import ProfileAvatar from './ProfileAvatar';
@@ -841,9 +840,16 @@ class Post extends CSSComponent {
 
         let author = this.state.owner;
         if (author === null || author === undefined) {
-            author = this.context.authenticatedProfile;
+            author = this.context.auth.profile;
         }
 
+        if (!__CLIENT__) {
+            return (
+                <span />
+            );
+        }
+
+        const Editor = require('./Editor');
         return (
             <span>
                 <div className="row between-xs middle-xs">

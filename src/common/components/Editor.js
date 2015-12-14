@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
-import 'script!trix/dist/trix.js';
+import 'script!../../../node_modules/trix/dist/trix.js';
 
 import CSSComponent from './CSSComponent';
 
