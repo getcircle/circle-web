@@ -37,11 +37,16 @@ class Editor extends CSSComponent {
     headerOffsetHeight = 0;
     toolbar = null;
     editorElement = null;
+    inputId = null;
+
+    componentWillMount() {
+        this.inputId = Math.round(1E6 * Math.random()).toString(36);
+        this.mergeStateAndProps(this.props);
+    }
 
     componentDidMount() {
         this.setup();
         this.attachEventListeners();
-        this.mergeStateAndProps(this.props);
         this.dragEventCounter = 0;
         this.headerOffsetHeight = document.querySelector('header').offsetHeight;
         this.toolbar = document.querySelector('trix-toolbar');
@@ -60,11 +65,9 @@ class Editor extends CSSComponent {
     }
 
     mergeStateAndProps(props) {
-        if (this.state.value === null && props.value && this.refs.leditorContainer) {
+        if (this.state.value === null && props.value) {
             this.setState({
                 value: props.value,
-            }, () => {
-                this.editorElement.editor.insertHTML(props.value);
             });
         }
     }
@@ -237,7 +240,7 @@ class Editor extends CSSComponent {
         return (
             <div className={className} ref="leditorContainer">
                 <input
-                    name="content"
+                    id={this.inputId}
                     onChange={::this.handleChange}
                     type="hidden"
                     value={this.state.value}
@@ -245,6 +248,7 @@ class Editor extends CSSComponent {
                 {this.renderDropzoneIndicator()}
                 <trix-editor
                     class="leditor"
+                    input={this.inputId}
                     onDragEnter={::this.handleDragEnter}
                     onDragLeave={::this.handleDragLeave}
                     placeholder={placeholder}
