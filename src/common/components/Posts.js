@@ -73,6 +73,7 @@ class Posts extends CSSComponent {
                     padding: 30,
                 },
                 emptyStateMessageContainer: {
+                    fontSize: '1.6rem',
                     height: '100%',
                     lineHeight: '25px',
                     minHeight: '50vh',
