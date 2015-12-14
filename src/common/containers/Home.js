@@ -33,13 +33,6 @@ class Home extends CSSComponent {
         focused: false,
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (!nextProps.authenticated) {
-            return false;
-        }
-        return true;
-    }
-
     styles() {
         const { largerDevice, mobileOS } = this.context.device;
         return this.css({
