@@ -38,7 +38,7 @@ import * as selectors from '../selectors';
 import moment from '../utils/moment';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
-import { trimNewLinesAndWhitespace } from '../utils/string';
+import { stripTags, trimNewLinesAndWhitespace } from '../utils/string';
 
 import AutoComplete from './AutoComplete';
 import CSSComponent from './CSSComponent';
@@ -759,13 +759,14 @@ class Search extends CSSComponent {
 
     getPostTexts(post, highlight) {
         const lastEditedText = `${t('Last edited')} ${moment(post.changed).fromNow()}`;
+        const plainTextContent = stripTags(post.content);
         const defaultSecondaryText = (
             <span style={this.styles().postSecondaryTextContainer}>
                 <span
                     key="matched-content"
                     style={this.styles().postSecondaryText}
                 >
-                    {trimNewLinesAndWhitespace(post.content).substr(0, POST_CONTENT_CHAR_LIMIT) + (post.content.length > POST_CONTENT_CHAR_LIMIT ? `\u2026` : '')}
+                    {trimNewLinesAndWhitespace(plainTextContent).substr(0, POST_CONTENT_CHAR_LIMIT) + (plainTextContent.length > POST_CONTENT_CHAR_LIMIT ? `\u2026` : '')}
                 </span>
                 <br key="line-break" />
                 <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
@@ -788,7 +789,7 @@ class Search extends CSSComponent {
         }
 
         if (highlight && highlight.get('content')) {
-            let highlightedContent = trimNewLinesAndWhitespace(highlight.get('content'));
+            let highlightedContent = trimNewLinesAndWhitespace(stripTags(highlight.get('content')));
             const startsWithCapitalLetter = 'A'.charCodeAt(0) <= highlightedContent.charCodeAt(0) && highlightedContent.charCodeAt(0) <= 'Z'.charCodeAt(0);
             if (!startsWithCapitalLetter) {
                 highlightedContent = `\u2026${highlightedContent}`;
