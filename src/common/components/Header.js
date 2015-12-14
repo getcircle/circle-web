@@ -21,8 +21,8 @@ class Header extends CSSComponent {
         showCTAsInHeader: PropTypes.bool,
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (!nextProps.authenticated) {
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        if (!nextContext.auth.profile) {
             return false;
         }
         return true;
