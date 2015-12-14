@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
 
 import { canvasColor } from '../constants/styles';
 import CurrentTheme from '../utils/ThemeManager';
@@ -59,7 +58,7 @@ class Post extends CSSComponent {
         params: PropTypes.shape({
             postId: PropTypes.string.isRequired,
         }).isRequired,
-        post: PropTypes.instanceOf(services.post.containers.PostV1),
+        post: InternalPropTypes.PostV1,
         postId: PropTypes.string,
     }
 
