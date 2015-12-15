@@ -1,5 +1,7 @@
 import compression from 'compression';
+import connectRedis from 'connect-redis';
 import Express from 'express';
+import session from 'express-session';
 import http from 'http';
 import httpProxy from 'http-proxy';
 import morgan from 'morgan';
@@ -8,15 +10,32 @@ import PrettyError from 'pretty-error';
 import favicon from 'serve-favicon';
 
 import main from './routes/main';
+import validateConfig from './validateConfig';
+
+const requiredKeys = ['SESSION_SECRET', 'REDIS_URL'];
 
 const PORT = process.env.PORT || 3000;
 
 const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
+const RedisStore = connectRedis(session);
+
+const sess = {
+    cookie: {},
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    store: new RedisStore({url: process.env.REDIS_URL}),
+}
+
+if (app.get('env') === 'production') {
+    sess.cookie.secure = true;
+}
 
 // Setup basic http auth for our dev environment to restrict access to admins
 if (process.env.NODE_ENV === 'development') {
+    requiredKeys.push('ADMIN_USERNAME', 'ADMIN_PASSWORD');
     const auth = require('http-auth');
     const basic = auth.basic({
         realm: 'luno'
@@ -43,6 +62,8 @@ app.use('/api', (req, res) => {
     }
 });
 
+app.use(session(sess));
+
 app.use((req, res) => {
     try {
         main(req, res);
@@ -51,6 +72,7 @@ app.use((req, res) => {
     }
 });
 
+validateConfig(requiredKeys);
 server.listen(PORT, (err) => {
     if (err) {
         console.error(err);
