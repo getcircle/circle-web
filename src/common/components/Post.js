@@ -860,7 +860,7 @@ class Post extends CSSComponent {
         }
     }
 
-    renderRichEditableContent() {
+    renderEditableContent() {
         let author = this.state.owner;
         if (author === null || author === undefined) {
             author = this.context.auth.profile;
@@ -901,59 +901,13 @@ class Post extends CSSComponent {
         );
     }
 
-    renderEditableContent() {
-        let author = this.state.owner;
-        if (author === null || author === undefined) {
-            author = this.context.auth.profile;
-        }
-
-        return (
-            <span>
-                <div className="row between-xs middle-xs">
-                    <div className="col-xs-8" style={this.styles().authorContainer}>
-                        <CardList style={this.styles().cardList}>
-                            <CardListItem
-                                disabled={true}
-                                key={author.id}
-                                leftAvatar={<ProfileAvatar style={this.styles().cardListAvatar} profile={author} />}
-                                primaryText={author.full_name}
-                                secondaryText={author.title}
-                                {...this.styles().CardListItem}
-                            />
-                        </CardList>
-                    </div>
-                    <div className="col-xs-4 end-xs middle-xs" style={this.styles().feedbackContainer}>
-                        {this.renderChangeOwnerButton()}
-                    </div>
-                </div>
-                <AutogrowTextarea
-                    autoFocus={true}
-                    onChange={::this.handleTitleChange}
-                    placeholder={t('Title')}
-                    singleLine={true}
-                    value={this.state.title}
-                    {...this.styles().AutogrowTitleTextarea}
-                />
-                <AutogrowTextarea
-                    additionalHeightDelta={50}
-                    onChange={::this.handleBodyChange}
-                    placeholder={t('Contribute Knowledge')}
-                    value={this.state.body}
-                    {...this.styles().AutogrowTextarea}
-                />
-                {this.renderFilesContainer()}
-                {this.renderChangeOwnerModal()}
-            </span>
-        );
-    }
-
     renderContent() {
         const {
             isEditable,
         } = this.props;
 
         if (isEditable) {
-            return this.renderRichEditableContent();
+            return this.renderEditableContent();
         } else {
             return this.renderReadonlyContent();
         }
