@@ -6,6 +6,7 @@ import { fontWeights, tintColor } from '../constants/styles';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
 import LoginEmailInput from './LoginEmailInput';
 
 const {
@@ -29,6 +30,10 @@ class LoginInternal extends CSSComponent {
         hasAlternative: false,
         onGuestSubmit: () => {},
         onUseAlternative: () => {},
+    }
+
+    static contextTypes = {
+        url: InternalPropTypes.URLContext,
     }
 
     state = {
@@ -103,7 +108,7 @@ class LoginInternal extends CSSComponent {
     handleSubmit() {
         const { email, password } = this.state;
         if (this.props.guest) {
-            this.props.onGuestSubmit(email);
+            this.props.onGuestSubmit(email, this.context.url);
         } else if (email && password) {
             this.props.onLogin(AUTH_BACKENDS.INTERNAL, this.state.email, this.state.password);
         }
@@ -113,7 +118,7 @@ class LoginInternal extends CSSComponent {
         const { email } = this.state;
         if (email !== '') {
             if (this.props.guest) {
-                return this.props.onGuestSubmit(email);
+                return this.props.onGuestSubmit(email, this.context.url);
             }
         }
     }

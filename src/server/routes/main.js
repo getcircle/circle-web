@@ -63,9 +63,16 @@ export default function (req, res) {
                     renderProps.location,
                     renderProps.params
                 ).then(() => {
+                    const url = {
+                        host: req.host,
+                        // window.location.protocol appends the ":"
+                        protocol: `${req.protocol}:`,
+                        raw: req.originalUrl,
+                        subdomain: getSubdomain(req.hostname),
+                    };
                     try {
                         content = ReactDOM.renderToString(
-                            <Root subdomain={getSubdomain(req.host)}>
+                            <Root url={url}>
                                 <Provider key="provider" store={store}>
                                     <RoutingContext {...renderProps} />
                                 </Provider>

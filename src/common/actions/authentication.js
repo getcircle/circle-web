@@ -72,7 +72,7 @@ export function loadAuth() {
     };
 }
 
-export function getAuthenticationInstructions(email, subdomain) {
+export function getAuthenticationInstructions(email, url) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -80,7 +80,7 @@ export function getAuthenticationInstructions(email, subdomain) {
                 types.GET_AUTHENTICATION_INSTRUCTIONS_SUCCESS,
                 types.GET_AUTHENTICATION_INSTRUCTIONS_FAILURE,
             ],
-            remote: (client) => userService.getAuthenticationInstructions(client, email, subdomain),
+            remote: (client) => userService.getAuthenticationInstructions(client, email, url),
         },
     };
 }

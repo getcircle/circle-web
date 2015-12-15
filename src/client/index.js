@@ -71,4 +71,11 @@ if (__DEVTOOLS__) {
 injectTapEventPlugin();
 FastClick.attach(document.body);
 
-ReactDOM.render(<Root children={elements} subdomain={getSubdomain(window.location.host)}/>, dest);
+const url = {
+    host: window.location.host,
+    protocol: window.location.protocol,
+    raw: window.location.href,
+    subdomain: getSubdomain(window.location.hostname),
+};
+
+ReactDOM.render(<Root children={elements} url={url}/>, dest);

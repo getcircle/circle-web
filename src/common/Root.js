@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 
 import CSSMixins from './CSSMixins';
+import InternalPropTypes from './components/InternalPropTypes';
 import CurrentTheme from './utils/ThemeManager';
 
 // import styles so webpack includes them
@@ -9,20 +10,20 @@ import './styles/app.scss';
 export default class Root extends Component {
 
     static propTypes = {
-        subdomain: PropTypes.string.isRequired,
+        url: InternalPropTypes.URLContext.isRequired,
     }
 
     static childContextTypes = {
         mixins: PropTypes.object,
         muiTheme: PropTypes.object,
-        subdomain: PropTypes.string.isRequired,
+        url: InternalPropTypes.URLContext.isRequired,
     }
 
     getChildContext() {
         return {
             mixins: CSSMixins,
             muiTheme: CurrentTheme,
-            subdomain: this.props.subdomain,
+            url: this.props.url,
         };
     }
 
