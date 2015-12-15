@@ -43,13 +43,17 @@ export function detectHashtagsAndAddMarkup(stringValue) {
 }
 
 export function stripTags(html) {
-    if (!document) {
+    if (!__CLIENT__ || !html) {
         // SSR
         return html;
     }
-    const tempElement = document.createElement('dev');
+
+    const tempElement = document.createElement('div');
     tempElement.innerHTML = html;
-    return tempElement.innerText;
+    const plainText = tempElement.innerText;
+    // null or undefined checks are needed for ensuring this does not
+    // break with fake objects created when testing
+    return plainText === null || plainText === undefined ? html : plainText;
 }
 
 export function detectCodeMarkdownAndAddMarkup(stringValue) {
@@ -58,14 +62,14 @@ export function detectCodeMarkdownAndAddMarkup(stringValue) {
 }
 
 export function hasHTML(stringValue) {
-    if (!document) {
+    if (!__CLIENT__) {
         // SSR - Worst case assume HTML exists. Typically such functions
         // would return false but we use it to determine whether the
         // text should have enclosing tags or not, which is quite safe even
         // when this returns true.
         return true;
     }
-    const tempElement = document.createElement('dev');
+    const tempElement = document.createElement('div');
     tempElement.innerHTML = stringValue;
     return tempElement.childNodes.length > 1;
 }
