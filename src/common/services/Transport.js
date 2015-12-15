@@ -1,4 +1,5 @@
 import ByteBuffer from 'bytebuffer';
+import { CookieAccessInfo } from 'cookiejar';
 import superagent from 'superagent';
 
 import WrappedResponse from './WrappedResponse';
@@ -39,15 +40,21 @@ function getApiEndpoint(req) {
 
 export default class Transport {
 
-    constructor(req) {
+    constructor(req, transportAuth) {
         this.req = req;
         this._endpoint = getApiEndpoint(req);
+        if (__CLIENT__) {
+            this.agent = superagent;
+        } else {
+            this.agent = superagent.agent();
+        }
+        this.cookie = transportAuth;
     }
 
     sendRequest(request) {
         return new Promise((resolve, reject) => {
             const data = request.toArrayBuffer();
-            const _request = superagent
+            const _request = this.agent
                 .post(this._endpoint)
                 .type('application/x-protobuf')
 
@@ -56,8 +63,16 @@ export default class Transport {
                     .send(data);
             }
 
-            if (__SERVER__ && this.req.get('cookie')) {
-                _request.set('cookie', this.req.get('cookie'))
+            if (__SERVER__) {
+                const cookies = [];
+                if (this.req.get('cookie')) {
+                    cookies.push(this.req.get('cookie'));
+                }
+                if (this.cookie) {
+                    cookies.push(this.cookie);
+                }
+                const cookie = cookies.join('; ');
+                _request.set('cookie', cookie)
                     .buffer(true)
                     .send(new Buffer(data));
             }
@@ -65,6 +80,18 @@ export default class Transport {
                 if (err) {
                     reject(err);
                 } else {
+                    if (this.agent.jar) {
+                        const accessInfo = CookieAccessInfo(
+                            process.env.AUTHENTICATION_TOKEN_COOKIE_DOMAIN,
+                            undefined,
+                            false,
+                            false,
+                        );
+                        const cookie = this.agent.jar.getCookies(accessInfo).toValueString();
+                        if (cookie) {
+                            this.cookie = cookie;
+                        }
+                    }
                     // TODO should reject with failures from the service
                     // TODO should handle any decoding errors
                     let response = new WrappedResponse(request, res, getBody(res));

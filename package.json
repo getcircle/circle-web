@@ -29,7 +29,8 @@
         "NODE_PATH": "./src",
         "NODE_ENV": "local",
         "PORT": 3000,
-        "REMOTE_API_ENDPOINT": "http://`docker-machine ip dev`:8000/v1/"
+        "REMOTE_API_ENDPOINT": "http://`docker-machine ip dev`:8000/v1/",
+        "AUTHENTICATION_TOKEN_COOKIE_DOMAIN": ".local.lunohq.com"
       }
     },
     "watch-client": {
