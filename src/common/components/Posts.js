@@ -186,7 +186,7 @@ class Posts extends CSSComponent {
         } = this.props;
 
         if (postState === PostStateURLString.DRAFT.toString()) {
-            return t('You haven’t created any knowledge yet.');
+            return t('You have no draft knowledge posts.');
         } else if (postState === PostStateURLString.LISTED.toString()) {
             return t('You haven’t published any knowledge yet.');
         }
