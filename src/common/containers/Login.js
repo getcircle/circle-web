@@ -45,15 +45,16 @@ function isAccessRequest(location) {
     return false;
 }
 
-function fetchAuthenticationInstructions(dispatch, location, url) {
-    if (!isAccessRequest(location)) {
+function fetchAuthenticationInstructions(dispatch, location, url, props) {
+    if ((props.backend === undefined || props.backend === null) && !isAccessRequest(location)) {
         return dispatch(getAuthenticationInstructions(null, url));
     }
 }
 
 function fetchData(getState, dispatch, location, params, url) {
+    const props = selector(getState());
     return Promise.all([
-        fetchAuthenticationInstructions(dispatch, location, url),
+        fetchAuthenticationInstructions(dispatch, location, url, props),
     ]);
 }
 
