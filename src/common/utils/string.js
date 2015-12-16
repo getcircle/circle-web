@@ -48,9 +48,7 @@ export function stripTags(html) {
         return html;
     }
 
-    const tempElement = document.createElement('div');
-    tempElement.innerHTML = html;
-    const plainText = tempElement.innerText;
+    const plainText = html.replace(/<\/?[^>]+>/gi, ' ').replace(/\s+|&nbsp;/gi, ' ').trim();
     // null or undefined checks are needed for ensuring this does not
     // break with fake objects created when testing
     return plainText === null || plainText === undefined ? html : plainText;
