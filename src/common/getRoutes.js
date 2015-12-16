@@ -24,11 +24,19 @@ export default function (store) {
 
     function loginOnce(next) {
         return (nextState, replaceState, exit) => {
-            if (isAuthLoaded(store.getState())) {
-                replaceState(null, '/');
-                return exit();
+            function checkAuth() {
+                if (isAuthenticated(store.getState())) {
+                    replaceState(null, '/');
+                    return exit();
+                }
+                next(nextState, replaceState, exit);
             }
-            next(nextState, replaceState, exit);
+
+            if (!isAuthLoaded(store.getState())) {
+                store.dispatch(loadAuth()).then(checkAuth);
+            } else {
+                checkAuth();
+            }
         };
     }
 
