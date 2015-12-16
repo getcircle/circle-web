@@ -20,7 +20,7 @@ import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToEditPost, routeToProfile, routeToSearch } from '../utils/routes';
 import { SHARE_CONTENT_TYPE } from '../constants/trackerProperties';
 import tracker from '../utils/tracker';
-import { stripTags, trimNewLines } from '../utils/string';
+import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
 
 import AttachmentIcon from './AttachmentIcon';
@@ -526,19 +526,25 @@ class Post extends CSSComponent {
     }
 
     handleBodyChange(event, value) {
-        const newValue = value;
         let modifiedState = {
             editing: true,
-            body: newValue,
+            body: value,
         };
 
         if ((this.state.title.trim() === '' || this.state.derivedTitle === true)) {
-            const plainTextValue = stripTags(newValue);
+            const plainTextValue = this.getPlainTextValue(value);
             modifiedState.title = trimNewLines(plainTextValue.split('.')[0].substring(0, 80));
             modifiedState.derivedTitle = true;
         }
 
         this.setState(modifiedState, () => this.saveData(false));
+    }
+
+    getPlainTextValue(value) {
+        // Remove tags and add space separators
+        // Note this is not a generic convert rich text to plain text
+        // and only applies to the editor use case
+        return value.replace(/<\/?[^>]+>/gi, ' ').replace(/\s+|&nbsp;/gi, ' ').trim();
     }
 
     onDrop(files) {
@@ -842,7 +848,7 @@ class Post extends CSSComponent {
 
             return (
                 <Editor
-                    onChange={(event) => {
+                    onChange={(event, plainTextValue) => {
                         this.handleBodyChange(event, event.target.value);
                     }}
                     onUploadCallback={(file) => {
