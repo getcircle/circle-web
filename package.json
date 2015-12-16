@@ -106,7 +106,7 @@
     "ua-parser-js": "^0.7.9",
     "vinyl-buffer": "~1.0.0",
     "vinyl-source-stream": "~1.1.0",
-    "webpack-isomorphic-tools": "^2.2.18"
+    "webpack-isomorphic-tools": "^2.2.22"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
