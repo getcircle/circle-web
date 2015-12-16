@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 
 import PrettyError from 'pretty-error';
-import raven from 'raven';
 import { Provider } from 'react-redux';
 import { match, RoutingContext } from 'react-router';
 
