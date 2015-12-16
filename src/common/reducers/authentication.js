@@ -72,7 +72,7 @@ function handleGetAuthenticationInstructionsSuccess(state, action) {
 }
 
 function handleAuthenticationFailure(state, action) {
-    return state.merge({authError: action.payload});
+    return state.merge({authError: true});
 }
 
 export function getAuthenticatedProfile(state, cache) {

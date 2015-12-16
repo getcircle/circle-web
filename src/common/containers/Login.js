@@ -62,7 +62,7 @@ function fetchData(getState, dispatch, location, params, url) {
 class Login extends CSSComponent {
 
     static propTypes = {
-        authError: PropTypes.object,
+        authError: PropTypes.bool,
         authenticated: PropTypes.bool,
         authorizationUrl: PropTypes.string,
         backend: PropTypes.number,
