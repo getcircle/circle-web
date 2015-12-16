@@ -9,6 +9,7 @@ import { fontColors, fontWeights } from '../constants/styles';
 import * as selectors from '../selectors';
 import { getNextPathname } from '../utils/routes';
 import t from '../utils/gettext';
+import connectData from '../utils/connectData';
 
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
@@ -37,6 +38,26 @@ const selector = createSelector(
     },
 )
 
+function isAccessRequest(location) {
+    if (location && location.query) {
+        return location.query.accessRequest;
+    }
+    return false;
+}
+
+function fetchAuthenticationInstructions(dispatch, location, url) {
+    if (!isAccessRequest(location)) {
+        return dispatch(getAuthenticationInstructions(null, url));
+    }
+}
+
+function fetchData(getState, dispatch, location, params, url) {
+    return Promise.all([
+        fetchAuthenticationInstructions(dispatch, location, url),
+    ]);
+}
+
+@connectData(fetchData)
 @connect(selector)
 class Login extends CSSComponent {
 
@@ -62,18 +83,6 @@ class Login extends CSSComponent {
         url: InternalPropTypes.URLContext.isRequired,
     }
 
-    componentWillMount() {
-        if (this.context.url.subdomain && !this.isAccessRequest()) {
-            this.props.dispatch(getAuthenticationInstructions(null, this.context.url));
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (!nextProps.backend && this.context.url.subdomain) {
-            this.props.dispatch(getAuthenticationInstructions(null, this.context.url));
-        }
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
             const pathname = getNextPathname(this.props.location, '/');
@@ -90,13 +99,6 @@ class Login extends CSSComponent {
             this.props.organizationImageUrl !== ''
         ) {
             return true;
-        }
-        return false;
-    }
-
-    isAccessRequest() {
-        if (this.props.location && this.props.location.query) {
-            return this.props.location.query.accessRequest;
         }
         return false;
     }
@@ -146,10 +148,10 @@ class Login extends CSSComponent {
     }
 
     getHeaderText() {
-        const isAccessRequest = this.isAccessRequest();
-        if (this.context.url.subdomain && !isAccessRequest) {
+        const accessRequest = isAccessRequest(this.props.location);
+        if (this.context.url.subdomain && !accessRequest) {
             return t(`Sign in to ${this.context.url.subdomain}.lunohq.com`);
-        } else if (isAccessRequest) {
+        } else if (accessRequest) {
             return t('Security is a little tight around here');
         } else {
             return t('Sign in');
@@ -188,14 +190,14 @@ class Login extends CSSComponent {
     }
 
     renderLoginForm() {
-        const isAccessRequest = this.isAccessRequest();
-        if (this.context.url.subdomain && !isAccessRequest && !this.props.email && !this.props.organizationDomain) {
+        const accessRequest = isAccessRequest(this.props.location);
+        if (this.context.url.subdomain && !accessRequest && !this.props.email && !this.props.organizationDomain) {
             return (
                 <div className="row center-xs">
                     <CircularProgress mode="indeterminate" size={0.5} />
                 </div>
             );
-        } else if (isAccessRequest) {
+        } else if (accessRequest) {
             const { userInfo } = this.props.location.query;
             return (
                 <LoginRequestAccess
