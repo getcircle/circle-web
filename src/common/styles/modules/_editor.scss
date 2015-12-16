@@ -18,6 +18,7 @@ trix-toolbar.sticky {
     margin-top: 4px;
     position: fixed;
     top: 64px;
+    z-index: 10;
 }
 
 trix-toolbar .button_group button.active, trix-toolbar .button_group input[type=button].active {
