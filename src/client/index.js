@@ -29,12 +29,19 @@ const initialState = nameSpaces.fromJSON(window.__INITIAL_STATE);
 const store = createStore(client, initialState);
 const history = createHistory();
 
+const url = {
+    host: window.location.host,
+    protocol: window.location.protocol,
+    raw: window.location.href,
+    subdomain: getSubdomain(window.location.hostname),
+};
+
 syncReduxAndRouter(history, store, (state) => state.get('routing'));
 
 function createElement(Component, props) {
     // XXX what about fetchDataDeferred?
     if (Component.fetchData) {
-        Component.fetchData(store.getState, store.dispatch, props.location, props.params);
+        Component.fetchData(store.getState, store.dispatch, props.location, props.params, url);
     }
     return React.createElement(Component, props);
 }
@@ -70,12 +77,5 @@ if (__DEVTOOLS__) {
 // Touch related
 injectTapEventPlugin();
 FastClick.attach(document.body);
-
-const url = {
-    host: window.location.host,
-    protocol: window.location.protocol,
-    raw: window.location.href,
-    subdomain: getSubdomain(window.location.hostname),
-};
 
 ReactDOM.render(<Root children={elements} url={url}/>, dest);

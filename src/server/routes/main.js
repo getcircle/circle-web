@@ -59,20 +59,21 @@ export default function (req, res) {
         } else if (renderProps) {
             let content;
             try {
+                const url = {
+                    host: req.host,
+                    // window.location.protocol appends the ":"
+                    protocol: `${req.protocol}:`,
+                    raw: req.originalUrl,
+                    subdomain: getSubdomain(req.hostname),
+                };
                 fetchAllData(
                     renderProps.components,
                     store.getState,
                     store.dispatch,
                     renderProps.location,
-                    renderProps.params
+                    renderProps.params,
+                    url
                 ).then(() => {
-                    const url = {
-                        host: req.host,
-                        // window.location.protocol appends the ":"
-                        protocol: `${req.protocol}:`,
-                        raw: req.originalUrl,
-                        subdomain: getSubdomain(req.hostname),
-                    };
                     try {
                         content = ReactDOM.renderToString(
                             <Root url={url}>
