@@ -29,7 +29,7 @@ export default function (content, store, assets) {
     try {
         serializedState = nameSpaces.toJSON(store.getState());
     } catch (e) {
-        raven.catchException(e);
+        raven.captureException(e);
         serializedState = '{}';
     }
 
