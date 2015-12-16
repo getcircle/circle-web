@@ -2,6 +2,8 @@ import ByteBuffer from 'bytebuffer';
 import { CookieAccessInfo } from 'cookiejar';
 import superagent from 'superagent';
 
+import raven from '../utils/raven';
+
 import WrappedResponse from './WrappedResponse';
 
 // Handle arraybuffer responses
@@ -37,6 +39,15 @@ function getApiEndpoint(req) {
         return process.env.REMOTE_API_ENDPOINT;
     }
 }
+
+
+export function ResponseError(message, response) {
+    this.name = 'ResponseError';
+    this.message = message || 'Response Error';
+    this.stack = (new Error()).stack;
+}
+ResponseError.prototype = Object.create(Error.prototype);
+ResponseError.prototype.constructor = ResponseError;
 
 export default class Transport {
 
@@ -78,7 +89,19 @@ export default class Transport {
             }
             return _request.end((err, res) => {
                 if (err) {
+                    raven.captureException(err);
                     reject(err);
+                } else if (!res.ok) {
+                    raven.captureMessage('Request Failure', {
+                        level: 'warning',
+                        extra: {
+                            res: {
+                                status: res.status,
+                                text: res.text,
+                            },
+                        },
+                    });
+                    reject(new ResponseError(undefined, response));
                 } else {
                     if (this.agent.jar) {
                         const accessInfo = CookieAccessInfo(
