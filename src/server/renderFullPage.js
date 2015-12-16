@@ -1,6 +1,8 @@
 import protobufs from 'protobufs';
 import transit from 'transit-immutable-protobuf-js';
 
+import raven from '../common/utils/raven';
+
 const nameSpaces = transit.withNameSpaces(
     [protobufs.soa, protobufs.services],
     new protobufs.services.$type.clazz().constructor,
@@ -22,7 +24,15 @@ export default function (content, store, assets) {
     if (!styles) {
         styles = `<style>${require('../common/styles/app.scss')}</style>`;
     }
-    const serializedState = nameSpaces.toJSON(store.getState());
+
+    let serializedState;
+    try {
+        serializedState = nameSpaces.toJSON(store.getState());
+    } catch (e) {
+        raven.catchException(e);
+        serializedState = '{}';
+    }
+
     return `
     <!doctype html>
     <html lang="en-us">
