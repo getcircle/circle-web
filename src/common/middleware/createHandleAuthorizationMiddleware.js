@@ -42,7 +42,7 @@ export default function (store) {
         let { identity } = query;
         identity = services.user.containers.IdentityV1.decode64(identity);
         if (identity.provider === services.user.containers.IdentityV1.ProviderV1.OKTA) {
-            handleOktaAuthorization(store.dispatch, query).then(() => {
+            return handleOktaAuthorization(store.dispatch, query).then(() => {
                 // XXX support the previous path they came to
                 replaceState(null, '/');
                 exit();
