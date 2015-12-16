@@ -53,12 +53,14 @@ class AutogrowTextarea extends CSSComponent {
                 },
                 textareaStyle: {
                     cursor: 'text',
+                    fontFamily: 'inherit',
                     outline: 0,
                     padding: 0,
                     resize: 'none',
                     width: '100%',
                 },
                 shadowStyle: {
+                    fontFamily: 'inherit',
                     opacity: 0,
                     outline: 0,
                     overflow: 'hidden',
