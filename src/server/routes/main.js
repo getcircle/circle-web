@@ -84,6 +84,7 @@ export default function (req, res) {
                         );
                     } catch (e) {
                         console.error('REACT RENDER ERROR:', pretty.render(e));
+                        raven.captureError(e);
                         hydrateOnClient();
                         return;
                     }
@@ -91,6 +92,7 @@ export default function (req, res) {
                     try {
                         page = renderFullPage(content, store, webpackIsomorphicTools.assets());
                     } catch (e) {
+                        raven.captureError(e);
                         console.error('RENDER ERROR:', pretty.render(e));
                         hydrateOnClient();
                         return;
