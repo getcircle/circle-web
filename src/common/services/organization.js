@@ -8,8 +8,12 @@ export function getOrganization(client) {
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then((response) => {
-                let { organization } = response.result;
-                resolve(organization);
+                if (response.isSuccess()) {
+                    let { organization } = response.result;
+                    resolve(organization);
+                } else {
+                    return reject(response.reject());
+                }
             })
             .catch((error) => {
                 logger.error(`Error fetching organization: ${error}`);
