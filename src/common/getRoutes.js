@@ -7,6 +7,7 @@ import { loadAuth } from './actions/authentication';
 import { toggleHeader } from './actions/header';
 import createHandleAuthorizationMiddleware from './middleware/createHandleAuthorizationMiddleware';
 import { isAuthenticated, isLoaded as isAuthLoaded } from './reducers/authentication';
+import raven from './utils/raven';
 import tracker from './utils/tracker';
 
 function applyMiddleware(...middleWares) {
@@ -71,6 +72,7 @@ export default function (store) {
      */
     function bail(next) {
         return (nextState, replaceState, exit) => {
+            raven.captureMessage('Bail middleware reached!');
             replaceState(null, '/');
             exit();
         }

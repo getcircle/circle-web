@@ -34,6 +34,7 @@ module.exports = {
                 GOOGLE_CLIENT_ID: JSON.stringify('1090169577912-57r89ml43udqthb050v57kim3vddlrvu.apps.googleusercontent.com'),
                 GOOGLE_MAPS_API_KEY: JSON.stringify('AIzaSyAlKvipmEx76I45QIHP6NAI4pJ0Ybp55u8'),
                 MIXPANEL_TOKEN: JSON.stringify('cfe0bd17e174c984714d5996b6a04606'),
+                SENTRY_DSN: JSON.stringify('https://0c2c66c2cd8b46f09fcfe7315fa57cd7@app.getsentry.com/61527'),
             }
         }),
         webpackIsomorphicToolsPlugin,

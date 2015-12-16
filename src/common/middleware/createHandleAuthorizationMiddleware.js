@@ -1,6 +1,7 @@
 import { services } from 'protobufs';
 
 import { authenticate } from '../actions/authentication';
+import raven from '../utils/raven';
 import { AUTH_BACKENDS } from '../services/user';
 
 function handleOktaAuthorization(dispatch, query) {
@@ -54,6 +55,7 @@ export default function (store) {
                 exit();
             });
         }
+        raven.captureMessage('Unsupported identity.provider', {extra: {provider: identity.provider}});
         next(nextState, replaceState, exit);
     }
 }

@@ -2,15 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 
 import PrettyError from 'pretty-error';
-import raven from 'raven';
 import { Provider } from 'react-redux';
 import { match, RoutingContext } from 'react-router';
 
 import Client from '../../common/services/Client';
 import createStore from '../../common/createStore';
 import getRoutes from '../../common/getRoutes';
-import { getSubdomain } from '../../common/utils/subdomains';
 import Root from '../../common/Root';
+import raven from '../../common/utils/raven';
+import { getSubdomain } from '../../common/utils/subdomains';
 
 import fetchAllData from '../fetchAllData';
 import renderFullPage from '../renderFullPage';
@@ -37,7 +37,6 @@ export default function (req, res) {
 
     const client = new Client(req, req.session.auth);
     const store = createStore(client);
-    const sentry = new raven.Client();
 
     function hydrateOnClient() {
         res.status(200).send(renderFullPage('', store, webpackIsomorphicTools.assets()));
@@ -50,7 +49,7 @@ export default function (req, res) {
 
     match({routes: getRoutes(store), location: req.url}, (error, redirectLocation, renderProps) => {
         if (error) {
-            sentry.captureError(error);
+            raven.captureError(error);
             console.error('ROUTER ERROR:', pretty.render(error));
             res.send(500, error.message);
             hydrateOnClient();
@@ -112,7 +111,7 @@ export default function (req, res) {
                     res.status(200).send(page);
                 })
             } catch (e) {
-                sentry.captureError(e);
+                raven.captureError(e);
                 console.error('DATA FETCHING ERROR:', pretty.render(e));
                 hydrateOnClient();
                 return;
