@@ -40,7 +40,7 @@ function getApiEndpoint(req) {
 
 export default class Transport {
 
-    constructor(req, transportAuth) {
+    constructor(req, auth) {
         this.req = req;
         this._endpoint = getApiEndpoint(req);
         if (__CLIENT__) {
@@ -48,7 +48,7 @@ export default class Transport {
         } else {
             this.agent = superagent.agent();
         }
-        this.cookie = transportAuth;
+        this.auth = auth || {value: null, cookie: null};
     }
 
     sendRequest(request) {
@@ -68,8 +68,8 @@ export default class Transport {
                 if (this.req.get('cookie')) {
                     cookies.push(this.req.get('cookie'));
                 }
-                if (this.cookie) {
-                    cookies.push(this.cookie);
+                if (this.auth) {
+                    cookies.push(this.auth.value);
                 }
                 const cookie = cookies.join('; ');
                 _request.set('cookie', cookie)
@@ -87,9 +87,10 @@ export default class Transport {
                             false,
                             false,
                         );
-                        const cookie = this.agent.jar.getCookies(accessInfo).toValueString();
-                        if (cookie) {
-                            this.cookie = cookie;
+                        const cookie = this.agent.jar.getCookies(accessInfo);
+                        if (cookie.toString()) {
+                            this.auth.value = cookie.toValueString();
+                            this.auth.cookie = cookie.toString();
                         }
                     }
                     // TODO should reject with failures from the service

@@ -34,7 +34,7 @@ export default function (req, res) {
         innerHeight: 0,
     };
 
-    const client = new Client(req);
+    const client = new Client(req, req.session.auth);
     const store = createStore(client);
 
     function hydrateOnClient() {
@@ -52,6 +52,7 @@ export default function (req, res) {
             res.send(500, error.message);
             hydrateOnClient();
         } else if (redirectLocation) {
+            req.session.auth = client.transport.auth;
             res.redirect(302, redirectLocation.pathname + redirectLocation.search);
         } else if (renderProps) {
             let content;
@@ -91,6 +92,20 @@ export default function (req, res) {
                         hydrateOnClient();
                         return;
                     }
+                    // If the authentication token cookie is present on the
+                    // transport (happens after a SSR redirect as a result of
+                    // successful authentication (SSO)), we need to tell the
+                    // browser to set the cookie.
+                    if (client.transport.auth.cookie) {
+                        res.append('Set-Cookie', client.transport.auth.cookie);
+                    }
+                    // We only need the session for handling multiple requests
+                    // and redirects during SSR. As soon as we return a
+                    // response to the browser, we should rely on the
+                    // authentication cookie set by the API. This means we
+                    // don't have to manage multiple cookies or worry about
+                    // invalidating multiple cookies when the user logs out.
+                    req.session.destroy();
                     res.status(200).send(page);
                 })
             } catch (e) {
