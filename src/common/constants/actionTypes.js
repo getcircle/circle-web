@@ -124,6 +124,3 @@ export const DELETE_LOCAL_FILE = 'DELETE_LOCAL_FILE';
 
 // Clear file uploads
 export const CLEAR_FILE_UPLOADS = 'CLEAR_FILE_UPLOADS';
-
-// Location Changed
-export const LOCATION_CHANGED = 'LOCATION_CHANGED';

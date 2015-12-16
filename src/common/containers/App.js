@@ -6,7 +6,6 @@ import React, { PropTypes } from 'react';
 import { backgroundColors, canvasColor } from '../constants/styles';
 import { deviceResized } from '../actions/device';
 import { getAuthenticatedProfile } from '../reducers/authentication';
-import { locationChanged } from '../actions/app';
 import resizable from '../decorators/resizable';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
@@ -36,7 +35,6 @@ const selector = createSelector(
         cacheState,
         authenticationState,
         responsiveState,
-        footerState,
     ) => {
         const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
@@ -125,6 +123,10 @@ class App extends CSSComponent {
         }
 
         this.initTrackerSession();
+        // XXX we should be able to listen to UPDATE_PATH action from
+        // redux-simple-router. since we're about to redo the search
+        // components, i'm not going to adjust this now, but we should ensure
+        // this isn't required for the new components.
         if (!this.historyListener) {
             this.historyListener = this.context.history.listen(location => {
                 this.locationChanged(location)
@@ -200,8 +202,6 @@ class App extends CSSComponent {
         if (this.props.displayHeader) {
            this.setState({focused: false});
         }
-
-        this.props.dispatch(locationChanged());
     }
 
     handleFocusSearch() {
