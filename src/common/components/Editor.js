@@ -2,6 +2,8 @@ import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 import 'script!trix/dist/trix.js';
 
+import t from '../utils/gettext';
+
 import CSSComponent from './CSSComponent';
 
 class Editor extends CSSComponent {
@@ -94,7 +96,7 @@ class Editor extends CSSComponent {
                 attachButtonElement.setAttribute('type', 'button');
                 attachButtonElement.setAttribute('class', 'attach');
                 attachButtonElement.setAttribute('data-action', 'x-attach');
-                attachButtonElement.innerHTML = 'Attach Files';
+                attachButtonElement.innerHTML = t('Attach Files');
                 document.querySelector('.button_group.block_tools').appendChild(attachButtonElement);
                 document.addEventListener('trix-action-invoke', (event) => this.handleAttachButtonClicked(event));
             }
@@ -226,7 +228,7 @@ class Editor extends CSSComponent {
         const classNames = 'row middle-xs center-xs drop_zone_indicator' + (this.state.dragStart ? '' : ' hide');
         return (
             <div className={classNames}>
-                <strong>Drop your files anywhere in this area to begin upload.</strong>
+                <strong>{t('Drop your files anywhere in this area to begin upload.')}</strong>
             </div>
         );
     }
