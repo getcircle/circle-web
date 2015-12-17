@@ -60,6 +60,7 @@ app.use(require('serve-static')(path.join(__dirname, '..', '..', 'static')));
 
 const proxy = httpProxy.createProxyServer({
     target: process.env.REMOTE_API_ENDPOINT,
+    secure: process.env.NODE_ENV === 'production',
 });
 app.use('/api', (req, res) => {
     try {
