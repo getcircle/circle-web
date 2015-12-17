@@ -41,11 +41,6 @@ const sess = {
 process.env.SENTRY_RELEASE = process.env.EMPIRE_RELEASE
 app.use(raven.middleware.express.requestHandler());
 
-if (app.get('env') === 'production') {
-    app.set('trust proxy', 1);
-    sess.cookie.secure = true;
-}
-
 // Setup basic http auth for our dev environment to restrict access to admins
 if (process.env.NODE_ENV === 'development') {
     requiredKeys.push('ADMIN_USERNAME', 'ADMIN_PASSWORD');
