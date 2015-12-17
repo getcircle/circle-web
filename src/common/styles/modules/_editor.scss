@@ -330,7 +330,7 @@ trix-editor img {
 
 .leditor .attachment img {
     max-width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .leditor .attachment .progress {
