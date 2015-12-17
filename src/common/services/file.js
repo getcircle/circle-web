@@ -6,12 +6,12 @@ import logger from '../utils/logger';
 export function uploadFile(client, fileName, contentType, data) {
     return new Promise((resolve, reject) => {
         let instructionsRef;
-        startUpload(fileName, contentType)
+        startUpload(client, fileName, contentType)
             .then((instructions) => {
                 instructionsRef = instructions;
                 return upload(instructions.upload_url, data);
             })
-            .then((response) => completeUpload(fileName, instructionsRef.upload_id, instructionsRef.upload_key))
+            .then((response) => completeUpload(client, fileName, instructionsRef.upload_id, instructionsRef.upload_key))
             .then((uploadResponse) => resolve(uploadResponse))
             .catch((error) => {
                 logger.log(`Error uploading file: ${error}`);
