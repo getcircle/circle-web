@@ -42,6 +42,7 @@ process.env.SENTRY_RELEASE = process.env.EMPIRE_RELEASE
 app.use(raven.middleware.express.requestHandler());
 
 if (app.get('env') === 'production') {
+    console.log('SETTING UP SECURE SESSION COOKIE');
     sess.cookie.secure = true;
 }
 
@@ -65,7 +66,7 @@ app.use(require('serve-static')(path.join(__dirname, '..', '..', 'static')));
 
 const proxy = httpProxy.createProxyServer({
     target: process.env.REMOTE_API_ENDPOINT,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.REMOTE_API_ENDPOINT.startsWith('https://'),
 });
 app.use('/api', (req, res) => {
     try {
