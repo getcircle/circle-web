@@ -61,7 +61,7 @@
     "bytebuffer": "^4.1.0",
     "compression": "1.6.0",
     "connect-redis": "^3.0.1",
-    "cookiejar": "^2.0.6",
+    "cookiejar": "git+https://github.com/lunohq/node-cookiejar.git#084d519318b98cb7c5ecd24893c4b3fdc2c8dc91",
     "express": "4.13.3",
     "express-session": "^1.12.1",
     "fastclick": "~1.0.3",

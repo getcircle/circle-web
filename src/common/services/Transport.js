@@ -111,7 +111,9 @@ export default class Transport {
                             false,
                         );
                         const cookie = this.agent.jar.getCookies(accessInfo);
+                        const allCookies = this.agent.jar.getCookies();
                         console.log('COOKIE: %s', cookie.toString());
+                        console.log('COOKIES: %s', allCookies.toString());
                         if (cookie.toString()) {
                             this.auth.value = cookie.toValueString();
                             this.auth.cookie = cookie.toString();
