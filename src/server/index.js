@@ -42,7 +42,7 @@ process.env.SENTRY_RELEASE = process.env.EMPIRE_RELEASE
 app.use(raven.middleware.express.requestHandler());
 
 if (app.get('env') === 'production') {
-    console.log('SETTING UP SECURE SESSION COOKIE');
+    app.set('trust proxy', 1);
     sess.cookie.secure = true;
 }
 
