@@ -107,7 +107,7 @@ export default class Transport {
                         const accessInfo = CookieAccessInfo(
                             process.env.AUTHENTICATION_TOKEN_COOKIE_DOMAIN,
                             undefined,
-                            process.env.NODE_ENV === 'production',
+                            !!parseInt(process.env.AUTHENTICATION_TOKEN_COOKIE_SECURE),
                             false,
                         );
                         console.log('COOKIE ACCESS INFO: %s', JSON.stringify(accessInfo));

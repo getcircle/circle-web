@@ -13,7 +13,12 @@ import favicon from 'serve-favicon';
 import main from './routes/main';
 import validateConfig from './validateConfig';
 
-const requiredKeys = ['SESSION_SECRET', 'REDIS_URL'];
+const requiredKeys = [
+    'SESSION_SECRET',
+    'REDIS_URL',
+    'AUTHENTICATION_TOKEN_COOKIE_DOMAIN',
+    'AUTHENTICATION_TOKEN_COOKIE_SECURE',
+];
 
 const PORT = process.env.PORT || 3000;
 
