@@ -107,9 +107,10 @@ export default class Transport {
                         const accessInfo = CookieAccessInfo(
                             process.env.AUTHENTICATION_TOKEN_COOKIE_DOMAIN,
                             undefined,
-                            false,
+                            process.env.NODE_ENV === 'production',
                             false,
                         );
+                        console.log('COOKIE ACCESS INFO: %s', JSON.stringify(accessInfo));
                         const cookie = this.agent.jar.getCookies(accessInfo);
                         const allCookies = this.agent.jar.getCookies();
                         console.log('COOKIE: %s', cookie.toString());
