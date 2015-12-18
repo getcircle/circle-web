@@ -759,13 +759,14 @@ class Search extends CSSComponent {
 
     getPostTexts(post, highlight) {
         const lastEditedText = `${t('Last edited')} ${moment(post.changed).fromNow()}`;
+        const content = post.content || '';
         const defaultSecondaryText = (
             <span style={this.styles().postSecondaryTextContainer}>
                 <span
                     key="matched-content"
                     style={this.styles().postSecondaryText}
                 >
-                    {trimNewLinesAndWhitespace(post.content).substr(0, POST_CONTENT_CHAR_LIMIT) + (post.content.length > POST_CONTENT_CHAR_LIMIT ? `\u2026` : '')}
+                    {trimNewLinesAndWhitespace(content).substr(0, POST_CONTENT_CHAR_LIMIT) + (content.length > POST_CONTENT_CHAR_LIMIT ? `\u2026` : '')}
                 </span>
                 <br key="line-break" />
                 <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
