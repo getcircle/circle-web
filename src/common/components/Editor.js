@@ -211,6 +211,12 @@ class Editor extends CSSComponent {
         });
     }
 
+    handleDrop(event) {
+        this.setState({
+            dragStart: false,
+        });
+    }
+
     handleScroll(event) {
         const elementToCompare = this.toolbar.classList.contains('sticky') ? this.toolbar.parentNode : this.toolbar;
         if (elementToCompare.getBoundingClientRect().top <= this.headerOffsetHeight) {
@@ -253,6 +259,7 @@ class Editor extends CSSComponent {
                     input={this.inputId}
                     onDragEnter={::this.handleDragEnter}
                     onDragLeave={::this.handleDragLeave}
+                    onDrop={::this.handleDrop}
                     placeholder={placeholder}
                 />
                 <input
