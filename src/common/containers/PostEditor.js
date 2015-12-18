@@ -131,6 +131,7 @@ class PostEditor extends CSSComponent {
                 Container: {
                     style: {
                         backgroundColor: 'rgb(255, 255, 255)',
+                        overflowX: 'hidden',
                     },
                 },
                 headerActionButtonLabel: {
