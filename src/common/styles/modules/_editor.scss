@@ -207,6 +207,12 @@ trix-editor:empty:not(:focus)::before {
     font-size: $fontSize;
     line-height: 1.68;
     letter-spacing: -0.003em;
+}
+
+.leditor ul+div,
+.leditor ol+div,
+.leditor pre+div,
+.leditor blockquote+div {
     margin-top: $marginTop;
 }
 
