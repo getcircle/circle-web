@@ -36,7 +36,8 @@ export default function (req, res) {
     };
 
     console.log('PROCESSING REQUEST: %s - %s', req.session.id, JSON.stringify(req.session.auth));
-    const client = new Client(req, req.session.auth);
+    const subdomain = getSubdomain(req.hostname);
+    const client = new Client(req, req.session.auth, subdomain);
     const store = createStore(client);
 
     function hydrateOnClient() {
@@ -66,7 +67,7 @@ export default function (req, res) {
                     // window.location.protocol appends the ":"
                     protocol: `${req.protocol}:`,
                     raw: req.originalUrl,
-                    subdomain: getSubdomain(req.hostname),
+                    subdomain: subdomain,
                 };
                 fetchAllData(
                     renderProps.components,

@@ -40,6 +40,12 @@ function getApiEndpoint(req) {
     }
 }
 
+function getCookieAccessInfo(subdomain) {
+    const domain = `${subdomain}.${process.env.AUTHENTICATION_TOKEN_COOKIE_BASE_DOMAIN}`;
+    const secure = !!parseInt(process.env.AUTHENTICATION_TOKEN_COOKIE_SECURE);
+    return CookieAccessInfo(domain, undefined, secure, false);
+}
+
 
 export function ResponseError(message, response) {
     this.name = 'ResponseError';
@@ -51,7 +57,7 @@ ResponseError.prototype.constructor = ResponseError;
 
 export default class Transport {
 
-    constructor(req, auth) {
+    constructor(req, auth, subdomain) {
         this.req = req;
         this._endpoint = getApiEndpoint(req);
         if (__CLIENT__) {
@@ -60,6 +66,7 @@ export default class Transport {
             this.agent = superagent.agent();
         }
         this.auth = auth || {value: null, cookie: null};
+        this.accessInfo = getCookieAccessInfo(subdomain);
     }
 
     sendRequest(request) {
@@ -104,14 +111,8 @@ export default class Transport {
                     reject(new ResponseError(undefined, response));
                 } else {
                     if (this.agent.jar) {
-                        const accessInfo = CookieAccessInfo(
-                            process.env.AUTHENTICATION_TOKEN_COOKIE_DOMAIN,
-                            undefined,
-                            !!parseInt(process.env.AUTHENTICATION_TOKEN_COOKIE_SECURE),
-                            false,
-                        );
-                        console.log('COOKIE ACCESS INFO: %s', JSON.stringify(accessInfo));
-                        const cookie = this.agent.jar.getCookies(accessInfo);
+                        console.log('COOKIE ACCESS INFO: %s', JSON.stringify(this.accessInfo));
+                        const cookie = this.agent.jar.getCookies(this.accessInfo);
                         const allCookies = this.agent.jar.getCookies();
                         console.log('COOKIE: %s', cookie.toString());
                         console.log('COOKIES: %s', allCookies.toString());
