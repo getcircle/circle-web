@@ -28,7 +28,8 @@ const RedisStore = connectRedis(session);
 const sentry = new raven.Client();
 
 const sess = {
-    cookie: {name: 'sid'},
+    cookie: {},
+    name: 'sid',
     resave: false,
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
