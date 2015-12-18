@@ -105,7 +105,7 @@ export default class Transport {
                 } else {
                     if (this.agent.jar) {
                         const accessInfo = CookieAccessInfo(
-                            process.env.AUTHENTICATION_TOKEN_COOKIE_DOMAIN,
+                            undefined,
                             undefined,
                             !!parseInt(process.env.AUTHENTICATION_TOKEN_COOKIE_SECURE),
                             false,

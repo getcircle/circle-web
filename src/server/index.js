@@ -16,7 +16,6 @@ import validateConfig from './validateConfig';
 const requiredKeys = [
     'SESSION_SECRET',
     'REDIS_URL',
-    'AUTHENTICATION_TOKEN_COOKIE_DOMAIN',
     'AUTHENTICATION_TOKEN_COOKIE_SECURE',
 ];
 
