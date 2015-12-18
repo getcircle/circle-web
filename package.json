@@ -30,9 +30,9 @@
         "NODE_ENV": "local",
         "PORT": 3000,
         "REMOTE_API_ENDPOINT": "http://`docker-machine ip dev`:8000/v1/",
-        "AUTHENTICATION_TOKEN_COOKIE_DOMAIN": ".local.lunohq.com",
         "REDIS_URL": "redis://`docker-machine ip dev`:6379",
-        "SESSION_SECRET": "shhhh"
+        "SESSION_SECRET": "shhhh",
+        "AUTHENTICATION_TOKEN_COOKIE_SECURE": 0
       }
     },
     "watch-client": {
