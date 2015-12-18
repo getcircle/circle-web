@@ -761,15 +761,14 @@ class Search extends CSSComponent {
         const lastEditedText = `${t('Last edited')} ${moment(post.changed).fromNow()}`;
         const plainTextContent = stripTags(post.content);
         const defaultSecondaryText = (
-            <span style={this.styles().postSecondaryTextContainer}>
-                <br key="line-break1" />
+            <span className="row full-width col-xs no-padding" style={this.styles().postSecondaryTextContainer}>
                 <span
+                    className="row full-width"
                     key="matched-content"
                     style={this.styles().postSecondaryText}
                 >
                     {trimNewLinesAndWhitespace(plainTextContent).substr(0, POST_CONTENT_CHAR_LIMIT) + (plainTextContent.length > POST_CONTENT_CHAR_LIMIT ? `\u2026` : '')}
                 </span>
-                <br key="line-break2" />
                 <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
             </span>
         );
@@ -796,14 +795,13 @@ class Search extends CSSComponent {
                 highlightedContent = `\u2026${highlightedContent}`;
             }
             const secondaryText = (
-                <span style={this.styles().postSecondaryTextContainer}>
-                    <br key="line-break1" />
+                <span className="row full-width col-xs no-padding" style={this.styles().postSecondaryTextContainer}>
                     <span
+                        className="row full-width"
                         dangerouslySetInnerHTML={{__html: `${highlightedContent}\u2026`}}
                         key="matched-content"
                         style={this.styles().postSecondaryText}
                     />
-                    <br key="line-break" />
                     <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
                 </span>
             );
