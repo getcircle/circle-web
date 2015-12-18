@@ -5,8 +5,8 @@ import Transport from './Transport';
 
 class Client {
 
-    constructor(req, transportAuth, subdomain) {
-        this.transport = new Transport(req, transportAuth, subdomain);
+    constructor(req, transportAuth) {
+        this.transport = new Transport(req, transportAuth);
     }
 
     buildRequest(action, params) {
