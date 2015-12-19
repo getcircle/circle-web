@@ -759,7 +759,7 @@ class Search extends CSSComponent {
 
     getPostTexts(post, highlight) {
         const lastEditedText = `${t('Last edited')} ${moment(post.changed).fromNow()}`;
-        const content = post.content || '';
+        const content = post.snippet || '';
         const defaultSecondaryText = (
             <span style={this.styles().postSecondaryTextContainer}>
                 <span
