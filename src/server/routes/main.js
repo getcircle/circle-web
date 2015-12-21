@@ -38,7 +38,6 @@ export default function (req, res) {
     console.log('PROCESSING REQUEST: %s - %s', req.session.id, JSON.stringify(req.session.auth));
     const client = new Client(req, req.session.auth);
     const store = createStore(client);
-    const sentry = new raven.Client();
 
     function hydrateOnClient() {
         res.status(200).send(renderFullPage('', store, webpackIsomorphicTools.assets()));
