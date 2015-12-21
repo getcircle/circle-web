@@ -197,6 +197,16 @@ class Editor extends CSSComponent {
         this.setState({
             dragStart: true,
         });
+
+        // In an ideal world, drag enter and drag leave would behave as
+        // stated in their documentation whereby drag enter gets called
+        // when a droppable object is in drop zone and drag leave when its
+        // moved. But, drag* events also get triggerred on every mouse move.
+        // There is no clean way to detect which drag enter/leave combination
+        // is real or is being caused by mouse movement. Fortunately, the
+        // total count of "enter" and "leave" events are equal when dragging a file
+        // or cancelling it. There is also a catch all onDrop event for the success
+        // case. This variable is used to keep the count of drag* events.
         ++this.dragEventCounter;
     }
 
