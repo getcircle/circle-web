@@ -509,7 +509,8 @@ class Post extends CSSComponent {
     // Change Methods
 
     handleTitleKeyDown(event) {
-        if (event.keyCode && event.keyCode === keyCodes.TAB && this.refs.editor) {
+        const triggerKeyCodes = [keyCodes.TAB, keyCodes.ENTER];
+        if (event.keyCode && triggerKeyCodes.indexOf(event.keyCode) !== -1 && this.refs.editor) {
             this.refs.editor.focus();
             event.preventDefault();
         }
