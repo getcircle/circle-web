@@ -104,7 +104,7 @@ trix-editor:empty:not(:focus)::before {
     color: rgba(0, 0, 0, 0.3);
 }
 
-.leditor, trix-editor.leditor {
+.luno-editor, trix-editor.luno-editor {
     border: 0;
     border-radius: 0;
     color: rgba(0,0,0,0.8);
@@ -115,7 +115,7 @@ trix-editor:empty:not(:focus)::before {
     padding: 16px 0;
 }
 
-.postContent a, .leditor a {
+.postContent a, .luno-editor a {
     background-color: transparent;
     background-image: linear-gradient(to bottom, rgba(122, 142, 255, 0) 50%, rgba(122, 142, 255, 0.6) 50%);
     background-repeat: repeat-x;
@@ -127,13 +127,13 @@ trix-editor:empty:not(:focus)::before {
     -webkit-tap-highlight-color: rgba(122, 142, 255, 0.3);
 }
 
-.postContent a.hashtag, .leditor a.hashtag {
+.postContent a.hashtag, .luno-editor a.hashtag {
     background-image: none;
     cursor: pointer;
     word-wrap: break-word;
 }
 
-.leditor a[data-trix-attachment] {
+.luno-editor a[data-trix-attachment] {
     background-image: none;
     color: inherit;
     cursor: pointer;
@@ -144,15 +144,15 @@ trix-editor:empty:not(:focus)::before {
     width: 100%;
 }
 
-.leditor a[data-trix-attachment]:hover, .leditor a[data-trix-attachment]:visited:hover {
+.luno-editor a[data-trix-attachment]:hover, .luno-editor a[data-trix-attachment]:visited:hover {
     color: inherit;
 }
 
-.leditor b, .leditor strong {
+.luno-editor b, .luno-editor strong {
     font-weight: bold;
 }
 
-.leditor blockquote {
+.luno-editor blockquote {
     border-left: 3px solid rgba(0,0,0,0.8);
     font-weight: 400;
     font-style: italic;
@@ -164,15 +164,15 @@ trix-editor:empty:not(:focus)::before {
     padding-bottom: 3px;
 }
 
-.leditor em, .leditor i {
+.luno-editor em, .luno-editor i {
     font-style: italic;
 }
 
-.leditor h2:first-child {
+.luno-editor h2:first-child {
     margin-top: 0;
 }
 
-.leditor h2 {
+.luno-editor h2 {
     color: rgba(0,0,0,0.8);
     font-weight: normal;
     font-style: normal;
@@ -182,11 +182,11 @@ trix-editor:empty:not(:focus)::before {
     margin-top: 56px;
 }
 
-.leditor h3:first-child {
+.luno-editor h3:first-child {
     margin-top: 0;
 }
 
-.leditor h3 {
+.luno-editor h3 {
     color: rgba(0,0,0,0.44);
     font-weight: 300;
     font-style: normal;
@@ -196,11 +196,11 @@ trix-editor:empty:not(:focus)::before {
     margin-top: 39px;
 }
 
-.leditor *:first-child {
+.luno-editor *:first-child {
     margin-top: 0;
 }
 
-.leditor div, .leditor p {
+.luno-editor div, .luno-editor p {
     color: rgba(0, 0, 0, 0.8);
     font-weight: 400;
     font-style: normal;
@@ -209,19 +209,19 @@ trix-editor:empty:not(:focus)::before {
     letter-spacing: -0.003em;
 }
 
-.leditor ul+div,
-.leditor ol+div,
-.leditor pre+div,
-.leditor blockquote+div {
+.luno-editor ul+div,
+.luno-editor ol+div,
+.luno-editor pre+div,
+.luno-editor blockquote+div {
     margin-top: $marginTop;
 }
 
-.leditor ul, .leditor ol {
+.luno-editor ul, .luno-editor ol {
     counter-reset: post;
     margin-top: $marginTop;
 }
 
-.leditor li {
+.luno-editor li {
     font-size: $fontSize;
     font-style: normal;
     letter-spacing: .01rem;
@@ -229,7 +229,7 @@ trix-editor:empty:not(:focus)::before {
     margin-left: 30px;
 }
 
-.leditor ol>li:before {
+.luno-editor ol>li:before {
     counter-increment: post;
     content: counter(post) ".";
     font-feature-settings: "liga" on,"lnum" on;
@@ -241,7 +241,7 @@ trix-editor:empty:not(:focus)::before {
     -webkit-font-smoothing: antialiased;
 }
 
-.leditor li:before {
+.luno-editor li:before {
     box-sizing: border-box;
     display: inline-block;
     font-size: $fontSize;
@@ -251,16 +251,16 @@ trix-editor:empty:not(:focus)::before {
     width: 58px;
 }
 
-.leditor ul > li::before {
+.luno-editor ul > li::before {
     content: "•";
     padding-top: 4px;
     padding-right: 15px;
 }
 
-.leditor pre,
-.leditor code,
-.leditor kbd,
-.leditor samp {
+.luno-editor pre,
+.luno-editor code,
+.luno-editor kbd,
+.luno-editor samp {
     background: rgba(0,0,0,0.05);
     font-family: monospace;
     font-size: 16px;
@@ -283,7 +283,7 @@ trix-editor img {
     height: auto;
 }
 
-.leditor .attachment {
+.luno-editor .attachment {
     color: $lightTextColor;
     display: inline-block;
     font-size: 13px;
@@ -296,15 +296,15 @@ trix-editor img {
     width: 100%;
 }
 
-.leditor a[data-trix-attachment] .attachment {
+.luno-editor a[data-trix-attachment] .attachment {
     width: initial;
 }
 
-.leditor .attachment.attachment-file {
+.luno-editor .attachment.attachment-file {
     line-height: 30px;
 }
 
-.leditor .attachment .caption {
+.luno-editor .attachment .caption {
     display: inline-block;
     margin: 4px auto 0 auto;
     max-width: 100%;
@@ -313,12 +313,12 @@ trix-editor img {
     vertical-align: bottom;
 }
 
-.leditor .attachment.attachment-preview .caption {
+.luno-editor .attachment.attachment-preview .caption {
     display: block;
     margin-top: 8px;
 }
 
-.leditor .attachment:not(.attachment-preview) .caption {
+.luno-editor .attachment:not(.attachment-preview) .caption {
     background-color: #fff;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cGF0aCBkPSJNMzMgMTJ2MjNjMCA0LjQyLTMuNTggOC04IDhzLTgtMy41OC04LThWMTBjMC0yLjc2IDIuMjQtNSA1LTVzNSAyLjI0IDUgNXYyMWMwIDEuMS0uODkgMi0yIDItMS4xMSAwLTItLjktMi0yVjEyaC0zdjE5YzAgMi43NiAyLjI0IDUgNSA1czUtMi4yNCA1LTVWMTBjMC00LjQyLTMuNTgtOC04LThzLTggMy41OC04IDh2MjVjMCA2LjA4IDQuOTMgMTEgMTEgMTFzMTEtNC45MiAxMS0xMVYxMmgtM3oiIGZpbGw9IiM3YzdiN2IiIC8+PC9zdmc+);
     background-position: 8.5px center;
@@ -330,16 +330,16 @@ trix-editor img {
     text-align: left;
 }
 
-.leditor .attachment .caption .size {
+.luno-editor .attachment .caption .size {
     display: none;
 }
 
-.leditor .attachment img {
+.luno-editor .attachment img {
     max-width: 100%;
     object-fit: contain;
 }
 
-.leditor .attachment .progress {
+.luno-editor .attachment .progress {
     appearance: none;
     background-color: rgba(255, 255, 255, 0.5);
     border: 0;
@@ -355,28 +355,28 @@ trix-editor img {
     z-index: 2;
 }
 
-.leditor .attachment .progress::-webkit-progress-bar {
+.luno-editor .attachment .progress::-webkit-progress-bar {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 3px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.15) inset;
 }
 
-.leditor .attachment .progress::-webkit-progress-value {
+.luno-editor .attachment .progress::-webkit-progress-value {
     background: $tintColor;
     border-radius: 3px;
     position: relative;
 }
 
-.leditor .attachment .progress::-moz-progress-bar {
+.luno-editor .attachment .progress::-moz-progress-bar {
     background: $tintColor;
     border-radius: 3px;
 }
 
-.leditor-container {
+.luno-editor-container {
     position: relative;
 }
 
-.leditor-container .drop_zone_indicator {
+.luno-editor-container .drop_zone_indicator {
     border: 2px dashed $tintColor;
     background: rgba($tintColor, 0.05);
     cursor: move;
@@ -388,17 +388,17 @@ trix-editor img {
     width: 100%;
 }
 
-.leditor-container .drop_zone_indicator strong {
+.luno-editor-container .drop_zone_indicator strong {
     color: $lightTextColor;
     display: inline-block;
     padding: 1.5rem 2rem 1.5rem 2rem;
 }
 
-.leditor-container.dropzone .leditor {
+.luno-editor-container.dropzone .luno-editor {
     cursor: move;
 }
 
-.leditor-container .hidden-file-picker {
+.luno-editor-container .hidden-file-picker {
     height: 0;
     left: 0;
     position: absolute;

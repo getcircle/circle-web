@@ -254,9 +254,9 @@ class Editor extends CSSComponent {
             placeholder,
         } = this.props;
 
-        const className = 'leditor-container ' + (this.state.dragStart ? 'dropzone' : '');
+        const className = 'luno-editor-container ' + (this.state.dragStart ? 'dropzone' : '');
         return (
-            <div className={className} ref="leditorContainer">
+            <div className={className}>
                 <input
                     id={this.inputId}
                     onChange={::this.handleChange}
@@ -265,7 +265,7 @@ class Editor extends CSSComponent {
                 />
                 {this.renderDropzoneIndicator()}
                 <trix-editor
-                    class="leditor"
+                    class="luno-editor"
                     input={this.inputId}
                     onDragEnter={::this.handleDragEnter}
                     onDragLeave={::this.handleDragLeave}

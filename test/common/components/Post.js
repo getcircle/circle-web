@@ -58,7 +58,7 @@ describe('PostComponent', () => {
                 post: PostFactory.getPostWithTitleAndContent('', postContent),
             });
 
-            const postContentComponent = TestUtils.findRenderedDOMComponentWithClass(postComponent, 'leditor');
+            const postContentComponent = TestUtils.findRenderedDOMComponentWithClass(postComponent, 'luno-editor');
             expect(TestUtils.isDOMComponent(postContentComponent)).toBe(true);
 
             expect((ReactDOM.findDOMNode(postContentComponent)).innerHTML).toBe(

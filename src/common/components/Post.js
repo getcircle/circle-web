@@ -502,7 +502,7 @@ class Post extends CSSComponent {
         finalContent = containsHTML ? finalContent : '<div>' + finalContent + '</div>';
         return (
             <div
-                className="leditor"
+                className="luno-editor"
                 dangerouslySetInnerHTML={{__html: finalContent}}
             />
         );
