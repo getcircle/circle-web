@@ -843,8 +843,12 @@ class Post extends CSSComponent {
                 uploadProgress,
                 uploadedFiles,
             } = this.props;
-            const Editor = require('./Editor');
 
+            // We add the editor related code only on the client
+            // because the library we use relies on DOM to be present.
+            // It uses the global window object, event listeners, query
+            // selectors, and the full Node and Element objects.
+            const Editor = require('./Editor');
             return (
                 <Editor
                     onChange={(event, plainTextValue) => {
