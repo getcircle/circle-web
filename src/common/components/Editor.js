@@ -39,6 +39,12 @@ class Editor extends CSSComponent {
     headerOffsetHeight = 0;
     toolbar = null;
     editorElement = null;
+
+    // Trix doesn't have real getters for HTML and it adds them as a
+    // value to a hidden input element or by change events; because
+    // it is designed to work like a web component. To pass value into Trix,
+    // we define our own hidden input element and pass its ID to Trix, so it
+    // can fetch the initial value.
     inputId = null;
 
     componentWillMount() {
