@@ -1,5 +1,6 @@
 import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import Dropzone from 'react-dropzone';
+import flow from 'lodash/function/flow';
 import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
@@ -489,16 +490,13 @@ class Post extends CSSComponent {
 
     getReadOnlyContent(content) {
         const containsHTML = hasHTML(content);
-        let finalContent = detectHashtagsAndAddMarkup(
-            detectEmailsAndAddMarkup(
-                detectURLsAndAddMarkup(
-                    detectCodeMarkdownAndAddMarkup(
-                        content
-                    )
-                )
-            )
+        const detectPatternsAndAddMarkup = flow(
+            detectCodeMarkdownAndAddMarkup,
+            detectURLsAndAddMarkup,
+            detectEmailsAndAddMarkup,
+            detectHashtagsAndAddMarkup
         );
-
+        let finalContent = detectPatternsAndAddMarkup(content);
         finalContent = containsHTML ? finalContent : '<div>' + finalContent + '</div>';
         return (
             <div
