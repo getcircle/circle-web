@@ -124,9 +124,9 @@ class TeamDetailHeader extends CSSComponent {
                     <IconContainer
                         IconClass={GroupIcon}
                         iconStyle={{...this.styles().icon}}
-                        style={this.styles().iconContainer}
                         stroke={iconColor}
                         strokeWidth={iconStrokeWidth}
+                        style={this.styles().iconContainer}
                     />
                 </div>
                 <div className="row center-xs" style={this.styles().nameSection}>

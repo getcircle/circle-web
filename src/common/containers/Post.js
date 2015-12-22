@@ -16,6 +16,7 @@ import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
+import LunoDocumentTitle from '../components/LunoDocumentTitle';
 import { default as PostComponent } from '../components/Post';
 
 const selector = selectors.createImmutableSelector(
@@ -155,12 +156,18 @@ class Post extends CSSComponent {
         } = this.props;
         if (post) {
             return (
-                <PostComponent post={post} />
+                <LunoDocumentTitle title={post.title}>
+                    <PostComponent post={post} />
+                </LunoDocumentTitle>
             );
         } else if (errorDetails) {
             return this.renderErrorMessage();
         } else  {
-            return <CenterLoadingIndicator />;
+            return (
+                <LunoDocumentTitle loading={true}>
+                    <CenterLoadingIndicator />
+                </LunoDocumentTitle>
+            );
         }
     }
 

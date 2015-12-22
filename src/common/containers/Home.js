@@ -1,15 +1,14 @@
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
 import { resetScroll } from '../utils/window';
-import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
 import HeaderMenu from '../components/HeaderMenu';
+import LunoDocumentTitle from '../components/LunoDocumentTitle';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/Search';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
@@ -174,42 +173,44 @@ class Home extends CSSComponent {
 
     render() {
         return (
-            <div style={this.styles().root}>
-                <header style={this.styles().header}>
-                    <div className="row end-xs">
-                        <HeaderMenu
-                            dispatch={this.props.dispatch}
-                            {...this.styles().HeaderMenu}
-                        />
-                    </div>
-                </header>
-                <section className="wrap" style={this.styles().wrap}>
-                    <section style={this.styles().organizationLogoSection}>
-                        <div>
-                            <div className="row center-xs">
-                                {this.getOrganizationImage()}
-                            </div>
-                        </div>
-                    </section>
-                    <section style={this.styles().searchSection}>
-                        <div>
-                            <SearchComponent
-                                className="row center-xs"
-                                onCancel={::this.handleCancelSearch}
-                                onFocus={::this.handleFocusSearch}
-                                searchContainerWidth={660}
-                                searchLocation={SEARCH_LOCATION.HOME}
-                                {...this.styles().SearchComponent}
+            <LunoDocumentTitle>
+                <div style={this.styles().root}>
+                    <header style={this.styles().header}>
+                        <div className="row end-xs">
+                            <HeaderMenu
+                                dispatch={this.props.dispatch}
+                                {...this.styles().HeaderMenu}
                             />
                         </div>
+                    </header>
+                    <section className="wrap" style={this.styles().wrap}>
+                        <section style={this.styles().organizationLogoSection}>
+                            <div>
+                                <div className="row center-xs">
+                                    {this.getOrganizationImage()}
+                                </div>
+                            </div>
+                        </section>
+                        <section style={this.styles().searchSection}>
+                            <div>
+                                <SearchComponent
+                                    className="row center-xs"
+                                    onCancel={::this.handleCancelSearch}
+                                    onFocus={::this.handleFocusSearch}
+                                    searchContainerWidth={660}
+                                    searchLocation={SEARCH_LOCATION.HOME}
+                                    {...this.styles().SearchComponent}
+                                />
+                            </div>
+                        </section>
+                        <section style={this.styles().poweredBySection}>
+                            <div className="row center-xs">
+                                <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
+                            </div>
+                        </section>
                     </section>
-                    <section style={this.styles().poweredBySection}>
-                        <div className="row center-xs">
-                            <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
-                        </div>
-                    </section>
-                </section>
-            </div>
+                </div>
+            </LunoDocumentTitle>
         );
     }
 }

@@ -15,6 +15,7 @@ import t from '../utils/gettext';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import DetailContent from '../components/DetailContent';
+import LunoDocumentTitle from '../components/LunoDocumentTitle';
 import Header from '../components/Header';
 import { default as SearchComponent } from '../components/Search';
 
@@ -172,29 +173,32 @@ class Search extends CSSComponent {
             params: { query },
         } = this.props;
 
+        const title = t('Search') + (query ? ` \u2013 ${query}` : '');
         if (query) {
             return (
-                <DetailContent>
-                    <div>
-                        <h3 style={this.styles().pageHeaderText}>
-                            {t('Search Results')}
-                            &nbsp;&ndash;&nbsp;<span style={this.styles().searchTerm}>&ldquo;{query}&rdquo;</span>
-                        </h3>
-                    </div>
-                    <SearchComponent
-                        canExplore={false}
-                        className="row center-xs"
-                        focused={true}
-                        limitResultsListHeight={false}
-                        query={query}
-                        results={results}
-                        retainResultsOnBlur={true}
-                        searchLocation={SEARCH_LOCATION.SEARCH}
-                        showExpandedResults={false}
-                        showRecents={false}
-                        {...this.styles().SearchResultsComponent}
-                    />
-                </DetailContent>
+                <LunoDocumentTitle title={title}>
+                    <DetailContent>
+                        <div>
+                            <h3 style={this.styles().pageHeaderText}>
+                                {t('Search Results')}
+                                &nbsp;&ndash;&nbsp;<span style={this.styles().searchTerm}>&ldquo;{query}&rdquo;</span>
+                            </h3>
+                        </div>
+                        <SearchComponent
+                            canExplore={false}
+                            className="row center-xs"
+                            focused={true}
+                            limitResultsListHeight={false}
+                            query={query}
+                            results={results}
+                            retainResultsOnBlur={true}
+                            searchLocation={SEARCH_LOCATION.SEARCH}
+                            showExpandedResults={false}
+                            showRecents={false}
+                            {...this.styles().SearchResultsComponent}
+                        />
+                    </DetailContent>
+                </LunoDocumentTitle>
             );
         }
     }

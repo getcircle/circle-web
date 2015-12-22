@@ -9,11 +9,12 @@ class LunoDocumentTitle extends CSSComponent {
 
     static propTypes = {
         loading: PropTypes.bool,
-        title: PropTypes.string.isRequired,
+        title: PropTypes.string,
     }
 
     static defaultProps = {
         loading: false,
+        title: '',
     }
 
     static rewind() {

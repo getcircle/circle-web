@@ -13,6 +13,7 @@ import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import LocationDetail from '../components/LocationDetail';
+import LunoDocumentTitle from '../components/LunoDocumentTitle';
 
 const selector = createSelector(
     [
@@ -92,15 +93,21 @@ class Location extends CSSComponent {
         } = this.props;
         if (office && members) {
             return (
-                <LocationDetail
-                    members={members}
-                    membersLoadMore={() => this.loadLocationMembers(this.props)}
-                    office={office}
-                    onUpdateLocationCallback={this.onUpdateLocation.bind(this)}
-                />
+                <LunoDocumentTitle title={office.name}>
+                    <LocationDetail
+                        members={members}
+                        membersLoadMore={() => this.loadLocationMembers(this.props)}
+                        office={office}
+                        onUpdateLocationCallback={this.onUpdateLocation.bind(this)}
+                    />
+                </LunoDocumentTitle>
             );
         } else {
-            return <CenterLoadingIndicator />;
+            return (
+                <LunoDocumentTitle loading={true}>
+                    <CenterLoadingIndicator />
+                </LunoDocumentTitle>
+            );
         }
     }
 

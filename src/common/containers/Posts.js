@@ -3,13 +3,16 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
+import connectData from '../utils/connectData';
 import { deletePost, getPosts } from '../actions/posts';
+import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
-import connectData from '../utils/connectData';
+import t from '../utils/gettext';
 
 import Container from '../components/Container';
+import LunoDocumentTitle from '../components/LunoDocumentTitle';
 import { default as PostsComponent } from '../components/Posts';
 import PureComponent from '../components/PureComponent';
 
@@ -101,14 +104,23 @@ class Posts extends PureComponent {
             posts,
         } = this.props;
 
+        let title = t('My Knowledge') + ` \u2013 `;
+        if (postState === PostStateURLString.DRAFT.toString()) {
+            title += t('Drafts');
+        } else if (postState === PostStateURLString.LISTED.toString()) {
+            title += t('Published');
+        }
+
         return (
-            <PostsComponent
-                loading={loading}
-                onDeletePostCallback={::this.onDeletePostTapped}
-                postState={postState}
-                posts={posts}
-                postsLoadMore={::this.onPostsLoadMore}
-            />
+            <LunoDocumentTitle title={title}>
+                <PostsComponent
+                    loading={loading}
+                    onDeletePostCallback={::this.onDeletePostTapped}
+                    postState={postState}
+                    posts={posts}
+                    postsLoadMore={::this.onPostsLoadMore}
+                />
+            </LunoDocumentTitle>
         );
     }
 
