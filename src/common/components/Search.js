@@ -759,7 +759,8 @@ class Search extends CSSComponent {
 
     getPostTexts(post, highlight) {
         const lastEditedText = `${t('Last edited')} ${moment(post.changed).fromNow()}`;
-        const plainTextContent = stripTags(post.content);
+        const content = post.snippet || '';
+        const plainTextContent = stripTags(content);
         const defaultSecondaryText = (
             <span className="row full-width col-xs no-padding" style={this.styles().postSecondaryTextContainer}>
                 <span
