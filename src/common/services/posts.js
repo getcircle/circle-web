@@ -41,10 +41,10 @@ export function deletePost(client, post) {
     });
 }
 
-export function getPost(client, postId, fields=null) {
+export function getPost(client, postId, fields=new services.common.containers.FieldsV1({exclude: ['snippet']})) {
     let parameters = {
         id: postId,
-        fields: fields || new services.common.containers.FieldsV1({exclude: ['snippet']}),
+        fields: fields,
     };
 
     let request = new services.post.actions.get_post.RequestV1(parameters);
@@ -55,13 +55,13 @@ export function getPost(client, postId, fields=null) {
     });
 }
 
-export function getPosts(client, postStateURLString, byProfile, nextRequest=null, key=null, fields=null) {
+export function getPosts(client, postStateURLString, byProfile, nextRequest=null, key=null, fields=new services.common.containers.FieldsV1({exclude: ['content']})) {
 
     let parameters = {
         /*eslint-disable camelcase*/
         by_profile_id: byProfile ? byProfile.id : undefined,
         state: getPostStateFromURLString(postStateURLString),
-        fields: fields || new services.common.containers.FieldsV1({exclude: ['content']}),
+        fields: fields,
         /*eslint-enable camelcase*/
     };
 
