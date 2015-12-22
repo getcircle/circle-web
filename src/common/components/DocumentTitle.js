@@ -17,12 +17,23 @@ class DocumentTitle extends CSSComponent {
         return ReactDocumentTitle.rewind();
     }
 
+    getAppName() {
+        let suffix = '';
+        if (__LOCAL__) {
+            suffix = 'Local';
+        } else if (__DEVELOPMENT__) {
+            suffix = 'Dev';
+        }
+
+        return 'Luno' + (suffix ? ' ' + suffix : '');
+    }
+
     getTitle() {
         const {
             title,
         } = this.props;
 
-        const finalTitle = (title ? `${title}  \u2013  ` : '') + 'Luno';
+        const finalTitle = (title ? `${title}  \u2013  ` : '') + this.getAppName();
         return finalTitle;
     }
 
