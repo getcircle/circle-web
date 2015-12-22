@@ -109,10 +109,9 @@ class Login extends CSSComponent {
             default: {
                 container: {
                     backgroundColor: '#ffffff',
-                    marginTop: '2%',
+                    marginTop: '24px',
                     maxWidth: 600,
-                    paddingTop: '5%',
-                    paddingBottom: '5%',
+                    padding: '60px 0',
                     width: '95%',
                 },
                 header: {
@@ -142,7 +141,7 @@ class Login extends CSSComponent {
                 },
                 wrap: {
                     marginBottom: 0,
-                    paddingTop: '2%',
+                    paddingTop: '24px',
                 },
             },
         };

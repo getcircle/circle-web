@@ -54,6 +54,7 @@ const selector = selectors.createImmutableSelector(
             isSaving: postState.get('loading'),
             post: post,
             shouldAutoSave: !post || (post && (!post.state || post.state === PostStateV1.DRAFT)),
+            uploadProgress: filesState.get('filesProgress'),
             uploadedFiles: filesState.get('files'),
             uploadingFiles: filesState.get('loading'),
         }
@@ -78,6 +79,7 @@ class PostEditor extends CSSComponent {
         }),
         post: InternalPropTypes.PostV1,
         shouldAutoSave: PropTypes.bool,
+        uploadProgress: PropTypes.object,
         uploadedFiles: PropTypes.object,
         uploadingFiles: PropTypes.bool,
     }
@@ -129,6 +131,7 @@ class PostEditor extends CSSComponent {
                 Container: {
                     style: {
                         backgroundColor: 'rgb(255, 255, 255)',
+                        overflowX: 'hidden',
                     },
                 },
                 headerActionButtonLabel: {
@@ -344,6 +347,7 @@ class PostEditor extends CSSComponent {
             params,
             post,
             shouldAutoSave,
+            uploadProgress,
             uploadedFiles,
             uploadingFiles,
         } = this.props;
@@ -362,6 +366,7 @@ class PostEditor extends CSSComponent {
                 post={post}
                 ref="post"
                 saveInProgress={isSaving}
+                uploadProgress={uploadProgress}
                 uploadedFiles={uploadedFiles}
                 uploadingFiles={uploadingFiles}
                 {...this.styles().Post}
