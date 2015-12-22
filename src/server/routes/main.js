@@ -35,7 +35,6 @@ export default function (req, res) {
         innerHeight: 0,
     };
 
-    console.log('PROCESSING REQUEST: %s - %s', req.session.id, JSON.stringify(req.session.auth));
     const client = new Client(req, req.session.auth);
     const store = createStore(client);
 
