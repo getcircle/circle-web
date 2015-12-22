@@ -6,7 +6,6 @@ import { resetScroll } from '../utils/window';
 import t from '../utils/gettext';
 
 import CSSComponent from '../components/CSSComponent';
-import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import HeaderMenu from '../components/HeaderMenu';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/Search';
@@ -173,44 +172,42 @@ class Home extends CSSComponent {
 
     render() {
         return (
-            <DocumentTitle>
-                <div style={this.styles().root}>
-                    <header style={this.styles().header}>
-                        <div className="row end-xs">
-                            <HeaderMenu
-                                dispatch={this.props.dispatch}
-                                {...this.styles().HeaderMenu}
+            <div style={this.styles().root}>
+                <header style={this.styles().header}>
+                    <div className="row end-xs">
+                        <HeaderMenu
+                            dispatch={this.props.dispatch}
+                            {...this.styles().HeaderMenu}
+                        />
+                    </div>
+                </header>
+                <section className="wrap" style={this.styles().wrap}>
+                    <section style={this.styles().organizationLogoSection}>
+                        <div>
+                            <div className="row center-xs">
+                                {this.getOrganizationImage()}
+                            </div>
+                        </div>
+                    </section>
+                    <section style={this.styles().searchSection}>
+                        <div>
+                            <SearchComponent
+                                className="row center-xs"
+                                onCancel={::this.handleCancelSearch}
+                                onFocus={::this.handleFocusSearch}
+                                searchContainerWidth={660}
+                                searchLocation={SEARCH_LOCATION.HOME}
+                                {...this.styles().SearchComponent}
                             />
                         </div>
-                    </header>
-                    <section className="wrap" style={this.styles().wrap}>
-                        <section style={this.styles().organizationLogoSection}>
-                            <div>
-                                <div className="row center-xs">
-                                    {this.getOrganizationImage()}
-                                </div>
-                            </div>
-                        </section>
-                        <section style={this.styles().searchSection}>
-                            <div>
-                                <SearchComponent
-                                    className="row center-xs"
-                                    onCancel={::this.handleCancelSearch}
-                                    onFocus={::this.handleFocusSearch}
-                                    searchContainerWidth={660}
-                                    searchLocation={SEARCH_LOCATION.HOME}
-                                    {...this.styles().SearchComponent}
-                                />
-                            </div>
-                        </section>
-                        <section style={this.styles().poweredBySection}>
-                            <div className="row center-xs">
-                                <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
-                            </div>
-                        </section>
                     </section>
-                </div>
-            </DocumentTitle>
+                    <section style={this.styles().poweredBySection}>
+                        <div className="row center-xs">
+                            <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
+                        </div>
+                    </section>
+                </section>
+            </div>
         );
     }
 }
