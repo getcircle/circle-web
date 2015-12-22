@@ -56,7 +56,7 @@ export function getPosts(client, postStateURLString, byProfile, nextRequest=null
         /*eslint-disable camelcase*/
         by_profile_id: byProfile ? byProfile.id : undefined,
         state: getPostStateFromURLString(postStateURLString),
-        inflations: inflations || new services.common.containers.InflationsV1({enabled: false}),
+        inflations: inflations || new services.common.containers.InflationsV1({disabled: true}),
         /*eslint-enable camelcase*/
     };
 
