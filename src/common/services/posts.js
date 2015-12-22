@@ -50,12 +50,13 @@ export function getPost(client, postId) {
     });
 }
 
-export function getPosts(client, postStateURLString, byProfile, nextRequest=null, key=null) {
+export function getPosts(client, postStateURLString, byProfile, nextRequest=null, key=null, inflations=new services.common.containers.InflationsV1({disabled: true})) {
 
     let parameters = {
         /*eslint-disable camelcase*/
         by_profile_id: byProfile ? byProfile.id : undefined,
         state: getPostStateFromURLString(postStateURLString),
+        inflations: inflations,
         /*eslint-enable camelcase*/
     };
 
