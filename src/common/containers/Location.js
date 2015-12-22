@@ -12,6 +12,7 @@ import { resetScroll } from '../utils/window';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
+import DocumentTitle from '../components/DocumentTitle';
 import LocationDetail from '../components/LocationDetail';
 
 const selector = createSelector(
@@ -92,12 +93,14 @@ class Location extends CSSComponent {
         } = this.props;
         if (office && members) {
             return (
-                <LocationDetail
-                    members={members}
-                    membersLoadMore={() => this.loadLocationMembers(this.props)}
-                    office={office}
-                    onUpdateLocationCallback={this.onUpdateLocation.bind(this)}
-                />
+                <DocumentTitle title={office.name}>
+                    <LocationDetail
+                        members={members}
+                        membersLoadMore={() => this.loadLocationMembers(this.props)}
+                        office={office}
+                        onUpdateLocationCallback={this.onUpdateLocation.bind(this)}
+                    />
+                </DocumentTitle>
             );
         } else {
             return <CenterLoadingIndicator />;

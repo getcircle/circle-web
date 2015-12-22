@@ -12,6 +12,7 @@ import connectData from '../utils/connectData';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
+import DocumentTitle from '../components/DocumentTitle';
 import TeamDetail from '../components/TeamDetail';
 
 const selector = createSelector(
@@ -98,17 +99,19 @@ class Team extends CSSComponent {
         } = this.props;
         if (extendedTeam) {
             return (
-                <TeamDetail
-                    extendedTeam={extendedTeam}
-                    members={members}
-                    membersLoadMore={fetchTeamMembers.bind(
-                        null,
-                        this.props.dispatch,
-                        this.props.params,
-                        this.props.membersNextRequest
-                    )}
-                    onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
-                />
+                <DocumentTitle title={extendedTeam.team.display_name}>
+                    <TeamDetail
+                        extendedTeam={extendedTeam}
+                        members={members}
+                        membersLoadMore={fetchTeamMembers.bind(
+                            null,
+                            this.props.dispatch,
+                            this.props.params,
+                            this.props.membersNextRequest
+                        )}
+                        onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
+                    />
+                </DocumentTitle>
             );
         } else {
             return <CenterLoadingIndicator />;

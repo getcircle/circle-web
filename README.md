@@ -9,16 +9,6 @@ nvm
 - `nvm install 0.10`
 - `nvm use 0.10`, add this to your bash profile, we can try v0.12 later
 
-npm global libs
-
-- `npm install -g divshot`
-- `npm install -g gulp`
-- is that it? I think there are more
-
-other global concerns
-
-- you may need fb watchman or something that lets you listen to more files at some point
-
 ## Run
 
 - Clone
@@ -39,7 +29,9 @@ Development
 - We're using Redux which implements a similar unidirectional data flow to Flux
 
 http://rackt.github.io/redux/
+
 http://rackt.github.io/react-router/
+
 https://github.com/rackt/react-redux
 
 ## Unit Testing
@@ -55,23 +47,15 @@ https://github.com/rackt/react-redux
 http://mochajs.org/
 http://rackt.github.io/redux/docs/recipes/WritingTests.html
 
-## Styling
+## Styling & Icons
 
-- We should use mostly inline styles and material-ui components when available.
+- We should use mostly inline styles and material-ui components when available. We use official material icons provided by Google.
 
-http://material-ui.com/#/
+Components - http://material-ui.com/
+Icons - http://google.github.io/material-design-icons/
 
 App Structure
 ==============
-
-## Routing
-
-Routing is handled by Amazon's Route53. Serving the files is handled by divshot for the moment.
-
-Currently we have two DNS records that serve www.circlehq.co.
-- "A" DNS record that is an alias to an s3 static website
-  - this just redirects to www.circlehq.co
-- "CNAME" DNS record that points to circlehq.divshot.io
 
 ## Top Level Structure
 

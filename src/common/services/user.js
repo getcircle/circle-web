@@ -31,12 +31,12 @@ export function authenticate(client, backend, key, secret) {
     });
 }
 
-export function getAuthenticationInstructions(client, email, subdomain) {
+export function getAuthenticationInstructions(client, email, url) {
     const parameters = {
         email,
         /*eslint-disable camelcase*/
-        organization_domain: subdomain,
-        redirect_uri: `${window.location.protocol}//${window.location.host}/auth`,
+        organization_domain: url.subdomain,
+        redirect_uri: `${url.protocol}//${url.host}/auth`,
         /*eslint-enable camelcase*/
     };
     let request = new services.user.actions.get_authentication_instructions.RequestV1(parameters);
@@ -49,7 +49,7 @@ export function getAuthenticationInstructions(client, email, subdomain) {
                         backend: response.result.backend,
                         userExists: response.result.user_exists,
                         email: email,
-                        organizationDomain: subdomain,
+                        organizationDomain: url.subdomain,
                         providerName: response.result.provider_name,
                         organizationImageUrl: response.result.organization_image_url
                     });

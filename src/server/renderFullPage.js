@@ -1,12 +1,14 @@
 import protobufs from 'protobufs';
 import transit from 'transit-immutable-protobuf-js';
 
+import raven from '../common/utils/raven';
+
 const nameSpaces = transit.withNameSpaces(
     [protobufs.soa, protobufs.services],
     new protobufs.services.$type.clazz().constructor,
 );
 
-export default function (content, store, assets) {
+export default function (content, store, assets, title) {
     const styleAssets = Object.keys(assets.styles).map((style, key) => {
         return (
             `<link
@@ -22,12 +24,22 @@ export default function (content, store, assets) {
     if (!styles) {
         styles = `<style>${require('../common/styles/app.scss')}</style>`;
     }
-    const serializedState = nameSpaces.toJSON(store.getState());
+
+    let serializedState;
+    try {
+        serializedState = nameSpaces.toJSON(store.getState());
+    } catch (e) {
+        raven.captureException(e);
+        serializedState = '{}';
+    }
+
+    const windowTitle = title || '';
     return `
     <!doctype html>
     <html lang="en-us">
         <head>
             <meta charset="utf-8">
+            <title>${windowTitle}</title>
             ${styles}
             <!-- Begin Google Log In -->
             <script type="text/javascript" src="https://apis.google.com/js/client.js" async defer></script>

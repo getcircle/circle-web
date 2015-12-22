@@ -37,6 +37,7 @@ class Header extends CSSComponent {
                         paddingRight: 0,
                         boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, .10)',
                         position: 'fixed',
+                        zIndex: 10,
                     },
                 },
                 headerContainer: {

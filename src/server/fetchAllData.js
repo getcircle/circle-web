@@ -1,9 +1,9 @@
 import getDataDependencies from '../common/utils/getDataDependencies';
 
-export default function (components, getState, dispatch, location, params) {
+export default function (components, getState, dispatch, location, params, url) {
     return new Promise(resolve => {
         function doTransition() {
-            Promise.all(getDataDependencies(components, getState, dispatch, location, params, true))
+            Promise.all(getDataDependencies(components, getState, dispatch, location, params, url, true))
                 .then(resolve)
                 .catch(error => {
                     // TODO: You may want to handle errors for fetchDataDeferred here
@@ -12,7 +12,7 @@ export default function (components, getState, dispatch, location, params) {
                 });
         };
 
-        return Promise.all(getDataDependencies(components, getState, dispatch, location, params))
+        return Promise.all(getDataDependencies(components, getState, dispatch, location, params, url))
             .then(doTransition)
             .catch(error => {
                 // TODO: You may want to handle errors for fetchData here

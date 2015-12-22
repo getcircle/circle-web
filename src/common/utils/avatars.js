@@ -6,7 +6,8 @@ const key = 'alphaColors';
 
 export function getRandomColor(name) {
     let alphaColors = {};
-    if (window.localStorage.getItem(key)) {
+    const hasLocalStorage = window && window.localStorage !== undefined;
+    if (hasLocalStorage && window.localStorage.getItem(key)) {
         alphaColors = JSON.parse(window.localStorage.getItem(key));
     }
 
@@ -17,6 +18,8 @@ export function getRandomColor(name) {
         color = colors[_.random(0, colors.length - 1)];
         alphaColors[character] = color;
     }
-    window.localStorage.setItem(key, JSON.stringify(alphaColors));
+    if (hasLocalStorage) {
+        window.localStorage.setItem(key, JSON.stringify(alphaColors));
+    }
     return color;
 }

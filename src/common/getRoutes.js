@@ -4,8 +4,10 @@ import { IndexRoute, Route } from 'react-router';
 
 import { PAGE_TYPE } from './constants/trackerProperties';
 import { loadAuth } from './actions/authentication';
-import { isAuthenticated, isLoaded as isAuthLoaded } from './reducers/authentication';
 import { toggleHeader } from './actions/header';
+import createHandleAuthorizationMiddleware from './middleware/createHandleAuthorizationMiddleware';
+import { isAuthenticated, isLoaded as isAuthLoaded } from './reducers/authentication';
+import raven from './utils/raven';
 import tracker from './utils/tracker';
 
 function applyMiddleware(...middleWares) {
@@ -22,11 +24,19 @@ export default function (store) {
 
     function loginOnce(next) {
         return (nextState, replaceState, exit) => {
-            if (isAuthLoaded(store.getState())) {
-                replaceState(null, '/');
-                return exit();
+            function checkAuth() {
+                if (isAuthenticated(store.getState())) {
+                    replaceState(null, '/');
+                    return exit();
+                }
+                next(nextState, replaceState, exit);
             }
-            next(nextState, replaceState, exit);
+
+            if (!isAuthLoaded(store.getState())) {
+                store.dispatch(loadAuth()).then(checkAuth);
+            } else {
+                checkAuth();
+            }
         };
     }
 
@@ -62,6 +72,22 @@ export default function (store) {
         }
     }
 
+    /**
+     * Simply redirect to "/" and exit.
+     *
+     * This middleware is meant as a catch all for routes such as "/auth" that
+     * don't map to a component and should be handled only with middleware.
+     */
+    function bail(next) {
+        return (nextState, replaceState, exit) => {
+            raven.captureMessage('Bail middleware reached!');
+            replaceState(null, '/');
+            exit();
+        }
+    }
+
+    const handleAuthorization = createHandleAuthorizationMiddleware(store);
+
     const trackPageView = (pageType, paramKey) => {
         return (next) => {
             return (nextState, replaceState, exit) => {
@@ -96,8 +122,8 @@ export default function (store) {
                 )}
             />
             <Route
-                component={require('./containers/AuthorizationHandler')}
-                onEnter={applyMiddleware(loginOnce)}
+                component={require('./containers/NoMatch')}
+                onEnter={applyMiddleware(loginOnce, handleAuthorization, bail)}
                 path="/auth"
             />
             <Route

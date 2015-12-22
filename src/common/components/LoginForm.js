@@ -14,7 +14,7 @@ const { Snackbar } = mui;
 class LoginForm extends CSSComponent {
 
     static propTypes = {
-        authError: PropTypes.string,
+        authError: PropTypes.bool,
         authenticate: PropTypes.func.isRequired,
         authorizationUrl: PropTypes.string,
         backend: PropTypes.number,

@@ -1,51 +1,178 @@
-.leditor {
-    outline: none;
-    min-height: 100px;
+$fontSize: 18px;
+$marginTop: 28px;
+$tintColor: rgb(122, 142, 255);
+$lightTextColor: rgba(0, 0, 0, 0.5);
+$toolbarHighlightColor: rgba($tintColor, 0.2);
+
+/* Trix Toolbar */
+
+trix-toolbar {
+    background: #ffffff;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    text-align: center;
 }
 
-.postContent a, .leditor a {
-    color: rgb(122, 142, 255);
+trix-toolbar.sticky {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+    position: fixed;
+    top: 64px;
+    z-index: 10;
+}
+
+trix-toolbar .button_group button.active, trix-toolbar .button_group input[type=button].active {
+    background-color: $toolbarHighlightColor;
+}
+
+trix-toolbar .button_group {
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+}
+
+trix-toolbar .button_groups {
+    height: 35px;
+}
+
+trix-toolbar .button_group button, trix-toolbar .button_group input[type=button] {
+    width: 40px;
+    height: 35px;
+    border: 0;
+    border-radius: 0;
+}
+
+trix-toolbar .dialogs .dialog input[type=button] {
+    font-size: 14px;
+    height: 30px;
+    opacity: 0.5;
+    padding: 1px 10px 0 8px;
+    width: 50px;
+}
+
+trix-toolbar .dialogs .dialog input[type=button]:first-child {
+    color: $tintColor;
+    opacity: 1;
+}
+
+trix-toolbar .dialog.active.link_dialog .link_url_fields input[type=url] {
+    font-size: 15px;
+    height: 32px;
+    line-height: 22px;
+    padding: 0 6px;
+}
+
+trix-toolbar .button_group button:not(:first-child), trix-toolbar .button_group input[type=button]:not(:first-child) {
+    border: 0;
+}
+
+trix-toolbar .button_group.text_tools > .strike,
+trix-toolbar .button_group.block_tools > .quote,
+trix-toolbar .button_group.block_tools .block-level,
+trix-toolbar .button_group.history_tools {
+    display: none;
+}
+
+trix-toolbar .dialog.active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 3px 10px #bfbfbf;
+    border-top: 3px solid $toolbarHighlightColor;
+    border-radius: 4px;
+    z-index: 5;
+}
+
+trix-toolbar .button_group button.attach::before {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTYuNSA2djExLjVjMCAyLjIxLTEuNzkgNC00IDRzLTQtMS43OS00LTRWNWMwLTEuMzggMS4xMi0yLjUgMi41LTIuNXMyLjUgMS4xMiAyLjUgMi41djEwLjVjMCAuNTUtLjQ1IDEtMSAxcy0xLS40NS0xLTFWNkgxMHY5LjVjMCAxLjM4IDEuMTIgMi41IDIuNSAyLjVzMi41LTEuMTIgMi41LTIuNVY1YzAtMi4yMS0xLjc5LTQtNC00UzcgMi43OSA3IDV2MTIuNWMwIDMuMDQgMi40NiA1LjUgNS41IDUuNXM1LjUtMi40NiA1LjUtNS41VjZoLTEuNXoiLz48L3N2Zz4=);
+}
+
+/* Editor */
+
+trix-editor [data-trix-mutable~=true] {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+trix-editor:empty:not(:focus)::before {
+    font-size: $fontSize;
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.luno-editor, trix-editor.luno-editor {
+    border: 0;
+    border-radius: 0;
+    color: rgba(0,0,0,0.8);
+    font-size: 1.8rem;
+    margin: 0;
+    min-height: 100px;
+    outline: none;
+    padding: 16px 0;
+}
+
+.postContent a, .luno-editor a {
     background-color: transparent;
     background-image: linear-gradient(to bottom, rgba(122, 142, 255, 0) 50%, rgba(122, 142, 255, 0.6) 50%);
     background-repeat: repeat-x;
     background-size: 2px 2px;
     background-position: 0 22px;
+    color: rgb(122, 142, 255);
     text-decoration: none;
-    -webkit-tap-highlight-color: rgba(122, 142, 255, 0.3);
     word-wrap: break-word;
+    -webkit-tap-highlight-color: rgba(122, 142, 255, 0.3);
 }
 
-.postContent a.hashtag, .leditor a.hashtag {
+.postContent a.hashtag, .luno-editor a.hashtag {
     background-image: none;
     cursor: pointer;
     word-wrap: break-word;
 }
 
-.leditor b, .leditor strong {
+.luno-editor a[data-trix-attachment] {
+    background-image: none;
+    color: inherit;
+    cursor: pointer;
+    display: block;
+    max-width: 100%;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+}
+
+.luno-editor a[data-trix-attachment]:hover, .luno-editor a[data-trix-attachment]:visited:hover {
+    color: inherit;
+}
+
+.luno-editor b, .luno-editor strong {
     font-weight: bold;
 }
 
-.leditor blockquote {
+.luno-editor blockquote {
+    border-left: 3px solid rgba(0,0,0,0.8);
     font-weight: 400;
     font-style: italic;
-    font-size: 20px;
+    font-size: $fontSize;
     line-height: 1.58;
     letter-spacing: -0.003em;
-    border-left: 3px solid rgba(0,0,0,0.8);
     padding-left: 20px;
     margin-left: -23px;
     padding-bottom: 3px;
 }
 
-.leditor em, .leditor i {
+.luno-editor em, .luno-editor i {
     font-style: italic;
 }
 
-.leditor h2:first-child {
+.luno-editor h2:first-child {
     margin-top: 0;
 }
 
-.leditor h2 {
+.luno-editor h2 {
     color: rgba(0,0,0,0.8);
     font-weight: normal;
     font-style: normal;
@@ -55,11 +182,11 @@
     margin-top: 56px;
 }
 
-.leditor h3:first-child {
+.luno-editor h3:first-child {
     margin-top: 0;
 }
 
-.leditor h3 {
+.luno-editor h3 {
     color: rgba(0,0,0,0.44);
     font-weight: 300;
     font-style: normal;
@@ -69,16 +196,212 @@
     margin-top: 39px;
 }
 
-.leditor p:first-child {
+.luno-editor *:first-child {
     margin-top: 0;
 }
 
-.leditor p {
+.luno-editor div, .luno-editor p {
     color: rgba(0, 0, 0, 0.8);
     font-weight: 400;
     font-style: normal;
-    font-size: 20px;
-    line-height: 1.58;
+    font-size: $fontSize;
+    line-height: 1.68;
     letter-spacing: -0.003em;
-    margin-top: 29px;
+}
+
+.luno-editor ul+div,
+.luno-editor ol+div,
+.luno-editor pre+div,
+.luno-editor blockquote+div {
+    margin-top: $marginTop;
+}
+
+.luno-editor ul, .luno-editor ol {
+    counter-reset: post;
+    margin-top: $marginTop;
+}
+
+.luno-editor li {
+    font-size: $fontSize;
+    font-style: normal;
+    letter-spacing: .01rem;
+    line-height: 1.58;
+    margin-left: 30px;
+}
+
+.luno-editor ol>li:before {
+    counter-increment: post;
+    content: counter(post) ".";
+    font-feature-settings: "liga" on,"lnum" on;
+    padding-right: 12px;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -moz-font-feature-settings: "liga" on,"lnum" on;
+    -webkit-font-feature-settings: "liga" on,"lnum" on;
+    -webkit-font-smoothing: antialiased;
+}
+
+.luno-editor li:before {
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: $fontSize;
+    margin-left: -58px;
+    position: absolute;
+    text-align: right;
+    width: 58px;
+}
+
+.luno-editor ul > li::before {
+    content: "•";
+    padding-top: 4px;
+    padding-right: 15px;
+}
+
+.luno-editor pre,
+.luno-editor code,
+.luno-editor kbd,
+.luno-editor samp {
+    background: rgba(0,0,0,0.05);
+    font-family: monospace;
+    font-size: 16px;
+    line-height: 22px;
+    margin-top: $marginTop;
+    overflow: auto;
+    padding: 20px;
+    white-space: pre-wrap;
+}
+
+/* Attachments */
+
+trix-editor [data-trix-mutable~=true] img,
+trix-editor [data-trix-mutable~=true].attachment-file .caption {
+    box-shadow: 0 0 0 2px $tintColor;
+}
+
+trix-editor img {
+    max-width: 100%;
+    height: auto;
+}
+
+.luno-editor .attachment {
+    color: $lightTextColor;
+    display: inline-block;
+    font-size: 13px;
+    margin: 0;
+    margin-top: $marginTop;
+    line-height: 1;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+
+.luno-editor a[data-trix-attachment] .attachment {
+    width: initial;
+}
+
+.luno-editor .attachment.attachment-file {
+    line-height: 30px;
+}
+
+.luno-editor .attachment .caption {
+    display: inline-block;
+    margin: 4px auto 0 auto;
+    max-width: 100%;
+    padding: 0 16px;
+    text-align: center;
+    vertical-align: bottom;
+}
+
+.luno-editor .attachment.attachment-preview .caption {
+    display: block;
+    margin-top: 8px;
+}
+
+.luno-editor .attachment:not(.attachment-preview) .caption {
+    background-color: #fff;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cGF0aCBkPSJNMzMgMTJ2MjNjMCA0LjQyLTMuNTggOC04IDhzLTgtMy41OC04LThWMTBjMC0yLjc2IDIuMjQtNSA1LTVzNSAyLjI0IDUgNXYyMWMwIDEuMS0uODkgMi0yIDItMS4xMSAwLTItLjktMi0yVjEyaC0zdjE5YzAgMi43NiAyLjI0IDUgNSA1czUtMi4yNCA1LTVWMTBjMC00LjQyLTMuNTgtOC04LThzLTggMy41OC04IDh2MjVjMCA2LjA4IDQuOTMgMTEgMTEgMTFzMTEtNC45MiAxMS0xMVYxMmgtM3oiIGZpbGw9IiM3YzdiN2IiIC8+PC9zdmc+);
+    background-position: 8.5px center;
+    background-repeat: no-repeat;
+    background-size: 30px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 10px 10px 10px 50px;
+    text-align: left;
+}
+
+.luno-editor .attachment .caption .size {
+    display: none;
+}
+
+.luno-editor .attachment img {
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.luno-editor .attachment .progress {
+    appearance: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 0;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15) inset;
+    color: $tintColor;
+    height: 10px;
+    left: 50%;
+    margin: -10px 0 0 -60px;
+    position: absolute;
+    top: 70%;
+    width: 120px;
+    z-index: 2;
+}
+
+.luno-editor .attachment .progress::-webkit-progress-bar {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15) inset;
+}
+
+.luno-editor .attachment .progress::-webkit-progress-value {
+    background: $tintColor;
+    border-radius: 3px;
+    position: relative;
+}
+
+.luno-editor .attachment .progress::-moz-progress-bar {
+    background: $tintColor;
+    border-radius: 3px;
+}
+
+.luno-editor-container {
+    position: relative;
+}
+
+.luno-editor-container .drop_zone_indicator {
+    border: 2px dashed $tintColor;
+    background: rgba($tintColor, 0.05);
+    cursor: move;
+    font-size: 1.4rem;
+    height: 100%;
+    position: absolute;
+    pointer-events: none;
+    z-index: 9;
+    width: 100%;
+}
+
+.luno-editor-container .drop_zone_indicator strong {
+    color: $lightTextColor;
+    display: inline-block;
+    padding: 1.5rem 2rem 1.5rem 2rem;
+}
+
+.luno-editor-container.dropzone .luno-editor {
+    cursor: move;
+}
+
+.luno-editor-container .hidden-file-picker {
+    height: 0;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 0;
 }

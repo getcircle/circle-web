@@ -8,7 +8,6 @@ import CSSComponent from '../components/CSSComponent';
 class Billing extends CSSComponent {
 
     static propTypes = {
-        authError: PropTypes.object,
         dispatch: PropTypes.func.isRequired,
         location: PropTypes.object.isRequired,
     }

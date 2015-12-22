@@ -10,7 +10,7 @@ export default function (client, initialState) {
 
     // NB: "thunk" middleware should be first
     const middleware = [thunk, createServicesMiddleware(client)];
-    if (__DEVELOPMENT__ && !__DEVTOOLS__) {
+    if (__DEVELOPMENT__ && !__DEVTOOLS__ && __CLIENT__) {
         middleware.push(logger);
     }
 

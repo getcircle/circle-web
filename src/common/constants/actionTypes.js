@@ -118,12 +118,10 @@ export const CLEAR_POSTS_CACHE = 'CLEAR_POSTS_CACHE';
 export const FILE_UPLOAD = 'FILE_UPLOAD';
 export const FILE_UPLOAD_SUCCESS = 'FILE_UPLOAD_SUCCESS';
 export const FILE_UPLOAD_FAILURE = 'FILE_UPLOAD_FAILURE';
+export const FILE_UPLOAD_PROGRESS = 'FILE_UPLOAD_PROGRESS';
 
 // Delete file
 export const DELETE_LOCAL_FILE = 'DELETE_LOCAL_FILE';
 
 // Clear file uploads
 export const CLEAR_FILE_UPLOADS = 'CLEAR_FILE_UPLOADS';
-
-// Location Changed
-export const LOCATION_CHANGED = 'LOCATION_CHANGED';

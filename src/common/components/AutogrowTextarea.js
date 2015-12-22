@@ -11,8 +11,10 @@ class AutogrowTextarea extends CSSComponent {
 
     static propTypes = {
         additionalHeightDelta: PropTypes.number,
+        autoFocus: PropTypes.bool,
         onChange: PropTypes.func,
         onHeightChange: PropTypes.func,
+        onKeyDown: PropTypes.func,
         placeholder: PropTypes.string,
         rows: PropTypes.number,
         singleLine: PropTypes.bool,
@@ -23,6 +25,7 @@ class AutogrowTextarea extends CSSComponent {
 
     static defaultProps = {
         additionalHeightDelta: 0,
+        autoFocus: false,
         rows: 1,
         singleLine: false,
     }
@@ -33,6 +36,7 @@ class AutogrowTextarea extends CSSComponent {
 
     componentDidMount() {
         this.syncHeight();
+        this.attachListeners();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -49,12 +53,14 @@ class AutogrowTextarea extends CSSComponent {
                 },
                 textareaStyle: {
                     cursor: 'text',
+                    fontFamily: 'inherit',
                     outline: 0,
                     padding: 0,
                     resize: 'none',
                     width: '100%',
                 },
                 shadowStyle: {
+                    fontFamily: 'inherit',
                     opacity: 0,
                     outline: 0,
                     overflow: 'hidden',
@@ -65,6 +71,12 @@ class AutogrowTextarea extends CSSComponent {
                 }
             },
         };
+    }
+
+    attachListeners() {
+        if (this.refs.input && this.props.onKeyDown) {
+            this.refs.input.addEventListener('keydown', (event) => this.props.onKeyDown(event));
+        }
     }
 
     syncHeight(newValue) {
@@ -107,6 +119,7 @@ class AutogrowTextarea extends CSSComponent {
 
     render() {
         const {
+            autoFocus,
             placeholder,
             rows,
             style,
@@ -131,6 +144,7 @@ class AutogrowTextarea extends CSSComponent {
                     */
                 }
                 <textarea
+                    autoFocus={autoFocus}
                     onChange={::this.handleChange}
                     placeholder={placeholder}
                     ref="input"

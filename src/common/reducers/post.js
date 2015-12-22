@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import { UPDATE_PATH } from 'redux-simple-router'
 
 import * as types from '../constants/actionTypes';
 
@@ -51,7 +52,7 @@ export default function post(state = initialState, action) {
             errorDetails: action.payload.errorDetails,
         });
 
-    case types.LOCATION_CHANGED:
+    case UPDATE_PATH:
         return state.merge({
             draftPost: null,
             loading: false,

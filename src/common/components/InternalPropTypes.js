@@ -24,6 +24,12 @@ const InternalPropTypes = {
         enumValues(services.search.containers.search.CategoryV1)
     ),
     TeamV1: PropTypes.instanceOf(services.organization.containers.TeamV1),
+    URLContext: PropTypes.shape({
+        raw: PropTypes.string.isRequired,
+        protocol: PropTypes.oneOf(['http:', 'https:']).isRequired,
+        host: PropTypes.string.isRequired,
+        subdomain: PropTypes.string.isRequired,
+    }),
 };
 InternalPropTypes.AuthContext = PropTypes.shape({
     location: InternalPropTypes.LocationV1,
