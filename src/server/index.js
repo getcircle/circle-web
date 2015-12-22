@@ -53,6 +53,18 @@ if (process.env.NODE_ENV === 'development') {
     app.use(auth.connect(basic));
 }
 
+if (process.env.NODE_ENV !== 'local') {
+    app.enable('trust proxy');
+    sess.cookie.secure = true;
+
+    app.use((req, res, next) => {
+        if (req.secure) {
+            return next();
+        }
+        res.redirect(`https://${req.headers.host}${req.url}`);
+    });
+}
+
 app.use(morgan(':remote-addr :method :url HTTP/:http-version :status :res[content-length] ":referrer" ":user-agent" - :response-time ms'));
 app.use(compression());
 app.use(favicon(path.join(__dirname, '..', '..', 'static', 'images', 'favicon.ico')));
