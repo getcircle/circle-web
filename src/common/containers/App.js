@@ -12,6 +12,7 @@ import * as selectors from '../selectors';
 import tracker from '../utils/tracker';
 
 import CSSComponent from '../components/CSSComponent';
+import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
@@ -243,15 +244,17 @@ class App extends CSSComponent {
             );
         }
         return (
-            <div style={this.styles().root}>
-                <AppCanvas>
-                    <div style={this.styles().canvasContainer}>
-                        {header}
-                        {this.props.children}
-                        {footer}
-                    </div>
-                </AppCanvas>
-            </div>
+            <DocumentTitle>
+                <div style={this.styles().root}>
+                    <AppCanvas>
+                        <div style={this.styles().canvasContainer}>
+                            {header}
+                            {this.props.children}
+                            {footer}
+                        </div>
+                    </AppCanvas>
+                </div>
+            </DocumentTitle>
         );
     }
 }

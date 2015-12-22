@@ -15,8 +15,8 @@ import t from '../utils/gettext';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
-import InternalPropTypes from '../components/InternalPropTypes';
 import DocumentTitle from '../components/DocumentTitle';
+import InternalPropTypes from '../components/InternalPropTypes';
 import { default as PostComponent } from '../components/Post';
 
 const selector = selectors.createImmutableSelector(
@@ -163,11 +163,7 @@ class Post extends CSSComponent {
         } else if (errorDetails) {
             return this.renderErrorMessage();
         } else  {
-            return (
-                <DocumentTitle loading={true}>
-                    <CenterLoadingIndicator />
-                </DocumentTitle>
-            );
+            return <CenterLoadingIndicator />;
         }
     }
 

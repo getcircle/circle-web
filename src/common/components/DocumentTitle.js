@@ -1,19 +1,15 @@
 import { default as ReactDocumentTitle} from 'react-document-title';
 import React, { PropTypes } from 'react';
 
-import t from '../utils/gettext';
-
 import CSSComponent from './CSSComponent';
 
 class DocumentTitle extends CSSComponent {
 
     static propTypes = {
-        loading: PropTypes.bool,
         title: PropTypes.string,
     }
 
     static defaultProps = {
-        loading: false,
         title: '',
     }
 
@@ -23,17 +19,10 @@ class DocumentTitle extends CSSComponent {
 
     getTitle() {
         const {
-            loading,
             title,
         } = this.props;
 
-        let finalTitle;
-        if (loading) {
-            finalTitle = `${t('Loading')} \u2026`;
-        } else {
-            finalTitle = (title ? `${title}  \u2013  ` : '') + 'Luno';
-        }
-
+        const finalTitle = (title ? `${title}  \u2013  ` : '') + 'Luno';
         return finalTitle;
     }
 

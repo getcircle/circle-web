@@ -12,8 +12,8 @@ import { resetScroll } from '../utils/window';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
-import LocationDetail from '../components/LocationDetail';
 import DocumentTitle from '../components/DocumentTitle';
+import LocationDetail from '../components/LocationDetail';
 
 const selector = createSelector(
     [
@@ -103,11 +103,7 @@ class Location extends CSSComponent {
                 </DocumentTitle>
             );
         } else {
-            return (
-                <DocumentTitle loading={true}>
-                    <CenterLoadingIndicator />
-                </DocumentTitle>
-            );
+            return <CenterLoadingIndicator />;
         }
     }
 

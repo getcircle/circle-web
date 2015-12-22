@@ -114,11 +114,7 @@ class Team extends CSSComponent {
                 </DocumentTitle>
             );
         } else {
-            return (
-                <DocumentTitle loading={true}>
-                    <CenterLoadingIndicator />
-                </DocumentTitle>
-            );
+            return <CenterLoadingIndicator />;
         }
     }
 

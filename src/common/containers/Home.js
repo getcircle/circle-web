@@ -6,9 +6,9 @@ import { resetScroll } from '../utils/window';
 import t from '../utils/gettext';
 
 import CSSComponent from '../components/CSSComponent';
+import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import HeaderMenu from '../components/HeaderMenu';
-import DocumentTitle from '../components/DocumentTitle';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/Search';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 

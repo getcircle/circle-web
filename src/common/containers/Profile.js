@@ -110,11 +110,7 @@ class Profile extends PureComponent {
                 </DocumentTitle>
             );
         } else {
-            return (
-                <DocumentTitle loading={true}>
-                    <CenterLoadingIndicator />
-                </DocumentTitle>
-            );
+            return <CenterLoadingIndicator />;
         }
     }
 
