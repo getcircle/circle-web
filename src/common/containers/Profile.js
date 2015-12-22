@@ -10,6 +10,7 @@ import connectData from '../utils/connectData';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
+import LunoDocumentTitle from '../components/LunoDocumentTitle';
 import ProfileDetail from '../components/ProfileDetail';
 import PureComponent from '../components/PureComponent';
 
@@ -100,14 +101,20 @@ class Profile extends PureComponent {
         } = this.props;
         if (extendedProfile) {
             return (
-                <ProfileDetail
-                    extendedProfile={extendedProfile}
-                    isLoggedInUser={isLoggedInUser}
-                    onUpdateProfile={::this.onUpdateProfile}
-                />
+                <LunoDocumentTitle title={extendedProfile.profile.full_name}>
+                    <ProfileDetail
+                        extendedProfile={extendedProfile}
+                        isLoggedInUser={isLoggedInUser}
+                        onUpdateProfile={::this.onUpdateProfile}
+                    />
+                </LunoDocumentTitle>
             );
         } else {
-            return <CenterLoadingIndicator />;
+            return (
+                <LunoDocumentTitle loading={true}>
+                    <CenterLoadingIndicator />
+                </LunoDocumentTitle>
+            );
         }
     }
 
