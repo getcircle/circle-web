@@ -79,7 +79,7 @@ app.use((req, res) => {
         main(req, res);
     } catch (e) {
         sentry.captureError(e);
-        console.log('ERROR PROCESSING REQUEST:', pretty.render(e));
+        console.error('ERROR PROCESSING REQUEST:', pretty.render(e));
     }
 });
 
