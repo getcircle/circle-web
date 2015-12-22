@@ -8,7 +8,7 @@ const nameSpaces = transit.withNameSpaces(
     new protobufs.services.$type.clazz().constructor,
 );
 
-export default function (content, store, assets) {
+export default function (content, store, assets, title) {
     const styleAssets = Object.keys(assets.styles).map((style, key) => {
         return (
             `<link
@@ -33,11 +33,13 @@ export default function (content, store, assets) {
         serializedState = '{}';
     }
 
+    const windowTitle = title || '';
     return `
     <!doctype html>
     <html lang="en-us">
         <head>
             <meta charset="utf-8">
+            <title>${windowTitle}</title>
             ${styles}
             <!-- Begin Google Log In -->
             <script type="text/javascript" src="https://apis.google.com/js/client.js" async defer></script>

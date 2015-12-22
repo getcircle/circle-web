@@ -1,10 +1,8 @@
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
 import { resetScroll } from '../utils/window';
-import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
 import CSSComponent from '../components/CSSComponent';

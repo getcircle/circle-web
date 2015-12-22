@@ -83,6 +83,7 @@
     "raven": "^0.9.0",
     "react": "^0.14.0",
     "react-addons-transition-group": "^0.14.3",
+    "react-document-title": "^2.0.1",
     "react-dom": "^0.14.0",
     "react-dropzone": "^3.0.0",
     "react-infinite": "^0.7.1",

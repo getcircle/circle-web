@@ -10,6 +10,7 @@ import connectData from '../utils/connectData';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
+import DocumentTitle from '../components/DocumentTitle';
 import ProfileDetail from '../components/ProfileDetail';
 import PureComponent from '../components/PureComponent';
 
@@ -100,11 +101,13 @@ class Profile extends PureComponent {
         } = this.props;
         if (extendedProfile) {
             return (
-                <ProfileDetail
-                    extendedProfile={extendedProfile}
-                    isLoggedInUser={isLoggedInUser}
-                    onUpdateProfile={::this.onUpdateProfile}
-                />
+                <DocumentTitle title={extendedProfile.profile.full_name}>
+                    <ProfileDetail
+                        extendedProfile={extendedProfile}
+                        isLoggedInUser={isLoggedInUser}
+                        onUpdateProfile={::this.onUpdateProfile}
+                    />
+                </DocumentTitle>
             );
         } else {
             return <CenterLoadingIndicator />;

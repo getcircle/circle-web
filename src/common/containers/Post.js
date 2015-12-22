@@ -15,6 +15,7 @@ import t from '../utils/gettext';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
+import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import { default as PostComponent } from '../components/Post';
 
@@ -155,7 +156,9 @@ class Post extends CSSComponent {
         } = this.props;
         if (post) {
             return (
-                <PostComponent post={post} />
+                <DocumentTitle title={post.title}>
+                    <PostComponent post={post} />
+                </DocumentTitle>
             );
         } else if (errorDetails) {
             return this.renderErrorMessage();

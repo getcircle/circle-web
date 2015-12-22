@@ -30,6 +30,7 @@ module.exports = {
             __SERVER__: false,
             __DEVELOPMENT__: false,
             __DEVTOOLS__: false,
+            __LOCAL__: false,
             'process.env': {
                 // Useful to reduce the size of client-side libraries, eg. react
                 NODE_ENV: JSON.stringify('production'),

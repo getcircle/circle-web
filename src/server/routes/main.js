@@ -8,6 +8,7 @@ import { match, RoutingContext } from 'react-router';
 import Client from '../../common/services/Client';
 import createStore from '../../common/createStore';
 import getRoutes from '../../common/getRoutes';
+import DocumentTitle from '../../common/components/DocumentTitle';
 import Root from '../../common/Root';
 import raven from '../../common/utils/raven';
 import { getSubdomain } from '../../common/utils/subdomains';
@@ -59,6 +60,7 @@ export default function (req, res) {
             res.redirect(302, redirectLocation.pathname + redirectLocation.search);
         } else if (renderProps) {
             let content;
+            let windowTitle;
             try {
                 const url = {
                     host: req.host,
@@ -83,6 +85,7 @@ export default function (req, res) {
                                 </Provider>
                             </Root>
                         );
+                        windowTitle = DocumentTitle.rewind();
                     } catch (e) {
                         console.error('REACT RENDER ERROR:', pretty.render(e));
                         raven.captureError(e);
@@ -91,7 +94,7 @@ export default function (req, res) {
                     }
                     let page;
                     try {
-                        page = renderFullPage(content, store, webpackIsomorphicTools.assets());
+                        page = renderFullPage(content, store, webpackIsomorphicTools.assets(), windowTitle);
                     } catch (e) {
                         raven.captureError(e);
                         console.error('RENDER ERROR:', pretty.render(e));
