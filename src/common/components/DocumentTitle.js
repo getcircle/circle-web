@@ -1,11 +1,11 @@
-import DocumentTitle from 'react-document-title';
+import { default as ReactDocumentTitle} from 'react-document-title';
 import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 
-class LunoDocumentTitle extends CSSComponent {
+class DocumentTitle extends CSSComponent {
 
     static propTypes = {
         loading: PropTypes.bool,
@@ -18,7 +18,7 @@ class LunoDocumentTitle extends CSSComponent {
     }
 
     static rewind() {
-        return DocumentTitle.rewind();
+        return ReactDocumentTitle.rewind();
     }
 
     getTitle() {
@@ -47,14 +47,14 @@ class LunoDocumentTitle extends CSSComponent {
 
     render() {
         return (
-            <DocumentTitle
+            <ReactDocumentTitle
                 title={this.getTitle()}
             >
                 {this.renderChildren()}
-            </DocumentTitle>
+            </ReactDocumentTitle>
         );
     }
 
 }
 
-export default LunoDocumentTitle;
+export default DocumentTitle;

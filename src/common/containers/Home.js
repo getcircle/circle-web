@@ -8,7 +8,7 @@ import t from '../utils/gettext';
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
 import HeaderMenu from '../components/HeaderMenu';
-import LunoDocumentTitle from '../components/LunoDocumentTitle';
+import DocumentTitle from '../components/DocumentTitle';
 import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/Search';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
@@ -173,7 +173,7 @@ class Home extends CSSComponent {
 
     render() {
         return (
-            <LunoDocumentTitle>
+            <DocumentTitle>
                 <div style={this.styles().root}>
                     <header style={this.styles().header}>
                         <div className="row end-xs">
@@ -210,7 +210,7 @@ class Home extends CSSComponent {
                         </section>
                     </section>
                 </div>
-            </LunoDocumentTitle>
+            </DocumentTitle>
         );
     }
 }

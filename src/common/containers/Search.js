@@ -15,7 +15,7 @@ import t from '../utils/gettext';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import DetailContent from '../components/DetailContent';
-import LunoDocumentTitle from '../components/LunoDocumentTitle';
+import DocumentTitle from '../components/DocumentTitle';
 import Header from '../components/Header';
 import { default as SearchComponent } from '../components/Search';
 
@@ -176,7 +176,7 @@ class Search extends CSSComponent {
         const title = t('Search') + (query ? ` \u2013 ${query}` : '');
         if (query) {
             return (
-                <LunoDocumentTitle title={title}>
+                <DocumentTitle title={title}>
                     <DetailContent>
                         <div>
                             <h3 style={this.styles().pageHeaderText}>
@@ -198,7 +198,7 @@ class Search extends CSSComponent {
                             {...this.styles().SearchResultsComponent}
                         />
                     </DetailContent>
-                </LunoDocumentTitle>
+                </DocumentTitle>
             );
         }
     }

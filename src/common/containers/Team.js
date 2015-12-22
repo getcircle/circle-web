@@ -12,7 +12,7 @@ import connectData from '../utils/connectData';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
-import LunoDocumentTitle from '../components/LunoDocumentTitle';
+import DocumentTitle from '../components/DocumentTitle';
 import TeamDetail from '../components/TeamDetail';
 
 const selector = createSelector(
@@ -99,7 +99,7 @@ class Team extends CSSComponent {
         } = this.props;
         if (extendedTeam) {
             return (
-                <LunoDocumentTitle title={extendedTeam.team.display_name}>
+                <DocumentTitle title={extendedTeam.team.display_name}>
                     <TeamDetail
                         extendedTeam={extendedTeam}
                         members={members}
@@ -111,13 +111,13 @@ class Team extends CSSComponent {
                         )}
                         onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
                     />
-                </LunoDocumentTitle>
+                </DocumentTitle>
             );
         } else {
             return (
-                <LunoDocumentTitle loading={true}>
+                <DocumentTitle loading={true}>
                     <CenterLoadingIndicator />
-                </LunoDocumentTitle>
+                </DocumentTitle>
             );
         }
     }

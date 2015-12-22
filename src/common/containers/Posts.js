@@ -12,7 +12,7 @@ import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
 import Container from '../components/Container';
-import LunoDocumentTitle from '../components/LunoDocumentTitle';
+import DocumentTitle from '../components/DocumentTitle';
 import { default as PostsComponent } from '../components/Posts';
 import PureComponent from '../components/PureComponent';
 
@@ -112,7 +112,7 @@ class Posts extends PureComponent {
         }
 
         return (
-            <LunoDocumentTitle title={title}>
+            <DocumentTitle title={title}>
                 <PostsComponent
                     loading={loading}
                     onDeletePostCallback={::this.onDeletePostTapped}
@@ -120,7 +120,7 @@ class Posts extends PureComponent {
                     posts={posts}
                     postsLoadMore={::this.onPostsLoadMore}
                 />
-            </LunoDocumentTitle>
+            </DocumentTitle>
         );
     }
 

@@ -8,7 +8,7 @@ import { match, RoutingContext } from 'react-router';
 import Client from '../../common/services/Client';
 import createStore from '../../common/createStore';
 import getRoutes from '../../common/getRoutes';
-import LunoDocumentTitle from '../../common/components/LunoDocumentTitle';
+import DocumentTitle from '../../common/components/DocumentTitle';
 import Root from '../../common/Root';
 import raven from '../../common/utils/raven';
 import { getSubdomain } from '../../common/utils/subdomains';
@@ -86,7 +86,7 @@ export default function (req, res) {
                                 </Provider>
                             </Root>
                         );
-                        windowTitle = LunoDocumentTitle.rewind();
+                        windowTitle = DocumentTitle.rewind();
                     } catch (e) {
                         console.error('REACT RENDER ERROR:', pretty.render(e));
                         raven.captureError(e);
