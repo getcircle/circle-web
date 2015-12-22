@@ -15,6 +15,10 @@ $font-base-line-height: 18;
 $font-sizes: 24 22 20 18 16 14 12;
 $font-stack: "Open Sans", Arial, sans-serif;
 
+html {
+    font-size: 10px;
+}
+
 body {
     font-size: ($font-base-size)px;
     font-family: $font-stack;

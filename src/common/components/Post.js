@@ -1,15 +1,19 @@
 import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import Dropzone from 'react-dropzone';
+import flow from 'lodash/function/flow';
 import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import {
+    hasHTML,
+    detectCodeMarkdownAndAddMarkup,
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
     detectURLsAndAddMarkup,
 } from '../utils/string';
 import { fontColors, tintColor } from '../constants/styles';
+import keyCodes from '../utils/keycodes';
 import { mailToPostFeedback, mailtoSharePost } from '../utils/contact';
 import moment from '../utils/moment';
 import { CONTACT_LOCATION } from '../constants/trackerProperties';
@@ -48,6 +52,7 @@ class Post extends CSSComponent {
         post: InternalPropTypes.PostV1,
         saveInProgress: PropTypes.bool,
         style: PropTypes.object,
+        uploadProgress: PropTypes.object,
         uploadedFiles: PropTypes.object,
     }
 
@@ -63,6 +68,7 @@ class Post extends CSSComponent {
         isEditable: false,
         post: null,
         saveInProgress: false,
+        uploadProgress: Immutable.Map(),
         uploadedFiles: Immutable.Map(),
     }
 
@@ -140,9 +146,6 @@ class Post extends CSSComponent {
                     transition: 'all 0.3s ease-out',
                     width: '100%',
                 },
-                authorAndFeedbackContainer: {
-                    marginBottom: 20,
-                },
                 authorContainer: {
                     padding: 0,
                 },
@@ -150,12 +153,13 @@ class Post extends CSSComponent {
                     textareaStyle: {
                         background: 'transparent',
                         border: '0',
-                        fontWeight: '600',
+                        fontWeight: '400',
                         fontStyle: 'normal',
-                        fontSize: '30px',
+                        fontSize: '36px',
                         letterSpacing: '0.4px',
                         lineHeight: '1.5',
-                        marginBottom: '20px',
+                        marginTop: '20px',
+                        marginBottom: '16px',
                         minHeight: 49,
                         ...fontColors.dark,
                     },
@@ -284,25 +288,14 @@ class Post extends CSSComponent {
                     margin: '10px 0 5px 0',
                     width: '100%',
                 },
-                postContent: {
-                    background: 'transparent',
-                    color: 'rgba(0, 0, 0, 0.8)',
-                    fontSize: '18px',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    lineHeight: '1.9',
-                    minHeight: '100vh',
-                    width: '100%',
-                },
                 postTitle: {
                     background: 'transparent',
                     border: '0',
-                    fontWeight: '600',
+                    fontWeight: '400',
                     fontStyle: 'normal',
-                    fontSize: '30px',
+                    fontSize: '36px',
                     letterSpacing: '0.4px',
                     lineHeight: '1.5',
-                    marginBottom: '20px',
                     outline: 'none',
                     width: '100%',
                     ...fontColors.dark,
@@ -311,15 +304,6 @@ class Post extends CSSComponent {
                     marginTop: 5,
                 },
             },
-            'isEditable-false': {
-                postTitle: {
-                    margin: 0,
-                },
-                postContent: {
-                    minHeight: 20,
-                    whiteSpace: 'pre-wrap',
-                },
-            }
         };
     }
 
@@ -505,18 +489,32 @@ class Post extends CSSComponent {
     }
 
     getReadOnlyContent(content) {
-        return {
-            __html: detectHashtagsAndAddMarkup(
-                detectEmailsAndAddMarkup(
-                    detectURLsAndAddMarkup(
-                        content
-                    )
-                )
-            ),
-        };
+        const containsHTML = hasHTML(content);
+        const detectPatternsAndAddMarkup = flow(
+            detectCodeMarkdownAndAddMarkup,
+            detectURLsAndAddMarkup,
+            detectEmailsAndAddMarkup,
+            detectHashtagsAndAddMarkup
+        );
+        let finalContent = detectPatternsAndAddMarkup(content);
+        finalContent = containsHTML ? finalContent : '<div>' + finalContent + '</div>';
+        return (
+            <div
+                className="luno-editor"
+                dangerouslySetInnerHTML={{__html: finalContent}}
+            />
+        );
     }
 
     // Change Methods
+
+    handleTitleKeyDown(event) {
+        const triggerKeyCodes = [keyCodes.TAB, keyCodes.ENTER];
+        if (event.keyCode && triggerKeyCodes.indexOf(event.keyCode) !== -1 && this.refs.editor) {
+            this.refs.editor.focus();
+            event.preventDefault();
+        }
+    }
 
     handleTitleChange(event, value) {
         this.setState({
@@ -526,19 +524,26 @@ class Post extends CSSComponent {
         }, () => this.saveData(false));
     }
 
-    handleBodyChange(event, value, isRichText) {
-        const newValue = value;
+    handleBodyChange(event, value) {
         let modifiedState = {
             editing: true,
-            body: newValue,
+            body: value,
         };
 
-        if ((this.state.title.trim() === '' || this.state.derivedTitle === true) && !isRichText) {
-            modifiedState.title = trimNewLines(newValue.split('.')[0].substring(0, 80));
+        if ((this.state.title.trim() === '' || this.state.derivedTitle === true)) {
+            const plainTextValue = this.getPlainTextValue(value);
+            modifiedState.title = trimNewLines(plainTextValue.split('.')[0].substring(0, 80));
             modifiedState.derivedTitle = true;
         }
 
         this.setState(modifiedState, () => this.saveData(false));
+    }
+
+    getPlainTextValue(value) {
+        // Remove tags and add space separators
+        // Note this is not a generic convert rich text to plain text
+        // and only applies to the editor use case
+        return value.replace(/<\/?[^>]+>/gi, ' ').replace(/\s+|&nbsp;/gi, ' ').trim();
     }
 
     onDrop(files) {
@@ -713,11 +718,7 @@ class Post extends CSSComponent {
                         {this.renderSuggestImprovementsButton()}
                     </div>
                 </div>
-                <div
-                    className="postContent"
-                    dangerouslySetInnerHTML={this.getReadOnlyContent(post.content)}
-                    style={{...this.styles().postContent}}
-                />
+                {this.getReadOnlyContent(post.content)}
                 {inlineImages}
                 {this.renderFiles(postFilesWithoutImages)}
             </span>
@@ -836,6 +837,38 @@ class Post extends CSSComponent {
         }
     }
 
+    renderEditor() {
+        if (__CLIENT__) {
+            const {
+                uploadProgress,
+                uploadedFiles,
+            } = this.props;
+
+            // We add the editor related code only on the client
+            // because the library we use relies on DOM to be present.
+            // It uses the global window object, event listeners, query
+            // selectors, and the full Node and Element objects.
+            const Editor = require('./Editor');
+            return (
+                <Editor
+                    onChange={(event, plainTextValue) => {
+                        this.handleBodyChange(event, event.target.value);
+                    }}
+                    onUploadCallback={(file) => {
+                        this.triggerUploads([file]);
+                    }}
+                    placeholder={t('Contribute Knowledge')}
+                    ref="editor"
+                    uploadProgress={uploadProgress}
+                    uploadedFiles={uploadedFiles}
+                    value={this.state.body}
+                />
+            );
+        } else {
+            return this.getReadOnlyContent(this.state.body);
+        }
+    }
+
     renderEditableContent() {
         let author = this.state.owner;
         if (author === null || author === undefined) {
@@ -850,7 +883,7 @@ class Post extends CSSComponent {
                             <CardListItem
                                 disabled={true}
                                 key={author.id}
-                                leftAvatar={<ProfileAvatar style={this.styles().cardListAvatar} profile={author} />}
+                                leftAvatar={<ProfileAvatar profile={author} style={this.styles().cardListAvatar} />}
                                 primaryText={author.full_name}
                                 secondaryText={author.title}
                                 {...this.styles().CardListItem}
@@ -862,20 +895,15 @@ class Post extends CSSComponent {
                     </div>
                 </div>
                 <AutogrowTextarea
-                    autoFocus="true"
+                    autoFocus={true}
                     onChange={::this.handleTitleChange}
+                    onKeyDown={::this.handleTitleKeyDown}
                     placeholder={t('Title')}
                     singleLine={true}
                     value={this.state.title}
                     {...this.styles().AutogrowTitleTextarea}
                 />
-                <AutogrowTextarea
-                    additionalHeightDelta={50}
-                    onChange={::this.handleBodyChange}
-                    placeholder={t('Contribute Knowledge')}
-                    value={this.state.body}
-                    {...this.styles().AutogrowTextarea}
-                />
+                {this.renderEditor()}
                 {this.renderFilesContainer()}
                 {this.renderChangeOwnerModal()}
             </span>

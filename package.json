@@ -30,9 +30,9 @@
         "NODE_ENV": "local",
         "PORT": 3000,
         "REMOTE_API_ENDPOINT": "http://`docker-machine ip dev`:8000/v1/",
-        "AUTHENTICATION_TOKEN_COOKIE_DOMAIN": ".local.lunohq.com",
         "REDIS_URL": "redis://`docker-machine ip dev`:6379",
-        "SESSION_SECRET": "shhhh"
+        "SESSION_SECRET": "shhhh",
+        "AUTHENTICATION_TOKEN_COOKIE_SECURE": 0
       }
     },
     "watch-client": {
@@ -61,7 +61,7 @@
     "bytebuffer": "^4.1.0",
     "compression": "1.6.0",
     "connect-redis": "^3.0.1",
-    "cookiejar": "^2.0.6",
+    "cookiejar": "git+https://github.com/lunohq/node-cookiejar.git#084d519318b98cb7c5ecd24893c4b3fdc2c8dc91",
     "express": "4.13.3",
     "express-session": "^1.12.1",
     "fastclick": "~1.0.3",
@@ -103,6 +103,7 @@
     "superagent": "git+https://github.com/mhahn/superagent.git",
     "transit-immutable-protobuf-js": "git+https://github.com/lunohq/transit-immutable-protobuf-js.git#b40244346d6055714ae70c46c1f5b53f573de4e6",
     "transit-js": "^0.8.837",
+    "trix": "^0.9.2",
     "ua-parser-js": "^0.7.9",
     "vinyl-buffer": "~1.0.0",
     "vinyl-source-stream": "~1.1.0",
@@ -149,6 +150,7 @@
     "redux-logger": "0.0.3",
     "require-dir": "~0.1.0",
     "sass-loader": "^2.0.0",
+    "script-loader": "^0.6.1",
     "sinon": "^1.17.1",
     "spin": "0.0.1",
     "strip-loader": "^0.1.0",

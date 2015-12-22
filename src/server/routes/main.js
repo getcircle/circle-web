@@ -54,6 +54,7 @@ export default function (req, res) {
             res.send(500, error.message);
             hydrateOnClient();
         } else if (redirectLocation) {
+            console.info('REDIRECTING AND SAVING AUTH IN SESSION: %s - %s', req.session.id, JSON.stringify(client.transport.auth));
             req.session.auth = client.transport.auth;
             res.redirect(302, redirectLocation.pathname + redirectLocation.search);
         } else if (renderProps) {

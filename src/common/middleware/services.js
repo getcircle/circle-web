@@ -12,7 +12,7 @@ export default function createServicesMiddleware(client) {
             remote,
             bailout = () => false,
         } = request;
-        const { getState } = store;
+        const { dispatch, getState } = store;
 
         if (!types) {
             // Normal action: pass it on
@@ -49,7 +49,7 @@ export default function createServicesMiddleware(client) {
 
         next(actionWith({type: requestType}));
 
-        return remote(client, getState()).then(
+        return remote(client, getState(), dispatch).then(
             response => next(actionWith({
                 type: successType,
                 payload: Object.assign({}, action.payload, response),

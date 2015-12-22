@@ -2,16 +2,17 @@ import { services } from 'protobufs';
 import requests from 'superagent';
 
 import logger from '../utils/logger';
+import { reportFileUploadProgress } from '../actions/files';
 
-export function uploadFile(client, fileName, contentType, data) {
+export function uploadFile(client, fileName, contentType, data, dispatch) {
     return new Promise((resolve, reject) => {
         let instructionsRef;
-        startUpload(fileName, contentType)
+        startUpload(client, fileName, contentType)
             .then((instructions) => {
                 instructionsRef = instructions;
-                return upload(instructions.upload_url, data);
+                return upload(fileName, instructions.upload_url, data, dispatch);
             })
-            .then((response) => completeUpload(fileName, instructionsRef.upload_id, instructionsRef.upload_key))
+            .then((response) => completeUpload(client, fileName, instructionsRef.upload_id, instructionsRef.upload_key))
             .then((uploadResponse) => resolve(uploadResponse))
             .catch((error) => {
                 logger.log(`Error uploading file: ${error}`);
@@ -59,11 +60,14 @@ function completeUpload(client, fileName, uploadId, uploadKey) {
     });
 }
 
-function upload(url, data) {
+function upload(fileName, url, data, dispatch) {
     return new Promise((resolve, reject) => {
         requests
             .put(url, data)
             .withCredentials()
+            .on('progress', (event) => {
+                dispatch(reportFileUploadProgress(fileName, event.percent));
+            })
             .end((err, res) => {
                 if (err) {
                     reject(err);

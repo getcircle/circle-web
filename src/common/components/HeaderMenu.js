@@ -124,6 +124,7 @@ class HeaderMenu extends CSSComponent {
                 },
                 profileName: {
                     color: tintColor,
+                    fontSize: '1.6rem',
                     lineHeight: 2,
                     marginLeft: '10px',
                     marginRight: '5px',

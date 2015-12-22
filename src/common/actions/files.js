@@ -10,7 +10,7 @@ export function uploadFile(fileName, contentType, data) {
                 types.FILE_UPLOAD_SUCCESS,
                 types.FILE_UPLOAD_FAILURE,
             ],
-            remote: (client) => requests.uploadFile(client, fileName, contentType, data),
+            remote: (client, state, dispatch) => requests.uploadFile(client, fileName, contentType, data, dispatch),
         },
     };
 }
@@ -28,4 +28,14 @@ export function clearFileUploads() {
     return {
         type: types.CLEAR_FILE_UPLOADS,
     }
+}
+
+export function reportFileUploadProgress(fileName, progress) {
+    return {
+        type: types.FILE_UPLOAD_PROGRESS,
+        payload: {
+            name: fileName,
+            progress: progress,
+        },
+    };
 }

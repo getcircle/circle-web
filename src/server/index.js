@@ -13,7 +13,11 @@ import favicon from 'serve-favicon';
 import main from './routes/main';
 import validateConfig from './validateConfig';
 
-const requiredKeys = ['SESSION_SECRET', 'REDIS_URL'];
+const requiredKeys = [
+    'SESSION_SECRET',
+    'REDIS_URL',
+    'AUTHENTICATION_TOKEN_COOKIE_SECURE',
+];
 
 const PORT = process.env.PORT || 3000;
 
@@ -25,6 +29,7 @@ const sentry = new raven.Client();
 
 const sess = {
     cookie: {},
+    name: 'sid',
     resave: false,
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
@@ -35,10 +40,6 @@ const sess = {
 // https://docs.getsentry.com/hosted/clients/node/integrations/express/
 process.env.SENTRY_RELEASE = process.env.EMPIRE_RELEASE
 app.use(raven.middleware.express.requestHandler());
-
-if (app.get('env') === 'production') {
-    sess.cookie.secure = true;
-}
 
 // Setup basic http auth for our dev environment to restrict access to admins
 if (process.env.NODE_ENV === 'development') {
@@ -52,6 +53,18 @@ if (process.env.NODE_ENV === 'development') {
     app.use(auth.connect(basic));
 }
 
+if (process.env.NODE_ENV !== 'local') {
+    app.enable('trust proxy');
+    sess.cookie.secure = true;
+
+    app.use((req, res, next) => {
+        if (req.secure) {
+            return next();
+        }
+        res.redirect(`https://${req.headers.host}${req.url}`);
+    });
+}
+
 app.use(morgan(':remote-addr :method :url HTTP/:http-version :status :res[content-length] ":referrer" ":user-agent" - :response-time ms'));
 app.use(compression());
 app.use(favicon(path.join(__dirname, '..', '..', 'static', 'images', 'favicon.ico')));
@@ -60,6 +73,7 @@ app.use(require('serve-static')(path.join(__dirname, '..', '..', 'static')));
 
 const proxy = httpProxy.createProxyServer({
     target: process.env.REMOTE_API_ENDPOINT,
+    secure: process.env.REMOTE_API_ENDPOINT.startsWith('https://'),
 });
 app.use('/api', (req, res) => {
     try {
@@ -77,7 +91,7 @@ app.use((req, res) => {
         main(req, res);
     } catch (e) {
         sentry.captureError(e);
-        console.log('ERROR PROCESSING REQUEST:', pretty.render(e));
+        console.error('ERROR PROCESSING REQUEST:', pretty.render(e));
     }
 });
 
