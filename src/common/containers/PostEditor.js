@@ -134,7 +134,6 @@ class PostEditor extends CSSComponent {
             default: {
                 Container: {
                     style: {
-                        backgroundColor: 'rgb(255, 255, 255)',
                         overflowX: 'hidden',
                     },
                 },
@@ -157,11 +156,6 @@ class PostEditor extends CSSComponent {
                     color: 'rgba(0, 0, 0, 0.4)',
                     fontSize: 14,
                 },
-                Post: {
-                    style: {
-                        backgroundColor: 'rgb(255, 255, 255)',
-                    },
-                }
             },
         }
     }

@@ -150,6 +150,11 @@ class Post extends CSSComponent {
                     padding: 0,
                 },
                 AutogrowTitleTextarea: {
+                    style: {
+                        background: '#fff',
+                        marginTop: '10px',
+                        padding: '16px',
+                    },
                     textareaStyle: {
                         background: 'transparent',
                         border: '0',
@@ -158,8 +163,6 @@ class Post extends CSSComponent {
                         fontSize: '36px',
                         letterSpacing: '0.4px',
                         lineHeight: '1.5',
-                        marginTop: '20px',
-                        marginBottom: '16px',
                         minHeight: 49,
                         ...fontColors.dark,
                     },
