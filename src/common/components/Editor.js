@@ -254,15 +254,20 @@ class Editor extends CSSComponent {
     }
 
     handleScroll(event) {
-        const elementToCompare = this.getToolbar().classList.contains('sticky') ? this.getToolbar().parentNode : this.getToolbar();
+        const toolbar = this.getToolbar();
+        if (!toolbar) {
+            return;
+        }
+
+        const elementToCompare = toolbar.classList.contains('sticky') ? toolbar.parentNode : toolbar;
         if (elementToCompare.getBoundingClientRect().top <= this.headerOffsetHeight) {
-            if (!this.getToolbar().classList.contains('sticky')) {
-                this.getToolbar().classList.add('sticky');
-                this.getToolbar().style.width = window.getComputedStyle(this.getEditorElement()).width;
+            if (!toolbar.classList.contains('sticky')) {
+                toolbar.classList.add('sticky');
+                toolbar.style.width = window.getComputedStyle(this.getEditorElement()).width;
             }
-        } else if (this.getToolbar().classList.contains('sticky')) {
-            this.getToolbar().classList.remove('sticky');
-            this.getToolbar().style.width = '100%';
+        } else if (toolbar.classList.contains('sticky')) {
+            toolbar.classList.remove('sticky');
+            toolbar.style.width = '100%';
         }
     }
 
