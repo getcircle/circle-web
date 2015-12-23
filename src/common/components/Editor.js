@@ -113,8 +113,9 @@ class Editor extends CSSComponent {
                 attachButtonElement.setAttribute('class', 'attach');
                 attachButtonElement.setAttribute('data-action', 'x-attach');
                 attachButtonElement.innerHTML = t('Attach Files');
+                attachButtonElement.addEventListener('click', (event) => this.handleAttachButtonClicked(event));
                 document.querySelector('.button_group.block_tools').appendChild(attachButtonElement);
-                document.addEventListener('trix-action-invoke', (event) => this.handleAttachButtonClicked(event));
+                document.addEventListener('trix-action-invoke', (event) => this.handleToolbarButtonClicked(event));
             }
         }, 10);
     }
@@ -158,7 +159,12 @@ class Editor extends CSSComponent {
         }
     }
 
-    handleAttachButtonClicked(trixEvent) {
+    handleAttachButtonClicked(event) {
+        this.refs.filePicker.click();
+        event.preventDefault();
+    }
+
+    handleToolbarButtonClicked(trixEvent) {
         if (trixEvent.actionName === 'x-attach' && this.refs.filePicker) {
             const editorElement = trixEvent.target;
             editorElement.focus();
