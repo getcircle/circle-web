@@ -12,6 +12,7 @@ const initialState = Immutable.fromJS({
 });
 
 export default function post(state = initialState, action) {
+    console.log(action.type);
     switch(action.type) {
     case types.UPDATE_POST:
     case types.CREATE_POST:
@@ -50,6 +51,7 @@ export default function post(state = initialState, action) {
         return state.merge({
             errors: action.payload.errors,
             errorDetails: action.payload.errorDetails,
+            loading: false,
         });
 
     case UPDATE_PATH:

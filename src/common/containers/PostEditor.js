@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
-import { canvasColor } from '../constants/styles';
+import { canvasColor, tintColor } from '../constants/styles';
 import CurrentTheme from '../utils/ThemeManager';
 import { deleteFile, uploadFile, clearFileUploads } from '../actions/files';
 import { getPostStateURLString } from '../utils/post';
@@ -116,6 +116,10 @@ class PostEditor extends CSSComponent {
         this.configure(this.props);
     }
 
+    componentDidMount() {
+        this.showProgressMessage(this.props);
+    }
+
     getChildContext() {
         return {
             muiTheme: this.state.muiTheme,
@@ -167,6 +171,9 @@ class PostEditor extends CSSComponent {
                     border: 0,
                     color: 'rgba(0, 0, 0, 0.4)',
                     fontSize: 14,
+                    marginRight: '15px',
+                    width: '90px',
+                },
                 },
             },
         }
@@ -310,19 +317,20 @@ class PostEditor extends CSSComponent {
     showProgressMessage(props) {
         const {
             isSaving,
+            params,
             post,
             shouldAutoSave,
         } = props;
 
         let postType = '';
-        if (!post ||
-            (post && (post.state === null || post.state === PostStateV1.DRAFT))
-        ) {
+        if (!params || !params.postId) {
             postType = t('Draft');
         }
 
         if (shouldAutoSave && isSaving) {
             postType += ` ${t('Saving')}\u2026`;
+        } else if ((!params || !params.postId) && post) {
+            postType += ` ${t('Saved')}`;
         }
 
         if (this.refs.headerMessageText) {
@@ -334,6 +342,7 @@ class PostEditor extends CSSComponent {
         if (this.canEdit()) {
             return (
                 <div>
+                    <input disabled={true} ref="headerMessageText" style={this.styles().headerMessageText} />
                     <RoundedButton
                         disabled={this.props.uploadingFiles && !this.props.post}
                         label={t('Publish')}
@@ -349,7 +358,6 @@ class PostEditor extends CSSComponent {
             return (
                 <div className="row middle-xs between-xs" style={this.styles().headerActionContainer}>
                     <div>
-                        <input disabled={true} ref="headerMessageText" style={this.styles().headerMessageText} />
                     </div>
                     {this.renderPublishButton()}
                 </div>
