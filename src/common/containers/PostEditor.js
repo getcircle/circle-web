@@ -285,12 +285,7 @@ class PostEditor extends CSSComponent {
             this.refs.post.getCurrentOwner(),
         );
         this.props.dispatch(clearPosts());
-
-        if (params && params.postId) {
-            routeToPost(this.context.history, post);
-        } else {
-            routeToPosts(this.context.history, PostStateURLString.LISTED);
-        }
+        routeToPost(this.context.history, post);
     }
 
     canEdit() {
