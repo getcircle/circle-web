@@ -3,6 +3,8 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
+import { canvasColor } from '../constants/styles';
+import CurrentTheme from '../utils/ThemeManager';
 import { deleteFile, uploadFile, clearFileUploads } from '../actions/files';
 import { getPostStateURLString } from '../utils/post';
 import logger from '../utils/logger';
@@ -88,6 +90,12 @@ class PostEditor extends CSSComponent {
         uploadingFiles: PropTypes.bool,
     }
 
+    static defaultProps = {
+        shouldAutoSave: true,
+        post: null,
+        uploadingFiles: false,
+    }
+
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
         history: PropTypes.shape({
@@ -96,17 +104,21 @@ class PostEditor extends CSSComponent {
     }
 
     static childContextTypes = {
+        muiTheme: PropTypes.object,
         showCTAsInHeader: PropTypes.bool,
     }
 
-    static defaultProps = {
-        shouldAutoSave: true,
-        post: null,
-        uploadingFiles: false,
+    state = {
+        muiTheme: CurrentTheme,
+    }
+
+    componentWillMount() {
+        this.configure(this.props);
     }
 
     getChildContext() {
         return {
+            muiTheme: this.state.muiTheme,
             showCTAsInHeader: false,
         };
     }
@@ -161,6 +173,17 @@ class PostEditor extends CSSComponent {
     }
 
     postCreationInProgress = false
+
+    configure(props) {
+        resetScroll();
+        this.customizeTheme();
+    }
+
+    customizeTheme() {
+        let customTheme = JSON.parse(JSON.stringify(CurrentTheme));
+        customTheme.flatButton.color = canvasColor;
+        this.setState({muiTheme: customTheme});
+    }
 
     loadPost(props) {
         if (props.params && props.params.postId) {

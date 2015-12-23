@@ -656,7 +656,7 @@ class Post extends CSSComponent {
                                 shareMethod,
                             );
                         }}
-                        urlShareSource='post_share_copy'
+                        urlShareSource="post_share_copy"
                     />
                 </div>
             </div>
