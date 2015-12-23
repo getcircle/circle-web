@@ -67,8 +67,6 @@ class Editor extends CSSComponent {
         this.attachEventListeners();
         this.dragEventCounter = 0;
         this.headerOffsetHeight = document.querySelector('header').offsetHeight;
-        this.toolbar = document.querySelector('trix-toolbar');
-        this.editorElement = document.querySelector('trix-editor');
     }
 
     componentWillReceiveProps(nextProps) {
@@ -91,7 +89,7 @@ class Editor extends CSSComponent {
     }
 
     focus() {
-        this.editorElement.focus();
+        this.getEditorElement().focus();
     }
 
     setup() {
@@ -113,8 +111,8 @@ class Editor extends CSSComponent {
                 attachButtonElement.setAttribute('class', 'attach');
                 attachButtonElement.setAttribute('data-action', 'x-attach');
                 attachButtonElement.innerHTML = t('Attach Files');
+                attachButtonElement.addEventListener('click', (event) => this.handleAttachButtonClicked(event));
                 document.querySelector('.button_group.block_tools').appendChild(attachButtonElement);
-                document.addEventListener('trix-action-invoke', (event) => this.handleAttachButtonClicked(event));
             }
         }, 10);
     }
@@ -124,6 +122,20 @@ class Editor extends CSSComponent {
         document.addEventListener('trix-attachment-add', (event) => this.handleFileAdd(event));
         document.addEventListener('trix-file-accept', (event) => this.handleFileVerification(event));
         document.addEventListener('scroll', (event) => this.handleScroll(event));
+    }
+
+    getEditorElement() {
+        if (this.editorElement === null) {
+            this.editorElement = document.querySelector('trix-editor');
+        }
+        return this.editorElement;
+    }
+
+    getToolbar() {
+        if (this.toolbar === null) {
+            this.toolbar = document.querySelector('trix-toolbar');
+        }
+        return this.toolbar;
     }
 
     updateFileUploadProgress(props) {
@@ -158,13 +170,10 @@ class Editor extends CSSComponent {
         }
     }
 
-    handleAttachButtonClicked(trixEvent) {
-        if (trixEvent.actionName === 'x-attach' && this.refs.filePicker) {
-            const editorElement = trixEvent.target;
-            editorElement.focus();
-            this.refs.filePicker.click();
-            trixEvent.preventDefault();
-        }
+    handleAttachButtonClicked(event) {
+        this.getEditorElement().focus();
+        this.refs.filePicker.click();
+        event.preventDefault();
     }
 
     handleSelectedFiles(event) {
@@ -172,7 +181,7 @@ class Editor extends CSSComponent {
             event.preventDefault();
             const files = event.target.files;
             for (let fileKey in files) {
-                this.editorElement.editor.insertFile(files[fileKey]);
+                this.getEditorElement().editor.insertFile(files[fileKey]);
             }
         }
     }
@@ -236,15 +245,20 @@ class Editor extends CSSComponent {
     }
 
     handleScroll(event) {
-        const elementToCompare = this.toolbar.classList.contains('sticky') ? this.toolbar.parentNode : this.toolbar;
+        const toolbar = this.getToolbar();
+        if (!toolbar) {
+            return;
+        }
+
+        const elementToCompare = toolbar.classList.contains('sticky') ? toolbar.parentNode : toolbar;
         if (elementToCompare.getBoundingClientRect().top <= this.headerOffsetHeight) {
-            if (!this.toolbar.classList.contains('sticky')) {
-                this.toolbar.classList.add('sticky');
-                this.toolbar.style.width = window.getComputedStyle(this.editorElement).width;
+            if (!toolbar.classList.contains('sticky')) {
+                toolbar.classList.add('sticky');
+                toolbar.style.width = window.getComputedStyle(this.getEditorElement()).width;
             }
-        } else if (this.toolbar.classList.contains('sticky')) {
-            this.toolbar.classList.remove('sticky');
-            this.toolbar.style.width = '100%';
+        } else if (toolbar.classList.contains('sticky')) {
+            toolbar.classList.remove('sticky');
+            toolbar.style.width = '100%';
         }
     }
 
