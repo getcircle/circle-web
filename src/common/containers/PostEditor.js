@@ -66,7 +66,11 @@ function fetchPost(dispatch, params) {
 }
 
 function fetchData(getState, dispatch, location, params) {
-    return Promise.all([fetchPost(dispatch, params)]);
+    const promises = [];
+    if (params && params.postId) {
+        promises.push(fetchPost(dispatch, params));
+    }
+    return Promise.all(promises);
 }
 
 class PostEditor extends CSSComponent {
