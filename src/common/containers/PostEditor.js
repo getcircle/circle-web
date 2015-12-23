@@ -1,3 +1,4 @@
+import { FlatButton } from 'material-ui';
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
@@ -174,6 +175,12 @@ class PostEditor extends CSSComponent {
                     marginRight: '15px',
                     width: '90px',
                 },
+                MyKnowledgeButton: {
+                    labelStyle: {
+                        color: tintColor,
+                        fontSize: 15,
+                        textTransform: 'none',
+                    },
                 },
             },
         }
@@ -295,6 +302,23 @@ class PostEditor extends CSSComponent {
         routeToPost(this.context.history, post);
     }
 
+    goToMyKnowledge() {
+        const postState = this.isDraftPost() ? PostStateURLString.DRAFT : PostStateURLString.LISTED;
+        routeToPosts(this.context.history, postState);
+    }
+
+    isDraftPost() {
+        const {
+            post,
+        } = this.props;
+
+        if (post === null || (post && (!post.state || post.state === PostStateV1.DRAFT))) {
+            return true;
+        }
+
+        return false;
+    }
+
     canEdit() {
         const {
             params,
@@ -358,6 +382,12 @@ class PostEditor extends CSSComponent {
             return (
                 <div className="row middle-xs between-xs" style={this.styles().headerActionContainer}>
                     <div>
+                        <FlatButton
+                            key="my-knowledge-button"
+                            label={`< ${t('My Knowledge')}`}
+                            onTouchTap={::this.goToMyKnowledge}
+                            {...this.styles().MyKnowledgeButton}
+                        />
                     </div>
                     {this.renderPublishButton()}
                 </div>
