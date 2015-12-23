@@ -30,7 +30,7 @@ const selector = selectors.createImmutableSelector(
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
         if (postState.get('ids').has(postId)) {
-            post = retrievePost(postId, cache);
+            post = retrievePost(postId, cache, ['content']);
         }
 
         return {
