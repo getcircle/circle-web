@@ -790,7 +790,7 @@ class Search extends CSSComponent {
         }
 
         if (highlight && highlight.get('content')) {
-            let highlightedContent = trimNewLinesAndWhitespace(stripTags(highlight.get('content')));
+            let highlightedContent = trimNewLinesAndWhitespace(highlight.get('content'));
             const startsWithCapitalLetter = 'A'.charCodeAt(0) <= highlightedContent.charCodeAt(0) && highlightedContent.charCodeAt(0) <= 'Z'.charCodeAt(0);
             if (!startsWithCapitalLetter) {
                 highlightedContent = `\u2026${highlightedContent}`;
