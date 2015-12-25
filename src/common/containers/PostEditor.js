@@ -154,6 +154,9 @@ class PostEditor extends CSSComponent {
                         overflowX: 'hidden',
                     },
                 },
+                header: {
+                    margin: '10px',
+                },
                 headerActionButtonLabel: {
                     color: '#8598FF',
                     fontSize: 16,
@@ -182,6 +185,19 @@ class PostEditor extends CSSComponent {
                         textTransform: 'none',
                     },
                 },
+                Post: {
+                    style: {
+                        paddingTop: 0,
+                    },
+                },
+                PublishButton: {
+                    labelStyle: {
+                        color: 'rgb(255, 255, 255)',
+                    },
+                    style: {
+                        backgroundColor: tintColor,
+                    },
+                }
             },
         }
     }
@@ -371,6 +387,7 @@ class PostEditor extends CSSComponent {
                         disabled={this.props.uploadingFiles && !this.props.post}
                         label={t('Publish')}
                         onTouchTap={::this.onPublishButtonTapped}
+                        {...this.styles().PublishButton}
                     />
                 </div>
             );
@@ -431,7 +448,9 @@ class PostEditor extends CSSComponent {
     render() {
         return (
             <Container {...this.styles().Container}>
-                <Header actionsContainer={this.renderHeaderActionsContainer()} {...this.props} />
+                <header className="row" style={this.styles().header}>
+                    {this.renderHeaderActionsContainer()}
+                </header>
                 {this.renderPost()}
             </Container>
         );
