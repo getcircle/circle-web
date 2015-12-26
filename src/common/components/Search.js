@@ -762,14 +762,14 @@ class Search extends CSSComponent {
         const content = post.snippet || '';
         const plainTextContent = stripTags(content);
         const defaultSecondaryText = (
-            <span className="row full-width col-xs no-padding" style={this.styles().postSecondaryTextContainer}>
+            <span style={this.styles().postSecondaryTextContainer}>
                 <span
-                    className="row full-width"
                     key="matched-content"
                     style={this.styles().postSecondaryText}
                 >
                     {trimNewLinesAndWhitespace(plainTextContent).substr(0, POST_CONTENT_CHAR_LIMIT) + (plainTextContent.length > POST_CONTENT_CHAR_LIMIT ? `\u2026` : '')}
                 </span>
+                <br />
                 <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
             </span>
         );
@@ -796,13 +796,13 @@ class Search extends CSSComponent {
                 highlightedContent = `\u2026${highlightedContent}`;
             }
             const secondaryText = (
-                <span className="row full-width col-xs no-padding" style={this.styles().postSecondaryTextContainer}>
+                <span style={this.styles().postSecondaryTextContainer}>
                     <span
-                        className="row full-width"
                         dangerouslySetInnerHTML={{__html: `${highlightedContent}\u2026`}}
                         key="matched-content"
                         style={this.styles().postSecondaryText}
                     />
+                    <br />
                     <span key="last-edited" style={this.styles().postLastEdited}>{lastEditedText}</span>
                 </span>
             );
