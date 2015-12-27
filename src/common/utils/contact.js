@@ -57,9 +57,6 @@ export function mailtoTeamDescription(team, manager, fromProfile) {
 }
 
 export function mailtoSharePost(post, fromProfile) {
-    console.log('fromProfile: %s', fromProfile);
-    console.log('post: %s', post);
-    console.log('post by_profile: %s', post.by_profile);
     const subject = encodeURI(t('Check out "' + post.title + '" on Luno'));
     const sourceParameter = getTrackingParameter(POST_SHARE);
     const link = `${window.location.host}/post/${post.id}?${sourceParameter}`;
