@@ -54,7 +54,7 @@ module.exports = {
     ],
     module: {
         loaders: [
-            { test: /\.js$/, loaders: [strip.loader('debug'), 'babel?stage=0&optional=runtime'], exclude: /node_modules/ },
+            { test: /\.js$/, loaders: ['babel?stage=0&optional=runtime'], exclude: /node_modules/ },
             { test: /\.json$/, loaders: ['json-loader']},
             { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css?importLoaders=2&sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap=true&sourceMapContents=true') },
             { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml' },
