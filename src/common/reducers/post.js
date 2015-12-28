@@ -39,8 +39,6 @@ export default function post(state = initialState, action) {
 
     case types.UPDATE_POST_SUCCESS:
     case types.GET_POST_SUCCESS:
-        console.log('GET_POST_SUCCESS: %s', state.get('ids'));
-        console.log('GET_POST_SUCCESS payload: %s', action.payload.result);
         return state.updateIn(['ids'], set => set.add(action.payload.result))
                     .merge({
                         loading: false,
