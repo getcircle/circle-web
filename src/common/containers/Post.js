@@ -33,6 +33,8 @@ const selector = selectors.createImmutableSelector(
         if (postState.get('ids').has(postId)) {
             post = retrievePost(postId, cache, ['content', 'by_profile']);
             const debugPost = retrievePost(postId, cache);
+            const contentPost = retrievePost(postId, cache, ['content']);
+            const byProfilePost = retrievePost(postId, cache, ['by_profile']);
             console.log('post: %s', post);
             if (post) {
                 console.log('post - content: %s', post.content);
@@ -40,6 +42,8 @@ const selector = selectors.createImmutableSelector(
             }
             console.log('debug post - content: %s', debugPost.content);
             console.log('debug post - by_profile: %s', debugPost.by_profile);
+            console.log('content post: %s', contentPost);
+            console.log('byProfile post: %s', byProfilePost);
         }
 
         return {
