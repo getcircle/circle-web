@@ -897,7 +897,7 @@ class Search extends CSSComponent {
     }
 
     getPrimaryTextContainer(text, style) {
-        return <span style={{...style}}>{text}</span>;
+        return <div style={{...style}}>{text}</div>;
     }
 
     getDefaultResults() {
