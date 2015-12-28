@@ -2,7 +2,6 @@ require('babel-core/polyfill');
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var strip = require('strip-loader');
 
 var relativeAssetsPath = '../static/dist';
 var assetsPath = path.join(__dirname, relativeAssetsPath);
@@ -41,16 +40,7 @@ module.exports = {
         webpackIsomorphicToolsPlugin,
 
         // ignore dev config
-        new webpack.IgnorePlugin(/\.\/dev/, /\/config$/),
-
-        // optimiazations
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        })
+        new webpack.IgnorePlugin(/\.\/dev/, /\/config$/)
     ],
     module: {
         loaders: [
