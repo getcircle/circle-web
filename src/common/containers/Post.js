@@ -35,23 +35,15 @@ const selector = selectors.createImmutableSelector(
             const debugPost = retrievePost(postId, cache);
             const contentPost = retrievePost(postId, cache, ['content']);
             const byProfilePost = retrievePost(postId, cache, ['by_profile']);
-            console.log('post: %s', !!post);
+            console.log('post: %s', post);
             if (post) {
-                console.log('post - content: %s', !!post.content);
-                console.log('post - by_profile: %s', !!post.by_profile);
+                console.log('post - content: %s', post.content);
+                console.log('post - by_profile: %s', post.by_profile);
             }
-            console.log('debugPost - content: %s', !!debugPost.content);
-            console.log('debugPost - by_profile: %s', !!debugPost.by_profile);
-            console.log('contentPost: %s', !!contentPost);
-            if (contentPost) {
-                console.log('contentPost - content: %s', !!contentPost.content);
-                console.log('contentPost - by_profile: %s', !!contentPost.by_profile);
-            }
-            console.log('byProfilePost: %s', !!byProfilePost);
-            if (byProfilePost) {
-                console.log('byProfilePost - content: %s', !!byProfilePost.content);
-                console.log('byProfilePost - by_profile: %s', !!byProfilePost.by_profile);
-            }
+            console.log('debug post - content: %s', debugPost.content);
+            console.log('debug post - by_profile: %s', debugPost.by_profile);
+            console.log('content post: %s', contentPost);
+            console.log('byProfile post: %s', byProfilePost);
         }
 
         return {
