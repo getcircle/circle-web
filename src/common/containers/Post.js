@@ -29,17 +29,8 @@ const selector = selectors.createImmutableSelector(
         let post;
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
-        console.log('post selector');
         if (postState.get('ids').has(postId)) {
             post = retrievePost(postId, cache, ['content', 'by_profile']);
-            const debugPost = retrievePost(postId, cache);
-            console.log('post: %s', post);
-            if (post) {
-                console.log('post - content: %s', post.content);
-                console.log('post - by_profile: %s', post.by_profile);
-            }
-            console.log('debug post - content: %s', debugPost.content);
-            console.log('debug post - by_profile: %s', debugPost.by_profile);
         }
 
         return {
@@ -163,7 +154,6 @@ class Post extends CSSComponent {
             errorDetails,
             post,
         } = this.props;
-        console.log('---> rendering post');
         if (post) {
             return (
                 <DocumentTitle title={post.title}>
