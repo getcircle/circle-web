@@ -31,6 +31,7 @@ const selector = selectors.createImmutableSelector(
         const cache = cacheState.toJS();
         console.log('post selector');
         if (postState.get('ids').has(postId)) {
+            debugger;
             post = retrievePost(postId, cache, ['content', 'by_profile']);
             const debugPost = retrievePost(postId, cache);
             const contentPost = retrievePost(postId, cache, ['content']);
