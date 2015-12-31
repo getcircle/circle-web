@@ -1,7 +1,9 @@
-import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
+import { CircularProgress, Dialog, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import Dropzone from 'react-dropzone';
 import flow from 'lodash/function/flow';
 import Immutable from 'immutable';
+import Menu from 'material-ui/lib/menus/menu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -34,8 +36,10 @@ import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
 import IconContainer from './IconContainer';
 import InternalPropTypes from './InternalPropTypes';
+import MoreHorizontalIcon from './MoreHorizontalIcon';
 import ProfileAvatar from './ProfileAvatar';
 import Share from './Share';
+import TrashIcon from './TrashIcon';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 const { PostStateV1 } = services.post.containers;
@@ -46,6 +50,7 @@ class Post extends CSSComponent {
         autoSave: PropTypes.bool,
         header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
+        onDeletePostCallback: PropTypes.func,
         onFileDeleteCallback: PropTypes.func,
         onFileUploadCallback: PropTypes.func,
         onSaveCallback: PropTypes.func,
@@ -74,6 +79,7 @@ class Post extends CSSComponent {
 
     state = {
         body: '',
+        confirmDelete: false,
         derivedTitle: false,
         editing: false,
         files: Immutable.OrderedMap(),
@@ -81,6 +87,7 @@ class Post extends CSSComponent {
         title: '',
         uploadedFiles: Immutable.Map(),
         namesOfDeletedFiles: [],
+        openMoreActionsMenu: false,
     }
 
     componentWillMount() {
@@ -206,6 +213,10 @@ class Post extends CSSComponent {
                     marginTop: 0,
                     padding: 0,
                 },
+                deleteDialog: {
+                    ...fontColors.dark,
+                    fontSize: 14,
+                },
                 dropzoneTriggerContainer: {
                     height: 250,
                     paddingTop: 20,
@@ -290,6 +301,34 @@ class Post extends CSSComponent {
                     fontSize: 14,
                     margin: '10px 0 5px 0',
                     width: '100%',
+                },
+                ModalPrimaryActionButton: {
+                    labelStyle: {
+                        color: 'rgba(255, 0, 0, 0.7)',
+                    },
+                },
+                MoreActionsMenuItem: {
+                    innerDivStyle: {
+                        color: 'rgba(0, 0, 0, 0.7)',
+                        fontSize: 14,
+                        width: '128px',
+                    },
+                    style: {
+                        lineHeight: '30px',
+                        width: '128px',
+                    },
+                },
+                moreHorizontalIcon: {
+                    position: 'relative',
+                    top: '-4px',
+                },
+                MoreIconButton: {
+                    style: {
+                        border: '1px solid #7A8EFF',
+                        borderRadius: '2px',
+                        height: '40px',
+                        marginLeft: '16px',
+                    },
                 },
                 postTitle: {
                     background: 'transparent',
@@ -441,6 +480,45 @@ class Post extends CSSComponent {
         }
 
         return false;
+    }
+
+    hideMenu() {
+        this.setState({
+            openMoreActionsMenu: false,
+        });
+    }
+
+    onDeleteButtonTapped(post) {
+        this.setState({
+            confirmDelete: true,
+        });
+    }
+
+    onModalCancelTapped() {
+        this.resetDeleteState();
+    }
+
+    onModalDeleteTapped() {
+        const {
+            onDeletePostCallback,
+            post
+        } = this.props;
+
+        if (post && onDeletePostCallback) {
+            onDeletePostCallback(post);
+            tracker.trackPostRemoved(
+                post.id,
+                post.state
+            );
+        }
+
+        this.resetDeleteState();
+    }
+
+    resetDeleteState() {
+        this.setState({
+            confirmDelete: false,
+        });
     }
 
     // Getters
@@ -601,6 +679,37 @@ class Post extends CSSComponent {
 
     // Render Methods
 
+    renderDeleteModal() {
+        if (this.state.confirmDelete) {
+            const dialogActions = [
+                (<FlatButton
+                    key="cancel"
+                    label={t('Cancel')}
+                    onTouchTap={::this.onModalCancelTapped}
+                    secondary={true}
+                />),
+                (<FlatButton
+                    key="delete"
+                    label={t('Delete')}
+                    onTouchTap={::this.onModalDeleteTapped}
+                    primary={true}
+                    {...this.styles().ModalPrimaryActionButton}
+                />)
+            ];
+            return (
+                <Dialog
+                    actions={dialogActions}
+                    bodyStyle={this.styles().deleteDialog}
+                    defaultOpen={true}
+                    open={true}
+                    title={t('Delete Post?')}
+                >
+                    {t('Please confirm you want to delete this post. This action cannot be undone.')}
+                </Dialog>
+            );
+        }
+    }
+
     renderSuggestImprovementsButton() {
         const {
             post,
@@ -632,6 +741,8 @@ class Post extends CSSComponent {
         } = this.props;
 
         let editButton = '';
+        let moreActionsButton = '';
+        let moreActionsMenu = '';
         if (post && post.permissions && post.permissions.can_edit) {
             editButton = (
                 <FlatButton
@@ -641,6 +752,44 @@ class Post extends CSSComponent {
                     {...this.styles().EditButton}
                 />
             );
+
+            moreActionsButton = (
+                <IconButton
+                    iconStyle={this.styles().moreHorizontalIcon}
+                    onTouchTap={(e) => {
+                        this.setState({openMoreActionsMenu: !this.state.openMoreActionsMenu});
+                    }}
+                    touch={true}
+                    {...this.styles().MoreIconButton}
+                >
+                    <MoreHorizontalIcon
+                        stroke={tintColor}
+                    />
+                </IconButton>
+            );
+
+            if (this.state.openMoreActionsMenu) {
+                moreActionsMenu = (
+                    <div
+                        className="row middle-xs end-xs full-width"
+                        key="more-actions-menu"
+                        style={{position: 'relative'}}
+                    >
+                        <Menu
+                            desktop={true}
+                            onEscKeyDown={::this.hideMenu}
+                            onItemTouchTap={::this.hideMenu}
+                            width="128px"
+                        >
+                            <MenuItem
+                                leftIcon={<TrashIcon stroke="rgba(0, 0, 0, 0.7)" />}
+                                onTouchTap={::this.onDeleteButtonTapped}
+                                primaryText={t('Delete')}
+                                {...this.styles().MoreActionsMenuItem} />
+                        </Menu>
+                    </div>
+                );
+            }
         }
 
         return (
@@ -658,7 +807,9 @@ class Post extends CSSComponent {
                         }}
                         urlShareSource="post_share_copy"
                     />
+                    {moreActionsButton}
                 </div>
+                {moreActionsMenu}
             </div>
         );
     }
@@ -681,7 +832,7 @@ class Post extends CSSComponent {
             post.files.forEach(file => {
                 if (file.content_type && file.content_type.toLowerCase().indexOf('image/') !== -1) {
                     inlineImages.push(
-                        <div className="row center-xs middle-xs" style={this.styles().inlineImageContainer} key={file.id}>
+                        <div className="row center-xs middle-xs" key={file.id} style={this.styles().inlineImageContainer}>
                             <div style={this.styles().inlineImageInnerDiv}>
                                 <a href={file.source_url} target="_blank">
                                     <img alt={t('Post attached image')} src={file.source_url} style={this.styles().inlineImage}/>
@@ -940,6 +1091,7 @@ class Post extends CSSComponent {
                         </div>
                     </div>
                 </div>
+                {this.renderDeleteModal()}
             </DetailContent>
         );
     }

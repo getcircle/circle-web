@@ -3,13 +3,15 @@ import React, { PropTypes } from 'react';
 
 import { canvasColor } from '../constants/styles';
 import CurrentTheme from '../utils/ThemeManager';
+import { deletePost, getPost } from '../actions/posts';
 import { fontColors } from '../constants/styles';
-import { getPost } from '../actions/posts';
 
+import connectData from '../utils/connectData';
+import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
+import { routeToPosts } from '../utils/routes';
 import * as selectors from '../selectors';
-import connectData from '../utils/connectData';
 import t from '../utils/gettext';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -125,6 +127,11 @@ class Post extends CSSComponent {
         this.setState({muiTheme: customTheme});
     }
 
+    onDeletePostTapped(post) {
+        this.props.dispatch(deletePost(post));
+        routeToPosts(this.context.history, PostStateURLString.LISTED);
+    }
+
     renderErrorMessage() {
         const {
             errorDetails,
@@ -158,7 +165,7 @@ class Post extends CSSComponent {
         if (post) {
             return (
                 <DocumentTitle title={post.title}>
-                    <PostComponent post={post} />
+                    <PostComponent onDeletePostCallback={::this.onDeletePostTapped} post={post} />
                 </DocumentTitle>
             );
         } else if (errorDetails) {

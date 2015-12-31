@@ -25,7 +25,6 @@ import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
 import Post from '../components/Post';
-import Header from '../components/Header';
 import RoundedButton from '../components/RoundedButton';
 
 const { PostV1, PostStateV1 } = services.post.containers;
