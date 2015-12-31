@@ -102,8 +102,9 @@ class Post extends CSSComponent {
         return {
             default: {
                 emptyStateMessageContainer: {
+                    fontSize: '16px',
                     height: '100%',
-                    lineHeight: '25px',
+                    lineHeight: '40px',
                     minHeight: '50vh',
                     whiteSpace: 'pre-wrap',
                     width: '100%',
