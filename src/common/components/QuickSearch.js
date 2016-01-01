@@ -16,6 +16,11 @@ import TypeaheadInput from './TypeaheadInput';
 import TypeaheadResultsList from './TypeaheadResultsList';
 import InternalPropTypes from './InternalPropTypes';
 import SearchIcon from './SearchIcon';
+import ProfileAvatar from './ProfileAvatar';
+import GroupIcon from './GroupIcon';
+import OfficeIcon from './OfficeIcon';
+import LightBulbIcon from './LightBulbIcon';
+import IconContainer from './IconContainer';
 
 const {
     Paper,
@@ -132,6 +137,23 @@ class QuickSearch extends CSSComponent {
                     paddingTop: 0,
                     paddingBottom: 0,
                 },
+                ResultIcon: {
+                    height: 30,
+                    width: 30,
+                    strokeWidth: 1,
+                },
+                ResultIconContainer: {
+                    style: {
+                        height: 40,
+                        width: 40,
+                        border: '',
+                    },
+                    iconStyle: {
+                        height: 30,
+                        width: 30,
+                    },
+                    strokeWidth: 1,
+                },
                 SearchIcon: {
                     strokeWidth: 3,
                     style: {
@@ -169,6 +191,7 @@ class QuickSearch extends CSSComponent {
         }
         const item = {
             index: index,
+            leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: primaryText,
             onTouchTap: routes.routeToProfile.bind(null, this.context.history, profile),
             type: RESULT_TYPES.PROFILE,
@@ -184,6 +207,7 @@ class QuickSearch extends CSSComponent {
         }
         const item = {
             index: index,
+            leftAvatar: <GroupIcon {...this.styles().ResultIcon} />,
             primaryText: primaryText,
             onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
             type: RESULT_TYPES.TEAM,
@@ -199,6 +223,7 @@ class QuickSearch extends CSSComponent {
         }
         const item = {
             index: index,
+            leftAvatar: <OfficeIcon {...this.styles().ResultIcon} />,
             primaryText: primaryText,
             onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
             type: RESULT_TYPES.LOCATION,
@@ -214,6 +239,7 @@ class QuickSearch extends CSSComponent {
         }
         const item = {
             index: index,
+            leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" {...this.styles().ResultIconContainer}/>,
             primaryText: primaryText,
             onTouchTap: routes.routeToPost.bind(null, this.context.history, post),
             type: RESULT_TYPES.POST,
