@@ -4,6 +4,7 @@ import mui from 'material-ui';
 import CSSComponent from './CSSComponent';
 
 const {
+    ListDivider,
     List,
     ListItem,
 } = mui;
@@ -21,10 +22,13 @@ class TypeaheadResultsList extends CSSComponent {
 
     renderResult(result) {
         return (
-            <ListItem
-                {...result}
-            />
-        )
+            <div>
+                <ListItem
+                    {...result}
+                />
+                <ListDivider />
+            </div>
+        );
     }
 
     render() {

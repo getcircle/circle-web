@@ -104,6 +104,7 @@ class QuickSearch extends CSSComponent {
                     width: '100%',
                     borderRadius: '0px 0px 3px 3px',
                     boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
+                    backgroundColor: 'white',
                 },
                 root: {
                     padding: 0,
@@ -127,7 +128,9 @@ class QuickSearch extends CSSComponent {
                     ...backgroundColors.light,
                 },
                 resultsList: {
-                    marginTop: -15,
+                    backgroundColor: 'white',
+                    paddingTop: 0,
+                    paddingBottom: 0,
                 },
                 SearchIcon: {
                     strokeWidth: 3,
@@ -300,6 +303,7 @@ class QuickSearch extends CSSComponent {
                     >
                         <TypeaheadResultsList
                             results={[this.getSearchTrigger()]}
+                            style={{...this.styles().resultsList}}
                         />
                         <TypeaheadResultsList
                             results={this.getSearchResults()}
