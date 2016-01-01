@@ -6,6 +6,7 @@ class TypeaheadInput extends CSSComponent {
 
     static propTypes = {
         onChange: PropTypes.func,
+        placeholder: PropTypes.string,
         style: PropTypes.object,
     }
 
@@ -16,8 +17,7 @@ class TypeaheadInput extends CSSComponent {
     render() {
         return (
             <input
-                onChange={::this.handleChange}
-                style={this.props.style}
+                {...this.props}
             />
         );
     }
