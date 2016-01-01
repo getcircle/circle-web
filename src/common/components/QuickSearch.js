@@ -2,16 +2,21 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import keymirror from 'keymirror';
+import mui from 'material-ui';
 
 import CSSComponent from './CSSComponent';
 import TypeaheadInput from './TypeaheadInput';
-import TypeaheadResults from './TypeaheadResults';
+import TypeaheadResultsList from './TypeaheadResultsList';
 import * as selectors from '../selectors';
 import { loadSearchResults } from '../actions/search';
 import * as routes from '../utils/routes';
 import { backgroundColors, fontColors } from '../constants/styles';
 import { SEARCH_CONTAINER_WIDTH, SEARCH_RESULTS_MAX_HEIGHT } from '../components/Search';
 import InternalPropTypes from './InternalPropTypes';
+
+const {
+    Paper,
+} = mui;
 
 const RESULT_TYPES = keymirror({
     PROFILE: null,
@@ -41,11 +46,11 @@ class QuickSearch extends CSSComponent {
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
+        listsContainerStyle: PropTypes.object,
         loading: PropTypes.bool,
         onBlur: PropTypes.func,
         onFocus: PropTypes.func,
         results: PropTypes.object,
-        resultsListStyle: PropTypes.object,
         style: PropTypes.object,
     }
 
@@ -68,6 +73,8 @@ class QuickSearch extends CSSComponent {
 
     ignoreBlur = false
 
+    updateQueryTimer = null;
+
     setIgnoreBlur(ignoreBlur) {
         this.ignoreBlur = ignoreBlur;
     }
@@ -84,7 +91,7 @@ class QuickSearch extends CSSComponent {
         };
         return {
             'default': {
-                resultsList: {
+                listsContainer: {
                     justifyContent: 'flex-start',
                     textAlign: 'start',
                     overflowY: 'hidden',
@@ -112,12 +119,15 @@ class QuickSearch extends CSSComponent {
                     width: '100%',
                     ...backgroundColors.light,
                 },
+                resultsList: {
+                    marginTop: -15,
+                }
             },
             'largerDevice': {
                 inputContainer: {
                     maxWidth: SEARCH_CONTAINER_WIDTH,
                 },
-                resultsList: {
+                listsContainer: {
                     width: SEARCH_CONTAINER_WIDTH,
                     maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                 },
@@ -125,13 +135,10 @@ class QuickSearch extends CSSComponent {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return !nextProps.loading
-    }
-
     handleChange(event) {
         const query = event.target.value;
-        this.props.dispatch(loadSearchResults(query));
+        clearTimeout(this.updateQueryTimer);
+        this.updateQueryTimer = setTimeout(() => { this.props.dispatch(loadSearchResults(query)) }, 100);
         this.setState({'query': query});
     }
 
@@ -224,6 +231,14 @@ class QuickSearch extends CSSComponent {
         }
     }
 
+    getSearchTrigger() {
+        return {
+            index: 0,
+            primaryText: 'Search "' + this.state.query + '"',
+            onTouchTap: routes.routeToSearch.bind(null, this.context.history, this.state.query),
+        }
+    }
+
     handleBlur(event) {
         if (this.ignoreBlur) {
             event.preventDefault();
@@ -236,7 +251,7 @@ class QuickSearch extends CSSComponent {
         const {
             inputContainerStyle,
             onFocus,
-            resultsListStyle,
+            listsContainerStyle,
             style,
         } = this.props;
 
@@ -259,10 +274,17 @@ class QuickSearch extends CSSComponent {
                             style={this.styles().input}
                         />
                     </div>
-                    <TypeaheadResults
-                        results={this.getSearchResults()}
-                        style={{...this.styles().resultsList, ...resultsListStyle}}
-                    />
+                    <Paper
+                        style={{...this.styles().listsContainer, ...listsContainerStyle}}
+                    >
+                        <TypeaheadResultsList
+                            results={[this.getSearchTrigger()]}
+                        />
+                        <TypeaheadResultsList
+                            results={this.getSearchResults()}
+                            style={{...this.styles().resultsList}}
+                        />
+                    </Paper>
                 </div>
             </div>
         );

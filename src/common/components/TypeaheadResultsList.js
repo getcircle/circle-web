@@ -6,18 +6,17 @@ import CSSComponent from './CSSComponent';
 const {
     List,
     ListItem,
-    Paper,
 } = mui;
 
-class TypeaheadResults extends CSSComponent {
+class TypeaheadResultsList extends CSSComponent {
 
     static propTypes = {
         results: PropTypes.array,
         style: PropTypes.object,
     }
 
-    static defaultProps = {
-        results: [],
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.results !== this.props.results
     }
 
     renderResult(result) {
@@ -30,27 +29,25 @@ class TypeaheadResults extends CSSComponent {
 
     render() {
         const {
-            style,
             results,
+            style,
         } = this.props;
 
         let renderedResults = []
-        results.forEach((result) => {
-            renderedResults.push(this.renderResult(result));
-        });
+        if (results) {
+            results.forEach((result) => {
+                renderedResults.push(this.renderResult(result));
+            });
+        }
 
         return (
-            <div>
-                <Paper
-                    style={style}
-                >
-                    <List>
-                        {renderedResults}
-                    </List>
-                </Paper>
-            </div>
+            <List
+                style={style}
+            >
+                {renderedResults}
+            </List>
         );
     }
 }
 
-export default TypeaheadResults;
+export default TypeaheadResultsList;
