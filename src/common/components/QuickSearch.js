@@ -272,7 +272,7 @@ class QuickSearch extends CSSComponent {
     getSearchResults() {
         const { results } = this.props;
         const querySpecificResults = results[this.state.query];
-        if (querySpecificResults && querySpecificResults.length) {
+        if (querySpecificResults) {
             return this.getSearchResultItems(querySpecificResults);
         }
     }
