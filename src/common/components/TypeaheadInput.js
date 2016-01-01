@@ -9,11 +9,8 @@ class TypeaheadInput extends CSSComponent {
         style: PropTypes.object,
     }
 
-    updateQueryTimer = null;
-
     handleChange(event) {
-        clearTimeout(this.updateQueryTimer);
-        this.updateQueryTimer = setTimeout(() => { this.props.onChange(event) }, 100);
+        this.props.onChange(event);
     }
 
     render() {
