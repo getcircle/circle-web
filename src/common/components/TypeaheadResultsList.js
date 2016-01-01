@@ -17,7 +17,7 @@ class TypeaheadResultsList extends CSSComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextProps.results !== this.props.results
+        return nextProps.results !== undefined && nextProps.results !== this.props.results
     }
 
     renderResult(result) {
