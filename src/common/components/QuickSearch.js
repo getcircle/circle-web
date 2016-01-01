@@ -4,15 +4,18 @@ import Immutable from 'immutable';
 import keymirror from 'keymirror';
 import mui from 'material-ui';
 
-import CSSComponent from './CSSComponent';
-import TypeaheadInput from './TypeaheadInput';
-import TypeaheadResultsList from './TypeaheadResultsList';
 import * as selectors from '../selectors';
 import { loadSearchResults } from '../actions/search';
 import * as routes from '../utils/routes';
-import { backgroundColors, fontColors } from '../constants/styles';
+import { backgroundColors, fontColors, iconColors } from '../constants/styles';
 import { SEARCH_CONTAINER_WIDTH, SEARCH_RESULTS_MAX_HEIGHT } from '../components/Search';
+import t from '../utils/gettext';
+
+import CSSComponent from './CSSComponent';
+import TypeaheadInput from './TypeaheadInput';
+import TypeaheadResultsList from './TypeaheadResultsList';
 import InternalPropTypes from './InternalPropTypes';
+import SearchIcon from './SearchIcon';
 
 const {
     Paper,
@@ -50,6 +53,7 @@ class QuickSearch extends CSSComponent {
         loading: PropTypes.bool,
         onBlur: PropTypes.func,
         onFocus: PropTypes.func,
+        placeholder: PropTypes.string,
         results: PropTypes.object,
         style: PropTypes.object,
     }
@@ -57,6 +61,7 @@ class QuickSearch extends CSSComponent {
     static defaultProps = {
         focused: false,
         loading: false,
+        placeholder: t('Search knowledge, people, & teams'),
         results: Immutable.Map(),
     }
 
@@ -105,11 +110,11 @@ class QuickSearch extends CSSComponent {
                 input: {
                     border: 'none',
                     borderRadius: common.borderRadius,
+                    flex: 1,
                     fontSize: '14px',
                     lineHeight: '19px',
                     outline: 'none',
                     paddingLeft: 5,
-                    width: '100%',
                     height: '100%',
                     ...fontColors.light,
                 },
@@ -121,7 +126,17 @@ class QuickSearch extends CSSComponent {
                 },
                 resultsList: {
                     marginTop: -15,
-                }
+                },
+                SearchIcon: {
+                    strokeWidth: 3,
+                    style: {
+                        alignSelf: 'center',
+                        height: 25,
+                        marginLeft: 14,
+                        width: 25,
+                    },
+                    ...iconColors.medium,
+                },
             },
             'largerDevice': {
                 inputContainer: {
@@ -251,6 +266,7 @@ class QuickSearch extends CSSComponent {
         const {
             inputContainerStyle,
             onFocus,
+            placeholder,
             listsContainerStyle,
             style,
         } = this.props;
@@ -268,9 +284,12 @@ class QuickSearch extends CSSComponent {
                     className="col-xs"
                 >
                     <div
+                        className="row middle-xs"
                         style={{...this.styles().inputContainer, ...inputContainerStyle}}>
+                        <SearchIcon {...this.styles().SearchIcon} />
                         <TypeaheadInput
                             onChange={::this.handleChange}
+                            placeholder={placeholder}
                             style={this.styles().input}
                         />
                     </div>
