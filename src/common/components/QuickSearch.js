@@ -102,6 +102,8 @@ class QuickSearch extends CSSComponent {
                     overflowY: 'hidden',
                     height: 'auto',
                     width: '100%',
+                    borderRadius: '0px 0px 3px 3px',
+                    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
                 },
                 root: {
                     padding: 0,
