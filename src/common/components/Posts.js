@@ -95,7 +95,7 @@ class Posts extends CSSComponent {
                         top: 0,
                         width: 24,
                     },
-                    stroke: 'rgba(0, 0, 0, 0.1)',
+                    stroke: 'rgba(0, 0, 0, 0.5)',
                     strokeWidth: 1,
                 },
                 infiniteListContainer: {
