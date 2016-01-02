@@ -42,6 +42,11 @@ export function detectHashtagsAndAddMarkup(stringValue) {
     return stringValue.replace(urlRegex, '$1<a class="hashtag">$2</a>');
 }
 
+export function detectLineBreaksAndAddMarkup(stringValue) {
+    const urlRegex = /(?:\n)/gi;
+    return stringValue.replace(urlRegex, '<br>');
+}
+
 export function stripTags(html) {
     if (!__CLIENT__ || !html) {
         // SSR

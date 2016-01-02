@@ -1,6 +1,7 @@
 import expect from 'expect';
 
 import {
+    detectLineBreaksAndAddMarkup,
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
     detectURLsAndAddMarkup
@@ -106,6 +107,14 @@ describe('string utils', () => {
         let content = 'This post answers all my questions https://lunohq.com/search/#meeting';
         expect(detectHashtagsAndAddMarkup(content)).toBe(
             'This post answers all my questions https://lunohq.com/search/#meeting'
+        );
+    });
+
+
+    it('does detects text line breaks and adds line break HTML tags', () => {
+        let content = 'Test of\ntext line\n\n\nbreaks with \n or without spaces.\n';
+        expect(detectLineBreaksAndAddMarkup(content)).toBe(
+            'Test of<br>text line<br><br><br>breaks with <br> or without spaces.<br>'
         );
     });
 });
