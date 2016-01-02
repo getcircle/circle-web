@@ -28,6 +28,13 @@ describe('string utils', () => {
         );
     });
 
+    it('does not include line breaks in URL', () => {
+        let contentWithMultipleURLs = '<div>Luno URL<br><br>https://github.com/getcircle/stacks/blob/master/conf/lunohq/staging.env<br>Hello</div><pre>abc</pre>';
+        expect(detectURLsAndAddMarkup(contentWithMultipleURLs)).toBe(
+            '<div>Luno URL<br><br><a href="https://github.com/getcircle/stacks/blob/master/conf/lunohq/staging.env" target="_blank">https://github.com/getcircle/stacks/blob/master/conf/lunohq/staging.env</a><br>Hello</div><pre>abc</pre>'
+        );
+    });
+
     it('work when no URLs are present', () => {
         let content = 'Luno Content';
         expect(detectURLsAndAddMarkup(content)).toBe('Luno Content');
