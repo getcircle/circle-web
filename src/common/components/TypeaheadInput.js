@@ -10,13 +10,14 @@ class TypeaheadInput extends CSSComponent {
         style: PropTypes.object,
     }
 
-    handleChange(event) {
-        this.props.onChange(event);
+    handleInputBlur(event) {
+        event.target.value = '';
     }
 
     render() {
         return (
             <input
+                onBlur={::this.handleInputBlur}
                 {...this.props}
             />
         );
