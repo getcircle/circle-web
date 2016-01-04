@@ -182,7 +182,6 @@ class App extends CSSComponent {
                     inputContainerStyle: {
                         borderRadius: '0px',
                     },
-                    focused: true,
                     listContainerStyle: {
                         display: '',
                         height: 'initial',

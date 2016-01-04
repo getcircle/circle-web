@@ -59,7 +59,6 @@ class QuickSearch extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
-        focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
         listContainerStyle: PropTypes.object,
         loading: PropTypes.bool,
@@ -72,7 +71,6 @@ class QuickSearch extends CSSComponent {
     }
 
     static defaultProps = {
-        focused: false,
         loading: false,
         maxListHeight: RESULT_HEIGHT * 10,
         placeholder: t('Search knowledge, people, & teams'),
