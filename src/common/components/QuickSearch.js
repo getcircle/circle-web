@@ -5,7 +5,7 @@ import keymirror from 'keymirror';
 import mui from 'material-ui';
 
 import * as selectors from '../selectors';
-import { loadSearchResults } from '../actions/search';
+import { clearSearchResults, loadSearchResults, viewSearchResult } from '../actions/search';
 import * as routes from '../utils/routes';
 import { backgroundColors, fontColors, iconColors } from '../constants/styles';
 import { SEARCH_CONTAINER_WIDTH, SEARCH_RESULTS_MAX_HEIGHT } from '../components/Search';
@@ -223,7 +223,7 @@ class QuickSearch extends CSSComponent {
             type: RESULT_TYPES.PROFILE,
             instance: profile,
         };
-        return item;
+        return this.trackTouchTap(item);
     }
 
     getTeamResult(team, index, highlight) {
@@ -239,7 +239,7 @@ class QuickSearch extends CSSComponent {
             type: RESULT_TYPES.TEAM,
             instance: team,
         };
-        return item;
+        return this.trackTouchTap(item);
     }
 
     getLocationResult(location, index, highlight) {
@@ -255,7 +255,7 @@ class QuickSearch extends CSSComponent {
             type: RESULT_TYPES.LOCATION,
             instance: location,
         };
-        return item;
+        return this.trackTouchTap(item);
     }
 
     getPostResult(post, index, highlight) {
@@ -271,7 +271,7 @@ class QuickSearch extends CSSComponent {
             type: RESULT_TYPES.POST,
             instance: post,
         };
-        return item;
+        return this.trackTouchTap(item);
     }
 
     getSearchResults() {
@@ -299,6 +299,9 @@ class QuickSearch extends CSSComponent {
             });
             return items;
         }
+        else if (this.state.query === '') {
+            return [];
+        }
     }
 
     getSearchTrigger() {
@@ -314,7 +317,7 @@ class QuickSearch extends CSSComponent {
         if (this.ignoreBlur) {
             event.preventDefault();
         } else {
-            this.props.onBlur();
+            this.cleanup();
         }
     }
 
@@ -374,6 +377,32 @@ class QuickSearch extends CSSComponent {
             default:
                 return null;
         }
+    }
+
+    cleanup() {
+        this.setState({query: ''});
+        this.props.dispatch(clearSearchResults());
+        this.props.onBlur();
+    }
+
+    trackTouchTap(item) {
+        const onTouchTap = item.onTouchTap;
+        item.onTouchTap = () => {
+            const trackItem = Object.assign({}, item);
+
+            // Don't expand tracked results
+            if (trackItem.type === RESULT_TYPES.EXPANDED_PROFILE) {
+                trackItem.type = RESULT_TYPES.PROFILE;
+            }
+            this.props.dispatch(viewSearchResult(trackItem));
+
+            if (onTouchTap && typeof onTouchTap === 'function') {
+                onTouchTap();
+            }
+
+            this.cleanup();
+        }
+        return item;
     }
 
     render() {
