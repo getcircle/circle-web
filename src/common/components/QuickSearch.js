@@ -189,9 +189,6 @@ class QuickSearch extends CSSComponent {
                     },
                     ...iconColors.medium,
                 },
-                searchTerm: {
-                    fontWeight: 600,
-                },
             },
             'largerDevice': {
                 inputContainer: {
@@ -310,7 +307,7 @@ class QuickSearch extends CSSComponent {
         const { query } = this.state;
         return {
             index: 0,
-            primaryText: (<span>{t('Search')}&nbsp;<span style={this.styles().searchTerm}>&ldquo;{this.state.query}&rdquo;</span></span>),
+            primaryText: (<span>{t('Search')}&nbsp;&ldquo;<mark>{this.state.query}</mark>&rdquo;</span>),
             onTouchTap: routes.routeToSearch.bind(null, this.context.history, query),
         }
     }
@@ -427,6 +424,7 @@ class QuickSearch extends CSSComponent {
                         />
                     </div>
                     <Paper
+                        className="search-results"
                         style={{...this.styles().listContainer, ...listContainerStyle}}
                     >
                         {lists}
