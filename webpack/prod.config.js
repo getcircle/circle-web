@@ -47,7 +47,12 @@ module.exports = {
 
         // optimiazations
         new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurrenceOrderPlugin()
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        })
     ],
     module: {
         loaders: [
