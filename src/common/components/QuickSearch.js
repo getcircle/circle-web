@@ -33,6 +33,13 @@ const RESULT_TYPES = keymirror({
     POST: null,
 });
 
+const SECTIONS = {
+    TRIGGER: 0,
+    RESULTS: 1,
+}
+
+const RESULT_HEIGHT = 56;
+
 const selector = selectors.createImmutableSelector(
     [
         selectors.searchSelector,
@@ -54,8 +61,9 @@ class QuickSearch extends CSSComponent {
         dispatch: PropTypes.func.isRequired,
         focused: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
-        listsContainerStyle: PropTypes.object,
+        listContainerStyle: PropTypes.object,
         loading: PropTypes.bool,
+        maxListHeight: PropTypes.number,
         onBlur: PropTypes.func,
         onFocus: PropTypes.func,
         placeholder: PropTypes.string,
@@ -66,6 +74,7 @@ class QuickSearch extends CSSComponent {
     static defaultProps = {
         focused: false,
         loading: false,
+        maxListHeight: RESULT_HEIGHT * 10,
         placeholder: t('Search knowledge, people, & teams'),
         results: Immutable.Map(),
     }
@@ -78,12 +87,25 @@ class QuickSearch extends CSSComponent {
     }
 
     state = {
+        highlightedIndex: 0,
         query: '',
     }
 
     ignoreBlur = false
 
     updateQueryTimer = null;
+
+    keyDownHandlers = {
+        ArrowDown(event) {
+            event.preventDefault();
+            this.setState({'highlightedIndex': this.state.highlightedIndex + 1});
+        },
+
+        ArrowUp(event) {
+            event.preventDefault();
+            this.setState({'highlightedIndex': this.state.highlightedIndex - 1});
+        },
+    }
 
     setIgnoreBlur(ignoreBlur) {
         this.ignoreBlur = ignoreBlur;
@@ -101,7 +123,7 @@ class QuickSearch extends CSSComponent {
         };
         return {
             'default': {
-                listsContainer: {
+                listContainer: {
                     justifyContent: 'flex-start',
                     textAlign: 'start',
                     overflowY: 'hidden',
@@ -132,10 +154,13 @@ class QuickSearch extends CSSComponent {
                     width: '100%',
                     ...backgroundColors.light,
                 },
-                resultsList: {
+                list: {
                     backgroundColor: 'white',
                     paddingTop: 0,
                     paddingBottom: 0,
+                },
+                listItem: {
+                    height: RESULT_HEIGHT,
                 },
                 ResultIcon: {
                     height: 30,
@@ -169,7 +194,7 @@ class QuickSearch extends CSSComponent {
                 inputContainer: {
                     maxWidth: SEARCH_CONTAINER_WIDTH,
                 },
-                listsContainer: {
+                listContainer: {
                     width: SEARCH_CONTAINER_WIDTH,
                     maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                 },
@@ -181,7 +206,10 @@ class QuickSearch extends CSSComponent {
         const query = event.target.value;
         clearTimeout(this.updateQueryTimer);
         this.updateQueryTimer = setTimeout(() => { this.props.dispatch(loadSearchResults(query)) }, 100);
-        this.setState({'query': query});
+        this.setState({
+            'query': query,
+            'highlightedIndex': 0,
+        });
     }
 
     getProfileResult(profile, index, highlight) {
@@ -248,40 +276,40 @@ class QuickSearch extends CSSComponent {
         return item;
     }
 
-    getSearchResultItems(results) {
-        let items = [];
-
-        results.forEach((result, index) => {
-            let searchResult = null;
-            if (result.profile) {
-                searchResult = this.getProfileResult(result.profile, index, result.highlight);
-            } else if (result.team) {
-                searchResult = this.getTeamResult(result.team, index, result.highlight);
-            } else if (result.location) {
-                searchResult = this.getLocationResult(result.location, index, result.highlight);
-            } else if (result.post) {
-                searchResult = this.getPostResult(result.post, index, result.highlight);
-            }
-            items.push(searchResult);
-            return searchResult;
-        });
-
-        return items;
-    }
-
     getSearchResults() {
-        const { results } = this.props;
+        const {
+            results,
+        } = this.props;
         const querySpecificResults = results[this.state.query];
         if (querySpecificResults) {
-            return this.getSearchResultItems(querySpecificResults);
+            const maxItems = this.numberOfItemsInSection(SECTIONS.RESULTS);
+            console.log('$'+maxItems);
+            let items = [];
+            querySpecificResults.forEach((result, index) => {
+                if (index < maxItems) {
+                    let searchResult = null;
+                    if (result.profile) {
+                        searchResult = this.getProfileResult(result.profile, index, result.highlight);
+                    } else if (result.team) {
+                        searchResult = this.getTeamResult(result.team, index, result.highlight);
+                    } else if (result.location) {
+                        searchResult = this.getLocationResult(result.location, index, result.highlight);
+                    } else if (result.post) {
+                        searchResult = this.getPostResult(result.post, index, result.highlight);
+                    }
+                    items.push(searchResult);
+                }
+            });
+            return items;
         }
     }
 
     getSearchTrigger() {
+        const { query } = this.state;
         return {
             index: 0,
-            primaryText: 'Search "' + this.state.query + '"',
-            onTouchTap: routes.routeToSearch.bind(null, this.context.history, this.state.query),
+            primaryText: t('Search') + (query ? ` "${query}"` : ''),
+            onTouchTap: routes.routeToSearch.bind(null, this.context.history, query),
         }
     }
 
@@ -293,20 +321,92 @@ class QuickSearch extends CSSComponent {
         }
     }
 
+    handleKeyDown(event) {
+        this.setIgnoreBlur(true);
+        const handler = this.keyDownHandlers[event.key];
+        if (handler) {
+            handler.call(this, event);
+        }
+    }
+
+    highlightedIndexForSection(section) {
+        let itemsBeforeSection = 0;
+        for (var i = 0; i < section; i++) {
+            itemsBeforeSection += this.numberOfItemsInSection(i);
+        }
+        let highlightedIndex = this.state.highlightedIndex - itemsBeforeSection;
+        let itemsInSection = this.numberOfItemsInSection(section);
+        if (highlightedIndex < 0 || highlightedIndex > (itemsInSection - 1)) {
+            return null;
+        } else {
+            return highlightedIndex;
+        }
+    }
+
+    numberOfItemsInSection(section) {
+        switch(section) {
+            case SECTIONS.TRIGGER:
+                return 1;
+            case SECTIONS.RESULTS:
+                const {
+                    maxListHeight,
+                    results,
+                } = this.props;
+                let numberOfResults = 0;
+                const querySpecificResults = results[this.state.query];
+                if (querySpecificResults) {
+                    let numberOfItemsInPreviousSections = 0;
+                    for (var i = 0; i < section; i++) {
+                        numberOfItemsInPreviousSections += this.numberOfItemsInSection(i);
+                    }
+                    const maxNumberOfResults = Math.floor(maxListHeight / RESULT_HEIGHT) - numberOfItemsInPreviousSections;
+                    numberOfResults = Math.min(maxNumberOfResults, querySpecificResults.length);
+                }
+                return numberOfResults;
+            default:
+                return 0;
+        }
+    }
+
+    itemsForSection(section) {
+        switch(section) {
+            case SECTIONS.TRIGGER:
+                return [this.getSearchTrigger()];
+            case SECTIONS.RESULTS:
+                return this.getSearchResults();
+            default:
+                return null;
+        }
+    }
+
     render() {
         const {
             inputContainerStyle,
             onFocus,
             placeholder,
-            listsContainerStyle,
+            listContainerStyle,
             style,
         } = this.props;
+
+        let lists = [];
+        for (let section in SECTIONS) {
+            let sectionIndex = SECTIONS[section];
+            lists.push(
+                <TypeaheadResultsList
+                    highlightedIndex={this.highlightedIndexForSection(sectionIndex)}
+                    itemStyle={{...this.styles().listItem}}
+                    results={this.itemsForSection(sectionIndex)}
+                    style={{...this.styles().list}}
+                />
+            );
+        }
 
         return (
             <div
                 className="row center-xs"
                 onBlur={::this.handleBlur}
                 onFocus={onFocus}
+                onKeyDown={::this.handleKeyDown}
                 onMouseEnter={() => this.setIgnoreBlur(true)}
                 onMouseLeave={() => this.setIgnoreBlur(false)}
                 style={{...this.styles().root, ...style, }}
@@ -325,16 +425,9 @@ class QuickSearch extends CSSComponent {
                         />
                     </div>
                     <Paper
-                        style={{...this.styles().listsContainer, ...listsContainerStyle}}
+                        style={{...this.styles().listContainer, ...listContainerStyle}}
                     >
-                        <TypeaheadResultsList
-                            results={[this.getSearchTrigger()]}
-                            style={{...this.styles().resultsList}}
-                        />
-                        <TypeaheadResultsList
-                            results={this.getSearchResults()}
-                            style={{...this.styles().resultsList}}
-                        />
+                        {lists}
                     </Paper>
                 </div>
             </div>
