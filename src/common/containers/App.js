@@ -168,7 +168,7 @@ class App extends CSSComponent {
                         justifyContent: 'center',
                         flex: 1,
                     },
-                    listsContainerStyle: {
+                    listContainerStyle: {
                         display: 'none',
                         position: 'absolute',
                     }
@@ -180,7 +180,7 @@ class App extends CSSComponent {
                         borderRadius: '0px',
                     },
                     focused: true,
-                    listsContainerStyle: {
+                    listContainerStyle: {
                         display: '',
                         height: 'initial',
                         marginTop: 1,
