@@ -6,7 +6,6 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import {
-    hasHTML,
     detectCodeMarkdownAndAddMarkup,
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
@@ -490,7 +489,6 @@ class Post extends CSSComponent {
     }
 
     getReadOnlyContent(content) {
-        const containsHTML = hasHTML(content);
         const detectPatternsAndAddMarkup = flow(
             detectLineBreaksAndAddMarkup,
             detectCodeMarkdownAndAddMarkup,
@@ -498,8 +496,7 @@ class Post extends CSSComponent {
             detectEmailsAndAddMarkup,
             detectHashtagsAndAddMarkup
         );
-        let finalContent = detectPatternsAndAddMarkup(content);
-        finalContent = containsHTML ? finalContent : '<div>' + finalContent + '</div>';
+        const finalContent = detectPatternsAndAddMarkup(content);
         return (
             <div
                 className="luno-editor"
