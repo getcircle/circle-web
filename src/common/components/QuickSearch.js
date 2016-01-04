@@ -283,7 +283,6 @@ class QuickSearch extends CSSComponent {
         const querySpecificResults = results[this.state.query];
         if (querySpecificResults) {
             const maxItems = this.numberOfItemsInSection(SECTIONS.RESULTS);
-            console.log('$'+maxItems);
             let items = [];
             querySpecificResults.forEach((result, index) => {
                 if (index < maxItems) {
