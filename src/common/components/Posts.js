@@ -18,7 +18,7 @@ import CSSComponent from './CSSComponent';
 import CenterLoadingIndicator from './CenterLoadingIndicator';
 import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
-import MoreVerticalIcon from './MoreVerticalIcon';
+import MoreHorizontalIcon from './MoreHorizontalIcon';
 
 const { PostStateV1 } = services.post.containers;
 
@@ -81,6 +81,12 @@ class Posts extends CSSComponent {
                     width: '100%',
                     ...fontColors.light,
                 },
+                IconButton: {
+                    style: {
+                        top: 18,
+                        right: 10,
+                    }
+                },
                 IconContainer: {
                     iconStyle: {
                         height: 24,
@@ -95,7 +101,7 @@ class Posts extends CSSComponent {
                         top: 0,
                         width: 24,
                     },
-                    stroke: 'rgba(0, 0, 0, 0.5)',
+                    stroke: 'rgba(0, 0, 0, 0.4)',
                     strokeWidth: 1,
                 },
                 infiniteListContainer: {
@@ -266,9 +272,13 @@ class Posts extends CSSComponent {
 
     renderMoreButton() {
         return (
-            <IconButton tooltip={t('More Actions')} touch={true}>
+            <IconButton
+                {...this.styles().IconButton}
+                tooltip={t('More Actions')}
+                touch={true}
+            >
                 <IconContainer
-                    IconClass={MoreVerticalIcon}
+                    IconClass={MoreHorizontalIcon}
                     {...this.styles().IconContainer}
                 />
             </IconButton>
