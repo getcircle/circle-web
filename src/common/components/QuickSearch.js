@@ -431,6 +431,7 @@ class QuickSearch extends CSSComponent {
                 <TypeaheadResultsList
                     highlightedIndex={this.highlightedIndexForSection(sectionIndex)}
                     itemStyle={{...this.styles().listItem}}
+                    key={`list-${sectionIndex}`}
                     results={this.itemsForSection(sectionIndex)}
                     style={{...this.styles().list}}
                 />
