@@ -14,7 +14,7 @@ import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import TypeaheadInput from './TypeaheadInput';
-import TypeaheadResultsList from './TypeaheadResultsList';
+import QuickSearchList from './QuickSearchList';
 import InternalPropTypes from './InternalPropTypes';
 import SearchIcon from './SearchIcon';
 import ProfileAvatar from './ProfileAvatar';
@@ -446,7 +446,7 @@ class QuickSearch extends CSSComponent {
         for (let section in SECTIONS) {
             let sectionIndex = SECTIONS[section];
             lists.push(
-                <TypeaheadResultsList
+                <QuickSearchList
                     highlightedIndex={this.highlightedIndexForSection(sectionIndex)}
                     itemStyle={{...this.styles().listItem}}
                     key={`list-${sectionIndex}`}
