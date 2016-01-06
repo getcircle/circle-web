@@ -332,6 +332,10 @@ class QuickSearch extends CSSComponent {
         }
     }
 
+    handleInputBlur(event) {
+        event.target.value = '';
+    }
+
     handleBlur(event) {
         if (this.ignoreBlur) {
             event.preventDefault();
@@ -466,7 +470,8 @@ class QuickSearch extends CSSComponent {
                     className="row middle-xs"
                     style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <SearchIcon {...this.styles().SearchIcon} />
-                    <TypeaheadInput
+                    <input
+                        onBlur={::this.handleInputBlur}
                         onChange={::this.handleChange}
                         placeholder={placeholder}
                         ref="input"
