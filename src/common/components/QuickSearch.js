@@ -13,7 +13,6 @@ import { SEARCH_CONTAINER_WIDTH, SEARCH_RESULTS_MAX_HEIGHT } from '../components
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
-import TypeaheadInput from './TypeaheadInput';
 import QuickSearchList from './QuickSearchList';
 import InternalPropTypes from './InternalPropTypes';
 import SearchIcon from './SearchIcon';
