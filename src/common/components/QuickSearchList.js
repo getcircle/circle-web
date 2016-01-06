@@ -9,7 +9,7 @@ const {
     ListItem,
 } = mui;
 
-class TypeaheadResultsList extends CSSComponent {
+class QuickSearchList extends CSSComponent {
 
     static propTypes = {
         highlightedIndex: PropTypes.number,
@@ -66,4 +66,4 @@ class TypeaheadResultsList extends CSSComponent {
     }
 }
 
-export default TypeaheadResultsList;
+export default QuickSearchList;
