@@ -390,7 +390,11 @@ class QuickSearch extends CSSComponent {
     }
 
     cleanupAndBlur() {
-        this.setState({query: ''});
+        this.setState({
+            highlightedIndex: 0,
+            query: '',
+            inputValue: '',
+        })
         this.props.dispatch(clearSearchResults());
         this.props.onBlur();
     }
