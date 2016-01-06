@@ -106,8 +106,17 @@ class QuickSearch extends CSSComponent {
             this.setState({'highlightedIndex': this.state.highlightedIndex - 1});
         },
 
+        Enter(event) {
+            for (let section in SECTIONS) {
+                let sectionIndex = SECTIONS[section];
+                let highlightedIndex = this.highlightedIndexForSection(sectionIndex);
+                if (highlightedIndex !== null) {
+                    this.itemsForSection(sectionIndex)[highlightedIndex].onTouchTap();
+                }
+            }
+        },
+
         Escape(event) {
-            ReactDOM.findDOMNode(this.refs.input).blur();
             this.cleanupAndBlur();
         },
     }
@@ -390,6 +399,7 @@ class QuickSearch extends CSSComponent {
     }
 
     cleanupAndBlur() {
+        ReactDOM.findDOMNode(this.refs.input).blur();
         this.setState({
             highlightedIndex: 0,
             query: '',
