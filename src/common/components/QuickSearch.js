@@ -88,6 +88,7 @@ class QuickSearch extends CSSComponent {
     state = {
         highlightedIndex: 0,
         query: '',
+        inputValue: '',
     }
 
     ignoreBlur = false
@@ -207,13 +208,16 @@ class QuickSearch extends CSSComponent {
     }
 
     handleChange(event) {
-        const query = event.target.value;
+        const inputValue = event.target.value;
         clearTimeout(this.updateQueryTimer);
-        this.updateQueryTimer = setTimeout(() => { this.props.dispatch(loadSearchResults(query)) }, 100);
-        this.setState({
-            'query': query,
-            'highlightedIndex': 0,
-        });
+        this.updateQueryTimer = setTimeout(() => {
+            this.props.dispatch(loadSearchResults(inputValue))
+            this.setState({
+                'query': inputValue,
+                'highlightedIndex': 0,
+            });
+        }, 100);
+        this.setState({'inputValue': inputValue});
     }
 
     getProfileResult(profile, index, highlight) {
@@ -311,11 +315,11 @@ class QuickSearch extends CSSComponent {
     }
 
     getSearchTrigger() {
-        const { query } = this.state;
+        const { inputValue } = this.state;
         return {
             index: 0,
-            primaryText: (<span>{t('Search')}&nbsp;&ldquo;<mark>{this.state.query}</mark>&rdquo;</span>),
-            onTouchTap: routes.routeToSearch.bind(null, this.context.history, query),
+            primaryText: (<span>{t('Search')}&nbsp;&ldquo;<mark>{this.state.inputValue}</mark>&rdquo;</span>),
+            onTouchTap: routes.routeToSearch.bind(null, this.context.history, inputValue),
         }
     }
 
