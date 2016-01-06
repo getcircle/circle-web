@@ -140,7 +140,7 @@ class QuickSearch extends CSSComponent {
                 },
                 root: {
                     padding: 0,
-                    width: '100%',
+                    maxWidth: SEARCH_CONTAINER_WIDTH,
                 },
                 input: {
                     border: 'none',
@@ -440,7 +440,7 @@ class QuickSearch extends CSSComponent {
 
         return (
             <div
-                className="row center-xs"
+                className="col-xs"
                 onBlur={::this.handleBlur}
                 onFocus={onFocus}
                 onKeyDown={::this.handleKeyDown}
@@ -449,26 +449,22 @@ class QuickSearch extends CSSComponent {
                 style={{...this.styles().root, ...style, }}
             >
                 <div
-                    className="col-xs"
-                >
-                    <div
-                        className="row middle-xs"
-                        style={{...this.styles().inputContainer, ...inputContainerStyle}}>
-                        <SearchIcon {...this.styles().SearchIcon} />
-                        <TypeaheadInput
-                            onChange={::this.handleChange}
-                            placeholder={placeholder}
-                            ref="input"
-                            style={this.styles().input}
-                        />
-                    </div>
-                    <Paper
-                        className="search-results"
-                        style={{...this.styles().listContainer, ...listContainerStyle}}
-                    >
-                        {lists}
-                    </Paper>
+                    className="row middle-xs"
+                    style={{...this.styles().inputContainer, ...inputContainerStyle}}>
+                    <SearchIcon {...this.styles().SearchIcon} />
+                    <TypeaheadInput
+                        onChange={::this.handleChange}
+                        placeholder={placeholder}
+                        ref="input"
+                        style={this.styles().input}
+                    />
                 </div>
+                <Paper
+                    className="search-results"
+                    style={{...this.styles().listContainer, ...listContainerStyle}}
+                >
+                    {lists}
+                </Paper>
             </div>
         );
     }
