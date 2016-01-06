@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import keymirror from 'keymirror';
 import mui from 'material-ui';
+import ReactDOM from 'react-dom';
 
 import * as selectors from '../selectors';
 import { clearSearchResults, loadSearchResults, viewSearchResult } from '../actions/search';
@@ -102,6 +103,11 @@ class QuickSearch extends CSSComponent {
         ArrowUp(event) {
             event.preventDefault();
             this.setState({'highlightedIndex': this.state.highlightedIndex - 1});
+        },
+
+        Escape(event) {
+            ReactDOM.findDOMNode(this.refs.input).blur();
+            this.cleanupAndBlur();
         },
     }
 
@@ -317,7 +323,7 @@ class QuickSearch extends CSSComponent {
         if (this.ignoreBlur) {
             event.preventDefault();
         } else {
-            this.cleanup();
+            this.cleanupAndBlur();
         }
     }
 
@@ -379,7 +385,7 @@ class QuickSearch extends CSSComponent {
         }
     }
 
-    cleanup() {
+    cleanupAndBlur() {
         this.setState({query: ''});
         this.props.dispatch(clearSearchResults());
         this.props.onBlur();
@@ -400,7 +406,7 @@ class QuickSearch extends CSSComponent {
                 onTouchTap();
             }
 
-            this.cleanup();
+            this.cleanupAndBlur();
         }
         return item;
     }
@@ -447,6 +453,7 @@ class QuickSearch extends CSSComponent {
                         <TypeaheadInput
                             onChange={::this.handleChange}
                             placeholder={placeholder}
+                            ref="input"
                             style={this.styles().input}
                         />
                     </div>
