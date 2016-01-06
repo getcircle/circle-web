@@ -22,7 +22,7 @@ class TypeaheadResultsList extends CSSComponent {
         return (nextProps.results !== undefined && nextProps.results !== this.props.results) || nextProps.highlightedIndex !== this.props.highlightedIndex;
     }
 
-    renderResult(result, highlighted) {
+    renderResult(result, index, highlighted) {
         let style = {};
         if (highlighted) {
             style = {
@@ -30,7 +30,9 @@ class TypeaheadResultsList extends CSSComponent {
             };
         }
         return (
-            <div>
+            <div
+                key={`item-${index}`}
+            >
                 <ListItem
                     {...result}
                     style={{...this.props.itemStyle, ...style}}
@@ -50,7 +52,7 @@ class TypeaheadResultsList extends CSSComponent {
         let renderedResults = []
         if (results) {
             results.forEach((result, index) => {
-                renderedResults.push(this.renderResult(result, index === highlightedIndex));
+                renderedResults.push(this.renderResult(result, index, index === highlightedIndex));
             });
         }
 
