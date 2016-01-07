@@ -186,11 +186,6 @@ class QuickSearch extends CSSComponent {
                 listItem: {
                     height: RESULT_HEIGHT,
                 },
-                ResultIcon: {
-                    height: 30,
-                    width: 30,
-                    strokeWidth: 1,
-                },
                 ResultIconContainer: {
                     style: {
                         height: 40,
@@ -262,7 +257,7 @@ class QuickSearch extends CSSComponent {
         }
         const item = {
             index: index,
-            leftAvatar: <GroupIcon {...this.styles().ResultIcon} />,
+            leftAvatar: <IconContainer IconClass={GroupIcon} stroke="#7c7b7b" {...this.styles().ResultIconContainer}/>,
             primaryText: primaryText,
             onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
             type: RESULT_TYPES.TEAM,
@@ -278,7 +273,7 @@ class QuickSearch extends CSSComponent {
         }
         const item = {
             index: index,
-            leftAvatar: <OfficeIcon {...this.styles().ResultIcon} />,
+            leftAvatar: <IconContainer IconClass={OfficeIcon} stroke="#7c7b7b" {...this.styles().ResultIconContainer}/>,
             primaryText: primaryText,
             onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
             type: RESULT_TYPES.LOCATION,
