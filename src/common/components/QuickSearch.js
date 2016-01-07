@@ -337,6 +337,7 @@ class QuickSearch extends CSSComponent {
         const { inputValue } = this.state;
         return {
             index: 0,
+            leftAvatar: <IconContainer IconClass={SearchIcon} stroke="#7c7b7b" {...this.styles().ResultIconContainer}/>,
             primaryText: (<span>{t('Search')}&nbsp;&ldquo;<mark>{this.state.inputValue}</mark>&rdquo;</span>),
             onTouchTap: routes.routeToSearch.bind(null, this.context.history, inputValue),
         }
