@@ -19,7 +19,10 @@ class QuickSearchList extends CSSComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return (nextProps.results !== undefined && nextProps.results !== this.props.results) || nextProps.highlightedIndex !== this.props.highlightedIndex;
+        const thereAreResults = (nextProps.results !== undefined && nextProps.results !== null);
+        const resultsChanged = (nextProps.results !== this.props.results);
+        const highlightedResultChanged = (nextProps.highlightedIndex !== this.props.highlightedIndex);
+        return thereAreResults && (resultsChanged || highlightedResultChanged);
     }
 
     renderResult(result, index, highlighted) {
