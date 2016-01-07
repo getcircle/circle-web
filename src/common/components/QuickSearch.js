@@ -96,13 +96,24 @@ class QuickSearch extends CSSComponent {
 
     keyDownHandlers = {
         ArrowDown(event) {
+            const { highlightedIndex } = this.state;
             event.preventDefault();
-            this.setState({'highlightedIndex': this.state.highlightedIndex + 1});
+            let numberOfItems = 0;
+            for (let section in SECTIONS) {
+                let sectionIndex = SECTIONS[section];
+                numberOfItems += this.numberOfItemsInSection(sectionIndex);
+            }
+            if (highlightedIndex < numberOfItems - 1) {
+                this.setState({'highlightedIndex': highlightedIndex + 1});
+            }
         },
 
         ArrowUp(event) {
+            const { highlightedIndex } = this.state;
             event.preventDefault();
-            this.setState({'highlightedIndex': this.state.highlightedIndex - 1});
+            if (highlightedIndex > 0) {
+                this.setState({'highlightedIndex': highlightedIndex - 1});
+            }
         },
 
         Enter(event) {
