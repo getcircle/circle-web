@@ -41,10 +41,16 @@ export function deletePost(client, post) {
     });
 }
 
-export function getPost(client, postId, fields=new services.common.containers.FieldsV1({exclude: ['snippet']})) {
+export function getPost(
+        client,
+        postId,
+        fields=new services.common.containers.FieldsV1({exclude: ['snippet']}),
+        inflations=new services.common.containers.InflationsV1({exclude: ['html_document']})
+    ) {
     let parameters = {
         id: postId,
         fields: fields,
+        inflations: inflations,
     };
 
     let request = new services.post.actions.get_post.RequestV1(parameters);
