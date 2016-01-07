@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import Immutable from 'immutable';
 import keymirror from 'keymirror';
 import mui from 'material-ui';
 import ReactDOM from 'react-dom';
@@ -74,7 +73,6 @@ class QuickSearch extends CSSComponent {
         loading: false,
         maxListHeight: RESULT_HEIGHT * 10,
         placeholder: t('Search knowledge, people, & teams'),
-        results: Immutable.Map(),
     }
 
     static contextTypes = {
