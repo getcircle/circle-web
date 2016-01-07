@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 
 import { canvasColor } from '../constants/styles';
@@ -66,7 +67,7 @@ class Post extends CSSComponent {
     }
 
     static defaultProps = {
-        errorDetails: {},
+        errorDetails: Immutable.List(),
     }
 
     static contextTypes = {
@@ -81,6 +82,7 @@ class Post extends CSSComponent {
 
     state = {
         muiTheme: CurrentTheme,
+        deleteRequested: false,
     }
 
     getChildContext() {
@@ -97,6 +99,14 @@ class Post extends CSSComponent {
         if (nextProps.params.postId !== this.props.params.postId) {
             fetchPost(nextProps.dispatch, nextProps.params);
             this.configure(nextProps);
+        }
+
+        if (!nextProps.post && nextProps.errorDetails.size === 0 && this.state.deleteRequested) {
+            this.setState({
+                deleteRequested: false,
+            }, () => {
+                routeToPosts(this.context.history, PostStateURLString.LISTED);
+            });
         }
     }
 
@@ -129,7 +139,9 @@ class Post extends CSSComponent {
 
     onDeletePostTapped(post) {
         this.props.dispatch(deletePost(post));
-        routeToPosts(this.context.history, PostStateURLString.LISTED);
+        this.setState({
+            deleteRequested: true,
+        });
     }
 
     renderErrorMessage() {

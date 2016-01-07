@@ -31,6 +31,17 @@ export default function post(state = initialState, action) {
             loading: false,
         });
 
+    case types.DELETE_POST_SUCCESS:
+        if (action.payload.postId) {
+            const postId = action.payload.postId;
+            return state.update('ids', set => set.delete(postId))
+                        .merge({
+                            loading: false,
+                            errors: [],
+                            errorDetails: [],
+                        });
+        }
+
     case types.GET_POST:
         return state.merge({
             loading: true,

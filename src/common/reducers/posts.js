@@ -18,7 +18,9 @@ const posts = paginate({
             if (action.payload.postId && action.payload.postState !== undefined) {
                 const postId = action.payload.postId;
                 const postState = action.payload.postState;
-                return state.updateIn([postState, 'ids'], set => set.delete(postId));
+                return state.updateIn([postState, 'ids'], set => {
+                    return set ? set.delete(postId) : set;
+                });
             }
             break;
 
