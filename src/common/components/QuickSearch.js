@@ -21,9 +21,7 @@ import OfficeIcon from './OfficeIcon';
 import LightBulbIcon from './LightBulbIcon';
 import IconContainer from './IconContainer';
 
-const {
-    Paper,
-} = mui;
+const { Paper } = mui;
 
 const RESULT_TYPES = keymirror({
     PROFILE: null,
@@ -297,9 +295,7 @@ class QuickSearch extends CSSComponent {
     }
 
     getSearchResults() {
-        const {
-            results,
-        } = this.props;
+        const { results } = this.props;
         const querySpecificResults = results[this.state.query];
         if (querySpecificResults) {
             const maxItems = this.numberOfItemsInSection(SECTIONS.RESULTS);
@@ -320,9 +316,10 @@ class QuickSearch extends CSSComponent {
                 }
             });
             return items;
-        }
-        else if (this.state.query === '') {
+        } else if (this.state.query === '') {
             return [];
+        } else {
+            return null;
         }
     }
 
@@ -358,7 +355,7 @@ class QuickSearch extends CSSComponent {
 
     highlightedIndexForSection(section) {
         let itemsBeforeSection = 0;
-        for (var i = 0; i < section; i++) {
+        for (let i = 0; i < section; i++) {
             itemsBeforeSection += this.numberOfItemsInSection(i);
         }
         let highlightedIndex = this.state.highlightedIndex - itemsBeforeSection;
@@ -383,10 +380,11 @@ class QuickSearch extends CSSComponent {
                 const querySpecificResults = results[this.state.query];
                 if (querySpecificResults) {
                     let numberOfItemsInPreviousSections = 0;
-                    for (var i = 0; i < section; i++) {
+                    for (let i = 0; i < section; i++) {
                         numberOfItemsInPreviousSections += this.numberOfItemsInSection(i);
                     }
-                    const maxNumberOfResults = Math.floor(maxListHeight / RESULT_HEIGHT) - numberOfItemsInPreviousSections;
+                    const maxNumberOfResultsVisible = Math.floor(maxListHeight / RESULT_HEIGHT);
+                    const maxNumberOfResults = maxNumberOfResultsVisible - numberOfItemsInPreviousSections;
                     numberOfResults = Math.min(maxNumberOfResults, querySpecificResults.length);
                 }
                 return numberOfResults;
