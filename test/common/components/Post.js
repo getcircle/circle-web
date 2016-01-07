@@ -62,10 +62,10 @@ describe('PostComponent', () => {
             expect(TestUtils.isDOMComponent(postContentComponent)).toBe(true);
 
             expect((ReactDOM.findDOMNode(postContentComponent)).innerHTML).toBe(
-                '<div>This is a sample post content. For more details checkout - ' +
+                'This is a sample post content. For more details checkout - ' +
                 '<a href="https://lunohq.com" target="_blank">https://lunohq.com</a> ' +
                 'If you have any questions, contact <a href="mailto:ravi@lunohq.com">ravi@lunohq.com</a> or ' +
-                '<a href="mailto:michael@lunohq.com">michael@lunohq.com</a></div>'
+                '<a href="mailto:michael@lunohq.com">michael@lunohq.com</a>'
             );
         });
 
