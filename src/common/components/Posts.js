@@ -6,7 +6,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import CurrentTheme from '../utils/ThemeManager';
-import { fontColors, fontWeights } from '../constants/styles';
+import { canvasColor, fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
 import { PostStateURLString } from '../utils/post';
 import { routeToEditPost, routeToPosts, routeToPost } from '../utils/routes';
@@ -120,6 +120,9 @@ class Posts extends CSSComponent {
                     labelStyle: {
                         color: 'rgba(255, 0, 0, 0.7)',
                     },
+                },
+                loadingIndicator: {
+                    backgroundColor: canvasColor,
                 },
                 pageHeaderContainer: {
                     padding: '10px 0 50px 0',
@@ -305,7 +308,7 @@ class Posts extends CSSComponent {
     renderLoadingIndicator() {
         if (this.props.loading) {
             return (
-                <div className="row center-xs" key="loading-indicator">
+                <div className="row center-xs" key="loading-indicator" style={this.styles().loadingIndicator}>
                     <CircularProgress mode="indeterminate" size={0.5} />
                 </div>
             );
