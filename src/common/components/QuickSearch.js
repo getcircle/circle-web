@@ -320,6 +320,8 @@ class QuickSearch extends CSSComponent {
         } else if (this.state.query === '') {
             return [];
         } else {
+            // Results are still loading.
+            // QuickSearchList does not re-render if the results we give it are null.
             return null;
         }
     }
