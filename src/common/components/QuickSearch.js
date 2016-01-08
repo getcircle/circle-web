@@ -36,6 +36,7 @@ const SECTIONS = {
 }
 
 const RESULT_HEIGHT = 56;
+const UPDATE_QUERY_DELAY = 100;
 
 const selector = selectors.createImmutableSelector(
     [
@@ -226,7 +227,7 @@ class QuickSearch extends CSSComponent {
                 'query': inputValue,
                 'highlightedIndex': 0,
             });
-        }, 100);
+        }, UPDATE_QUERY_DELAY);
         this.setState({'inputValue': inputValue});
     }
 
