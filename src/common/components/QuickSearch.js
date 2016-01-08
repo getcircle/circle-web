@@ -357,6 +357,12 @@ class QuickSearch extends CSSComponent {
     }
 
     highlightedIndexForSection(section) {
+        // highlightedIndex ignores sections and its value can be up to the total number
+        // of items we have in all sections.
+        //
+        // This function converts highlightedIndex to an index useful to the section
+        // containing the highlighted item or null if the section doesn't contain
+        // the highlighted item.
         const itemsBeforeSection = this.numberOfItemsBeforeSection(section);
         const highlightedIndex = this.state.highlightedIndex - itemsBeforeSection;
         const itemsInSection = this.numberOfItemsInSection(section);
