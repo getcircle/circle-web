@@ -4,26 +4,21 @@ import keymirror from 'keymirror';
 import mui from 'material-ui';
 import ReactDOM from 'react-dom';
 
-import * as selectors from '../selectors';
-import { clearSearchResults, loadSearchResults, viewSearchResult } from '../actions/search';
-import * as routes from '../utils/routes';
-import { backgroundColors, fontColors, iconColors } from '../constants/styles';
-import { SEARCH_CONTAINER_WIDTH, SEARCH_RESULTS_MAX_HEIGHT } from '../components/Search';
-import t from '../utils/gettext';
+import * as selectors from '../../selectors';
+import { clearSearchResults, loadSearchResults, viewSearchResult } from '../../actions/search';
+import { backgroundColors, fontColors, iconColors } from '../../constants/styles';
+import { SEARCH_CONTAINER_WIDTH, SEARCH_RESULTS_MAX_HEIGHT } from '../../components/Search';
+import t from '../../utils/gettext';
+import * as itemFactory from './factories';
 
-import CSSComponent from './CSSComponent';
-import QuickSearchList from './QuickSearchList';
-import InternalPropTypes from './InternalPropTypes';
-import SearchIcon from './SearchIcon';
-import ProfileAvatar from './ProfileAvatar';
-import GroupIcon from './GroupIcon';
-import OfficeIcon from './OfficeIcon';
-import LightBulbIcon from './LightBulbIcon';
-import IconContainer from './IconContainer';
+import CSSComponent from '../CSSComponent';
+import QuickSearchList from '../QuickSearchList';
+import InternalPropTypes from '../InternalPropTypes';
+import SearchIcon from '../SearchIcon';
 
 const { Paper } = mui;
 
-const RESULT_TYPES = keymirror({
+export const RESULT_TYPES = keymirror({
     PROFILE: null,
     TEAM: null,
     LOCATION: null,
@@ -183,18 +178,6 @@ class QuickSearch extends CSSComponent {
                 listItem: {
                     height: RESULT_HEIGHT,
                 },
-                ResultIconContainer: {
-                    style: {
-                        height: 40,
-                        width: 40,
-                        border: '',
-                    },
-                    iconStyle: {
-                        height: 30,
-                        width: 30,
-                    },
-                    strokeWidth: 1,
-                },
                 SearchIcon: {
                     strokeWidth: 3,
                     style: {
@@ -231,70 +214,6 @@ class QuickSearch extends CSSComponent {
         this.setState({'inputValue': inputValue});
     }
 
-    getProfileResult(profile, index, highlight) {
-        let primaryText = profile.full_name;
-        if (highlight && highlight.get('full_name')) {
-            primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} />);
-        }
-        const item = {
-            index: index,
-            leftAvatar: <ProfileAvatar profile={profile} />,
-            primaryText: primaryText,
-            onTouchTap: routes.routeToProfile.bind(null, this.context.history, profile),
-            type: RESULT_TYPES.PROFILE,
-            instance: profile,
-        };
-        return this.trackTouchTap(item);
-    }
-
-    getTeamResult(team, index, highlight) {
-        let primaryText = team.display_name;
-        if (highlight && highlight.get('display_name')) {
-            primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('display_name')}} />);
-        }
-        const item = {
-            index: index,
-            leftAvatar: <IconContainer IconClass={GroupIcon} stroke="#7c7b7b" {...this.styles().ResultIconContainer}/>,
-            primaryText: primaryText,
-            onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
-            type: RESULT_TYPES.TEAM,
-            instance: team,
-        };
-        return this.trackTouchTap(item);
-    }
-
-    getLocationResult(location, index, highlight) {
-        let primaryText = location.name;
-        if (highlight && highlight.get('name')) {
-            primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('name')}} />);
-        }
-        const item = {
-            index: index,
-            leftAvatar: <IconContainer IconClass={OfficeIcon} stroke="#7c7b7b" {...this.styles().ResultIconContainer}/>,
-            primaryText: primaryText,
-            onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
-            type: RESULT_TYPES.LOCATION,
-            instance: location,
-        };
-        return this.trackTouchTap(item);
-    }
-
-    getPostResult(post, index, highlight) {
-        let primaryText = post.title;
-        if (highlight && highlight.get('title')) {
-            primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('title')}} />);
-        }
-        const item = {
-            index: index,
-            leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" {...this.styles().ResultIconContainer}/>,
-            primaryText: primaryText,
-            onTouchTap: routes.routeToPost.bind(null, this.context.history, post),
-            type: RESULT_TYPES.POST,
-            instance: post,
-        };
-        return this.trackTouchTap(item);
-    }
-
     getSearchResults() {
         const { results } = this.props;
         const querySpecificResults = results[this.state.query];
@@ -305,14 +224,15 @@ class QuickSearch extends CSSComponent {
                 if (index < maxItems) {
                     let searchResult = null;
                     if (result.profile) {
-                        searchResult = this.getProfileResult(result.profile, index, result.highlight);
+                        searchResult = itemFactory.getProfileResult(result.profile, index, result.highlight, this.context.history);
                     } else if (result.team) {
-                        searchResult = this.getTeamResult(result.team, index, result.highlight);
+                        searchResult = itemFactory.getTeamResult(result.team, index, result.highlight, this.context.history);
                     } else if (result.location) {
-                        searchResult = this.getLocationResult(result.location, index, result.highlight);
+                        searchResult = itemFactory.getLocationResult(result.location, index, result.highlight, this.context.history);
                     } else if (result.post) {
-                        searchResult = this.getPostResult(result.post, index, result.highlight);
+                        searchResult = itemFactory.getPostResult(result.post, index, result.highlight, this.context.history);
                     }
+                    searchResult = this.trackTouchTap(searchResult);
                     items.push(searchResult);
                 }
             });
@@ -323,16 +243,6 @@ class QuickSearch extends CSSComponent {
             // Results are still loading.
             // QuickSearchList does not re-render if the results we give it are null.
             return null;
-        }
-    }
-
-    getSearchTrigger() {
-        const { inputValue } = this.state;
-        return {
-            index: 0,
-            leftAvatar: <IconContainer IconClass={SearchIcon} stroke="#7c7b7b" {...this.styles().ResultIconContainer}/>,
-            primaryText: (<span>{t('Search')}&nbsp;&ldquo;<mark>{this.state.inputValue}</mark>&rdquo;</span>),
-            onTouchTap: routes.routeToSearch.bind(null, this.context.history, inputValue),
         }
     }
 
@@ -407,7 +317,7 @@ class QuickSearch extends CSSComponent {
     itemsForSection(section) {
         switch(section) {
             case SECTIONS.TRIGGER:
-                return [this.getSearchTrigger()];
+                return [itemFactory.getSearchTrigger(this.state.inputValue, 0, this.context.history)];
             case SECTIONS.RESULTS:
                 return this.getSearchResults();
             default:
