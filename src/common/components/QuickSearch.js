@@ -357,17 +357,22 @@ class QuickSearch extends CSSComponent {
     }
 
     highlightedIndexForSection(section) {
-        let itemsBeforeSection = 0;
-        for (let i = 0; i < section; i++) {
-            itemsBeforeSection += this.numberOfItemsInSection(i);
-        }
-        let highlightedIndex = this.state.highlightedIndex - itemsBeforeSection;
-        let itemsInSection = this.numberOfItemsInSection(section);
+        const itemsBeforeSection = this.numberOfItemsBeforeSection(section);
+        const highlightedIndex = this.state.highlightedIndex - itemsBeforeSection;
+        const itemsInSection = this.numberOfItemsInSection(section);
         if (highlightedIndex < 0 || highlightedIndex > (itemsInSection - 1)) {
             return null;
         } else {
             return highlightedIndex;
         }
+    }
+
+    numberOfItemsBeforeSection(section) {
+        let numberOfItemsInPreviousSections = 0;
+        for (let i = 0; i < section; i++) {
+            numberOfItemsInPreviousSections += this.numberOfItemsInSection(i);
+        }
+        return numberOfItemsInPreviousSections;
     }
 
     numberOfItemsInSection(section) {
@@ -382,10 +387,7 @@ class QuickSearch extends CSSComponent {
                 let numberOfResults = 0;
                 const querySpecificResults = results[this.state.query];
                 if (querySpecificResults) {
-                    let numberOfItemsInPreviousSections = 0;
-                    for (let i = 0; i < section; i++) {
-                        numberOfItemsInPreviousSections += this.numberOfItemsInSection(i);
-                    }
+                    const numberOfItemsInPreviousSections = this.numberOfItemsBeforeSection(section);
                     const maxNumberOfResultsVisible = Math.floor(maxListHeight / RESULT_HEIGHT);
                     const maxNumberOfResults = maxNumberOfResultsVisible - numberOfItemsInPreviousSections;
                     numberOfResults = Math.min(maxNumberOfResults, querySpecificResults.length);
