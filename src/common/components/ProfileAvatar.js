@@ -14,7 +14,7 @@ class ProfileAvatar extends StyleableComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return (nextProps.profile !== this.props.profile);
+        return (nextProps.profile.id !== this.props.profile.id);
     }
 
     _getInitials() {
