@@ -160,7 +160,11 @@ class PostEditor extends CSSComponent {
                     fontSize: 14,
                 },
                 header: {
-                    margin: '10px',
+                    backgroundColor: canvasColor,
+                    padding: '10px',
+                    position: 'fixed',
+                    width: '100%',
+                    zIndex: '10',
                 },
                 headerActionButtonLabel: {
                     color: '#8598FF',
@@ -192,12 +196,13 @@ class PostEditor extends CSSComponent {
                     labelStyle: {
                         color: tintColor,
                         fontSize: 15,
+                        padding: 0,
                         textTransform: 'none',
                     },
                 },
                 Post: {
                     style: {
-                        paddingTop: 0,
+                        paddingTop: '60px',
                     },
                 },
                 PublishButton: {
