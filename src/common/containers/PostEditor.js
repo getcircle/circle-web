@@ -1,10 +1,10 @@
-import { FlatButton } from 'material-ui';
+import { Dialog, FlatButton } from 'material-ui';
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
-import { canvasColor, tintColor } from '../constants/styles';
+import { canvasColor, tintColor, fontColors } from '../constants/styles';
 import CurrentTheme from '../utils/ThemeManager';
 import { deleteFile, uploadFile, clearFileUploads } from '../actions/files';
 import { getPostStateURLString } from '../utils/post';
@@ -109,6 +109,8 @@ class PostEditor extends CSSComponent {
     }
 
     state = {
+        confirmDiscardChanges: false,
+        discardChanges: false,
         muiTheme: CurrentTheme,
     }
 
@@ -153,6 +155,10 @@ class PostEditor extends CSSComponent {
                         overflowX: 'hidden',
                     },
                 },
+                discardChangesDialog: {
+                    ...fontColors.dark,
+                    fontSize: 14,
+                },
                 header: {
                     margin: '10px',
                 },
@@ -176,6 +182,11 @@ class PostEditor extends CSSComponent {
                     fontSize: 14,
                     marginRight: '15px',
                     width: '90px',
+                },
+                ModalPrimaryActionButton: {
+                    labelStyle: {
+                        color: 'rgba(255, 0, 0, 0.7)',
+                    },
                 },
                 MyKnowledgeButton: {
                     labelStyle: {
@@ -318,7 +329,19 @@ class PostEditor extends CSSComponent {
     }
 
     goToMyKnowledge() {
-        const postState = this.isDraftPost() ? PostStateURLString.DRAFT : PostStateURLString.LISTED;
+        const isDraftPost = this.isDraftPost();
+        const postState = isDraftPost ? PostStateURLString.DRAFT : PostStateURLString.LISTED;
+        if (!isDraftPost && this.hasChanges() && !this.state.discardChanges) {
+            // Not a draft post, has changes, and user hasn't confirmed if we should discard changes
+            this.setState({
+                confirmDiscardChanges: true,
+            });
+            return;
+        }
+
+        this.setState({
+            discardChanges: false,
+        });
         routeToPosts(this.context.history, postState);
     }
 
@@ -328,6 +351,22 @@ class PostEditor extends CSSComponent {
         } = this.props;
 
         if (post === null || (post && (!post.state || post.state === PostStateV1.DRAFT))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    hasChanges() {
+        const {
+            post,
+        } = this.props;
+
+        if (!post) {
+            return false;
+        }
+
+        if (post.title !== this.refs.post.getCurrentTitle() || post.content !== this.refs.post.getCurrentBody()) {
             return true;
         }
 
@@ -377,6 +416,24 @@ class PostEditor extends CSSComponent {
         }
     }
 
+    onModalDiscardChangesTapped() {
+        this.setState({
+            discardChanges: true,
+        }, () => {
+            this.goToMyKnowledge();
+        });
+    }
+
+    onModalCancelTapped() {
+        this.resetDiscardChangesState();
+    }
+
+    resetDiscardChangesState() {
+        this.setState({
+            confirmDiscardChanges: false,
+        });
+    }
+
     renderPublishButton() {
         if (this.canEdit()) {
             return (
@@ -407,6 +464,37 @@ class PostEditor extends CSSComponent {
                     </div>
                     {this.renderPublishButton()}
                 </div>
+            );
+        }
+    }
+
+    renderDiscardChangesConfirmationDialog() {
+        if (this.state.confirmDiscardChanges) {
+            const dialogActions = [
+                (<FlatButton
+                    key="cancel"
+                    label={t('Cancel')}
+                    onTouchTap={::this.onModalCancelTapped}
+                    secondary={true}
+                />),
+                (<FlatButton
+                    key="discard"
+                    label={t('Discard Changes')}
+                    onTouchTap={::this.onModalDiscardChangesTapped}
+                    primary={true}
+                    {...this.styles().ModalPrimaryActionButton}
+                />)
+            ];
+            return (
+                <Dialog
+                    actions={dialogActions}
+                    bodyStyle={this.styles().discardChangesDialog}
+                    defaultOpen={true}
+                    open={true}
+                    title={t('Discard Changes?')}
+                >
+                    {t('Unpublished changes will be lost.')}
+                </Dialog>
             );
         }
     }
@@ -451,6 +539,7 @@ class PostEditor extends CSSComponent {
                     {this.renderHeaderActionsContainer()}
                 </header>
                 {this.renderPost()}
+                {this.renderDiscardChangesConfirmationDialog()}
             </Container>
         );
     }
