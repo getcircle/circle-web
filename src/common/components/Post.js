@@ -1,5 +1,4 @@
-import { CircularProgress, Dialog, FlatButton, IconButton, List, ListItem } from 'material-ui';
-import Dropzone from 'react-dropzone';
+import { Dialog, FlatButton, IconButton, List, ListItem } from 'material-ui';
 import flow from 'lodash/function/flow';
 import Immutable from 'immutable';
 import Menu from 'material-ui/lib/menus/menu';
@@ -139,13 +138,6 @@ class Post extends CSSComponent {
                     color: tintColor,
                     fontSize: '14px',
                 },
-                attachmentListItemDisabledTextStyle: {
-                    ...fontColors.light,
-                    fontSize: '14px',
-                    paddingTop: 5,
-                    paddingLeft: 40,
-                    paddingBottom: 5,
-                },
                 attachmentsContainer: {
                     backgroundColor: 'transparent',
                     paddingTop: '10px',
@@ -217,9 +209,11 @@ class Post extends CSSComponent {
                     ...fontColors.dark,
                     fontSize: 14,
                 },
-                dropzoneTriggerContainer: {
-                    height: 250,
-                    paddingTop: 20,
+                hintsContainer: {
+                    ...fontColors.light,
+                    fontSize: 13,
+                    paddingTop: 10,
+                    userSelect: 'none',
                     width: '100%',
                 },
                 Dropzone: {
@@ -626,15 +620,6 @@ class Post extends CSSComponent {
         return value.replace(/<\/?[^>]+>/gi, ' ').replace(/\s+|&nbsp;/gi, ' ').trim();
     }
 
-    onDrop(files) {
-        if (files.length > 0) {
-            let namesOfNewFiles = files.map(file => file.name);
-            // Filter out deleted files that we're trying to re-upload
-            let namesOfDeletedFiles = this.state.namesOfDeletedFiles.filter(nameOfDeletedFile => namesOfNewFiles.indexOf(nameOfDeletedFile) < 0);
-            this.setState({'files': this.getUpdatedFilesMap(files, namesOfDeletedFiles)}, () => this.triggerUploads(files));
-        }
-    }
-
     onOwnerSelected(newOwnerProfileItem) {
         this.setState({
             owner: newOwnerProfileItem.instance,
@@ -905,18 +890,7 @@ class Post extends CSSComponent {
                         key={this.getFileId(file.name)}
                         leftIcon={<IconContainer IconClass={AttachmentIcon} stroke="#7c7b7b" {...this.styles().IconContainer} />}
                         primaryText={<span style={{...this.styles().attachmentListItemTextStyle}}>{file.name}</span>}
-                        rightIconButton={this.renderDeleteFileButton(file)}
                         target="_blank"
-                        {...this.styles().AttachementListItem}
-                    />
-                );
-            } else {
-                elements.push(
-                    <ListItem
-                        disabled={true}
-                        key={file.name}
-                        leftIcon={<CircularProgress mode="indeterminate" size={0.4} {...this.styles().CircularProgress} />}
-                        primaryText={<span style={{...this.styles().attachmentListItemDisabledTextStyle}}>{file.name}</span>}
                         {...this.styles().AttachementListItem}
                     />
                 );
@@ -930,29 +904,11 @@ class Post extends CSSComponent {
         );
     }
 
-    renderFilesContainer() {
-        const { post } = this.props;
-
-        // Do not show file upload until a post has been saved.
-        if (!post) {
-            return;
-        }
-
+    renderHintContainer() {
         return (
-            <span>
-                {this.renderFiles(this.state.files)}
-                <Dropzone
-                    className="row"
-                    multiple={true}
-                    onDrop={this.onDrop.bind(this)}
-                    ref="dropzone"
-                    {...this.styles().Dropzone}
-                >
-                    <div className="row dropzone-trigger" style={this.styles().dropzoneTriggerContainer}>
-                        <div className="row col-xs start-xs">{t('Add attachments by selecting files or dropping them here')}</div>
-                    </div>
-                </Dropzone>
-            </span>
+            <div className="row" style={this.styles().hintsContainer}>
+                {t('Hint: You can also drag and drop to add attachments inline.')}
+            </div>
         );
     }
 
@@ -1057,7 +1013,7 @@ class Post extends CSSComponent {
                     {...this.styles().AutogrowTitleTextarea}
                 />
                 {this.renderEditor()}
-                {this.renderFilesContainer()}
+                {this.renderHintContainer()}
                 {this.renderChangeOwnerModal()}
             </span>
         );
