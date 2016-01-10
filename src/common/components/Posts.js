@@ -72,6 +72,10 @@ class Posts extends CSSComponent {
                     borderBottom: '1px solid rgba(0, 0, 0, .1)',
                     padding: 30,
                 },
+                deleteDialog: {
+                    ...fontColors.dark,
+                    fontSize: 14,
+                },
                 emptyStateMessageContainer: {
                     fontSize: '1.6rem',
                     height: '100%',
@@ -101,7 +105,7 @@ class Posts extends CSSComponent {
                         top: 0,
                         width: 24,
                     },
-                    stroke: 'rgba(0, 0, 0, 0.4)',
+                    stroke: 'rgba(0, 0, 0, 0.3)',
                     strokeWidth: 1,
                 },
                 infiniteListContainer: {
@@ -263,6 +267,7 @@ class Posts extends CSSComponent {
             return (
                 <Dialog
                     actions={dialogActions}
+                    bodyStyle={this.styles().deleteDialog}
                     defaultOpen={true}
                     open={true}
                     title={t('Delete Post?')}
