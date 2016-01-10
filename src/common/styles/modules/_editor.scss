@@ -117,6 +117,10 @@ trix-editor:empty:not(:focus)::before {
     min-height: 100px;
     outline: none;
     padding: 16px 0;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
 .postContent a, .luno-editor a {
