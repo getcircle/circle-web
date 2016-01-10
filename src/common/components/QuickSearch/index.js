@@ -188,6 +188,21 @@ class QuickSearch extends CSSComponent {
                     },
                     ...iconColors.medium,
                 },
+                result: {
+                    IconContainer: {
+                        style: {
+                            height: 40,
+                            width: 40,
+                            border: '',
+                        },
+                        iconStyle: {
+                            height: 30,
+                            width: 30,
+                        },
+                        strokeWidth: 1,
+                        stroke: '#7c7b7b',
+                    }
+                },
             },
             'largerDevice': {
                 inputContainer: {
@@ -224,13 +239,13 @@ class QuickSearch extends CSSComponent {
                 if (index < maxItems) {
                     let searchResult = null;
                     if (result.profile) {
-                        searchResult = itemFactory.getProfileResult(result.profile, index, result.highlight, this.context.history);
+                        searchResult = itemFactory.getProfileResult(result.profile, index, result.highlight, this.context.history, this.styles().result);
                     } else if (result.team) {
-                        searchResult = itemFactory.getTeamResult(result.team, index, result.highlight, this.context.history);
+                        searchResult = itemFactory.getTeamResult(result.team, index, result.highlight, this.context.history, this.styles().result);
                     } else if (result.location) {
-                        searchResult = itemFactory.getLocationResult(result.location, index, result.highlight, this.context.history);
+                        searchResult = itemFactory.getLocationResult(result.location, index, result.highlight, this.context.history, this.styles().result);
                     } else if (result.post) {
-                        searchResult = itemFactory.getPostResult(result.post, index, result.highlight, this.context.history);
+                        searchResult = itemFactory.getPostResult(result.post, index, result.highlight, this.context.history, this.styles().result);
                     }
                     searchResult = this.trackTouchTap(searchResult);
                     items.push(searchResult);
@@ -317,7 +332,7 @@ class QuickSearch extends CSSComponent {
     itemsForSection(section) {
         switch(section) {
             case SECTIONS.TRIGGER:
-                return [itemFactory.getSearchTrigger(this.state.inputValue, 0, this.context.history)];
+                return [itemFactory.getSearchTrigger(this.state.inputValue, 0, this.context.history, this.styles().result)];
             case SECTIONS.RESULTS:
                 return this.getSearchResults();
             default:
