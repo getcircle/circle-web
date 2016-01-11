@@ -12,7 +12,6 @@ const initialState = Immutable.fromJS({
 });
 
 export default function post(state = initialState, action) {
-    console.log(action.type);
     switch(action.type) {
     case types.UPDATE_POST:
     case types.CREATE_POST:

@@ -227,7 +227,7 @@ class PostEditor extends CSSComponent {
     }
 
     customizeTheme() {
-        let customTheme = JSON.parse(JSON.stringify(CurrentTheme));
+        let customTheme = Object.assign({}, CurrentTheme);
         customTheme.flatButton.color = canvasColor;
         this.setState({muiTheme: customTheme});
     }
