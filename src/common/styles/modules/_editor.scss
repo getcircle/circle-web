@@ -1,5 +1,6 @@
 $fontSize: 18px;
 $marginTop: 0px;
+$canvasColor: rgb(247, 249, 250);
 $tintColor: rgb(122, 142, 255);
 $lightTextColor: rgba(0, 0, 0, 0.5);
 $toolbarHighlightColor: rgba($tintColor, 0.2);
@@ -21,9 +22,20 @@ trix-toolbar.sticky {
     z-index: 10;
 }
 
-.luno-editor.sticky-toolbar {
+.luno-editor.sticky-toolbar, .luno-editor-container.sticky-toolbar .hints-container {
     position: relative;
     top: 35px;
+}
+
+.luno-editor-container .hints-container {
+    color: $lightTextColor;
+    font-size: 13px;
+    padding-top: 10px;
+    width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 trix-toolbar .button_group button.active, trix-toolbar .button_group input[type=button].active {
@@ -395,7 +407,7 @@ trix-editor img {
 }
 
 .luno-editor-container {
-    background-color: #fff;
+    backgroundColor: $canvasColor;
     min-height: 300px;
     padding: 0;
     position: relative;

@@ -248,7 +248,7 @@ class Editor extends CSSComponent {
     handleScroll(event) {
         const toolbar = this.getToolbar();
         const editorElement = this.getEditorElement();
-        if (!toolbar && !editorElement) {
+        if (!toolbar || !this.refs.lunoEditorContainer || !editorElement) {
             return;
         }
 
@@ -257,12 +257,14 @@ class Editor extends CSSComponent {
             if (!toolbar.classList.contains('sticky')) {
                 toolbar.classList.add('sticky');
                 editorElement.classList.add('sticky-toolbar');
+                this.refs.lunoEditorContainer.classList.add('sticky-toolbar');
                 toolbar.style.width = window.getComputedStyle(this.getEditorElement()).width;
             }
         } else if (toolbar.classList.contains('sticky')) {
             toolbar.classList.remove('sticky');
             toolbar.style.width = '100%';
             editorElement.classList.remove('sticky-toolbar');
+            this.refs.lunoEditorContainer.classList.remove('sticky-toolbar');
         }
     }
 
@@ -282,7 +284,7 @@ class Editor extends CSSComponent {
 
         const className = 'luno-editor-container ' + (this.state.dragStart ? 'dropzone' : '');
         return (
-            <div className={className}>
+            <div className={className} ref="lunoEditorContainer">
                 <input
                     id={this.inputId}
                     onChange={::this.handleChange}
@@ -305,6 +307,9 @@ class Editor extends CSSComponent {
                     ref="filePicker"
                     type="file"
                 />
+                <div className="row hints-container" style={this.styles().hintsContainer}>
+                    {t('Hint: You can also drag and drop to add attachments inline.')}
+                </div>
             </div>
         );
     }

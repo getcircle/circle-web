@@ -209,30 +209,6 @@ class Post extends CSSComponent {
                     ...fontColors.dark,
                     fontSize: 14,
                 },
-                hintsContainer: {
-                    ...fontColors.light,
-                    fontSize: 13,
-                    paddingTop: 10,
-                    userSelect: 'none',
-                    width: '100%',
-                },
-                Dropzone: {
-                    style: {
-                        borderTop: '1px solid rgba(0, 0, 0, 0.1)',
-                        boxShadow: 'none',
-                        fontSize: 14,
-                        height: '50px',
-                        padding: 0,
-                        outline: 'none',
-                        width: '100%',
-                        ...fontColors.light,
-                    },
-                    activeStyle: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                        border: '1px solid rgba(0, 0, 0, 0.1)',
-                        boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
-                    },
-                },
                 EditButton: {
                     labelStyle: {
                         color: tintColor,
@@ -904,14 +880,6 @@ class Post extends CSSComponent {
         );
     }
 
-    renderHintContainer() {
-        return (
-            <div className="row" style={this.styles().hintsContainer}>
-                {t('Hint: You can also drag and drop to add attachments inline.')}
-            </div>
-        );
-    }
-
     renderChangeOwnerModal() {
         if (this.shouldAllowChangingOwner()) {
             return (
@@ -1013,7 +981,6 @@ class Post extends CSSComponent {
                     {...this.styles().AutogrowTitleTextarea}
                 />
                 {this.renderEditor()}
-                {this.renderHintContainer()}
                 {this.renderChangeOwnerModal()}
             </span>
         );
