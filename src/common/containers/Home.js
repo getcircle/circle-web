@@ -152,7 +152,11 @@ class Home extends CSSComponent {
         const { organization } = this.context.auth;
         const imageUrl = organization.image_url;
         if (imageUrl) {
-            return <img className="row" src={imageUrl} style={this.styles().organizationLogo} />;
+            return (
+                <div style={this.styles().organizationLogoPlaceholder}>
+                    <img className="row" src={imageUrl} style={this.styles().organizationLogo} />
+                </div>
+            );
         } else {
             return <div style={this.styles().organizationLogoPlaceholder} />;
         }
