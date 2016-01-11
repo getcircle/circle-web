@@ -145,7 +145,7 @@ class Editor extends CSSComponent {
         } = props;
 
         if (Object.keys(this.attachmentObjects).length && (uploadProgress.size || uploadedFiles.size)) {
-            let attachment, fileUrl;
+            let attachment, file;
             const attachmentObjects = this.attachmentObjects;
 
             for (let fileName in attachmentObjects) {
@@ -158,10 +158,11 @@ class Editor extends CSSComponent {
 
                 // update URL when upload is completed
                 if (uploadedFiles.get(fileName)) {
-                    fileUrl = uploadedFiles.get(fileName).source_url;
+                    file = uploadedFiles.get(fileName);
                     attachment.setAttributes({
-                        url: fileUrl,
-                        href: fileUrl,
+                        url: file.source_url,
+                        href: file.source_url,
+                        fileId: file.id,
                     });
 
                     delete this.attachmentObjects[fileName];
