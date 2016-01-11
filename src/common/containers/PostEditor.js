@@ -346,9 +346,6 @@ class PostEditor extends CSSComponent {
             return;
         }
 
-        this.setState({
-            discardChanges: false,
-        });
         routeToPosts(this.context.history, postState);
     }
 

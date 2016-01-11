@@ -100,14 +100,15 @@ class Post extends CSSComponent {
             fetchPost(nextProps.dispatch, nextProps.params);
             this.configure(nextProps);
         }
+    }
 
+    shouldComponentUpdate(nextProps, nextState) {
         if (!nextProps.post && nextProps.errorDetails.size === 0 && this.state.deleteRequested) {
-            this.setState({
-                deleteRequested: false,
-            }, () => {
-                routeToPosts(this.context.history, PostStateURLString.LISTED);
-            });
+            routeToPosts(this.context.history, PostStateURLString.LISTED);
+            return false;
         }
+
+        return super.shouldComponentUpdate(nextProps, nextState);
     }
 
     classes() {
