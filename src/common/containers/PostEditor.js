@@ -109,9 +109,9 @@ class PostEditor extends CSSComponent {
     }
 
     state = {
-        confirmDiscardChanges: false,
         discardChanges: false,
         muiTheme: CurrentTheme,
+        showDiscardChangesModal: false,
         titleShownInHeader: false,
     }
 
@@ -341,7 +341,7 @@ class PostEditor extends CSSComponent {
         if (!isDraftPost && this.hasChanges() && !this.state.discardChanges) {
             // Not a draft post, has changes, and user hasn't confirmed if we should discard changes
             this.setState({
-                confirmDiscardChanges: true,
+                showDiscardChangesModal: true,
             });
             return;
         }
@@ -432,7 +432,7 @@ class PostEditor extends CSSComponent {
     }
 
     onModalCancelTapped() {
-        this.resetDiscardChangesState();
+        this.hideDiscardChangesModal();
     }
 
     handleScroll(event) {
@@ -467,9 +467,9 @@ class PostEditor extends CSSComponent {
         }
     }
 
-    resetDiscardChangesState() {
+    hideDiscardChangesModal() {
         this.setState({
-            confirmDiscardChanges: false,
+            showDiscardChangesModal: false,
         });
     }
 
@@ -511,7 +511,7 @@ class PostEditor extends CSSComponent {
     }
 
     renderDiscardChangesConfirmationDialog() {
-        if (this.state.confirmDiscardChanges) {
+        if (this.state.showDiscardChangesModal) {
             const dialogActions = [
                 (<FlatButton
                     key="cancel"

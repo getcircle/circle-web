@@ -78,15 +78,15 @@ class Post extends CSSComponent {
 
     state = {
         body: '',
-        confirmDelete: false,
         derivedTitle: false,
         editing: false,
         files: Immutable.OrderedMap(),
-        owner: null,
-        title: '',
-        uploadedFiles: Immutable.Map(),
         namesOfDeletedFiles: [],
         openMoreActionsMenu: false,
+        owner: null,
+        title: '',
+        showConfirmDeleteModal: false,
+        uploadedFiles: Immutable.Map(),
     }
 
     componentWillMount() {
@@ -460,12 +460,12 @@ class Post extends CSSComponent {
 
     onDeleteButtonTapped(post) {
         this.setState({
-            confirmDelete: true,
+            showConfirmDeleteModal: true,
         });
     }
 
     onModalCancelTapped() {
-        this.resetDeleteState();
+        this.hideConfirmDeleteModal();
     }
 
     onModalDeleteTapped() {
@@ -482,12 +482,12 @@ class Post extends CSSComponent {
             );
         }
 
-        this.resetDeleteState();
+        this.hideConfirmDeleteModal();
     }
 
-    resetDeleteState() {
+    hideConfirmDeleteModal() {
         this.setState({
-            confirmDelete: false,
+            showConfirmDeleteModal: false,
         });
     }
 
@@ -641,7 +641,7 @@ class Post extends CSSComponent {
     // Render Methods
 
     renderDeleteModal() {
-        if (this.state.confirmDelete) {
+        if (this.state.showConfirmDeleteModal) {
             const dialogActions = [
                 (<FlatButton
                     key="cancel"

@@ -45,10 +45,10 @@ class Posts extends CSSComponent {
     }
 
     state = {
-        confirmDelete: false,
         loading: false,
         muiTheme: CurrentTheme,
         postToBeDeleted: null,
+        showConfirmDeleteModal: false,
     }
 
     getChildContext() {
@@ -207,13 +207,13 @@ class Posts extends CSSComponent {
 
     onDeleteButtonTapped(post) {
         this.setState({
-            confirmDelete: true,
+            showConfirmDeleteModal: true,
             postToBeDeleted: post,
         });
     }
 
     onModalCancelTapped() {
-        this.resetDeleteState();
+        this.hideConfirmDeleteModal();
     }
 
     onModalDeleteTapped() {
@@ -225,7 +225,7 @@ class Posts extends CSSComponent {
             );
         }
 
-        this.resetDeleteState();
+        this.hideConfirmDeleteModal();
     }
 
     handleInfiniteLoad() {
@@ -238,9 +238,9 @@ class Posts extends CSSComponent {
         }
     }
 
-    resetDeleteState() {
+    hideConfirmDeleteModal() {
         this.setState({
-            confirmDelete: false,
+            showConfirmDeleteModal: false,
             postToBeDeleted: null,
         });
     }
@@ -248,7 +248,7 @@ class Posts extends CSSComponent {
     // Render Methods
 
     renderDeleteModal() {
-        if (this.state.confirmDelete) {
+        if (this.state.showConfirmDeleteModal) {
             const dialogActions = [
                 (<FlatButton
                     key="cancel"
