@@ -20,6 +20,7 @@ import tracker from '../utils/tracker';
 import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
 
+import ArrowBackIcon from '../components/ArrowBackIcon';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
@@ -152,6 +153,14 @@ class PostEditor extends CSSComponent {
     classes() {
         return {
             default: {
+                ArrowBackIcon: {
+                    stroke: tintColor,
+                    style: {
+                        marginRight: '4px',
+                        position: 'relative',
+                        top: '4px',
+                    },
+                },
                 Container: {
                     style: {
                         overflowX: 'hidden',
@@ -493,10 +502,13 @@ class PostEditor extends CSSComponent {
                     <div>
                         <FlatButton
                             key="my-knowledge-button"
-                            label={`< ${t('My Knowledge')}`}
+                            label={`${t('My Knowledge')}`}
+                            labelPosition="after"
                             onTouchTap={::this.goToMyKnowledge}
                             {...this.styles().MyKnowledgeButton}
-                        />
+                        >
+                            <ArrowBackIcon {...this.styles().ArrowBackIcon} />
+                        </FlatButton>
                     </div>
                     <div className="row middle-xs center-xs post-editor-header-title" ref="postEditorHeaderTitle">
                         {this.refs.post ? this.refs.post.getCurrentTitle() : ''}
