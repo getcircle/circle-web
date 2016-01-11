@@ -247,7 +247,8 @@ class Editor extends CSSComponent {
 
     handleScroll(event) {
         const toolbar = this.getToolbar();
-        if (!toolbar) {
+        const editorElement = this.getEditorElement();
+        if (!toolbar && !editorElement) {
             return;
         }
 
@@ -255,11 +256,13 @@ class Editor extends CSSComponent {
         if (elementToCompare.getBoundingClientRect().top <= this.headerOffsetHeight) {
             if (!toolbar.classList.contains('sticky')) {
                 toolbar.classList.add('sticky');
+                editorElement.classList.add('sticky-toolbar');
                 toolbar.style.width = window.getComputedStyle(this.getEditorElement()).width;
             }
         } else if (toolbar.classList.contains('sticky')) {
             toolbar.classList.remove('sticky');
             toolbar.style.width = '100%';
+            editorElement.classList.remove('sticky-toolbar');
         }
     }
 
