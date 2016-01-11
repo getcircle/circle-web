@@ -5,6 +5,22 @@ $tintColor: rgb(122, 142, 255);
 $lightTextColor: rgba(0, 0, 0, 0.5);
 $toolbarHighlightColor: rgba($tintColor, 0.2);
 
+.post-editor-header-title {
+    color: rgba(0,0,0,0.8);
+    font-size: 26px;
+    font-weight: 400;
+    height: 40px;
+    letter-spacing: 0.4px;
+    opacity: 0;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-transition: opacity 0.2s;
+    -moz-transition: opacity 0.2s;
+    -o-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+}
+
 /* Trix Toolbar */
 
 trix-toolbar {

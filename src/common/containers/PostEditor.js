@@ -112,10 +112,12 @@ class PostEditor extends CSSComponent {
         confirmDiscardChanges: false,
         discardChanges: false,
         muiTheme: CurrentTheme,
+        titleShownInHeader: false,
     }
 
     componentWillMount() {
         this.configure(this.props);
+        document.addEventListener('scroll', (event) => this.handleScroll(event));
     }
 
     componentDidMount() {
@@ -433,6 +435,38 @@ class PostEditor extends CSSComponent {
         this.resetDiscardChangesState();
     }
 
+    handleScroll(event) {
+        if (window.scrollY >= 170) {
+            this.showPostTitle();
+        } else {
+            this.hidePostTitle();
+        }
+    }
+
+    showPostTitle() {
+        if (this.refs.postEditorHeaderTitle) {
+            if (this.refs.postEditorHeaderTitle.style.opacity === '0' ||
+                this.refs.postEditorHeaderTitle.style.opacity === ''
+            ) {
+                this.setState({
+                    titleShownInHeader: true,
+                });
+            }
+            this.refs.postEditorHeaderTitle.style.opacity = 1.0;
+        }
+    }
+
+    hidePostTitle() {
+        if (this.refs.postEditorHeaderTitle) {
+            if (this.refs.postEditorHeaderTitle.style.opacity === '1') {
+                this.setState({
+                    titleShownInHeader: false,
+                });
+            }
+            this.refs.postEditorHeaderTitle.style.opacity = 0.0;
+        }
+    }
+
     resetDiscardChangesState() {
         this.setState({
             confirmDiscardChanges: false,
@@ -466,6 +500,9 @@ class PostEditor extends CSSComponent {
                             onTouchTap={::this.goToMyKnowledge}
                             {...this.styles().MyKnowledgeButton}
                         />
+                    </div>
+                    <div className="row middle-xs center-xs post-editor-header-title" ref="postEditorHeaderTitle">
+                        {this.refs.post ? this.refs.post.getCurrentTitle() : ''}
                     </div>
                     {this.renderPublishButton()}
                 </div>
