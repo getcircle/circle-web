@@ -306,12 +306,18 @@ class Post extends CSSComponent {
         }
     }
 
-    triggerUploads(newFiles) {
-        const { onFileUploadCallback } = this.props;
-        if (onFileUploadCallback) {
-            newFiles.forEach((file) => {
-                onFileUploadCallback(file);
-            });
+    deleteFile(fileId) {
+       const { onFileDeleteCallback, post } = this.props;
+        if (post && post.state === PostStateV1.LISTED) {
+            // TODO: Ideally, we would track the file being deleted and then
+            // actually delete on Publish and no action if user discards changes
+            // For now, take no action. The impact would be zombie remote files
+            // but we can run some cleanup on the server for it.
+            return;
+        }
+
+        if (onFileDeleteCallback) {
+            onFileDeleteCallback(fileId);
         }
     }
 
@@ -663,7 +669,7 @@ class Post extends CSSComponent {
     renderEditor() {
         if (__CLIENT__) {
             const {
-                onFileDeleteCallback,
+                onFileUploadCallback,
                 uploadProgress,
                 uploadedFiles,
             } = this.props;
@@ -678,10 +684,8 @@ class Post extends CSSComponent {
                     onChange={(event, plainTextValue) => {
                         this.handleBodyChange(event, event.target.value);
                     }}
-                    onFileDeleteCallback={onFileDeleteCallback}
-                    onUploadCallback={(file) => {
-                        this.triggerUploads([file]);
-                    }}
+                    onFileDeleteCallback={(fileId) => this.deleteFile(fileId)}
+                    onUploadCallback={onFileUploadCallback}
                     placeholder={t('Contribute Knowledge')}
                     ref="editor"
                     uploadProgress={uploadProgress}
