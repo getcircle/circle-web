@@ -247,7 +247,7 @@ class PostEditor extends CSSComponent {
         }
     }
 
-    onSavePost(title, body, fileIds, postState, postOwner) {
+    onSavePost(title, body, postState, postOwner) {
         if (title.trim() === '' || body.trim() === '') {
             return;
         }
@@ -272,7 +272,6 @@ class PostEditor extends CSSComponent {
             let postV1 = new PostV1({
                 /*eslint-disable camelcase*/
                 content: trimmedBodyValue,
-                file_ids: fileIds,
                 title: trimmedTitleValue,
                 /*eslint-enable camelcase*/
             });
@@ -285,7 +284,6 @@ class PostEditor extends CSSComponent {
             let updates = {
                 /*eslint-disable camelcase*/
                 content: trimmedBodyValue,
-                file_ids: fileIds,
                 title: trimmedTitleValue,
                 /*eslint-enable camelcase*/
             };
@@ -336,7 +334,6 @@ class PostEditor extends CSSComponent {
         this.onSavePost(
             this.refs.post.getCurrentTitle(),
             this.refs.post.getCurrentBody(),
-            this.refs.post.getCurrentFileIds(),
             PostStateV1.LISTED,
             this.refs.post.getCurrentOwner(),
         );

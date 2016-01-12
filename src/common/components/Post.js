@@ -1,4 +1,4 @@
-import { Dialog, FlatButton, IconButton, List, ListItem } from 'material-ui';
+import { Dialog, FlatButton, IconButton } from 'material-ui';
 import flow from 'lodash/function/flow';
 import Immutable from 'immutable';
 import Menu from 'material-ui/lib/menus/menu';
@@ -25,14 +25,12 @@ import tracker from '../utils/tracker';
 import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
 
-import AttachmentIcon from './AttachmentIcon';
 import AutogrowTextarea from './AutogrowTextarea';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
-import IconContainer from './IconContainer';
 import InternalPropTypes from './InternalPropTypes';
 import MoreHorizontalIcon from './MoreHorizontalIcon';
 import ProfileAvatar from './ProfileAvatar';
@@ -79,13 +77,10 @@ class Post extends CSSComponent {
         body: '',
         derivedTitle: false,
         editing: false,
-        files: Immutable.OrderedMap(),
-        namesOfDeletedFiles: [],
         openMoreActionsMenu: false,
         owner: null,
         title: '',
         showConfirmDeleteModal: false,
-        uploadedFiles: Immutable.Map(),
     }
 
     componentWillMount() {
@@ -119,31 +114,6 @@ class Post extends CSSComponent {
     classes() {
         return {
             default: {
-                AttachementListItem: {
-                    innerDivStyle: {
-                        marginLeft: 0,
-                        paddingTop: 5,
-                        paddingLeft: 40,
-                        paddingBottom: 5,
-                    },
-                    style: {
-                        marginLeft: 0,
-                        paddingTop: 10,
-                        paddingLeft: 0,
-                        paddingBottom: 10,
-                    },
-                },
-                attachmentListItemTextStyle: {
-                    color: tintColor,
-                    fontSize: '14px',
-                },
-                attachmentsContainer: {
-                    backgroundColor: 'transparent',
-                    paddingTop: '10px',
-                    paddingBottom: '0',
-                    transition: 'all 0.3s ease-out',
-                    width: '100%',
-                },
                 authorContainer: {
                     padding: 0,
                 },
@@ -194,12 +164,6 @@ class Post extends CSSComponent {
                         paddingBottom: 16,
                     },
                 },
-                CircularProgress: {
-                    style: {
-                        top: '-20px',
-                        left: '-30px',
-                    }
-                },
                 contentContainer: {
                     marginTop: 0,
                     padding: 0,
@@ -233,37 +197,6 @@ class Post extends CSSComponent {
                         right: '-10px',
                         top: '-10px',
                     },
-                },
-                IconContainer: {
-                    rootStyle: {
-                        border: 0,
-                        left: 0,
-                        height: 24,
-                        top: 0,
-                        width: 24,
-                    },
-                    iconStyle: {
-                        height: 24,
-                        width: 24,
-                    },
-                    strokeWidth: 1,
-                },
-                inlineImageContainer: {
-                    padding: '25px 10px',
-                    width: '100%',
-                },
-                inlineImageInnerDiv: {
-                    width: '100%',
-                },
-                inlineImage: {
-                    height: 'auto',
-                    objectFit: 'cover',
-                    maxWidth: '100%',
-                },
-                inlineImageCaption: {
-                    ...fontColors.light,
-                    fontSize: 12,
-                    paddingTop: 10,
                 },
                 lastUpdatedText: {
                     ...fontColors.light,
@@ -344,39 +277,6 @@ class Post extends CSSComponent {
 
             this.setState(updatedState);
         }
-
-        // Following logic ensures we handle the files that are
-        // already attached to a post.
-        // This allows us to reuse code and also, make deleting files possible.
-        let uploadedFiles = Immutable.Map();
-        let files = this.state.files;
-        if (props.uploadedFiles) {
-            uploadedFiles = props.uploadedFiles;
-        }
-
-        // If new files are detected, save to post if its a Draft
-        if (props.uploadedFiles &&
-            this.props.uploadedFiles &&
-            !props.uploadedFiles.equals(this.props.uploadedFiles)
-        ) {
-            this.saveData(false);
-        }
-
-        if (props.post && props.post.files) {
-            uploadedFiles = uploadedFiles.asMutable();
-            props.post.files.forEach((file) => {
-                if (this.state.namesOfDeletedFiles.indexOf(file.name) < 0) {
-                    uploadedFiles.set(file.name, file);
-                }
-            });
-
-            files = this.getUpdatedFilesMap(props.post.files);
-        }
-
-        this.setState({
-            files: files,
-            uploadedFiles: uploadedFiles.asImmutable(),
-        });
     }
 
     /**
@@ -399,10 +299,10 @@ class Post extends CSSComponent {
             }
 
             this.saveTimeout = window.setTimeout(() => {
-                onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), this.getCurrentFileIds(), null, this.getCurrentOwner());
+                onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), null, this.getCurrentOwner());
             }, 500);
         } else if (explicitSave === true) {
-            onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), this.getCurrentFileIds(), null, this.getCurrentOwner());
+            onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), null, this.getCurrentOwner());
         }
     }
 
@@ -410,20 +310,9 @@ class Post extends CSSComponent {
         const { onFileUploadCallback } = this.props;
         if (onFileUploadCallback) {
             newFiles.forEach((file) => {
-                if (!this.isFileUploaded(file.name)) {
-                    onFileUploadCallback(file);
-                }
+                onFileUploadCallback(file);
             });
         }
-    }
-
-    isFileUploaded(fileName) {
-        const { uploadedFiles } = this.state;
-        if (uploadedFiles && uploadedFiles.get(fileName)) {
-            return true;
-        }
-
-        return false;
     }
 
     hideMenu() {
@@ -467,46 +356,12 @@ class Post extends CSSComponent {
 
     // Getters
 
-    getFileUrl(fileName) {
-        if (this.isFileUploaded(fileName)) {
-            const { uploadedFiles } = this.state;
-            return uploadedFiles.get(fileName).source_url;
-        }
-
-        return undefined;
-    }
-
-    getFileId(fileName) {
-        if (this.isFileUploaded(fileName)) {
-            const { uploadedFiles } = this.state;
-            return uploadedFiles.get(fileName).id;
-        }
-
-        return '';
-    }
-
     getCurrentTitle() {
         return this.state.title;
     }
 
     getCurrentBody() {
         return this.state.body;
-    }
-
-    getCurrentFileIds() {
-        const files = this.state.files.filter((file) => {
-            return this.isFileUploaded(file.name);
-        });
-
-        let fileIds = [];
-        files.forEach((file) => {
-            let fileId = this.getFileId(file.name);
-            if (fileId) {
-                fileIds.push(fileId);
-            }
-        });
-
-        return fileIds;
     }
 
     getCurrentOwner() {
@@ -581,23 +436,6 @@ class Post extends CSSComponent {
 
     getSuggestImprovementsLink(post) {
         return mailToPostFeedback(post, this.context.auth.profile);
-    }
-
-    getUpdatedFilesMap(files, namesOfDeletedFiles = this.state.namesOfDeletedFiles) {
-        const existingFiles = this.state.files;
-        let newFilesMap = Immutable.OrderedMap();
-        if (existingFiles && existingFiles.size) {
-            newFilesMap = existingFiles;
-        }
-
-        newFilesMap = newFilesMap.withMutations((map) => {
-            files.forEach((file) => {
-                if (namesOfDeletedFiles.indexOf(file.name) < 0) {
-                    map.set(file.name, file);
-                }
-            });
-        });
-        return newFilesMap;
     }
 
     shouldAllowChangingOwner() {
@@ -761,29 +599,6 @@ class Post extends CSSComponent {
         const author = post.by_profile;
         const lastUpdatedText = ` \u2013 ${t('Last updated')} ${moment(post.changed).fromNow()}`;
 
-        let inlineImages = [];
-        let postFilesWithoutImages = [];
-        if (post.files && post.files.length) {
-            post.files.forEach(file => {
-                if (file.content_type && file.content_type.toLowerCase().indexOf('image/') !== -1) {
-                    inlineImages.push(
-                        <div className="row center-xs middle-xs" key={file.id} style={this.styles().inlineImageContainer}>
-                            <div style={this.styles().inlineImageInnerDiv}>
-                                <a href={file.source_url} target="_blank">
-                                    <img alt={t('Post attached image')} src={file.source_url} style={this.styles().inlineImage}/>
-                                </a>
-                            </div>
-                            <div style={this.styles().inlineImageCaption}>
-                                {file.name}
-                            </div>
-                        </div>
-                    );
-                } else {
-                    postFilesWithoutImages.push(file);
-                }
-            });
-        }
-
         return (
             <span>
                 {this.renderEditAndShareButton()}
@@ -807,33 +622,7 @@ class Post extends CSSComponent {
                     </div>
                 </div>
                 {this.getReadOnlyContent(post.content)}
-                {inlineImages}
-                {this.renderFiles(postFilesWithoutImages)}
             </span>
-        );
-    }
-
-    renderFiles(files) {
-        let elements = [];
-        files.forEach((file) => {
-            if (this.isFileUploaded(file.name)) {
-                elements.push(
-                    <ListItem
-                        href={this.getFileUrl(file.name)}
-                        key={this.getFileId(file.name)}
-                        leftIcon={<IconContainer IconClass={AttachmentIcon} stroke="#7c7b7b" {...this.styles().IconContainer} />}
-                        primaryText={<span style={{...this.styles().attachmentListItemTextStyle}}>{file.name}</span>}
-                        target="_blank"
-                        {...this.styles().AttachementListItem}
-                    />
-                );
-            }
-        });
-
-        return (
-            <List style={this.styles().attachmentsContainer}>
-                {elements}
-            </List>
         );
     }
 
