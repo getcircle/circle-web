@@ -10,6 +10,7 @@ class Editor extends CSSComponent {
 
     static propTypes = {
         onChange: PropTypes.func.isRequired,
+        onFileDeleteCallback: PropTypes.func.isRequired,
         onUploadCallback: PropTypes.func.isRequired,
         placeholder: PropTypes.string,
         uploadProgress: PropTypes.object,
@@ -19,6 +20,7 @@ class Editor extends CSSComponent {
 
     static defaultProps = {
         onChange: () => {},
+        onFileDeleteCallback: () => {},
         onUploadCallback: () => {},
         placeholder: '',
         uploadProgress: Immutable.Map(),
@@ -120,6 +122,7 @@ class Editor extends CSSComponent {
     attachEventListeners() {
         document.addEventListener('trix-change', (event) => this.handleChange(event));
         document.addEventListener('trix-attachment-add', (event) => this.handleFileAdd(event));
+        document.addEventListener('trix-attachment-remove', (event) => this.handleFileDelete(event));
         document.addEventListener('trix-file-accept', (event) => this.handleFileVerification(event));
         document.addEventListener('scroll', (event) => this.handleScroll(event));
     }
@@ -200,6 +203,16 @@ class Editor extends CSSComponent {
             if (file.name) {
                 this.attachmentObjects[file.name] = event.attachment;
                 onUploadCallback(file);
+            }
+        }
+    }
+
+    handleFileDelete(event) {
+        if (event && event.attachment && event.attachment.getAttribute('fileId')) {
+            const { onFileDeleteCallback } = this.props;
+            const fileId = event.attachment.getAttribute('fileId');
+            if (fileId) {
+                onFileDeleteCallback(fileId);
             }
         }
     }

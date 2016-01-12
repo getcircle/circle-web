@@ -24,6 +24,19 @@ export function deleteFile(file) {
     };
 }
 
+export function deleteFileWithId(fileId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.FILE_DELETE,
+                types.FILE_DELETE_SUCCESS,
+                types.FILE_DELETE_FAILURE,
+            ],
+            remote: (client, state, dispatch) => requests.deleteFile(client, fileId),
+        },
+    };
+}
+
 export function clearFileUploads() {
     return {
         type: types.CLEAR_FILE_UPLOADS,

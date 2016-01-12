@@ -418,31 +418,6 @@ class Post extends CSSComponent {
         }
     }
 
-    deleteFile(file) {
-        const { onFileDeleteCallback } = this.props;
-        let updatedState = {};
-        const existingFiles = this.state.files;
-        const existingUploadedFiles = this.state.uploadedFiles;
-
-        if (existingFiles.size > 0) {
-            updatedState.files = existingFiles.delete(file.name);
-        }
-
-        if (existingUploadedFiles.size > 0) {
-            updatedState.uploadedFiles = existingUploadedFiles.delete(file.name);
-        }
-
-        updatedState.namesOfDeletedFiles = this.state.namesOfDeletedFiles;
-        updatedState.namesOfDeletedFiles.push(file.name);
-
-        this.setState(updatedState, () => {
-            this.saveData(false);
-            if (onFileDeleteCallback) {
-                onFileDeleteCallback(file);
-            }
-        });
-    }
-
     isFileUploaded(fileName) {
         const { uploadedFiles } = this.state;
         if (uploadedFiles && uploadedFiles.get(fileName)) {
@@ -839,23 +814,6 @@ class Post extends CSSComponent {
         );
     }
 
-    renderDeleteFileButton(file) {
-        if (this.props.isEditable === true) {
-            return (
-                <IconButton
-                    onTouchTap={(e) => {
-                        this.deleteFile(file);
-                    }}
-                    tooltip={t('Remove attachment')}
-                    touch={true}
-                    {...this.styles().IconButton}
-                >
-                    <DeleteIcon stroke="rgba(0, 0, 0, 0.2)" />
-                </IconButton>
-            );
-        }
-    }
-
     renderFiles(files) {
         let elements = [];
         files.forEach((file) => {
@@ -917,6 +875,7 @@ class Post extends CSSComponent {
     renderEditor() {
         if (__CLIENT__) {
             const {
+                onFileDeleteCallback,
                 uploadProgress,
                 uploadedFiles,
             } = this.props;
@@ -931,6 +890,7 @@ class Post extends CSSComponent {
                     onChange={(event, plainTextValue) => {
                         this.handleBodyChange(event, event.target.value);
                     }}
+                    onFileDeleteCallback={onFileDeleteCallback}
                     onUploadCallback={(file) => {
                         this.triggerUploads([file]);
                     }}
