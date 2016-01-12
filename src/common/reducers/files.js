@@ -24,10 +24,17 @@ export default function fileUpload(state = initialState, action) {
     case types.FILE_UPLOAD_PROGRESS:
         return state.setIn(['filesProgress', action.payload.name], action.payload.progress);
 
-    case types.DELETE_LOCAL_FILE:
-        return state.deleteIn(['files', action.payload.file.name])
-                    .deleteIn(['filesProgress', action.payload.file.name])
-                    .set('loading', false);
+    case types.FILE_DELETE_SUCCESS:
+        const fileId = action.payload.fileId;
+        const file = state.get('files').find((file) => {
+            return (file && file.id && file.id === fileId);
+        });
+
+        if (file) {
+            return state.deleteIn(['files', file.name])
+                        .deleteIn(['filesProgress', file.name])
+                        .set('loading', false);
+        }
 
     case types.CLEAR_FILE_UPLOADS:
         return initialState;

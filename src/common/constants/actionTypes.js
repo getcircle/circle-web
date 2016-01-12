@@ -125,8 +125,5 @@ export const FILE_DELETE = 'FILE_DELETE';
 export const FILE_DELETE_SUCCESS = 'FILE_DELETE_SUCCESS';
 export const FILE_DELETE_FAILURE = 'FILE_DELETE_FAILURE';
 
-// Delete file
-export const DELETE_LOCAL_FILE = 'DELETE_LOCAL_FILE';
-
 // Clear file uploads
 export const CLEAR_FILE_UPLOADS = 'CLEAR_FILE_UPLOADS';

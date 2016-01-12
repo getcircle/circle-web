@@ -15,16 +15,7 @@ export function uploadFile(fileName, contentType, data) {
     };
 }
 
-export function deleteFile(file) {
-    return {
-        type: types.DELETE_LOCAL_FILE,
-        payload: {
-            file: file,
-        },
-    };
-}
-
-export function deleteFileWithId(fileId) {
+export function deleteFile(fileId) {
     return {
         [SERVICE_REQUEST]: {
             types: [
