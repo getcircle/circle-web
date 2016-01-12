@@ -1,8 +1,11 @@
+import { Dialog, FlatButton } from 'material-ui';
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
+import { canvasColor, tintColor, fontColors } from '../constants/styles';
+import CurrentTheme from '../utils/ThemeManager';
 import { deleteFile, uploadFile, clearFileUploads } from '../actions/files';
 import { getPostStateURLString } from '../utils/post';
 import logger from '../utils/logger';
@@ -17,12 +20,12 @@ import tracker from '../utils/tracker';
 import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
 
+import ArrowBackIcon from '../components/ArrowBackIcon';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
 import Post from '../components/Post';
-import Header from '../components/Header';
 import RoundedButton from '../components/RoundedButton';
 
 const { PostV1, PostStateV1 } = services.post.containers;
@@ -88,6 +91,12 @@ class PostEditor extends CSSComponent {
         uploadingFiles: PropTypes.bool,
     }
 
+    static defaultProps = {
+        shouldAutoSave: true,
+        post: null,
+        uploadingFiles: false,
+    }
+
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
         history: PropTypes.shape({
@@ -96,17 +105,29 @@ class PostEditor extends CSSComponent {
     }
 
     static childContextTypes = {
+        muiTheme: PropTypes.object,
         showCTAsInHeader: PropTypes.bool,
     }
 
-    static defaultProps = {
-        shouldAutoSave: true,
-        post: null,
-        uploadingFiles: false,
+    state = {
+        discardChanges: false,
+        muiTheme: CurrentTheme,
+        showDiscardChangesModal: false,
+        titleShownInHeader: false,
+    }
+
+    componentWillMount() {
+        this.configure(this.props);
+        document.addEventListener('scroll', (event) => this.handleScroll(event));
+    }
+
+    componentDidMount() {
+        this.showProgressMessage(this.props);
     }
 
     getChildContext() {
         return {
+            muiTheme: this.state.muiTheme,
             showCTAsInHeader: false,
         };
     }
@@ -132,11 +153,29 @@ class PostEditor extends CSSComponent {
     classes() {
         return {
             default: {
+                ArrowBackIcon: {
+                    stroke: tintColor,
+                    style: {
+                        marginRight: '4px',
+                        position: 'relative',
+                        top: '4px',
+                    },
+                },
                 Container: {
                     style: {
-                        backgroundColor: 'rgb(255, 255, 255)',
                         overflowX: 'hidden',
                     },
+                },
+                discardChangesDialog: {
+                    ...fontColors.dark,
+                    fontSize: 14,
+                },
+                header: {
+                    backgroundColor: canvasColor,
+                    padding: '10px',
+                    position: 'fixed',
+                    width: '100%',
+                    zIndex: '10',
                 },
                 headerActionButtonLabel: {
                     color: '#8598FF',
@@ -156,10 +195,33 @@ class PostEditor extends CSSComponent {
                     border: 0,
                     color: 'rgba(0, 0, 0, 0.4)',
                     fontSize: 14,
+                    marginRight: '15px',
+                    width: '90px',
+                },
+                ModalPrimaryActionButton: {
+                    labelStyle: {
+                        color: 'rgba(255, 0, 0, 0.7)',
+                    },
+                },
+                MyKnowledgeButton: {
+                    labelStyle: {
+                        color: tintColor,
+                        fontSize: 15,
+                        padding: 0,
+                        textTransform: 'none',
+                    },
                 },
                 Post: {
                     style: {
-                        backgroundColor: 'rgb(255, 255, 255)',
+                        paddingTop: '60px',
+                    },
+                },
+                PublishButton: {
+                    labelStyle: {
+                        color: 'rgb(255, 255, 255)',
+                    },
+                    style: {
+                        backgroundColor: tintColor,
                     },
                 }
             },
@@ -168,13 +230,24 @@ class PostEditor extends CSSComponent {
 
     postCreationInProgress = false
 
+    configure(props) {
+        resetScroll();
+        this.customizeTheme();
+    }
+
+    customizeTheme() {
+        let customTheme = Object.assign({}, CurrentTheme);
+        customTheme.flatButton.color = canvasColor;
+        this.setState({muiTheme: customTheme});
+    }
+
     loadPost(props) {
         if (props.params && props.params.postId) {
            this.props.dispatch(getPost(props.params.postId));
         }
     }
 
-    onSavePost(title, body, fileIds, postState, postOwner) {
+    onSavePost(title, body, postState, postOwner) {
         if (title.trim() === '' || body.trim() === '') {
             return;
         }
@@ -199,7 +272,6 @@ class PostEditor extends CSSComponent {
             let postV1 = new PostV1({
                 /*eslint-disable camelcase*/
                 content: trimmedBodyValue,
-                file_ids: fileIds,
                 title: trimmedTitleValue,
                 /*eslint-enable camelcase*/
             });
@@ -212,7 +284,6 @@ class PostEditor extends CSSComponent {
             let updates = {
                 /*eslint-disable camelcase*/
                 content: trimmedBodyValue,
-                file_ids: fileIds,
                 title: trimmedTitleValue,
                 /*eslint-enable camelcase*/
             };
@@ -237,8 +308,8 @@ class PostEditor extends CSSComponent {
         this.props.dispatch(uploadFile(file.name, file.type, file));
     }
 
-    onFileDelete(file) {
-        this.props.dispatch(deleteFile(file));
+    onFileDelete(fileId) {
+        this.props.dispatch(deleteFile(fileId));
     }
 
     onPublishButtonTapped() {
@@ -263,17 +334,53 @@ class PostEditor extends CSSComponent {
         this.onSavePost(
             this.refs.post.getCurrentTitle(),
             this.refs.post.getCurrentBody(),
-            this.refs.post.getCurrentFileIds(),
             PostStateV1.LISTED,
             this.refs.post.getCurrentOwner(),
         );
         this.props.dispatch(clearPosts());
+        routeToPost(this.context.history, post);
+    }
 
-        if (params && params.postId) {
-            routeToPost(this.context.history, post);
-        } else {
-            routeToPosts(this.context.history, PostStateURLString.LISTED);
+    goToMyKnowledge() {
+        const isDraftPost = this.isDraftPost();
+        const postState = isDraftPost ? PostStateURLString.DRAFT : PostStateURLString.LISTED;
+        if (!isDraftPost && this.hasChanges() && !this.state.discardChanges) {
+            // Not a draft post, has changes, and user hasn't confirmed if we should discard changes
+            this.setState({
+                showDiscardChangesModal: true,
+            });
+            return;
         }
+
+        routeToPosts(this.context.history, postState);
+    }
+
+    isDraftPost() {
+        const {
+            post,
+        } = this.props;
+
+        if (post === null || (post && (!post.state || post.state === PostStateV1.DRAFT))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    hasChanges() {
+        const {
+            post,
+        } = this.props;
+
+        if (!post) {
+            return false;
+        }
+
+        if (post.title !== this.refs.post.getCurrentTitle() || post.content !== this.refs.post.getCurrentBody()) {
+            return true;
+        }
+
+        return false;
     }
 
     canEdit() {
@@ -298,19 +405,20 @@ class PostEditor extends CSSComponent {
     showProgressMessage(props) {
         const {
             isSaving,
+            params,
             post,
             shouldAutoSave,
         } = props;
 
         let postType = '';
-        if (!post ||
-            (post && (post.state === null || post.state === PostStateV1.DRAFT))
-        ) {
+        if (!params || !params.postId) {
             postType = t('Draft');
         }
 
         if (shouldAutoSave && isSaving) {
             postType += ` ${t('Saving')}\u2026`;
+        } else if ((!params || !params.postId) && post) {
+            postType += ` ${t('Saved')}`;
         }
 
         if (this.refs.headerMessageText) {
@@ -318,14 +426,66 @@ class PostEditor extends CSSComponent {
         }
     }
 
+    onModalDiscardChangesTapped() {
+        this.setState({
+            discardChanges: true,
+        }, () => {
+            this.goToMyKnowledge();
+        });
+    }
+
+    onModalCancelTapped() {
+        this.hideDiscardChangesModal();
+    }
+
+    handleScroll(event) {
+        if (window.scrollY >= 170) {
+            this.showPostTitle();
+        } else {
+            this.hidePostTitle();
+        }
+    }
+
+    showPostTitle() {
+        if (this.refs.postEditorHeaderTitle) {
+            if (this.refs.postEditorHeaderTitle.style.opacity === '0' ||
+                this.refs.postEditorHeaderTitle.style.opacity === ''
+            ) {
+                this.setState({
+                    titleShownInHeader: true,
+                });
+            }
+            this.refs.postEditorHeaderTitle.style.opacity = 1.0;
+        }
+    }
+
+    hidePostTitle() {
+        if (this.refs.postEditorHeaderTitle) {
+            if (this.refs.postEditorHeaderTitle.style.opacity === '1') {
+                this.setState({
+                    titleShownInHeader: false,
+                });
+            }
+            this.refs.postEditorHeaderTitle.style.opacity = 0.0;
+        }
+    }
+
+    hideDiscardChangesModal() {
+        this.setState({
+            showDiscardChangesModal: false,
+        });
+    }
+
     renderPublishButton() {
         if (this.canEdit()) {
             return (
                 <div>
+                    <input disabled={true} ref="headerMessageText" style={this.styles().headerMessageText} />
                     <RoundedButton
                         disabled={this.props.uploadingFiles && !this.props.post}
                         label={t('Publish')}
                         onTouchTap={::this.onPublishButtonTapped}
+                        {...this.styles().PublishButton}
                     />
                 </div>
             );
@@ -337,10 +497,52 @@ class PostEditor extends CSSComponent {
             return (
                 <div className="row middle-xs between-xs" style={this.styles().headerActionContainer}>
                     <div>
-                        <input disabled={true} ref="headerMessageText" style={this.styles().headerMessageText} />
+                        <FlatButton
+                            key="my-knowledge-button"
+                            label={`${t('My Knowledge')}`}
+                            labelPosition="after"
+                            onTouchTap={::this.goToMyKnowledge}
+                            {...this.styles().MyKnowledgeButton}
+                        >
+                            <ArrowBackIcon {...this.styles().ArrowBackIcon} />
+                        </FlatButton>
+                    </div>
+                    <div className="row middle-xs center-xs post-editor-header-title" ref="postEditorHeaderTitle">
+                        {this.refs.post ? this.refs.post.getCurrentTitle() : ''}
                     </div>
                     {this.renderPublishButton()}
                 </div>
+            );
+        }
+    }
+
+    renderDiscardChangesConfirmationDialog() {
+        if (this.state.showDiscardChangesModal) {
+            const dialogActions = [
+                (<FlatButton
+                    key="cancel"
+                    label={t('Cancel')}
+                    onTouchTap={::this.onModalCancelTapped}
+                    secondary={true}
+                />),
+                (<FlatButton
+                    key="discard"
+                    label={t('Discard Changes')}
+                    onTouchTap={::this.onModalDiscardChangesTapped}
+                    primary={true}
+                    {...this.styles().ModalPrimaryActionButton}
+                />)
+            ];
+            return (
+                <Dialog
+                    actions={dialogActions}
+                    bodyStyle={this.styles().discardChangesDialog}
+                    defaultOpen={true}
+                    open={true}
+                    title={t('Discard Changes?')}
+                >
+                    {t('Unpublished changes will be lost.')}
+                </Dialog>
             );
         }
     }
@@ -381,8 +583,11 @@ class PostEditor extends CSSComponent {
     render() {
         return (
             <Container {...this.styles().Container}>
-                <Header actionsContainer={this.renderHeaderActionsContainer()} {...this.props} />
+                <header className="row" style={this.styles().header}>
+                    {this.renderHeaderActionsContainer()}
+                </header>
                 {this.renderPost()}
+                {this.renderDiscardChangesConfirmationDialog()}
             </Container>
         );
     }

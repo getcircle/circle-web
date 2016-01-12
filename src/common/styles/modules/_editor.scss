@@ -1,8 +1,25 @@
 $fontSize: 18px;
 $marginTop: 0px;
+$canvasColor: rgb(247, 249, 250);
 $tintColor: rgb(122, 142, 255);
 $lightTextColor: rgba(0, 0, 0, 0.5);
 $toolbarHighlightColor: rgba($tintColor, 0.2);
+
+.post-editor-header-title {
+    color: rgba(0,0,0,0.8);
+    font-size: 26px;
+    font-weight: 400;
+    height: 40px;
+    letter-spacing: 0.4px;
+    opacity: 0;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -webkit-transition: opacity 0.2s;
+    -moz-transition: opacity 0.2s;
+    -o-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+}
 
 /* Trix Toolbar */
 
@@ -15,10 +32,26 @@ trix-toolbar {
 
 trix-toolbar.sticky {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    margin-top: 4px;
+    margin-top: 0;
     position: fixed;
-    top: 64px;
+    top: 58px;
     z-index: 10;
+}
+
+.luno-editor.sticky-toolbar, .luno-editor-container.sticky-toolbar .hints-container {
+    position: relative;
+    top: 35px;
+}
+
+.luno-editor-container .hints-container {
+    color: $lightTextColor;
+    font-size: 13px;
+    padding-top: 10px;
+    width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 trix-toolbar .button_group button.active, trix-toolbar .button_group input[type=button].active {
@@ -104,6 +137,17 @@ trix-editor:empty:not(:focus)::before {
     color: rgba(0, 0, 0, 0.3);
 }
 
+// Edit mode only
+trix-editor.luno-editor {
+    background-color: #fff;
+    padding: 16px;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+// Edit and read-only mode
 .luno-editor, trix-editor.luno-editor {
     border: 0;
     border-radius: 0;
@@ -114,9 +158,8 @@ trix-editor:empty:not(:focus)::before {
     line-height: 1.68;
     letter-spacing: -0.003em;
     margin: 0;
-    min-height: 100px;
+    min-height: 300px;
     outline: none;
-    padding: 16px 0;
 }
 
 .postContent a, .luno-editor a {
@@ -380,6 +423,9 @@ trix-editor img {
 }
 
 .luno-editor-container {
+    backgroundColor: $canvasColor;
+    min-height: 300px;
+    padding: 0;
     position: relative;
 }
 

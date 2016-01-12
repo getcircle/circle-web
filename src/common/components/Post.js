@@ -1,7 +1,8 @@
-import { CircularProgress, FlatButton, IconButton, List, ListItem } from 'material-ui';
-import Dropzone from 'react-dropzone';
+import { Dialog, FlatButton, IconButton } from 'material-ui';
 import flow from 'lodash/function/flow';
 import Immutable from 'immutable';
+import Menu from 'material-ui/lib/menus/menu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
@@ -24,18 +25,17 @@ import tracker from '../utils/tracker';
 import { trimNewLines } from '../utils/string';
 import t from '../utils/gettext';
 
-import AttachmentIcon from './AttachmentIcon';
 import AutogrowTextarea from './AutogrowTextarea';
 import CardList from './CardList';
 import CardListItem from './CardListItem';
 import CSSComponent from './CSSComponent';
-import DeleteIcon from './DeleteIcon';
 import DetailContent from './DetailContent';
 import DetailViewAll from './DetailViewAll';
-import IconContainer from './IconContainer';
 import InternalPropTypes from './InternalPropTypes';
+import MoreHorizontalIcon from './MoreHorizontalIcon';
 import ProfileAvatar from './ProfileAvatar';
 import Share from './Share';
+import TrashIcon from './TrashIcon';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 const { PostStateV1 } = services.post.containers;
@@ -46,6 +46,7 @@ class Post extends CSSComponent {
         autoSave: PropTypes.bool,
         header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
+        onDeletePostCallback: PropTypes.func,
         onFileDeleteCallback: PropTypes.func,
         onFileUploadCallback: PropTypes.func,
         onSaveCallback: PropTypes.func,
@@ -76,11 +77,10 @@ class Post extends CSSComponent {
         body: '',
         derivedTitle: false,
         editing: false,
-        files: Immutable.OrderedMap(),
+        openMoreActionsMenu: false,
         owner: null,
         title: '',
-        uploadedFiles: Immutable.Map(),
-        namesOfDeletedFiles: [],
+        showConfirmDeleteModal: false,
     }
 
     componentWillMount() {
@@ -114,42 +114,15 @@ class Post extends CSSComponent {
     classes() {
         return {
             default: {
-                AttachementListItem: {
-                    innerDivStyle: {
-                        marginLeft: 0,
-                        paddingTop: 5,
-                        paddingLeft: 40,
-                        paddingBottom: 5,
-                    },
-                    style: {
-                        marginLeft: 0,
-                        paddingTop: 10,
-                        paddingLeft: 0,
-                        paddingBottom: 10,
-                    },
-                },
-                attachmentListItemTextStyle: {
-                    color: tintColor,
-                    fontSize: '14px',
-                },
-                attachmentListItemDisabledTextStyle: {
-                    ...fontColors.light,
-                    fontSize: '14px',
-                    paddingTop: 5,
-                    paddingLeft: 40,
-                    paddingBottom: 5,
-                },
-                attachmentsContainer: {
-                    backgroundColor: 'transparent',
-                    paddingTop: '10px',
-                    paddingBottom: '0',
-                    transition: 'all 0.3s ease-out',
-                    width: '100%',
-                },
                 authorContainer: {
                     padding: 0,
                 },
                 AutogrowTitleTextarea: {
+                    style: {
+                        background: '#fff',
+                        marginTop: '10px',
+                        padding: '16px',
+                    },
                     textareaStyle: {
                         background: 'transparent',
                         border: '0',
@@ -158,8 +131,6 @@ class Post extends CSSComponent {
                         fontSize: '36px',
                         letterSpacing: '0.4px',
                         lineHeight: '1.5',
-                        marginTop: '20px',
-                        marginBottom: '16px',
                         minHeight: 49,
                         ...fontColors.dark,
                     },
@@ -193,37 +164,13 @@ class Post extends CSSComponent {
                         paddingBottom: 16,
                     },
                 },
-                CircularProgress: {
-                    style: {
-                        top: '-20px',
-                        left: '-30px',
-                    }
-                },
                 contentContainer: {
                     marginTop: 0,
                     padding: 0,
                 },
-                dropzoneTriggerContainer: {
-                    height: 250,
-                    paddingTop: 20,
-                    width: '100%',
-                },
-                Dropzone: {
-                    style: {
-                        borderTop: '1px solid rgba(0, 0, 0, 0.1)',
-                        boxShadow: 'none',
-                        fontSize: 14,
-                        height: '50px',
-                        padding: 0,
-                        outline: 'none',
-                        width: '100%',
-                        ...fontColors.light,
-                    },
-                    activeStyle: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                        border: '1px solid rgba(0, 0, 0, 0.1)',
-                        boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
-                    },
+                deleteDialog: {
+                    ...fontColors.dark,
+                    fontSize: 14,
                 },
                 EditButton: {
                     labelStyle: {
@@ -251,42 +198,39 @@ class Post extends CSSComponent {
                         top: '-10px',
                     },
                 },
-                IconContainer: {
-                    rootStyle: {
-                        border: 0,
-                        left: 0,
-                        height: 24,
-                        top: 0,
-                        width: 24,
-                    },
-                    iconStyle: {
-                        height: 24,
-                        width: 24,
-                    },
-                    strokeWidth: 1,
-                },
-                inlineImageContainer: {
-                    padding: '25px 10px',
-                    width: '100%',
-                },
-                inlineImageInnerDiv: {
-                    width: '100%',
-                },
-                inlineImage: {
-                    height: 'auto',
-                    objectFit: 'cover',
-                    maxWidth: '100%',
-                },
-                inlineImageCaption: {
-                    ...fontColors.light,
-                    fontSize: 12,
-                    paddingTop: 10,
-                },
                 lastUpdatedText: {
                     ...fontColors.light,
                     fontSize: 14,
                     margin: '10px 0 5px 0',
                     width: '100%',
+                },
+                ModalPrimaryActionButton: {
+                    labelStyle: {
+                        color: 'rgba(255, 0, 0, 0.7)',
+                    },
+                },
+                MoreActionsMenuItem: {
+                    innerDivStyle: {
+                        color: 'rgba(0, 0, 0, 0.7)',
+                        fontSize: 14,
+                        width: '128px',
+                    },
+                    style: {
+                        lineHeight: '30px',
+                        width: '128px',
+                    },
+                },
+                moreHorizontalIcon: {
+                    position: 'relative',
+                    top: '-4px',
+                },
+                MoreIconButton: {
+                    style: {
+                        border: '1px solid #7A8EFF',
+                        borderRadius: '2px',
+                        height: '40px',
+                        marginLeft: '16px',
+                    },
                 },
                 postTitle: {
                     background: 'transparent',
@@ -333,39 +277,6 @@ class Post extends CSSComponent {
 
             this.setState(updatedState);
         }
-
-        // Following logic ensures we handle the files that are
-        // already attached to a post.
-        // This allows us to reuse code and also, make deleting files possible.
-        let uploadedFiles = Immutable.Map();
-        let files = this.state.files;
-        if (props.uploadedFiles) {
-            uploadedFiles = props.uploadedFiles;
-        }
-
-        // If new files are detected, save to post if its a Draft
-        if (props.uploadedFiles &&
-            this.props.uploadedFiles &&
-            !props.uploadedFiles.equals(this.props.uploadedFiles)
-        ) {
-            this.saveData(false);
-        }
-
-        if (props.post && props.post.files) {
-            uploadedFiles = uploadedFiles.asMutable();
-            props.post.files.forEach((file) => {
-                if (this.state.namesOfDeletedFiles.indexOf(file.name) < 0) {
-                    uploadedFiles.set(file.name, file);
-                }
-            });
-
-            files = this.getUpdatedFilesMap(props.post.files);
-        }
-
-        this.setState({
-            files: files,
-            uploadedFiles: uploadedFiles.asImmutable(),
-        });
     }
 
     /**
@@ -388,77 +299,68 @@ class Post extends CSSComponent {
             }
 
             this.saveTimeout = window.setTimeout(() => {
-                onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), this.getCurrentFileIds(), null, this.getCurrentOwner());
+                onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), null, this.getCurrentOwner());
             }, 500);
         } else if (explicitSave === true) {
-            onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), this.getCurrentFileIds(), null, this.getCurrentOwner());
+            onSaveCallback(this.getCurrentTitle(), this.getCurrentBody(), null, this.getCurrentOwner());
         }
     }
 
-    triggerUploads(newFiles) {
-        const { onFileUploadCallback } = this.props;
-        if (onFileUploadCallback) {
-            newFiles.forEach((file) => {
-                if (!this.isFileUploaded(file.name)) {
-                    onFileUploadCallback(file);
-                }
-            });
+    deleteFile(fileId) {
+       const { onFileDeleteCallback, post } = this.props;
+        if (post && post.state === PostStateV1.LISTED) {
+            // TODO: Ideally, we would track the file being deleted and then
+            // actually delete on Publish and no action if user discards changes
+            // For now, take no action. The impact would be zombie remote files
+            // but we can run some cleanup on the server for it.
+            return;
+        }
+
+        if (onFileDeleteCallback) {
+            onFileDeleteCallback(fileId);
         }
     }
 
-    deleteFile(file) {
-        const { onFileDeleteCallback } = this.props;
-        let updatedState = {};
-        const existingFiles = this.state.files;
-        const existingUploadedFiles = this.state.uploadedFiles;
-
-        if (existingFiles.size > 0) {
-            updatedState.files = existingFiles.delete(file.name);
-        }
-
-        if (existingUploadedFiles.size > 0) {
-            updatedState.uploadedFiles = existingUploadedFiles.delete(file.name);
-        }
-
-        updatedState.namesOfDeletedFiles = this.state.namesOfDeletedFiles;
-        updatedState.namesOfDeletedFiles.push(file.name);
-
-        this.setState(updatedState, () => {
-            this.saveData(false);
-            if (onFileDeleteCallback) {
-                onFileDeleteCallback(file);
-            }
+    hideMenu() {
+        this.setState({
+            openMoreActionsMenu: false,
         });
     }
 
-    isFileUploaded(fileName) {
-        const { uploadedFiles } = this.state;
-        if (uploadedFiles && uploadedFiles.get(fileName)) {
-            return true;
+    onDeleteButtonTapped(post) {
+        this.setState({
+            showConfirmDeleteModal: true,
+        });
+    }
+
+    onModalCancelTapped() {
+        this.hideConfirmDeleteModal();
+    }
+
+    onModalDeleteTapped() {
+        const {
+            onDeletePostCallback,
+            post
+        } = this.props;
+
+        if (post && onDeletePostCallback) {
+            onDeletePostCallback(post);
+            tracker.trackPostRemoved(
+                post.id,
+                post.state
+            );
         }
 
-        return false;
+        this.hideConfirmDeleteModal();
+    }
+
+    hideConfirmDeleteModal() {
+        this.setState({
+            showConfirmDeleteModal: false,
+        });
     }
 
     // Getters
-
-    getFileUrl(fileName) {
-        if (this.isFileUploaded(fileName)) {
-            const { uploadedFiles } = this.state;
-            return uploadedFiles.get(fileName).source_url;
-        }
-
-        return undefined;
-    }
-
-    getFileId(fileName) {
-        if (this.isFileUploaded(fileName)) {
-            const { uploadedFiles } = this.state;
-            return uploadedFiles.get(fileName).id;
-        }
-
-        return '';
-    }
 
     getCurrentTitle() {
         return this.state.title;
@@ -466,22 +368,6 @@ class Post extends CSSComponent {
 
     getCurrentBody() {
         return this.state.body;
-    }
-
-    getCurrentFileIds() {
-        const files = this.state.files.filter((file) => {
-            return this.isFileUploaded(file.name);
-        });
-
-        let fileIds = [];
-        files.forEach((file) => {
-            let fileId = this.getFileId(file.name);
-            if (fileId) {
-                fileIds.push(fileId);
-            }
-        });
-
-        return fileIds;
     }
 
     getCurrentOwner() {
@@ -545,15 +431,6 @@ class Post extends CSSComponent {
         return value.replace(/<\/?[^>]+>/gi, ' ').replace(/\s+|&nbsp;/gi, ' ').trim();
     }
 
-    onDrop(files) {
-        if (files.length > 0) {
-            let namesOfNewFiles = files.map(file => file.name);
-            // Filter out deleted files that we're trying to re-upload
-            let namesOfDeletedFiles = this.state.namesOfDeletedFiles.filter(nameOfDeletedFile => namesOfNewFiles.indexOf(nameOfDeletedFile) < 0);
-            this.setState({'files': this.getUpdatedFilesMap(files, namesOfDeletedFiles)}, () => this.triggerUploads(files));
-        }
-    }
-
     onOwnerSelected(newOwnerProfileItem) {
         this.setState({
             owner: newOwnerProfileItem.instance,
@@ -565,23 +442,6 @@ class Post extends CSSComponent {
 
     getSuggestImprovementsLink(post) {
         return mailToPostFeedback(post, this.context.auth.profile);
-    }
-
-    getUpdatedFilesMap(files, namesOfDeletedFiles = this.state.namesOfDeletedFiles) {
-        const existingFiles = this.state.files;
-        let newFilesMap = Immutable.OrderedMap();
-        if (existingFiles && existingFiles.size) {
-            newFilesMap = existingFiles;
-        }
-
-        newFilesMap = newFilesMap.withMutations((map) => {
-            files.forEach((file) => {
-                if (namesOfDeletedFiles.indexOf(file.name) < 0) {
-                    map.set(file.name, file);
-                }
-            });
-        });
-        return newFilesMap;
     }
 
     shouldAllowChangingOwner() {
@@ -597,6 +457,37 @@ class Post extends CSSComponent {
     }
 
     // Render Methods
+
+    renderDeleteModal() {
+        if (this.state.showConfirmDeleteModal) {
+            const dialogActions = [
+                (<FlatButton
+                    key="cancel"
+                    label={t('Cancel')}
+                    onTouchTap={::this.onModalCancelTapped}
+                    secondary={true}
+                />),
+                (<FlatButton
+                    key="delete"
+                    label={t('Delete')}
+                    onTouchTap={::this.onModalDeleteTapped}
+                    primary={true}
+                    {...this.styles().ModalPrimaryActionButton}
+                />)
+            ];
+            return (
+                <Dialog
+                    actions={dialogActions}
+                    bodyStyle={this.styles().deleteDialog}
+                    defaultOpen={true}
+                    open={true}
+                    title={t('Delete Post?')}
+                >
+                    {t('Please confirm you want to delete this post. This action cannot be undone.')}
+                </Dialog>
+            );
+        }
+    }
 
     renderSuggestImprovementsButton() {
         const {
@@ -629,6 +520,8 @@ class Post extends CSSComponent {
         } = this.props;
 
         let editButton = '';
+        let moreActionsButton = '';
+        let moreActionsMenu = '';
         if (post && post.permissions && post.permissions.can_edit) {
             editButton = (
                 <FlatButton
@@ -638,6 +531,44 @@ class Post extends CSSComponent {
                     {...this.styles().EditButton}
                 />
             );
+
+            moreActionsButton = (
+                <IconButton
+                    iconStyle={this.styles().moreHorizontalIcon}
+                    onTouchTap={(e) => {
+                        this.setState({openMoreActionsMenu: !this.state.openMoreActionsMenu});
+                    }}
+                    touch={true}
+                    {...this.styles().MoreIconButton}
+                >
+                    <MoreHorizontalIcon
+                        stroke={tintColor}
+                    />
+                </IconButton>
+            );
+
+            if (this.state.openMoreActionsMenu) {
+                moreActionsMenu = (
+                    <div
+                        className="row middle-xs end-xs full-width"
+                        key="more-actions-menu"
+                        style={{position: 'relative'}}
+                    >
+                        <Menu
+                            desktop={true}
+                            onEscKeyDown={::this.hideMenu}
+                            onItemTouchTap={::this.hideMenu}
+                            width="128px"
+                        >
+                            <MenuItem
+                                leftIcon={<TrashIcon stroke="rgba(0, 0, 0, 0.7)" />}
+                                onTouchTap={::this.onDeleteButtonTapped}
+                                primaryText={t('Delete')}
+                                {...this.styles().MoreActionsMenuItem} />
+                        </Menu>
+                    </div>
+                );
+            }
         }
 
         return (
@@ -653,9 +584,11 @@ class Post extends CSSComponent {
                                 shareMethod,
                             );
                         }}
-                        urlShareSource='post_share_copy'
+                        urlShareSource="post_share_copy"
                     />
+                    {moreActionsButton}
                 </div>
+                {moreActionsMenu}
             </div>
         );
     }
@@ -671,29 +604,6 @@ class Post extends CSSComponent {
 
         const author = post.by_profile;
         const lastUpdatedText = ` \u2013 ${t('Last updated')} ${moment(post.changed).fromNow()}`;
-
-        let inlineImages = [];
-        let postFilesWithoutImages = [];
-        if (post.files && post.files.length) {
-            post.files.forEach(file => {
-                if (file.content_type && file.content_type.toLowerCase().indexOf('image/') !== -1) {
-                    inlineImages.push(
-                        <div className="row center-xs middle-xs" style={this.styles().inlineImageContainer} key={file.id}>
-                            <div style={this.styles().inlineImageInnerDiv}>
-                                <a href={file.source_url} target="_blank">
-                                    <img alt={t('Post attached image')} src={file.source_url} style={this.styles().inlineImage}/>
-                                </a>
-                            </div>
-                            <div style={this.styles().inlineImageCaption}>
-                                {file.name}
-                            </div>
-                        </div>
-                    );
-                } else {
-                    postFilesWithoutImages.push(file);
-                }
-            });
-        }
 
         return (
             <span>
@@ -718,86 +628,6 @@ class Post extends CSSComponent {
                     </div>
                 </div>
                 {this.getReadOnlyContent(post.content)}
-                {inlineImages}
-                {this.renderFiles(postFilesWithoutImages)}
-            </span>
-        );
-    }
-
-    renderDeleteFileButton(file) {
-        if (this.props.isEditable === true) {
-            return (
-                <IconButton
-                    onTouchTap={(e) => {
-                        this.deleteFile(file);
-                    }}
-                    tooltip={t('Remove attachment')}
-                    touch={true}
-                    {...this.styles().IconButton}
-                >
-                    <DeleteIcon stroke="rgba(0, 0, 0, 0.2)" />
-                </IconButton>
-            );
-        }
-    }
-
-    renderFiles(files) {
-        let elements = [];
-        files.forEach((file) => {
-            if (this.isFileUploaded(file.name)) {
-                elements.push(
-                    <ListItem
-                        href={this.getFileUrl(file.name)}
-                        key={this.getFileId(file.name)}
-                        leftIcon={<IconContainer IconClass={AttachmentIcon} stroke="#7c7b7b" {...this.styles().IconContainer} />}
-                        primaryText={<span style={{...this.styles().attachmentListItemTextStyle}}>{file.name}</span>}
-                        rightIconButton={this.renderDeleteFileButton(file)}
-                        target="_blank"
-                        {...this.styles().AttachementListItem}
-                    />
-                );
-            } else {
-                elements.push(
-                    <ListItem
-                        disabled={true}
-                        key={file.name}
-                        leftIcon={<CircularProgress mode="indeterminate" size={0.4} {...this.styles().CircularProgress} />}
-                        primaryText={<span style={{...this.styles().attachmentListItemDisabledTextStyle}}>{file.name}</span>}
-                        {...this.styles().AttachementListItem}
-                    />
-                );
-            }
-        });
-
-        return (
-            <List style={this.styles().attachmentsContainer}>
-                {elements}
-            </List>
-        );
-    }
-
-    renderFilesContainer() {
-        const { post } = this.props;
-
-        // Do not show file upload until a post has been saved.
-        if (!post) {
-            return;
-        }
-
-        return (
-            <span>
-                {this.renderFiles(this.state.files)}
-                <Dropzone
-                    className="row"
-                    multiple={true}
-                    onDrop={this.onDrop.bind(this)}
-                    ref="dropzone"
-                    {...this.styles().Dropzone}
-                >
-                    <div className="row dropzone-trigger" style={this.styles().dropzoneTriggerContainer}>
-                        <div className="row col-xs start-xs">{t('Add attachments by selecting files or dropping them here')}</div>
-                    </div>
-                </Dropzone>
             </span>
         );
     }
@@ -839,6 +669,7 @@ class Post extends CSSComponent {
     renderEditor() {
         if (__CLIENT__) {
             const {
+                onFileUploadCallback,
                 uploadProgress,
                 uploadedFiles,
             } = this.props;
@@ -853,9 +684,8 @@ class Post extends CSSComponent {
                     onChange={(event, plainTextValue) => {
                         this.handleBodyChange(event, event.target.value);
                     }}
-                    onUploadCallback={(file) => {
-                        this.triggerUploads([file]);
-                    }}
+                    onFileDeleteCallback={(fileId) => this.deleteFile(fileId)}
+                    onUploadCallback={onFileUploadCallback}
                     placeholder={t('Contribute Knowledge')}
                     ref="editor"
                     uploadProgress={uploadProgress}
@@ -903,7 +733,6 @@ class Post extends CSSComponent {
                     {...this.styles().AutogrowTitleTextarea}
                 />
                 {this.renderEditor()}
-                {this.renderFilesContainer()}
                 {this.renderChangeOwnerModal()}
             </span>
         );
@@ -937,6 +766,7 @@ class Post extends CSSComponent {
                         </div>
                     </div>
                 </div>
+                {this.renderDeleteModal()}
             </DetailContent>
         );
     }

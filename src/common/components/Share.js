@@ -75,10 +75,10 @@ class Share extends CSSComponent {
                 },
                 MenuItem: {
                     innerDivStyle: {
+                        color: 'rgba(0, 0, 0, 0.7)',
                         fontSize: 14,
                         padding: '0px 16px 0px 60px',
                         textAlign: 'left',
-                        ...fontColors.light,
                     },
                     style: {
                         lineHeight: '36px',
@@ -138,7 +138,7 @@ class Share extends CSSComponent {
                 <Snackbar
                     autoHideDuration={2000}
                     message={t('Link copied to clipboard!')}
-                    ref='snackbar'
+                    ref="snackbar"
                     {...this.styles().Snackbar}
                 />
                 <div className="row middle-xs end-xs full-width" key="share-menu" style={{position: 'relative'}}>
@@ -171,7 +171,7 @@ class Share extends CSSComponent {
                         href={mailToHref}
                         leftIcon={<IconContainer
                             IconClass={MenuMailIcon}
-                            stroke='#757575'
+                            stroke="rgba(0, 0, 0, 0.7)"
                             {...this.styles().MenuIconContainer}
                         />}
                         linkButton={true}
@@ -186,7 +186,7 @@ class Share extends CSSComponent {
                         desktop={true}
                         leftIcon={<IconContainer
                             IconClass={MenuGetLinkIcon}
-                            stroke='#757575'
+                            stroke="rgba(0, 0, 0, 0.7)"
                             {...this.styles().MenuIconContainer}
                         />}
                         onTouchTap={() => {

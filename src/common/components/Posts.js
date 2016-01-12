@@ -6,7 +6,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import CurrentTheme from '../utils/ThemeManager';
-import { fontColors, fontWeights } from '../constants/styles';
+import { canvasColor, fontColors, fontWeights } from '../constants/styles';
 import moment from '../utils/moment';
 import { PostStateURLString } from '../utils/post';
 import { routeToEditPost, routeToPosts, routeToPost } from '../utils/routes';
@@ -18,7 +18,7 @@ import CSSComponent from './CSSComponent';
 import CenterLoadingIndicator from './CenterLoadingIndicator';
 import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
-import MoreVerticalIcon from './MoreVerticalIcon';
+import MoreHorizontalIcon from './MoreHorizontalIcon';
 
 const { PostStateV1 } = services.post.containers;
 
@@ -45,10 +45,10 @@ class Posts extends CSSComponent {
     }
 
     state = {
-        confirmDelete: false,
         loading: false,
         muiTheme: CurrentTheme,
         postToBeDeleted: null,
+        showConfirmDeleteModal: false,
     }
 
     getChildContext() {
@@ -72,6 +72,10 @@ class Posts extends CSSComponent {
                     borderBottom: '1px solid rgba(0, 0, 0, .1)',
                     padding: 30,
                 },
+                deleteDialog: {
+                    ...fontColors.dark,
+                    fontSize: 14,
+                },
                 emptyStateMessageContainer: {
                     fontSize: '1.6rem',
                     height: '100%',
@@ -80,6 +84,12 @@ class Posts extends CSSComponent {
                     whiteSpace: 'pre-wrap',
                     width: '100%',
                     ...fontColors.light,
+                },
+                IconButton: {
+                    style: {
+                        top: 18,
+                        right: 10,
+                    }
                 },
                 IconContainer: {
                     iconStyle: {
@@ -95,7 +105,7 @@ class Posts extends CSSComponent {
                         top: 0,
                         width: 24,
                     },
-                    stroke: 'rgba(0, 0, 0, 0.1)',
+                    stroke: 'rgba(0, 0, 0, 0.3)',
                     strokeWidth: 1,
                 },
                 infiniteListContainer: {
@@ -114,6 +124,9 @@ class Posts extends CSSComponent {
                     labelStyle: {
                         color: 'rgba(255, 0, 0, 0.7)',
                     },
+                },
+                loadingIndicator: {
+                    backgroundColor: canvasColor,
                 },
                 pageHeaderContainer: {
                     padding: '10px 0 50px 0',
@@ -194,13 +207,13 @@ class Posts extends CSSComponent {
 
     onDeleteButtonTapped(post) {
         this.setState({
-            confirmDelete: true,
+            showConfirmDeleteModal: true,
             postToBeDeleted: post,
         });
     }
 
     onModalCancelTapped() {
-        this.resetDeleteState();
+        this.hideConfirmDeleteModal();
     }
 
     onModalDeleteTapped() {
@@ -212,7 +225,7 @@ class Posts extends CSSComponent {
             );
         }
 
-        this.resetDeleteState();
+        this.hideConfirmDeleteModal();
     }
 
     handleInfiniteLoad() {
@@ -225,9 +238,9 @@ class Posts extends CSSComponent {
         }
     }
 
-    resetDeleteState() {
+    hideConfirmDeleteModal() {
         this.setState({
-            confirmDelete: false,
+            showConfirmDeleteModal: false,
             postToBeDeleted: null,
         });
     }
@@ -235,7 +248,7 @@ class Posts extends CSSComponent {
     // Render Methods
 
     renderDeleteModal() {
-        if (this.state.confirmDelete) {
+        if (this.state.showConfirmDeleteModal) {
             const dialogActions = [
                 (<FlatButton
                     key="cancel"
@@ -254,6 +267,7 @@ class Posts extends CSSComponent {
             return (
                 <Dialog
                     actions={dialogActions}
+                    bodyStyle={this.styles().deleteDialog}
                     defaultOpen={true}
                     open={true}
                     title={t('Delete Post?')}
@@ -266,9 +280,13 @@ class Posts extends CSSComponent {
 
     renderMoreButton() {
         return (
-            <IconButton tooltip={t('More Actions')} touch={true}>
+            <IconButton
+                {...this.styles().IconButton}
+                tooltip={t('More Actions')}
+                touch={true}
+            >
                 <IconContainer
-                    IconClass={MoreVerticalIcon}
+                    IconClass={MoreHorizontalIcon}
                     {...this.styles().IconContainer}
                 />
             </IconButton>
@@ -295,7 +313,7 @@ class Posts extends CSSComponent {
     renderLoadingIndicator() {
         if (this.props.loading) {
             return (
-                <div className="row center-xs" key="loading-indicator">
+                <div className="row center-xs" key="loading-indicator" style={this.styles().loadingIndicator}>
                     <CircularProgress mode="indeterminate" size={0.5} />
                 </div>
             );

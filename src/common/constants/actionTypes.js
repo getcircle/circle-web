@@ -120,8 +120,10 @@ export const FILE_UPLOAD_SUCCESS = 'FILE_UPLOAD_SUCCESS';
 export const FILE_UPLOAD_FAILURE = 'FILE_UPLOAD_FAILURE';
 export const FILE_UPLOAD_PROGRESS = 'FILE_UPLOAD_PROGRESS';
 
-// Delete file
-export const DELETE_LOCAL_FILE = 'DELETE_LOCAL_FILE';
+// File Delete Actions
+export const FILE_DELETE = 'FILE_DELETE';
+export const FILE_DELETE_SUCCESS = 'FILE_DELETE_SUCCESS';
+export const FILE_DELETE_FAILURE = 'FILE_DELETE_FAILURE';
 
 // Clear file uploads
 export const CLEAR_FILE_UPLOADS = 'CLEAR_FILE_UPLOADS';

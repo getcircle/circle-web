@@ -15,11 +15,15 @@ export function uploadFile(fileName, contentType, data) {
     };
 }
 
-export function deleteFile(file) {
+export function deleteFile(fileId) {
     return {
-        type: types.DELETE_LOCAL_FILE,
-        payload: {
-            file: file,
+        [SERVICE_REQUEST]: {
+            types: [
+                types.FILE_DELETE,
+                types.FILE_DELETE_SUCCESS,
+                types.FILE_DELETE_FAILURE,
+            ],
+            remote: (client, state, dispatch) => requests.deleteFile(client, fileId),
         },
     };
 }
