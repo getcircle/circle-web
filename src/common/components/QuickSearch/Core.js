@@ -7,9 +7,10 @@ import { backgroundColors, fontColors, iconColors } from '../../constants/styles
 import t from '../../utils/gettext';
 
 import CSSComponent from '../CSSComponent';
-import QuickSearchList from '../QuickSearchList';
 import InternalPropTypes from '../InternalPropTypes';
 import SearchIcon from '../SearchIcon';
+
+import List from './List';
 
 const { Paper } = mui;
 
@@ -322,7 +323,7 @@ class Core extends CSSComponent {
             const section = this.props.sections[sectionIndex];
             const maxItems = this.numberOfItemsInSection(section);
             lists.push(
-                <QuickSearchList
+                <List
                     highlightedIndex={this.highlightedIndexForSection(section)}
                     itemStyle={{...this.styles().listItem}}
                     items={section.getItems(maxItems)}

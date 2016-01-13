@@ -5,8 +5,8 @@ import TestUtils from 'react-addons-test-utils';
 
 import componentWithContext from '../../../componentWithContext';
 import Core from '../../../../src/common/components/QuickSearch/Core';
+import List from '../../../../src/common/components/QuickSearch/List';
 import Section from '../../../../src/common/components/QuickSearch/Section';
-import QuickSearchList from '../../../../src/common/components/QuickSearchList';
 
 const { ListItem } = mui;
 
@@ -33,7 +33,7 @@ describe('Core', () => {
             const sectionTwoItems = [{className: '2-1'}, {className: '2-2'}, {className: '2-3'}];
             const sections = [new Section(sectionOneItems, 'Section One'), new Section(sectionTwoItems, 'Section Two')];
             const { output } = setup({sections: sections});
-            const lists = TestUtils.scryRenderedComponentsWithType(output, QuickSearchList);
+            const lists = TestUtils.scryRenderedComponentsWithType(output, List);
             expect(lists.length).toEqual(2);
             expect(lists[0].props.items).toEqual(sectionOneItems);
             expect(lists[1].props.items).toEqual(sectionTwoItems);

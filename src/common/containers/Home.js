@@ -8,7 +8,8 @@ import t from '../utils/gettext';
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
 import HeaderMenu from '../components/HeaderMenu';
-import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/Search';
+import { SEARCH_CONTAINER_WIDTH } from '../components/QuickSearch';
+import SearchAndExplore from '../components/SearchAndExplore';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
 const ORGANIZATION_LOGO_HEIGHT = 200;
@@ -194,8 +195,8 @@ class Home extends CSSComponent {
                         </div>
                     </section>
                     <section style={this.styles().searchSection}>
-                        <div style={{position: 'absolute', 'top': '250px', 'width': '100%'}}>
-                            <SearchComponent
+                        <div className="row center-xs">
+                            <SearchAndExplore
                                 className="row center-xs"
                                 onCancel={::this.handleCancelSearch}
                                 onFocus={::this.handleFocusSearch}

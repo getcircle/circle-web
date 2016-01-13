@@ -1,16 +1,15 @@
 import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 
-import { fontColors, fontWeights } from '../constants/styles';
-import CSSComponent from './CSSComponent';
+import { fontColors, fontWeights } from '../../constants/styles';
+import CSSComponent from '../CSSComponent';
 
 const {
     ListDivider,
-    List,
     ListItem,
 } = mui;
 
-class QuickSearchList extends CSSComponent {
+class List extends CSSComponent {
 
     static propTypes = {
         highlightedIndex: PropTypes.number,
@@ -92,14 +91,14 @@ class QuickSearchList extends CSSComponent {
         return (
             <div>
                 {this.renderHeader()}
-                <List
+                <mui.List
                     style={style}
                 >
                     {renderedItems}
-                </List>
+                </mui.List>
             </div>
         );
     }
 }
 
-export default QuickSearchList;
+export default List;
