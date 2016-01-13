@@ -200,6 +200,7 @@ class Home extends CSSComponent {
                                 className="row center-xs"
                                 onCancel={::this.handleCancelSearch}
                                 onFocus={::this.handleFocusSearch}
+                                organization={this.context.auth.organization}
                                 searchContainerWidth={660}
                                 searchLocation={SEARCH_LOCATION.HOME}
                                 {...this.styles().SearchComponent}
