@@ -73,6 +73,19 @@ export default function (store, url) {
     }
 
     /**
+     * Redirect to "/" and exit.
+     *
+     * Unlike "bail", this is used when we want to intentially route to '/'
+     * (ie. empty search query)
+     */
+    function redirectHome(next) {
+        return (nextState, replaceState, exit) => {
+            replaceState(null, '/');
+            exit();
+        }
+    }
+
+    /**
      * Simply redirect to "/" and exit.
      *
      * This middleware is meant as a catch all for routes such as "/auth" that
@@ -208,10 +221,7 @@ export default function (store, url) {
             />
             <Route
                 component={require('./containers/Search')}
-                onEnter={applyMiddleware(
-                    requireAuth,
-                    hideHeader,
-                )}
+                onEnter={applyMiddleware(redirectHome)}
                 path="/search"
             />
             <Route
