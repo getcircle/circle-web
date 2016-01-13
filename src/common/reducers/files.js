@@ -25,16 +25,30 @@ export default function fileUpload(state = initialState, action) {
         return state.setIn(['filesProgress', action.payload.name], action.payload.progress);
 
     case types.FILE_DELETE_SUCCESS:
-        const fileId = action.payload.fileId;
-        const file = state.get('files').find((file) => {
-            return (file && file.id && file.id === fileId);
+        const fileIds = action.payload.fileIds;
+        const fileIdsLength = fileIds.length;
+        if (state.get('files').size === 0) {
+            return state;
+        }
+
+        let modifiedState = state.withMutations((stateMap) => {
+            let internalModifiedState = stateMap;
+            let fileId;
+            for (let i = 0; i < fileIdsLength; i++) {
+                fileId = fileIds[i];
+                const file = internalModifiedState.get('files').find((file) => {
+                    return (file && file.id && file.id === fileId);
+                });
+
+                if (file) {
+                    internalModifiedState = internalModifiedState.deleteIn(['files', file.name])
+                                                                 .deleteIn(['filesProgress', file.name]);
+                }
+            }
         });
 
-        if (file) {
-            return state.deleteIn(['files', file.name])
-                        .deleteIn(['filesProgress', file.name])
-                        .set('loading', false);
-        }
+        return  modifiedState.set('loading', false);
+
 
     case types.CLEAR_FILE_UPLOADS:
         return initialState;

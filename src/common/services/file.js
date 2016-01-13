@@ -78,14 +78,14 @@ function upload(fileName, url, data, dispatch) {
     });
 }
 
-export function deleteFile(client, fileId) {
-     let request = new services.file.actions.delete.RequestV1({ids: [fileId]});
+export function deleteFile(client, fileIds) {
+     let request = new services.file.actions.delete.RequestV1({ids: fileIds});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => {
                 if (response.isSuccess()) {
                     resolve({
-                        fileId: fileId,
+                        fileIds: fileIds,
                     });
                 } else {
                     reject('File wasn\'t deleted');

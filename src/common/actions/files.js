@@ -15,7 +15,7 @@ export function uploadFile(fileName, contentType, data) {
     };
 }
 
-export function deleteFile(fileId) {
+export function deleteFiles(fileIds) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -23,7 +23,7 @@ export function deleteFile(fileId) {
                 types.FILE_DELETE_SUCCESS,
                 types.FILE_DELETE_FAILURE,
             ],
-            remote: (client, state, dispatch) => requests.deleteFile(client, fileId),
+            remote: (client, state, dispatch) => requests.deleteFile(client, fileIds),
         },
     };
 }
