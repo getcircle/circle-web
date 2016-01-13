@@ -10,7 +10,6 @@ import {
     detectCodeMarkdownAndAddMarkup,
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
-    detectLineBreaksAndAddMarkup,
     detectURLsAndAddMarkup,
 } from '../utils/string';
 import { fontColors, tintColor } from '../constants/styles';
@@ -376,7 +375,6 @@ class Post extends CSSComponent {
 
     getReadOnlyContent(content) {
         const detectPatternsAndAddMarkup = flow(
-            detectLineBreaksAndAddMarkup,
             detectCodeMarkdownAndAddMarkup,
             detectURLsAndAddMarkup,
             detectEmailsAndAddMarkup,
