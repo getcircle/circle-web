@@ -47,6 +47,21 @@ export function detectLineBreaksAndAddMarkup(stringValue) {
     return stringValue.replace(urlRegex, '<br>');
 }
 
+export function setTargetBlankOnAnchorTags(html) {
+    if (!__CLIENT__) {
+        // Don't do anything during SSR
+        return html;
+    }
+
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = html;
+    const anchorTags = tempElement.querySelectorAll('a');
+    for (let i = 0; i < anchorTags.length; i++) {
+        anchorTags[i].setAttribute('target', '_blank');
+    }
+    return tempElement.innerHTML;
+}
+
 export function stripTags(html) {
     if (!__CLIENT__ || !html) {
         // SSR

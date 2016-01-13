@@ -11,6 +11,7 @@ import {
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
     detectURLsAndAddMarkup,
+    setTargetBlankOnAnchorTags,
 } from '../utils/string';
 import { fontColors, tintColor } from '../constants/styles';
 import keyCodes from '../utils/keycodes';
@@ -375,6 +376,7 @@ class Post extends CSSComponent {
 
     getReadOnlyContent(content) {
         const detectPatternsAndAddMarkup = flow(
+            setTargetBlankOnAnchorTags,
             detectCodeMarkdownAndAddMarkup,
             detectURLsAndAddMarkup,
             detectEmailsAndAddMarkup,

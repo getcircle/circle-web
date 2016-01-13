@@ -4,7 +4,8 @@ import {
     detectLineBreaksAndAddMarkup,
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
-    detectURLsAndAddMarkup
+    detectURLsAndAddMarkup,
+    setTargetBlankOnAnchorTags,
 } from '../../../src/common/utils/string';
 
 describe('string utils', () => {
@@ -115,6 +116,13 @@ describe('string utils', () => {
         let content = 'Test of\ntext line\n\n\nbreaks with \n or without spaces.\n';
         expect(detectLineBreaksAndAddMarkup(content)).toBe(
             'Test of<br>text line<br><br><br>breaks with <br> or without spaces.<br>'
+        );
+    });
+
+    it('adds target _blank on anchor tags', () => {
+        let content = 'Test of <a>anchor tags</a> getting <a>target blank</a>';
+        expect(setTargetBlankOnAnchorTags(content)).toBe(
+            'Test of <a target="_blank">anchor tags</a> getting <a target="_blank">target blank</a>'
         );
     });
 });
