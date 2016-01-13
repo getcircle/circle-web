@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 
+import { fontColors, fontWeights } from '../constants/styles';
 import CSSComponent from './CSSComponent';
 
 const {
@@ -14,18 +15,37 @@ class QuickSearchList extends CSSComponent {
     static propTypes = {
         highlightedIndex: PropTypes.number,
         itemStyle: PropTypes.object,
-        results: PropTypes.array,
+        items: PropTypes.array,
         style: PropTypes.object,
+        title: PropTypes.string,
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const thereAreResults = (nextProps.results !== undefined && nextProps.results !== null);
-        const resultsChanged = (nextProps.results !== this.props.results);
-        const highlightedResultChanged = (nextProps.highlightedIndex !== this.props.highlightedIndex);
-        return thereAreResults && (resultsChanged || highlightedResultChanged);
+        const differentSection = nextProps.title !== this.props.title;
+        const thereAreItems = (nextProps.items !== undefined && nextProps.items !== null);
+        const itemsChanged = (nextProps.items !== this.props.items);
+        const highlightedItemChanged = (nextProps.highlightedIndex !== this.props.highlightedIndex);
+        return (differentSection || thereAreItems) && (itemsChanged || highlightedItemChanged);
     }
 
-    renderResult(result, index, highlighted) {
+    classes() {
+        return {
+            'default': {
+                header: {
+                    fontSize: '11px',
+                    lineHeight: '20px',
+                    paddingTop: 14,
+                    paddingLeft: 20,
+                    textAlign: 'left',
+                    textTransform: 'uppercase',
+                    ...fontColors.extraLight,
+                    ...fontWeights.semiBold,
+                },
+            },
+        };
+    };
+
+    renderItem(item, index, highlighted) {
         let style = {};
         if (highlighted) {
             style = {
@@ -37,7 +57,7 @@ class QuickSearchList extends CSSComponent {
                 key={`item-${index}`}
             >
                 <ListItem
-                    {...result}
+                    {...item}
                     style={{...this.props.itemStyle, ...style}}
                 />
                 <ListDivider />
@@ -45,26 +65,39 @@ class QuickSearchList extends CSSComponent {
         );
     }
 
+    renderHeader() {
+        if (this.props.title) {
+            return (
+                <div style={this.styles().header}>
+                    <span>{this.props.title}</span>
+                </div>
+            );
+        }
+    }
+
     render() {
         const {
             highlightedIndex,
-            results,
+            items,
             style,
         } = this.props;
 
-        let renderedResults = []
-        if (results) {
-            results.forEach((result, index) => {
-                renderedResults.push(this.renderResult(result, index, index === highlightedIndex));
+        let renderedItems = []
+        if (items) {
+            items.forEach((item, index) => {
+                renderedItems.push(this.renderItem(item, index, index === highlightedIndex));
             });
         }
 
         return (
-            <List
-                style={style}
-            >
-                {renderedResults}
-            </List>
+            <div>
+                {this.renderHeader()}
+                <List
+                    style={style}
+                >
+                    {renderedItems}
+                </List>
+            </div>
         );
     }
 }
