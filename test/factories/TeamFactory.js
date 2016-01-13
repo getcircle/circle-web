@@ -1,22 +1,18 @@
 import faker from 'faker';
 import { services } from 'protobufs';
 
-class TeamFactory {
+export default {
 
-    constructor() {
+    getTeam() {
         const teamName = faker.hacker.noun();
-        this._team = new services.organization.containers.TeamV1({
+        const displayName = `${teamName} (${faker.hacker.noun()})`;
+        return new services.organization.containers.TeamV1({
             /*eslint-disable camelcase*/
             id: faker.random.uuid(),
             name: teamName,
-            display_name: teamName,
+            display_name: displayName,
             /*eslint-enable camelcase*/
         });
     }
 
-    getTeam() {
-        return this._team;
-    }
 }
-
-export default new TeamFactory();
