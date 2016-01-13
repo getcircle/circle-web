@@ -190,7 +190,7 @@ class Home extends CSSComponent {
                         </div>
                     </section>
                     <section style={this.styles().searchSection}>
-                        <div>
+                        <div style={{position: 'absolute', 'top': '250px', 'width': '100%'}}>
                             <SearchComponent
                                 className="row center-xs"
                                 onCancel={::this.handleCancelSearch}
@@ -199,11 +199,9 @@ class Home extends CSSComponent {
                                 searchLocation={SEARCH_LOCATION.HOME}
                                 {...this.styles().SearchComponent}
                             />
-                        </div>
-                    </section>
-                    <section style={this.styles().poweredBySection}>
-                        <div className="row center-xs">
-                            <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
+                            <div className="row center-xs" style={this.styles().poweredBySection}>
+                                <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
+                            </div>
                         </div>
                     </section>
                 </section>
