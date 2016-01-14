@@ -99,10 +99,17 @@ class Editor extends CSSComponent {
         // In some browsers, the elements are not attached by the time
         // the control gets here. Delay execution.
         setTimeout(() => {
-            // Add keyboard short-cut to code block
+            // Add keyboard shortcut for code block
             const codeButton = document.querySelector('.button_group.block_tools .code');
             if (codeButton) {
                 codeButton.setAttribute('data-key', 'alt+6');
+            }
+
+            // Make toolbar buttons not selectable by pressing tab key
+            const toolbarButtons = document.querySelectorAll('trix-toolbar button');
+            const numberOfToolbarButtons = toolbarButtons.length;
+            for (let i = 0; i < numberOfToolbarButtons; i++) {
+                toolbarButtons[i].setAttribute('tabindex', '-1');
             }
 
             // Add attach button in toolbar
@@ -112,6 +119,7 @@ class Editor extends CSSComponent {
                 attachButtonElement.setAttribute('type', 'button');
                 attachButtonElement.setAttribute('class', 'attach');
                 attachButtonElement.setAttribute('data-action', 'x-attach');
+                attachButtonElement.setAttribute('tabindex', '-1');
                 attachButtonElement.innerHTML = t('Attach Files');
                 attachButtonElement.addEventListener('click', (event) => this.handleAttachButtonClicked(event));
                 document.querySelector('.button_group.block_tools').appendChild(attachButtonElement);
