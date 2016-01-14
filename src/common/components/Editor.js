@@ -95,10 +95,11 @@ class Editor extends CSSComponent {
     }
 
     setup() {
-
         // In some browsers, the elements are not attached by the time
         // the control gets here. Delay execution.
         setTimeout(() => {
+            // CUSTOMIZE TOOLBAR
+
             // Add keyboard shortcut for code block
             const codeButton = document.querySelector('.button_group.block_tools .code');
             if (codeButton) {
@@ -111,6 +112,14 @@ class Editor extends CSSComponent {
             for (let i = 0; i < numberOfToolbarButtons; i++) {
                 toolbarButtons[i].setAttribute('tabindex', '-1');
             }
+
+            // Prefix with protocol by default when link button is clicked
+            const linkInput = document.querySelector('.dialogs input[type="url"]');
+            linkInput.addEventListener('focus', (event) => {
+                if (!linkInput.value || linkInput.value.length === 0) {
+                    linkInput.value = 'https://';
+                }
+            });
 
             // Add attach button in toolbar
             const attachButton = document.querySelector('.button_group.block_tools .attach');
