@@ -6,7 +6,7 @@ import { services } from 'protobufs';
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
 import { canvasColor, tintColor, fontColors } from '../constants/styles';
 import CurrentTheme from '../utils/ThemeManager';
-import { deleteFile, uploadFile, clearFileUploads } from '../actions/files';
+import { deleteFiles, uploadFile, clearFileUploads } from '../actions/files';
 import { getPostStateURLString } from '../utils/post';
 import logger from '../utils/logger';
 import { POST_SOURCE } from '../constants/trackerProperties';
@@ -308,8 +308,10 @@ class PostEditor extends CSSComponent {
         this.props.dispatch(uploadFile(file.name, file.type, file));
     }
 
-    onFileDelete(fileId) {
-        this.props.dispatch(deleteFile(fileId));
+    onFileDelete(fileIds) {
+        if (fileIds && fileIds.length) {
+            this.props.dispatch(deleteFiles(fileIds));
+        }
     }
 
     onPublishButtonTapped() {
@@ -338,6 +340,7 @@ class PostEditor extends CSSComponent {
             this.refs.post.getCurrentOwner(),
         );
         this.props.dispatch(clearPosts());
+        this.onFileDelete(this.refs.post.getDeletedFileIds())
         routeToPost(this.context.history, post);
     }
 

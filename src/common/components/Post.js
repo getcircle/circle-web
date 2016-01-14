@@ -76,6 +76,7 @@ class Post extends CSSComponent {
     state = {
         body: '',
         derivedTitle: false,
+        deletedFileIds: [],
         editing: false,
         openMoreActionsMenu: false,
         owner: null,
@@ -309,15 +310,18 @@ class Post extends CSSComponent {
     deleteFile(fileId) {
        const { onFileDeleteCallback, post } = this.props;
         if (post && post.state === PostStateV1.LISTED) {
-            // TODO: Ideally, we would track the file being deleted and then
-            // actually delete on Publish and no action if user discards changes
-            // For now, take no action. The impact would be zombie remote files
-            // but we can run some cleanup on the server for it.
+            // We track the file being deleted and then
+            // actually delete on Publish and not if the user discards changes.
+            let deletedFileIds = this.state.deletedFileIds;
+            deletedFileIds.push(fileId);
+            this.setState({
+                deletedFileIds: deletedFileIds,
+            });
             return;
         }
 
         if (onFileDeleteCallback) {
-            onFileDeleteCallback(fileId);
+            onFileDeleteCallback([fileId]);
         }
     }
 
@@ -372,6 +376,14 @@ class Post extends CSSComponent {
 
     getCurrentOwner() {
         return this.state.owner;
+    }
+
+    getDeletedFileIds() {
+        // These only represent files that were deleted locally
+        // but haven't been removed remotely. This case applies
+        // for published posts where we do not commit changes
+        // until the user has clicked "Publish"
+        return this.state.deletedFileIds;
     }
 
     getReadOnlyContent(content) {

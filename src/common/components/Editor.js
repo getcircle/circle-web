@@ -59,6 +59,11 @@ class Editor extends CSSComponent {
     // can fetch the initial value.
     inputId = null;
 
+    // We need to define these and a keep a reference to correctly add and register them
+    // because these are added on the global document. Doing it inline does not for deregistering
+    // when using anonymous functions or using bind.
+    eventHandlers = {}
+
     componentWillMount() {
         this.inputId = Math.round(1E6 * Math.random()).toString(36);
         this.mergeStateAndProps(this.props);
@@ -73,6 +78,10 @@ class Editor extends CSSComponent {
 
     componentWillReceiveProps(nextProps) {
         this.updateFileUploadProgress(nextProps);
+    }
+
+    componentWillUnmount() {
+        this.removeEventListeners();
     }
 
     classes() {
@@ -137,11 +146,27 @@ class Editor extends CSSComponent {
     }
 
     attachEventListeners() {
-        document.addEventListener('trix-change', (event) => this.handleChange(event));
-        document.addEventListener('trix-attachment-add', (event) => this.handleFileAdd(event));
-        document.addEventListener('trix-attachment-remove', (event) => this.handleFileDelete(event));
-        document.addEventListener('trix-file-accept', (event) => this.handleFileVerification(event));
-        document.addEventListener('scroll', (event) => this.handleScroll(event));
+        this.eventHandlers = {
+            'trix-change': this.handleChange.bind(this),
+            'trix-attachment-add': this.handleFileAdd.bind(this),
+            'trix-attachment-remove': this.handleFileDelete.bind(this),
+            'trix-file-accept': this.handleFileVerification.bind(this),
+            'scroll': this.handleScroll.bind(this),
+        };
+
+        for (let prop in this.eventHandlers) {
+            if (this.eventHandlers.hasOwnProperty(prop)) {
+                document.addEventListener(prop, this.eventHandlers[prop], false);
+            }
+        }
+    }
+
+    removeEventListeners() {
+        for (let prop in this.eventHandlers) {
+            if (this.eventHandlers.hasOwnProperty(prop)) {
+                document.removeEventListener(prop, this.eventHandlers[prop], false);
+            }
+        }
     }
 
     getEditorElement() {
