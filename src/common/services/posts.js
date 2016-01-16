@@ -1,5 +1,7 @@
 import { services } from 'protobufs';
 
+import { getPostsPaginationKey } from '../actions/posts';
+
 import { getPostStateURLString, getPostStateFromURLString } from '../utils/post';
 
 export function createPost(client, post) {
@@ -65,7 +67,7 @@ export function getPosts(client, postStateURLString, byProfile, nextRequest=null
 
     let parameters = {
         /*eslint-disable camelcase*/
-        by_profile_id: byProfile ? byProfile.id : undefined,
+        by_profile_id: byProfile.id,
         state: getPostStateFromURLString(postStateURLString),
         inflations: inflations,
         fields: fields,
@@ -73,7 +75,7 @@ export function getPosts(client, postStateURLString, byProfile, nextRequest=null
     };
 
     if (key === null) {
-        key = postStateURLString;
+        key = getPostsPaginationKey(postStateURLString, byProfile);
     }
 
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);

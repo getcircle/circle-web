@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import connectData from '../utils/connectData';
-import { deletePost, getPosts } from '../actions/posts';
+import { deletePost, getPostsPaginationKey, getPosts } from '../actions/posts';
 import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePosts } from '../reducers/denormalizations';
@@ -29,11 +29,12 @@ const selector = createSelector(
         let postState = parametersSelector.postState
         let loading = false;
         const cache = cacheState.toJS();
-        if (postsState.has(postState)) {
-            const ids = postsState.get(postState).get('ids').toJS();
+        const cacheKey = getPostsPaginationKey(postState, authenticationState.get('profile'));
+        if (postsState.has(cacheKey)) {
+            const ids = postsState.get(cacheKey).get('ids').toJS();
             posts = retrievePosts(ids, cache);
-            postsNextRequest = postsState.get(postState).get('nextRequest');
-            loading = postsState.get(postState).get('loading');
+            postsNextRequest = postsState.get(cacheKey).get('nextRequest');
+            loading = postsState.get(cacheKey).get('loading');
         }
 
         return {

@@ -28,6 +28,10 @@ export function updatePost(post) {
     };
 }
 
+export function getPostsPaginationKey(postStateURLString, byProfile) {
+    return byProfile.id + '-' + postStateURLString;
+}
+
 export function getPosts(postStateURLString, byProfile, nextRequest) {
     return {
         [SERVICE_REQUEST]: {
@@ -39,7 +43,7 @@ export function getPosts(postStateURLString, byProfile, nextRequest) {
             remote: (client) => requests.getPosts(client, postStateURLString, byProfile, nextRequest),
         },
         meta: {
-            paginateBy: postStateURLString,
+            paginateBy: getPostsPaginationKey(postStateURLString, byProfile),
         },
     };
 }
