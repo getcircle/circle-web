@@ -10,6 +10,12 @@ import {
     getTeams,
 } from '../services/organization';
 import { PostStateURLString } from '../utils/post';
+import {
+    retrieveLocations,
+    retrievePosts,
+    retrieveProfiles,
+    retrieveTeams
+} from '../reducers/denormalizations';
 
 const exploreActionTypes = [
     types.EXPLORE,
@@ -24,9 +30,23 @@ export const EXPLORE_TYPES = keymirror({
     LOCATIONS: null,
 });
 
-function shouldBail(exploreState, nextRequest) {
-    if (exploreState && nextRequest === null && exploreState.get('ids').size) {
-        return true;
+function shouldBail(state, nextRequest, type) {
+    const exploreState = state.get('explore').get(type);
+    const cacheState = state.get('cache').toJS();
+    if (exploreState && nextRequest === null) {
+        const ids = exploreState.get('ids').toJS();
+        if (ids.length > 0) {
+            switch(type) {
+            case EXPLORE_TYPES.LOCATIONS:
+                return retrieveLocations(ids, cacheState) !== null;
+            case EXPLORE_TYPES.POSTS:
+                return retrievePosts(ids, cacheState) !== null;
+            case EXPLORE_TYPES.PROFILES:
+                return retrieveProfiles(ids, cacheState) !== null;
+            case EXPLORE_TYPES.TEAMS:
+                return retrieveTeams(ids, cacheState) !== null;
+            }
+        }
     }
 }
 
@@ -37,8 +57,7 @@ export function exploreProfiles(nextRequest) {
             types: exploreActionTypes,
             remote: (client) => getProfiles(client, null, nextRequest, PROFILES),
             bailout: (state) => {
-                const profilesState = state.get('explore').get(PROFILES);
-                return shouldBail(profilesState, nextRequest);
+                return shouldBail(state, nextRequest, PROFILES);
             }
         },
         meta: {
@@ -54,8 +73,7 @@ export function exploreTeams(nextRequest) {
             types: exploreActionTypes,
             remote: (client) => getTeams(client, null, nextRequest, TEAMS),
             bailout: (state) => {
-                const teamsState = state.get('explore').get(TEAMS);
-                return shouldBail(teamsState, nextRequest);
+                return shouldBail(state, nextRequest, TEAMS);
             },
         },
         meta: {
@@ -71,8 +89,7 @@ export function exploreLocations(nextRequest) {
             types: exploreActionTypes,
             remote: (client) => getLocations(client, null, nextRequest, LOCATIONS),
             bailout: (state) => {
-                const locationsState = state.get('explore').get(LOCATIONS);
-                return shouldBail(locationsState, nextRequest);
+                return shouldBail(state, nextRequest, LOCATIONS);
             },
         },
         meta: {
@@ -88,8 +105,7 @@ export function explorePosts(nextRequest) {
             types: exploreActionTypes,
             remote: (client) => getPosts(client, PostStateURLString.LISTED, null, nextRequest, POSTS),
             bailout: (state) => {
-                const postsState = state.get('explore').get(POSTS);
-                return shouldBail(postsState, nextRequest);
+                return shouldBail(state, nextRequest, POSTS);
             },
         },
         meta: {

@@ -2,6 +2,7 @@ import * as organizationRequests from '../services/organization';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import { getProfiles } from '../services/profile';
+import { retrieveProfiles } from '../reducers/denormalizations';
 
 export function loadExtendedTeam(teamId) {
     return {
@@ -29,7 +30,9 @@ export function loadTeamMembers(teamId, nextRequest=null) {
             /*eslint-enable camelcase */
             bailout: (state) => {
                 if (state.get('teamMembers').has(teamId) && nextRequest === null) {
-                    return state.get('teamMembers').get(teamId).get('ids').size > 0;
+                    const ids = state.get('teamMembers').get(teamId).get('ids').toJS();
+                    const members = retrieveProfiles(ids, state.get('cache').toJS());
+                    return members !== null;
                 }
             },
         },

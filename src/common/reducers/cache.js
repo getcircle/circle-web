@@ -5,6 +5,7 @@ import * as types from '../constants/actionTypes';
 const initialState = Immutable.fromJS({
     entities: Immutable.Map(),
     normalizations: Immutable.Map(),
+    timestamps: Immutable.Map(),
 });
 
 export default function cache(state = initialState, action) {
@@ -24,6 +25,16 @@ export default function cache(state = initialState, action) {
                     for (let normalizationId in normalizations) {
                         map.deleteIn(['normalizations', normalizationsType, normalizationId]);
                     }
+                }
+            }
+
+            // Timestamp when each entity in the payload gets cached so we can calculate its age later for TTL.
+            for (let entityType in action.payload.entities) {
+                const entities = action.payload.entities[entityType];
+                for (let entityId in entities) {
+                    // Store timestamp as Epoch time measured in seconds.
+                    const epochTime = Math.floor(new Date().getTime() / 1000);
+                    map.setIn(['timestamps', entityType, entityId], epochTime);
                 }
             }
 

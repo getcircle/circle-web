@@ -2,6 +2,7 @@ import * as organizationRequests from '../services/organization';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import { getProfiles } from '../services/profile';
+import { retrieveLocation, retrieveProfiles } from '../reducers/denormalizations';
 
 export function loadLocation(locationId) {
     return {
@@ -12,7 +13,12 @@ export function loadLocation(locationId) {
                 types.LOAD_LOCATION_FAILURE,
             ],
             remote: (client) => organizationRequests.getLocation(client, locationId),
-            bailout: state => state.get('locations').get('ids').has(locationId),
+            bailout: (state) => {
+                if (state.get('locations').get('ids').has(locationId)) {
+                    const location = retrieveLocation(locationId, state.get('cache').toJS());
+                    return location !== null;
+                }
+            },
         },
     };
 }
@@ -30,7 +36,9 @@ export function loadLocationMembers(locationId, nextRequest=null) {
             /*eslint-enable camelcase */
             bailout: (state) => {
                 if (state.get('locationMembers').has(locationId) && nextRequest === null) {
-                    return state.get('locationMembers').get(locationId).get('ids').size > 0;
+                    const ids = state.get('locationMembers').get(locationId).get('ids').toJS();
+                    const members = retrieveProfiles(ids, state.get('cache').toJS());
+                    return members !== null;
                 }
             },
         },
