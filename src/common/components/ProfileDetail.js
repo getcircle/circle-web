@@ -1,6 +1,10 @@
+import mui from 'material-ui';
+import { Tabs, Tab } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import CurrentTheme from '../utils/ThemeManager';
+import { fontWeights } from '../constants/styles';
 import {
     routeToProfile,
     routeToLocation,
@@ -34,15 +38,80 @@ class ProfileDetail extends CSSComponent {
         }).isRequired,
     }
 
+    static childContextTypes = {
+        muiTheme: PropTypes.object,
+    }
+
+    state = {
+        muiTheme: CurrentTheme,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: this.state.muiTheme,
+        };
+    }
+
+    componentWillMount() {
+        this.customizeTheme(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.customizeTheme(nextProps);
+    }
+
     classes() {
         return {
             default: {
+                DetailContent: {
+                    style: {
+                        paddingTop: 20,
+                    },
+                },
                 section: {
                     marginTop: 20,
+                },
+                tabsContainer: {
+                    margin: '0 auto',
+                    width: '800px',
+                },
+                tabsSection: {
+                    backgroundColor: 'rgb(51, 51, 51)',
+                    paddingBottom: '2px',
+                    width: '100%',
+                },
+                tabInkBarStyle: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    height: 1,
+                    marginTop: '-8px',
+                },
+                tab: {
+                    fontSize: 12,
+                    letterSpacing: '1px',
+                    padding: '0 15px',
+                    textTransform: 'uppercase',
+                    ...fontWeights.semiBold,
                 },
             },
         };
     }
+
+    customizeTheme(props) {
+        let customTheme = Object.assign({}, CurrentTheme, {
+            tabs: {
+                backgroundColor: 'transparent',
+                textColor: 'rgba(255, 255, 255, 0.7)',
+                selectedTextColor: 'rgb(255, 255, 255)',
+            },
+        });
+
+        this.setState({muiTheme: customTheme});
+    }
+
+    onTabChange(event) {
+
+    }
+
     // Render Methods
 
     renderContactInfo(contactMethods=[], locations=[], isLoggedInUser = false) {
@@ -143,7 +212,7 @@ class ProfileDetail extends CSSComponent {
         }
     }
 
-    render() {
+    renderContent() {
         const {
             /*eslint-disable camelcase*/
             direct_reports,
@@ -151,8 +220,28 @@ class ProfileDetail extends CSSComponent {
             manager,
             manages_team,
             peers,
-            profile,
             team,
+            /*eslint-enable camelcase*/
+        } = this.props.extendedProfile;
+
+        const {
+            isLoggedInUser,
+        } = this.props;
+
+        return (
+            <div>
+                {this.renderContactInfo(this.getContactMethods(), locations, isLoggedInUser)}
+                {this.renderTeam(manager, peers, team)}
+                {this.renderManages(manages_team, direct_reports)}
+            </div>
+        );
+    }
+
+    render() {
+        const {
+            /*eslint-disable camelcase*/
+            manager,
+            profile,
             /*eslint-enable camelcase*/
         } = this.props.extendedProfile;
 
@@ -168,10 +257,27 @@ class ProfileDetail extends CSSComponent {
                     onEditTapped={this.editButtonTapped.bind(this)}
                     profile={profile}
                 />
-                <DetailContent>
-                    {this.renderContactInfo(this.getContactMethods(), locations, isLoggedInUser)}
-                    {this.renderTeam(manager, peers, team)}
-                    {this.renderManages(manages_team, direct_reports)}
+                <div className="row" style={this.styles().tabsSection}>
+                    <div className="row" style={this.styles().tabsContainer}>
+                        <Tabs
+                            inkBarStyle={{...this.styles().tabInkBarStyle}}
+                            valueLink={{value: 'about', requestChange: this.onTabChange.bind(this)}}
+                        >
+                            <Tab
+                                label={t('Knowledge')}
+                                style={{...this.styles().tab}}
+                                value="knowledge"
+                            />
+                            <Tab
+                                label={t('About')}
+                                style={{...this.styles().tab}}
+                                value="about"
+                            />
+                        </Tabs>
+                    </div>
+                </div>
+                <DetailContent {...this.styles().DetailContent}>
+                    {this.renderContent()}
                 </DetailContent>
                 {this.renderProfileDetailForm(profile, manager)}
             </div>
