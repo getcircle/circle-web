@@ -8,6 +8,7 @@ import {
 } from '../utils/routes';
 import t from '../utils/gettext';
 
+import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import InternalPropTypes from './InternalPropTypes';
 import ProfileDetailContactInfo from './ProfileDetailContactInfo';
@@ -15,17 +16,10 @@ import ProfileDetailForm from './ProfileDetailForm';
 import ProfileDetailHeader from './ProfileDetailHeader';
 import ProfileDetailManages from './ProfileDetailManages';
 import ProfileDetailTeam from './ProfileDetailTeam';
-import StyleableComponent from './StyleableComponent';
 
 const { ContactMethodV1 } = services.profile.containers;
 
-const styles = {
-    section: {
-        marginTop: 20,
-    },
-};
-
-class ProfileDetail extends StyleableComponent {
+class ProfileDetail extends CSSComponent {
 
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
@@ -40,6 +34,15 @@ class ProfileDetail extends StyleableComponent {
         }).isRequired,
     }
 
+    classes() {
+        return {
+            default: {
+                section: {
+                    marginTop: 20,
+                },
+            },
+        };
+    }
     // Render Methods
 
     renderContactInfo(contactMethods=[], locations=[], isLoggedInUser = false) {
@@ -50,7 +53,7 @@ class ProfileDetail extends StyleableComponent {
                 locations={locations}
                 onClickLocation={routeToLocation.bind(null, this.context.history)}
                 profile={this.props.extendedProfile.profile}
-                style={this.mergeAndPrefix(styles.section)}
+                style={this.styles().section}
             />
         );
     }
@@ -64,7 +67,7 @@ class ProfileDetail extends StyleableComponent {
                     onClickPeer={routeToProfile.bind(null, this.context.history)}
                     onClickTeam={routeToTeam.bind(null, this.context.history, team)}
                     peers={peers}
-                    style={this.mergeAndPrefix(styles.section)}
+                    style={this.styles().section}
                     team={team}
                 />
             );
@@ -78,7 +81,7 @@ class ProfileDetail extends StyleableComponent {
                     directReports={directReports}
                     onClickDirectReport={routeToProfile.bind(null, this.context.history)}
                     onClickTeam={routeToTeam.bind(null, this.context.history, team)}
-                    style={this.mergeAndPrefix(styles.section)}
+                    style={this.styles().section}
                     team={team}
                 />
             );
