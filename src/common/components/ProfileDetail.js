@@ -28,10 +28,12 @@ class ProfileDetail extends CSSComponent {
         ),
         postsLoadMore: PropTypes.func.isRequired,
         slug: PropTypes.string,
+        totalPosts: PropTypes.number,
     }
 
     static defaultProps = {
         posts: [],
+        totalPosts: 0,
     };
 
     static contextTypes = {
@@ -233,6 +235,7 @@ class ProfileDetail extends CSSComponent {
 
         const {
             isLoggedInUser,
+            totalPosts,
         } = this.props;
         const { profile: authenticatedProfile } = this.context.auth;
         const selectedTabValue = this.state.selectedTabValue ? this.state.selectedTabValue : 'knowledge';
@@ -251,7 +254,7 @@ class ProfileDetail extends CSSComponent {
                             valueLink={{value: selectedTabValue, requestChange: this.onTabChange.bind(this)}}
                         >
                             <Tab
-                                label={t('Knowledge')}
+                                label={t('Knowledge') + (totalPosts > 0 ? ` (${totalPosts})` : '')}
                                 style={{...this.styles().tab}}
                                 value="knowledge"
                             />

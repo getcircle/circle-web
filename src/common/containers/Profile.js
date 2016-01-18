@@ -142,6 +142,12 @@ class Profile extends PureComponent {
             postsNextRequest,
             slug,
         } = this.props;
+
+        let totalPosts = 0;
+        if (postsNextRequest && postsNextRequest.actions[0]) {
+            totalPosts = postsNextRequest.actions[0].control.paginator.count;
+        }
+
         if (extendedProfile) {
             return (
                 <DocumentTitle title={extendedProfile.profile.full_name}>
@@ -152,6 +158,7 @@ class Profile extends PureComponent {
                         posts={posts}
                         postsLoadMore={::this.onPostsLoadMore}
                         slug={slug}
+                        totalPosts={totalPosts}
                     />
                 </DocumentTitle>
             );
