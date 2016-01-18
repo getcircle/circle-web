@@ -4,7 +4,7 @@ import { services } from 'protobufs';
 
 import CurrentTheme from '../utils/ThemeManager';
 import { PostStateURLString } from '../utils/post';
-import { routeToProfile } from '../utils/routes';
+import { replaceProfileSlug } from '../utils/routes';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -47,6 +47,7 @@ class ProfileDetail extends CSSComponent {
 
     state = {
         muiTheme: CurrentTheme,
+        selectedTabValue: null,
     }
 
     getChildContext() {
@@ -57,10 +58,12 @@ class ProfileDetail extends CSSComponent {
 
     componentWillMount() {
         this.customizeTheme(this.props);
+        this.mergeStateAndProps(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         this.customizeTheme(nextProps);
+        this.mergeStateAndProps(nextProps);
     }
 
     classes() {
@@ -97,6 +100,14 @@ class ProfileDetail extends CSSComponent {
         };
     }
 
+    mergeStateAndProps(props) {
+        if (!this.state.selectedTabValue) {
+            this.setState({
+                selectedTabValue: props.slug,
+            });
+        }
+    }
+
     customizeTheme(props) {
         let customTheme = Object.assign({}, CurrentTheme, {
             tabs: {
@@ -116,7 +127,10 @@ class ProfileDetail extends CSSComponent {
             profile,
         } = this.props.extendedProfile;
 
-        routeToProfile(this.context.history, profile, value);
+        replaceProfileSlug(this.context.history, profile, value);
+        this.setState({
+            selectedTabValue: value,
+        });
     }
 
     editButtonTapped() {
@@ -219,10 +233,9 @@ class ProfileDetail extends CSSComponent {
 
         const {
             isLoggedInUser,
-            slug,
         } = this.props;
         const { profile: authenticatedProfile } = this.context.auth;
-        const selectedTabValue = slug;
+        const selectedTabValue = this.state.selectedTabValue ? this.state.selectedTabValue : 'knowledge';
 
         return (
             <div>

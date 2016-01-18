@@ -1,10 +1,12 @@
 const NEXT_PATHNAME_KEY = 'n:p';
 
-export function routeToProfile(history, profile, slug) {
+export function routeToProfile(history, profile) {
+    history.pushState(null, `/profile/${profile.id}`);
+}
+
+export function replaceProfileSlug(history, profile, slug) {
     if (slug && typeof slug === 'string') {
-        history.pushState(null, `/profile/${profile.id}/${slug}`);
-    } else {
-        history.pushState(null, `/profile/${profile.id}`);
+        history.replaceState(null, `/profile/${profile.id}/${slug}`);
     }
 }
 
