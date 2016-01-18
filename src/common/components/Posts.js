@@ -30,10 +30,14 @@ class Posts extends CSSComponent {
             PropTypes.instanceOf(services.post.containers.PostV1)
         ),
         postsLoadMore: PropTypes.func.isRequired,
+        showContent: PropTypes.bool,
+        showEditDelete: PropTypes.bool,
     }
 
     static defaultProps = {
         onDeletePostCallback: () => {},
+        showContent: false,
+        showEditDelete: false,
     }
 
     static contextTypes = {
@@ -71,7 +75,7 @@ class Posts extends CSSComponent {
         return {
             default: {
                 cardListItemInnerDivStyle: {
-                    borderBottom: '1px solid rgba(0, 0, 0, .1)',
+                    borderBottom: '1px solid rgba(200, 200, 200, .3)',
                     padding: 30,
                 },
                 deleteDialog: {
@@ -130,11 +134,24 @@ class Posts extends CSSComponent {
                 loadingIndicator: {
                     backgroundColor: canvasColor,
                 },
+                postContent: {
+                    ...fontColors.dark,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                },
                 primaryTextStyle: {
                     lineHeight: '25px',
                     marginBottom: 5,
                 },
             },
+            'showContent-true': {
+                primaryTextStyle: {
+                    fontSize: '21px',
+                    fontWeight: '600',
+                    lineHeight: '35px',
+                }
+            }
         };
     }
 
@@ -211,7 +228,11 @@ class Posts extends CSSComponent {
     // Render Methods
 
     renderDeleteModal() {
-        if (this.state.showConfirmDeleteModal) {
+        const {
+            showEditDelete,
+        } = this.props;
+
+        if (this.state.showConfirmDeleteModal && showEditDelete) {
             const dialogActions = [
                 (<FlatButton
                     key="cancel"
@@ -257,20 +278,26 @@ class Posts extends CSSComponent {
     }
 
     renderRightMenu(post) {
-        return (
-            <IconMenu iconButtonElement={this.renderMoreButton()}>
-                <MenuItem
-                    onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
-                    primaryText={t('Edit')}
-                    {...this.styles().MenuItem}
-                />
-                <MenuItem
-                    onTouchTap={() => this.onDeleteButtonTapped(post)}
-                    primaryText={t('Delete')}
-                    {...this.styles().MenuItem}
-                />
-            </IconMenu>
-        );
+        const {
+            showEditDelete,
+        } = this.props;
+
+        if (showEditDelete) {
+            return (
+                <IconMenu iconButtonElement={this.renderMoreButton()}>
+                    <MenuItem
+                        onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
+                        primaryText={t('Edit')}
+                        {...this.styles().MenuItem}
+                    />
+                    <MenuItem
+                        onTouchTap={() => this.onDeleteButtonTapped(post)}
+                        primaryText={t('Delete')}
+                        {...this.styles().MenuItem}
+                    />
+                </IconMenu>
+            );
+        }
     }
 
     renderLoadingIndicator() {
@@ -284,7 +311,23 @@ class Posts extends CSSComponent {
     }
 
     renderPost(post) {
+        const {
+            showContent,
+        } = this.props;
+
         const lastUpdatedText = `${t('Last updated')} ${moment(post.changed).fromNow()}`;
+        let secondaryText = lastUpdatedText;
+        let secondaryTextLines = 1;
+        if (showContent) {
+            secondaryText = (
+                <div>
+                    <div className="row" style={this.styles().postContent}>{post.snippet}</div>
+                    <div>{lastUpdatedText}</div>
+                </div>
+            );
+            secondaryTextLines = 2;
+        }
+
         return (
             <ListItem
                 innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
@@ -292,7 +335,8 @@ class Posts extends CSSComponent {
                 onTouchTap={() => this.onPostTapped(post)}
                 primaryText={<span style={{...this.styles().primaryTextStyle}}>{post.title}</span>}
                 rightIconButton={this.renderRightMenu(post)}
-                secondaryText={lastUpdatedText}
+                secondaryText={secondaryText}
+                secondaryTextLines={secondaryTextLines}
             />
         );
     }
@@ -300,6 +344,7 @@ class Posts extends CSSComponent {
     render() {
         const {
             loading,
+            showContent,
             posts,
         } = this.props;
 
@@ -308,11 +353,12 @@ class Posts extends CSSComponent {
                 return this.renderPost(post);
             });
 
+            const elementHeight = showContent ? 136 : 107;
             return (
                 <div className="row full-width" style={this.styles().infiniteListContainer}>
                     <Infinite
                         className="col-xs no-padding"
-                        elementHeight={107}
+                        elementHeight={elementHeight}
                         infiniteLoadBeginEdgeOffset={20}
                         isInfiniteLoading={this.props.loading}
                         key="infinite-results"

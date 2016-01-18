@@ -223,6 +223,7 @@ class Posts extends CSSComponent {
                             postState={postState}
                             posts={posts}
                             postsLoadMore={::this.onPostsLoadMore}
+                            showEditDelete={true}
                         />
                     </CardRow>
                 </DetailContent>

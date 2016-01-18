@@ -193,6 +193,8 @@ class ProfileDetail extends CSSComponent {
                     postState={PostStateURLString.LISTED}
                     posts={posts}
                     postsLoadMore={onPostsLoadMore}
+                    showContent={true}
+                    showEditDelete={false}
                 />
             );
         } else {
