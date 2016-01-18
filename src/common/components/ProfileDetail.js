@@ -1,25 +1,19 @@
-import { List, ListItem, Tabs, Tab } from 'material-ui';
+import { Tabs, Tab } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import CurrentTheme from '../utils/ThemeManager';
-import { fontWeights } from '../constants/styles';
-import moment from '../utils/moment';
-import {
-    routeToProfile,
-    routeToLocation,
-    routeToTeam,
-} from '../utils/routes';
+import { PostStateURLString } from '../utils/post';
+import { routeToProfile } from '../utils/routes';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import InternalPropTypes from './InternalPropTypes';
-import ProfileDetailContactInfo from './ProfileDetailContactInfo';
+import Posts from './Posts';
+import ProfileDetailAbout from './ProfileDetailAbout';
 import ProfileDetailForm from './ProfileDetailForm';
 import ProfileDetailHeader from './ProfileDetailHeader';
-import ProfileDetailManages from './ProfileDetailManages';
-import ProfileDetailTeam from './ProfileDetailTeam';
 
 const { ContactMethodV1 } = services.profile.containers;
 
@@ -30,8 +24,9 @@ class ProfileDetail extends CSSComponent {
         isLoggedInUser: PropTypes.bool.isRequired,
         onUpdateProfile: PropTypes.func.isRequired,
         posts: PropTypes.arrayOf(
-            PropTypes.instanceOf(services.post.containers.PostV1)
+            InternalPropTypes.PostV1
         ),
+        postsLoadMore: PropTypes.func.isRequired,
         slug: PropTypes.string,
     }
 
@@ -73,11 +68,8 @@ class ProfileDetail extends CSSComponent {
             default: {
                 DetailContent: {
                     style: {
-                        paddingTop: 20,
+                        paddingTop: 40,
                     },
-                },
-                section: {
-                    marginTop: 20,
                 },
                 tabsContainer: {
                     margin: '0 auto',
@@ -117,57 +109,14 @@ class ProfileDetail extends CSSComponent {
         this.setState({muiTheme: customTheme});
     }
 
+    // Handlers
+
     onTabChange(value, event, tab) {
         const {
             profile,
         } = this.props.extendedProfile;
 
         routeToProfile(this.context.history, profile, value);
-    }
-
-    // Render Methods
-
-    renderContactInfo(contactMethods=[], locations=[], isLoggedInUser = false) {
-        return (
-            <ProfileDetailContactInfo
-                contactMethods={contactMethods}
-                isLoggedInUser={isLoggedInUser}
-                locations={locations}
-                onClickLocation={routeToLocation.bind(null, this.context.history)}
-                profile={this.props.extendedProfile.profile}
-                style={this.styles().section}
-            />
-        );
-    }
-
-    renderTeam(manager, peers, team) {
-        if (team) {
-            return (
-                <ProfileDetailTeam
-                    manager={manager}
-                    onClickManager={routeToProfile.bind(null, this.context.history, manager)}
-                    onClickPeer={routeToProfile.bind(null, this.context.history)}
-                    onClickTeam={routeToTeam.bind(null, this.context.history, team)}
-                    peers={peers}
-                    style={this.styles().section}
-                    team={team}
-                />
-            );
-        }
-    }
-
-    renderManages(team, directReports) {
-        if (team) {
-            return (
-                <ProfileDetailManages
-                    directReports={directReports}
-                    onClickDirectReport={routeToProfile.bind(null, this.context.history)}
-                    onClickTeam={routeToTeam.bind(null, this.context.history, team)}
-                    style={this.styles().section}
-                    team={team}
-                />
-            );
-        }
     }
 
     editButtonTapped() {
@@ -205,6 +154,8 @@ class ProfileDetail extends CSSComponent {
         return contactMethods.concat(profile.contact_methods);
     }
 
+    // Render Methods
+
     renderProfileDetailForm(profile, manager) {
         const {
             isLoggedInUser,
@@ -225,67 +176,32 @@ class ProfileDetail extends CSSComponent {
         }
     }
 
-    renderPost(post) {
-        const lastUpdatedText = `${t('Last updated')} ${moment(post.changed).fromNow()}`;
-        return (
-            <ListItem
-                innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
-                key={post.id}
-                primaryText={<span style={{...this.styles().primaryTextStyle}}>{post.title}</span>}
-                secondaryText={lastUpdatedText}
-            />
-        );
-    }
-
-    renderPosts() {
-        const {
-            posts,
-        } = this.props;
-
-        if (posts && posts.length) {
-            const postElements = posts.map((post, index) => {
-                return this.renderPost(post);
-            });
-
-            return (
-                <div className="row full-width" style={this.styles().infiniteListContainer}>
-                    <List
-                        className="col-xs no-padding"
-                        key="infinite-results"
-                    >
-                        {postElements}
-                    </List>
-                </div>
-            );
-        }
-    }
-
     renderContent() {
         const {
-            /*eslint-disable camelcase*/
-            direct_reports,
-            locations,
-            manager,
-            manages_team,
-            peers,
-            team,
-            /*eslint-enable camelcase*/
-        } = this.props.extendedProfile;
-
-        const {
+            extendedProfile,
             isLoggedInUser,
+            onPostsLoadMore,
+            onUpdateProfile,
+            posts,
             slug,
         } = this.props;
 
         if (slug === 'knowledge') {
-            return this.renderPosts();
+            return (
+                <Posts
+                    loading={false}
+                    postState={PostStateURLString.LISTED}
+                    posts={posts}
+                    postsLoadMore={onPostsLoadMore}
+                />
+            );
         } else {
             return (
-                <div>
-                    {this.renderContactInfo(this.getContactMethods(), locations, isLoggedInUser)}
-                    {this.renderTeam(manager, peers, team)}
-                    {this.renderManages(manages_team, direct_reports)}
-                </div>
+                <ProfileDetailAbout
+                    extendedProfile={extendedProfile}
+                    isLoggedInUser={isLoggedInUser}
+                    onUpdateProfile={onUpdateProfile}
+                />
             );
         }
     }

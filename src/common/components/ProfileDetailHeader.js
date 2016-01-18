@@ -53,7 +53,6 @@ class ProfileDetailHeader extends CSSComponent {
                 },
                 tenureSection: {
                     paddingTop: 10,
-                    paddingBottom: '5vh',
                 },
                 titleSection: {
                     paddingTop: 10,

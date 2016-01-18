@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
-import { services, soa } from 'protobufs';
+import { soa } from 'protobufs';
 
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
 import { getPostsPaginationKey, getPosts } from '../actions/posts';
@@ -14,6 +14,7 @@ import connectData from '../utils/connectData';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import DocumentTitle from '../components/DocumentTitle';
+import InternalPropTypes from '../components/InternalPropTypes';
 import ProfileDetail from '../components/ProfileDetail';
 import PureComponent from '../components/PureComponent';
 
@@ -93,7 +94,7 @@ class Profile extends PureComponent {
             slug: PropTypes.string,
         }).isRequired,
         posts: PropTypes.arrayOf(
-            PropTypes.instanceOf(services.post.containers.PostV1)
+            InternalPropTypes.PostV1,
         ),
         postsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
     }

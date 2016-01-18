@@ -24,12 +24,16 @@ class Posts extends CSSComponent {
 
     static propTypes = {
         loading: PropTypes.bool,
-        onDeletePostCallback: PropTypes.func.isRequired,
+        onDeletePostCallback: PropTypes.func,
         postState: PropTypes.string,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
         ),
         postsLoadMore: PropTypes.func.isRequired,
+    }
+
+    static defaultProps = {
+        onDeletePostCallback: () => {},
     }
 
     static contextTypes = {
