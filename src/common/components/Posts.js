@@ -1,4 +1,4 @@
-import { CircularProgress, Dialog, FlatButton, IconButton, IconMenu, ListItem, Tabs, Tab } from 'material-ui';
+import { CircularProgress, Dialog, FlatButton, IconButton, IconMenu, ListItem } from 'material-ui';
 import Infinite from 'react-infinite';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import mui from 'material-ui';
@@ -6,17 +6,15 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import CurrentTheme from '../utils/ThemeManager';
-import { canvasColor, fontColors, fontWeights } from '../constants/styles';
+import { canvasColor, fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import { PostStateURLString } from '../utils/post';
-import { routeToEditPost, routeToPosts, routeToPost } from '../utils/routes';
+import { routeToEditPost, routeToPost } from '../utils/routes';
 import tracker from '../utils/tracker';
 import t from '../utils/gettext';
 
-import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
 import CenterLoadingIndicator from './CenterLoadingIndicator';
-import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
 import MoreHorizontalIcon from './MoreHorizontalIcon';
 
@@ -128,33 +126,9 @@ class Posts extends CSSComponent {
                 loadingIndicator: {
                     backgroundColor: canvasColor,
                 },
-                pageHeaderContainer: {
-                    padding: '10px 0 50px 0',
-                    width: '100%',
-                },
-                pageHeaderText: {
-                    fontSize: 36,
-                    fontWeight: 300,
-                    ...fontColors.dark,
-                },
                 primaryTextStyle: {
                     lineHeight: '25px',
                     marginBottom: 5,
-                },
-                tabsContainer: {
-                    borderBottom: '1px solid rgba(0, 0, 0, .1)',
-                    width: '100%',
-                },
-                tabInkBarStyle: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    height: 1,
-                },
-                tab: {
-                    fontSize: 12,
-                    letterSpacing: '1px',
-                    padding: '0 25px',
-                    textTransform: 'uppercase',
-                    ...fontWeights.semiBold,
                 },
             },
         };
@@ -163,17 +137,6 @@ class Posts extends CSSComponent {
     customizeTheme(props) {
         let customTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
             canvasColor: 'rgb(255, 255, 255)',
-        });
-
-
-        customTheme = Object.assign({}, customTheme, {
-            tab: {
-                textColor: CurrentTheme.tab.textColor,
-                selectedTextColor: 'rgba(0, 0, 0, 0.8)',
-            },
-            tabs: {
-                backgroundColor: 'transparent',
-            },
         });
 
         this.setState({muiTheme: customTheme});
@@ -187,10 +150,6 @@ class Posts extends CSSComponent {
         } else if (post.state === PostStateV1.LISTED) {
             routeToPost(this.context.history, post);
         }
-    }
-
-    onTabChange(value, event, tab) {
-        routeToPosts(this.context.history, value);
     }
 
     getEmptyStateMessage() {
@@ -334,7 +293,7 @@ class Posts extends CSSComponent {
         );
     }
 
-    renderPosts() {
+    render() {
         const {
             loading,
             posts,
@@ -359,6 +318,7 @@ class Posts extends CSSComponent {
                     >
                         {postElements}
                     </Infinite>
+                    {this.renderDeleteModal()}
                 </div>
             );
         } else if (loading) {
@@ -370,43 +330,6 @@ class Posts extends CSSComponent {
                 </p>
             );
         }
-    }
-
-    render() {
-        const {
-            postState,
-        } = this.props;
-
-        return (
-            <DetailContent>
-                <CardRow>
-                    <div className="row start-xs between-xs" style={this.styles().pageHeaderContainer}>
-                        <div>
-                            <h3 style={this.styles().pageHeaderText}>{t('My Knowledge')}</h3>
-                        </div>
-                    </div>
-                    <div className="row" style={this.styles().tabsContainer}>
-                        <Tabs
-                            inkBarStyle={{...this.styles().tabInkBarStyle}}
-                            valueLink={{value: postState, requestChange: this.onTabChange.bind(this)}}
-                        >
-                            <Tab
-                                label={t('Published')}
-                                style={{...this.styles().tab}}
-                                value={PostStateURLString.LISTED.toString()}
-                            />
-                            <Tab
-                                label={t('Drafts')}
-                                style={{...this.styles().tab}}
-                                value={PostStateURLString.DRAFT.toString()}
-                            />
-                        </Tabs>
-                    </div>
-                    {this.renderPosts()}
-                </CardRow>
-                {this.renderDeleteModal()}
-            </DetailContent>
-        );
     }
 }
 
