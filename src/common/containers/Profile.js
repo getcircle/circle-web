@@ -143,7 +143,7 @@ class Profile extends PureComponent {
             slug,
         } = this.props;
 
-        let totalPosts = 0;
+        let totalPosts = posts.length;
         if (postsNextRequest && postsNextRequest.actions[0]) {
             totalPosts = postsNextRequest.actions[0].control.paginator.count;
         }
