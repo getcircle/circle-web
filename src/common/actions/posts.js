@@ -29,7 +29,7 @@ export function updatePost(post) {
 }
 
 export function getPostsPaginationKey(postStateURLString, byProfile) {
-    return byProfile.id + '-' + postStateURLString;
+    return (byProfile ? byProfile.id : 'all') + '-' + postStateURLString;
 }
 
 export function getPosts(postStateURLString, byProfile, nextRequest) {

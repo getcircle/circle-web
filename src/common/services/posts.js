@@ -67,7 +67,7 @@ export function getPosts(client, postStateURLString, byProfile, nextRequest=null
 
     let parameters = {
         /*eslint-disable camelcase*/
-        by_profile_id: byProfile.id,
+        by_profile_id: byProfile ? byProfile.id : undefined,
         state: getPostStateFromURLString(postStateURLString),
         inflations: inflations,
         fields: fields,
