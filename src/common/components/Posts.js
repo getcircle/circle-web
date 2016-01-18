@@ -14,7 +14,6 @@ import tracker from '../utils/tracker';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
-import CenterLoadingIndicator from './CenterLoadingIndicator';
 import IconContainer from './IconContainer';
 import MoreHorizontalIcon from './MoreHorizontalIcon';
 
@@ -130,6 +129,9 @@ class Posts extends CSSComponent {
                     labelStyle: {
                         color: 'rgba(255, 0, 0, 0.7)',
                     },
+                },
+                loadingIndicatorContainer: {
+                    padding: '20px 0',
                 },
                 loadingIndicator: {
                     backgroundColor: canvasColor,
@@ -372,7 +374,11 @@ class Posts extends CSSComponent {
                 </div>
             );
         } else if (loading) {
-            return <CenterLoadingIndicator />;
+            return (
+                <div style={this.styles().loadingIndicatorContainer}>
+                    <img src="/images/posts_placeholder.png" />
+                </div>
+            );
         } else {
             return (
                 <p className="row center-xs middle-xs" style={this.styles().emptyStateMessageContainer}>
