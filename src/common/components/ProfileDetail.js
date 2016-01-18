@@ -1,10 +1,10 @@
-import mui from 'material-ui';
-import { Tabs, Tab } from 'material-ui';
+import { List, ListItem, Tabs, Tab } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import CurrentTheme from '../utils/ThemeManager';
 import { fontWeights } from '../constants/styles';
+import moment from '../utils/moment';
 import {
     routeToProfile,
     routeToLocation,
@@ -29,7 +29,15 @@ class ProfileDetail extends CSSComponent {
         extendedProfile: PropTypes.object.isRequired,
         isLoggedInUser: PropTypes.bool.isRequired,
         onUpdateProfile: PropTypes.func.isRequired,
+        posts: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.post.containers.PostV1)
+        ),
+        slug: PropTypes.string,
     }
+
+    static defaultProps = {
+        posts: [],
+    };
 
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
@@ -73,6 +81,7 @@ class ProfileDetail extends CSSComponent {
                 },
                 tabsContainer: {
                     margin: '0 auto',
+                    padding: '0 25px',
                     width: '800px',
                 },
                 tabsSection: {
@@ -90,7 +99,7 @@ class ProfileDetail extends CSSComponent {
                     letterSpacing: '1px',
                     padding: '0 15px',
                     textTransform: 'uppercase',
-                    ...fontWeights.semiBold,
+                    fontWeight: '700',
                 },
             },
         };
@@ -100,7 +109,7 @@ class ProfileDetail extends CSSComponent {
         let customTheme = Object.assign({}, CurrentTheme, {
             tabs: {
                 backgroundColor: 'transparent',
-                textColor: 'rgba(255, 255, 255, 0.7)',
+                textColor: 'rgba(255, 255, 255, 0.5)',
                 selectedTextColor: 'rgb(255, 255, 255)',
             },
         });
@@ -108,8 +117,12 @@ class ProfileDetail extends CSSComponent {
         this.setState({muiTheme: customTheme});
     }
 
-    onTabChange(event) {
+    onTabChange(value, event, tab) {
+        const {
+            profile,
+        } = this.props.extendedProfile;
 
+        routeToProfile(this.context.history, profile, value);
     }
 
     // Render Methods
@@ -212,6 +225,41 @@ class ProfileDetail extends CSSComponent {
         }
     }
 
+    renderPost(post) {
+        const lastUpdatedText = `${t('Last updated')} ${moment(post.changed).fromNow()}`;
+        return (
+            <ListItem
+                innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
+                key={post.id}
+                primaryText={<span style={{...this.styles().primaryTextStyle}}>{post.title}</span>}
+                secondaryText={lastUpdatedText}
+            />
+        );
+    }
+
+    renderPosts() {
+        const {
+            posts,
+        } = this.props;
+
+        if (posts && posts.length) {
+            const postElements = posts.map((post, index) => {
+                return this.renderPost(post);
+            });
+
+            return (
+                <div className="row full-width" style={this.styles().infiniteListContainer}>
+                    <List
+                        className="col-xs no-padding"
+                        key="infinite-results"
+                    >
+                        {postElements}
+                    </List>
+                </div>
+            );
+        }
+    }
+
     renderContent() {
         const {
             /*eslint-disable camelcase*/
@@ -226,15 +274,20 @@ class ProfileDetail extends CSSComponent {
 
         const {
             isLoggedInUser,
+            slug,
         } = this.props;
 
-        return (
-            <div>
-                {this.renderContactInfo(this.getContactMethods(), locations, isLoggedInUser)}
-                {this.renderTeam(manager, peers, team)}
-                {this.renderManages(manages_team, direct_reports)}
-            </div>
-        );
+        if (slug === 'knowledge') {
+            return this.renderPosts();
+        } else {
+            return (
+                <div>
+                    {this.renderContactInfo(this.getContactMethods(), locations, isLoggedInUser)}
+                    {this.renderTeam(manager, peers, team)}
+                    {this.renderManages(manages_team, direct_reports)}
+                </div>
+            );
+        }
     }
 
     render() {
@@ -247,8 +300,10 @@ class ProfileDetail extends CSSComponent {
 
         const {
             isLoggedInUser,
+            slug,
         } = this.props;
         const { profile: authenticatedProfile } = this.context.auth;
+        const selectedTabValue = slug;
 
         return (
             <div>
@@ -261,7 +316,7 @@ class ProfileDetail extends CSSComponent {
                     <div className="row" style={this.styles().tabsContainer}>
                         <Tabs
                             inkBarStyle={{...this.styles().tabInkBarStyle}}
-                            valueLink={{value: 'about', requestChange: this.onTabChange.bind(this)}}
+                            valueLink={{value: selectedTabValue, requestChange: this.onTabChange.bind(this)}}
                         >
                             <Tab
                                 label={t('Knowledge')}

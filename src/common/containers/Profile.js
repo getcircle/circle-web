@@ -1,10 +1,13 @@
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
+import { services, soa } from 'protobufs';
 
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
+import { getPostsPaginationKey, getPosts } from '../actions/posts';
+import { PostStateURLString } from '../utils/post';
 import { clearTeamMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
-import { retrieveExtendedProfile } from '../reducers/denormalizations';
+import { retrieveExtendedProfile, retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 import connectData from '../utils/connectData';
 
@@ -16,12 +19,15 @@ import PureComponent from '../components/PureComponent';
 
 const selector = selectors.createImmutableSelector(
     [
+        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.extendedProfilesSelector,
+        selectors.postsSelector,
         selectors.routerParametersSelector,
-        selectors.authenticationSelector,
     ],
-    (cacheState, extendedProfilesState, paramsState, authenticationState) => {
+    (authenticationState, cacheState, extendedProfilesState, postsState, paramsState) => {
+        const slug = paramsState.slug ? paramsState.slug : 'knowledge';
+
         let extendedProfile;
         const profileId = paramsState.profileId;
         const cache = cacheState.toJS();
@@ -37,15 +43,31 @@ const selector = selectors.createImmutableSelector(
             isLoggedInUser = false;
         }
 
+        let posts, postsNextRequest;
+        let postState = PostStateURLString.LISTED;
+        const cacheKey = getPostsPaginationKey(postState, authenticationState.get('profile'));
+        if (postsState.has(cacheKey)) {
+            const ids = postsState.get(cacheKey).get('ids').toJS();
+            posts = retrievePosts(ids, cache);
+            postsNextRequest = postsState.get(cacheKey).get('nextRequest');
+        }
+
         // Profile ID is passed because extended profile might not have been fetched
         // ID is used to check whether this user is the logged in user or not
         return {
             extendedProfile,
-            profileId,
             isLoggedInUser,
+            posts,
+            postsNextRequest,
+            profileId,
+            slug,
         };
     }
 );
+
+function fetchPosts(dispatch, params, postsNextRequest) {
+    return dispatch(getPosts(PostStateURLString.LISTED, {id: params.profileId}, postsNextRequest));
+}
 
 function fetchProfile(dispatch, params) {
     return dispatch(getExtendedProfile(params.profileId));
@@ -54,6 +76,7 @@ function fetchProfile(dispatch, params) {
 function fetchData(getState, dispatch, location, params) {
     return Promise.all([
         fetchProfile(dispatch, params),
+        fetchPosts(dispatch, params, null),
     ]);
 }
 
@@ -67,12 +90,18 @@ class Profile extends PureComponent {
         isLoggedInUser: PropTypes.bool.isRequired,
         params: PropTypes.shape({
             profileId: PropTypes.string.isRequired,
+            slug: PropTypes.string,
         }).isRequired,
+        posts: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.post.containers.PostV1)
+        ),
+        postsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
             fetchProfile(this.props.dispatch, this.props.params);
+            fetchPosts(this.props.dispatch, params, this.props.postsNextRequest);
             resetScroll();
         }
         else if (this.props.extendedProfile && nextProps.extendedProfile) {
@@ -84,6 +113,10 @@ class Profile extends PureComponent {
                 nextProps.dispatch(clearTeamMembers(nextProps.extendedProfile.team.id));
             }
         }
+    }
+
+    onPostsLoadMore() {
+
     }
 
     onUpdateProfile(profile, manager) {
@@ -98,6 +131,8 @@ class Profile extends PureComponent {
         const {
             extendedProfile,
             isLoggedInUser,
+            posts,
+            slug,
         } = this.props;
         if (extendedProfile) {
             return (
@@ -106,6 +141,9 @@ class Profile extends PureComponent {
                         extendedProfile={extendedProfile}
                         isLoggedInUser={isLoggedInUser}
                         onUpdateProfile={::this.onUpdateProfile}
+                        posts={posts}
+                        postsLoadMore={::this.onPostsLoadMore}
+                        slug={slug}
                     />
                 </DocumentTitle>
             );

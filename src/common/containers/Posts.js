@@ -26,7 +26,7 @@ const selector = createSelector(
     ],
     (authenticationState, cacheState, responsiveState, parametersSelector, postsState) => {
         let posts, postsNextRequest;
-        let postState = parametersSelector.postState
+        let postState = parametersSelector.postState;
         let loading = false;
         const cache = cacheState.toJS();
         const cacheKey = getPostsPaginationKey(postState, authenticationState.get('profile'));

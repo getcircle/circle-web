@@ -187,6 +187,14 @@ export default function (store) {
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
                 )}
+                path="/profile/:profileId/:slug"
+            />
+            <Route
+                component={require('./containers/Profile')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
+                )}
                 path="/profile/:profileId"
             />
             <Route
