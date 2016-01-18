@@ -15,6 +15,7 @@ import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import IconContainer from './IconContainer';
+import InternalPropTypes from './InternalPropTypes';
 import MoreHorizontalIcon from './MoreHorizontalIcon';
 
 const { PostStateV1 } = services.post.containers;
@@ -22,6 +23,7 @@ const { PostStateV1 } = services.post.containers;
 class Posts extends CSSComponent {
 
     static propTypes = {
+        forProfile: InternalPropTypes.ProfileV1,
         loading: PropTypes.bool,
         onDeletePostCallback: PropTypes.func,
         postState: PropTypes.string,
@@ -177,13 +179,18 @@ class Posts extends CSSComponent {
 
     getEmptyStateMessage() {
         const {
+            forProfile,
             postState,
         } = this.props;
 
         if (postState === PostStateURLString.DRAFT.toString()) {
             return t('You have no draft knowledge posts.');
         } else if (postState === PostStateURLString.LISTED.toString()) {
-            return t('You haven’t published any knowledge yet.');
+            if (forProfile && forProfile.first_name) {
+                return t(forProfile.first_name + ' hasn’t published any knowledge yet.');
+            } else {
+                return t('You haven’t published any knowledge yet.');
+            }
         }
     }
 

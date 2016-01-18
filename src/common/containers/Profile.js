@@ -46,7 +46,7 @@ const selector = selectors.createImmutableSelector(
 
         let posts, postsNextRequest;
         let postState = PostStateURLString.LISTED;
-        const cacheKey = getPostsPaginationKey(postState, authenticationState.get('profile'));
+        const cacheKey = getPostsPaginationKey(postState, {id: profileId});
         if (postsState.has(cacheKey)) {
             const ids = postsState.get(cacheKey).get('ids').toJS();
             posts = retrievePosts(ids, cache);

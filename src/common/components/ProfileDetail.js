@@ -190,6 +190,7 @@ class ProfileDetail extends CSSComponent {
             return (
                 <Posts
                     loading={false}
+                    forProfile={extendedProfile.profile}
                     postState={PostStateURLString.LISTED}
                     posts={posts}
                     postsLoadMore={postsLoadMore}
