@@ -323,7 +323,7 @@ class Posts extends CSSComponent {
         if (showContent) {
             secondaryText = (
                 <div>
-                    <div className="row" style={this.styles().postContent}>{post.snippet}</div>
+                    <div className="row" style={this.styles().postContent}>{`${post.snippet}\u2026`}</div>
                     <div>{lastUpdatedText}</div>
                 </div>
             );

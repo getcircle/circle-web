@@ -102,7 +102,7 @@ class Profile extends PureComponent {
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
             fetchProfile(this.props.dispatch, this.props.params);
-            fetchPosts(this.props.dispatch, params, this.props.postsNextRequest);
+            fetchPosts(this.props.dispatch, this.props.params, this.props.postsNextRequest);
             resetScroll();
         }
         else if (this.props.extendedProfile && nextProps.extendedProfile) {
@@ -117,7 +117,13 @@ class Profile extends PureComponent {
     }
 
     onPostsLoadMore() {
+        const {
+            dispatch,
+            params,
+            postsNextRequest,
+        } = this.props;
 
+        fetchPosts(dispatch, params, postsNextRequest);
     }
 
     onUpdateProfile(profile, manager) {
@@ -133,6 +139,7 @@ class Profile extends PureComponent {
             extendedProfile,
             isLoggedInUser,
             posts,
+            postsNextRequest,
             slug,
         } = this.props;
         if (extendedProfile) {

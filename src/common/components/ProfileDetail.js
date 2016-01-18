@@ -180,7 +180,7 @@ class ProfileDetail extends CSSComponent {
         const {
             extendedProfile,
             isLoggedInUser,
-            onPostsLoadMore,
+            postsLoadMore,
             onUpdateProfile,
             posts,
             slug,
@@ -192,7 +192,7 @@ class ProfileDetail extends CSSComponent {
                     loading={false}
                     postState={PostStateURLString.LISTED}
                     posts={posts}
-                    postsLoadMore={onPostsLoadMore}
+                    postsLoadMore={postsLoadMore}
                     showContent={true}
                     showEditDelete={false}
                 />
