@@ -126,9 +126,15 @@ class Login extends CSSComponent {
                     maxWidth: 400,
                 },
                 organizationImage: {
+                    marginTop: 70,
                     maxHeight: 200,
                     maxWidth: '100%',
                     objectFit: 'contain',
+                },
+                paperContainer: {
+                    position: 'absolute',
+                    top: '320px',
+                    width: '100%',
                 },
                 section: {
                     marginLeft: 20,
@@ -142,6 +148,7 @@ class Login extends CSSComponent {
                 wrap: {
                     marginBottom: 0,
                     paddingTop: '24px',
+                    position: 'relative',
                 },
             },
         };
@@ -232,7 +239,7 @@ class Login extends CSSComponent {
             <div style={this.styles().root}>
                 <div className="wrap" style={this.styles().wrap}>
                     {this.renderOrganizationImage()}
-                    <div className="row center-xs">
+                    <div className="row center-xs" style={this.styles().paperContainer}>
                         <Paper style={this.styles().container}>
                             <div className="row center-xs">
                                 <h1 style={this.styles().header}>{this.getHeaderText()}</h1>
