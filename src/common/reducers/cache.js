@@ -38,6 +38,29 @@ export default function cache(state = initialState, action) {
                 }
             }
 
+            // Keep old values for fields excluded by new entities.
+            if (action.payload.entities) {
+                for (let entitiesType in action.payload.entities) {
+                    const entities = action.payload.entities[entitiesType];
+                    for (let entityId in entities) {
+                        let newEntity = entities[entityId];
+                        const oldEntity = map.getIn(['entities', entitiesType, entityId]);
+                        if (oldEntity) {
+                            let excludedFields = [];
+                            if (newEntity.fields) {
+                                excludedFields = excludedFields.concat(newEntity.fields.exclude);
+                            }
+                            if (newEntity.inflations) {
+                                excludedFields = excludedFields.concat(newEntity.inflations.exclude);
+                            }
+                            excludedFields.forEach((field) => {
+                                newEntity.set(field, oldEntity.get(field));
+                            });
+                        }
+                    }
+                }
+            }
+
             map.mergeDeepIn(['entities'], action.payload.entities)
                 .mergeDeepIn(['normalizations'], action.payload.normalizations);
         });
