@@ -1,37 +1,45 @@
+import { Tabs, Tab } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import {
-    routeToProfile,
-    routeToLocation,
-    routeToTeam,
-} from '../utils/routes';
+import CurrentTheme from '../utils/ThemeManager';
+import { PostStateURLString } from '../utils/post';
+import { replaceProfileSlug } from '../utils/routes';
 import t from '../utils/gettext';
 
+import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import InternalPropTypes from './InternalPropTypes';
-import ProfileDetailContactInfo from './ProfileDetailContactInfo';
+import Posts from './Posts';
+import ProfileDetailAbout from './ProfileDetailAbout';
 import ProfileDetailForm from './ProfileDetailForm';
 import ProfileDetailHeader from './ProfileDetailHeader';
-import ProfileDetailManages from './ProfileDetailManages';
-import ProfileDetailTeam from './ProfileDetailTeam';
-import StyleableComponent from './StyleableComponent';
 
 const { ContactMethodV1 } = services.profile.containers;
 
-const styles = {
-    section: {
-        marginTop: 20,
-    },
+export const PROFILE_TAB_VALUES = {
+    KNOWLEDGE: 'knowledge',
+    ABOUT: 'about',
 };
 
-class ProfileDetail extends StyleableComponent {
+class ProfileDetail extends CSSComponent {
 
     static propTypes = {
         extendedProfile: PropTypes.object.isRequired,
         isLoggedInUser: PropTypes.bool.isRequired,
         onUpdateProfile: PropTypes.func.isRequired,
+        posts: PropTypes.arrayOf(
+            InternalPropTypes.PostV1
+        ),
+        postsLoadMore: PropTypes.func.isRequired,
+        slug: PropTypes.string,
+        totalPosts: PropTypes.number,
     }
+
+    static defaultProps = {
+        posts: [],
+        totalPosts: 0,
+    };
 
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
@@ -40,49 +48,96 @@ class ProfileDetail extends StyleableComponent {
         }).isRequired,
     }
 
-    // Render Methods
-
-    renderContactInfo(contactMethods=[], locations=[], isLoggedInUser = false) {
-        return (
-            <ProfileDetailContactInfo
-                contactMethods={contactMethods}
-                isLoggedInUser={isLoggedInUser}
-                locations={locations}
-                onClickLocation={routeToLocation.bind(null, this.context.history)}
-                profile={this.props.extendedProfile.profile}
-                style={this.mergeAndPrefix(styles.section)}
-            />
-        );
+    static childContextTypes = {
+        muiTheme: PropTypes.object,
     }
 
-    renderTeam(manager, peers, team) {
-        if (team) {
-            return (
-                <ProfileDetailTeam
-                    manager={manager}
-                    onClickManager={routeToProfile.bind(null, this.context.history, manager)}
-                    onClickPeer={routeToProfile.bind(null, this.context.history)}
-                    onClickTeam={routeToTeam.bind(null, this.context.history, team)}
-                    peers={peers}
-                    style={this.mergeAndPrefix(styles.section)}
-                    team={team}
-                />
-            );
+    state = {
+        muiTheme: CurrentTheme,
+        selectedTabValue: null,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: this.state.muiTheme,
+        };
+    }
+
+    componentWillMount() {
+        this.customizeTheme(this.props);
+        this.mergeStateAndProps(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.customizeTheme(nextProps);
+        this.mergeStateAndProps(nextProps);
+    }
+
+    classes() {
+        return {
+            default: {
+                DetailContent: {
+                    style: {
+                        paddingTop: 40,
+                    },
+                },
+                tabsContainer: {
+                    margin: '0 auto',
+                    padding: '0 25px',
+                    width: '800px',
+                },
+                tabsSection: {
+                    backgroundColor: 'rgb(51, 51, 51)',
+                    paddingBottom: '2px',
+                    width: '100%',
+                },
+                tabInkBarStyle: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    height: 1,
+                    marginTop: '-8px',
+                },
+                tab: {
+                    fontSize: 12,
+                    letterSpacing: '1px',
+                    padding: '0 15px',
+                    textTransform: 'uppercase',
+                    fontWeight: '700',
+                },
+            },
+        };
+    }
+
+    mergeStateAndProps(props) {
+        if (!this.state.selectedTabValue) {
+            this.setState({
+                selectedTabValue: props.slug,
+            });
         }
     }
 
-    renderManages(team, directReports) {
-        if (team) {
-            return (
-                <ProfileDetailManages
-                    directReports={directReports}
-                    onClickDirectReport={routeToProfile.bind(null, this.context.history)}
-                    onClickTeam={routeToTeam.bind(null, this.context.history, team)}
-                    style={this.mergeAndPrefix(styles.section)}
-                    team={team}
-                />
-            );
-        }
+    customizeTheme(props) {
+        let customTheme = Object.assign({}, CurrentTheme, {
+            tabs: {
+                backgroundColor: 'transparent',
+                textColor: 'rgba(255, 255, 255, 0.5)',
+                selectedTextColor: 'rgb(255, 255, 255)',
+            },
+        });
+
+        this.setState({muiTheme: customTheme});
+    }
+
+    // Handlers
+
+    onTabChange(value, event, tab) {
+        const {
+            profile,
+        } = this.props.extendedProfile;
+
+        replaceProfileSlug(this.context.history, profile, value);
+        this.setState({
+            selectedTabValue: value,
+        });
     }
 
     editButtonTapped() {
@@ -120,6 +175,8 @@ class ProfileDetail extends StyleableComponent {
         return contactMethods.concat(profile.contact_methods);
     }
 
+    // Render Methods
+
     renderProfileDetailForm(profile, manager) {
         const {
             isLoggedInUser,
@@ -140,23 +197,53 @@ class ProfileDetail extends StyleableComponent {
         }
     }
 
+    renderContent() {
+        const {
+            extendedProfile,
+            isLoggedInUser,
+            postsLoadMore,
+            onUpdateProfile,
+            posts,
+            slug,
+        } = this.props;
+
+        if (slug === PROFILE_TAB_VALUES.KNOWLEDGE) {
+            return (
+                <Posts
+                    loading={false}
+                    forProfile={extendedProfile.profile}
+                    postState={PostStateURLString.LISTED}
+                    posts={posts}
+                    postsLoadMore={postsLoadMore}
+                    showContent={true}
+                    showEditDelete={false}
+                />
+            );
+        } else {
+            return (
+                <ProfileDetailAbout
+                    extendedProfile={extendedProfile}
+                    isLoggedInUser={isLoggedInUser}
+                    onUpdateProfile={onUpdateProfile}
+                />
+            );
+        }
+    }
+
     render() {
         const {
             /*eslint-disable camelcase*/
-            direct_reports,
-            locations,
             manager,
-            manages_team,
-            peers,
             profile,
-            team,
             /*eslint-enable camelcase*/
         } = this.props.extendedProfile;
 
         const {
             isLoggedInUser,
+            totalPosts,
         } = this.props;
         const { profile: authenticatedProfile } = this.context.auth;
+        const selectedTabValue = this.state.selectedTabValue ? this.state.selectedTabValue : PROFILE_TAB_VALUES.KNOWLEDGE;
 
         return (
             <div>
@@ -165,10 +252,27 @@ class ProfileDetail extends StyleableComponent {
                     onEditTapped={this.editButtonTapped.bind(this)}
                     profile={profile}
                 />
-                <DetailContent>
-                    {this.renderContactInfo(this.getContactMethods(), locations, isLoggedInUser)}
-                    {this.renderTeam(manager, peers, team)}
-                    {this.renderManages(manages_team, direct_reports)}
+                <div className="row" style={this.styles().tabsSection}>
+                    <div className="row" style={this.styles().tabsContainer}>
+                        <Tabs
+                            inkBarStyle={{...this.styles().tabInkBarStyle}}
+                            valueLink={{value: selectedTabValue, requestChange: this.onTabChange.bind(this)}}
+                        >
+                            <Tab
+                                label={t('Knowledge') + (totalPosts > 0 ? ` (${totalPosts})` : '')}
+                                style={{...this.styles().tab}}
+                                value="knowledge"
+                            />
+                            <Tab
+                                label={t('About')}
+                                style={{...this.styles().tab}}
+                                value="about"
+                            />
+                        </Tabs>
+                    </div>
+                </div>
+                <DetailContent {...this.styles().DetailContent}>
+                    {this.renderContent()}
                 </DetailContent>
                 {this.renderProfileDetailForm(profile, manager)}
             </div>

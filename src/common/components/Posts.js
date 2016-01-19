@@ -1,4 +1,4 @@
-import { CircularProgress, Dialog, FlatButton, IconButton, IconMenu, ListItem, Tabs, Tab } from 'material-ui';
+import { CircularProgress, Dialog, FlatButton, IconButton, IconMenu, ListItem } from 'material-ui';
 import Infinite from 'react-infinite';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import mui from 'material-ui';
@@ -6,18 +6,16 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import CurrentTheme from '../utils/ThemeManager';
-import { canvasColor, fontColors, fontWeights } from '../constants/styles';
+import { canvasColor, fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import { PostStateURLString } from '../utils/post';
-import { routeToEditPost, routeToPosts, routeToPost } from '../utils/routes';
+import { routeToEditPost, routeToPost } from '../utils/routes';
 import tracker from '../utils/tracker';
 import t from '../utils/gettext';
 
-import CardRow from './CardRow';
 import CSSComponent from './CSSComponent';
-import CenterLoadingIndicator from './CenterLoadingIndicator';
-import DetailContent from './DetailContent';
 import IconContainer from './IconContainer';
+import InternalPropTypes from './InternalPropTypes';
 import MoreHorizontalIcon from './MoreHorizontalIcon';
 
 const { PostStateV1 } = services.post.containers;
@@ -25,13 +23,22 @@ const { PostStateV1 } = services.post.containers;
 class Posts extends CSSComponent {
 
     static propTypes = {
+        forProfile: InternalPropTypes.ProfileV1,
         loading: PropTypes.bool,
-        onDeletePostCallback: PropTypes.func.isRequired,
+        onDeletePostCallback: PropTypes.func,
         postState: PropTypes.string,
         posts: PropTypes.arrayOf(
             PropTypes.instanceOf(services.post.containers.PostV1)
         ),
         postsLoadMore: PropTypes.func.isRequired,
+        showContent: PropTypes.bool,
+        showEditDelete: PropTypes.bool,
+    }
+
+    static defaultProps = {
+        onDeletePostCallback: () => {},
+        showContent: false,
+        showEditDelete: false,
     }
 
     static contextTypes = {
@@ -69,7 +76,7 @@ class Posts extends CSSComponent {
         return {
             default: {
                 cardListItemInnerDivStyle: {
-                    borderBottom: '1px solid rgba(0, 0, 0, .1)',
+                    borderBottom: '1px solid rgba(200, 200, 200, .3)',
                     padding: 30,
                 },
                 deleteDialog: {
@@ -125,55 +132,36 @@ class Posts extends CSSComponent {
                         color: 'rgba(255, 0, 0, 0.7)',
                     },
                 },
+                loadingIndicatorContainer: {
+                    padding: '20px 0',
+                },
                 loadingIndicator: {
                     backgroundColor: canvasColor,
                 },
-                pageHeaderContainer: {
-                    padding: '10px 0 50px 0',
-                    width: '100%',
-                },
-                pageHeaderText: {
-                    fontSize: 36,
-                    fontWeight: 300,
+                postContent: {
                     ...fontColors.dark,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
                 },
                 primaryTextStyle: {
                     lineHeight: '25px',
                     marginBottom: 5,
                 },
-                tabsContainer: {
-                    borderBottom: '1px solid rgba(0, 0, 0, .1)',
-                    width: '100%',
-                },
-                tabInkBarStyle: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    height: 1,
-                },
-                tab: {
-                    fontSize: 12,
-                    letterSpacing: '1px',
-                    padding: '0 25px',
-                    textTransform: 'uppercase',
-                    ...fontWeights.semiBold,
-                },
             },
+            'showContent-true': {
+                primaryTextStyle: {
+                    fontSize: '21px',
+                    fontWeight: '600',
+                    lineHeight: '35px',
+                }
+            }
         };
     }
 
     customizeTheme(props) {
         let customTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
             canvasColor: 'rgb(255, 255, 255)',
-        });
-
-
-        customTheme = Object.assign({}, customTheme, {
-            tab: {
-                textColor: CurrentTheme.tab.textColor,
-                selectedTextColor: 'rgba(0, 0, 0, 0.8)',
-            },
-            tabs: {
-                backgroundColor: 'transparent',
-            },
         });
 
         this.setState({muiTheme: customTheme});
@@ -189,19 +177,20 @@ class Posts extends CSSComponent {
         }
     }
 
-    onTabChange(value, event, tab) {
-        routeToPosts(this.context.history, value);
-    }
-
     getEmptyStateMessage() {
         const {
+            forProfile,
             postState,
         } = this.props;
 
         if (postState === PostStateURLString.DRAFT.toString()) {
             return t('You have no draft knowledge posts.');
         } else if (postState === PostStateURLString.LISTED.toString()) {
-            return t('You haven’t published any knowledge yet.');
+            if (forProfile && forProfile.first_name) {
+                return t(forProfile.first_name + ' hasn’t published any knowledge yet.');
+            } else {
+                return t('You haven’t published any knowledge yet.');
+            }
         }
     }
 
@@ -248,7 +237,11 @@ class Posts extends CSSComponent {
     // Render Methods
 
     renderDeleteModal() {
-        if (this.state.showConfirmDeleteModal) {
+        const {
+            showEditDelete,
+        } = this.props;
+
+        if (this.state.showConfirmDeleteModal && showEditDelete) {
             const dialogActions = [
                 (<FlatButton
                     key="cancel"
@@ -294,20 +287,26 @@ class Posts extends CSSComponent {
     }
 
     renderRightMenu(post) {
-        return (
-            <IconMenu iconButtonElement={this.renderMoreButton()}>
-                <MenuItem
-                    onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
-                    primaryText={t('Edit')}
-                    {...this.styles().MenuItem}
-                />
-                <MenuItem
-                    onTouchTap={() => this.onDeleteButtonTapped(post)}
-                    primaryText={t('Delete')}
-                    {...this.styles().MenuItem}
-                />
-            </IconMenu>
-        );
+        const {
+            showEditDelete,
+        } = this.props;
+
+        if (showEditDelete) {
+            return (
+                <IconMenu iconButtonElement={this.renderMoreButton()}>
+                    <MenuItem
+                        onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
+                        primaryText={t('Edit')}
+                        {...this.styles().MenuItem}
+                    />
+                    <MenuItem
+                        onTouchTap={() => this.onDeleteButtonTapped(post)}
+                        primaryText={t('Delete')}
+                        {...this.styles().MenuItem}
+                    />
+                </IconMenu>
+            );
+        }
     }
 
     renderLoadingIndicator() {
@@ -321,7 +320,23 @@ class Posts extends CSSComponent {
     }
 
     renderPost(post) {
+        const {
+            showContent,
+        } = this.props;
+
         const lastUpdatedText = `${t('Last updated')} ${moment(post.changed).fromNow()}`;
+        let secondaryText = lastUpdatedText;
+        let secondaryTextLines = 1;
+        if (showContent) {
+            secondaryText = (
+                <div>
+                    <div className="row" style={this.styles().postContent}>{`${post.snippet}\u2026`}</div>
+                    <div>{lastUpdatedText}</div>
+                </div>
+            );
+            secondaryTextLines = 2;
+        }
+
         return (
             <ListItem
                 innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
@@ -329,14 +344,16 @@ class Posts extends CSSComponent {
                 onTouchTap={() => this.onPostTapped(post)}
                 primaryText={<span style={{...this.styles().primaryTextStyle}}>{post.title}</span>}
                 rightIconButton={this.renderRightMenu(post)}
-                secondaryText={lastUpdatedText}
+                secondaryText={secondaryText}
+                secondaryTextLines={secondaryTextLines}
             />
         );
     }
 
-    renderPosts() {
+    render() {
         const {
             loading,
+            showContent,
             posts,
         } = this.props;
 
@@ -345,11 +362,12 @@ class Posts extends CSSComponent {
                 return this.renderPost(post);
             });
 
+            const elementHeight = showContent ? 136 : 107;
             return (
                 <div className="row full-width" style={this.styles().infiniteListContainer}>
                     <Infinite
                         className="col-xs no-padding"
-                        elementHeight={107}
+                        elementHeight={elementHeight}
                         infiniteLoadBeginEdgeOffset={20}
                         isInfiniteLoading={this.props.loading}
                         key="infinite-results"
@@ -359,10 +377,15 @@ class Posts extends CSSComponent {
                     >
                         {postElements}
                     </Infinite>
+                    {this.renderDeleteModal()}
                 </div>
             );
         } else if (loading) {
-            return <CenterLoadingIndicator />;
+            return (
+                <div style={this.styles().loadingIndicatorContainer}>
+                    <img src="/images/posts_placeholder.png" />
+                </div>
+            );
         } else {
             return (
                 <p className="row center-xs middle-xs" style={this.styles().emptyStateMessageContainer}>
@@ -370,43 +393,6 @@ class Posts extends CSSComponent {
                 </p>
             );
         }
-    }
-
-    render() {
-        const {
-            postState,
-        } = this.props;
-
-        return (
-            <DetailContent>
-                <CardRow>
-                    <div className="row start-xs between-xs" style={this.styles().pageHeaderContainer}>
-                        <div>
-                            <h3 style={this.styles().pageHeaderText}>{t('My Knowledge')}</h3>
-                        </div>
-                    </div>
-                    <div className="row" style={this.styles().tabsContainer}>
-                        <Tabs
-                            inkBarStyle={{...this.styles().tabInkBarStyle}}
-                            valueLink={{value: postState, requestChange: this.onTabChange.bind(this)}}
-                        >
-                            <Tab
-                                label={t('Published')}
-                                style={{...this.styles().tab}}
-                                value={PostStateURLString.LISTED.toString()}
-                            />
-                            <Tab
-                                label={t('Drafts')}
-                                style={{...this.styles().tab}}
-                                value={PostStateURLString.DRAFT.toString()}
-                            />
-                        </Tabs>
-                    </div>
-                    {this.renderPosts()}
-                </CardRow>
-                {this.renderDeleteModal()}
-            </DetailContent>
-        );
     }
 }
 

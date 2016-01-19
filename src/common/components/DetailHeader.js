@@ -21,13 +21,13 @@ class DetailHeader extends CSSComponent {
             default: {
                 root: {
                     backgroundColor: 'rgb(51, 51, 51)',
-                    height: 320,
+                    height: 290,
                     position: 'relative',
                     zIndex: 1,
                 },
                 nonBlurHeader: {
                     backgroundColor: 'rgb(51, 51, 51)',
-                    height: 320,
+                    height: 290,
                     position: 'relative',
                 },
             },

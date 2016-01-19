@@ -4,6 +4,12 @@ export function routeToProfile(history, profile) {
     history.pushState(null, `/profile/${profile.id}`);
 }
 
+export function replaceProfileSlug(history, profile, slug) {
+    if (slug && typeof slug === 'string') {
+        history.replaceState(null, `/profile/${profile.id}/${slug}`);
+    }
+}
+
 export function routeToTeam(history, team) {
     history.pushState(null, `/team/${team.id}`);
 }
