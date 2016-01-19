@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 
-import { canvasColor } from '../constants/styles';
 import CurrentTheme from '../utils/ThemeManager';
 import { deletePost, getPost } from '../actions/posts';
 import { fontColors } from '../constants/styles';
@@ -114,6 +113,11 @@ class Post extends CSSComponent {
     classes() {
         return {
             default: {
+                Container: {
+                    style: {
+                        paddingTop: '50px',
+                    },
+                },
                 emptyStateMessageContainer: {
                     fontSize: '16px',
                     height: '100%',
@@ -122,6 +126,14 @@ class Post extends CSSComponent {
                     whiteSpace: 'pre-wrap',
                     width: '100%',
                     ...fontColors.light,
+                },
+                PostComponent: {
+                    style: {
+                        background: '#FFF',
+                        borderRadius: '3px',
+                        boxShadow: '1px 1px 2px 0 rgba(0, 0, 0, 0.1)',
+                        padding: '20px',
+                    },
                 },
             },
         };
@@ -134,7 +146,7 @@ class Post extends CSSComponent {
 
     customizeTheme() {
         let customTheme = Object.assign({}, CurrentTheme);
-        customTheme.flatButton.color = canvasColor;
+        customTheme.flatButton.color = '#FFF';
         this.setState({muiTheme: customTheme});
     }
 
@@ -178,7 +190,7 @@ class Post extends CSSComponent {
         if (post) {
             return (
                 <DocumentTitle title={post.title}>
-                    <PostComponent onDeletePostCallback={::this.onDeletePostTapped} post={post} />
+                    <PostComponent onDeletePostCallback={::this.onDeletePostTapped} post={post} {...this.styles().PostComponent} />
                 </DocumentTitle>
             );
         } else if (errorDetails) {
@@ -190,7 +202,7 @@ class Post extends CSSComponent {
 
     render() {
         return (
-            <Container>
+            <Container {...this.styles().Container} >
                 {this.renderPost()}
             </Container>
         );
