@@ -17,6 +17,11 @@ import ProfileDetailHeader from './ProfileDetailHeader';
 
 const { ContactMethodV1 } = services.profile.containers;
 
+export const PROFILE_TAB_VALUES = {
+    KNOWLEDGE: 'knowledge',
+    ABOUT: 'about',
+};
+
 class ProfileDetail extends CSSComponent {
 
     static propTypes = {
@@ -202,7 +207,7 @@ class ProfileDetail extends CSSComponent {
             slug,
         } = this.props;
 
-        if (slug === 'knowledge') {
+        if (slug === PROFILE_TAB_VALUES.KNOWLEDGE) {
             return (
                 <Posts
                     loading={false}
@@ -238,7 +243,7 @@ class ProfileDetail extends CSSComponent {
             totalPosts,
         } = this.props;
         const { profile: authenticatedProfile } = this.context.auth;
-        const selectedTabValue = this.state.selectedTabValue ? this.state.selectedTabValue : 'knowledge';
+        const selectedTabValue = this.state.selectedTabValue ? this.state.selectedTabValue : PROFILE_TAB_VALUES.KNOWLEDGE;
 
         return (
             <div>

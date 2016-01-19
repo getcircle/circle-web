@@ -16,6 +16,7 @@ import Container from '../components/Container';
 import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import ProfileDetail from '../components/ProfileDetail';
+import { PROFILE_TAB_VALUES } from '../components/ProfileDetail';
 import PureComponent from '../components/PureComponent';
 
 const selector = selectors.createImmutableSelector(
@@ -27,7 +28,7 @@ const selector = selectors.createImmutableSelector(
         selectors.routerParametersSelector,
     ],
     (authenticationState, cacheState, extendedProfilesState, postsState, paramsState) => {
-        const slug = paramsState.slug ? paramsState.slug : 'knowledge';
+        const slug = paramsState.slug ? paramsState.slug : PROFILE_TAB_VALUES.KNOWLEDGE;
 
         let extendedProfile;
         const profileId = paramsState.profileId;
@@ -143,7 +144,7 @@ class Profile extends PureComponent {
             slug,
         } = this.props;
 
-        let totalPosts = posts.length;
+        let totalPosts = posts ? posts.length : 0;
         if (postsNextRequest && postsNextRequest.actions[0]) {
             totalPosts = postsNextRequest.actions[0].control.paginator.count;
         }
