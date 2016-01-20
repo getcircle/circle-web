@@ -39,6 +39,8 @@ export default function (content, store, assets, title) {
     <html lang="en-us">
         <head>
             <meta charset="utf-8">
+            <meta name="author" content="Luno">
+            <meta name="description" content="Organizing your company's knowledge.">
             <title>${windowTitle}</title>
             <!-- Load Fonts -->
             <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,600italic,300' rel='stylesheet' type='text/css'>
