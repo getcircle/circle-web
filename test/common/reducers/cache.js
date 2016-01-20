@@ -67,4 +67,18 @@ describe('cache reducer', () => {
         expect(state.get('normalizations').get('.services.post.containers.postv1').get(newPostId).has('by_profile_id')).to.be.ok();
     });
 
+    it('timestamps entities when they are cached', () => {
+        const postId = faker.random.uuid();
+        const initialState = Immutable.fromJS({
+            timestamps: {},
+        });
+        const state = cache(
+            initialState,
+            {
+                payload: mockPayloadWithPost(postId)
+            }
+        );
+        expect(state.get('timestamps').get('.services.post.containers.postv1').has(postId)).to.be.ok();
+    });
+
 });
