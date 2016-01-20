@@ -10,6 +10,7 @@ import {
     detectCodeMarkdownAndAddMarkup,
     detectEmailsAndAddMarkup,
     detectHashtagsAndAddMarkup,
+    detectSingleLineCodeMarkdownAndAddMarkup,
     detectURLsAndAddMarkup,
     setTargetBlankOnAnchorTags,
 } from '../utils/string';
@@ -397,7 +398,8 @@ class Post extends CSSComponent {
             detectCodeMarkdownAndAddMarkup,
             detectURLsAndAddMarkup,
             detectEmailsAndAddMarkup,
-            detectHashtagsAndAddMarkup
+            detectHashtagsAndAddMarkup,
+            detectSingleLineCodeMarkdownAndAddMarkup,
         );
         const finalContent = detectPatternsAndAddMarkup(content);
         return (

@@ -79,6 +79,11 @@ export function detectCodeMarkdownAndAddMarkup(stringValue) {
     return stringValue.replace(backTicksRegex, '<pre>$2</pre>');
 }
 
+export function detectSingleLineCodeMarkdownAndAddMarkup(stringValue) {
+    const backTicksRegex = new RegExp(/(`)([^`]*)(`)/gi);
+    return stringValue.replace(backTicksRegex, '<code>$2</code>');
+}
+
 export function hasHTML(stringValue) {
     if (!__CLIENT__) {
         // SSR - Worst case assume HTML exists. Typically such functions
