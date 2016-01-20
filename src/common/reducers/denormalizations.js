@@ -1,6 +1,8 @@
 import { denormalize } from 'protobuf-normalizr';
 import { services } from 'protobufs';
 
+import { isEntityStale } from './cache';
+
 function entityHasValueForField(entity, field) {
     const parts = field.split('.');
     const part = parts[0];
@@ -17,24 +19,15 @@ function entityHasValueForField(entity, field) {
 
 function retrieve(key, builder, cache, requiredFields) {
     const entity = denormalize(key, builder, cache, (denormalizedEntity, entityKey, key) => {
-        if (cache.timestamps && cache.timestamps[entityKey]) {
-            let timestamp = cache.timestamps[entityKey][key];
-            if (timestamp) {
-                let currentTime = Math.floor(new Date().getTime() / 1000);
-                let ageInSeconds = currentTime - timestamp;
-                if (ageInSeconds > 60 * 5) {
-                    return false;
-                }
-            }
-        }
-        if (requiredFields && requiredFields.length > 0) {
+        if (isEntityStale(cache, entityKey, key)) {
+            return false;
+        } else if (requiredFields && requiredFields.length > 0) {
             for (let field of requiredFields) {
                 if (!entityHasValueForField(denormalizedEntity, field)) {
                     return false;
                 }
             }
         }
-
         return true
     });
     return entity;

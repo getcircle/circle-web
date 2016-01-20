@@ -8,6 +8,20 @@ const initialState = Immutable.fromJS({
     timestamps: Immutable.Map(),
 });
 
+export function isEntityStale(cache, entityKey, key) {
+    if (cache.timestamps && cache.timestamps[entityKey]) {
+        let timestamp = cache.timestamps[entityKey][key];
+        if (timestamp) {
+            let currentTime = Math.floor(new Date().getTime() / 1000);
+            let ageInSeconds = currentTime - timestamp;
+            if (ageInSeconds > 60 * 5) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 export default function cache(state = initialState, action) {
     switch(action.type) {
     case types.LOGOUT_SUCCESS:
