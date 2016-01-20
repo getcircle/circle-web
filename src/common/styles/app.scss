@@ -21,6 +21,7 @@
 @import '../../../node_modules/trix/dist/trix.css';
 
 body, html {
+    background-color: $canvasColor;
     margin: 0;
     height: 100%;
 }
