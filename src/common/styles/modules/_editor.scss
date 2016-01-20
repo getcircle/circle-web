@@ -280,19 +280,21 @@ trix-editor.luno-editor {
     counter-increment: post;
     content: counter(post) ".";
     font-feature-settings: "liga" on,"lnum" on;
-    padding-right: 12px;
+    font-size: $fontSize;
     text-rendering: optimizeLegibility;
     -moz-osx-font-smoothing: grayscale;
     -moz-font-feature-settings: "liga" on,"lnum" on;
     -webkit-font-feature-settings: "liga" on,"lnum" on;
     -webkit-font-smoothing: antialiased;
+    padding-right: 5px;
 }
 
 .luno-editor li:before {
     box-sizing: border-box;
     display: inline-block;
-    font-size: $fontSize;
+    font-size: 22px;
     margin-left: -58px;
+    padding-right: 10px;
     position: absolute;
     text-align: right;
     width: 58px;
@@ -300,8 +302,7 @@ trix-editor.luno-editor {
 
 .luno-editor ul > li::before {
     content: "•";
-    padding-top: 4px;
-    padding-right: 15px;
+    margin-top: -3px;
 }
 
 .luno-editor pre,
