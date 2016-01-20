@@ -65,10 +65,30 @@ export default function cache(state = initialState, action) {
                         if (oldEntity) {
                             let excludedFields = [];
                             if (newEntity.fields) {
-                                excludedFields = excludedFields.concat(newEntity.fields.exclude);
+                                if (newEntity.fields.exclude.length > 0) {
+                                    excludedFields = excludedFields.concat(newEntity.fields.exclude);
+                                }
+                                else if (newEntity.fields.only.length > 0) {
+                                    const otherFields = oldEntity.$type._fields.map((field) => {
+                                        if (newEntity.fields.only.indexOf(field.name) < 0) {
+                                            return field.name;
+                                        }
+                                    });
+                                    excludedFields = excludedFields.concat(otherFields);
+                                }
                             }
                             if (newEntity.inflations) {
-                                excludedFields = excludedFields.concat(newEntity.inflations.exclude);
+                                if (newEntity.inflations.exclude.length > 0) {
+                                    excludedFields = excludedFields.concat(newEntity.inflations.exclude);
+                                }
+                                else if (newEntity.inflations.only.length > 0) {
+                                    const otherFields = oldEntity.$type._fields.map((field) => {
+                                        if (newEntity.inflations.only.indexOf(field.name) < 0) {
+                                            return field.name;
+                                        }
+                                    });
+                                    excludedFields = excludedFields.concat(otherFields);
+                                }
                             }
                             excludedFields.forEach((field) => {
                                 newEntity.set(field, oldEntity.get(field));
