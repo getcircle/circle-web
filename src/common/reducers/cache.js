@@ -67,8 +67,7 @@ export default function cache(state = initialState, action) {
                             if (newEntity.fields) {
                                 if (newEntity.fields.exclude.length > 0) {
                                     excludedFields = excludedFields.concat(newEntity.fields.exclude);
-                                }
-                                else if (newEntity.fields.only.length > 0) {
+                                } else if (newEntity.fields.only.length > 0) {
                                     const otherFields = oldEntity.$type._fields.map((field) => {
                                         if (newEntity.fields.only.indexOf(field.name) < 0) {
                                             return field.name;
@@ -80,8 +79,7 @@ export default function cache(state = initialState, action) {
                             if (newEntity.inflations) {
                                 if (newEntity.inflations.exclude.length > 0) {
                                     excludedFields = excludedFields.concat(newEntity.inflations.exclude);
-                                }
-                                else if (newEntity.inflations.only.length > 0) {
+                                } else if (newEntity.inflations.only.length > 0) {
                                     const otherFields = oldEntity.$type._fields.map((field) => {
                                         if (newEntity.inflations.only.indexOf(field.name) < 0) {
                                             return field.name;
