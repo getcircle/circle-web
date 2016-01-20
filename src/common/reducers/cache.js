@@ -2,6 +2,9 @@ import Immutable from 'immutable';
 
 import * as types from '../constants/actionTypes';
 
+// in seconds
+const TIME_TO_LIVE = 60 * 5;
+
 const initialState = Immutable.fromJS({
     entities: Immutable.Map(),
     normalizations: Immutable.Map(),
@@ -14,7 +17,7 @@ export function isEntityStale(cache, entityKey, key) {
         if (timestamp) {
             let currentTime = Math.floor(new Date().getTime() / 1000);
             let ageInSeconds = currentTime - timestamp;
-            if (ageInSeconds > 60 * 5) {
+            if (ageInSeconds > TIME_TO_LIVE) {
                 return true;
             }
         }
