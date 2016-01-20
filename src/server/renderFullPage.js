@@ -40,6 +40,10 @@ export default function (content, store, assets, title) {
         <head>
             <meta charset="utf-8">
             <title>${windowTitle}</title>
+            <!-- Load Fonts -->
+            <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,600italic,300' rel='stylesheet' type='text/css'>
+            <!-- End Load Fonts -->
+
             ${styles}
             <!-- Begin Google Log In -->
             <script type="text/javascript" src="https://apis.google.com/js/client.js" async defer></script>

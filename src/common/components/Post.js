@@ -222,6 +222,7 @@ class Post extends CSSComponent {
                     },
                 },
                 moreHorizontalIcon: {
+                    left: '-1px',
                     position: 'relative',
                     top: '-4px',
                 },
