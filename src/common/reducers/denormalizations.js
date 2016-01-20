@@ -18,18 +18,21 @@ function entityHasValueForField(entity, field) {
 }
 
 function retrieve(key, builder, cache, requiredFields) {
-    const entity = denormalize(key, builder, cache, (denormalizedEntity, entityKey, key) => {
-        if (isEntityStale(cache, entityKey, key)) {
-            return false;
-        } else if (requiredFields && requiredFields.length > 0) {
-            for (let field of requiredFields) {
-                if (!entityHasValueForField(denormalizedEntity, field)) {
-                    return false;
+    let entity = null;
+    if (!isEntityStale(cache, builder.$type.fqn().toLowerCase(), key)) {
+        entity = denormalize(key, builder, cache, (denormalizedEntity, entityKey, key) => {
+            if (isEntityStale(cache, entityKey, key)) {
+                return false;
+            } else if (requiredFields && requiredFields.length > 0) {
+                for (let field of requiredFields) {
+                    if (!entityHasValueForField(denormalizedEntity, field)) {
+                        return false;
+                    }
                 }
             }
-        }
-        return true
-    });
+            return true
+        });
+    }
     return entity;
 }
 
