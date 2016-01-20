@@ -131,7 +131,7 @@ class Post extends CSSComponent {
                     style: {
                         background: '#FFF',
                         borderRadius: '3px',
-                        boxShadow: '1px 1px 2px 0 rgba(0, 0, 0, 0.1)',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
                         padding: '20px',
                     },
                 },

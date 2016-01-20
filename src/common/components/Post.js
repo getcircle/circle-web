@@ -180,6 +180,10 @@ class Post extends CSSComponent {
                         textTransform: 'none',
                     },
                 },
+                editShareContainer: {
+                    position: 'relative',
+                    top: '7px',
+                },
                 feedbackContainer: {
                     padding: 0,
                 },
@@ -202,7 +206,7 @@ class Post extends CSSComponent {
                 lastUpdatedText: {
                     ...fontColors.light,
                     fontSize: 14,
-                    margin: '10px 0 5px 0',
+                    margin: '8px 0 5px 0',
                     width: '100%',
                 },
                 ModalPrimaryActionButton: {
@@ -398,7 +402,7 @@ class Post extends CSSComponent {
         const finalContent = detectPatternsAndAddMarkup(content);
         return (
             <div
-                className="luno-editor"
+                className="luno-editor readonly"
                 dangerouslySetInnerHTML={{__html: finalContent}}
             />
         );
@@ -563,7 +567,7 @@ class Post extends CSSComponent {
             if (this.state.openMoreActionsMenu) {
                 moreActionsMenu = (
                     <div
-                        className="row middle-xs end-xs full-width"
+                        className="row middle-xs end-xs"
                         key="more-actions-menu"
                         style={{position: 'relative'}}
                     >
@@ -620,8 +624,16 @@ class Post extends CSSComponent {
 
         return (
             <span>
-                {this.renderEditAndShareButton()}
-                <h1 style={this.styles().postTitle}>{post.title}</h1>
+                <div className="row">
+                    <div className="col-xs no-padding">
+                        <div className="box">
+                            <h1 style={this.styles().postTitle}>{post.title}</h1>
+                        </div>
+                    </div>
+                    <div className="box" style={this.styles().editShareContainer}>
+                        {this.renderEditAndShareButton()}
+                    </div>
+                </div>
                 <div className="row" style={this.styles().lastUpdatedText}>{lastUpdatedText}</div>
                 <div className="row between-xs middle-xs" style={this.styles().authorAndFeedbackContainer}>
                     <div className="col-xs-8" style={this.styles().authorContainer}>
