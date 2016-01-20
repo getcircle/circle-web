@@ -4,14 +4,18 @@ import faker from 'faker';
 
 import cache from '../../../src/common/reducers/cache';
 
-function mockPayloadWithPost(postId = faker.random.uuid(), postFields = {}) {
-    const posts = {};
-    posts[postId] = postFields;
+function mockPayloadWithPost(postId = faker.random.uuid(), normalizationFields = {}, entityFields = {}) {
+    const normalizations = {};
+    normalizations[postId] = normalizationFields;
+    const entities = {};
+    entities[postId] = entityFields;
     return {
         normalizations: {
-            '.services.post.containers.postv1': posts,
+            '.services.post.containers.postv1': normalizations,
         },
-        entities: {},
+        entities: {
+            '.services.post.containers.postv1': entities,
+        },
     };
 }
 
