@@ -28,7 +28,7 @@ const selector = selectors.createImmutableSelector(
         selectors.routerParametersSelector,
     ],
     (authenticationState, cacheState, extendedProfilesState, postsState, paramsState) => {
-        const slug = paramsState.slug ? paramsState.slug : PROFILE_TAB_VALUES.KNOWLEDGE;
+        const slug = paramsState.slug ? paramsState.slug : PROFILE_TAB_VALUES.ABOUT;
 
         let extendedProfile;
         const profileId = paramsState.profileId;

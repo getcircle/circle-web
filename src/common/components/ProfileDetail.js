@@ -243,7 +243,7 @@ class ProfileDetail extends CSSComponent {
             totalPosts,
         } = this.props;
         const { profile: authenticatedProfile } = this.context.auth;
-        const selectedTabValue = this.state.selectedTabValue ? this.state.selectedTabValue : PROFILE_TAB_VALUES.KNOWLEDGE;
+        const selectedTabValue = this.state.selectedTabValue ? this.state.selectedTabValue : PROFILE_TAB_VALUES.ABOUT;
 
         return (
             <div>
@@ -259,14 +259,14 @@ class ProfileDetail extends CSSComponent {
                             valueLink={{value: selectedTabValue, requestChange: this.onTabChange.bind(this)}}
                         >
                             <Tab
-                                label={t('Knowledge') + (totalPosts > 0 ? ` (${totalPosts})` : '')}
-                                style={{...this.styles().tab}}
-                                value="knowledge"
-                            />
-                            <Tab
                                 label={t('About')}
                                 style={{...this.styles().tab}}
-                                value="about"
+                                value={PROFILE_TAB_VALUES.ABOUT}
+                            />
+                            <Tab
+                                label={t('Knowledge') + (totalPosts > 0 ? ` (${totalPosts})` : '')}
+                                style={{...this.styles().tab}}
+                                value={PROFILE_TAB_VALUES.KNOWLEDGE}
                             />
                         </Tabs>
                     </div>
