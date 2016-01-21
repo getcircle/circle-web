@@ -1,37 +1,27 @@
 import { denormalize } from 'protobuf-normalizr';
+import combine from 'protobuf-normalizr/lib/combine';
+import { createRequiredFieldsValidator } from 'protobuf-normalizr/lib/validators';
 import { services } from 'protobufs';
 
 import { isEntityStale } from './cache';
 
-function entityHasValueForField(entity, field) {
-    const parts = field.split('.');
-    const part = parts[0];
-    const remainder = parts.slice(1).join('.');
-    const value = entity[part];
-    if (value !== undefined && value !== null) {
-        if (remainder) {
-            return entityHasValueForField(value, remainder);
+function createTTLValidator(cache) {
+    return (denormalizedEntity, entityKey, key) => {
+        if (isEntityStale(cache, entityKey, key)) {
+            return false;
         }
         return true;
     }
-    return false;
 }
 
 function retrieve(key, builder, cache, requiredFields) {
+    const validator = combine(
+        createRequiredFieldsValidator(requiredFields),
+        createTTLValidator(cache),
+    );
     let entity = null;
     if (!isEntityStale(cache, builder.$type.fqn().toLowerCase(), key)) {
-        entity = denormalize(key, builder, cache, (denormalizedEntity, entityKey, key) => {
-            if (isEntityStale(cache, entityKey, key)) {
-                return false;
-            } else if (requiredFields && requiredFields.length > 0) {
-                for (let field of requiredFields) {
-                    if (!entityHasValueForField(denormalizedEntity, field)) {
-                        return false;
-                    }
-                }
-            }
-            return true
-        });
+        entity = denormalize(key, builder, cache, validator);
     }
     return entity;
 }
