@@ -175,6 +175,11 @@ class Post extends CSSComponent {
                     ...fontColors.dark,
                     fontSize: 14,
                 },
+                DeleteModalCancelButton: {
+                    style: {
+                        backgroundColor: 'transparent',
+                    },
+                },
                 EditButton: {
                     labelStyle: {
                         color: tintColor,
@@ -215,6 +220,9 @@ class Post extends CSSComponent {
                     labelStyle: {
                         color: 'rgba(255, 0, 0, 0.7)',
                     },
+                    style: {
+                        backgroundColor: 'transparent',
+                    }
                 },
                 MoreActionsMenuItem: {
                     innerDivStyle: {
@@ -487,6 +495,7 @@ class Post extends CSSComponent {
                     label={t('Cancel')}
                     onTouchTap={::this.onModalCancelTapped}
                     secondary={true}
+                    {...this.styles().DeleteModalCancelButton}
                 />),
                 (<FlatButton
                     key="delete"
