@@ -371,7 +371,7 @@ class ProfileDetailForm extends CSSComponent {
         };
 
         for (let requiredField in requiredFieldsToTitle) {
-            if (this.state[requiredField].trim() === '') {
+            if (!this.state[requiredField] || this.state[requiredField].trim() === '') {
                 this.setState({
                     'error': t(requiredFieldsToTitle[requiredField] + ' cannot be empty.'),
                 });

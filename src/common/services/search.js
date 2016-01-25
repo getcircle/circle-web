@@ -30,6 +30,7 @@ export function search(client, query, category, attribute, attributeValue) {
         attribute,
         /*eslint-disable camelcase*/
         attribute_value: attributeValue,
+        has_category: category !== null || category !== undefined,
         /*eslint-enable camelcase*/
     });
     return handleSearchResponse(client, query, request);
@@ -40,6 +41,9 @@ export function searchV2(client, query, category) {
     let request = new services.search.actions.search_v2.RequestV1({
         query,
         category,
+        /*eslint-disable camelcase*/
+        has_category: category !== null || category !== undefined,
+        /*eslint-enable camelcase*/
     });
     return handleSearchResponse(client, query, request);
 }

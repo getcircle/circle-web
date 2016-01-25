@@ -47,7 +47,10 @@ export function getAuthenticationInstructions(client, email, url) {
                 if (response.isSuccess()) {
                     resolve({
                         authorizationUrl: response.result.authorization_url,
-                        backend: response.result.backend,
+                        // NB: protobufjs doesn't handle proto3 default enum
+                        // values well, this is returned as "null", even if
+                        // explicitly set to 0
+                        backend: response.result.backend || 0,
                         userExists: response.result.user_exists,
                         email: email,
                         organizationDomain: url.subdomain,
