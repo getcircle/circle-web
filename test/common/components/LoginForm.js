@@ -8,6 +8,8 @@ import LoginForm from '../../../src/common/components/LoginForm';
 import LoginInternal from '../../../src/common/components/LoginInternal';
 import LoginSSO from '../../../src/common/components/LoginSSO';
 
+import componentWithContext from '../../componentWithContext';
+
 function setup(overrides) {
     const defaults = {
         authenticate: expect.createSpy(),
@@ -17,7 +19,9 @@ function setup(overrides) {
     }
     const props = Object.assign({}, defaults, overrides);
 
-    let output = TestUtils.renderIntoDocument(<LoginForm {...props} />);
+    const Container = componentWithContext(<LoginForm {...props} />);
+    const container = TestUtils.renderIntoDocument(<Container />);
+    const output = TestUtils.findRenderedComponentWithType(container, LoginForm);
 
     return {
         props,

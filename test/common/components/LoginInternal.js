@@ -11,6 +11,8 @@ import { AUTH_BACKENDS } from '../../../src/common/services/user';
 import LoginEmailInput from '../../../src/common/components/LoginEmailInput';
 import LoginInternal from '../../../src/common/components/LoginInternal';
 
+import componentWithContext from '../../componentWithContext';
+
 const {
     RaisedButton,
     TextField,
@@ -24,7 +26,9 @@ function setup(overrides) {
     }
     const props = Object.assign({}, defaults, overrides);
 
-    let output = TestUtils.renderIntoDocument(<LoginInternal {...props} />);
+    const Container = componentWithContext(<LoginInternal {...props} />);
+    const container = TestUtils.renderIntoDocument(<Container />);
+    const output = TestUtils.findRenderedComponentWithType(container, LoginInternal);
 
     return {
         props,
@@ -91,7 +95,7 @@ describe('LoginInternal', () => {
                 expect(props.onGuestSubmit.calls.length).toBe(0);
                 expect(props.onLogin.calls.length).toBe(1);
                 expect(props.onLogin.calls[0].arguments).toEqual(
-                    [AUTH_BACKENDS.INTERNAL, expectedEmail, expectedPassword]
+                    [AUTH_BACKENDS.INTERNAL, expectedEmail, expectedPassword, 'team']
                 );
             });
 

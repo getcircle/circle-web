@@ -7,6 +7,7 @@ import InternalPropTypes from '../src/common/components/InternalPropTypes';
 
 import AuthContextFactory from './factories/AuthContextFactory';
 import DeviceContextFactory from './factories/DeviceContextFactory';
+import URLContextFactory from './factories/URLContextFactory';
 
 export default function (child, contextOverrides = {}, childContextTypesOverrides = {}) {
 
@@ -18,6 +19,7 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
             pushState: expect.createSpy(),
         },
         mixins: {},
+        url: URLContextFactory.getContext(),
         ...contextOverrides,
     }
 
@@ -31,6 +33,7 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
                 pushState: PropTypes.func.isRequired,
             }).isRequired,
             mixins: PropTypes.object,
+            url: InternalPropTypes.URLContext,
             ...childContextTypesOverrides,
         }
 
