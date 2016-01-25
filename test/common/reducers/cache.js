@@ -39,7 +39,7 @@ describe('cache reducer', () => {
             }
         );
         expect(state.get('normalizations').get('.services.post.containers.postv1').get(postId).has('by_profile_id')).to.not.be.ok();
-        expect(state.get('normalizations').get('.services.post.containers.postv1').get(postId).get('files').length).to.be(1);
+        expect(state.get('normalizations').get('.services.post.containers.postv1').get(postId).get('files').size).to.be(1);
         expect(state.get('normalizations').get('.services.post.containers.postv1').get(postId).get('files').get(0)).to.be(fileId);
     });
 
