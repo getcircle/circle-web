@@ -903,36 +903,47 @@ class Search extends CSSComponent {
     getDefaultResults() {
         const { organization } = this.context.auth;
         const { CategoryV1 } = services.search.containers.search;
-        const items = [
-            {
+        const items = [];
+        if (organization.post_count) {
+            items.push({
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.POSTS),
                 primaryText: this.getPrimaryTextContainer(
                     t(`Knowledge (${organization.post_count})`),
                     this.styles().searchResultText
                 ),
-            },
-            {
+            });
+        }
+
+        if (organization.profile_count) {
+            items.push({
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.PROFILES),
                 primaryText: this.getPrimaryTextContainer(
                     t(`People (${organization.profile_count})`),
                     this.styles().searchResultText
                 ),
-            },
-            {
+            });
+        }
+
+        if (organization.team_count) {
+            items.push({
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.TEAMS),
                 primaryText: this.getPrimaryTextContainer(
                     t(`Teams (${organization.team_count})`),
                     this.styles().searchResultText
                 ),
-            },
-            {
+            });
+        }
+
+        if (organization.location_count) {
+            items.push({
                 onTouchTap: this.handleCategorySelection.bind(this, CategoryV1.LOCATIONS),
                 primaryText: this.getPrimaryTextContainer(
                     t(`Locations (${organization.location_count})`),
                     this.styles().searchResultText
                 ),
-            },
-        ];
+            });
+        }
+
         const recents = this.getRecentResults();
         const exploreResults = items.map((item) => {
             return {
