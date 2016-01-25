@@ -34,6 +34,7 @@ export function deletePost(client, post) {
                     resolve({
                         postId: post.id,
                         postState: getPostStateURLString(post.state),
+                        postAuthorId: post.by_profile_id,
                     });
                 } else {
                     reject('Post wasn\'t deleted');
