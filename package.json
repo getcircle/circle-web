@@ -104,7 +104,7 @@
     "superagent": "git+https://github.com/mhahn/superagent.git",
     "transit-immutable-protobuf-js": "git+https://github.com/lunohq/transit-immutable-protobuf-js.git#b40244346d6055714ae70c46c1f5b53f573de4e6",
     "transit-js": "^0.8.837",
-    "trix": "^0.9.2",
+    "trix": "^0.9.5",
     "ua-parser-js": "^0.7.9",
     "vinyl-buffer": "~1.0.0",
     "vinyl-source-stream": "~1.1.0",
