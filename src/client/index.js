@@ -51,7 +51,7 @@ const elements = [
         <Router
             createElement={createElement}
             history={history}
-            routes={getRoutes(store)}
+            routes={getRoutes(store, url)}
         />
     </Provider>
 ];

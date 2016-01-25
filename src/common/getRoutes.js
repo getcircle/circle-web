@@ -20,7 +20,7 @@ function applyMiddleware(...middleWares) {
     }
 }
 
-export default function (store) {
+export default function (store, url) {
 
     function loginOnce(next) {
         return (nextState, replaceState, exit) => {
@@ -86,7 +86,7 @@ export default function (store) {
         }
     }
 
-    const handleAuthorization = createHandleAuthorizationMiddleware(store);
+    const handleAuthorization = createHandleAuthorizationMiddleware(store, url);
 
     const trackPageView = (pageType, paramKey) => {
         return (next) => {

@@ -24,7 +24,7 @@ function getAuthenticatedObjectsPayload(client, payload = {}) {
     });
 }
 
-export function authenticate(backend, key, secret) {
+export function authenticate(backend, key, secret, domain) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -34,7 +34,7 @@ export function authenticate(backend, key, secret) {
             ],
             remote: (client) => {
                 let payload = {};
-                return userService.authenticate(client, backend, key, secret)
+                return userService.authenticate(client, backend, key, secret, domain)
                     .then((response) => {
                         const { user } = response;
                         payload.user = user;

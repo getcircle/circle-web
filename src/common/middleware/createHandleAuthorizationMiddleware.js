@@ -4,14 +4,14 @@ import { authenticate } from '../actions/authentication';
 import raven from '../utils/raven';
 import { AUTH_BACKENDS } from '../services/user';
 
-function handleOktaAuthorization(dispatch, query) {
-    const samlDetails = services.user.containers.SAMLDetailsV1.decode64(query['saml_details']);
-    return dispatch(authenticate(AUTH_BACKENDS.OKTA, undefined, samlDetails.auth_state));
+function handleOktaAuthorization(dispatch, query, url) {
+    const credentials = services.user.containers.SAMLCredentialsV1.decode64(query['saml_credentials']);
+    return dispatch(authenticate(AUTH_BACKENDS.OKTA, undefined, credentials.state, url.subdomain));
 }
 
-function handleGoogleAuthorization(dispatch, query) {
-    const oauthSdkDetails = services.user.containers.OAuthSDKDetailsV1.decode64(query['oauth_sdk_details']);
-    return dispatch(authenticate(AUTH_BACKENDS.GOOGLE, oauthSdkDetails.code, oauthSdkDetails.id_token));
+function handleGoogleAuthorization(dispatch, query, url) {
+    const credentials = services.user.containers.GoogleCredentialsV1.decode64(query['google_credentials']);
+    return dispatch(authenticate(AUTH_BACKENDS.GOOGLE, credentials.code, credentials.id_token, url.subdomain));
 }
 
 /**
@@ -26,7 +26,7 @@ function handleGoogleAuthorization(dispatch, query) {
  * @param {Object} store - redux store, available in getRoutes.
  * @returns {function} middleware function that can be passed to `applyMiddleware` within `../common/getRoutes.js`
  */
-export default function (store) {
+export default function (store, url) {
     return next => (nextState, replaceState, exit) => {
         const { query } = nextState.location;
         const { error } = query;
@@ -43,13 +43,13 @@ export default function (store) {
         let { identity } = query;
         identity = services.user.containers.IdentityV1.decode64(identity);
         if (identity.provider === services.user.containers.IdentityV1.ProviderV1.OKTA) {
-            return handleOktaAuthorization(store.dispatch, query).then(() => {
+            return handleOktaAuthorization(store.dispatch, query, url).then(() => {
                 // XXX support the previous path they came to
                 replaceState(null, '/');
                 exit();
             });
         } else if (identity.provider === services.user.containers.IdentityV1.ProviderV1.GOOGLE) {
-            return handleGoogleAuthorization(store.dispatch, query).then(() => {
+            return handleGoogleAuthorization(store.dispatch, query, url).then(() => {
                 // XXX support the previous path they came to
                 replaceState(null, '/');
                 exit();

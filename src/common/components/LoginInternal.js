@@ -107,10 +107,11 @@ class LoginInternal extends CSSComponent {
 
     handleSubmit() {
         const { email, password } = this.state;
+        const { url } = this.context;
         if (this.props.guest) {
-            this.props.onGuestSubmit(email, this.context.url);
+            this.props.onGuestSubmit(email, url);
         } else if (email && password) {
-            this.props.onLogin(AUTH_BACKENDS.INTERNAL, this.state.email, this.state.password);
+            this.props.onLogin(AUTH_BACKENDS.INTERNAL, this.state.email, this.state.password, url.subdomain);
         }
     }
 

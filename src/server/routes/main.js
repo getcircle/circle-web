@@ -48,7 +48,15 @@ export default function (req, res) {
         return;
     }
 
-    match({routes: getRoutes(store), location: req.url}, (error, redirectLocation, renderProps) => {
+    const url = {
+        host: req.host,
+        // window.location.protocol appends the ":"
+        protocol: `${req.protocol}:`,
+        raw: req.originalUrl,
+        subdomain: getSubdomain(req.hostname),
+    };
+
+    match({routes: getRoutes(store, url), location: req.url}, (error, redirectLocation, renderProps) => {
         if (error) {
             raven.captureError(error);
             console.error('ROUTER ERROR:', pretty.render(error));
@@ -61,13 +69,6 @@ export default function (req, res) {
             let content;
             let windowTitle;
             try {
-                const url = {
-                    host: req.host,
-                    // window.location.protocol appends the ":"
-                    protocol: `${req.protocol}:`,
-                    raw: req.originalUrl,
-                    subdomain: getSubdomain(req.hostname),
-                };
                 fetchAllData(
                     renderProps.components,
                     store.getState,

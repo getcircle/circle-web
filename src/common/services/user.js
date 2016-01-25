@@ -4,12 +4,13 @@ import logger from '../utils/logger';
 
 export const AUTH_BACKENDS = services.user.actions.authenticate_user.RequestV1.AuthBackendV1;
 
-export function authenticate(client, backend, key, secret) {
+export function authenticate(client, backend, key, secret, domain) {
     /*eslint-disable camelcase*/
     let parameters = {
         backend: backend,
         credentials: {key, secret},
         client_type: services.user.containers.token.ClientTypeV1.WEB,
+        organization_domain: domain,
     };
     /*eslint-enable camelcase*/
 
