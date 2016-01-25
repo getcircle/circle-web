@@ -277,7 +277,7 @@ class PostEditor extends CSSComponent {
             });
 
             dispatch(createPost(postV1));
-            dispatch(clearPosts(PostStateURLString.DRAFT));
+            dispatch(clearPosts(PostStateURLString.DRAFT, this.context.auth.profile));
         }
         else {
             logger.log('Saving existing post');
@@ -300,7 +300,7 @@ class PostEditor extends CSSComponent {
 
             let postV1 = Object.assign({}, post, updates);
             dispatch(updatePost(postV1));
-            dispatch(clearPosts(getPostStateURLString(postV1.state)));
+            dispatch(clearPosts(getPostStateURLString(postV1.state), this.context.auth.profile));
         }
     }
 
@@ -339,7 +339,7 @@ class PostEditor extends CSSComponent {
             PostStateV1.LISTED,
             this.refs.post.getCurrentOwner(),
         );
-        this.props.dispatch(clearPosts());
+        this.props.dispatch(clearPosts(null, this.context.auth.profile));
         this.onFileDelete(this.refs.post.getDeletedFileIds())
         routeToPost(this.context.history, post);
     }

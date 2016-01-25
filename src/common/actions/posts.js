@@ -48,11 +48,18 @@ export function getPosts(postStateURLString, byProfile, nextRequest) {
     };
 }
 
-export function clearPosts(postStateURLString) {
+export function clearPosts(postStateURLString, forProfile) {
+    let key;
+    if (postStateURLString === null || postStateURLString === undefined) {
+        key = postStateURLString;
+    } else {
+        key = getPostsPaginationKey(postStateURLString, forProfile);
+    }
+
     return {
         type: types.CLEAR_POSTS_CACHE,
         payload: {
-            postState: postStateURLString,
+            key: key,
         },
     };
 }

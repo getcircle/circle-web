@@ -33,10 +33,10 @@ const posts = paginate({
             break;
 
         case types.CLEAR_POSTS_CACHE:
-            if (action.payload.postState === null || action.payload.postState === undefined) {
+            if (action.payload.key === null || action.payload.key === undefined) {
                 return Immutable.Map();
-            } else if (action.payload.postState) {
-                return state.deleteIn([action.payload.postState]);
+            } else if (action.payload.key) {
+                return state.deleteIn([action.payload.key]);
             }
             break;
         }
