@@ -45,21 +45,17 @@ export default function cache(state = initialState, action) {
                 }
             }
 
-            // Timestamp when each entity in the payload gets cached so we can calculate its age later for TTL.
-            for (let entityType in action.payload.entities) {
-                const entities = action.payload.entities[entityType];
-                for (let entityId in entities) {
-                    // Store timestamp as Epoch time measured in seconds.
-                    const epochTime = Math.floor(new Date().getTime() / 1000);
-                    map.setIn(['timestamps', entityType, entityId], epochTime);
-                }
-            }
-
-            // Keep old values for fields excluded by new entities.
             if (action.payload.entities) {
                 for (let entitiesType in action.payload.entities) {
                     const entities = action.payload.entities[entitiesType];
                     for (let entityId in entities) {
+                        // Timestamp when each entity in the payload gets
+                        // cached so we can calculate its age later for TTL.
+                        // Timestamps are in Epoch time, measured in seconds.
+                        const epochTime = Math.floor(new Date().getTime() / 1000);
+                        map.setIn(['timestamps', entitiesType, entityId], epochTime);
+
+                        // Keep old values for fields excluded by new entities.
                         let newEntity = entities[entityId];
                         const oldEntity = map.getIn(['entities', entitiesType, entityId]);
                         if (oldEntity) {
