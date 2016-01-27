@@ -38,7 +38,7 @@ export function detectURLsAndAddMarkup(stringValue) {
  * click event listeners.
  */
 export function detectHashtagsAndAddMarkup(stringValue) {
-    const urlRegex = /(\s)(#\w+)/gi;
+    const urlRegex = /(^|\s|\>)(#\w+)/gmi;
     return stringValue.replace(urlRegex, '$1<a class="hashtag">$2</a>');
 }
 
