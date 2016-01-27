@@ -67,8 +67,8 @@ export function updateProfile(client, profile, manager) {
 
     if (!!manager) {
         return new Promise((resolve, reject) => {
-            Promise.all([updateProfile, organizationRequests.setManager(profile.id, manager.id)])
-                .then(() => getExtendedProfile(profile.id))
+            Promise.all([updateProfile, organizationRequests.setManager(client, profile.id, manager.id)])
+                .then(() => getExtendedProfile(client, profile.id))
                 .then(response => resolve(response))
                 .catch(error => reject(error));
         });
