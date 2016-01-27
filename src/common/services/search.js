@@ -4,7 +4,7 @@ import logger from '../utils/logger';
 
 function handleSearchResponse(client, query, request) {
     return new Promise((resolve, reject) => {
-        if (query === null || query.trim() === '') {
+        if (!query || query.trim() === '') {
             resolve({results: []});
         } else {
             client.sendRequest(request)

@@ -71,7 +71,7 @@ class Search extends CSSComponent {
 
     /* Ensure that the header query and the query we're searching with are synced */
     loadSearchResults(props) {
-        const { query } = this.props.params;
+        const query = this.getQueryFromURL(props);
         if (this.refs.headerSearch) {
             const headerSearch = this.refs.headerSearch.getWrappedInstance();
             const currentQuery = headerSearch.getCurrentQuery();
@@ -167,14 +167,24 @@ class Search extends CSSComponent {
         this.setState({focused: false});
     }
 
+    getQueryFromURL(props) {
+        let query = props.params.query ? props.params.query : '';
+        if (props.params.hasOwnProperty('query') === false && props.location && props.location.hash) {
+            // replaceSearchQuery(this.context.history, props.location.hash);
+            query = props.location.hash;
+        }
+
+        return query;
+    }
+
     renderContent() {
         const {
             results,
-            params: { query },
         } = this.props;
 
-        const title = t('Search') + (query ? ` \u2013 ${query}` : '');
+        const query = this.getQueryFromURL(this.props);
         if (query) {
+            const title = t('Search') + (query ? ` \u2013 ${query}` : '');
             return (
                 <DocumentTitle title={title}>
                     <DetailContent>
