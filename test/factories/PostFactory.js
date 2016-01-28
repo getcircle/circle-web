@@ -10,8 +10,8 @@ export default {
             /*eslint-disable camelcase*/
             id: faker.random.uuid(),
             state: services.post.containers.PostStateV1.DRAFT,
-            title: 'This is test title of a post',
-            content: 'This is test content of a post',
+            title: faker.lorem.sentence(),
+            content: faker.lorem.paragraph(),
             by_profile: ProfileFactory.getProfile(),
             changed: '2015-11-05 01:09:00.099535+00',
             /*eslint-enable camelcase*/

@@ -1,8 +1,11 @@
 import expect from 'expect.js';
 import Immutable from 'immutable';
 import faker from 'faker';
+import { services } from 'protobufs';
 
 import cache from '../../../src/common/reducers/cache';
+
+import PostFactory from '../../factories/PostFactory';
 
 function mockPayloadWithPost(postId = faker.random.uuid(), normalizationFields = {}, entityFields = {}) {
     const normalizations = {};
@@ -83,6 +86,28 @@ describe('cache reducer', () => {
             }
         );
         expect(state.get('timestamps').get('.services.post.containers.postv1').has(postId)).to.be.ok();
+    });
+
+    it('preserves values in the cache if they weren\'t requested in the new entity', () => {
+        const initialPost = PostFactory.getPost();
+        const initialPayload = mockPayloadWithPost(initialPost.id, undefined, initialPost);
+        const initialState = Immutable.fromJS(initialPayload);
+        const nextPost = PostFactory.getPost({
+            id: initialPost.id,
+            content: null,
+            snippet: faker.lorem.sentence(),
+            /*eslint-disable camelcase */
+            by_profile: null,
+            /*eslint-enable camelcase */
+            changed: null,
+            fields: new services.common.containers.FieldsV1({only: ['snippet']}),
+        });
+        const nextPayload = mockPayloadWithPost(nextPost.id, undefined, nextPost);
+        const state = cache(initialState, {payload: nextPayload});
+        const cached = state.getIn(['entities', '.services.post.containers.postv1', nextPost.id]);
+        expect(cached.snippet).to.equal(nextPost.snippet);
+        expect(cached.content).to.equal(initialPost.content);
+        expect(cached.title).to.equal(initialPost.title);
     });
 
 });

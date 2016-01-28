@@ -11,6 +11,68 @@ const initialState = Immutable.fromJS({
     timestamps: Immutable.Map(),
 });
 
+/**
+ * Return any field names within entity that aren't within fields.
+ *
+ * @param {Object} entity the protobuf entity
+ * @param {Array[str]} fields array of field names we're checking against.
+ * @return {Array[str]} array of field names within `entity` that aren't within `fields`
+ */
+function difference(entity, fields) {
+    let otherFields = entity.$type._fields.map((field) => {
+        if (fields.indexOf(field.name) < 0) {
+            return field.name;
+        }
+    });
+    return otherFields.filter((elem) => elem !== undefined && elem !== null);
+};
+
+/**
+ * Return fields that have been excluded from the new entity.
+ * Any field that is excluded from the new entity will be pulled from the
+ * oldEntity.
+ *
+ * @param {Object} newEntity the new entity we're loading into the cache
+ * @param {Object} oldEntity the existing entity in the cache
+ */
+function getExcludedFields(newEntity, oldEntity) {
+    let excludedFields = [];
+    if (newEntity.fields) {
+        if (newEntity.fields.exclude.length > 0) {
+            excludedFields = excludedFields.concat(newEntity.fields.exclude);
+        } else if (newEntity.fields.only.length > 0) {
+            const otherFields = difference(oldEntity, newEntity.fields.only);
+            excludedFields = excludedFields.concat(otherFields);
+        }
+    }
+    if (newEntity.inflations) {
+        if (newEntity.inflations.exclude.length > 0) {
+            excludedFields = excludedFields.concat(newEntity.inflations.exclude);
+        } else if (newEntity.inflations.only.length > 0) {
+            const otherFields = difference(oldEntity, newEntity.inflations.only);
+            excludedFields = excludedFields.concat(otherFields);
+        }
+    }
+    return excludedFields;
+}
+
+/**
+ * Merge a new entity with the existing entity in the cache.
+ * The only case where it is necessary to merge entities is when the new entity
+ * was only fetched with specific fields or inflations. In that case, those
+ * fields from the existing entity should still be considered valid.
+ *
+ * @param {Object} newEntity the new entity we're loading into the cache
+ * @param {Object} oldEntity the existing entity in the cache
+ */
+function mergeEntities(newEntity, oldEntity) {
+    const excludedFields = getExcludedFields(newEntity, oldEntity);
+    excludedFields.forEach((field) => {
+        newEntity.set(field, oldEntity.get(field));
+    });
+    return newEntity;
+}
+
 export function isEntityStale(cache, entityKey, key) {
     if (cache.timestamps && cache.timestamps[entityKey]) {
         let timestamp = cache.timestamps[entityKey][key];
@@ -59,34 +121,7 @@ export default function cache(state = initialState, action) {
                         let newEntity = entities[entityId];
                         const oldEntity = map.getIn(['entities', entitiesType, entityId]);
                         if (oldEntity) {
-                            let excludedFields = [];
-                            if (newEntity.fields) {
-                                if (newEntity.fields.exclude.length > 0) {
-                                    excludedFields = excludedFields.concat(newEntity.fields.exclude);
-                                } else if (newEntity.fields.only.length > 0) {
-                                    const otherFields = oldEntity.$type._fields.map((field) => {
-                                        if (newEntity.fields.only.indexOf(field.name) < 0) {
-                                            return field.name;
-                                        }
-                                    });
-                                    excludedFields = excludedFields.concat(otherFields);
-                                }
-                            }
-                            if (newEntity.inflations) {
-                                if (newEntity.inflations.exclude.length > 0) {
-                                    excludedFields = excludedFields.concat(newEntity.inflations.exclude);
-                                } else if (newEntity.inflations.only.length > 0) {
-                                    const otherFields = oldEntity.$type._fields.map((field) => {
-                                        if (newEntity.inflations.only.indexOf(field.name) < 0) {
-                                            return field.name;
-                                        }
-                                    });
-                                    excludedFields = excludedFields.concat(otherFields);
-                                }
-                            }
-                            excludedFields.forEach((field) => {
-                                newEntity.set(field, oldEntity.get(field));
-                            });
+                            newEntity = mergeEntities(newEntity, oldEntity);
                         }
                     }
                 }
