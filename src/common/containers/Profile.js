@@ -5,7 +5,7 @@ import { soa } from 'protobufs';
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
 import { getPostsPaginationKey, getPosts } from '../actions/posts';
 import { PostStateURLString } from '../utils/post';
-import { clearTeamMembers } from '../actions/teams';
+import { clearTeamMembers } from '../actions/teams_deprecated';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile, retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
