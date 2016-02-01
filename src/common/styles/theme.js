@@ -23,7 +23,7 @@ export function getCustomTheme(userAgent) {
     };
     const muiTheme = getMuiTheme(baseTheme, {userAgent});
 
-    muiTheme.appBar.color = '#F7F9FA';
+    muiTheme.appBar.color = 'white';
     muiTheme.flatButton.color = 'rgb(255, 255, 255)';
     muiTheme.tab = {
         textColor: 'rgba(0, 0, 0, 0.3)',

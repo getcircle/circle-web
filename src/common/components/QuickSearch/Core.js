@@ -189,7 +189,7 @@ class Core extends CSSComponent {
                     maxWidth: this.props.searchContainerWidth,
                 },
                 listContainer: {
-                    width: this.props.searchContainerWidth,
+                    maxWidth: this.props.searchContainerWidth,
                     maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                 },
             },

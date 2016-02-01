@@ -14,7 +14,7 @@ const constants = {
     horizontalUnit: 10,
 };
 
-export const canvasColor = 'rgb(247, 249, 250)';
+export const canvasColor = 'white';
 export const tintColor = '#7A8EFF';
 
 export const iconColors = {
@@ -34,7 +34,7 @@ export const backgroundColors = {
         backgroundColor: 'white',
     },
     dark: {
-        backgroundColor: 'rgb(47, 55, 62)',
+        backgroundColor: 'rgb(67, 69, 76)',
     },
 }
 
