@@ -129,7 +129,7 @@ class Home extends CSSComponent {
             },
             'searchHeader': {
                 header: {
-                    display: 'initial',
+                    display: 'block',
                     position: 'relative',
                 },
                 HeaderMenu: {
