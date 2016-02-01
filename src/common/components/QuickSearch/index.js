@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import mui from 'material-ui';
 
 import * as selectors from '../../selectors';
 
@@ -10,8 +9,6 @@ import * as itemFactory from './factories';
 import Core from './Core';
 import ResultsSection from './ResultsSection';
 import Section from './Section';
-
-const { Paper } = mui;
 
 const selector = selectors.createImmutableSelector(
     [
