@@ -41,6 +41,7 @@ class Header extends CSSComponent {
                     },
                 },
                 headerContainer: {
+                    display: 'block',
                     paddingBottom: 64,
                     position: 'relative',
                 },
