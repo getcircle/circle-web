@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
-import { loadExtendedTeam, loadTeamMembers, updateTeam } from '../actions/teams';
+import { loadExtendedTeam, loadTeamMembers, updateTeam } from '../actions/teams_deprecated';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedTeam, retrieveProfiles } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
