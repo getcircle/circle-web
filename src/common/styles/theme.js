@@ -1,4 +1,5 @@
-import mui from 'material-ui';
+import merge from 'lodash.merge';
+import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 
 import {
     fontWeights,
@@ -7,34 +8,29 @@ import {
     tintColor
 } from '../constants/styles';
 
-export function getCustomThemeManager() {
-    const ThemeManager = mui.Styles.ThemeManager;
-    const muiTheme = ThemeManager.getMuiTheme(mui.Styles.LightRawTheme);
+export function getCustomTheme(userAgent) {
+    const baseTheme = {
+        fontFamily: '"Open Sans", Arial, sans-serif',
+        palette: {
+            accent1Color: tintColor,
+            canvasColor: canvasColor,
+            // All of them are shades of tint color generated from:
+            // http://mcg.mbitson.com/#/
+            primary1Color: tintColor,
+            primary2Color: '#5C6BBF',
+            primary3Color: '#D7DDFF',
+        }
+    };
+    const muiTheme = getMuiTheme(baseTheme, {userAgent});
 
-    // Custom Theme
-    let lunoMuiTheme = ThemeManager.modifyRawThemeFontFamily(
-        muiTheme,
-        '"Open Sans", Arial, sans-serif'
-    );
-
-    lunoMuiTheme = ThemeManager.modifyRawThemePalette(lunoMuiTheme, {
-        accent1Color: tintColor,
-        canvasColor: canvasColor,
-        // All of them are shades of tint color generated from:
-        // http://mcg.mbitson.com/#/
-        primary1Color: tintColor,
-        primary2Color: '#5C6BBF',
-        primary3Color: '#D7DDFF',
-    });
-
-    lunoMuiTheme.appBar.color = '#F7F9FA';
-    lunoMuiTheme.flatButton.color = 'rgb(255, 255, 255)';
-    lunoMuiTheme.tab = {
+    muiTheme.appBar.color = '#F7F9FA';
+    muiTheme.flatButton.color = 'rgb(255, 255, 255)';
+    muiTheme.tab = {
         textColor: 'rgba(0, 0, 0, 0.3)',
         selectedTextColor: tintColor,
     };
-    lunoMuiTheme.tabs.backgroundColor = 'rgba(255, 255, 255, 0.5)';
-    lunoMuiTheme.raisedButton.secondaryColor = '#5C6BBF';
+    muiTheme.tabs.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+    muiTheme.raisedButton.secondaryColor = '#5C6BBF';
 
     /**
      * The purpose of this object is to consolidate any common styles
@@ -45,7 +41,7 @@ export function getCustomThemeManager() {
      *
      * THIS SHOULD BE KEPT VERY SMALL, SO PLEASE DO NOT ABUSE THIS AS A PLACE FOR ADDING ALL CSS.
      */
-    lunoMuiTheme.commonStyles = {
+    muiTheme.commonStyles = {
         headerPrimaryText: {
             fontSize: '36px',
             lineHeight: '49px',
@@ -68,9 +64,10 @@ export function getCustomThemeManager() {
             ...fontColors.darkWhite,
         },
     };
-
-    return lunoMuiTheme;
+    return muiTheme;
 }
 
-export default getCustomThemeManager();
-
+export function modifyBaseTheme(muiTheme, baseTheme) {
+    const newBase = merge({}, muiTheme.baseTheme, baseTheme);
+    return getMuiTheme(newBase, muiTheme);
+}

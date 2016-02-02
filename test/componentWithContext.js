@@ -4,6 +4,7 @@ import { PropTypes } from 'react';
 
 import CSSComponent from '../src/common/components/CSSComponent';
 import InternalPropTypes from '../src/common/components/InternalPropTypes';
+import { getCustomTheme } from '../src/common/styles/theme';
 
 import AuthContextFactory from './factories/AuthContextFactory';
 import DeviceContextFactory from './factories/DeviceContextFactory';
@@ -19,6 +20,7 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
             pushState: expect.createSpy(),
         },
         mixins: {},
+        muiTheme: getCustomTheme('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36'),
         url: URLContextFactory.getContext(),
         ...contextOverrides,
     }
@@ -33,6 +35,7 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
                 pushState: PropTypes.func.isRequired,
             }).isRequired,
             mixins: PropTypes.object,
+            muiTheme: PropTypes.object,
             url: InternalPropTypes.URLContext,
             ...childContextTypesOverrides,
         }

@@ -5,7 +5,6 @@ import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import connectData from '../utils/connectData';
-import CurrentTheme from '../utils/ThemeManager';
 import { deletePost, getPostsPaginationKey, getPosts } from '../actions/posts';
 import { fontColors, fontWeights } from '../constants/styles';
 import { PostStateURLString } from '../utils/post';
@@ -89,30 +88,10 @@ class Posts extends CSSComponent {
         posts: [],
     }
 
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
-    state = {
-        muiTheme: CurrentTheme,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        };
-    }
-
-    componentWillMount() {
-        this.customizeTheme(this.props);
-    }
-
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.postState !== this.props.postState) {
             this.loadPosts(nextProps, true);
         }
-
-        this.customizeTheme(nextProps);
     }
 
     loadPosts(props, shouldResetScroll) {
@@ -153,18 +132,6 @@ class Posts extends CSSComponent {
         };
     }
 
-    customizeTheme(props) {
-        let customTheme = Object.assign({}, CurrentTheme, {
-            tabs: {
-                backgroundColor: 'transparent',
-                textColor: CurrentTheme.tab.textColor,
-                selectedTextColor: 'rgba(0, 0, 0, 0.8)',
-            },
-        });
-
-        this.setState({muiTheme: customTheme});
-    }
-
     onDeletePostTapped(post) {
         this.props.dispatch(deletePost(post));
     }
@@ -184,7 +151,7 @@ class Posts extends CSSComponent {
             posts,
         } = this.props;
 
-        let title = t('My Knowledge') + ` \u2013 `;
+        let title = t('My Knowledge') + ' \u2013 ';
         if (postState === PostStateURLString.DRAFT.toString()) {
             title += t('Drafts');
         } else if (postState === PostStateURLString.LISTED.toString()) {

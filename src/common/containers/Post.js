@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { deletePost, getPost } from '../actions/posts';
 import { fontColors } from '../constants/styles';
 
@@ -75,29 +74,18 @@ class Post extends CSSComponent {
         }).isRequired,
     }
 
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
     state = {
-        muiTheme: CurrentTheme,
         deleteRequested: false,
     }
 
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        };
-    }
-
     componentWillMount() {
-        this.configure(this.props);
+        resetScroll();
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.postId !== this.props.params.postId) {
             fetchPost(nextProps.dispatch, nextProps.params);
-            this.configure(nextProps);
+            resetScroll();
         }
     }
 
@@ -137,17 +125,6 @@ class Post extends CSSComponent {
                 },
             },
         };
-    }
-
-    configure(props) {
-        resetScroll();
-        this.customizeTheme();
-    }
-
-    customizeTheme() {
-        let customTheme = Object.assign({}, CurrentTheme);
-        customTheme.flatButton.color = '#FFF';
-        this.setState({muiTheme: customTheme});
     }
 
     onDeletePostTapped(post) {

@@ -1,8 +1,8 @@
+import merge from 'lodash.merge';
 import { Tabs, Tab } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { PostStateURLString } from '../utils/post';
 import { replaceProfileSlug } from '../utils/routes';
 import t from '../utils/gettext';
@@ -46,6 +46,7 @@ class ProfileDetail extends CSSComponent {
         history: PropTypes.shape({
             pushState: PropTypes.func.isRequired,
         }).isRequired,
+        muiTheme: PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
@@ -53,7 +54,7 @@ class ProfileDetail extends CSSComponent {
     }
 
     state = {
-        muiTheme: CurrentTheme,
+        muiTheme: this.context.muiTheme,
         selectedTabValue: null,
     }
 
@@ -64,13 +65,20 @@ class ProfileDetail extends CSSComponent {
     }
 
     componentWillMount() {
-        this.customizeTheme(this.props);
+        this.customizeTheme();
         this.mergeStateAndProps(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.customizeTheme(nextProps);
         this.mergeStateAndProps(nextProps);
+    }
+
+    customizeTheme() {
+        const muiTheme = merge({}, this.state.muiTheme);
+        muiTheme.tabs.backgroundColor = 'transparent';
+        muiTheme.tabs.textColor = 'rgba(255, 255, 255, 0.5)';
+        muiTheme.tabs.selectedTextColor = 'rgb(255, 255, 255)';
+        this.setState({muiTheme});
     }
 
     classes() {
@@ -113,18 +121,6 @@ class ProfileDetail extends CSSComponent {
                 selectedTabValue: props.slug,
             });
         }
-    }
-
-    customizeTheme(props) {
-        let customTheme = Object.assign({}, CurrentTheme, {
-            tabs: {
-                backgroundColor: 'transparent',
-                textColor: 'rgba(255, 255, 255, 0.5)',
-                selectedTextColor: 'rgb(255, 255, 255)',
-            },
-        });
-
-        this.setState({muiTheme: customTheme});
     }
 
     // Handlers

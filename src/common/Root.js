@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
-import CSSMixins from './CSSMixins';
+import getCSSMixins from './getCSSMixins';
 import InternalPropTypes from './components/InternalPropTypes';
-import CurrentTheme from './utils/ThemeManager';
+import { getCustomTheme } from './styles/theme';
 
 // import styles so webpack includes them
 import './styles/app.scss';
@@ -11,6 +11,7 @@ export default class Root extends Component {
 
     static propTypes = {
         url: InternalPropTypes.URLContext.isRequired,
+        userAgent: PropTypes.string.isRequired,
     }
 
     static childContextTypes = {
@@ -21,8 +22,8 @@ export default class Root extends Component {
 
     getChildContext() {
         return {
-            mixins: CSSMixins,
-            muiTheme: CurrentTheme,
+            mixins: getCSSMixins(this.props.userAgent),
+            muiTheme: getCustomTheme(this.props.userAgent),
             url: this.props.url,
         };
     }

@@ -76,8 +76,8 @@ class App extends CSSComponent {
     }
 
     static contextTypes = {
-        muiTheme: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
+        muiTheme: PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
@@ -158,9 +158,6 @@ class App extends CSSComponent {
                 root: {
                     height: '100vh',
                     width: '100vw',
-                },
-                canvasContainer: {
-                    backgroundColor: canvasColor,
                 },
                 Search: {
                     inputContainerStyle: {
@@ -247,7 +244,7 @@ class App extends CSSComponent {
             <DocumentTitle>
                 <div style={this.styles().root}>
                     <AppCanvas>
-                        <div style={this.styles().canvasContainer}>
+                        <div>
                             {header}
                             {this.props.children}
                             {footer}

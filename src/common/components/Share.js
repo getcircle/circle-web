@@ -1,12 +1,7 @@
-import ClickAwayable from 'material-ui/lib/mixins/click-awayable';
-import { decorate } from 'react-mixin';
-import Menu from 'material-ui/lib/menus/menu';
-import MenuItem from 'material-ui/lib/menus/menu-item';
 import React, { PropTypes } from 'react';
-import ReactTransitionGroup from 'react-addons-transition-group';
-import { Snackbar } from 'material-ui';
 
-import autoBind from '../utils/autoBind';
+import { Menu, MenuItem, Popover, Snackbar } from 'material-ui';
+
 import { copyUrl } from '../utils/clipboard';
 import { fontColors, tintColor } from '../constants/styles';
 import { SHARE_METHOD } from '../constants/trackerProperties';
@@ -19,8 +14,6 @@ import MenuGetLinkIcon from './MenuGetLinkIcon';
 import MenuMailIcon from './MenuMailIcon';
 import RoundedButton from './RoundedButton';
 
-@decorate(ClickAwayable)
-@decorate(autoBind(ClickAwayable))
 class Share extends CSSComponent {
 
     static propTypes = {
@@ -35,7 +28,8 @@ class Share extends CSSComponent {
     }
 
     state = {
-        menuDisplayed: false,
+        menuOpen: false,
+        snackbarOpen: false,
     }
 
     componentClickAway() {
@@ -113,45 +107,11 @@ class Share extends CSSComponent {
     }
 
     hideMenu(event) {
-        this.setState({menuDisplayed: false});
-    }
-
-    render() {
-        return (
-            <div>
-                <RoundedButton
-                    label={t('Share')}
-                    onTouchTap={() => {
-                        this.setState({
-                            menuDisplayed: !this.state.menuDisplayed,
-                        });
-                    }}
-                    {...this.styles().ShareButton}
-                >
-                    <IconContainer
-                        IconClass={DownArrowIcon}
-                        iconStyle={{...this.styles().arrowIcon}}
-                        stroke={tintColor}
-                        style={this.styles().arrowContainer}
-                    />
-                </RoundedButton>
-                <Snackbar
-                    autoHideDuration={2000}
-                    message={t('Link copied to clipboard!')}
-                    ref="snackbar"
-                    {...this.styles().Snackbar}
-                />
-                <div className="row middle-xs end-xs full-width" key="share-menu" style={{position: 'relative'}}>
-                    <ReactTransitionGroup>
-                        {this.renderShareMenu()}
-                    </ReactTransitionGroup>
-                </div>
-            </div>
-        );
+        this.setState({menuOpen: false});
     }
 
     renderShareMenu() {
-        if (this.state.menuDisplayed) {
+        if (this.state.menuOpen) {
             const {
                 mailToHref,
                 onShareCallback,
@@ -160,7 +120,6 @@ class Share extends CSSComponent {
 
             return (
                 <Menu
-                    animated={true}
                     desktop={true}
                     onEscKeyDown={::this.hideMenu}
                     onItemTouchTap={::this.hideMenu}
@@ -174,7 +133,6 @@ class Share extends CSSComponent {
                             stroke="rgba(0, 0, 0, 0.7)"
                             {...this.styles().MenuIconContainer}
                         />}
-                        linkButton={true}
                         onTouchTap={() => {
                             onShareCallback(SHARE_METHOD.EMAIL);
                         }}
@@ -191,7 +149,7 @@ class Share extends CSSComponent {
                         />}
                         onTouchTap={() => {
                             copyUrl(urlShareSource);
-                            this.refs.snackbar.show();
+                            this.setState({snackbarOpen: true});
                             onShareCallback(SHARE_METHOD.COPY_LINK);
                         }}
                         primaryText={t('Copy Link')}
@@ -200,6 +158,48 @@ class Share extends CSSComponent {
                 </Menu>
             );
         }
+    }
+
+    render() {
+        return (
+            <div ref="anchor">
+                <RoundedButton
+                    label={t('Share')}
+                    onTouchTap={() => {
+                        this.setState({
+                            menuOpen: !this.state.menuOpen,
+                        });
+                    }}
+                    {...this.styles().ShareButton}
+                >
+                    <IconContainer
+                        IconClass={DownArrowIcon}
+                        iconStyle={{...this.styles().arrowIcon}}
+                        stroke={tintColor}
+                        style={this.styles().arrowContainer}
+                    />
+                </RoundedButton>
+                <Snackbar
+                    autoHideDuration={2000}
+                    message={t('Link copied to clipboard!')}
+                    onRequestClose={() => {this.setState({snackbarOpen: false})}}
+                    open={this.state.snackbarOpen}
+                    ref="snackbar"
+                    {...this.styles().Snackbar}
+                />
+                <div className="row middle-xs end-xs full-width">
+                    <Popover
+                        anchorEl={this.refs.anchor}
+                        anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                        onRequestClose={() => { this.setState({menuOpen: false})}}
+                        open={this.state.menuOpen}
+                        targetOrigin={{vertical: 'top', horizontal: 'right'}}
+                    >
+                        {this.renderShareMenu()}
+                    </Popover>
+                </div>
+            </div>
+        );
     }
 }
 

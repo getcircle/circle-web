@@ -3,11 +3,11 @@ import Immutable from 'immutable';
 import Infinite from 'react-infinite';
 import keymirror from 'keymirror';
 import mui from 'material-ui';
+import FlatButton from 'material-ui/lib/flat-button';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
 
 import * as exploreActions from '../actions/explore';
-import CurrentTheme from '../utils/ThemeManager';
 import {
     loadSearchResults,
     clearSearchResults,
@@ -237,10 +237,6 @@ class Search extends CSSComponent {
         mixins: PropTypes.object.isRequired,
     }
 
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
     static defaultProps = {
         alwaysActive: false,
         canExplore: true,
@@ -274,41 +270,22 @@ class Search extends CSSComponent {
         category: null,
         feedbackDialogOpen: false,
         infoRequest: '',
-        muiTheme: CurrentTheme,
         query: '',
         typing: false,
     }
 
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        };
-    }
-
     componentWillMount() {
-        this.customizeTheme();
         this.setQuery(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         // Resets tracked bit for new searches
         this.checkAndResetSearchTracked(this.state.query);
-        this.customizeTheme();
         this.setQuery(nextProps);
     }
 
     componentWillUnmount() {
         this.props.dispatch(clearSearchResults());
-    }
-
-    customizeTheme() {
-        let customTheme = mui.Styles.ThemeManager.modifyRawThemePalette(
-            CurrentTheme,
-            {
-                canvasColor: '#ffffff',
-            },
-        );
-        this.setState({muiTheme: customTheme});
     }
 
     currentSearchTimeout = null
@@ -1487,8 +1464,8 @@ class Search extends CSSComponent {
 
     renderDialog() {
         const standardActions = [
-            {text: 'Cancel', onTouchTap: ::this.handleDialogCancel},
-            {text: 'Submit', onTouchTap: ::this.handleDialogSubmit}
+            <FlatButton label={t('Cancel')} onTouchTap={::this.handleDialogCancel} secondary={true}/>,
+            <FlatButton label={t('Submit')} onTouchTap={::this.handleDialogSubmit} primary={true}/>,
         ];
         return (
             <Dialog

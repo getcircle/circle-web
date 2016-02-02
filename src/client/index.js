@@ -78,4 +78,4 @@ if (__DEVTOOLS__) {
 injectTapEventPlugin();
 FastClick.attach(document.body);
 
-ReactDOM.render(<Root children={elements} url={url}/>, dest);
+ReactDOM.render(<Root children={elements} url={url} userAgent={window.navigator.userAgent}/>, dest);

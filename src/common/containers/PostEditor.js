@@ -5,7 +5,6 @@ import { services } from 'protobufs';
 
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
 import { canvasColor, tintColor, fontColors } from '../constants/styles';
-import CurrentTheme from '../utils/ThemeManager';
 import { deleteFiles, uploadFile, clearFileUploads } from '../actions/files';
 import { getPostStateURLString } from '../utils/post';
 import logger from '../utils/logger';
@@ -105,19 +104,18 @@ class PostEditor extends CSSComponent {
     }
 
     static childContextTypes = {
-        muiTheme: PropTypes.object,
         showCTAsInHeader: PropTypes.bool,
     }
 
     state = {
         discardChanges: false,
-        muiTheme: CurrentTheme,
         showDiscardChangesModal: false,
         titleShownInHeader: false,
     }
 
     componentWillMount() {
-        this.configure(this.props);
+        resetScroll();
+        // TODO shouldn't depend on document
         document.addEventListener('scroll', (event) => this.handleScroll(event));
     }
 
@@ -127,7 +125,6 @@ class PostEditor extends CSSComponent {
 
     getChildContext() {
         return {
-            muiTheme: this.state.muiTheme,
             showCTAsInHeader: false,
         };
     }
@@ -229,17 +226,6 @@ class PostEditor extends CSSComponent {
     }
 
     postCreationInProgress = false
-
-    configure(props) {
-        resetScroll();
-        this.customizeTheme();
-    }
-
-    customizeTheme() {
-        let customTheme = Object.assign({}, CurrentTheme);
-        customTheme.flatButton.color = canvasColor;
-        this.setState({muiTheme: customTheme});
-    }
 
     loadPost(props) {
         if (props.params && props.params.postId) {

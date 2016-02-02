@@ -25,10 +25,6 @@ export default function (req, res) {
         webpackIsomorphicTools.refresh();
     }
 
-    // XXX come up with a better way to do this, possibly context?
-    global.navigator = {
-        userAgent: req.headers['user-agent'],
-    };
     global.window = {
         location: {
             host: req.get('host'),
@@ -36,7 +32,12 @@ export default function (req, res) {
         innerHeight: 0,
     };
 
-    const client = new Client(req, req.session.auth);
+    let auth;
+    if (req.session) {
+        auth = req.session.auth;
+    }
+
+    const client = new Client(req, auth);
     const store = createStore(client);
 
     function hydrateOnClient() {
@@ -79,7 +80,7 @@ export default function (req, res) {
                 ).then(() => {
                     try {
                         content = ReactDOM.renderToString(
-                            <Root url={url}>
+                            <Root url={url} userAgent={req.headers['user-agent']}>
                                 <Provider key="provider" store={store}>
                                     <RoutingContext {...renderProps} />
                                 </Provider>

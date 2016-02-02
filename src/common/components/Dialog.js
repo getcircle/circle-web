@@ -1,7 +1,7 @@
 import mui from 'material-ui';
+
 import React, { PropTypes } from 'react';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { fontColors, fontWeights } from '../constants/styles';
 import tracker from '../utils/tracker';
 
@@ -28,10 +28,6 @@ class Dialog extends CSSComponent {
         device: InternalPropTypes.DeviceContext.isRequired,
     }
 
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
     static defaultProps = {
         // TODO this should be an icon
         dialogDismissLabel: 'x',
@@ -42,46 +38,7 @@ class Dialog extends CSSComponent {
 
     state = {
         open: false,
-        muiTheme: CurrentTheme,
         saveEnabled: true,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        };
-    }
-
-    componentWillMount() {
-        this.customizeTheme(this.props, this.context);
-    }
-
-    componentWillReceiveProps(nextProps, nextContext) {
-        this.customizeTheme(nextProps, nextContext);
-    }
-
-    originalDesktopKeylineIncrement = CurrentTheme.rawTheme.spacing.desktopKeylineIncrement;
-
-    customizeTheme(props, context) {
-        let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
-            canvasColor: 'rgb(242, 242, 242)',
-        });
-
-        customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(customDialogTheme, {
-            alternateTextColor: 'rgb(242, 242, 242)',
-        });
-
-        if (!context.device.largerDevice) {
-            customDialogTheme = mui.Styles.ThemeManager.modifyRawThemeSpacing(customDialogTheme, {
-                desktopKeylineIncrement: 0,
-            });
-        } else {
-            customDialogTheme = mui.Styles.ThemeManager.modifyRawThemeSpacing(customDialogTheme, {
-                desktopKeylineIncrement: this.originalDesktopKeylineIncrement,
-            });
-        }
-
-        this.setState({muiTheme: customDialogTheme});
     }
 
     styles() {
