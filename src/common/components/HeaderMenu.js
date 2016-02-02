@@ -13,6 +13,7 @@ import { routeToNewPost, routeToPosts, routeToProfile, routeToTeam } from '../ut
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
+import CreateTeamForm from './CreateTeamForm';
 import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
@@ -162,6 +163,10 @@ class HeaderMenu extends CSSComponent {
         routeToPosts(this.context.history, PostStateURLString.LISTED);
     }
 
+    handleCreateTeam(event) {
+        this.refs.createTeamForm.getWrappedInstance().show();
+    }
+
     handleLogout(event) {
         this.props.dispatch(logout());
     }
@@ -190,6 +195,7 @@ class HeaderMenu extends CSSComponent {
                     />
                     {this.renderMyKnowledgeMenuItem()}
                     {this.renderMyTeamMenuItem()}
+                    {this.renderCreateTeamMenuItem()}
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
@@ -278,6 +284,28 @@ class HeaderMenu extends CSSComponent {
         }
     }
 
+    renderCreateTeamMenuItem() {
+        return (
+            <MenuItem
+                desktop={true}
+                innerDivStyle={{...this.styles().menuItemDivStyle}}
+                onTouchTap={(e) => this.handleCreateTeam(e)}
+                primaryText={t('Create Team')}
+            />
+        );
+    }
+
+    renderCreateTeamForm() {
+        const {
+            dispatch,
+        } = this.props;
+
+        return (
+            <CreateTeamForm ref="createTeamForm"
+                            dispatch={dispatch} />
+        );
+    }
+
     render() {
         const { profile } = this.context.auth;
 
@@ -301,6 +329,8 @@ class HeaderMenu extends CSSComponent {
                         {this.renderMenu()}
                     </ReactTransitionGroup>
                 </div>
+
+                {this.renderCreateTeamForm()}
             </div>
         );
     }

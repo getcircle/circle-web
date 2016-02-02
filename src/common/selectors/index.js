@@ -68,5 +68,6 @@ export const profilesSelector = state => state.get('profiles');
 export const responsiveSelector = state => state.get('responsive');
 export const routerParametersSelector = (_, props) => props.params;
 export const searchSelector = state => state.get('search');
+export const teamSelector = state => state.get('team');
 export const teamMembersSelector = state => state.get('teamMembers');
 export const updateProfileSelector = state => state.get('updateProfile');
