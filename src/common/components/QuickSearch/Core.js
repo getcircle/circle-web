@@ -146,7 +146,6 @@ class Core extends CSSComponent {
                 },
                 root: {
                     padding: 0,
-                    maxWidth: this.props.searchContainerWidth,
                 },
                 input: {
                     border: 'none',
@@ -311,15 +310,18 @@ class Core extends CSSComponent {
 
     render() {
         const {
+            className,
             inputContainerStyle,
             onFocus,
             placeholder,
             listContainerStyle,
+            sections,
             style,
+            ...other,
         } = this.props;
 
         let lists = [];
-        for (let sectionIndex in this.props.sections) {
+        for (let sectionIndex in sections) {
             const section = this.props.sections[sectionIndex];
             const maxItems = this.numberOfItemsInSection(section);
             lists.push(
@@ -336,13 +338,13 @@ class Core extends CSSComponent {
 
         return (
             <div
-                className="col-xs"
+                className={className}
                 onBlur={::this.handleBlur}
                 onFocus={onFocus}
                 onKeyDown={::this.handleKeyDown}
                 onMouseEnter={() => this.setIgnoreBlur(true)}
                 onMouseLeave={() => this.setIgnoreBlur(false)}
-                style={{...this.styles().root, ...style, }}
+                style={{...this.styles().root, ...style}}
             >
                 <div
                     className="row middle-xs"

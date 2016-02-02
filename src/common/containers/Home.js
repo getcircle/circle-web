@@ -123,12 +123,10 @@ class Home extends CSSComponent {
                             </div>
                         </div>
                     </section>
-                    <section className="row center-xs" style={this.styles().searchSection}>
-                        <div className="col-xs-12 col-md-6">
-                            <HomeSearch className="row center-xs" />
-                            <div className="row center-xs" style={this.styles().poweredBySection}>
-                                <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
-                            </div>
+                    <section style={this.styles().searchSection}>
+                        <HomeSearch className="row center-xs" />
+                        <div className="row center-xs" style={this.styles().poweredBySection}>
+                            <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
                         </div>
                     </section>
                 </section>
