@@ -32,7 +32,7 @@ const teamSelector = selectors.createImmutableSelector(
 class CreateTeamForm extends CSSComponent {
 
     static propTypes = {
-        dispatch: PropTypes.func.isRequired
+        dispatch: PropTypes.func.isRequired,
     };
 
     componentWillMount() {
