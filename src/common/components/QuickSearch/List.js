@@ -1,13 +1,9 @@
 import React, { PropTypes } from 'react';
-import mui from 'material-ui';
+
+import { Divider, List as MaterialList, ListItem } from 'material-ui';
 
 import { fontColors, fontWeights } from '../../constants/styles';
 import CSSComponent from '../CSSComponent';
-
-const {
-    ListDivider,
-    ListItem,
-} = mui;
 
 class List extends CSSComponent {
 
@@ -59,7 +55,7 @@ class List extends CSSComponent {
                     {...item}
                     style={{...this.props.itemStyle, ...style}}
                 />
-                <ListDivider />
+                <Divider />
             </div>
         );
     }
@@ -91,11 +87,11 @@ class List extends CSSComponent {
         return (
             <div>
                 {this.renderHeader()}
-                <mui.List
+                <MaterialList
                     style={style}
                 >
                     {renderedItems}
-                </mui.List>
+                </MaterialList>
             </div>
         );
     }
