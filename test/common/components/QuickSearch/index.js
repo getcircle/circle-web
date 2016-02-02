@@ -41,4 +41,24 @@ describe('QuickSearch', () => {
         expect(lists.length).toEqual(2);
     });
 
+    it('clears the query on escape', () => {
+        const { output } = setup();
+        const input = TestUtils.findRenderedDOMComponentWithTag(output, 'input');
+        TestUtils.Simulate.change(input, {target: {value: 'a'}});
+        expect(output.state.query).toEqual('a');
+        TestUtils.Simulate.keyDown(input, {key: 'Escape'});
+        expect(output.state.query).toEqual('');
+    });
+
+    it('calls the provided onBlur handler and clears the query on escape', () => {
+        const onBlurSpy = expect.createSpy();
+        const { output } = setup({onBlur: onBlurSpy});
+        const input = TestUtils.findRenderedDOMComponentWithTag(output, 'input');
+        TestUtils.Simulate.change(input, {target: {value: 'a'}});
+        expect(output.state.query).toEqual('a');
+        TestUtils.Simulate.keyDown(input, {key: 'Escape'});
+        expect(output.state.query).toEqual('');
+        expect(onBlurSpy.calls.length).toBe(1);
+    });
+
 });

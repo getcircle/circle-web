@@ -27,6 +27,7 @@ class QuickSearch extends CSSComponent {
 
     static propTypes = {
         defaults: PropTypes.arrayOf(PropTypes.instanceOf(Section)),
+        onBlur: PropTypes.funciton,
         results: PropTypes.object,
     }
 
@@ -38,11 +39,21 @@ class QuickSearch extends CSSComponent {
 
     static defaultProps = {
         defaults: [],
+        onBlur: () => {},
         results: {},
     }
 
     state = {
         query: '',
+    }
+
+    handleChange = (value) => {
+        this.setState({query: value});
+    }
+
+    handleBlur = () => {
+        this.setState({query: ''});
+        this.props.onBlur();
     }
 
     getTriggerAndResults() {
@@ -64,19 +75,17 @@ class QuickSearch extends CSSComponent {
         }
     }
 
-    handleChange(value) {
-        this.setState({query: value});
-    }
-
     render() {
         const {
             defaults,
+            onBlur,
             ...other,
         } = this.props;
         const sections = this.getSections();
         return (
             <Core
-                onChange={::this.handleChange}
+                onBlur={this.handleBlur}
+                onChange={this.handleChange}
                 sections={sections}
                 {...other}
             />
