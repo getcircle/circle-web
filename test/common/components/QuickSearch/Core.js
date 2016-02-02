@@ -32,7 +32,7 @@ describe('Core', () => {
             const sectionOneItems = [{className: '1-1'}, {className: '1-2'}, {className: '1-3'}];
             const sectionTwoItems = [{className: '2-1'}, {className: '2-2'}, {className: '2-3'}];
             const sections = [new Section(sectionOneItems, 'Section One'), new Section(sectionTwoItems, 'Section Two')];
-            const { output } = setup({sections: sections});
+            const { output } = setup({sections});
             const lists = TestUtils.scryRenderedComponentsWithType(output, List);
             expect(lists.length).toEqual(2);
             expect(lists[0].props.items).toEqual(sectionOneItems);
@@ -44,7 +44,7 @@ describe('Core', () => {
         it('renders a title for the section if present', () => {
             const section = new Section([{}, {}], 'Section');
             const { output } = setup({sections: [section]});
-            const title = TestUtils.findRenderedDOMComponentWithTag(output, 'span');
+            const title = TestUtils.scryRenderedDOMComponentsWithTag(output, 'span')[0];
             expect(title.textContent).toEqual('Section');
         });
 
@@ -55,7 +55,7 @@ describe('Core', () => {
 
         it('loops through available items when highlighting', () => {
             const sections = [new Section([{}, {}]), new Section([{}, {}])];
-            const { output } = setup({sections: sections});
+            const { output } = setup({sections});
             for (let i = 0; i < 5; i++) {
                 TestUtils.Simulate.keyDown(output.refs.input, {key: 'ArrowDown'});
                 if (i === 2) {
@@ -77,7 +77,7 @@ describe('Core', () => {
 
         it('allows a section to specify an initially highlighted index', () => {
             const sections = [new Section([{}, {}]), new Section([{}, {}], undefined, 0)];
-            const { output } = setup({sections: sections});
+            const { output } = setup({sections});
             expect(output.state.highlightedIndex).toEqual(2);
         });
 
@@ -92,6 +92,24 @@ describe('Core', () => {
                     done();
                 }, 150);
             }, 150);
+        });
+
+    });
+
+    describe('keyDownHandlers', () => {
+
+        it('calls onBlur when we select an item with Enter', () => {
+            const onTouchTapSpy = expect.createSpy();
+            const onBlurSpy = expect.createSpy();
+            const sections = [new Section([{onTouchTap: onTouchTapSpy}])];
+            const { output } = setup({sections, onBlur: onBlurSpy});
+            // select the first item
+            TestUtils.Simulate.keyDown(output.refs.input, {key: 'ArrowDown'});
+            // select item with enter
+            TestUtils.Simulate.keyDown(output.refs.input, {key: 'Enter'});
+
+            expect(onTouchTapSpy.calls.length).toBe(1, 'Should have triggered onTouchTap');
+            expect(onBlurSpy.calls.length).toBe(1, 'Should have triggered onBlur');
         });
 
     });
