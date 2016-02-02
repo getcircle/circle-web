@@ -13,6 +13,10 @@ class ProfileAvatar extends StyleableComponent {
         ).isRequired,
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return (nextProps.profile.id !== this.props.profile.id);
+    }
+
     _getInitials() {
         const profile = this.props.profile;
         return [profile.first_name[0]].map((character, index) => _.capitalize(character)).join('');

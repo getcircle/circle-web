@@ -16,7 +16,7 @@ import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
-import Search from '../components/Search';
+import QuickSearch from '../components/QuickSearch';
 
 const { AppCanvas } = mui;
 
@@ -171,6 +171,10 @@ class App extends CSSComponent {
                         justifyContent: 'center',
                         flex: 1,
                     },
+                    listContainerStyle: {
+                        display: 'none',
+                        position: 'absolute',
+                    }
                 },
             },
             focused: {
@@ -178,12 +182,11 @@ class App extends CSSComponent {
                     inputContainerStyle: {
                         borderRadius: '0px',
                     },
-                    focused: true,
-                    resultsListStyle: {
+                    listContainerStyle: {
+                        display: '',
                         height: 'initial',
                         marginTop: 1,
                         opacity: 1,
-                        position: 'absolute',
                         ...backgroundColors.light,
                     },
                 },
@@ -215,15 +218,11 @@ class App extends CSSComponent {
 
     renderHeaderActionsContainer() {
         return (
-            <Search
-                canExplore={false}
-                className="center-xs"
+            <QuickSearch
+                dispatch={this.props.dispatch}
                 largerDevice={true}
                 onBlur={::this.handleBlurSearch}
                 onFocus={::this.handleFocusSearch}
-                organization={this.props.organization}
-                params={this.props.params}
-                searchLocation={SEARCH_LOCATION.PAGE_HEADER}
                 {...this.styles().Search}
             />
         );
