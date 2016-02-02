@@ -39,6 +39,9 @@ class Header extends CSSComponent {
                         position: 'fixed',
                         zIndex: 10,
                     },
+                    titleStyle: {
+                        overflow: 'initial',
+                    },
                 },
                 headerContainer: {
                     display: 'block',

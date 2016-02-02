@@ -3,11 +3,9 @@ import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { backgroundColors, canvasColor } from '../constants/styles';
 import { deviceResized } from '../actions/device';
 import { getAuthenticatedProfile } from '../reducers/authentication';
 import resizable from '../decorators/resizable';
-import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import tracker from '../utils/tracker';
 
@@ -15,8 +13,8 @@ import CSSComponent from '../components/CSSComponent';
 import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import Header from '../components/Header';
+import HeaderSearch from '../components/HeaderSearch';
 import TabBar from '../components/TabBar';
-import QuickSearch from '../components/QuickSearch';
 
 const { AppCanvas } = mui;
 
@@ -159,34 +157,6 @@ class App extends CSSComponent {
                     height: '100vh',
                     width: '100vw',
                 },
-                Search: {
-                    inputContainerStyle: {
-                        boxShadow: '0px 1px 3px 0px rgba(0, 0, 0, .09)',
-                    },
-                    style: {
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        flex: 1,
-                    },
-                    listContainerStyle: {
-                        display: 'none',
-                        position: 'absolute',
-                    }
-                },
-            },
-            focused: {
-                Search: {
-                    inputContainerStyle: {
-                        borderRadius: '0px',
-                    },
-                    listContainerStyle: {
-                        display: '',
-                        height: 'initial',
-                        marginTop: 1,
-                        opacity: 1,
-                        ...backgroundColors.light,
-                    },
-                },
             },
         };
     }
@@ -215,12 +185,10 @@ class App extends CSSComponent {
 
     renderHeaderActionsContainer() {
         return (
-            <QuickSearch
+            <HeaderSearch
                 dispatch={this.props.dispatch}
-                largerDevice={true}
                 onBlur={::this.handleBlurSearch}
                 onFocus={::this.handleFocusSearch}
-                {...this.styles().Search}
             />
         );
     }
