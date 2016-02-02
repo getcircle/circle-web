@@ -46,7 +46,7 @@ class CreateTeamForm extends CSSComponent {
             if (nextProps.error === '') {
                 this.refs.modal.dismiss();
             } else {
-                const error = nextProps.error ? 'Error creating team' : '';
+                const error = nextProps.error ? t('Error creating team') : '';
                 this.setState({error: error});
                 this.refs.modal.setSaveEnabled(true);
             }
@@ -124,7 +124,7 @@ class CreateTeamForm extends CSSComponent {
 
     validate() {
         const requiredFieldsToTitle = {
-            'name': 'Team Name'
+            'name': t('Team Name'),
         };
 
         for (let requiredField in requiredFieldsToTitle) {
