@@ -84,12 +84,6 @@ class App extends CSSComponent {
         device: InternalPropTypes.DeviceContext,
     }
 
-    state = {
-        focused: false,
-    }
-
-    historyListener = null
-
     getChildContext() {
         return {
             auth: {
@@ -122,15 +116,6 @@ class App extends CSSComponent {
         }
 
         this.initTrackerSession();
-        // XXX we should be able to listen to UPDATE_PATH action from
-        // redux-simple-router. since we're about to redo the search
-        // components, i'm not going to adjust this now, but we should ensure
-        // this isn't required for the new components.
-        if (!this.historyListener) {
-            this.historyListener = this.context.history.listen(location => {
-                this.locationChanged(location)
-            });
-        }
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -161,36 +146,8 @@ class App extends CSSComponent {
         };
     }
 
-    styles() {
-        return this.css({
-            focused: this.state.focused,
-        });
-    }
-
-    locationChanged(newLocation) {
-        // This ensures search results are reset correctly
-        // and do not carry over across pages.
-        if (this.props.displayHeader) {
-           this.setState({focused: false});
-        }
-    }
-
-    handleFocusSearch() {
-        this.setState({focused: true});
-    }
-
-    handleBlurSearch() {
-        this.setState({focused: false});
-    }
-
     renderHeaderActionsContainer() {
-        return (
-            <HeaderSearch
-                dispatch={this.props.dispatch}
-                onBlur={::this.handleBlurSearch}
-                onFocus={::this.handleFocusSearch}
-            />
-        );
+        return <HeaderSearch dispatch={this.props.dispatch} />;
     }
 
     render() {

@@ -1,14 +1,13 @@
 import expect from 'expect';
-import mui from 'material-ui';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
+
+import { ListItem } from 'material-ui';
 
 import componentWithContext from '../../../componentWithContext';
 import Core from '../../../../src/common/components/QuickSearch/Core';
 import List from '../../../../src/common/components/QuickSearch/List';
 import Section from '../../../../src/common/components/QuickSearch/Section';
-
-const { ListItem } = mui;
 
 function setup(overrides, includeSections) {
     const defaults = {
@@ -112,6 +111,20 @@ describe('Core', () => {
             expect(onBlurSpy.calls.length).toBe(1, 'Should have triggered onBlur');
         });
 
+    });
+
+    describe('item onTouchTap', () => {
+
+        it('triggers an onBlur', () => {
+            const onTouchTapSpy = expect.createSpy();
+            const onBlurSpy = expect.createSpy();
+            const sections = [new Section([{onTouchTap: onTouchTapSpy}])];
+            const { output } = setup({sections, onBlur: onBlurSpy});
+            const item = TestUtils.findRenderedComponentWithType(output, ListItem);
+            item.props.onTouchTap();
+            expect(onTouchTapSpy.calls.length).toEqual(1, 'Should have triggered onTouchTap for item');
+            expect(onBlurSpy.calls.length).toEqual(1, 'SHould have triggered onBlur when item is selected');
+        });
     });
 
 });

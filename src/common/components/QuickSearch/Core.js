@@ -126,6 +126,20 @@ class Core extends CSSComponent {
         },
     }
 
+    cleanupAndBlur = () => {
+        ReactDOM.findDOMNode(this.refs.input).blur();
+        this.setState({
+            highlightedIndex: null,
+            query: '',
+        })
+        this.props.dispatch(clearSearchResults());
+        this.props.onBlur();
+    }
+
+    handleOnSelectItem = () => {
+        this.cleanupAndBlur();
+    }
+
     setIgnoreBlur(ignoreBlur) {
         this.ignoreBlur = ignoreBlur;
     }
@@ -291,16 +305,6 @@ class Core extends CSSComponent {
         return numberOfItems;
     }
 
-    cleanupAndBlur() {
-        ReactDOM.findDOMNode(this.refs.input).blur();
-        this.setState({
-            highlightedIndex: null,
-            query: '',
-        })
-        this.props.dispatch(clearSearchResults());
-        this.props.onBlur();
-    }
-
     trackTouchTap(item) {
         const onTouchTap = item.onTouchTap;
         item.onTouchTap = () => {
@@ -338,6 +342,7 @@ class Core extends CSSComponent {
                     itemStyle={{...this.styles().listItem}}
                     items={section.getItems(maxItems)}
                     key={`list-${sectionIndex}`}
+                    onSelectItem={this.handleOnSelectItem}
                     style={{...this.styles().list}}
                     title={section.title}
                 />
