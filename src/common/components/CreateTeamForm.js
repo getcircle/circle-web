@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 
 import { createTeam, hideModal } from '../actions/teams';
@@ -9,7 +9,6 @@ import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { teamValidator } from '../utils/validators';
 
-import CSSComponent from  './CSSComponent';
 import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
 import TextArea from './TextArea';
@@ -29,7 +28,7 @@ const teamSelector = selectors.createImmutableSelector(
     }
 );
 
-class CreateTeamForm extends CSSComponent {
+class CreateTeamForm extends Component {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
@@ -48,13 +47,6 @@ class CreateTeamForm extends CSSComponent {
             this.refs.modal.dismiss();
             this.props.resetForm();
         }
-    }
-
-    classes() {
-        return {
-            default: {
-            },
-        };
     }
 
     buildCreateHandler() {
