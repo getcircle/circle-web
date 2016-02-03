@@ -12,6 +12,8 @@ export const authenticatedSelector = createImmutableSelector(
     (authenticationState) => { return { authenticated: authenticationState.get('authenticated') } },
 );
 
+export const autocompleteSelector = state => state.get('autocomplete');
+
 export const cacheSelector = state => state.get('cache');
 export const exploreSelector = state => state.get('explore');
 

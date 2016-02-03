@@ -23,6 +23,7 @@ class ListItem extends CSSComponent {
         onTouchTap: PropTypes.func,
     }
 
+    // TODO add support for tracking recent
     handleOnTouchTap = () => {
         const {
             onTouchTap,

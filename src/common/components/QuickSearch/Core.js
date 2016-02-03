@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import ReactDOM from 'react-dom';
 
-import { clearSearchResults, loadSearchResults, viewSearchResult } from '../../actions/search';
+import { clearResults, autocomplete } from '../../actions/autocomplete';
 import { backgroundColors, fontColors, iconColors } from '../../constants/styles';
 import t from '../../utils/gettext';
 
@@ -132,7 +132,7 @@ class Core extends CSSComponent {
             highlightedIndex: null,
             query: '',
         })
-        this.props.dispatch(clearSearchResults());
+        this.props.dispatch(clearResults());
         this.props.onBlur();
     }
 
@@ -221,7 +221,7 @@ class Core extends CSSComponent {
         const inputValue = event.target.value;
         clearTimeout(this.updateQueryTimer);
         this.updateQueryTimer = setTimeout(() => {
-            this.props.dispatch(loadSearchResults(inputValue))
+            this.props.dispatch(autocomplete(inputValue))
             this.setState({'query': inputValue});
         }, UPDATE_QUERY_DELAY);
         this.setState({'highlightedIndex': inputValue !== '' ? 0 : null});

@@ -12,13 +12,14 @@ import Section from './Section';
 
 const selector = selectors.createImmutableSelector(
     [
-        selectors.searchSelector,
+        selectors.autocompleteSelector,
     ],
     (
-        searchState
+        autocompleteState
     ) => {
         return {
-            results: searchState.get('results').toJS(),
+            // TODO we should support Immutable.js in the search results
+            results: autocompleteState.get('results').toJS(),
         };
     }
 );
