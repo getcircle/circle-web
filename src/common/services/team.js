@@ -17,7 +17,50 @@ export function createTeam(client, team) {
     const request = new services.team.actions.create_team.RequestV1({team});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.finish(resolve, reject, key))
+            .then(response => response.finish(resolve, reject))
+            .catch(error => reject(error));
+    });
+}
+
+/**
+ * Get a team
+ *
+ * @param {Object} client the service client
+ * @param {String} teamId the id of the team
+ *
+ */
+export function getTeam(client, teamId) {
+    const request = new services.team.actions.get_team.RequestV1({
+        /*eslint-disable camelcase*/
+        team_id: teamId,
+        /*eslint-enable camelcase*/
+    });
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.finsih(resolve, reject))
+            .catch(error => reject(error));
+    });
+}
+
+/**
+ * Get team members with the given role
+ *
+ * @param {Object} client the service client
+ * @param {String} teamId the id of the team
+ * @param {services.team.containers.TeamMemberV1.RoleV1} role the member role we want to return
+ *
+ */
+export function getMembers(client, teamId, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER) {
+    const request = new services.team.actions.get_members.RequestV1({
+        /*eslint-disable camelcase*/
+        team_id: teamId,
+        /*eslint-enable camelcase*/
+        role: role,
+    });
+    const cacheKey = `${teamId}:${role}`;
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.finish(resolve, reject, cacheKey))
             .catch(error => reject(error));
     });
 }

@@ -24,3 +24,53 @@ export function createTeam(name, description = null) {
         },
     };
 }
+
+/**
+ * Get team
+ *
+ * @param {String} teamId id of the team
+ *
+ */
+export function getTeam(teamId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_TEAM,
+                types.GET_TEAM_SUCCESS,
+                types.GET_TEAM_FAILURE,
+            ],
+            // TODO do we need to add bail here or is this solved with fetching from the cache first?
+            remote: (client) => requests.getTeam(client, teamId),
+        },
+    };
+}
+
+/**
+ * Get team members
+ *
+ * @param {String} teamId id of the team
+ * @param {services.team.containers.TeamMemberV1.RoleV1} role the member role we want to return
+ *
+ */
+export function getMembers(teamId, role) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_TEAM_MEMBERS,
+                types.GET_TEAM_MEMBERS_SUCCESS,
+                types.GET_TEAM_MEMBERS_FAILURE,
+            ],
+            remote: (client) => requests.getMembers(client, teamId, role),
+        },
+    };
+}
+
+/**
+ * Get team coordinators
+ *
+ * @param {String} teamId id of the team
+ *
+ */
+export function getCoordinators(teamId) {
+    return getMembers(teamId, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
+}
