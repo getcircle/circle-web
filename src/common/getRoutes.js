@@ -211,16 +211,15 @@ export default function (store, url) {
                 path="/profile/:profileId"
             />
             <Route
-                component={require('./containers/Search')}
+                component={require('./containers/SearchV2')}
                 onEnter={applyMiddleware(
-                    requireAuth,
-                    hideHeader,
+                    ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.SEARCH, 'query')
                 )}
                 path="/search/:query"
             />
             <Route
-                component={require('./containers/Search')}
+                component={require('./containers/NoMatch')}
                 onEnter={applyMiddleware(redirectHome)}
                 path="/search"
             />

@@ -3,7 +3,7 @@ import StyleResizable from 'material-ui/lib/mixins/style-resizable';
 
 import * as types from '../constants/actionTypes';
 
-const HEADER_AND_FOOTERLESS_PATHS = [/\/billing/i, /\/new-post/, /^\/post(.*)edit$/i,  /^\/search(.*)?$/i];
+const HEADER_AND_FOOTERLESS_PATHS = [/\/billing/i, /\/new-post/, /^\/post(.*)edit$/i];
 const MOBILE_OS = ['iOS', 'Android'];
 
 const os = checkOS();
