@@ -305,21 +305,6 @@ class Core extends CSSComponent {
         return numberOfItems;
     }
 
-    trackTouchTap(item) {
-        const onTouchTap = item.onTouchTap;
-        item.onTouchTap = () => {
-            const trackItem = Object.assign({}, item);
-            this.props.dispatch(viewSearchResult(trackItem));
-
-            if (onTouchTap && typeof onTouchTap === 'function') {
-                onTouchTap();
-            }
-
-            this.cleanupAndBlur();
-        }
-        return item;
-    }
-
     render() {
         const {
             className,
