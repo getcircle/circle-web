@@ -1,5 +1,6 @@
-import mui from 'material-ui';
 import React, { PropTypes } from 'react';
+
+import { Snackbar } from 'material-ui';
 
 import { AUTH_BACKENDS } from '../services/user';
 import { fontColors, fontWeights } from '../constants/styles';
@@ -8,8 +9,6 @@ import t from '../utils/gettext';
 import CSSComponent from './CSSComponent';
 import LoginInternal from './LoginInternal';
 import LoginSSO from './LoginSSO';
-
-const { Snackbar } = mui;
 
 class LoginForm extends CSSComponent {
 
@@ -31,6 +30,7 @@ class LoginForm extends CSSComponent {
         internal: false,
         providerName: '',
         singleSignOn: false,
+        snackbarOpen: false,
     }
 
     componentWillMount() {
@@ -42,12 +42,6 @@ class LoginForm extends CSSComponent {
             this.setState({guest: false});
         }
         this.mergeState(nextProps, nextState);
-    }
-
-    componentDidUpdate() {
-        if (this.props.authError) {
-            this.refs.snackbar.show();
-        }
     }
 
     mergeState(props, state) {
@@ -62,7 +56,7 @@ class LoginForm extends CSSComponent {
                 providerName: props.providerName,
             });
         } else if (props.authError) {
-            this.setState({guest: true});
+            this.setState({guest: true, snackbarOpen: true});
         }
     }
 
@@ -189,7 +183,12 @@ class LoginForm extends CSSComponent {
         return (
             <div>
                 {this.renderInputSection()}
-                <Snackbar message={t('Error logging in')} ref="snackbar" />
+                <Snackbar
+                    message={t('Error logging in')}
+                    onRequestClose={() => {this.setState({snackbarOpen: false})}}
+                    open={this.state.snackbarOpen}
+                    ref="snackbar"
+                />
             </div>
         );
     }
