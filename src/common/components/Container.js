@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 
+import { backgroundColors } from '../constants/styles';
+
 import CSSComponent from './CSSComponent';
 
 class Container extends CSSComponent {
@@ -13,9 +15,9 @@ class Container extends CSSComponent {
         return {
             default: {
                 root: {
-                    backgroundColor: '#F7F9FA',
                     minHeight: '100vh',
                     paddingBottom: 100,
+                    ...backgroundColors.light,
                 },
             },
         };
