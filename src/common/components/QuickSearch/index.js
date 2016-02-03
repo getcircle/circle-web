@@ -27,7 +27,7 @@ class QuickSearch extends CSSComponent {
 
     static propTypes = {
         defaults: PropTypes.arrayOf(PropTypes.instanceOf(Section)),
-        onBlur: PropTypes.funciton,
+        onBlur: PropTypes.func,
         results: PropTypes.object,
     }
 
