@@ -33,7 +33,10 @@ class CreateTeamForm extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        fields: PropTypes.object.isRequired,
+        handleSubmit: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
+        visible: PropTypes.bool.isRequired,
     };
 
     componentWillReceiveProps(nextProps) {
