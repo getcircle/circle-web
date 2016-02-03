@@ -11,7 +11,6 @@ import DeviceContextFactory from './factories/DeviceContextFactory';
 import URLContextFactory from './factories/URLContextFactory';
 
 export default function (child, contextOverrides = {}, childContextTypesOverrides = {}) {
-
     const defaultContext = {
         auth: AuthContextFactory.getContext(),
         device: DeviceContextFactory.getContext(),
@@ -20,7 +19,7 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
             pushState: expect.createSpy(),
         },
         mixins: {},
-        muiTheme: getCustomTheme('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36'),
+        muiTheme: getCustomTheme(global.navigator.userAgent),
         url: URLContextFactory.getContext(),
         ...contextOverrides,
     }
