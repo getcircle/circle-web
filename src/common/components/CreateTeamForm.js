@@ -1,17 +1,19 @@
-import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
-import { LinearProgress } from 'material-ui';
+import { reduxForm } from 'redux-form';
 
-import { createTeam } from '../actions/teams';
+import { createTeam, hideModal } from '../actions/teams';
 import { fontColors, fontWeights } from '../constants/styles';
 import * as messageTypes from '../constants/messageTypes';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
+import { teamValidator } from '../utils/validators';
 
 import CSSComponent from  './CSSComponent';
-import Dialog from './Dialog';
-import Toast from './Toast';
+import FormDialog from './FormDialog';
+import FormLabel from './FormLabel';
+import TextArea from './TextArea';
+import TextField from './TextField';
 
 const teamSelector = selectors.createImmutableSelector(
     [
@@ -21,224 +23,81 @@ const teamSelector = selectors.createImmutableSelector(
         teamState,
     ) => {
         return {
-            error: teamState.get('error'),
-            saving: teamState.get('saving'),
+            formSubmitting: teamState.get('formSubmitting'),
+            visible: teamState.get('modalVisible'),
         };
     }
 );
 
-
-@connect(teamSelector, undefined, undefined, {withRef: true})
 class CreateTeamForm extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        resetForm: PropTypes.func.isRequired,
     };
 
-    componentWillMount() {
-        this.resetState();
-    }
-
     componentWillReceiveProps(nextProps) {
-        this.setState({saving: nextProps.saving});
-
-        if (this.props.saving && !nextProps.saving) {
-            if (nextProps.error === '') {
-                this.refs.modal.dismiss();
-            } else {
-                const error = nextProps.error ? t('Error creating team') : '';
-                this.setState({error: error});
-                this.refs.modal.setSaveEnabled(true);
-            }
+        if (!this.props.visible && nextProps.visible) {
+            this.refs.modal.show();
         }
-    }
 
-    resetState() {
-        this.setState({
-            description: '',
-            error: '',
-            name: '',
-            saving: false,
-        });
-    }
-
-    show() {
-        this.refs.modal.show();
+        if (this.props.visible && !nextProps.visible) {
+            this.refs.modal.dismiss();
+            this.props.resetForm();
+        }
     }
 
     classes() {
         return {
             default: {
-                formContainer: {
-                    backgroundColor: 'rgb(255, 255, 255)',
-                    padding: 0,
-                    width: '100%',
-                },
-                form: {
-                    padding: '0 16px 16px 16px',
-                },
-                input: {
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '3px',
-                    boxSizing: 'border-box',
-                    display: 'flex',
-                    fontSize: 14,
-                    height: '50px',
-                    lineHeight: '14px',
-                    outline: 'none',
-                    padding: '10px',
-                    width: '100%',
-                    ...fontColors.dark,
-                },
-                textarea: {
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '3px',
-                    boxSizing: 'border-box',
-                    display: 'flex',
-                    fontSize: 14,
-                    height: '100px',
-                    lineHeight: '14px',
-                    outline: 'none',
-                    padding: '10px',
-                    width: '100%',
-                    ...fontColors.dark,
-                },
-                sectionTitle: {
-                    fontSize: 11,
-                    letterSpacing: '1px',
-                    lineHeight: '11px',
-                    margin: '16px 0',
-                    textAlign: 'left',
-                    textTransform: 'uppercase',
-                    ...fontColors.light,
-                    ...fontWeights.semiBold,
-                },
-            },
-            'error': {
-                textarea: {
-                    borderColor: 'rgba(255, 0, 0, 0.7)',
-                },
             },
         };
     }
 
-    validate() {
-        const requiredFieldsToTitle = {
-            'name': t('Team Name'),
-        };
-
-        for (let requiredField in requiredFieldsToTitle) {
-            if (!this.state[requiredField] || this.state[requiredField].trim() === '') {
-                this.setState({
-                    'error': t(requiredFieldsToTitle[requiredField] + ' cannot be empty.'),
-                });
-                return false;
-            }
-        }
-
-        this.setState({
-            'error': '',
-        });
-        return true;
+    buildCreateHandler() {
+        return this.props.handleSubmit(({name, description}, dispatch) => {
+            dispatch(createTeam(name, description));
+        })
     }
 
-    handleChange(event) {
-        let updatedState = {};
-        if (this.state[event.target.name] !== undefined) {
-            updatedState[event.target.name] = event.target.value;
-            // Reset state on any key change
-            updatedState.error = '';
-        } else {
-            logger.error('Received change event for untracked input.');
-            return;
-        }
-
-        this.setState(updatedState);
-    }
-
-    handleSaveTapped() {
-        if (!this.validate()) {
-            return;
-        }
-
-        const { name, description } = this.state;
-        this.props.dispatch(createTeam(name, description));
-    }
-
-    renderProgressIndicator() {
-        if (this.props.saving) {
-            return (
-                <LinearProgress mode="indeterminate" />
-            );
-        }
-    }
-
-    renderToast() {
-        if (this.state.error.trim() !== '') {
-            return (
-                <Toast
-                    message={this.state.error}
-                    messageType={messageTypes.ERROR}
-                />
-            );
-        }
-    }
-
-    renderContent() {
-        const { saving } = this.props;
-        const { description, name } = this.state;
-
-        return (
-            <div className="col-xs center-xs" style={this.styles().formContainer}>
-                {this.renderProgressIndicator()}
-                {this.renderToast()}
-                <form style={this.styles().form}>
-                    <div style={this.styles().sectionTitle}>{t('Team Name')}</div>
-                    <input
-                        disabled={saving}
-                        name="name"
-                        onChange={this.handleChange.bind(this)}
-                        placeholder={t('Marketing, IT, etc.')}
-                        style={this.styles().input}
-                        type="text"
-                        value={name}
-                     />
-                    <div style={this.styles().sectionTitle}>{t('Description')}</div>
-                    <textarea
-                        disabled={saving}
-                        name="description"
-                        onChange={this.handleChange.bind(this)}
-                        placeholder={t('What are the responsibilities or the purpose of this team?')}
-                        style={this.styles().textarea}
-                        type="text"
-                        value={description}
-                    ></textarea>
-                </form>
-            </div>
-        );
+    handleCancel() {
+        this.props.dispatch(hideModal());
     }
 
     render() {
+        const { fields: { name, description }, formSubmitting } = this.props;
+
         return (
-            <div >
-                <Dialog
-                    dialogDismissLabel={t('Cancel')}
-                    dialogSaveLabel={t('Save')}
-                    onRequestClose={this.resetState.bind(this)}
-                    onSave={this.handleSaveTapped.bind(this)}
-                    pageType={PAGE_TYPE.CREATE_TEAM}
-                    ref="modal"
-                    repositionOnUpdate={false}
-                    title={t('Create Team')}
-                    {...this.styles().Dialog}
-                >
-                    <div className="row center-xs">
-                        {this.renderContent()}
-                    </div>
-                </Dialog>
-            </div>
+            <FormDialog
+                onCancel={this.handleCancel.bind(this)}
+                onSubmit={this.buildCreateHandler()}
+                pageType={PAGE_TYPE.CREATE_TEAM}
+                ref="modal"
+                submitLabel={t('Save')}
+                submitting={formSubmitting}
+                title={t('Create Team')}
+            >
+                <FormLabel text={t('Team Name')} />
+                <TextField
+                    placeholder={t('Marketing, IT, etc.')}
+                    {...name}
+                 />
+                <FormLabel text={t('Description')} />
+                <TextArea
+                    placeholder={t('What are the responsibilities or the purpose of this team?')}
+                    {...description}
+                />
+            </FormDialog>
         );
     }
 }
 
-export default CreateTeamForm;
+export default reduxForm(
+    {
+      form: 'createTeam',
+      fields: ['name', 'description'],
+      getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
+      validate: teamValidator,
+    },
+    teamSelector
+)(CreateTeamForm);

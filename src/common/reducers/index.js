@@ -1,3 +1,6 @@
+import { reducer as formReducer } from 'redux-form';
+import Immutable from 'immutable';
+
 export { default as authentication } from './authentication';
 export { default as cache } from './cache';
 export { default as explore } from './explore';
@@ -17,4 +20,7 @@ export { default as teamMembers } from './teamMembers';
 export { default as updateProfile } from './profile';
 
 // external reducers
+export function form(state, action) {
+    return formReducer(state, action)
+};
 export { routeReducer as routing } from 'redux-simple-router';
