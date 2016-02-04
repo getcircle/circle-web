@@ -74,7 +74,7 @@ export default class FormPhotoField extends FormField {
                 },
             },
             'showError': {
-                input: {
+                dropzone: {
                     border: '1px solid rgba(200, 0, 0, 0.8)',
                 },
             },
@@ -95,6 +95,7 @@ export default class FormPhotoField extends FormField {
 
     render() {
         const { error, value } = this.props;
+        const preview = value && value.preview;
 
         return (
             <div>
@@ -105,7 +106,7 @@ export default class FormPhotoField extends FormField {
                         style={this.styles().profileImageButton}
                         type="button"
                     >
-                        <img alt={t('Image')} src={value.preview} style={this.styles().profileImage} />
+                        <img alt={t('Image')} src={preview} style={this.styles().profileImage} />
                     </button>
                     <Dropzone
                         activeStyle={{...this.styles().dropzoneActive}}
