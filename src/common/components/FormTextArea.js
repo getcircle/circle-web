@@ -34,7 +34,7 @@ export default class FormTextArea extends FormField {
                 },
             },
             'showError': {
-                input: {
+                textarea: {
                     border: '1px solid rgba(200, 0, 0, 0.8)',
                 },
             },
@@ -43,7 +43,6 @@ export default class FormTextArea extends FormField {
 
     render() {
         const { error } = this.props;
-        const showError = this.showError();
 
         return (
             <div>
