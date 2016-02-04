@@ -152,10 +152,6 @@ class HeaderMenu extends CSSComponent {
         routeToProfile(this.context.history, this.context.auth.profile);
     }
 
-    handleViewTeam(event) {
-        routeToTeam(this.context.history, this.context.auth.managesTeam);
-    }
-
     handleViewKnowledge(event) {
         routeToPosts(this.context.history, PostStateURLString.LISTED);
     }
@@ -186,7 +182,6 @@ class HeaderMenu extends CSSComponent {
                         primaryText={t('My Profile')}
                     />
                     {this.renderMyKnowledgeMenuItem()}
-                    {this.renderMyTeamMenuItem()}
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
@@ -219,28 +214,6 @@ class HeaderMenu extends CSSComponent {
                         style={this.styles().arrowContainer}
                     />
                 </div>
-            );
-        }
-    }
-
-    renderMyTeamMenuItem() {
-        const { managesTeam } = this.context.auth;
-        if (managesTeam && managesTeam.id) {
-            return (
-                <MenuItem
-                    desktop={true}
-                    innerDivStyle={{...this.styles().menuItemDivStyle}}
-                    onTouchTap={(e) => this.handleViewTeam(e)}
-                    primaryText={t('My Team')}
-                />
-            );
-        } else {
-            // We need to return something because material-ui
-            // doesn't handle empty children. They show up as null in a for loop
-            // and they don't have any checks around it.
-            // Not returning anything or returning empty breaks the component
-            return (
-                <span />
             );
         }
     }

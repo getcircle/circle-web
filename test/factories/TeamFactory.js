@@ -4,14 +4,9 @@ import { services } from 'protobufs';
 export default {
 
     getTeam() {
-        const teamName = faker.hacker.noun();
-        const displayName = `${teamName} (${faker.hacker.noun()})`;
-        return new services.organization.containers.TeamV1({
-            /*eslint-disable camelcase*/
+        return new services.team.containers.TeamV1({
             id: faker.random.uuid(),
-            name: teamName,
-            display_name: displayName,
-            /*eslint-enable camelcase*/
+            name: faker.hacker.noun(),
         });
     }
 

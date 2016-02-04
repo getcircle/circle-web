@@ -12,7 +12,7 @@ import ProfileAvatar from '../../../src/common/components/ProfileAvatar';
 
 import componentWithContext from '../../componentWithContext';
 import AuthContextFactory from '../../factories/AuthContextFactory';
-import TeamFactory from '../../factories/TeamFactory';
+import DeprecatedTeamFactory from '../../factories/TeamFactory';
 
 function setup(propOverrides, contextOverrides) {
     const defaultProps = {
@@ -101,20 +101,6 @@ describe('HeaderMenu', () => {
 
             expect(viewProfileHandlerSpy.calls.length).toBe(1);
             expect(logoutHandlerSpy.calls.length).toBe(1);
-        });
-    });
-
-    it('shows team menu item if user manages a team', () => {
-        const auth = AuthContextFactory.getContext(undefined, TeamFactory.getTeam());
-        const { headerMenu } = setup({}, {auth});
-        TestUtils.Simulate.click(headerMenu.refs.container);
-        then(() => {
-            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-            expect(menuItems.length).toBe(3);
-
-            const viewTeamHandlerSpy = expect.spyOn(headerMenu, 'handleViewTeam');
-            menuItems[1].props.onTouchTap();
-            expect(viewTeamHandlerSpy.calls.length).toBe(1);
         });
     });
 

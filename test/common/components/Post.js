@@ -26,7 +26,7 @@ function setup(propsOverrides, adminProfile) {
     let contextOverrides;
     if (typeof adminProfile !== 'undefined') {
         contextOverrides = {
-            auth: AuthContextFactory.getContext(undefined, undefined, undefined, adminProfile),
+            auth: AuthContextFactory.getContext(undefined, undefined, adminProfile),
         };
     }
 

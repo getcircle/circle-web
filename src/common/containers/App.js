@@ -40,11 +40,9 @@ const selector = createSelector(
             authenticated: authenticationState.get('authenticated'),
             displayFooter: responsiveState.get('displayFooter'),
             displayHeader: responsiveState.get('displayHeader'),
-            managesTeam: authenticationState.get('managesTeam'),
             organization: authenticationState.get('organization'),
             profile: profile,
             profileLocation: authenticationState.get('profileLocation'),
-            team: authenticationState.get('team'),
             flags: authenticationState.get('flags'),
             mobileOS: responsiveState.get('mobileOS'),
         }

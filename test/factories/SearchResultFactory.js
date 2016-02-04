@@ -4,7 +4,7 @@ import { services } from 'protobufs';
 import LocationFactory from './LocationFactory';
 import PostFactory from './PostFactory';
 import ProfileFactory from './ProfileFactory';
-import TeamFactory from './TeamFactory';
+import DeprecatedTeamFactory from './DeprecatedTeamFactory';
 
 export default {
 
@@ -31,7 +31,7 @@ export default {
     },
 
     getSearchResultWithTeam(highlightName) {
-        const team = TeamFactory.getTeam();
+        const team = DeprecatedTeamFactory.getTeam();
         const highlight = {};
         if (highlightName) {
             /*eslint-disable camelcase*/

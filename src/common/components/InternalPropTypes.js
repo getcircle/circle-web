@@ -33,9 +33,7 @@ const InternalPropTypes = {
 };
 InternalPropTypes.AuthContext = PropTypes.shape({
     location: InternalPropTypes.LocationV1,
-    managesTeam: InternalPropTypes.TeamV1,
     organization: InternalPropTypes.OrganizationV1,
     profile: InternalPropTypes.ProfileV1,
-    team: InternalPropTypes.TeamV1,
 });
 export default InternalPropTypes;

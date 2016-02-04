@@ -112,7 +112,6 @@ export default function (store, url) {
                     tracker.initSession(
                         authenticationState.get('profile'),
                         authenticationState.get('organization'),
-                        authenticationState.get('team'),
                         authenticationState.get('profileLocation')
                     );
                     tracker.trackPageView(pageType, pageId);
