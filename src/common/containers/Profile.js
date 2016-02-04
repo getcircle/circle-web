@@ -127,16 +127,13 @@ class Profile extends PureComponent {
         fetchPosts(dispatch, params, postsNextRequest);
     }
 
-    onUpdateProfile(profile, manager) {
-        if (manager !== this.props.extendedProfile.manager) {
-            this.props.dispatch(updateProfile(profile, manager));
-        } else {
-            this.props.dispatch(updateProfile(profile));
-        }
+    onUpdateProfile(profile) {
+        this.props.dispatch(updateProfile(profile));
     }
 
     renderProfile() {
         const {
+            dispatch,
             extendedProfile,
             isLoggedInUser,
             posts,
@@ -153,6 +150,7 @@ class Profile extends PureComponent {
             return (
                 <DocumentTitle title={extendedProfile.profile.full_name}>
                     <ProfileDetail
+                        dispatch={dispatch}
                         extendedProfile={extendedProfile}
                         isLoggedInUser={isLoggedInUser}
                         onUpdateProfile={::this.onUpdateProfile}

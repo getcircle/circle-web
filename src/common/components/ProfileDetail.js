@@ -5,6 +5,7 @@ import { services } from 'protobufs';
 import CurrentTheme from '../utils/ThemeManager';
 import { PostStateURLString } from '../utils/post';
 import { replaceProfileSlug } from '../utils/routes';
+import { showModal } from '../actions/profiles';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -25,6 +26,7 @@ export const PROFILE_TAB_VALUES = {
 class ProfileDetail extends CSSComponent {
 
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object.isRequired,
         isLoggedInUser: PropTypes.bool.isRequired,
         onUpdateProfile: PropTypes.func.isRequired,
@@ -141,7 +143,7 @@ class ProfileDetail extends CSSComponent {
     }
 
     editButtonTapped() {
-        this.refs.profileDetailForm.getWrappedInstance().show();
+        this.props.dispatch(showModal());
     }
 
     // Helpers

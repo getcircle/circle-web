@@ -23,6 +23,12 @@ function createValidator(rules) {
   };
 }
 
+export const profileValidator = createValidator({
+    firstName: [required],
+    lastName: [required],
+    title: [required],
+});
+
 export const teamValidator = createValidator({
     name: [required],
 });
