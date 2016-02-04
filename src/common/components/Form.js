@@ -1,5 +1,5 @@
 import { LinearProgress } from 'material-ui';
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 
 import * as messageTypes from '../constants/messageTypes';
 
