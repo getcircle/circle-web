@@ -7,7 +7,7 @@ import CSSComponent from  './CSSComponent';
 export default class FormFieldError extends CSSComponent {
 
     static propTypes = {
-        error: PropTypes.string.isRequired,
+        error: PropTypes.string,
     }
 
     classes() {

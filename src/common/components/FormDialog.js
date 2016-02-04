@@ -9,6 +9,7 @@ import Form from './Form';
 export default class FormDialog extends CSSComponent {
     static propTypes = {
         children: PropTypes.node,
+        error: PropTypes.string,
         onCancel: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
         pageType: PropTypes.string.isRequired,
@@ -16,6 +17,7 @@ export default class FormDialog extends CSSComponent {
         submitLabel: PropTypes.string.isRequired,
         submitting: PropTypes.bool,
         title: PropTypes.string,
+        warning: PropTypes.string,
     };
 
     classes() {
@@ -50,23 +52,33 @@ export default class FormDialog extends CSSComponent {
                     {children}
                 </Form>
             </div>
-        )
+        );
     }
 
     render() {
-        const { onCancel, onSubmit, pageType, submitLabel, title } = this.props;
+        const {
+            error,
+            onCancel,
+            onSubmit,
+            pageType,
+            submitLabel,
+            title,
+            warning,
+        } = this.props;
 
         return (
             <div >
                 <Dialog
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={submitLabel}
-                    onSave={onSubmit}
+                    error={error}
                     onRequestClose={onCancel}
+                    onSave={onSubmit}
                     pageType={pageType}
                     ref="modal"
                     repositionOnUpdate={false}
                     title={title}
+                    warning={warning}
                 >
                     <div className="row center-xs">
                         {this.renderForm()}

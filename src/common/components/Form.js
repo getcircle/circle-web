@@ -9,8 +9,10 @@ import Toast from './Toast';
 export default class Form extends CSSComponent {
     static propTypes = {
         children: PropTypes.node,
+        error: PropTypes.string,
         onSubmit: PropTypes.func.isRequired,
         style: PropTypes.object,
+        warning: PropTypes.string,
     };
 
     classes() {
@@ -32,13 +34,20 @@ export default class Form extends CSSComponent {
     }
 
     renderToast() {
-        const { error } = this.props;
+        const { error, warning } = this.props;
 
         if (error) {
             return (
                 <Toast
                     message={error}
                     messageType={messageTypes.ERROR}
+                />
+            );
+        } else if (warning) {
+            return (
+                <Toast
+                    message={warning}
+                    messageType={messageTypes.WARNING}
                 />
             );
         }
