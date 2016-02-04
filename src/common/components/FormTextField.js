@@ -10,10 +10,10 @@ export default class FormTextField extends FormField {
     static propTypes = {
         name: PropTypes.string,
         onBlur: PropTypes.func,
-        onChange: PropTypes.func,
+        onChange: PropTypes.func.isRequired,
         onFocus: PropTypes.func,
         placeholder: PropTypes.string,
-        value: PropTypes.string,
+        value: PropTypes.string.isRequired,
     }
 
     classes() {

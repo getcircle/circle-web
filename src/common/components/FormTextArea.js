@@ -8,12 +8,12 @@ import FormFieldError from './FormFieldError';
 export default class FormTextArea extends FormField {
 
     static propTypes = {
-        name: PropTypes.string.isRequired,
+        name: PropTypes.string,
         onBlur: PropTypes.func,
-        onChange: PropTypes.func,
+        onChange: PropTypes.func.isRequired,
         onFocus: PropTypes.func,
         placeholder: PropTypes.string,
-        value: PropTypes.string,
+        value: PropTypes.string.isRequired,
     }
 
     classes() {

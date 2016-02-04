@@ -12,9 +12,8 @@ import IconContainer from './IconContainer';
 export default class FormPhotoField extends FormField {
 
     static propTypes = {
-        name: PropTypes.string,
-        onChange: PropTypes.func,
-        value: PropTypes.string,
+        onChange: PropTypes.func.isRequired,
+        value: PropTypes.string.isRequired,
     }
 
     classes() {
