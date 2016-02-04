@@ -5,7 +5,7 @@ import { fontColors } from '../constants/styles';
 import FormField from  './FormField';
 import FormFieldError from './FormFieldError';
 
-export default class TextField extends FormField {
+export default class FormTextField extends FormField {
 
     static propTypes = {
         name: PropTypes.string,

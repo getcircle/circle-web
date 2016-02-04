@@ -11,8 +11,8 @@ import { teamValidator } from '../utils/validators';
 
 import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
-import TextArea from './TextArea';
-import TextField from './TextField';
+import FormTextArea from './FormTextArea';
+import FormTextField from './FormTextField';
 
 const teamSelector = selectors.createImmutableSelector(
     [
@@ -73,12 +73,12 @@ class CreateTeamForm extends Component {
                 title={t('Create Team')}
             >
                 <FormLabel text={t('Team Name')} />
-                <TextField
+                <FormTextField
                     placeholder={t('Marketing, IT, etc.')}
                     {...name}
                  />
                 <FormLabel text={t('Description')} />
-                <TextArea
+                <FormTextArea
                     placeholder={t('What are the responsibilities or the purpose of this team?')}
                     {...description}
                 />

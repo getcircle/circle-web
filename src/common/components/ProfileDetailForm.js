@@ -14,7 +14,7 @@ import CSSComponent from  './CSSComponent';
 import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
 import FormPhotoField from './FormPhotoField';
-import TextField from './TextField';
+import FormTextField from './FormTextField';
 
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
@@ -216,26 +216,26 @@ class ProfileDetailForm extends CSSComponent {
                 <div className="row">
                     <div className="col-xs" style={this.styles().firstField}>
                         <FormLabel text={t('First Name')} />
-                        <TextField
+                        <FormTextField
                             placeholder={t('First Name')}
                             {...firstName}
                          />
                     </div>
                     <div className="col-xs" style={this.styles().lastField}>
                         <FormLabel text={t('Last Name')} />
-                        <TextField
+                        <FormTextField
                             placeholder={t('Last Name')}
                             {...lastName}
                          />
                     </div>
                 </div>
                 <FormLabel text={t('Title')} />
-                <TextField
+                <FormTextField
                     placeholder={t('Job Title')}
                     {...title}
                  />
                 <FormLabel text={t('Contact')} />
-                <TextField
+                <FormTextField
                     placeholder={t('Add your cell number')}
                     {...cellNumber}
                  />

@@ -2,7 +2,7 @@ import expect from 'expect';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import TextField from '../../../src/common/components/TextField';
+import FormTextField from '../../../src/common/components/FormTextField';
 
 const RED_BORDER = '1px solid rgba(200, 0, 0, 0.8)';
 
@@ -20,7 +20,7 @@ function setup(overrides) {
     const props = Object.assign({}, defaults, overrides);
 
     let renderer = TestUtils.createRenderer();
-    renderer.render(<TextField {...props} />);
+    renderer.render(<FormTextField {...props} />);
     let output = renderer.getRenderOutput();
 
     return {
@@ -43,7 +43,7 @@ function itShowsError(output) {
     });
 }
 
-describe('TextField', () => {
+describe('FormTextField', () => {
 
     context('when valid', () => {
         const { output } = setup();
