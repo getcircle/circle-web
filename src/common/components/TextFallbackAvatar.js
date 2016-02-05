@@ -59,7 +59,6 @@ class TextFallbackAvatar extends CSSComponent {
         if (!this.state.imageSrc && this.props.fallbackText.length > 0) {
             backgroundColor = getRandomColor(this.props.fallbackText);
         }
-
         return (
             <div className={this.props.className}>
                 <Avatar
