@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 
 import { createTeam, hideModal } from '../actions/teams';
-import { fontColors, fontWeights } from '../constants/styles';
-import * as messageTypes from '../constants/messageTypes';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
@@ -33,6 +31,7 @@ class CreateTeamForm extends Component {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
+        formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
         visible: PropTypes.bool.isRequired,
@@ -52,7 +51,7 @@ class CreateTeamForm extends Component {
     buildCreateHandler() {
         return this.props.handleSubmit(({name, description}, dispatch) => {
             dispatch(createTeam(name, description));
-        })
+        });
     }
 
     handleCancel() {
