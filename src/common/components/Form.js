@@ -12,6 +12,7 @@ export default class Form extends CSSComponent {
         error: PropTypes.string,
         onSubmit: PropTypes.func.isRequired,
         style: PropTypes.object,
+        submitting: PropTypes.bool,
         warning: PropTypes.string,
     };
 
