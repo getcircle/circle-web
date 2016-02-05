@@ -3,6 +3,8 @@ import combine from 'protobuf-normalizr/lib/combine';
 import { createRequiredFieldsValidator } from 'protobuf-normalizr/lib/validators';
 import { services } from 'protobufs';
 
+import { getMembersCacheKey } from '../services/team';
+
 import { isEntityStale } from './cache';
 
 function createTTLValidator(cache) {
@@ -74,4 +76,19 @@ export function retrievePosts(postIds, cache) {
 
 export function retrieveTeams(teamIds, cache) {
     return retrieve(teamIds, services.organization.containers.TeamV1, cache);
+}
+
+export function retrieveTeam(teamId, cache) {
+    return retrieve(teamId, services.team.containers.TeamV1, cache);
+}
+
+/**
+ * Retrieve team members from the cache.
+ *
+ * @param {Array} ids team member ids
+ * @param {Object} cache cache state
+ *
+ */
+export function retrieveTeamMembers(ids, cache) {
+    return retrieve(ids, services.team.containers.TeamMemberV1, cache);
 }

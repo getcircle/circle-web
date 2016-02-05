@@ -10,8 +10,8 @@ import AuthContextFactory from './factories/AuthContextFactory';
 import DeviceContextFactory from './factories/DeviceContextFactory';
 import URLContextFactory from './factories/URLContextFactory';
 
-export default function (child, contextOverrides = {}, childContextTypesOverrides = {}) {
-    const defaultContext = {
+export function getDefaultContext(contextOverrides) {
+    return {
         auth: AuthContextFactory.getContext(),
         device: DeviceContextFactory.getContext(),
         flags: Immutable.Map(),
@@ -23,6 +23,10 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
         url: URLContextFactory.getContext(),
         ...contextOverrides,
     }
+}
+
+export default function (child, contextOverrides = {}, childContextTypesOverrides = {}) {
+    const defaultContext = getDefaultContext(contextOverrides);
 
     class TestComponent extends CSSComponent {
 

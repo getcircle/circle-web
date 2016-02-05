@@ -2,39 +2,34 @@ import React, { PropTypes } from 'react';
 
 import { backgroundColors } from '../constants/styles';
 
-import CSSComponent from './CSSComponent';
+import DocumentTitle from './DocumentTitle';
 
-class Container extends CSSComponent {
+const Container = ({children, style, title, ...other}) => {
+    const styles = {
+        root: {
+            minHeight: '100vh',
+            paddingBottom: 100,
+            ...backgroundColors.light,
+        },
+    };
+    const component = (
+        <section {...other} style={{...styles.root, ...style}}>
+            {children}
+        </section>
+    );
 
-    static propTypes = {
-        children: PropTypes.node,
-        style: PropTypes.object,
-    }
+    // TODO ensure we display a default title
+    if (title) {
+        return <DocumentTitle title={title}>{component}</DocumentTitle>;
+    } else {
+        return component;
+    };
+};
 
-    classes() {
-        return {
-            default: {
-                root: {
-                    minHeight: '100vh',
-                    paddingBottom: 100,
-                    ...backgroundColors.light,
-                },
-            },
-        };
-    }
-
-    render() {
-        const {
-            style,
-            ...other,
-        } = this.props;
-        return (
-            <section {...other} style={{...this.styles().root, ...style}}>
-                {this.props.children}
-            </section>
-        );
-    }
-
-}
+Container.propTypes = {
+    children: PropTypes.node,
+    style: PropTypes.object,
+    title: PropTypes.string,
+};
 
 export default Container;

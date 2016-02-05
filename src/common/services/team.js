@@ -37,9 +37,20 @@ export function getTeam(client, teamId) {
     });
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.finsih(resolve, reject))
+            .then(response => response.finish(resolve, reject, teamId))
             .catch(error => reject(error));
     });
+}
+
+/**
+ * Return the key used to cache team members with the given role.
+ *
+ * @param {String} teamId the id of the team
+ * @param {services.team.containers.TeamMemberV1.RoleV1} role the member role we want to return
+ *
+ */
+export function getMembersCacheKey(teamId, role) {
+    return `${teamId}:${role}`;
 }
 
 /**
@@ -57,7 +68,7 @@ export function getMembers(client, teamId, role = services.team.containers.TeamM
         /*eslint-enable camelcase*/
         role: role,
     });
-    const cacheKey = `${teamId}:${role}`;
+    const cacheKey = getMembersCacheKey(teamId, role);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => response.finish(resolve, reject, cacheKey))

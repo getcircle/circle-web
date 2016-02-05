@@ -52,7 +52,8 @@ export function getTeam(teamId) {
  * @param {services.team.containers.TeamMemberV1.RoleV1} role the member role we want to return
  *
  */
-export function getMembers(teamId, role) {
+export function getMembers(teamId) {
+    const role = services.team.containers.TeamMemberV1.RoleV1.MEMBER;
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -61,6 +62,9 @@ export function getMembers(teamId, role) {
                 types.GET_TEAM_MEMBERS_FAILURE,
             ],
             remote: (client) => requests.getMembers(client, teamId, role),
+        },
+        meta: {
+            paginateBy: teamId,
         },
     };
 }
@@ -72,5 +76,18 @@ export function getMembers(teamId, role) {
  *
  */
 export function getCoordinators(teamId) {
-    return getMembers(teamId, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
+    const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_TEAM_COORDINATORS,
+                types.GET_TEAM_COORDINATORS_SUCCESS,
+                types.GET_TEAM_COORDINATORS_FAILURE,
+            ],
+            remote: (client) => requests.getMembers(client, teamId, role),
+        },
+        meta: {
+            paginateBy: teamId,
+        },
+    };
 }

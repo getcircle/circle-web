@@ -1,131 +1,107 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
-import { services, soa } from 'protobufs';
+import { services } from 'protobufs';
 
-import { loadExtendedTeam, loadTeamMembers, updateTeam } from '../actions/teams_deprecated';
+import { getTeam, getCoordinators } from '../actions/teams';
 import { resetScroll } from '../utils/window';
-import { retrieveExtendedTeam, retrieveProfiles } from '../reducers/denormalizations';
+import { retrieveTeam, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 import connectData from '../utils/connectData';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
-import DocumentTitle from '../components/DocumentTitle';
 import TeamDetail from '../components/TeamDetail';
 
 const selector = createSelector(
     [
         selectors.cacheSelector,
-        selectors.extendedTeamsSelector,
         selectors.routerParametersSelector,
-        selectors.teamMembersSelector,
+        selectors.teamCoordinatorsSelector,
     ],
-    (cacheState, extendedTeamsState, parametersSelector, membersState) => {
-        let extendedTeam, members, membersNextRequest;
-        const teamId = parametersSelector.teamId;
+    (cacheState, parametersState, coordinatorsState) => {
+        let coordinators;
+        const teamId = parametersState.teamId;
         const cache = cacheState.toJS();
-        if (extendedTeamsState.get('ids').has(teamId)) {
-            extendedTeam = retrieveExtendedTeam(teamId, cache);
-        }
-        if (membersState.has(teamId)) {
-            const ids = membersState.get(teamId).get('ids').toJS();
-            members = retrieveProfiles(ids, cache);
-            membersNextRequest = membersState.get(teamId).get('nextRequest');
+        const team = retrieveTeam(teamId, cache);
+        if (coordinatorsState.has(teamId)) {
+            const ids = coordinatorsState.get(teamId).get('ids');
+            if (ids.size) {
+                coordinators = retrieveTeamMembers(ids.toJS(), cache);
+            }
         }
         return {
-            extendedTeam: extendedTeam,
-            members: members,
-            membersNextRequest: membersNextRequest,
+            coordinators,
+            team,
         };
     }
 );
 
-function fetchTeam(dispatch, params, membersNextRequest) {
-    return dispatch(loadExtendedTeam(params.teamId));
+function fetchTeam(dispatch, params) {
+    return dispatch(getTeam(params.teamId));
 }
 
-function fetchTeamMembers(dispatch, params, membersNextRequest) {
-    return dispatch(loadTeamMembers(params.teamId, membersNextRequest));
+function fetchTeamCoordinators(dispatch, params) {
+    return dispatch(getCoordinators(params.teamId));
 }
+
+//function fetchTeamMembers(dispatch, params, membersNextRequest) {
+    //return dispatch(loadTeamMembers(params.teamId, membersNextRequest));
+//}
 
 function fetchData(getState, dispatch, location, params) {
     return Promise.all([
         fetchTeam(dispatch, params),
-        fetchTeamMembers(dispatch, params),
+        fetchTeamCoordinators(dispatch, params),
     ]);
 }
 
-@connectData(fetchData)
-@connect(selector)
+function loadTeam({dispatch, params}) {
+    fetchTeam(dispatch, params);
+    fetchTeamCoordinators(dispatch, params);
+}
+
 class Team extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
-        extendedTeam: PropTypes.shape({
-            reportingDetails: PropTypes.object.isRequired,
-            team: PropTypes.object.isRequired,
-        }),
-        members: PropTypes.arrayOf(
-            PropTypes.instanceOf(services.profile.containers.ProfileV1),
-        ),
-        membersNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
         params: PropTypes.shape({
             teamId: PropTypes.string,
         }),
+        team: PropTypes.instanceOf(services.team.containers.TeamV1),
     }
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.teamId !== this.props.params.teamId) {
             resetScroll();
-            this.loadTeam(nextProps);
-        }
-    }
-
-    loadTeam(props) {
-        fetchTeam(props.dispatch, props.params);
-        fetchTeamMembers(props.dispatch, props.params, props.membersNextRequest);
-    }
-
-    onUpdateTeam(team) {
-        this.props.dispatch(updateTeam(team))
-    }
-
-    renderTeam() {
-        const {
-            extendedTeam,
-            members,
-        } = this.props;
-        if (extendedTeam) {
-            return (
-                <DocumentTitle title={extendedTeam.team.display_name}>
-                    <TeamDetail
-                        extendedTeam={extendedTeam}
-                        members={members}
-                        membersLoadMore={fetchTeamMembers.bind(
-                            null,
-                            this.props.dispatch,
-                            this.props.params,
-                            this.props.membersNextRequest
-                        )}
-                        onUpdateTeamCallback={this.onUpdateTeam.bind(this)}
-                    />
-                </DocumentTitle>
-            );
-        } else {
-            return <CenterLoadingIndicator />;
+            loadTeam({dispatch: nextProps.dispatch, params: nextProps.params});
         }
     }
 
     render() {
+        const { coordinators, team } = this.props;
+        const title = team ? team.name : null;
+
+        let content;
+        if (team) {
+            content = (
+                <TeamDetail
+                    coordinators={coordinators}
+                    team={team}
+                />
+            );
+        } else {
+            content = <CenterLoadingIndicator />;
+        }
         return (
-            <Container>
-                {this.renderTeam()}
+            <Container title={title}>
+                {content}
             </Container>
         );
     }
 
 }
 
-export default Team;
+export { Team };
+export default connectData(fetchData)(connect(selector)(Team));

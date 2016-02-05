@@ -2,8 +2,8 @@ import React, { PropTypes } from 'react';
 
 const styles = {
     root: {
-        backgroundColor: 'rgb(51, 51, 51)',
-        height: 290,
+        backgroundColor: 'rgb(67, 69, 76)',
+        height: 200,
         position: 'relative',
         zIndex: 1,
     }

@@ -223,7 +223,7 @@ export default function (store, url) {
                 path="/search"
             />
             <Route
-                component={require('./containers/Team')}
+                component={require('./containers/Team').default}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.TEAM_DETAIL, 'teamId')

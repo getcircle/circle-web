@@ -1,6 +1,8 @@
 import { getNormalizations } from 'protobuf-normalizr';
 import { services } from 'protobufs';
 
+import * as requests from '../services/team';
+
 export function getLocationNormalizations(action) {
     return getNormalizations(
         'locations',
@@ -35,4 +37,36 @@ export function getPostsNormalizations(action) {
         services.post.actions.get_posts.ResponseV1,
         action.payload
     );
+}
+
+/**
+ * Return the team member ids that have been normalized in the payload.
+ *
+ * @param {Object} action redux action
+ * @param {services.team.containers.TeamMemberV1.RoleV1} role membership role
+ *      we're fetching normalizations for. Since we fetch both members and
+ *      coordinators with `get_members`, we cache the results as `${teamId}:${role}`
+ *
+ */
+export function getTeamMemberNormalizations(action, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER) {
+    const key = requests.getMembersCacheKey(action.meta.paginateBy, role);
+    return getNormalizations(
+        'members',
+        key,
+        services.team.actions.get_members.ResponseV1,
+        action.payload,
+    );
+}
+
+/**
+ * Return the team member ids that have been normalized in the payload.
+ *
+ * Only returns coordinator team member ids.
+ *
+ * @param {Object} action redux action
+ *
+ */
+export function getTeamCoordinatorNormalizations(action) {
+    const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+    return getTeamMemberNormalizations(action, role);
 }

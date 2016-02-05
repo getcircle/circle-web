@@ -32,37 +32,45 @@ export function getCustomTheme(userAgent) {
     muiTheme.tabs.backgroundColor = 'rgba(255, 255, 255, 0.5)';
     muiTheme.raisedButton.secondaryColor = '#5C6BBF';
 
-    /**
-     * The purpose of this object is to consolidate any common styles
-     * for things that are shared amongst various components.
-     *
-     * Common styles between components is RARE and if they are sharing too many of
-     * these, you should ask why there is no one component representing them.
-     *
-     * THIS SHOULD BE KEPT VERY SMALL, SO PLEASE DO NOT ABUSE THIS AS A PLACE FOR ADDING ALL CSS.
-     */
-    muiTheme.commonStyles = {
-        headerPrimaryText: {
-            fontSize: '36px',
-            lineHeight: '49px',
-            ...fontColors.white,
-            ...fontWeights.light,
-        },
-        headerSecondaryText: {
-            textTransform: 'uppercase',
-            fontSize: '12px',
-            lineHeight: '17px',
-            letterSpacing: '2px',
-            ...fontColors.white,
-            ...fontWeights.semiBold,
-        },
-        headerTertiaryText: {
-            display: 'flex',
-            alignItems: 'center',
-            fontSize: '12px',
-            lineHeight: '18px',
-            ...fontColors.darkWhite,
-        },
+    muiTheme.luno = {
+        header: {
+            primaryText: {
+                fontSize: '36px',
+                lineHeight: '49px',
+                ...fontColors.white,
+                ...fontWeights.light,
+            },
+            secondaryText: {
+                textTransform: 'uppercase',
+                fontSize: '12px',
+                lineHeight: '17px',
+                letterSpacing: '2px',
+                ...fontColors.white,
+                ...fontWeights.semiBold,
+            },
+            tertiaryText: {
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: '12px',
+                lineHeight: '18px',
+                ...fontColors.darkWhite,
+            },
+            icon: {
+                height: 80,
+                width: 80,
+                color: 'white',
+                strokeWidth: 1,
+            },
+            iconContainer: {
+                position: 'relative',
+                height: 120,
+                width: 120,
+                border: 'none',
+                top: 0,
+                left: 0,
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
+        }
     };
     return muiTheme;
 }
