@@ -40,11 +40,6 @@ class CreateTeamForm extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.visible && nextProps.visible) {
-            this.refs.modal.show();
-        }
-
-        if (this.props.visible && !nextProps.visible) {
-            this.refs.modal.dismiss();
             this.props.resetForm();
         }
     }
@@ -60,17 +55,21 @@ class CreateTeamForm extends Component {
     }
 
     render() {
-        const { fields: { name, description }, formSubmitting } = this.props;
+        const {
+            fields: { name, description },
+            formSubmitting,
+            visible,
+        } = this.props;
 
         return (
             <FormDialog
                 onCancel={this.handleCancel.bind(this)}
                 onSubmit={this.buildCreateHandler()}
                 pageType={PAGE_TYPE.CREATE_TEAM}
-                ref="modal"
                 submitLabel={t('Save')}
                 submitting={formSubmitting}
                 title={t('Create Team')}
+                visible={visible}
             >
                 <FormLabel text={t('Team Name')} />
                 <FormTextField

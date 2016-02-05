@@ -18,7 +18,18 @@ export default class FormDialog extends CSSComponent {
         submitting: PropTypes.bool,
         title: PropTypes.string,
         warning: PropTypes.string,
+        visible: PropTypes.bool.isRequired,
     };
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.visible && nextProps.visible) {
+            this.refs.modal.show();
+        }
+
+        if (this.props.visible && !nextProps.visible) {
+            this.refs.modal.dismiss();
+        }
+    }
 
     classes() {
         return {
@@ -30,14 +41,6 @@ export default class FormDialog extends CSSComponent {
                 },
             },
         };
-    }
-
-    show() {
-        this.refs.modal.show();
-    }
-
-    dismiss() {
-        this.refs.modal.dismiss();
     }
 
     renderForm() {

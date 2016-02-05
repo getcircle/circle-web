@@ -73,11 +73,6 @@ class ProfileDetailForm extends CSSComponent {
         if (!this.props.visible && nextProps.visible) {
             this.setInitialValues();
             this.props.resetForm();
-            this.refs.modal.show();
-        }
-
-        if (this.props.visible && !nextProps.visible) {
-            this.refs.modal.dismiss();
         }
 
         if (this.props.mediaUrl  === '' && nextProps.mediaUrl) {
@@ -244,17 +239,17 @@ class ProfileDetailForm extends CSSComponent {
     }
 
     render() {
-        const { formSubmitting } = this.props;
+        const { formSubmitting, visible } = this.props;
 
         return (
             <FormDialog
                 onCancel={this.handleCancel.bind(this)}
                 onSubmit={this.buildUpdateHandler()}
                 pageType={PAGE_TYPE.EDIT_PROFILE}
-                ref="modal"
                 submitLabel={t('Save')}
                 submitting={formSubmitting}
                 title={t('Edit Profile')}
+                visible={visible}
             >
                 {this.renderFields()}
             </FormDialog>
