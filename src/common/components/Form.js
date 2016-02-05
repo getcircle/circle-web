@@ -6,6 +6,36 @@ import * as messageTypes from '../constants/messageTypes';
 import CSSComponent from  './CSSComponent';
 import Toast from './Toast';
 
+const Progress = ({submitting}) => {
+    if (submitting) {
+        return (
+            <LinearProgress mode="indeterminate" />
+        );
+    } else {
+        return <span />;
+    }
+};
+
+const Message = ({error, warning}) => {
+    if (error) {
+        return (
+            <Toast
+                message={error}
+                messageType={messageTypes.ERROR}
+            />
+        );
+    } else if (warning) {
+        return (
+            <Toast
+                message={warning}
+                messageType={messageTypes.WARNING}
+            />
+        );
+    } else {
+        return <span />;
+    }
+};
+
 export default class Form extends CSSComponent {
     static propTypes = {
         children: PropTypes.node,
@@ -25,41 +55,13 @@ export default class Form extends CSSComponent {
         };
     }
 
-    renderProgressIndicator() {
-        if (this.props.submitting) {
-            return (
-                <LinearProgress mode="indeterminate" />
-            );
-        }
-    }
-
-    renderToast() {
-        const { error, warning } = this.props;
-
-        if (error) {
-            return (
-                <Toast
-                    message={error}
-                    messageType={messageTypes.ERROR}
-                />
-            );
-        } else if (warning) {
-            return (
-                <Toast
-                    message={warning}
-                    messageType={messageTypes.WARNING}
-                />
-            );
-        }
-    }
-
     render() {
-        const { children, onSubmit } = this.props;
+        const { children, onSubmit, ...other } = this.props;
 
         return (
             <div>
-                {this.renderProgressIndicator()}
-                {this.renderToast()}
+                <Progress {...other} />
+                <Message {...other} />
                 <form
                     onSubmit={onSubmit}
                     style={this.styles().form}
