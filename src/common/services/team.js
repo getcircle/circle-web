@@ -19,7 +19,7 @@ export function createTeam(client, team) {
         client.sendRequest(request)
             .then(response => {
                 const { team } = response.result;
-                resolve({team})
+                response.finish(resolve, reject, team.id);
             })
             .catch(error => reject(error));
     });
