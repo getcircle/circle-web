@@ -27,7 +27,7 @@ const teamSelector = selectors.createImmutableSelector(
     }
 );
 
-class CreateTeamForm extends Component {
+export class CreateTeamForm extends Component {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
