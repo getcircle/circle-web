@@ -12,8 +12,9 @@ export default function (client, initialState) {
     // NB: "thunk" middleware should be first
     const middleware = [thunk, createServicesMiddleware(client)];
     if (__DEVELOPMENT__ && !__DEVTOOLS__ && __CLIENT__) {
+        // Logs state as a plain JS object for easier inspection
         const transformer = (state) => {
-            return Iterable.isIterable(state) ? state.toJS() : state
+            return Iterable.isIterable(state) ? state.toJS() : state;
         };
 
         const logger = createLogger({transformer});
