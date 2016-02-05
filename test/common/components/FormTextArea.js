@@ -1,5 +1,5 @@
 import React from 'react';
-import TestUtils from 'react-addons-test-utils';
+import { shallow } from 'enzyme';
 
 import * as formBehaviors from './formBehaviors';
 
@@ -14,31 +14,29 @@ function setup(overrides) {
     };
     const props = Object.assign({}, defaults, overrides);
 
-    let renderer = TestUtils.createRenderer();
-    renderer.render(<FormTextArea {...props} />);
-    let output = renderer.getRenderOutput();
+    const wrapper = shallow(<FormTextArea {...props} />);
 
     return {
         props,
-        output,
+        wrapper,
     };
 }
 
 describe('FormTextArea', () => {
 
     context('when valid', () => {
-        const { output } = setup();
-        formBehaviors.itDoesNotShowError(output);
+        const { wrapper } = setup();
+        formBehaviors.itDoesNotShowError(wrapper.find('textarea'));
     });
 
     context('when invalid but not touched', () => {
-        const { output } = setup({invalid: true, touched: false});
-        formBehaviors.itDoesNotShowError(output);
+        const { wrapper } = setup({invalid: true, touched: false});
+        formBehaviors.itDoesNotShowError(wrapper.find('textarea'));
     });
 
     context('when invalid and touched', () => {
-        const { output } = setup({invalid: true, touched: true});
-        formBehaviors.itShowsError(output);
+        const { wrapper } = setup({invalid: true, touched: true});
+        formBehaviors.itShowsError(wrapper.find('textarea'));
     });
 
 });
