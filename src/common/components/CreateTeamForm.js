@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 
 import { createTeam, hideModal } from '../actions/teams';
+import { CREATE_TEAM } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
@@ -88,7 +89,7 @@ class CreateTeamForm extends Component {
 
 export default reduxForm(
     {
-      form: 'createTeam',
+      form: CREATE_TEAM,
       fields: ['name', 'description'],
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
       validate: teamValidator,

@@ -5,6 +5,7 @@ import { services } from 'protobufs';
 import { hideModal } from '../actions/profiles';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { profileValidator } from '../utils/validators';
+import { PROFILE_DETAIL } from '../constants/forms';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
@@ -20,7 +21,6 @@ const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
 const fieldNames = ['cellNumber', 'firstName', 'lastName', 'photo', 'title'];
-const formName = 'updateProfile';
 
 const selector = selectors.createImmutableSelector(
     [
@@ -90,7 +90,7 @@ class ProfileDetailForm extends CSSComponent {
     setInitialValues() {
         const { dispatch, profile } = this.props;
 
-        const action = initialize(formName, {
+        const action = initialize(PROFILE_DETAIL, {
             firstName: profile.first_name,
             lastName: profile.last_name,
             photo: {existing: true, preview: profile.image_url},
@@ -264,7 +264,7 @@ class ProfileDetailForm extends CSSComponent {
 
 export default reduxForm(
     {
-      form: formName,
+      form: PROFILE_DETAIL,
       fields: fieldNames,
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
       validate: profileValidator,
