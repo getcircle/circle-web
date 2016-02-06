@@ -54,6 +54,9 @@ export const fontColors = {
     white: {
         color: 'white',
     },
+    medium: {
+        color: '#616166',
+    },
     dark: {
         color: 'rgba(0, 0, 0, 0.8)',
     },

@@ -26,5 +26,13 @@ export default {
         /*eslint-disable camelcase*/
         return this.getProfile({is_admin: true});
         /*eslint-enable camelcase*/
+    },
+
+    getProfiles(number) {
+        const profiles = [];
+        for (let i = 0; i < number; i++) {
+            profiles.push(this.getProfile());
+        }
+        return profiles;
     }
 }

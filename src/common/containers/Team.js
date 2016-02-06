@@ -67,7 +67,8 @@ class Team extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         params: PropTypes.shape({
-            teamId: PropTypes.string,
+            slug: PropTypes.string,
+            teamId: PropTypes.string.isRequired,
         }),
         team: PropTypes.instanceOf(services.team.containers.TeamV1),
     }
@@ -80,17 +81,12 @@ class Team extends CSSComponent {
     }
 
     render() {
-        const { coordinators, team } = this.props;
+        const { team } = this.props;
         const title = team ? team.name : null;
 
         let content;
         if (team) {
-            content = (
-                <TeamDetail
-                    coordinators={coordinators}
-                    team={team}
-                />
-            );
+            content = <TeamDetail {...this.props} />;
         } else {
             content = <CenterLoadingIndicator />;
         }

@@ -1,42 +1,21 @@
 import React, { PropTypes } from 'react';
 
-import CSSComponent from './CSSComponent';
+const DetailContent = ({ children }) => {
+    const styles = {
+        root: {
+            padding: '0 100px 0 100px',
+        },
+    };
 
-class DetailContent extends CSSComponent {
+    return (
+        <section className="wrap" style={styles.root}>
+            {children}
+        </section>
+    );
+};
 
-    static propTypes = {
-        children: PropTypes.node,
-        style: PropTypes.object,
-    }
-
-    classes() {
-        return {
-            default: {
-                root: {
-                    backgroundColor: 'rgb(247, 249, 250)',
-                    boxSizing: 'border-box',
-                    paddingTop: 40,
-                    maxWidth: 800,
-                    margin: '0px auto',
-                    paddingRight: 10,
-                    paddingLeft: 10,
-                },
-            },
-        };
-    }
-
-    render() {
-        const {
-            style,
-            ...other,
-        } = this.props;
-        return (
-            <section {...other} className="wrap" style={{...this.styles().root, ...style}}>
-                {this.props.children}
-            </section>
-        );
-    }
-
-}
+DetailContent.propTypes = {
+    children: PropTypes.node,
+};
 
 export default DetailContent;

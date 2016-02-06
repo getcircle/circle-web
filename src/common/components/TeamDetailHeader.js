@@ -95,6 +95,6 @@ TeamDetailHeader.propTypes = {
 };
 TeamDetailHeader.contextTypes = {
     muiTheme: PropTypes.object,
-}
+};
 
 export default TeamDetailHeader;

@@ -9,6 +9,9 @@ export default {
         return new services.team.containers.TeamV1({
             id: faker.random.uuid(),
             name: faker.hacker.noun(),
+            description: {
+                value: faker.lorem.paragraph(),
+            },
         });
     },
 
@@ -22,12 +25,16 @@ export default {
         });
     },
 
-    getTeamMembers(number, role = services.team.containers.TeamMember.RoleV1.MEMBER) {
+    getTeamMembers(number, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER) {
         const members = [];
         for (let i = 0; i < number; i++) {
             members.push(this.getTeamMember(role));
         }
         return members;
+    },
+
+    getTeamCoordinators(number) {
+        return this.getTeamMembers(number, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
     }
 
 }
