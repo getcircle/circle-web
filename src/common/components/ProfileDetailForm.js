@@ -40,17 +40,19 @@ const selector = selectors.createImmutableSelector(
 );
 
 
-class ProfileDetailForm extends CSSComponent {
+export class ProfileDetailForm extends CSSComponent {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
         dispatch: PropTypes.func.isRequired,
+        formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         resetForm: PropTypes.func.isRequired,
+        visible: PropTypes.bool.isRequired,
     };
 
     directAttributesToStateMapping = {
