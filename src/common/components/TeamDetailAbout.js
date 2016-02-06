@@ -33,7 +33,7 @@ const TeamDetailAbout = ({ coordinators, team }, { muiTheme }) => {
         coordinatorsSection = (
             <section style={styles.section}>
                 <h2 style={theme.h2}>{t('Coordinators')}</h2>
-                <DetailDivider />
+                <DetailDivider style={{marginBottom: 0}}/>
                 <DetailListProfiles profiles={profiles} />
             </section>
         );
