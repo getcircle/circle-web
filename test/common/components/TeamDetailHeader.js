@@ -44,7 +44,7 @@ describe('TeamDetailHeader', () => {
     describe('coordinator details', () => {
 
         it('displays correctly with 1 coordinator', () => {
-            const coordinators = TeamFactory.getTeamMembers(1, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
+            const coordinators = TeamFactory.getMembers(1, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
             const { wrapper } = setup({coordinators});
             const html = wrapper.html();
             expect(html).toInclude('Coordinated by');
@@ -52,7 +52,7 @@ describe('TeamDetailHeader', () => {
         });
 
         it('displays correctly with 2 coordinators', () => {
-            const coordinators = TeamFactory.getTeamMembers(2, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
+            const coordinators = TeamFactory.getMembers(2, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
             const { wrapper } = setup({coordinators});
             const html = wrapper.html();
             expect(html).toInclude('Coordinated by');
@@ -62,7 +62,7 @@ describe('TeamDetailHeader', () => {
         });
 
         it('displays correctly with 3 coordinators', () => {
-            const coordinators = TeamFactory.getTeamMembers(3, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
+            const coordinators = TeamFactory.getMembers(3, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
             const { wrapper } = setup({coordinators});
             const html = wrapper.html();
             expect(html).toInclude('Coordinated by');

@@ -1,7 +1,10 @@
 import expect from 'expect';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import React from 'react';
 
+import { getCustomTheme } from '../../../src/common/styles/theme';
+
+import DetailSection from '../../../src/common/components/DetailSectionV2';
 import DetailListProfiles from '../../../src/common/components/DetailListProfiles';
 import TeamDetailAbout from '../../../src/common/components/TeamDetailAbout';
 
@@ -17,7 +20,10 @@ function setup(propsOverrides, teamOverrides) {
         team,
         ...propsOverrides,
     };
-    const wrapper = shallow(<TeamDetailAbout {...props} />);
+    const wrapper = shallow(
+        <TeamDetailAbout {...props} />,
+        { context: { muiTheme: getCustomTheme(global.navigator.userAgent)}},
+    );
     return {
         props,
         wrapper,
@@ -35,12 +41,12 @@ describe('TeamDetailAbout', () => {
 
         it('has a header', () => {
             const { wrapper } = setup();
-            expect(wrapper.find('h2').at(0).text()).toEqual('Description');
+            expect(wrapper.find(DetailSection).at(0).props().title).toEqual('Description');
         });
 
         it('renders the team description', () => {
             const { wrapper, props } = setup();
-            expect(wrapper.text()).toInclude(props.team.description.value);
+            expect(wrapper.find('p').text()).toInclude(props.team.description.value);
         });
 
     });
@@ -49,13 +55,13 @@ describe('TeamDetailAbout', () => {
 
         it('only renders if coordinators are provided', () => {
             const { wrapper } = setup();
-            expect(wrapper.find('h2').length).toEqual(1);
+            expect(wrapper.find(DetailSection).length).toEqual(1);
         });
 
         it('renders the coordinators section if they\'re provided', () => {
-            const coordinators = TeamFactory.getTeamCoordinators(2);
+            const coordinators = TeamFactory.getCoordinators(2);
             const { wrapper } = setup({ coordinators });
-            expect(wrapper.find('h2').at(1).text()).toEqual('Coordinators');
+            expect(wrapper.find(DetailSection).at(1).props().title).toEqual('Coordinators');
             expect(wrapper.find(DetailListProfiles).length).toEqual(1);
         });
 

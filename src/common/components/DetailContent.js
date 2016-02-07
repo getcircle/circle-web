@@ -4,6 +4,7 @@ const DetailContent = ({ children }) => {
     const styles = {
         root: {
             padding: '0 100px 0 100px',
+            paddingTop: 50,
         },
     };
 

@@ -6,7 +6,7 @@ import { ListItem } from 'material-ui';
 import Colors from '../styles/Colors';
 import ProfileAvatar from './ProfileAvatar';
 
-const DetailListItemProfile = ({ profile }) => {
+const DetailListItemProfile = ({ profile, ...other }) => {
     const styles = {
         avatar: {
             height: 50,
@@ -26,12 +26,14 @@ const DetailListItemProfile = ({ profile }) => {
         },
     };
     return (
-        <ListItem
-            innerDivStyle={styles.innerDivStyle}
-            leftAvatar={<ProfileAvatar profile={profile} style={styles.avatar} />}
-            primaryText={<span style={styles.primaryText}>{profile.full_name}</span>}
-            secondaryText={<div style={styles.secondaryText}>{profile.title}</div>}
-        />
+        <div {...other}>
+            <ListItem
+                innerDivStyle={styles.innerDivStyle}
+                leftAvatar={<ProfileAvatar profile={profile} style={styles.avatar} />}
+                primaryText={<span style={styles.primaryText}>{profile.full_name}</span>}
+                secondaryText={<div style={styles.secondaryText}>{profile.title}</div>}
+            />
+        </div>
     );
 };
 

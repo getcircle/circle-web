@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 
 import { ListItem } from 'material-ui';
@@ -16,7 +16,7 @@ function setup(propOverrides) {
         ...propOverrides,
     };
 
-    const wrapper = shallow(<DetailListItemProfile {...props} />);
+    const wrapper = mount(<DetailListItemProfile {...props} />);
     return {
         props,
         wrapper,
@@ -27,11 +27,12 @@ describe('DetailListItemProfile', () => {
 
     it('renders a ListItem with appropriate props', () => {
         const { wrapper, props: { profile } } = setup();
+        debugger;
         const props = wrapper.find(ListItem).props();
         expect(props.leftAvatar.type).toBe(ProfileAvatar);
         expect(props.leftAvatar.props.profile).toEqual(profile);
-        expect(props.primaryText).toEqual(profile.full_name);
-        expect(props.secondaryText).toEqual(profile.title);
+        expect(props.primaryText.props.children).toEqual(profile.full_name);
+        expect(props.secondaryText.props.children).toEqual(profile.title);
     });
 
 });

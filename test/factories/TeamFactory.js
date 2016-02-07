@@ -25,7 +25,7 @@ export default {
         });
     },
 
-    getTeamMembers(number, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER) {
+    getMembers(number, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER) {
         const members = [];
         for (let i = 0; i < number; i++) {
             members.push(this.getTeamMember(role));
@@ -33,8 +33,8 @@ export default {
         return members;
     },
 
-    getTeamCoordinators(number) {
-        return this.getTeamMembers(number, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
+    getCoordinators(number) {
+        return this.getMembers(number, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
     }
 
 }

@@ -5,6 +5,7 @@ import React from 'react';
 import TeamDetail from '../../../src/common/components/TeamDetail';
 import TeamDetailAbout from '../../../src/common/components/TeamDetailAbout';
 import TeamDetailHeader from '../../../src/common/components/TeamDetailHeader';
+import TeamDetailPeople from '../../../src/common/components/TeamDetailPeople';
 import TeamDetailTabs, { SLUGS } from '../../../src/common/components/TeamDetailTabs';
 
 import TeamFactory from '../../factories/TeamFactory';
@@ -17,6 +18,7 @@ function setup(propsOverrides, teamOverrides) {
 
     const props = {
         team,
+        coordinators: [],
         ...propsOverrides,
     };
     const wrapper = shallow(<TeamDetail {...props} />);
@@ -35,10 +37,10 @@ describe('TeamDetail', () => {
 
     describe('TeamDetailsTab', () => {
 
-        it.only('renders with "About" as the default', () => {
+        it('renders with "People" as the default', () => {
             const { wrapper } = setup();
-            expect(wrapper.find(TeamDetailTabs).props().slug).toEqual(SLUGS.ABOUT);
-            expect(wrapper.find(TeamDetailAbout).length).toEqual(1);
+            expect(wrapper.find(TeamDetailTabs).props().slug).toEqual(SLUGS.PEOPLE);
+            expect(wrapper.find(TeamDetailPeople).length).toEqual(1);
         });
 
     });

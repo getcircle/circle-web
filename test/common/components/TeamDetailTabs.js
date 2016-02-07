@@ -22,17 +22,24 @@ describe('TeamDetailTabs', () => {
     it('has the correct tabs', () => {
         const { wrapper } = setup();
         const tabs = wrapper.find(Tab);
-        expect(tabs.length).toEqual(1);
+        expect(tabs.length).toEqual(2);
 
-        expect(tabs.nodes[0].props.label).toEqual('About');
+        expect(tabs.nodes[0].props.label).toEqual('People');
+        expect(tabs.nodes[1].props.label).toEqual('About');
     });
 
     describe('slug', () => {
 
         it('activates the "ABOUT" tab when the about slug is present', () => {
-            const { wrapper } = setup({slug: SLUGS.about});
+            const { wrapper } = setup({slug: SLUGS.ABOUT});
             const tabs = wrapper.find(Tabs);
-            expect(tabs.props().value).toEqual(SLUGS.about);
+            expect(tabs.props().value).toEqual(SLUGS.ABOUT);
+        });
+
+        it('activates the "PEOPLE" tab when the people slug is present', () => {
+            const { wrapper } = setup({slug: SLUGS.PEOPLE});
+            const tabs = wrapper.find(Tabs);
+            expect(tabs.props().value).toEqual(SLUGS.PEOPLE);
         });
 
     });

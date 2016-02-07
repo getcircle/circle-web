@@ -4,6 +4,7 @@ import { services } from 'protobufs';
 import DetailContent from './DetailContent';
 import TeamDetailAbout from './TeamDetailAbout';
 import TeamDetailHeader from './TeamDetailHeader';
+import TeamDetailPeople from './TeamDetailPeople';
 import TeamDetailTabs, { SLUGS } from './TeamDetailTabs';
 
 const TeamDetail = ({
@@ -15,6 +16,8 @@ const TeamDetail = ({
     switch (slug) {
     case SLUGS.ABOUT:
         content = <TeamDetailAbout coordinators={coordinators} team={team} />;
+    case SLUGS.PEOPLE:
+        content = <TeamDetailPeople coordinators={coordinators} />;
     }
     return (
         <div>
@@ -33,7 +36,7 @@ TeamDetail.propTypes = {
     team: PropTypes.instanceOf(services.team.containers.TeamV1).isRequired,
 };
 TeamDetail.defaultProps = {
-    slug: SLUGS.ABOUT,
+    slug: SLUGS.PEOPLE,
 };
 
 export default TeamDetail;
