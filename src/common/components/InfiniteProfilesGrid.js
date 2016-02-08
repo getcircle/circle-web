@@ -7,7 +7,7 @@ const InfiniteProfilesGrid = ({ profiles, ...other }) => {
     const items = profiles.map((p, i) => {
         return (
             <DetailListItemProfile
-                className="col-xs-12 col-md-6"
+                className="col-xs-6"
                 key={`detail-list-item-profile-${i}`}
                 profile={p}
             />

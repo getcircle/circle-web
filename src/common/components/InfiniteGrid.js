@@ -8,9 +8,10 @@ const InfiniteGrid = ({ children, elementHeight, onLoadMore }) => {
     return (
         <List>
             <Infinite
-                elementHeight={elementHeight}
-                infiniteLoadBeginEdgeOffset={20}
+                elementHeight={elementHeight / 2}
+                infiniteLoadBeginEdgeOffset={200}
                 onInfiniteLoad={onLoadMore}
+                smoothScrollingWrapperClassName="row"
                 useWindowAsScrollContainer={true}
             >
                 {children}
