@@ -4,6 +4,7 @@ import { reduxForm } from 'redux-form';
 import { createTeam, hideModal } from '../actions/teams';
 import { CREATE_TEAM } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
+import { routeToTeam } from '../utils/routes';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { teamValidator } from '../utils/validators';
@@ -22,6 +23,7 @@ const teamSelector = selectors.createImmutableSelector(
     ) => {
         return {
             formSubmitting: teamState.get('formSubmitting'),
+            id: teamState.get('id'),
             visible: teamState.get('modalVisible'),
         };
     }
@@ -32,15 +34,27 @@ export class CreateTeamForm extends Component {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
+        formSubmitted: PropTypes.bool,
         formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
+        id: PropTypes.string,
         resetForm: PropTypes.func.isRequired,
         visible: PropTypes.bool.isRequired,
+    };
+
+    static contextTypes = {
+        history: PropTypes.shape({
+            pushState: PropTypes.func.isRequired,
+        }).isRequired,
     };
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.visible && nextProps.visible) {
             this.props.resetForm();
+        }
+
+        if (!this.props.id && nextProps.id) {
+            routeToTeam(this.context.history, {id: nextProps.id});
         }
     }
 
