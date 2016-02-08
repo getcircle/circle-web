@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
+import { FADE } from '../constants/animations';
 import t from '../utils/gettext';
 
 import InternalPropTypes from './InternalPropTypes';
@@ -26,7 +28,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     if (device.mounted && members && members.length) {
         const memberProfiles = members.map(m => m.profile);
         membersSection = (
-            <DetailSection title={t('Members')}>
+            <DetailSection key="members-section" title={t('Members')}>
                 <InfiniteProfilesGrid
                     loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}
@@ -42,7 +44,12 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
                 <h1 style={theme.h1}>{t('People')}</h1>
             </section>
             {coordinatorsSection}
-            {membersSection}
+            <ReactCSSTransitionGroup
+                transitionAppear={true}
+                transitionName={FADE}
+            >
+                {membersSection}
+            </ReactCSSTransitionGroup>
         </div>
     );
 };
