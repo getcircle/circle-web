@@ -9,6 +9,7 @@ const MOBILE_OS = ['iOS', 'Android'];
 const os = checkOS();
 const mobileOS = MOBILE_OS.indexOf(os) !== -1;
 const initialState = Immutable.fromJS({
+    clientMounted: false,
     deviceSize: null,
     displayHeader: false,
     displayFooter: false,
@@ -109,6 +110,8 @@ export default function responsive(state = initialState, action, mobile) {
                 .set('largerDevice', largerDevice)
                 .set('deviceSize', deviceSize);
         });
+    case types.CLIENT_MOUNTED:
+        return state.set('clientMounted', true);
     default:
         return state;
     }

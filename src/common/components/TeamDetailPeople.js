@@ -2,11 +2,14 @@ import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
 
+import InternalPropTypes from './InternalPropTypes';
+
 import DetailSection from './DetailSectionV2';
 import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 import ProfilesGrid from './ProfilesGrid';
 
-const TeamDetailPeople = ({ coordinators, members, membersLoading, onLoadMoreMembers }, { muiTheme }) => {
+const TeamDetailPeople = (props, { device, muiTheme }) => {
+    const { coordinators, members, membersLoading, onLoadMoreMembers } = props;
     const theme = muiTheme.luno.detail;
 
     let coordinatorsSection;
@@ -20,7 +23,7 @@ const TeamDetailPeople = ({ coordinators, members, membersLoading, onLoadMoreMem
     }
 
     let membersSection;
-    if (members && members.length) {
+    if (device.mounted && members && members.length) {
         const memberProfiles = members.map(m => m.profile);
         membersSection = (
             <DetailSection title={t('Members')}>
@@ -52,6 +55,7 @@ TeamDetailPeople.propTypes = {
 };
 
 TeamDetailPeople.contextTypes = {
+    device: InternalPropTypes.DeviceContext,
     muiTheme: PropTypes.object.isRequired,
 };
 

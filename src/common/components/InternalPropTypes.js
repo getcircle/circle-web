@@ -12,6 +12,7 @@ const InternalPropTypes = {
         deviceSize: PropTypes.oneOf(Object.values(Sizes)).isRequired,
         largerDevice: PropTypes.bool.isRequired,
         mobileOS: PropTypes.bool.isRequired,
+        mounted: PropTypes.bool,
     }),
     LocationV1: PropTypes.instanceOf(services.organization.containers.LocationV1),
     OrganizationV1: PropTypes.instanceOf(services.organization.containers.OrganizationV1),

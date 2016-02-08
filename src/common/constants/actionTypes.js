@@ -93,6 +93,7 @@ export const UPDATE_TEAM_FAILURE = 'UPDATE_TEAM_FAILURE';
 
 // Device Actions
 export const DEVICE_RESIZED = 'DEVICE_RESIZED';
+export const CLIENT_MOUNTED = 'CLIENT_MOUNTED';
 
 // Billing Actions
 export const STORE_TOKEN = 'STORE_TOKEN';

@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { deviceResized } from '../actions/device';
+import { clientMounted, deviceResized } from '../actions/device';
 import { getAuthenticatedProfile } from '../reducers/authentication';
 import resizable from '../decorators/resizable';
 import * as selectors from '../selectors';
@@ -38,6 +38,7 @@ const selector = createSelector(
         const profile = getAuthenticatedProfile(authenticationState, cacheState.toJS());
         return {
             authenticated: authenticationState.get('authenticated'),
+            clientMounted: responsiveState.get('clientMounted'),
             displayFooter: responsiveState.get('displayFooter'),
             displayHeader: responsiveState.get('displayHeader'),
             organization: authenticationState.get('organization'),
@@ -56,6 +57,7 @@ class App extends CSSComponent {
     static propTypes = {
         authenticated: PropTypes.bool.isRequired,
         children: PropTypes.element.isRequired,
+        clientMounted: PropTypes.bool,
         deviceSize: PropTypes.number.isRequired,
         dispatch: PropTypes.func.isRequired,
         displayFooter: PropTypes.bool.isRequired,
@@ -95,6 +97,7 @@ class App extends CSSComponent {
                 deviceSize: this.props.deviceSize,
                 largerDevice: this.props.largerDevice,
                 mobileOS: this.props.mobileOS,
+                mounted: this.props.clientMounted,
             },
             flags: this.props.flags,
         };
@@ -106,6 +109,7 @@ class App extends CSSComponent {
 
     componentDidMount() {
         this.props.dispatch(deviceResized(this.props.deviceSize, this.props.location.pathname));
+        this.props.dispatch(clientMounted());
     }
 
     componentWillReceiveProps(nextProps, nextState) {

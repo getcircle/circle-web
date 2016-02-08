@@ -7,5 +7,11 @@ export function deviceResized(deviceSize, pathname) {
             deviceSize: deviceSize,
             pathname: pathname,
         },
-    }
+    };
+}
+
+export function clientMounted() {
+    return {
+        type: types.CLIENT_MOUNTED,
+    };
 }
