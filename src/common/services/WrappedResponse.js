@@ -72,7 +72,7 @@ export default class WrappedResponse {
         return this.action.result.success;
     }
 
-    resolve(key=null) {
+    resolve(key = null) {
         const copy = this.result.$type.decode(this.result.encode());
         const normalized = normalize(copy, key);
         return Object.assign({},
@@ -85,7 +85,7 @@ export default class WrappedResponse {
         return new ServiceError(this.errors, this.errorDetails, this.request);
     }
 
-    finish(resolve, reject, key=null) {
+    finish(resolve, reject, key = null) {
         if (this.isSuccess()) {
             return resolve(this.resolve(key));
         } else {

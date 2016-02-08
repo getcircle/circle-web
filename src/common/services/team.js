@@ -61,8 +61,8 @@ export function getMembersCacheKey(teamId, role) {
  * @param {services.team.containers.TeamMemberV1.RoleV1} role the member role we want to return
  *
  */
-export function getMembers(client, teamId, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER) {
-    const request = new services.team.actions.get_members.RequestV1({
+export function getMembers(client, teamId, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER, nextRequest = null) {
+    const request = nextRequest ? nextRequest : new services.team.actions.get_members.RequestV1({
         /*eslint-disable camelcase*/
         team_id: teamId,
         /*eslint-enable camelcase*/

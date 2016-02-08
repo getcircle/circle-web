@@ -1,23 +1,24 @@
 import React, { PropTypes } from 'react';
 
+import InfiniteGrid from './InfiniteGrid';
 import DetailListItemProfile from './DetailListItemProfile';
-import Grid from './Grid';
 
-const ProfilesGrid = ({ profiles }) => {
+const InfiniteProfilesGrid = ({ profiles, ...other }) => {
     const items = profiles.map((p, i) => {
         return (
             <DetailListItemProfile
-                className="col-xs-6"
+                className="col-xs-12 col-md-6"
                 key={`detail-list-item-profile-${i}`}
                 profile={p}
             />
         );
-    });;
-    return <Grid children={items} />;
+    });
+    return <InfiniteGrid children={items} elementHeight={75} {...other} />;
 };
 
-ProfilesGrid.propTypes = {
+InfiniteProfilesGrid.propTypes = {
+    onLoadMore: PropTypes.func,
     profiles: PropTypes.array.isRequired,
 };
 
-export default ProfilesGrid;
+export default InfiniteProfilesGrid;

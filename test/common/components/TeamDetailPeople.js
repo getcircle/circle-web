@@ -5,6 +5,7 @@ import React from 'react';
 import { getCustomTheme } from '../../../src/common/styles/theme';
 
 import DetailSection from '../../../src/common/components/DetailSectionV2';
+import InfiniteProfilesGrid from '../../../src/common/components/InfiniteProfilesGrid';
 import ProfilesGrid from '../../../src/common/components/ProfilesGrid';
 import TeamDetailPeople from '../../../src/common/components/TeamDetailPeople';
 
@@ -46,6 +47,27 @@ describe('TeamDetailPeople', () => {
             const { wrapper } = setup({coordinators: []});
             expect(wrapper.find(DetailSection).length).toEqual(0);
             expect(wrapper.find(ProfilesGrid).length).toEqual(0);
+        });
+    });
+
+    describe('members', () => {
+
+        it('doesn\'t render the "Members" section if we don\'t have members yet', () => {
+            const { wrapper } = setup({members: []});
+            expect(wrapper.find(DetailSection).length).toEqual(1);
+            expect(wrapper.find(InfiniteProfilesGrid).length).toEqual(0);
+        });
+
+        it('renders the "Members" header', () => {
+            const members = TeamFactory.getMembers(5);
+            const { wrapper } = setup({members});
+            expect(wrapper.find(DetailSection).at(1).props().title).toEqual('Members');
+        });
+
+        it('renders a InfiniteProfilesGrid with the members', () => {
+            const members = TeamFactory.getMembers(5);
+            const { wrapper } = setup({members});
+            expect(wrapper.find(InfiniteProfilesGrid).length).toEqual(1);
         });
 
     });

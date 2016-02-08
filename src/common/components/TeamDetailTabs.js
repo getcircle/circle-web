@@ -18,6 +18,7 @@ const TeamDetailTabs = ({ slug }) => {
     const styles = {
         root: {
             padding: '0 100px 0 100px',
+            marginBottom: 0,
         },
         tabs: {
             width: 200,
@@ -25,7 +26,7 @@ const TeamDetailTabs = ({ slug }) => {
     };
     return (
         <div>
-            <section style={styles.root}>
+            <section className="wrap" style={styles.root}>
                 <div>
                     <Tabs style={styles.tabs} value={slug}>
                         <Tab label={t('People')} value={SLUGS.PEOPLE} />

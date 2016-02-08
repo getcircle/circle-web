@@ -3,9 +3,10 @@ import React, { PropTypes } from 'react';
 import t from '../utils/gettext';
 
 import DetailSection from './DetailSectionV2';
+import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 import ProfilesGrid from './ProfilesGrid';
 
-const TeamDetailPeople = ({ coordinators }, { muiTheme }) => {
+const TeamDetailPeople = ({ coordinators, members, onLoadMoreMembers }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     let coordinatorsSection;
@@ -18,18 +19,34 @@ const TeamDetailPeople = ({ coordinators }, { muiTheme }) => {
         );
     }
 
+    let membersSection;
+    if (members && members.length) {
+        const memberProfiles = members.map(m => m.profile);
+        membersSection = (
+            <DetailSection title={t('Members')}>
+                <InfiniteProfilesGrid
+                    onLoadMore={onLoadMoreMembers}
+                    profiles={memberProfiles}
+                />
+            </DetailSection>
+        );
+    }
+
     return (
         <div>
             <section>
                 <h1 style={theme.h1}>{t('People')}</h1>
             </section>
             {coordinatorsSection}
+            {membersSection}
         </div>
     );
 };
 
 TeamDetailPeople.propTypes = {
-    coordinators: PropTypes.array.isRequired,
+    coordinators: PropTypes.array,
+    members: PropTypes.array,
+    onLoadMoreMembers: PropTypes.func,
 };
 
 TeamDetailPeople.contextTypes = {

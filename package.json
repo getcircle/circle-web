@@ -85,7 +85,7 @@
     "react-document-title": "^2.0.1",
     "react-dom": "^0.14.0",
     "react-dropzone": "^3.0.0",
-    "react-infinite": "^0.7.1",
+    "react-infinite": "git+https://github.com/lunohq/react-infinite.git#62bb856cd39d0f8db6cc2135c3369a88ead11892",
     "react-mixin": "^1.3.1",
     "react-pure-render": "^1.0.2",
     "react-redux": "^4.0.0",

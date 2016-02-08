@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { getTeam, getCoordinators } from '../actions/teams';
+import { getTeam, getCoordinators, getMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { retrieveTeam, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
@@ -19,9 +19,10 @@ const selector = createSelector(
         selectors.cacheSelector,
         selectors.routerParametersSelector,
         selectors.teamCoordinatorsSelector,
+        selectors.teamMembersSelector,
     ],
-    (cacheState, parametersState, coordinatorsState) => {
-        let coordinators;
+    (cacheState, parametersState, coordinatorsState, membersState) => {
+        let coordinators, members, membersNextRequest;
         const teamId = parametersState.teamId;
         const cache = cacheState.toJS();
         const team = retrieveTeam(teamId, cache);
@@ -31,8 +32,18 @@ const selector = createSelector(
                 coordinators = retrieveTeamMembers(ids.toJS(), cache);
             }
         }
+
+        if (membersState.has(teamId)) {
+            const ids = membersState.get(teamId).get('ids');
+            if (ids.size) {
+                members = retrieveTeamMembers(ids.toJS(), cache);
+                membersNextRequest = membersState.get(teamId).get('nextRequest');
+            }
+        }
         return {
             coordinators,
+            members,
+            membersNextRequest,
             team,
         };
     }
@@ -46,31 +57,41 @@ function fetchTeamCoordinators(dispatch, params) {
     return dispatch(getCoordinators(params.teamId));
 }
 
-//function fetchTeamMembers(dispatch, params, membersNextRequest) {
-    //return dispatch(loadTeamMembers(params.teamId, membersNextRequest));
-//}
+function fetchTeamMembers(dispatch, params, membersNextRequest) {
+    return dispatch(getMembers(params.teamId, membersNextRequest));
+}
 
 function fetchData(getState, dispatch, location, params) {
     return Promise.all([
         fetchTeam(dispatch, params),
         fetchTeamCoordinators(dispatch, params),
+        fetchTeamMembers(dispatch, params),
     ]);
 }
 
 function loadTeam({dispatch, params}) {
     fetchTeam(dispatch, params);
     fetchTeamCoordinators(dispatch, params);
+    fetchTeamMembers(dispatch, params);
 }
 
 class Team extends CSSComponent {
 
     static propTypes = {
+        coordinators: PropTypes.array,
         dispatch: PropTypes.func.isRequired,
+        members: PropTypes.array,
+        membersNextRequest: PropTypes.object,
         params: PropTypes.shape({
             slug: PropTypes.string,
             teamId: PropTypes.string.isRequired,
         }),
         team: PropTypes.instanceOf(services.team.containers.TeamV1),
+    }
+
+    handleLoadMoreMembers = () => {
+        const { dispatch, params: { teamId }, membersNextRequest } = this.props;
+        dispatch(getMembers(teamId, membersNextRequest));
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -86,7 +107,12 @@ class Team extends CSSComponent {
 
         let content;
         if (team) {
-            content = <TeamDetail {...this.props} />;
+            content = (
+                <TeamDetail
+                    onLoadMoreMembers={this.handleLoadMoreMembers}
+                    {...this.props}
+                />
+            );
         } else {
             content = <CenterLoadingIndicator />;
         }
