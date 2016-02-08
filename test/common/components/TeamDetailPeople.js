@@ -9,6 +9,7 @@ import InfiniteProfilesGrid from '../../../src/common/components/InfiniteProfile
 import ProfilesGrid from '../../../src/common/components/ProfilesGrid';
 import TeamDetailPeople from '../../../src/common/components/TeamDetailPeople';
 
+import DeviceContextFactory from '../../factories/DeviceContextFactory';
 import TeamFactory from '../../factories/TeamFactory';
 
 function setup(propOverrides) {
@@ -19,7 +20,7 @@ function setup(propOverrides) {
     };
     const wrapper = shallow(
         <TeamDetailPeople {...props} />,
-        { context: { muiTheme: getCustomTheme(global.navigator.userAgent)}},
+        { context: { muiTheme: getCustomTheme(global.navigator.userAgent), device: DeviceContextFactory.getContext()}},
     );
     return {props, wrapper};
 };
