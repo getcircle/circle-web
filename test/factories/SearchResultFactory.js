@@ -9,7 +9,6 @@ class SearchResultFactory {
 
     constructor() {
         this._result = new services.search.containers.SearchResultV1({
-            group: null,
             highlight: null,
             location: null,
             post: null,

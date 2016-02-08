@@ -9,19 +9,18 @@ import AuthContextFactory from './factories/AuthContextFactory';
 import DeviceContextFactory from './factories/DeviceContextFactory';
 import URLContextFactory from './factories/URLContextFactory';
 
-export default function (child, contextOverrides = {}, childContextTypesOverrides = {}) {
+export const defaultContext = {
+    auth: AuthContextFactory.getContext(),
+    device: DeviceContextFactory.getContext(),
+    flags: Immutable.Map(),
+    history: {
+        pushState: expect.createSpy(),
+    },
+    mixins: {},
+    url: URLContextFactory.getContext(),
+};
 
-    const defaultContext = {
-        auth: AuthContextFactory.getContext(),
-        device: DeviceContextFactory.getContext(),
-        flags: Immutable.Map(),
-        history: {
-            pushState: expect.createSpy(),
-        },
-        mixins: {},
-        url: URLContextFactory.getContext(),
-        ...contextOverrides,
-    }
+export default function (child, contextOverrides = {}, childContextTypesOverrides = {}) {
 
     class TestComponent extends CSSComponent {
 
@@ -38,7 +37,7 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
         }
 
         getChildContext() {
-            return defaultContext;
+            return Object.assign({}, defaultContext, contextOverrides);
         }
 
         render() {

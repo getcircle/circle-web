@@ -40,3 +40,21 @@ export function updateProfile(profile, manager) {
         },
     };
 }
+
+/**
+ * Show the update profile modal
+ *
+ * @return {Object} plain object redux action
+ */
+export function showModal() {
+    return {type: types.MODAL_UPDATE_PROFILE_SHOW};
+}
+
+/**
+ * Hide the update profile modal
+ *
+ * @return {Object} plain object redux action
+ */
+export function hideModal() {
+    return {type: types.MODAL_UPDATE_PROFILE_HIDE};
+}

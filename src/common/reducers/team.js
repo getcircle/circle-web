@@ -7,24 +7,24 @@ const initialState = Immutable.fromJS({
     modalVisible: false,
 });
 
-export default function updateProfile(state = initialState, action) {
+export default function updateTeam(state = initialState, action) {
     switch(action.type) {
-    case types.UPDATE_PROFILE, types.MEDIA_UPLOAD:
+    case types.CREATE_TEAM:
         return state.merge({formSubmitting: true});
 
-    case types.UPDATE_PROFILE_FAILURE:
-        return state.merge({formSubmitting: false});
-
-    case types.UPDATE_PROFILE_SUCCESS:
+    case types.CREATE_TEAM_SUCCESS:
         return state.merge({
             formSubmitting: false,
             modalVisible: false,
         });
 
-    case types.MODAL_UPDATE_PROFILE_SHOW:
+    case types.CREATE_TEAM_FAILURE:
+        return state.merge({formSubmitting: false});
+
+    case types.MODAL_CREATE_TEAM_SHOW:
         return state.merge({modalVisible: true});
 
-    case types.MODAL_UPDATE_PROFILE_HIDE:
+    case types.MODAL_CREATE_TEAM_HIDE:
         return state.merge({modalVisible: false});
 
     default:

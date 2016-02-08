@@ -1,6 +1,7 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import { combineReducers } from 'redux-immutablejs';
-import logger from 'redux-logger';
+import createLogger from 'redux-logger';
+import { Iterable } from 'immutable';
 import thunk from 'redux-thunk';
 
 import createServicesMiddleware from './middleware/services';
@@ -11,6 +12,12 @@ export default function (client, initialState) {
     // NB: "thunk" middleware should be first
     const middleware = [thunk, createServicesMiddleware(client)];
     if (__DEVELOPMENT__ && !__DEVTOOLS__ && __CLIENT__) {
+        // Logs state as a plain JS object for easier inspection
+        const transformer = (state) => {
+            return Iterable.isIterable(state) ? state.toJS() : state;
+        };
+
+        const logger = createLogger({transformer});
         middleware.push(logger);
     }
 
