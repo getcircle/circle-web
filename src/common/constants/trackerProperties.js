@@ -53,6 +53,9 @@ export const PAGE_TYPE = {
     EDIT_PROFILE: 'Edit Profile',
     EDIT_TEAM: 'Edit Team',
 
+    // Create forms
+    CREATE_TEAM: 'Create Team',
+
     // Selector pages
     PROFILE_SELECTOR: 'Profile Selector'
 };

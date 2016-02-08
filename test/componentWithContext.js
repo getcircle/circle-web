@@ -44,7 +44,7 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
         }
 
         getChildContext() {
-            return defaultContext;
+            return Object.assign({}, defaultContext, contextOverrides);
         }
 
         render() {

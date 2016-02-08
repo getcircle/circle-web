@@ -91,3 +91,21 @@ export function getCoordinators(teamId, nextRequest = null) {
         },
     };
 }
+
+/**
+ * Show the create team modal
+ *
+ * @return {Object} plain object redux action
+ */
+export function showModal() {
+    return {type: types.MODAL_CREATE_TEAM_SHOW}
+}
+
+/**
+ * Hide the create team modal
+ *
+ * @return {Object} plain object redux action
+ */
+export function hideModal() {
+    return {type: types.MODAL_CREATE_TEAM_HIDE}
+}

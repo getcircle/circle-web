@@ -17,7 +17,7 @@ export function createTeam(client, team) {
     const request = new services.team.actions.create_team.RequestV1({team});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.finish(resolve, reject))
+            .then(response => response.finish(resolve, reject, response.result.team.id))
             .catch(error => reject(error));
     });
 }

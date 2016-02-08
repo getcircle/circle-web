@@ -60,6 +60,9 @@ export const fontColors = {
     dark: {
         color: 'rgba(0, 0, 0, 0.8)',
     },
+    red: {
+        color: 'rgba(200, 0, 0, 0.8)',
+    },
 }
 
 export const fontWeights = {

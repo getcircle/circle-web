@@ -1,3 +1,6 @@
+import { reducer as formReducer } from 'redux-form';
+import Immutable from 'immutable';
+
 export { default as authentication } from './authentication';
 export { default as autocomplete } from './autocomplete';
 export { default as cache } from './cache';
@@ -13,9 +16,13 @@ export { default as posts } from './posts';
 export { default as profiles } from './profiles';
 export { default as responsive } from './responsive';
 export { default as search } from './search';
+export { default as team} from './team';
 export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';
 export { default as updateProfile } from './profile';
 
 // external reducers
+export function form(state, action) {
+    return formReducer(state, action)
+};
 export { routeReducer as routing } from 'redux-simple-router';
