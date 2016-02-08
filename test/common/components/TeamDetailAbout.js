@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
 
 import { getCustomTheme } from '../../../src/common/styles/theme';

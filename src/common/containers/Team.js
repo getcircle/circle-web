@@ -109,7 +109,7 @@ class Team extends CSSComponent {
     }
 
     render() {
-        const { team } = this.props;
+        const { params: { slug }, team } = this.props;
         const title = team ? team.name : null;
 
         let content;
@@ -117,6 +117,7 @@ class Team extends CSSComponent {
             content = (
                 <TeamDetail
                     onLoadMoreMembers={this.handleLoadMoreMembers}
+                    slug={slug}
                     {...this.props}
                 />
             );

@@ -41,6 +41,14 @@ describe('TeamDetail', () => {
             const { wrapper } = setup();
             expect(wrapper.find(TeamDetailTabs).props().slug).toEqual(SLUGS.PEOPLE);
             expect(wrapper.find(TeamDetailPeople).length).toEqual(1);
+            expect(wrapper.find(TeamDetailAbout).length).toEqual(0);
+        });
+
+        it('renders the "About" section if provided the correct slug', () => {
+            const { wrapper } = setup({slug: SLUGS.ABOUT});
+            expect(wrapper.find(TeamDetailTabs).props().slug).toEqual(SLUGS.ABOUT);
+            expect(wrapper.find(TeamDetailAbout).length).toEqual(1);
+            expect(wrapper.find(TeamDetailPeople).length).toEqual(0);
         });
 
     });

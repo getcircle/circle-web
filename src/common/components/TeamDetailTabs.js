@@ -5,6 +5,9 @@ import {
 } from 'material-ui';
 
 import t from '../utils/gettext';
+import { replaceTeamSlug } from '../utils/routes';
+
+import InternalPropTypes from './InternalPropTypes';
 
 import Tab from './Tab';
 import Tabs from './Tabs';
@@ -14,7 +17,7 @@ export const SLUGS = {
     PEOPLE: t('people'),
 };
 
-const TeamDetailTabs = ({ slug }) => {
+const TeamDetailTabs = ({ team, slug }, { history }) => {
     const styles = {
         root: {
             padding: '0 100px 0 100px',
@@ -24,11 +27,20 @@ const TeamDetailTabs = ({ slug }) => {
             width: 200,
         },
     };
+
+    function handleRequestChange(e, slug) {
+        replaceTeamSlug(history, team, slug);
+    }
+
     return (
         <div>
             <section className="wrap" style={styles.root}>
                 <div>
-                    <Tabs style={styles.tabs} value={slug}>
+                    <Tabs
+                        onRequestChange={handleRequestChange}
+                        style={styles.tabs}
+                        value={slug}
+                    >
                         <Tab label={t('People')} value={SLUGS.PEOPLE} />
                         <Tab label={t('About')} value={SLUGS.ABOUT} />
                     </Tabs>
@@ -41,6 +53,11 @@ const TeamDetailTabs = ({ slug }) => {
 
 TeamDetailTabs.propTypes = {
     slug: PropTypes.oneOf(Object.values(SLUGS)),
+    team: InternalPropTypes.TeamV1,
+};
+
+TeamDetailTabs.contextTypes = {
+    history: InternalPropTypes.history.isRequired,
 };
 
 export default TeamDetailTabs;

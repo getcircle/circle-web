@@ -21,6 +21,7 @@ const TeamDetail = (props) => {
     switch (slug) {
     case SLUGS.ABOUT:
         content = <TeamDetailAbout coordinators={coordinators} team={team} />;
+        break;
     case SLUGS.PEOPLE:
         content = (
             <TeamDetailPeople
@@ -30,11 +31,12 @@ const TeamDetail = (props) => {
                 onLoadMoreMembers={onLoadMoreMembers}
             />
         );
+        break;
     }
     return (
         <div>
             <TeamDetailHeader coordinators={coordinators} team={team} />
-            <TeamDetailTabs slug={slug} />
+            <TeamDetailTabs slug={slug} team={team} />
             <DetailContent>
                 {content}
             </DetailContent>

@@ -10,6 +10,10 @@ export function replaceProfileSlug(history, profile, slug) {
     }
 }
 
+export function replaceTeamSlug(history, team, slug) {
+    history.replaceState(null, `/team/${team.id}/${slug}`);
+}
+
 export function routeToTeam(history, team) {
     history.pushState(null, `/team/${team.id}`);
 }

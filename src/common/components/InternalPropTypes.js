@@ -14,6 +14,10 @@ const InternalPropTypes = {
         mobileOS: PropTypes.bool.isRequired,
         mounted: PropTypes.bool,
     }),
+    history: PropTypes.shape({
+        pushState: PropTypes.func.isRequired,
+        replaceState: PropTypes.func.isRequired,
+    }),
     LocationV1: PropTypes.instanceOf(services.organization.containers.LocationV1),
     OrganizationV1: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
     PostV1: PropTypes.instanceOf(services.post.containers.PostV1),
@@ -24,7 +28,7 @@ const InternalPropTypes = {
     SearchCategoryV1: PropTypes.oneOf(
         enumValues(services.search.containers.search.CategoryV1)
     ),
-    TeamV1: PropTypes.instanceOf(services.organization.containers.TeamV1),
+    TeamV1: PropTypes.instanceOf(services.team.containers.TeamV1),
     URLContext: PropTypes.shape({
         raw: PropTypes.string.isRequired,
         protocol: PropTypes.oneOf(['http:', 'https:']).isRequired,

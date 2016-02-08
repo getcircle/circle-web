@@ -231,6 +231,14 @@ export default function (store, url) {
                 path="/team/:teamId"
             />
             <Route
+                component={require('./containers/Team').default}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.TEAM_DETAIL, 'teamId')
+                )}
+                path="/team/:teamId/:slug"
+            />
+            <Route
                 component={require('./containers/NoMatch')}
                 onEnter={applyMiddleware(...defaultMiddleware)}
                 path="*"
