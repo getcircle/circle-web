@@ -46,6 +46,9 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
             {coordinatorsSection}
             <ReactCSSTransitionGroup
                 transitionAppear={true}
+                transitionAppearTimeout={300}
+                transitionEnterTimeout={300}
+                transitionLeaveTimeout={300}
                 transitionName={FADE}
             >
                 {membersSection}
