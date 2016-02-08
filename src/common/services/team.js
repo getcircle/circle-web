@@ -70,7 +70,7 @@ export function getMembers(client, teamId, role = services.team.containers.TeamM
     });
     const cacheKey = getMembersCacheKey(teamId, role);
     return new Promise((resolve, reject) => {
-        client.sendRequest(request)
+        client.send(request)
             .then(response => response.finish(resolve, reject, cacheKey))
             .catch(error => reject(error));
     });
