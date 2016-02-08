@@ -1,3 +1,4 @@
+import expect from 'expect';
 import React from 'react';
 import { shallow } from 'enzyme';
 
@@ -8,6 +9,7 @@ import FormTextField from '../../../src/common/components/FormTextField';
 function setup(overrides) {
     const defaults = {
         invalid: true,
+        onChange: expect.createSpy(),
         placeholder: 'Add your cell number',
         touched: false,
         value: '',

@@ -1,4 +1,5 @@
 import Dropzone from 'react-dropzone';
+import expect from 'expect';
 import React from 'react';
 import { shallow } from 'enzyme';
 
@@ -9,6 +10,7 @@ import FormPhotoField from '../../../src/common/components/FormPhotoField';
 function setup(overrides) {
     const defaults = {
         invalid: true,
+        onChange: expect.createSpy(),
         placeholder: 'A bunch of text',
         touched: false,
         value: '',

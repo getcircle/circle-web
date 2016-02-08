@@ -1,3 +1,4 @@
+import expect from 'expect';
 import React from 'react';
 import { shallow } from 'enzyme';
 
@@ -8,6 +9,7 @@ import FormTextArea from '../../../src/common/components/FormTextArea';
 function setup(overrides) {
     const defaults = {
         invalid: true,
+        onChange: expect.createSpy(),
         placeholder: 'A bunch of text',
         touched: false,
         value: '',
