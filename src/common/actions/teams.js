@@ -109,3 +109,22 @@ export function showModal() {
 export function hideModal() {
     return {type: types.MODAL_CREATE_TEAM_HIDE}
 }
+
+/**
+ * Update the team
+ *
+ * @param {services.team.containers.TeamV1} team team we're updating
+ *
+ */
+export function updateTeam(team) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.UPDATE_TEAM,
+                types.UPDATE_TEAM_SUCCESS,
+                types.UPDATE_TEAM_FAILURE,
+            ],
+            remote: (client) => requests.updateTeam(client, team),
+        },
+    };
+}

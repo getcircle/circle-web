@@ -75,3 +75,31 @@ export function getMembers(client, teamId, role = services.team.containers.TeamM
             .catch(error => reject(error));
     });
 }
+
+/**
+ * Update a team
+ *
+ * @param {Object} client the service client
+ * @param {services.team.containers.TeamV1} team a team container
+ *
+ * Example of how to call:
+ *
+ * (with an existing team object)
+ * team.name = 'new name'
+ * team.description.value = 'new description'
+ *
+ * const contact_method = new services.team.containers.ContactMethodV1({
+ *      value: 'michael@lunohq.com',
+ *      type: services.team.containers.ContactMethodV1.TypeV1.EMAIL,
+ * });
+ * team.contact_methods.push(contact_method)
+ * updateTeam(client, team);
+ */
+export function updateTeam(client, team) {
+    const request = new services.team.actions.update_team.RequestV1({team});
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.finish(resolve, reject, team))
+            .catch(error => reject(error));
+    });
+}
