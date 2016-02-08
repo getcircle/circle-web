@@ -6,7 +6,7 @@ import DetailSection from './DetailSectionV2';
 import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 import ProfilesGrid from './ProfilesGrid';
 
-const TeamDetailPeople = ({ coordinators, members, onLoadMoreMembers }, { muiTheme }) => {
+const TeamDetailPeople = ({ coordinators, members, membersLoading, onLoadMoreMembers }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     let coordinatorsSection;
@@ -25,6 +25,7 @@ const TeamDetailPeople = ({ coordinators, members, onLoadMoreMembers }, { muiThe
         membersSection = (
             <DetailSection title={t('Members')}>
                 <InfiniteProfilesGrid
+                    loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}
                     profiles={memberProfiles}
                 />
@@ -46,6 +47,7 @@ const TeamDetailPeople = ({ coordinators, members, onLoadMoreMembers }, { muiThe
 TeamDetailPeople.propTypes = {
     coordinators: PropTypes.array,
     members: PropTypes.array,
+    membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,
 };
 

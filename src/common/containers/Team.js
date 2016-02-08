@@ -22,7 +22,7 @@ const selector = createSelector(
         selectors.teamMembersSelector,
     ],
     (cacheState, parametersState, coordinatorsState, membersState) => {
-        let coordinators, members, membersNextRequest;
+        let coordinators, members, membersNextRequest, membersLoading;
         const teamId = parametersState.teamId;
         const cache = cacheState.toJS();
         const team = retrieveTeam(teamId, cache);
@@ -39,10 +39,12 @@ const selector = createSelector(
                 members = retrieveTeamMembers(ids.toJS(), cache);
                 membersNextRequest = membersState.get(teamId).get('nextRequest');
             }
+            membersLoading = membersState.get(teamId).get('loading');
         }
         return {
             coordinators,
             members,
+            membersLoading,
             membersNextRequest,
             team,
         };
@@ -81,12 +83,17 @@ class Team extends CSSComponent {
         coordinators: PropTypes.array,
         dispatch: PropTypes.func.isRequired,
         members: PropTypes.array,
+        membersLoading: PropTypes.bool,
         membersNextRequest: PropTypes.object,
         params: PropTypes.shape({
             slug: PropTypes.string,
             teamId: PropTypes.string.isRequired,
         }),
         team: PropTypes.instanceOf(services.team.containers.TeamV1),
+    }
+
+    static defaultProps = {
+        membersLoading: false,
     }
 
     handleLoadMoreMembers = () => {

@@ -17,6 +17,7 @@ const InfiniteProfilesGrid = ({ profiles, ...other }) => {
 };
 
 InfiniteProfilesGrid.propTypes = {
+    loading: PropTypes.bool,
     onLoadMore: PropTypes.func,
     profiles: PropTypes.array.isRequired,
 };

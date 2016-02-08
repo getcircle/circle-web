@@ -11,6 +11,7 @@ const TeamDetail = (props) => {
     const {
         coordinators,
         members,
+        membersLoading,
         onLoadMoreMembers,
         slug,
         team,
@@ -25,6 +26,7 @@ const TeamDetail = (props) => {
             <TeamDetailPeople
                 coordinators={coordinators}
                 members={members}
+                membersLoading={membersLoading}
                 onLoadMoreMembers={onLoadMoreMembers}
             />
         );
@@ -43,10 +45,12 @@ const TeamDetail = (props) => {
 TeamDetail.propTypes = {
     coordinators: PropTypes.array,
     members: PropTypes.array,
+    membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,
     slug: PropTypes.oneOf(Object.values(SLUGS)),
     team: PropTypes.instanceOf(services.team.containers.TeamV1).isRequired,
 };
+
 TeamDetail.defaultProps = {
     slug: SLUGS.PEOPLE,
 };
