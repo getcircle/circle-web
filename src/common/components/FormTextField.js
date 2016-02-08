@@ -13,7 +13,7 @@ export default class FormTextField extends FormField {
         onChange: PropTypes.func.isRequired,
         onFocus: PropTypes.func,
         placeholder: PropTypes.string,
-        value: PropTypes.string.isRequired,
+        value: PropTypes.string,
     }
 
     classes() {

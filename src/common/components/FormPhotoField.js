@@ -13,7 +13,7 @@ export default class FormPhotoField extends FormField {
 
     static propTypes = {
         onChange: PropTypes.func.isRequired,
-        value: PropTypes.string.isRequired,
+        value: PropTypes.object.isRequired,
     }
 
     classes() {
