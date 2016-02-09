@@ -1,21 +1,45 @@
 import React, { PropTypes } from 'react';
-import Infinite from 'react-infinite';
+import InfiniteScroll from 'redux-infinite-scroll';
 
 import { List } from 'material-ui';
 
-const InfiniteGrid = ({ children, elementHeight, loading, onLoadMore }) => {
+import t from '../utils/gettext';
+
+const Loader = ({ theme }) => {
+    const styles = {
+        row: {
+            paddingTop: 20,
+        },
+        span: {
+            color: theme.tintColor,
+        },
+    };
+    return (
+        <div className="col-xs-12">
+            <div className="row center-xs" style={styles.row}>
+                <span style={styles.span}>{t('loading...')}</span>
+            </div>
+        </div>
+    );
+};
+
+Loader.propTypes = {
+    theme: PropTypes.object.isRequired,
+};
+
+const InfiniteGrid = ({ children, elementHeight, loading, onLoadMore }, { muiTheme }) => {
     return (
         <List>
-            <Infinite
-                elementHeight={elementHeight / 2}
-                infiniteLoadBeginEdgeOffset={200}
-                isInfiniteLoading={loading}
-                onInfiniteLoad={onLoadMore}
-                smoothScrollingWrapperClassName="row"
-                useWindowAsScrollContainer={true}
+            <InfiniteScroll
+                className="row"
+                elementIsScrollable={false}
+                loadMore={onLoadMore}
+                loader={<Loader theme={muiTheme.luno}/>}
+                loadingMore={loading}
+                threshold={2000}
             >
                 {children}
-            </Infinite>
+            </InfiniteScroll>
         </List>
     );
 };
@@ -29,6 +53,10 @@ InfiniteGrid.propTypes = {
 
 InfiniteGrid.defaultProps = {
     loading: false,
+};
+
+InfiniteGrid.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
 };
 
 export default InfiniteGrid;
