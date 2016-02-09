@@ -36,7 +36,7 @@ const InfiniteGrid = ({ children, elementHeight, loading, onLoadMore }, { muiThe
                 loadMore={onLoadMore}
                 loader={<Loader theme={muiTheme.luno}/>}
                 loadingMore={loading}
-                threshold={2000}
+                threshold={100}
             >
                 {children}
             </InfiniteScroll>
