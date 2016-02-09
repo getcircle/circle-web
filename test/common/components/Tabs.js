@@ -11,6 +11,7 @@ function setup(propOverrides) {
     const children = getTabs(2);
     const props = {
         children,
+        onRequestChange: expect.createSpy(),
         ...propOverrides,
     };
     const wrapper = shallow(

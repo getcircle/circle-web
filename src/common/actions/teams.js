@@ -8,11 +8,12 @@ import { retrieveTeam } from '../reducers/denormalizations';
 
 function paginatedShouldBail(key, teamId, nextRequest, state) {
     if (state.get(key).has(teamId)) {
-        if (nextRequest === null) return true;
+        if (nextRequest === null) return {bail: true};
         const paginator = getPaginator(nextRequest);
-        return state.get(key).get(teamId).get('pages').has(paginator.page);
+        const bail = state.get(key).get(teamId).get('pages').has(paginator.page);
+        return {bail, paginator}
     }
-    return false;
+    return {bail: false};
 }
 
 /**
@@ -74,9 +75,18 @@ export function getMembers(teamId, nextRequest = null) {
                 types.GET_TEAM_MEMBERS,
                 types.GET_TEAM_MEMBERS_SUCCESS,
                 types.GET_TEAM_MEMBERS_FAILURE,
+                types.GET_TEAM_MEMBERS_BAIL,
             ],
             remote: client => requests.getMembers(client, teamId, role, nextRequest),
-            bailout: state => paginatedShouldBail('teamMembers', teamId, nextRequest, state),
+            bailout: (state) => {
+                const { bail, paginator } = paginatedShouldBail('teamMembers', teamId, nextRequest, state);
+                if (bail && paginator) {
+                    return {paginator};
+                } else {
+                    return bail;
+                }
+                return false;
+            },
         },
         meta: {
             paginateBy: teamId,
@@ -100,7 +110,10 @@ export function getCoordinators(teamId, nextRequest = null) {
                 types.GET_TEAM_COORDINATORS_FAILURE,
             ],
             remote: client => requests.getMembers(client, teamId, role, nextRequest),
-            bailout: state => paginatedShouldBail('teamCoordinators', teamId, nextRequest, state),
+            bailout: (state) => {
+                const { bail } = paginatedShouldBail('teamCoordinators', teamId, nextRequest, state);
+                return bail;
+            },
         },
         meta: {
             paginateBy: teamId,
@@ -141,6 +154,17 @@ export function updateTeam(team) {
                 types.UPDATE_TEAM_FAILURE,
             ],
             remote: (client) => requests.updateTeam(client, team),
+        },
+    };
+}
+
+export function updateTeamSlug(team, previousSlug, nextSlug) {
+    return {
+        type: types.UPDATE_TEAM_SLUG,
+        payload: {
+            previousSlug,
+            nextSlug,
+            teamId: team.id,
         },
     };
 }

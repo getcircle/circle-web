@@ -6,6 +6,7 @@ import { provideHooks } from 'redial';
 
 import { getTeam, getCoordinators, getMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
+import { slice } from '../reducers/paginate';
 import { retrieveTeam, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
@@ -34,7 +35,7 @@ const selector = createSelector(
         }
 
         if (membersState.has(teamId)) {
-            const ids = membersState.get(teamId).get('ids');
+            const ids = slice(membersState.get(teamId));
             if (ids.size) {
                 members = retrieveTeamMembers(ids.toJS(), cache);
                 membersNextRequest = membersState.get(teamId).get('nextRequest');

@@ -12,15 +12,15 @@ function setup(propsOverrides) {
     const team = TeamFactory.getTeam();
     const props = {
         team,
+        onRequestChange: expect.createSpy(),
         ...propsOverrides,
     };
-    const history = {
-        pushState: expect.createSpy(),
-        replaceState: expect.createSpy(),
+    const store = {
+        dispatch: expect.createSpy(),
     };
-    const wrapper = shallow(<TeamDetailTabs {...props} />, {context: {history: history}});
+    const wrapper = shallow(<TeamDetailTabs {...props} />, {context: {store}});
     return {
-        history,
+        store,
         props,
         wrapper,
     };
@@ -56,14 +56,14 @@ describe('TeamDetailTabs', () => {
     describe('requestChange', () => {
 
         it('is called when a tab is selected', () => {
-            const { wrapper, history } = setup({slug: SLUGS.PEOPLE});
+            const { wrapper, props: { onRequestChange } } = setup({slug: SLUGS.PEOPLE});
             const tabs = wrapper.find(Tabs);
             tabs.simulate('requestChange', {}, SLUGS.ABOUT);
-            expect(history.replaceState.calls.length).toEqual(1);
-            expect(history.replaceState.calls[0].arguments[1].endsWith(SLUGS.ABOUT));
+            expect(onRequestChange.calls.length).toEqual(1);
+            expect(onRequestChange.calls[0].arguments[1].endsWith(SLUGS.ABOUT));
             tabs.simulate('requestChange', {}, SLUGS.PEOPLE);
-            expect(history.replaceState.calls.length).toEqual(2);
-            expect(history.replaceState.calls[0].arguments[1].endsWith(SLUGS.PEOPLE));
+            expect(onRequestChange.calls.length).toEqual(2);
+            expect(onRequestChange.calls[0].arguments[1].endsWith(SLUGS.PEOPLE));
         });
 
     });
