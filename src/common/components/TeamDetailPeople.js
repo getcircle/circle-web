@@ -1,7 +1,5 @@
 import React, { PropTypes } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-import { FADE } from '../constants/animations';
 import t from '../utils/gettext';
 
 import InternalPropTypes from './InternalPropTypes';
@@ -43,16 +41,8 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
             <section>
                 <h1 style={theme.h1}>{t('People')}</h1>
             </section>
-            <ReactCSSTransitionGroup
-                transitionAppear={true}
-                transitionAppearTimeout={500}
-                transitionEnterTimeout={500}
-                transitionLeave={false}
-                transitionName={FADE}
-            >
-                {coordinatorsSection}
-                {membersSection}
-            </ReactCSSTransitionGroup>
+            {coordinatorsSection}
+            {membersSection}
         </div>
     );
 };
