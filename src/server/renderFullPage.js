@@ -43,7 +43,7 @@ export default function (content, store, assets, title) {
             <meta name="description" content="Organizing your company's knowledge.">
             <title>${windowTitle}</title>
             <!-- Load Fonts -->
-            <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,600italic,300' rel='stylesheet' type='text/css'>
+            <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic,300,300italic' rel='stylesheet' type='text/css'>
             <!-- End Load Fonts -->
 
             ${styles}

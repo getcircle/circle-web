@@ -12,7 +12,7 @@ export const fontWeights = {
 export function getCustomTheme(userAgent) {
     const tintColor = Colors.blue700;
     const baseTheme = {
-        fontFamily: '"Open Sans", Arial, sans-serif',
+        fontFamily: '"Lato", Arial, sans-serif',
         palette: {
             accent1Color: tintColor,
             canvasColor: Colors.white,
