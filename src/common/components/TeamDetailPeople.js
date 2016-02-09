@@ -48,7 +48,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
                 transitionAppear={true}
                 transitionAppearTimeout={300}
                 transitionEnterTimeout={300}
-                transitionLeaveTimeout={300}
+                transitionLeave={false}
                 transitionName={FADE}
             >
                 {membersSection}
