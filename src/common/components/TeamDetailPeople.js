@@ -25,7 +25,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     }
 
     let membersSection;
-    if (device.mounted && members && members.length) {
+    if (members && members.length) {
         const memberProfiles = members.map(m => m.profile);
         membersSection = (
             <DetailSection key="members-section" title={t('Members')}>
