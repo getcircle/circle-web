@@ -11,6 +11,7 @@ import TeamFactory from '../../factories/TeamFactory';
 function setup(propsOverrides) {
     const props = {
         dispatch: expect.createSpy(),
+        params: {teamId: '123'},
         ...propsOverrides,
     };
     const wrapper = shallow(<Team {...props} />);
@@ -29,7 +30,7 @@ describe('Team Container', () => {
 
     it('renders the TeamDetail if a team is provided', () => {
         const team = TeamFactory.getTeam();
-        const { wrapper } = setup({team});
+        const { wrapper } = setup({team, params: {teamId: team.id}});
         expect(wrapper.find(CenterLoadingIndicator).length).toEqual(0);
         expect(wrapper.find(TeamDetail).length).toEqual(1);
     });
