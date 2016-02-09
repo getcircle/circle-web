@@ -13,7 +13,7 @@ function setup(overrides) {
         onChange: expect.createSpy(),
         placeholder: 'A bunch of text',
         touched: false,
-        value: '',
+        value: {},
     };
     const props = Object.assign({}, defaults, overrides);
 

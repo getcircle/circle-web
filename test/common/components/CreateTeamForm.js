@@ -19,8 +19,9 @@ function setup(overrides) {
         visible: false,
     };
     const props = Object.assign({}, defaults, overrides);
+    const context = {history: {pushState: expect.createSpy()}};
 
-    const wrapper = shallow(<CreateTeamForm {...props} />);
+    const wrapper = shallow(<CreateTeamForm {...props} />, {context: context});
 
     return {
         props,

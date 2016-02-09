@@ -21,7 +21,7 @@ function setup(overrides) {
             cellNumber: {onChange: expect.createSpy(), value: ''},
             firstName: {onChange: expect.createSpy(), value: ''},
             lastName: {onChange: expect.createSpy(), value: ''},
-            photo: {onChange: expect.createSpy(), value: ''},
+            photo: {onChange: expect.createSpy(), value: {}},
             title: {onChange: expect.createSpy(), value: ''},
         },
         formSubmitting: false,
