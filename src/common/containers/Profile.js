@@ -5,7 +5,6 @@ import { soa } from 'protobufs';
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
 import { getPostsPaginationKey, getPosts } from '../actions/posts';
 import { PostStateURLString } from '../utils/post';
-import { clearTeamMembers } from '../actions/teams_deprecated';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile, retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
@@ -110,9 +109,6 @@ class Profile extends PureComponent {
             if (this.props.extendedProfile.team &&
                 nextProps.extendedProfile.team &&
                 nextProps.extendedProfile.team.id !== this.props.extendedProfile.team.id) {
-                // When user switches teams, clear cached team members for old & new team
-                nextProps.dispatch(clearTeamMembers(this.props.extendedProfile.team.id));
-                nextProps.dispatch(clearTeamMembers(nextProps.extendedProfile.team.id));
             }
         }
     }

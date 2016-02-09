@@ -74,27 +74,6 @@ describe('SearchComponent', () => {
         ));
     });
 
-    it('does not show highlighted term if its not available for teams', () => {
-        let teamSearchResult = SearchResultFactory.getSearchResultWithTeam();
-        const team = teamSearchResult.team;
-        const { searchComponent } = setup({results: [teamSearchResult]});
-
-        expect(searchComponent.getTeamPrimaryText(team)).toBe(team.display_name);
-    });
-
-    it('shows highlighted team name when matched for teams', () => {
-        let teamSearchResultWithHighlightedName = SearchResultFactory.getSearchResultWithTeam(true);
-        const {
-            highlight,
-            team,
-        } = teamSearchResultWithHighlightedName;
-        const { searchComponent } = setup({results: [teamSearchResultWithHighlightedName]});
-
-        expect(searchComponent.getTeamPrimaryText(team, highlight)).toEqual((<div
-            dangerouslySetInnerHTML={{__html: highlight.get('display_name')}} />
-        ));
-    });
-
     it('does not show highlighted term if its not available for locations', () => {
         let searchResultWithLocation = SearchResultFactory.getSearchResultWithLocation();
         const location = searchResultWithLocation.location;
