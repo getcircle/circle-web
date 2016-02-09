@@ -3,6 +3,17 @@ import { services } from 'protobufs';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/team';
+import { getPaginator } from '../services/helpers';
+import { retrieveTeam } from '../reducers/denormalizations';
+
+function paginatedShouldBail(key, teamId, nextRequest, state) {
+    if (state.get(key).has(teamId)) {
+        if (nextRequest === null) return true;
+        const paginator = getPaginator(nextRequest);
+        return state.get(key).get(teamId).get('pages').has(paginator.page);
+    }
+    return false;
+}
 
 /**
  * Redux action to create a team
@@ -20,7 +31,7 @@ export function createTeam(name, description = null) {
                 types.CREATE_TEAM_SUCCESS,
                 types.CREATE_TEAM_FAILURE,
             ],
-            remote: (client) => requests.createTeam(client, team),
+            remote: client => requests.createTeam(client, team),
         },
     };
 }
@@ -39,8 +50,11 @@ export function getTeam(teamId) {
                 types.GET_TEAM_SUCCESS,
                 types.GET_TEAM_FAILURE,
             ],
-            // TODO do we need to add bail here or is this solved with fetching from the cache first?
-            remote: (client) => requests.getTeam(client, teamId),
+            remote: client => requests.getTeam(client, teamId),
+            bailout: (state) => {
+                const team = retrieveTeam(teamId, state.get('cache').toJS());
+                return team !== null && team !== undefined;
+            },
         },
     };
 }
@@ -61,7 +75,8 @@ export function getMembers(teamId, nextRequest = null) {
                 types.GET_TEAM_MEMBERS_SUCCESS,
                 types.GET_TEAM_MEMBERS_FAILURE,
             ],
-            remote: (client) => requests.getMembers(client, teamId, role, nextRequest),
+            remote: client => requests.getMembers(client, teamId, role, nextRequest),
+            bailout: state => paginatedShouldBail('teamMembers', teamId, nextRequest, state),
         },
         meta: {
             paginateBy: teamId,
@@ -84,7 +99,8 @@ export function getCoordinators(teamId, nextRequest = null) {
                 types.GET_TEAM_COORDINATORS_SUCCESS,
                 types.GET_TEAM_COORDINATORS_FAILURE,
             ],
-            remote: (client) => requests.getMembers(client, teamId, role, nextRequest),
+            remote: client => requests.getMembers(client, teamId, role, nextRequest),
+            bailout: state => paginatedShouldBail('teamCoordinators', teamId, nextRequest, state),
         },
         meta: {
             paginateBy: teamId,
