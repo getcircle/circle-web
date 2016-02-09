@@ -5,10 +5,11 @@ import FastClick from 'fastclick';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Provider } from 'react-redux';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Router } from 'react-router';
+import { render } from 'react-dom';
+import { Router, match } from 'react-router';
 import { syncReduxAndRouter } from 'redux-simple-router';
 import transit from 'transit-immutable-protobuf-js';
+import { trigger } from 'redial';
 import protobufs from 'protobufs';
 
 import Client from '../common/services/Client';
@@ -36,23 +37,37 @@ const url = {
     subdomain: getSubdomain(window.location.hostname),
 };
 
+// XXX don't think we need this anymore with React Router 2.0
 syncReduxAndRouter(history, store, (state) => state.get('routing'));
 
-function createElement(Component, props) {
-    // XXX what about fetchDataDeferred?
-    if (Component.fetchData) {
-        Component.fetchData(store.getState, store.dispatch, props.location, props.params, url);
-    }
-    return React.createElement(Component, props);
-}
+const routes = getRoutes(store, url);
+
+history.listen(location => {
+    match({routes, location}, (error, redirectLocation, renderProps) => {
+        const locals = {
+            dispatch: store.dispatch,
+            getState: store.getState,
+            location: renderProps.location,
+            params: renderProps.params,
+            url,
+        };
+
+        // Don't fetch data for initial route, server has done the work
+        if (window.INITIAL_STATE) {
+            // Delete global data so subsequent data fetches can occur
+            delete window.INITIAL_STATE;
+        } else {
+            trigger('fetch', renderProps.components, locals);
+        }
+
+        trigger('defer', renderProps.components, locals)
+            .then(() => trigger('done', renderProps.components, locals));
+    });
+});
 
 const elements = [
     <Provider key="provider" store={store}>
-        <Router
-            createElement={createElement}
-            history={history}
-            routes={getRoutes(store, url)}
-        />
+        <Router history={history} routes={routes} />
     </Provider>
 ];
 
@@ -78,4 +93,4 @@ if (__DEVTOOLS__) {
 injectTapEventPlugin();
 FastClick.attach(document.body);
 
-ReactDOM.render(<Root children={elements} url={url} userAgent={window.navigator.userAgent}/>, dest);
+render(<Root children={elements} url={url} userAgent={window.navigator.userAgent}/>, dest);

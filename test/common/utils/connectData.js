@@ -1,3 +1,4 @@
+// XXX remove this, its deprecated
 import expect from 'expect';
 import React from 'react';
 import connectData from '../../../src/common/utils/connectData';

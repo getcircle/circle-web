@@ -1,3 +1,4 @@
+// XXX remove this, its deprecated
 import getDataDependencies from '../common/utils/getDataDependencies';
 
 export default function (components, getState, dispatch, location, params, url) {

@@ -1,3 +1,4 @@
+// XXX remove this, its deprecated
 import React, { Component } from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 
