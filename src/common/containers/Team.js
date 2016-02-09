@@ -2,12 +2,12 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import { provideHooks } from 'redial';
 
 import { getTeam, getCoordinators, getMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { retrieveTeam, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
-import connectData from '../utils/connectData';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -51,6 +51,14 @@ const selector = createSelector(
     }
 );
 
+const hooks = {
+    fetch: ({ dispatch, params }) => fetchTeam(dispatch, params),
+    defer: ({ dispatch, params }) => {
+        fetchTeamCoordinators(dispatch, params);
+        fetchTeamMembers(dispatch, params);
+    },
+};
+
 function fetchTeam(dispatch, params) {
     return dispatch(getTeam(params.teamId));
 }
@@ -61,14 +69,6 @@ function fetchTeamCoordinators(dispatch, params) {
 
 function fetchTeamMembers(dispatch, params, membersNextRequest) {
     return dispatch(getMembers(params.teamId, membersNextRequest));
-}
-
-function fetchData(getState, dispatch, location, params) {
-    return Promise.all([
-        fetchTeam(dispatch, params),
-        fetchTeamCoordinators(dispatch, params),
-        fetchTeamMembers(dispatch, params),
-    ]);
 }
 
 function loadTeam({dispatch, params}) {
@@ -134,4 +134,4 @@ class Team extends CSSComponent {
 }
 
 export { Team };
-export default connectData(fetchData)(connect(selector)(Team));
+export default provideHooks(hooks)(connect(selector)(Team));
