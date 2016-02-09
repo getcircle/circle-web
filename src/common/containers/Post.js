@@ -68,12 +68,6 @@ class Post extends CSSComponent {
         errorDetails: Immutable.List(),
     }
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    }
-
     state = {
         deleteRequested: false,
     }
@@ -91,7 +85,7 @@ class Post extends CSSComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         if (!nextProps.post && nextProps.errorDetails.size === 0 && this.state.deleteRequested) {
-            routeToPosts(this.context.history, PostStateURLString.LISTED);
+            routeToPosts(PostStateURLString.LISTED);
             return false;
         }
 

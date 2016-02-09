@@ -82,10 +82,7 @@ class SearchV2 extends CSSComponent {
                         </section>
                         <section className="row">
                             <div style={this.styles().resultsContainer}>
-                                <SearchResults
-                                    history={this.props.history}
-                                    results={this.props.results[query]}
-                                />
+                                <SearchResults results={this.props.results[query]} />
                             </div>
                         </section>
                     </section>

@@ -26,9 +26,6 @@ class ProfileDetailAbout extends CSSComponent {
 
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
     }
 
     classes() {
@@ -49,7 +46,7 @@ class ProfileDetailAbout extends CSSComponent {
                 contactMethods={contactMethods}
                 isLoggedInUser={isLoggedInUser}
                 locations={locations}
-                onClickLocation={routeToLocation.bind(null, this.context.history)}
+                onClickLocation={routeToLocation}
                 profile={this.props.extendedProfile.profile}
             />
         );
@@ -60,9 +57,9 @@ class ProfileDetailAbout extends CSSComponent {
             return (
                 <ProfileDetailTeam
                     manager={manager}
-                    onClickManager={routeToProfile.bind(null, this.context.history, manager)}
-                    onClickPeer={routeToProfile.bind(null, this.context.history)}
-                    onClickTeam={routeToTeam.bind(null, this.context.history, team)}
+                    onClickManager={routeToProfile.bind(null, manager)}
+                    onClickPeer={routeToProfile}
+                    onClickTeam={routeToTeam.bind(null, team)}
                     peers={peers}
                     style={this.styles().section}
                     team={team}
@@ -76,8 +73,8 @@ class ProfileDetailAbout extends CSSComponent {
             return (
                 <ProfileDetailManages
                     directReports={directReports}
-                    onClickDirectReport={routeToProfile.bind(null, this.context.history)}
-                    onClickTeam={routeToTeam.bind(null, this.context.history, team)}
+                    onClickDirectReport={routeToProfile}
+                    onClickTeam={routeToTeam.bind(null, team)}
                     style={this.styles().section}
                     team={team}
                 />

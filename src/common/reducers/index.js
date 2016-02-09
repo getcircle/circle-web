@@ -25,4 +25,4 @@ export { default as updateProfile } from './profile';
 export function form(state, action) {
     return formReducer(state, action)
 };
-export { routeReducer as routing } from 'redux-simple-router';
+export { routeReducer as routing } from 'react-router-redux';

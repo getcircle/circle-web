@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
+import { browserHistory } from 'react-router';
 
 import { clientMounted, deviceResized } from '../actions/device';
 import { getAuthenticatedProfile } from '../reducers/authentication';
@@ -74,7 +75,6 @@ class App extends CSSComponent {
     }
 
     static contextTypes = {
-        history: PropTypes.object.isRequired,
         muiTheme: PropTypes.object.isRequired,
     }
 
@@ -114,7 +114,7 @@ class App extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         if (!nextProps.authenticated && UNAUTHENTICATED_ROUTES.indexOf(nextProps.location.pathname) === -1) {
-            this.context.history.pushState(null, '/login');
+            browserHistory.push('/login');
         }
 
         this.initTrackerSession();

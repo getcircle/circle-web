@@ -14,16 +14,15 @@ import * as itemFactory from './factories';
 class SearchResults extends CSSComponent {
 
     static propTypes = {
-        history: PropTypes.object,
         results: PropTypes.array.isRequired,
     }
 
     render() {
-        const {results, history, ...other} = this.props;
+        const {results, ...other} = this.props;
         const items = [<Divider key="search-result-divider-top" />];
         for (let index in results) {
             const result = results[index];
-            const item = itemFactory.getResult(result, index, history);
+            const item = itemFactory.getResult(result, index);
             if (item) {
                 items.push(<ListItem key={`search-result-${index}`} {...item} />);
                 items.push(<Divider key={`search-result-divider-${index}`} />);

@@ -231,9 +231,6 @@ class Search extends CSSComponent {
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
         device: InternalPropTypes.DeviceContext.isRequired,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
         mixins: PropTypes.object.isRequired,
     }
 
@@ -654,7 +651,7 @@ class Search extends CSSComponent {
             leftAvatar: <ProfileAvatar profile={profile} />,
             primaryText: profileTexts.primaryText,
             secondaryText: profileTexts.secondaryText,
-            onTouchTap: routes.routeToProfile.bind(null, this.context.history, profile),
+            onTouchTap: routes.routeToProfile.bind(null, profile),
             type: numberOfResults === 1 ? RESULT_TYPES.EXPANDED_PROFILE : RESULT_TYPES.PROFILE,
             instance: profile,
             ...trackingAttributes,
@@ -691,7 +688,7 @@ class Search extends CSSComponent {
             leftAvatar: <IconContainer IconClass={GroupIcon} {...this.styles().ResultIcon} />,
             primaryText: teamPrimaryText,
             secondaryText: subTextParts.join(', '),
-            onTouchTap: routes.routeToTeam.bind(null, this.context.history, team),
+            onTouchTap: routes.routeToTeam.bind(null, team),
             type: RESULT_TYPES.TEAM,
             instance: team,
             ...trackingAttributes
@@ -726,7 +723,7 @@ class Search extends CSSComponent {
             leftAvatar: <IconContainer IconClass={OfficeIcon} {...this.styles().ResultIcon} />,
             primaryText: locationTexts.primaryText,
             secondaryText: locationTexts.secondaryText,
-            onTouchTap: routes.routeToLocation.bind(null, this.context.history, location),
+            onTouchTap: routes.routeToLocation.bind(null, location),
             type: RESULT_TYPES.LOCATION,
             instance: location,
             ...trackingAttributes
@@ -802,7 +799,7 @@ class Search extends CSSComponent {
             primaryText: postTexts.primaryText,
             secondaryText: postTexts.secondaryText,
             secondaryTextLines: 2,
-            onTouchTap: routes.routeToPost.bind(null, this.context.history, post),
+            onTouchTap: routes.routeToPost.bind(null, post),
             type: RESULT_TYPES.POST,
             instance: post,
             ...trackingAttributes
@@ -1206,7 +1203,7 @@ class Search extends CSSComponent {
 
     handleEnter() {
         if (this.shouldShowFullSearchTrigger()) {
-            routes.routeToSearch(this.context.history, this.state.query);
+            routes.routeToSearch(this.state.query);
         }
     }
 
@@ -1286,7 +1283,7 @@ class Search extends CSSComponent {
                     disableFocusRipple={true}
                     leftAvatar={<IconContainer IconClass={SearchIcon} {...this.styles().ResultIcon} />}
                     onTouchTap={() => {
-                        routes.routeToSearch(this.context.history, this.state.query);
+                        routes.routeToSearch(this.state.query);
                     }}
                     primaryText={<span>{t('Search')}&nbsp;<span style={this.styles().searchTerm}>&ldquo;{this.state.query}&rdquo;</span></span>}
                     ref={(component) => {

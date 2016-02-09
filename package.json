@@ -91,6 +91,7 @@
     "react-pure-render": "^1.0.2",
     "react-redux": "^4.0.0",
     "react-router": "v2.0.0-rc6",
+    "react-router-redux": "^3.0.0",
     "react-stripe-checkout": "^1.7.0",
     "react-tap-event-plugin": "^0.2.1",
     "reactcss": "git+https://github.com/lunohq/reactcss.git#9bf0849abd970be71bbddd2aa69fc0540a761285",

@@ -1,5 +1,6 @@
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
+import { browserHistory } from 'react-router';
 
 import { fontWeights, tintColor } from '../constants/styles';
 import t from '../utils/gettext';
@@ -12,12 +13,6 @@ class LoginRequestAccess extends CSSComponent {
 
     static propTypes = {
         onRequestAccess: PropTypes.func.isRequired,
-    }
-
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }),
     }
 
     state = {
@@ -79,7 +74,7 @@ class LoginRequestAccess extends CSSComponent {
                     />
                     <div style={this.styles().retrySection}>
                         <a
-                            onTouchTap={() => {this.context.history.pushState(null, '/login')}}
+                            onTouchTap={() => {browserHistory.push(null, '/login')}}
                             style={this.styles().retry}
                         >
                             {t('Try Again')}

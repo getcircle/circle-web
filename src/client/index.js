@@ -1,13 +1,11 @@
 import 'babel/polyfill';
 
-import createHistory from 'history/lib/createBrowserHistory';
 import FastClick from 'fastclick';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Provider } from 'react-redux';
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, match } from 'react-router';
-import { syncReduxAndRouter } from 'redux-simple-router';
+import { Router, match, browserHistory } from 'react-router';
 import transit from 'transit-immutable-protobuf-js';
 import { trigger } from 'redial';
 import protobufs from 'protobufs';
@@ -28,7 +26,6 @@ const nameSpaces = transit.withNameSpaces(
 );
 const initialState = nameSpaces.fromJSON(window.__INITIAL_STATE);
 const store = createStore(client, initialState);
-const history = createHistory();
 
 const url = {
     host: window.location.host,
@@ -37,12 +34,9 @@ const url = {
     subdomain: getSubdomain(window.location.hostname),
 };
 
-// XXX don't think we need this anymore with React Router 2.0
-syncReduxAndRouter(history, store, (state) => state.get('routing'));
-
 const routes = getRoutes(store, url);
 
-history.listen(location => {
+browserHistory.listen(location => {
     match({routes, location}, (error, redirectLocation, renderProps) => {
         const locals = {
             dispatch: store.dispatch,
@@ -67,7 +61,7 @@ history.listen(location => {
 
 const elements = [
     <Provider key="provider" store={store}>
-        <Router history={history} routes={routes} />
+        <Router history={browserHistory} routes={routes} />
     </Provider>
 ];
 

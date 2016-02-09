@@ -98,9 +98,6 @@ class PostEditor extends CSSComponent {
 
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
     }
 
     static childContextTypes = {
@@ -341,7 +338,7 @@ class PostEditor extends CSSComponent {
             return;
         }
 
-        routeToPosts(this.context.history, postState);
+        routeToPosts(postState);
     }
 
     isDraftPost() {

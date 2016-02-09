@@ -9,7 +9,7 @@ import LightBulbIcon from '../LightBulbIcon';
 import OfficeIcon from '../OfficeIcon';
 import ProfileAvatar from '../ProfileAvatar';
 
-export function getResult(result, index, history) {
+export function getResult(result, index) {
     let func;
     if (result.profile) {
         func = getProfileResult;
@@ -21,11 +21,11 @@ export function getResult(result, index, history) {
         func = getLocationResult;
     }
     if (func) {
-        return func(result, index, history);
+        return func(result, index);
     }
 }
 
-export function getProfileResult(result, index, history) {
+export function getProfileResult(result, index) {
     const { profile, highlight } = result;
     let primaryText = profile.full_name;
     let secondaryText = profile.display_title;
@@ -40,12 +40,12 @@ export function getProfileResult(result, index, history) {
         primaryText,
         secondaryText,
         leftAvatar: <ProfileAvatar profile={profile} />,
-        onTouchTap: routes.routeToProfile.bind(null, history, profile),
+        onTouchTap: routes.routeToProfile.bind(null, profile),
         instance: profile,
     };
 }
 
-export function getPostResult(result, index, history) {
+export function getPostResult(result, index) {
     const { post, highlight } = result;
     let primaryText = post.title;
     // posts always return content in the highlight, even if nothing is
@@ -59,12 +59,12 @@ export function getPostResult(result, index, history) {
         primaryText,
         secondaryText,
         leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" />,
-        onTouchTap: routes.routeToPost.bind(null, history, post),
+        onTouchTap: routes.routeToPost.bind(null, post),
         instance: post,
     };
 }
 
-export function getTeamResult(result, index, history) {
+export function getTeamResult(result, index) {
     const { team, highlight } = result;
     let primaryText = team.display_name;
     const secondaryText = t(`${team.profile_count} People`);
@@ -76,12 +76,12 @@ export function getTeamResult(result, index, history) {
         primaryText,
         secondaryText,
         leftAvatar: <IconContainer IconClass={GroupIcon} />,
-        onTouchTap: routes.routeToTeam.bind(null, history, team),
+        onTouchTap: routes.routeToTeam.bind(null, team),
         instance: team,
     };
 }
 
-export function getLocationResult(result, index, history) {
+export function getLocationResult(result, index) {
     const { location, highlight } = result;
     let primaryText = location.name;
     let secondaryText = location.full_address;
@@ -96,7 +96,7 @@ export function getLocationResult(result, index, history) {
         primaryText,
         secondaryText,
         leftAvatar: <IconContainer IconClass={OfficeIcon} />,
-        onTouchTap: routes.routeToLocation.bind(null, history, location),
+        onTouchTap: routes.routeToLocation.bind(null, location),
         instance: location,
     }
 }

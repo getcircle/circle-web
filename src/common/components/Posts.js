@@ -40,12 +40,6 @@ class Posts extends CSSComponent {
         showEditDelete: false,
     }
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    }
-
     state = {
         loading: false,
         postToBeDeleted: null,
@@ -143,9 +137,9 @@ class Posts extends CSSComponent {
 
     onPostTapped(post) {
         if (post.state === PostStateV1.DRAFT || !post.state) {
-            routeToEditPost(this.context.history, post);
+            routeToEditPost(post);
         } else if (post.state === PostStateV1.LISTED) {
-            routeToPost(this.context.history, post);
+            routeToPost(post);
         }
     }
 
@@ -267,7 +261,7 @@ class Posts extends CSSComponent {
             return (
                 <IconMenu iconButtonElement={this.renderMoreButton()}>
                     <MenuItem
-                        onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
+                        onTouchTap={routeToEditPost.bind(null, post)}
                         primaryText={t('Edit')}
                         {...this.styles().MenuItem}
                     />

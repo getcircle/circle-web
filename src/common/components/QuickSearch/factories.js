@@ -32,16 +32,16 @@ const RESULT_TYPES = keymirror({
     POST: null,
 });
 
-export function getSearchTrigger(inputValue, index, history) {
+export function getSearchTrigger(inputValue, index) {
     return {
         index: index,
         leftAvatar: <IconContainer IconClass={SearchIcon} {...ICON_CONTAINER_STYLE} />,
         primaryText: (<span>{t('Search')}&nbsp;&ldquo;<mark>{inputValue}</mark>&rdquo;</span>),
-        onTouchTap: routes.routeToSearch.bind(null, history, inputValue),
+        onTouchTap: routes.routeToSearch.bind(null, inputValue),
     };
 }
 
-export function getShortcut(title, onTouchTap, index, history) {
+export function getShortcut(title, onTouchTap, index) {
     return {
         index: index,
         leftAvatar: <IconContainer IconClass={SearchIcon} {...ICON_CONTAINER_STYLE} />,
@@ -50,7 +50,7 @@ export function getShortcut(title, onTouchTap, index, history) {
     };
 }
 
-export function getProfileResult(profile, index, highlight, history) {
+export function getProfileResult(profile, index, highlight) {
     let primaryText = profile.full_name;
     if (highlight && highlight.get('full_name')) {
         primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} />);
@@ -59,14 +59,14 @@ export function getProfileResult(profile, index, highlight, history) {
         index: index,
         leftAvatar: <ProfileAvatar profile={profile} />,
         primaryText: primaryText,
-        onTouchTap: routes.routeToProfile.bind(null, history, profile),
+        onTouchTap: routes.routeToProfile.bind(null, profile),
         type: RESULT_TYPES.PROFILE,
         instance: profile,
     };
     return item;
 }
 
-export function getTeamResult(team, index, highlight, history) {
+export function getTeamResult(team, index, highlight) {
     let primaryText = team.display_name;
     if (highlight && highlight.get('display_name')) {
         primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('display_name')}} />);
@@ -75,14 +75,14 @@ export function getTeamResult(team, index, highlight, history) {
         index: index,
         leftAvatar: <IconContainer IconClass={GroupIcon} {...ICON_CONTAINER_STYLE} />,
         primaryText: primaryText,
-        onTouchTap: routes.routeToTeam.bind(null, history, team),
+        onTouchTap: routes.routeToTeam.bind(null, team),
         type: RESULT_TYPES.TEAM,
         instance: team,
     };
     return item;
 }
 
-export function getLocationResult(location, index, highlight, history) {
+export function getLocationResult(location, index, highlight) {
     let primaryText = location.name;
     if (highlight && highlight.get('name')) {
         primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('name')}} />);
@@ -91,14 +91,14 @@ export function getLocationResult(location, index, highlight, history) {
         index: index,
         leftAvatar: <IconContainer IconClass={OfficeIcon} {...ICON_CONTAINER_STYLE} />,
         primaryText: primaryText,
-        onTouchTap: routes.routeToLocation.bind(null, history, location),
+        onTouchTap: routes.routeToLocation.bind(null, location),
         type: RESULT_TYPES.LOCATION,
         instance: location,
     };
     return item;
 }
 
-export function getPostResult(post, index, highlight, history) {
+export function getPostResult(post, index, highlight) {
     let primaryText = post.title;
     if (highlight && highlight.get('title')) {
         primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('title')}} />);
@@ -107,7 +107,7 @@ export function getPostResult(post, index, highlight, history) {
         index: index,
         leftAvatar: <IconContainer IconClass={LightBulbIcon} {...ICON_CONTAINER_STYLE} />,
         primaryText: primaryText,
-        onTouchTap: routes.routeToPost.bind(null, history, post),
+        onTouchTap: routes.routeToPost.bind(null, post),
         type: RESULT_TYPES.POST,
         instance: post,
     };

@@ -30,9 +30,6 @@ class HeaderMenu extends CSSComponent {
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
         flags: PropTypes.object,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
         muiTheme: PropTypes.object.isRequired,
         showCTAsInHeader: PropTypes.bool,
     }
@@ -143,7 +140,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     onAddPostTapped() {
-        routeToNewPost(this.context.history);
+        routeToNewPost();
     }
 
     handleTouchTap(event) {
@@ -151,11 +148,11 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewProfile(event) {
-        routeToProfile(this.context.history, this.context.auth.profile);
+        routeToProfile(this.context.auth.profile);
     }
 
     handleViewKnowledge(event) {
-        routeToPosts(this.context.history, PostStateURLString.LISTED);
+        routeToPosts(PostStateURLString.LISTED);
     }
 
     handleCreateTeam(event) {

@@ -45,9 +45,6 @@ class ProfileDetail extends CSSComponent {
 
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
         muiTheme: PropTypes.object.isRequired,
     }
 
@@ -132,7 +129,7 @@ class ProfileDetail extends CSSComponent {
             profile,
         } = this.props.extendedProfile;
 
-        replaceProfileSlug(this.context.history, profile, value);
+        replaceProfileSlug(profile, value);
         this.setState({
             selectedTabValue: value,
         });

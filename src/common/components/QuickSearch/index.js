@@ -32,12 +32,6 @@ class QuickSearch extends CSSComponent {
         results: PropTypes.object,
     }
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    }
-
     static defaultProps = {
         defaults: [],
         onBlur: () => {},
@@ -59,12 +53,11 @@ class QuickSearch extends CSSComponent {
 
     getTriggerAndResults() {
         const { query } = this.state;
-        const { history } = this.context;
-        const trigger = itemFactory.getSearchTrigger(query, 0, history);
+        const trigger = itemFactory.getSearchTrigger(query, 0);
         const querySpecificResults = this.props.results[query];
         return [
             new Section([trigger], undefined, 0),
-            new ResultsSection(querySpecificResults, history),
+            new ResultsSection(querySpecificResults),
         ];
     }
 

@@ -2,8 +2,6 @@ import React, { PropTypes } from 'react';
 
 import { List, SelectableContainerEnhance } from 'material-ui';
 
-import InternalPropTypes from './InternalPropTypes';
-
 export const SelectableList = SelectableContainerEnhance(List);
 
 const Tabs = ({ children, onRequestChange, value }, { muiTheme }) => {
@@ -34,7 +32,6 @@ Tabs.propTypes = {
 };
 
 Tabs.contextTypes = {
-    history: InternalPropTypes.history,
     muiTheme: PropTypes.object.isRequired,
 };
 

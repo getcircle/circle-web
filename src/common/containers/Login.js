@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
+import { browserHistory } from 'react-router';
 
 import { authenticate, getAuthenticationInstructions, requestAccess, } from '../actions/authentication';
 import { AUTH_BACKENDS } from '../services/user';
@@ -77,9 +78,6 @@ class Login extends CSSComponent {
     }
 
     static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }),
         muiTheme: PropTypes.object.isRequired,
         url: InternalPropTypes.URLContext.isRequired,
     }
@@ -87,7 +85,7 @@ class Login extends CSSComponent {
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
             const pathname = getNextPathname(this.props.location, '/');
-            this.context.history.pushState(null, pathname);
+            browserHistory.push(pathname);
             return false;
         }
         return true;

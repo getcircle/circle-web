@@ -1,51 +1,54 @@
+import { browserHistory } from 'react-router';
+
 const NEXT_PATHNAME_KEY = 'n:p';
 
-export function routeToProfile(history, profile) {
-    history.pushState(null, `/profile/${profile.id}`);
+export function routeToProfile(profile) {
+    browserHistory.push(`/profile/${profile.id}`);
 }
 
-export function replaceProfileSlug(history, profile, slug) {
+export function replaceProfileSlug(profile, slug) {
     if (slug && typeof slug === 'string') {
-        history.replaceState(null, `/profile/${profile.id}/${slug}`);
+        browserHistory.replace(`/profile/${profile.id}/${slug}`);
     }
 }
 
-export function replaceTeamSlug(history, team, slug) {
-    history.replaceState(null, `/team/${team.id}/${slug}`);
+export function replaceTeamSlug(team, slug) {
+    browserHistory.replace(`/team/${team.id}/${slug}`);
 }
 
-export function routeToTeam(history, team) {
-    history.pushState(null, `/team/${team.id}`);
+export function routeToTeam(team) {
+    browserHistory.push(`/team/${team.id}`);
 }
 
-export function routeToLocation(history, location) {
-    history.pushState(null, `/location/${location.id}`);
+export function routeToLocation(location) {
+    browserHistory.push(`/location/${location.id}`);
 }
 
-export function routeToEditPost(history, post) {
-    history.pushState(null, `/post/${post.id}/edit`);
+export function routeToEditPost(post) {
+    browserHistory.push(`/post/${post.id}/edit`);
 }
 
-export function routeToNewPost(history) {
-    history.pushState(null, '/new-post');
+export function routeToNewPost() {
+    browserHistory.push('/new-post');
 }
 
-export function routeToPosts(history, postState) {
-    history.pushState(null, `/posts/${postState}`);
+export function routeToPosts(postState) {
+    browserHistory.push(`/posts/${postState}`);
 }
 
-export function routeToPost(history, post) {
-    history.pushState(null, `/post/${post.id}`);
+export function routeToPost(post) {
+    browserHistory.push(`/post/${post.id}`);
 }
 
-export function routeToSearch(history, query) {
-    history.pushState(null, `/search/${query}`);
+export function routeToSearch(query) {
+    browserHistory.push(`/search/${query}`);
 }
 
-export function replaceSearchQuery(history, query) {
-    history.replaceState(null, `/search/${query}`);
+export function replaceSearchQuery(query) {
+    browserHistory.replace(`/search/${query}`);
 }
 
+// TODO check if we still use this
 export function routeToURL(url, nextPathname = null) {
     if (nextPathname !== null) {
         localStorage.setItem(NEXT_PATHNAME_KEY, nextPathname);

@@ -61,9 +61,6 @@ class Post extends CSSComponent {
 
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
     }
 
     static defaultProps = {
@@ -107,7 +104,7 @@ class Post extends CSSComponent {
         const ilen = hashtags.length;
         for (i = 0; i < ilen; i++) {
             hashtags[i].addEventListener('click', (event) => {
-                routeToSearch(this.context.history, event.target.innerText);
+                routeToSearch(event.target.innerText);
             });
         }
     }
@@ -557,7 +554,7 @@ class Post extends CSSComponent {
                 <FlatButton
                     key="edit-button"
                     label={t('Edit')}
-                    onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
+                    onTouchTap={routeToEditPost.bind(null, post)}
                     {...this.styles().EditButton}
                 />
             );
@@ -654,7 +651,7 @@ class Post extends CSSComponent {
                             <CardListItem
                                 key={author.id}
                                 leftAvatar={<ProfileAvatar profile={author} style={this.styles().cardListAvatar} />}
-                                onTouchTap={routeToProfile.bind(null, this.context.history, author)}
+                                onTouchTap={routeToProfile.bind(null, author)}
                                 primaryText={author.full_name}
                                 secondaryText={author.title}
                                 {...this.styles().CardListItem}

@@ -48,9 +48,6 @@ class Core extends CSSComponent {
 
     static contextTypes = {
         device: InternalPropTypes.DeviceContext.isRequired,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
     }
 
     componentWillMount() {

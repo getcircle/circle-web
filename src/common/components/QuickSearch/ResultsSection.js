@@ -8,9 +8,8 @@ import Section from './Section';
 
 class ResultsSection extends Section {
 
-    constructor(items, history, title = '') {
+    constructor(items, title = '') {
         super(items, title);
-        this._history = history
     }
 
     _getItems(maxItems) {
@@ -24,28 +23,24 @@ class ResultsSection extends Section {
                         result.profile,
                         index,
                         result.highlight,
-                        this._history,
                     );
                 } else if (result.team) {
                     searchResult = itemFactory.getTeamResult(
                         result.team,
                         index,
                         result.highlight,
-                        this._history,
                     );
                 } else if (result.location) {
                     searchResult = itemFactory.getLocationResult(
                         result.location,
                         index,
                         result.highlight,
-                        this._history,
                     );
                 } else if (result.post) {
                     searchResult = itemFactory.getPostResult(
                         result.post,
                         index,
                         result.highlight,
-                        this._history,
                     );
                 }
                 items.push(searchResult);

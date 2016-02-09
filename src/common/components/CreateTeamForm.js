@@ -42,19 +42,13 @@ export class CreateTeamForm extends Component {
         visible: PropTypes.bool.isRequired,
     };
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    };
-
     componentWillReceiveProps(nextProps) {
         if (!this.props.visible && nextProps.visible) {
             this.props.resetForm();
         }
 
         if (!this.props.id && nextProps.id) {
-            routeToTeam(this.context.history, {id: nextProps.id});
+            routeToTeam({id: nextProps.id});
         }
     }
 

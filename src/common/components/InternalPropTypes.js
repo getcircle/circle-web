@@ -14,10 +14,6 @@ const InternalPropTypes = {
         mobileOS: PropTypes.bool.isRequired,
         mounted: PropTypes.bool,
     }),
-    history: PropTypes.shape({
-        pushState: PropTypes.func.isRequired,
-        replaceState: PropTypes.func.isRequired,
-    }),
     LocationV1: PropTypes.instanceOf(services.organization.containers.LocationV1),
     OrganizationV1: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
     PostV1: PropTypes.instanceOf(services.post.containers.PostV1),

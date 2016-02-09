@@ -78,12 +78,6 @@ class Posts extends CSSComponent {
         postsNextRequest: PropTypes.instanceOf(soa.ServiceRequestV1),
     }
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    }
-
     static defaultProps = {
         posts: [],
     }
@@ -141,7 +135,7 @@ class Posts extends CSSComponent {
     }
 
     onTabChange(value, event, tab) {
-        routeToPosts(this.context.history, value);
+        routeToPosts(value);
     }
 
     renderPosts() {
