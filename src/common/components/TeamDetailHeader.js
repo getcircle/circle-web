@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
+import { FADE } from '../constants/animations';
 import t from '../utils/gettext';
 
 import DetailHeader from './DetailHeader';
@@ -57,7 +59,15 @@ const Details = ({coordinators, muiTheme, team}) => {
                 <span style={muiTheme.luno.header.primaryText}>{team.name}</span>
             </div>
             <div className="row center-xs start-md">
-                <span style={muiTheme.luno.header.secondaryText}>{coordinatorDetails}</span>
+                <ReactCSSTransitionGroup
+                    transitionAppear={true}
+                    transitionAppearTimeout={500}
+                    transitionEnterTimeout={500}
+                    transitionLeave={false}
+                    transitionName={FADE}
+                >
+                    <span key="team-coordinators" style={muiTheme.luno.header.secondaryText}>{coordinatorDetails}</span>
+                </ReactCSSTransitionGroup>
             </div>
         </section>
     );

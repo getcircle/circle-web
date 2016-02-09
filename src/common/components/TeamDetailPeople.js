@@ -43,14 +43,14 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
             <section>
                 <h1 style={theme.h1}>{t('People')}</h1>
             </section>
-            {coordinatorsSection}
             <ReactCSSTransitionGroup
                 transitionAppear={true}
-                transitionAppearTimeout={300}
-                transitionEnterTimeout={300}
+                transitionAppearTimeout={500}
+                transitionEnterTimeout={500}
                 transitionLeave={false}
                 transitionName={FADE}
             >
+                {coordinatorsSection}
                 {membersSection}
             </ReactCSSTransitionGroup>
         </div>
