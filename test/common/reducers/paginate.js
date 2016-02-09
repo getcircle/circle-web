@@ -4,6 +4,8 @@ import { soa } from 'protobufs';
 
 import paginate from '../../../src/common/reducers/paginate';
 
+import ServiceRequestFactory from '../../factories/ServiceRequestFactory';
+
 describe('paginate reducer', function () {
 
     beforeEach(function () {
@@ -65,7 +67,7 @@ describe('paginate reducer', function () {
             type: 'successType',
             payload: {
                 result: ids.toJS(),
-                nextRequest: new soa.ServiceRequestV1(),
+                nextRequest: ServiceRequestFactory.getRequest(),
             },
             meta: {
                 key: 'key',
@@ -78,6 +80,7 @@ describe('paginate reducer', function () {
         expect(keyState.get('nextRequest')).to.be.an(soa.ServiceRequestV1);
         expect(keyState.get('ttl')).to.not.be(null);
         expect(keyState.get('ids').toJS()).to.eql(ids.toJS());
+        expect(keyState.get('pages').toJS()).to.eql([1]);
     });
 
     it('returns the correct state for a failure action', function () {
@@ -101,7 +104,7 @@ describe('paginate reducer', function () {
             type: 'successType',
             payload: {
                 result: ids,
-                nextRequest: new soa.ServiceRequestV1(),
+                nextRequest: ServiceRequestFactory.getRequest(),
             },
             meta: {
                 key: 'key',
@@ -126,7 +129,7 @@ describe('paginate reducer', function () {
             type: 'successType',
             payload: {
                 profileIds: ids,
-                nextRequest: new soa.ServiceRequestV1(),
+                nextRequest: ServiceRequestFactory.getRequest(),
             },
             meta: {
                 key: 'key',

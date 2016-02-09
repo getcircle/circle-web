@@ -2,9 +2,10 @@ import _ from 'lodash';
 import normalize from 'protobuf-normalizr';
 import protobufs from 'protobufs';
 
+import { getNextRequest } from './helpers';
 import ServiceError from './ServiceError';
 
-export const getResponseExtensionName = (action) => {
+export function getResponseExtensionName(action) {
     let basePath = protobufs.services.registry.responses.$type.fqn();
     return [basePath, _.capitalize(action.control.service), action.control.action].join('.');
 }
@@ -40,34 +41,6 @@ export default class WrappedResponse {
         return this.response.actions[0];
     }
 
-    getNextRequest() {
-        // XXX not sure if there is a better way to do this
-        let nextRequest = this.request.$type.decode(this.request.encode());
-        let currentPaginator = this.getPaginator();
-        let nextAction = nextRequest.actions[0];
-
-        if (!currentPaginator || currentPaginator.next_page === null) {
-            return null;
-        }
-
-        let paginatorData = _.assign({}, nextAction.control.paginator);
-        /*eslint-disable new-cap*/
-        nextAction.control.paginator = new currentPaginator.$type.clazz(paginatorData);
-        /*eslint-enable new-cap*/
-        nextAction.control.paginator.page = currentPaginator.next_page;
-        /*eslint-disable camelcase*/
-        nextAction.control.paginator.previous_page = currentPaginator.page;
-        /*eslint-enable camelcase*/
-        nextAction.control.paginator.count = currentPaginator.count;
-
-        return nextRequest;
-    }
-
-    getPaginator() {
-        let action = this._getFirstAction();
-        return action.control.paginator;
-    }
-
     isSuccess() {
         return this.action.result.success;
     }
@@ -76,7 +49,7 @@ export default class WrappedResponse {
         const copy = this.result.$type.decode(this.result.encode());
         const normalized = normalize(copy, key);
         return Object.assign({},
-            {type: this.result.$type, nextRequest: this.getNextRequest()},
+            {type: this.result.$type, nextRequest: getNextRequest(this.request, this.response)},
             normalized
         );
     }

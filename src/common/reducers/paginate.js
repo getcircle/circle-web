@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 
 import * as actionTypes from '../constants/actionTypes';
+import { getPaginator } from '../services/helpers';
 
 // ttl interval in milliseconds
 const TTL_INTERVAL = 300000
@@ -34,6 +35,7 @@ export default function paginate({
         nextRequest: null,
         ids: Immutable.OrderedSet(),
         ttl: null,
+        pages: Immutable.OrderedSet(),
     }), action) {
         const { payload } = action;
         switch (action.type) {
@@ -45,7 +47,15 @@ export default function paginate({
                 return map.updateIn(['ids'], set => set.union(results))
                     .set('loading', false)
                     .set('ttl', Date.now() + TTL_INTERVAL)
-                    .set('nextRequest', payload.nextRequest);
+                    .set('nextRequest', payload.nextRequest)
+                    .updateIn(['pages'], (set) => {
+                        if (!payload.nextRequest) return;
+
+                        const paginator = getPaginator(payload.nextRequest);
+                        if (paginator.previous_page !== null) {
+                            return set.add(paginator.previous_page);
+                        }
+                    });
             });
         case failureType:
             return state.set('loading', false);
