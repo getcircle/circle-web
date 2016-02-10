@@ -74,7 +74,7 @@ const Details = ({coordinators, muiTheme, onEdit, team}) => {
     );
 };
 
-const TeamDetailHeader = ({team, coordinators, onEdit}, {dispatch, muiTheme}) => {
+const TeamDetailHeader = ({team, coordinators, onEdit}, {muiTheme}) => {
     const styles = {
         container: {
             paddingTop: 35,
