@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import { provideHooks } from 'redial';
 
-import { getTeam, getCoordinators, getMembers } from '../actions/teams';
+import { getTeam, getCoordinators, getMembers, showTeamEditModal } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { retrieveTeam, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
@@ -13,6 +13,7 @@ import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import TeamDetail from '../components/TeamDetail';
+import TeamEditForm from '../components/TeamEditForm';
 
 const selector = createSelector(
     [
@@ -96,6 +97,11 @@ class Team extends CSSComponent {
         membersLoading: false,
     }
 
+    handleEdit = () => {
+        const { dispatch } = this.props;
+        dispatch(showTeamEditModal());
+    }
+
     handleLoadMoreMembers = () => {
         const { dispatch, params: { teamId }, membersNextRequest } = this.props;
         dispatch(getMembers(teamId, membersNextRequest));
@@ -109,13 +115,14 @@ class Team extends CSSComponent {
     }
 
     render() {
-        const { params: { slug }, team } = this.props;
+        const { dispatch, params: { slug }, team } = this.props;
         const title = team ? team.name : null;
 
         let content;
         if (team) {
             content = (
                 <TeamDetail
+                    onEdit={this.handleEdit}
                     onLoadMoreMembers={this.handleLoadMoreMembers}
                     slug={slug}
                     {...this.props}
@@ -127,6 +134,7 @@ class Team extends CSSComponent {
         return (
             <Container title={title}>
                 {content}
+                <TeamEditForm dispatch={dispatch} team={team} />
             </Container>
         );
     }

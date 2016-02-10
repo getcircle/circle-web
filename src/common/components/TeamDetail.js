@@ -12,6 +12,7 @@ const TeamDetail = (props) => {
         coordinators,
         members,
         membersLoading,
+        onEdit,
         onLoadMoreMembers,
         slug,
         team,
@@ -35,7 +36,11 @@ const TeamDetail = (props) => {
     }
     return (
         <div>
-            <TeamDetailHeader coordinators={coordinators} team={team} />
+            <TeamDetailHeader
+                coordinators={coordinators}
+                onEdit={onEdit}
+                team={team}
+            />
             <TeamDetailTabs slug={slug} team={team} />
             <DetailContent>
                 {content}
@@ -48,6 +53,7 @@ TeamDetail.propTypes = {
     coordinators: PropTypes.array,
     members: PropTypes.array,
     membersLoading: PropTypes.bool,
+    onEdit: PropTypes.func,
     onLoadMoreMembers: PropTypes.func,
     slug: PropTypes.oneOf(Object.values(SLUGS)),
     team: PropTypes.instanceOf(services.team.containers.TeamV1).isRequired,
