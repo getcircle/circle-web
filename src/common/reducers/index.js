@@ -20,6 +20,7 @@ export { default as team} from './team';
 export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';
 export { default as updateProfile } from './profile';
+export { default as updateTeam } from './updateTeam';
 
 // external reducers
 export function form(state, action) {

@@ -144,3 +144,21 @@ export function updateTeam(team) {
         },
     };
 }
+
+/**
+ * Show the team edit modal
+ *
+ * @return {Object} plain object redux action
+ */
+export function showTeamEditModal() {
+    return {type: types.MODAL_TEAM_EDIT_SHOW};
+}
+
+/**
+ * Hide the team edit modal
+ *
+ * @return {Object} plain object redux action
+ */
+export function hideTeamEditModal() {
+    return {type: types.MODAL_TEAM_EDIT_HIDE};
+}
