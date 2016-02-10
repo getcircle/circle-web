@@ -12,7 +12,7 @@ const initialState = Immutable.fromJS({
 export default function createTeam(state = initialState, action) {
     switch(action.type) {
     case types.RESET_FORM:
-        if (action.form === forms.CREATE_FORM) {
+        if (action.form === forms.CREATE_TEAM) {
             return state.merge({
                 formSubmitting: false,
                 id: undefined,
