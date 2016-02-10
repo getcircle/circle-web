@@ -4,7 +4,6 @@ import * as types from '../constants/actionTypes';
 import * as forms from '../constants/forms';
 
 const initialState = Immutable.fromJS({
-    updateComplete: false,
     formSubmitting: false,
     id: undefined,
     modalVisible: false,
@@ -17,7 +16,6 @@ export default function updateTeam(state = initialState, action) {
             return state.merge({
                 formSubmitting: false,
                 id: undefined,
-                updateComplete: false,
             });
         }
 
@@ -29,7 +27,6 @@ export default function updateTeam(state = initialState, action) {
             id: action.payload.result,
             formSubmitting: false,
             modalVisible: false,
-            updateComplete: true,
         });
 
     case types.UPDATE_TEAM_FAILURE:
