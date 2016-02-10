@@ -1,6 +1,6 @@
 import expect from 'expect';
 import React from 'react';
-import { SelectField } from 'material-ui';
+import { DropDownMenu } from 'material-ui';
 import { shallow } from 'enzyme';
 
 import * as formBehaviors from './formBehaviors';
@@ -37,17 +37,17 @@ describe('FormSelectField', () => {
 
         context('when valid', () => {
             const { wrapper } = setup();
-            formBehaviors.itDoesNotShowError(wrapper.find(SelectField));
+            formBehaviors.itDoesNotShowError(wrapper.find(DropDownMenu));
         });
 
         context('when invalid but not touched', () => {
             const { wrapper } = setup({invalid: true, touched: false});
-            formBehaviors.itDoesNotShowError(wrapper.find(SelectField));
+            formBehaviors.itDoesNotShowError(wrapper.find(DropDownMenu));
         });
 
         context('when invalid and touched', () => {
             const { wrapper } = setup({invalid: true, touched: true});
-            formBehaviors.itShowsError(wrapper.find(SelectField));
+            formBehaviors.itShowsError(wrapper.find(DropDownMenu));
         });
 
     });
@@ -57,7 +57,7 @@ describe('FormSelectField', () => {
         it('is called when the select field changes', () => {
             const onChangeSpy = expect.createSpy();
             const { wrapper } = setup({onChange: onChangeSpy});
-            wrapper.find(SelectField).prop('onChange')();
+            wrapper.find(DropDownMenu).prop('onChange')();
             expect(onChangeSpy).toHaveBeenCalled();
         });
 

@@ -1,4 +1,4 @@
-import { MenuItem, SelectField } from 'material-ui';
+import { MenuItem, DropDownMenu } from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import FormFieldError from './FormFieldError';
@@ -40,7 +40,7 @@ const FormSelectField = (props, {muiTheme}) => {
 
     return (
         <div>
-            <SelectField
+            <DropDownMenu
                 children={items}
                 fullWidth={true}
                 iconStyle={{top: 8}}
