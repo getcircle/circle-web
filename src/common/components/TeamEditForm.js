@@ -82,7 +82,6 @@ export class TeamEditForm extends CSSComponent {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
-        formSubmitted: PropTypes.bool,
         formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
         resetForm: PropTypes.func.isRequired,
