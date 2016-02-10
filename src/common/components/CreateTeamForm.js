@@ -14,9 +14,9 @@ import FormLabel from './FormLabel';
 import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
 
-const teamSelector = selectors.createImmutableSelector(
+const createTeamSelector = selectors.createImmutableSelector(
     [
-        selectors.teamSelector,
+        selectors.createTeamSelector,
     ],
     (
         teamState,
@@ -101,5 +101,5 @@ export default reduxForm(
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
       validate: teamValidator,
     },
-    teamSelector
+    createTeamSelector
 )(CreateTeamForm);
