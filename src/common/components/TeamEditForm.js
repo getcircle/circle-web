@@ -41,7 +41,7 @@ const fieldNames = [
     'description',
 ];
 
-let contactTypes = [];
+const contactTypes = [];
 _.forIn(ContactMethodV1.TypeV1, (value, type) => {
     const label = _.capitalize(type.toLowerCase());
     contactTypes.push({label: t(label), value: value});
@@ -89,12 +89,6 @@ export class TeamEditForm extends CSSComponent {
         visible: PropTypes.bool.isRequired,
     };
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    };
-
     componentDidMount() {
         const { contacts } = this.props.fields;
         if (contacts.length === 0) {
@@ -112,7 +106,7 @@ export class TeamEditForm extends CSSComponent {
     setInitialValues() {
         const { dispatch, team } = this.props;
 
-        let contacts = team.contact_methods.map(c => {
+        const contacts = team.contact_methods.map(c => {
             return {type: c.type, value: c.value};
         });
         if (contacts.length === 0) {
@@ -120,7 +114,7 @@ export class TeamEditForm extends CSSComponent {
         }
 
         const action = initialize(EDIT_TEAM, {
-            contacts: contacts,
+            contacts,
             name: team.name,
             description: team.description && team.description.value,
         }, fieldNames);
@@ -128,26 +122,20 @@ export class TeamEditForm extends CSSComponent {
         dispatch(action);
     }
 
-    handleAddContact = () => {
-        this.props.fields.contacts.addField();
-    }
+    submit = ({contacts, name, description}, dispatch) => {
+        const team = {
+            ...this.props.team,
+            /*eslint-disable camelcase*/
+            contact_methods: contacts.map(c => new ContactMethodV1({
+                value: c.value,
+                type: c.type,
+            })),
+            description: {value: description},
+            /*eslint-enable camelcase*/
+            name,
+        };
 
-    buildUpdateHandler() {
-        return this.props.handleSubmit(({contacts, name, description}, dispatch) => {
-            let team = {
-                ...this.props.team,
-                /*eslint-disable camelcase*/
-                contact_methods: contacts.map(c => new ContactMethodV1({
-                    value: c.value,
-                    type: c.type,
-                })),
-                description: {value: description},
-                /*eslint-enable camelcase*/
-                name: name,
-            };
-
-            dispatch(updateTeam(team));
-        });
+        dispatch(updateTeam(team));
     }
 
     handleCancel() {
@@ -158,13 +146,14 @@ export class TeamEditForm extends CSSComponent {
         const {
             fields: { contacts, description, name },
             formSubmitting,
+            handleSubmit,
             visible,
         } = this.props;
 
         return (
             <FormDialog
                 onCancel={::this.handleCancel}
-                onSubmit={this.buildUpdateHandler()}
+                onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.EDIT_TEAM}
                 submitLabel={t('Update')}
                 submitting={formSubmitting}
