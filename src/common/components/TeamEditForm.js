@@ -122,7 +122,7 @@ export class TeamEditForm extends CSSComponent {
         const action = initialize(EDIT_TEAM, {
             contacts: contacts,
             name: team.name,
-            description: team.description.value,
+            description: team.description && team.description.value,
         }, fieldNames);
 
         dispatch(action);
@@ -141,11 +141,11 @@ export class TeamEditForm extends CSSComponent {
                     value: c.value,
                     type: c.type,
                 })),
+                description: {value: description},
                 /*eslint-enable camelcase*/
                 name: name,
             };
 
-            team.description.value = description;
             dispatch(updateTeam(team));
         });
     }
