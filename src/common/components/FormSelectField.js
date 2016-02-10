@@ -55,7 +55,7 @@ FormSelectField.propTypes = {
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     touched: PropTypes.bool,
-    value: PropTypes.string,
+    value: PropTypes.node,
 };
 
 export default FormSelectField;
