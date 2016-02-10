@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 import FormRecordList, { RecordWrapper } from '../../../src/common/components/FormRecordList';
 import FormTextField from '../../../src/common/components/FormTextField';
 
-const Record = ({}) => {
+const Record = ({record}) => {
     return (
         <div>
             <FormTextField

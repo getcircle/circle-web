@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import { fontColors } from '../constants/styles';
 import t from '../utils/gettext';
 
-const RecordWrapper = ({Component, index, onRemove, record}) => {
+const RecordWrapper = ({RecordComponent, index, onRemove, record}) => {
     const remove = () => onRemove(index);
     const styles = {
         remove: {
@@ -20,17 +20,13 @@ const RecordWrapper = ({Component, index, onRemove, record}) => {
 
     return (
         <div className="row" key={index} style={styles.row}>
-            <Component
-                index={index}
-                record={record}
-                style={styles.record}
-            />
+            <RecordComponent record={record} />
             <a onTouchTap={remove} style={styles.remove}>{t('x')}</a>
         </div>
     );
 };
 RecordWrapper.propTypes = {
-    Component: PropTypes.oneOfType([ PropTypes.func, PropTypes.string ]).isRequired,
+    RecordComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.string ]).isRequired,
     index: PropTypes.number.isRequired,
     onRemove: PropTypes.func.isRequired,
     record: PropTypes.object.isRequired,
@@ -53,7 +49,7 @@ export { RecordWrapper };
  *      );
  *  };
  *
- * @param {React component} component the component to render for each record
+ * @param {React component} ReactComponent the component to render for each record
  * @param {Array} records the redux-forms records array
  * @return {React component}
  */
@@ -85,7 +81,7 @@ const FormRecordList = ({component, records}) => {
         <div>
             {records.map((record, index) =>
                 <RecordWrapper
-                    Component={component}
+                    RecordComponent={component}
                     index={index}
                     key={index}
                     onRemove={handleRemove}
@@ -100,7 +96,7 @@ const FormRecordList = ({component, records}) => {
 };
 
 FormRecordList.propTypes = {
-    component: PropTypes.oneOfType([ PropTypes.func, PropTypes.string ]).isRequired,
+    component: PropTypes.func.isRequired,
     records: PropTypes.array.isRequired,
 };
 
