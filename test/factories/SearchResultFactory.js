@@ -4,7 +4,6 @@ import { services } from 'protobufs';
 import LocationFactory from './LocationFactory';
 import PostFactory from './PostFactory';
 import ProfileFactory from './ProfileFactory';
-import DeprecatedTeamFactory from './DeprecatedTeamFactory';
 
 export default {
 
@@ -26,22 +25,6 @@ export default {
         return new services.search.containers.SearchResultV1({
             highlight: highlight,
             profile: profile,
-            score: faker.random.number(),
-        });
-    },
-
-    getSearchResultWithTeam(highlightName) {
-        const team = DeprecatedTeamFactory.getTeam();
-        const highlight = {};
-        if (highlightName) {
-            /*eslint-disable camelcase*/
-            highlight['display_name'] = '<mark>' + team.display_name.substr(0, 2) + '</mark>' + team.display_name.substr(2);
-            /*eslint-enable camelcase*/
-        }
-
-        return new services.search.containers.SearchResultV1({
-            highlight: highlight,
-            team: team,
             score: faker.random.number(),
         });
     },

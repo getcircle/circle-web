@@ -9,8 +9,6 @@ import HeaderMenu from '../../../src/common/components/HeaderMenu';
 import ProfileAvatar from '../../../src/common/components/ProfileAvatar';
 
 import { getDefaultContext } from '../../componentWithContext';
-import AuthContextFactory from '../../factories/AuthContextFactory';
-import DeprecatedTeamFactory from '../../factories/TeamFactory';
 
 const MENU_SELECTOR = '.middle-xs';
 

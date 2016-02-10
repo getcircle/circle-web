@@ -35,7 +35,7 @@ describe('services middleware', function () {
             },
         };
         expect(servicesMiddleware(store)(next)).withArgs(action)
-            .to.throwException(/array of three action types/);
+            .to.throwException(/array of at least three action types/);
 
         action = {
             [SERVICE_REQUEST]: {
@@ -43,7 +43,7 @@ describe('services middleware', function () {
             },
         };
         expect(servicesMiddleware(store)(next)).withArgs(action)
-            .to.throwException(/array of three action types/);
+            .to.throwException(/array of at least three action types/);
 
         action = {
             [SERVICE_REQUEST]: {
@@ -88,6 +88,23 @@ describe('services middleware', function () {
         servicesMiddleware(store)(next)(action);
         expect(action[SERVICE_REQUEST].remote.calledOnce).to.not.be.ok();
         expect(next.calledOnce).to.not.be.ok();
+    });
+
+    it('supports firing a bailout action if one is specified', function () {
+        const action = {
+            [SERVICE_REQUEST]: {
+                types: ['request', 'success', 'error', 'bail'],
+                remote: sinon.spy(),
+                bailout: (state) => {
+                    return {id: '123'};
+                },
+            }
+        };
+        servicesMiddleware(store)(next)(action)
+        expect(next.callCount).to.be(1);
+        expect(next.getCall(0).args[0].type).to.be('bail');
+        expect(next.getCall(0).args[0].payload.id).to.be('123');
+        expect(action[SERVICE_REQUEST].remote.calledOnce).to.not.be.ok()
     });
 
     it('dispatches requestType and successType if the remote call succeeds', function (done) {

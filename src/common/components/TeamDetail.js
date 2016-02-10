@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { replaceTeamSlug } from '../utils/routes';
+
 import DetailContent from './DetailContent';
 import TeamDetailAbout from './TeamDetailAbout';
 import TeamDetailHeader from './TeamDetailHeader';
@@ -17,6 +19,10 @@ const TeamDetail = (props) => {
         slug,
         team,
     } = props;
+
+    function handleRequestChange(team, nextSlug) {
+        replaceTeamSlug(team, nextSlug);
+    }
 
     let content;
     switch (slug) {
@@ -41,7 +47,11 @@ const TeamDetail = (props) => {
                 onEdit={onEdit}
                 team={team}
             />
-            <TeamDetailTabs slug={slug} team={team} />
+            <TeamDetailTabs
+                onRequestChange={handleRequestChange}
+                slug={slug}
+                team={team}
+            />
             <DetailContent>
                 {content}
             </DetailContent>
