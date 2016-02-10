@@ -1,15 +1,18 @@
 import expect from 'expect';
 
-const RED_BORDER = '1px solid rgba(200, 0, 0, 0.8)';
+import { getCustomTheme } from '../../../src/common/styles/theme';
+
+const theme = getCustomTheme(global.navigator.userAgent);
+const redBorder = theme.luno.form.fieldError.border;
 
 export function itDoesNotShowError(wrapper) {
     it('is not highlighted in red', () => {
-        expect(wrapper.prop('style').border).toNotBe(RED_BORDER);
+        expect(wrapper.prop('style').border).toNotBe(redBorder);
     });
 }
 
 export function itShowsError(wrapper) {
     it('is highlighted in red', () => {
-        expect(wrapper.prop('style').border).toBe(RED_BORDER);
+        expect(wrapper.prop('style').border).toBe(redBorder);
     });
 }

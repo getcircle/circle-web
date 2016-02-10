@@ -19,7 +19,7 @@ export function getCustomTheme(userAgent) {
             primary1Color: tintColor,
             primary2Color: Colors.blue500,
             primary3Color: Colors.blue200,
-        }
+        },
     };
     const muiTheme = getMuiTheme(baseTheme, {userAgent});
 
@@ -51,6 +51,23 @@ export function getCustomTheme(userAgent) {
                 fontSize: '13px',
                 lineHeight: '20px',
                 color: Colors.lightBlack,
+            },
+        },
+        form: {
+            field: {
+                border: '1px solid rgba(0, 0, 0, 0.1)',
+                borderRadius: '3px',
+                boxSizing: 'border-box',
+                color: Colors.darkBlack,
+                display: 'flex',
+                fontSize: 14,
+                lineHeight: '14px',
+                outline: 'none',
+                padding: '10px',
+                width: '100%',
+            },
+            fieldError: {
+                border: `1px solid ${Colors.red700}`,
             },
         },
         header: {
@@ -90,7 +107,7 @@ export function getCustomTheme(userAgent) {
                 left: 0,
                 backgroundColor: Colors.minWhite,
             },
-        }
+        },
     };
     return muiTheme;
 }

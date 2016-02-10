@@ -6,6 +6,7 @@ import { shallow } from 'enzyme';
 import * as formBehaviors from './formBehaviors';
 
 import FormSelectField from '../../../src/common/components/FormSelectField';
+import { getDefaultContext } from '../../componentWithContext';
 
 function setup(overrides) {
     const defaults = {
@@ -20,8 +21,9 @@ function setup(overrides) {
         value: '',
     };
     const props = Object.assign({}, defaults, overrides);
+    const context = getDefaultContext();
 
-    const wrapper = shallow(<FormSelectField {...props} />);
+    const wrapper = shallow(<FormSelectField {...props} />, {context});
 
     return {
         props,

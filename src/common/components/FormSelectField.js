@@ -3,7 +3,17 @@ import React, { PropTypes } from 'react';
 
 import FormFieldError from './FormFieldError';
 
-const FormSelectField = ({choices, error, invalid, onChange, name, touched, ...other}) => {
+const FormSelectField = (props, {muiTheme}) => {
+    const {
+        choices,
+        error,
+        invalid,
+        onChange,
+        name,
+        touched,
+        ...other,
+    } = props;
+
     const showError = invalid && touched;
 
     const handleChange = (event, index, value) => {
@@ -20,12 +30,12 @@ const FormSelectField = ({choices, error, invalid, onChange, name, touched, ...o
         );
     });
 
-    let styles = {
-        border: '1px solid rgba(0, 0, 0, 0.1)',
+    const styles = {
+        ...muiTheme.luno.form.field,
         height: 36,
     };
     if (showError) {
-        styles.border = '1px solid rgba(200, 0, 0, 0.8)';
+        Object.assign(styles, muiTheme.luno.form.fieldError);
     }
 
     return (
@@ -56,6 +66,10 @@ FormSelectField.propTypes = {
     onChange: PropTypes.func.isRequired,
     touched: PropTypes.bool,
     value: PropTypes.node,
+};
+
+FormSelectField.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
 };
 
 export default FormSelectField;
