@@ -20,7 +20,10 @@ const FormSelectField = ({choices, error, invalid, onChange, name, touched, ...o
         );
     });
 
-    let styles = {};
+    let styles = {
+        border: '1px solid rgba(0, 0, 0, 0.1)',
+        height: 36,
+    };
     if (showError) {
         styles.border = '1px solid rgba(200, 0, 0, 0.8)';
     }
@@ -29,11 +32,15 @@ const FormSelectField = ({choices, error, invalid, onChange, name, touched, ...o
         <div>
             <SelectField
                 children={items}
+                fullWidth={true}
+                iconStyle={{top: 8}}
                 invalid={invalid}
+                labelStyle={{lineHeight: '44px'}}
                 name={name}
                 onChange={handleChange}
                 style={styles}
                 touched={touched}
+                underlineStyle={{borderBottom: 'none'}}
                 {...other}
             />
             <FormFieldError error={showError ? error : undefined} />

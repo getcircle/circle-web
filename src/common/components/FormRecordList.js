@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+import { fontColors } from '../constants/styles';
 import t from '../utils/gettext';
 
 const RecordWrapper = ({Component, index, onRemove, record}) => {
@@ -8,13 +9,17 @@ const RecordWrapper = ({Component, index, onRemove, record}) => {
         remove: {
             cursor: 'pointer',
             fontSize: 16,
-            marginLeft: 20,
-            marginTop: 20,
+            marginLeft: 10,
+            marginTop: 8,
+            ...fontColors.red,
+        },
+        row: {
+            marginTop: 10,
         },
     };
 
     return (
-        <div className="row" key={index}>
+        <div className="row" key={index} style={styles.row}>
             <Component
                 index={index}
                 record={record}
@@ -61,6 +66,21 @@ const FormRecordList = ({component, records}) => {
         records.removeField(index);
     };
 
+    const styles = {
+        addWrapper: {
+            display: 'block',
+            marginLeft: 5,
+            marginTop: 15,
+            textAlign: 'left',
+        },
+        add: {
+            cursor: 'pointer',
+            fontSize: 13,
+            padding: 5,
+            ...fontColors.medium,
+        },
+    };
+
     return (
         <div>
             {records.map((record, index) =>
@@ -72,7 +92,9 @@ const FormRecordList = ({component, records}) => {
                     record={record}
                 />
             )}
-            <a onTouchTap={handleAdd}>{t('Add another')}</a>
+            <div style={styles.addWrapper}>
+                <a onTouchTap={handleAdd} style={styles.add}>{t('Add another')}</a>
+            </div>
         </div>
     );
 };

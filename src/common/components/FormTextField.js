@@ -25,7 +25,7 @@ export default class FormTextField extends FormField {
                     boxSizing: 'border-box',
                     display: 'flex',
                     fontSize: 14,
-                    height: '50px',
+                    height: '36px',
                     lineHeight: '14px',
                     outline: 'none',
                     padding: '10px',
@@ -50,8 +50,8 @@ export default class FormTextField extends FormField {
                     style={this.styles().input}
                     type="text"
                     {...this.props}
-                 />
-                 <FormFieldError error={this.showError() ? error : undefined} />
+                />
+                <FormFieldError error={this.showError() ? error : undefined} />
             </div>
         );
     }
