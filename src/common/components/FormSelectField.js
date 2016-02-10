@@ -3,6 +3,9 @@ import React, { PropTypes } from 'react';
 
 import FormFieldError from './FormFieldError';
 
+const encodeValue = value => `val-${ JSON.stringify(value) }`;
+const decodeValue = value => JSON.parse(value.substr(4));
+
 const FormSelectField = (props, {muiTheme}) => {
     const {
         choices,
@@ -11,13 +14,14 @@ const FormSelectField = (props, {muiTheme}) => {
         onChange,
         name,
         touched,
+        value,
         ...other,
     } = props;
 
     const showError = invalid && touched;
 
     const handleChange = (event, index, value) => {
-        onChange(value);
+        onChange(decodeValue(value));
     };
 
     const items = choices.map(({label, value}, i) => {
@@ -25,7 +29,7 @@ const FormSelectField = (props, {muiTheme}) => {
             <MenuItem
                 key={`form-select-choice-${name}-${i}`}
                 primaryText={label}
-                value={value}
+                value={encodeValue(value)}
             />
         );
     });
@@ -51,6 +55,7 @@ const FormSelectField = (props, {muiTheme}) => {
                 style={styles}
                 touched={touched}
                 underlineStyle={{borderBottom: 'none'}}
+                value={encodeValue(value)}
                 {...other}
             />
             <FormFieldError error={showError ? error : undefined} />
