@@ -20,6 +20,8 @@ export default class FormPhotoField extends FormField {
     }
 
     classes() {
+        const { muiTheme } = this.context;
+
         return {
             default: {
                 dropzone: {
