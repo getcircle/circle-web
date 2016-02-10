@@ -4,7 +4,7 @@ import React from 'react';
 
 import { CreateTeamForm } from '../../../src/common/components/CreateTeamForm';
 import FormDialog from '../../../src/common/components/FormDialog';
-import { createTeam, hideModal } from '../../../src/common/actions/teams';
+import { createTeam, hideCreateTeamModal } from '../../../src/common/actions/teams';
 
 function setup(overrides) {
     const defaults = {
@@ -48,7 +48,7 @@ describe('CreateTeamForm', () => {
             const dispatchSpy = expect.createSpy();
             const { wrapper } = setup({dispatch: dispatchSpy});
             wrapper.find(FormDialog).prop('onCancel')();
-            expect(dispatchSpy).toHaveBeenCalledWith(hideModal());
+            expect(dispatchSpy).toHaveBeenCalledWith(hideCreateTeamModal());
         });
 
     });

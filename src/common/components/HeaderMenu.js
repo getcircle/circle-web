@@ -6,7 +6,7 @@ import { Menu, MenuItem, Popover } from 'material-ui';
 import { logout } from '../actions/authentication';
 import { PostStateURLString } from '../utils/post';
 import { routeToNewPost, routeToPosts, routeToProfile, routeToTeam } from '../utils/routes';
-import { showModal as showCreateTeamModal } from '../actions/teams';
+import { showCreateTeamModal } from '../actions/teams';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 

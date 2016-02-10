@@ -113,8 +113,8 @@ export function getCoordinators(teamId, nextRequest = null) {
  *
  * @return {Object} plain object redux action
  */
-export function showModal() {
-    return {type: types.MODAL_CREATE_TEAM_SHOW}
+export function showCreateTeamModal() {
+    return {type: types.MODAL_CREATE_TEAM_SHOW};
 }
 
 /**
@@ -122,8 +122,8 @@ export function showModal() {
  *
  * @return {Object} plain object redux action
  */
-export function hideModal() {
-    return {type: types.MODAL_CREATE_TEAM_HIDE}
+export function hideCreateTeamModal() {
+    return {type: types.MODAL_CREATE_TEAM_HIDE};
 }
 
 /**

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 
-import { createTeam, hideModal } from '../actions/teams';
+import { createTeam, hideCreateTeamModal } from '../actions/teams';
 import { CREATE_TEAM } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToTeam } from '../utils/routes';
@@ -59,7 +59,7 @@ export class CreateTeamForm extends Component {
     }
 
     handleCancel() {
-        this.props.dispatch(hideModal());
+        this.props.dispatch(hideCreateTeamModal());
     }
 
     render() {
