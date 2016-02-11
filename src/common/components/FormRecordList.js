@@ -55,7 +55,7 @@ export { RecordWrapper };
  *      );
  *  };
  *
- * @param {React component} ReactComponent the component to render for each record
+ * @param {React component} RecordComponent the component to render for each record
  * @param {Array} records the redux-forms records array
  * @return {React component}
  */
