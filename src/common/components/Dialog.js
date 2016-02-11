@@ -18,6 +18,7 @@ class Dialog extends CSSComponent {
         children: PropTypes.node,
         dialogDismissLabel: PropTypes.string,
         dialogSaveLabel: PropTypes.string,
+        modal: PropTypes.bool,
         onRequestClose: PropTypes.func,
         onSave: PropTypes.func,
         pageType: PropTypes.string.isRequired,
@@ -180,6 +181,7 @@ class Dialog extends CSSComponent {
         const {
             children,
             dialogDismissLabel,
+            modal,
             title,
             ...other,
         } = this.props;
@@ -187,6 +189,7 @@ class Dialog extends CSSComponent {
 
         return (
             <mui.Dialog
+                modal={modal}
                 open={this.state.open}
                 ref="modal"
                 {...dialogProps}

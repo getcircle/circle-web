@@ -152,6 +152,7 @@ export class TeamEditForm extends CSSComponent {
 
         return (
             <FormDialog
+                modal={true}
                 onCancel={::this.handleCancel}
                 onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.EDIT_TEAM}

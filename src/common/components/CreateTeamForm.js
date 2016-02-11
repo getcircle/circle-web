@@ -71,6 +71,7 @@ export class CreateTeamForm extends Component {
 
         return (
             <FormDialog
+                modal={true}
                 onCancel={this.handleCancel.bind(this)}
                 onSubmit={this.buildCreateHandler()}
                 pageType={PAGE_TYPE.CREATE_TEAM}
