@@ -46,7 +46,7 @@ const Icon = ({muiTheme}) => {
     );
 };
 
-const Details = ({coordinators, muiTheme, onEdit, team}) => {
+const Details = ({coordinators, muiTheme, team}) => {
     const styles = {
         container: {
             paddingTop: 20,
@@ -69,12 +69,11 @@ const Details = ({coordinators, muiTheme, onEdit, team}) => {
                     <span key="team-coordinators" style={muiTheme.luno.header.secondaryText}>{coordinatorDetails}</span>
                 </ReactCSSTransitionGroup>
             </div>
-            <a onTouchTap={onEdit}>{t('Edit')}</a>
         </section>
     );
 };
 
-const TeamDetailHeader = ({team, coordinators, onEdit}, {muiTheme}) => {
+const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
     const styles = {
         container: {
             paddingTop: 35,
@@ -93,7 +92,6 @@ const TeamDetailHeader = ({team, coordinators, onEdit}, {muiTheme}) => {
                     <Details
                         coordinators={coordinators}
                         muiTheme={muiTheme}
-                        onEdit={onEdit}
                         team={team}
                     />
                 </div>
