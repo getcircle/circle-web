@@ -52,10 +52,8 @@ export class CreateTeamForm extends Component {
         }
     }
 
-    buildCreateHandler() {
-        return this.props.handleSubmit(({name, description}, dispatch) => {
-            dispatch(createTeam(name, description));
-        });
+    submit = ({name, description}, dispatch) => {
+        dispatch(createTeam(name, description));
     }
 
     handleCancel() {
@@ -66,6 +64,7 @@ export class CreateTeamForm extends Component {
         const {
             fields: { name, description },
             formSubmitting,
+            handleSubmit,
             visible,
         } = this.props;
 
@@ -73,7 +72,7 @@ export class CreateTeamForm extends Component {
             <FormDialog
                 modal={true}
                 onCancel={this.handleCancel.bind(this)}
-                onSubmit={this.buildCreateHandler()}
+                onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.CREATE_TEAM}
                 submitLabel={t('Save')}
                 submitting={formSubmitting}
