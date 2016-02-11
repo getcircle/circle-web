@@ -3,6 +3,8 @@ import React, { PropTypes } from 'react';
 
 import FormFieldError from './FormFieldError';
 
+// Workaround for the DropDownMenu component in material-ui appears to not
+// handling a value of 0 (and perhaps other falsey values)
 const encodeValue = value => `val-${ JSON.stringify(value) }`;
 const decodeValue = value => JSON.parse(value.substr(4));
 
