@@ -20,7 +20,7 @@ import FormTextField from './FormTextField';
 
 const { ContactMethodV1 } = services.team.containers;
 
-const createTeamSelector = selectors.createImmutableSelector(
+const selector = selectors.createImmutableSelector(
     [
         selectors.updateTeamSelector,
     ],
@@ -188,5 +188,5 @@ export default reduxForm(
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
       validate: teamValidator,
     },
-    createTeamSelector
+    selector
 )(TeamEditForm);
