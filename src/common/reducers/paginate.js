@@ -116,7 +116,7 @@ export default function paginate({
                         }
                     })
                     .set('currentPage', paginator ? paginator.previous_page : 1)
-                    .set('pageSize', paginator ? paginator.page_size : state.pageSize);
+                    .set('pageSize', paginator ? paginator.page_size : state.get('pageSize'));
             });
         case failureType:
             return state.set('loading', false);
