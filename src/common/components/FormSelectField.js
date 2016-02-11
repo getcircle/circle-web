@@ -68,15 +68,11 @@ const FormSelectField = (props, {muiTheme}) => {
         <div>
             <DropDownMenu
                 children={items}
-                fullWidth={true}
                 iconStyle={{top: 8}}
-                invalid={invalid}
                 labelStyle={styles.label}
                 menuStyle={styles.menu}
-                name={name}
                 onChange={handleChange}
                 style={styles.main}
-                touched={touched}
                 underlineStyle={styles.underline}
                 value={encodeValue(value)}
                 {...other}
