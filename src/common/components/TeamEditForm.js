@@ -107,7 +107,7 @@ export class TeamEditForm extends CSSComponent {
         const { dispatch, team } = this.props;
 
         const contacts = team.contact_methods.map(c => {
-            return {type: c.type, value: c.value};
+            return {type: c.type || ContactMethodV1.TypeV1.EMAIL, value: c.value};
         });
         if (contacts.length === 0) {
             contacts.push({type: ContactMethodV1.TypeV1.EMAIL, value: ''});
@@ -173,6 +173,7 @@ export class TeamEditForm extends CSSComponent {
                 <FormLabel text={t('Contact')} />
                 <FormRecordList
                     component={ContactRecord}
+                    defaultRecord={{type: ContactMethodV1.TypeV1.EMAIL, value: ''}}
                     records={contacts}
                 />
             </FormDialog>

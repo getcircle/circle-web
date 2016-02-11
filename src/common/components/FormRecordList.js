@@ -59,9 +59,9 @@ export { RecordWrapper };
  * @param {Array} records the redux-forms records array
  * @return {React component}
  */
-const FormRecordList = ({component, records}) => {
+const FormRecordList = ({component, defaultRecord, records}) => {
     const handleAdd = () => {
-        records.addField();
+        records.addField(defaultRecord || {});
     };
 
     const handleRemove = (index) => {
@@ -103,6 +103,7 @@ const FormRecordList = ({component, records}) => {
 
 FormRecordList.propTypes = {
     component: PropTypes.func.isRequired,
+    defaultRecord: PropTypes.object,
     records: PropTypes.array.isRequired,
 };
 
