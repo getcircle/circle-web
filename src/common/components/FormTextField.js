@@ -5,7 +5,7 @@ import FormFieldError from './FormFieldError';
 const FormTextField = ({error, invalid, touched, ...other}, {muiTheme}) => {
     const styles = {
         ...muiTheme.luno.form.field,
-        height: 36,
+        height: 40,
     };
     const showError = invalid && touched;
     if (showError) {
