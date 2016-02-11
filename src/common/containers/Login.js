@@ -3,6 +3,7 @@ import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 import { browserHistory } from 'react-router';
+import { provideHooks } from 'redial';
 
 import { authenticate, getAuthenticationInstructions, requestAccess, } from '../actions/authentication';
 import { AUTH_BACKENDS } from '../services/user';
@@ -46,20 +47,20 @@ function isAccessRequest(location) {
     return false;
 }
 
+const hooks = {
+    fetch: ({ getState, dispatch, location, params, url }) => {
+        const props = selector(getState());
+        return fetchAuthenticationInstructions(dispatch, location, url, props);
+    },
+};
+
 function fetchAuthenticationInstructions(dispatch, location, url, props) {
     if ((props.backend === undefined || props.backend === null) && !isAccessRequest(location)) {
         return dispatch(getAuthenticationInstructions(null, url));
     }
 }
 
-function fetchData(getState, dispatch, location, params, url) {
-    const props = selector(getState());
-    return Promise.all([
-        fetchAuthenticationInstructions(dispatch, location, url, props),
-    ]);
-}
-
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class Login extends CSSComponent {
 
