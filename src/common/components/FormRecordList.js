@@ -32,7 +32,7 @@ const RecordWrapper = (props) => {
     );
 };
 RecordWrapper.propTypes = {
-    RecordComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.string ]).isRequired,
+    RecordComponent: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,
     onRemove: PropTypes.func.isRequired,
     record: PropTypes.object.isRequired,
