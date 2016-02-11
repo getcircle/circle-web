@@ -57,7 +57,7 @@ describe('FormSelectField', () => {
         it('is called when the select field changes', () => {
             const onChangeSpy = expect.createSpy();
             const { wrapper } = setup({onChange: onChangeSpy});
-            wrapper.find(DropDownMenu).prop('onChange')();
+            wrapper.find(DropDownMenu).prop('onChange')(null, null, 'val-0');
             expect(onChangeSpy).toHaveBeenCalled();
         });
 

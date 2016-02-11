@@ -4,6 +4,7 @@ import { shallow } from 'enzyme';
 
 import FormRecordList, { RecordWrapper } from '../../../src/common/components/FormRecordList';
 import FormTextField from '../../../src/common/components/FormTextField';
+import { getDefaultContext } from '../../componentWithContext';
 
 const Record = ({record}) => {
     return (
@@ -28,8 +29,9 @@ function setup(overrides) {
         records: records,
     };
     const props = Object.assign({}, defaults, overrides);
+    const context = getDefaultContext();
 
-    const wrapper = shallow(<FormRecordList {...props} />);
+    const wrapper = shallow(<FormRecordList {...props} />, {context});
 
     return {
         props,

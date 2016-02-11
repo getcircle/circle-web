@@ -55,8 +55,8 @@ export function getCustomTheme(userAgent) {
         },
         form: {
             field: {
-                border: '1px solid rgba(0, 0, 0, 0.1)',
-                borderRadius: '3px',
+                border: `1px solid ${Colors.minBlack}`,
+                borderRadius: '2px',
                 boxSizing: 'border-box',
                 color: Colors.darkBlack,
                 display: 'flex',

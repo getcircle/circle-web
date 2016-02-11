@@ -3,7 +3,13 @@ import React, { PropTypes } from 'react';
 import { fontColors } from '../constants/styles';
 import t from '../utils/gettext';
 
-const RecordWrapper = ({RecordComponent, index, onRemove, record}) => {
+const RecordWrapper = (props) => {
+    const {
+        RecordComponent,
+        index,
+        onRemove,
+        record,
+    } = props;
     const remove = () => onRemove(index);
     const styles = {
         remove: {
@@ -14,7 +20,7 @@ const RecordWrapper = ({RecordComponent, index, onRemove, record}) => {
             ...fontColors.red,
         },
         row: {
-            marginTop: 10,
+            marginBottom: 15,
         },
     };
 
@@ -71,9 +77,9 @@ const FormRecordList = ({component, records}) => {
         },
         add: {
             cursor: 'pointer',
-            fontSize: 13,
+            fontSize: 12,
             padding: 5,
-            ...fontColors.medium,
+            ...fontColors.light,
         },
     };
 

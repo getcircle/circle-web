@@ -18,29 +18,49 @@ const FormSelectField = (props, {muiTheme}) => {
         ...other,
     } = props;
 
-    const showError = invalid && touched;
-
     const handleChange = (event, index, value) => {
         onChange(decodeValue(value));
     };
 
+    const styles = {
+        item: {
+            margin: 0,
+            paddingLeft: 12,
+        },
+        label: {
+            lineHeight: 0,
+            paddingLeft: 12,
+            paddingTop: 20,
+        },
+        main: {
+            ...muiTheme.luno.form.field,
+            height: 40,
+            padding: 0,
+            textAlign: 'left',
+        },
+        menu: {
+            width: 128,
+        },
+        underline: {
+            borderBottom: 'none',
+            borderTop: 'none',
+        },
+    };
+    const showError = invalid && touched;
+    if (showError) {
+        Object.assign(styles.main, muiTheme.luno.form.fieldError);
+    }
+
     const items = choices.map(({label, value}, i) => {
         return (
             <MenuItem
+                innerDivStyle={styles.item}
                 key={`form-select-choice-${name}-${i}`}
                 primaryText={label}
                 value={encodeValue(value)}
             />
         );
     });
-
-    const styles = {
-        ...muiTheme.luno.form.field,
-        height: 36,
-    };
-    if (showError) {
-        Object.assign(styles, muiTheme.luno.form.fieldError);
-    }
 
     return (
         <div>
@@ -49,12 +69,13 @@ const FormSelectField = (props, {muiTheme}) => {
                 fullWidth={true}
                 iconStyle={{top: 8}}
                 invalid={invalid}
-                labelStyle={{lineHeight: '44px'}}
+                labelStyle={styles.label}
+                menuStyle={styles.menu}
                 name={name}
                 onChange={handleChange}
-                style={styles}
+                style={styles.main}
                 touched={touched}
-                underlineStyle={{borderBottom: 'none'}}
+                underlineStyle={styles.underline}
                 value={encodeValue(value)}
                 {...other}
             />

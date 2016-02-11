@@ -51,12 +51,12 @@ const ContactRecord = ({record}) => {
     const styles = {
         type: {
             float: 'left',
-            marginRight: 20,
-            width: 150,
+            marginRight: 15,
+            width: 128,
         },
         value: {
             float: 'left',
-            width: 250,
+            width: 392,
         },
     };
 
@@ -165,7 +165,7 @@ export class TeamEditForm extends CSSComponent {
                     placeholder={t('Marketing, IT, etc.')}
                     {...name}
                  />
-                <FormLabel text={t('Description')} />
+                <FormLabel optional={true} text={t('Description')} />
                 <FormTextArea
                     placeholder={t('What are the responsibilities or the purpose of this team?')}
                     {...description}
