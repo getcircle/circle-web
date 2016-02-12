@@ -5,6 +5,7 @@ import { shallow } from 'enzyme';
 import * as formBehaviors from './formBehaviors';
 
 import FormTextField from '../../../src/common/components/FormTextField';
+import { getDefaultContext } from '../../componentWithContext';
 
 function setup(overrides) {
     const defaults = {
@@ -15,8 +16,9 @@ function setup(overrides) {
         value: '',
     };
     const props = Object.assign({}, defaults, overrides);
+    const context = getDefaultContext();
 
-    const wrapper = shallow(<FormTextField {...props} />);
+    const wrapper = shallow(<FormTextField {...props} />, {context});
 
     return {
         props,

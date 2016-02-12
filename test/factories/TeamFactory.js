@@ -3,15 +3,32 @@ import { services } from 'protobufs';
 
 import ProfileFactory from './ProfileFactory';
 
+const allPermissions = new services.common.containers.PermissionsV1({
+    /*eslint-disable camelcase*/
+    can_edit: true,
+    can_delete: true,
+    can_add: true,
+    /*eslint-enable camelcase*/
+});
+
+const noPermissions = new services.common.containers.PermissionsV1({
+    /*eslint-disable camelcase*/
+    can_edit: false,
+    can_delete: false,
+    can_add: false,
+    /*eslint-enable camelcase*/
+});
+
 export default {
 
-    getTeam() {
+    getTeam(overrides = {}) {
         return new services.team.containers.TeamV1({
             id: faker.random.uuid(),
             name: faker.hacker.noun(),
             description: {
                 value: faker.lorem.paragraph(),
             },
+            permissions: overrides.noPermissions ? noPermissions : allPermissions,
         });
     },
 

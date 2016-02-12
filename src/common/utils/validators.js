@@ -9,6 +9,13 @@ function required(value) {
   }
 }
 
+function arrayOf(validations) {
+    const validator = createValidator(validations);
+    return values => {
+        return values && values.map(validator);
+    };
+}
+
 function createValidator(rules) {
   return (data = {}) => {
     const errors = {};
@@ -31,4 +38,5 @@ export const profileValidator = createValidator({
 
 export const teamValidator = createValidator({
     name: [required],
+    contacts: arrayOf({type: [required], value: [required]}),
 });

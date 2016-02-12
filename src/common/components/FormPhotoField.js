@@ -1,7 +1,6 @@
 import Dropzone from 'react-dropzone';
 import React, { PropTypes } from 'react';
 
-import { fontColors } from '../constants/styles';
 import t from '../utils/gettext';
 
 import EditProfileCameraIcon from './EditProfileCameraIcon';
@@ -16,23 +15,23 @@ export default class FormPhotoField extends FormField {
         value: PropTypes.object.isRequired,
     }
 
+    static contextTypes = {
+        muiTheme: PropTypes.object.isRequired,
+    }
+
     classes() {
+        const { muiTheme } = this.context;
+
         return {
             default: {
                 dropzone: {
+                    ...muiTheme.luno.form.field,
                     alignItems: 'center',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
                     borderRadius: '4px',
                     boxShadow: 'none',
-                    boxSizing: 'border-box',
-                    display: 'flex',
-                    fontSize: 14,
                     height: '50px',
                     justifyContent: 'flex-start',
                     padding: 0,
-                    outline: 'none',
-                    width: '100%',
-                    ...fontColors.dark,
                 },
                 dropzoneActive: {
                     backgroundColor: 'rgba(0, 0, 0, 0.1)',
@@ -74,7 +73,7 @@ export default class FormPhotoField extends FormField {
             },
             'showError': {
                 dropzone: {
-                    border: '1px solid rgba(200, 0, 0, 0.8)',
+                    ...muiTheme.luno.form.fieldError,
                 },
             },
         };
@@ -126,7 +125,7 @@ export default class FormPhotoField extends FormField {
                         </div>
                     </Dropzone>
                 </div>
-                 <FormFieldError error={this.showError() ? error : undefined} />
+                <FormFieldError error={this.showError() ? error : undefined} />
             </div>
         );
     }

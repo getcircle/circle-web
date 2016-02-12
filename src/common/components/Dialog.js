@@ -18,6 +18,7 @@ class Dialog extends CSSComponent {
         children: PropTypes.node,
         dialogDismissLabel: PropTypes.string,
         dialogSaveLabel: PropTypes.string,
+        modal: PropTypes.bool,
         onRequestClose: PropTypes.func,
         onSave: PropTypes.func,
         pageType: PropTypes.string.isRequired,
@@ -26,6 +27,7 @@ class Dialog extends CSSComponent {
 
     static contextTypes = {
         device: InternalPropTypes.DeviceContext.isRequired,
+        muiTheme: PropTypes.object.isRequired,
     }
 
     static defaultProps = {
@@ -48,12 +50,14 @@ class Dialog extends CSSComponent {
     }
 
     classes() {
+        const { muiTheme } = this.context;
+
         return {
             default: {
                 Dialog: {
                     contentStyle: {
-                        maxWidth: 480,
-                        width: 480,
+                        maxWidth: 640,
+                        width: 640,
                     },
                     bodyStyle: {
                         padding: 0,
@@ -67,10 +71,10 @@ class Dialog extends CSSComponent {
                         minWidth: 15,
                     },
                     labelStyle: {
-                        fontSize: '14px',
+                        color: muiTheme.luno.tintColor,
+                        fontSize: 11,
                         padding: '0 15px',
-                        textTransform: 'none',
-                        ...fontColors.dark,
+                        textTransform: 'uppercase',
                     },
                 },
                 DialogHeader: {
@@ -78,19 +82,23 @@ class Dialog extends CSSComponent {
                         display: 'flex',
                         justifyContent: 'space-between',
                         borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        paddingBottom: 10,
                     },
                 },
                 DialogSave: {
                 },
                 DialogSaveButton: {
                     style: {
+                        backgroundColor: muiTheme.luno.tintColor,
+                        borderRadius: 100,
+                        marginRight: 10,
                         minWidth: 15,
                     },
                     labelStyle: {
-                        fontSize: '14px',
+                        fontSize: 11,
                         padding: '0 15px',
-                        textTransform: 'none',
-                        ...fontColors.dark,
+                        textTransform: 'uppercase',
+                        ...fontColors.white,
                     },
                 },
                 DialogTitle: {
@@ -98,11 +106,9 @@ class Dialog extends CSSComponent {
                     style: {
                         alignSelf: 'center',
                         display: 'flex',
-                        fontSize: '12px',
+                        fontSize: '18px',
                         letterSpacing: '1px',
-                        textTransform: 'uppercase',
-                        ...fontColors.light,
-                        ...fontWeights.semiBold,
+                        ...fontColors.dark,
                     },
                 },
                 placeholder: {
@@ -175,6 +181,7 @@ class Dialog extends CSSComponent {
         const {
             children,
             dialogDismissLabel,
+            modal,
             title,
             ...other,
         } = this.props;
@@ -182,6 +189,7 @@ class Dialog extends CSSComponent {
 
         return (
             <mui.Dialog
+                modal={modal}
                 open={this.state.open}
                 ref="modal"
                 {...dialogProps}

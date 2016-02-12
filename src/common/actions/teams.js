@@ -126,8 +126,8 @@ export function getCoordinators(teamId, nextRequest = null) {
  *
  * @return {Object} plain object redux action
  */
-export function showModal() {
-    return {type: types.MODAL_CREATE_TEAM_SHOW}
+export function showCreateTeamModal() {
+    return {type: types.MODAL_CREATE_TEAM_SHOW};
 }
 
 /**
@@ -135,8 +135,8 @@ export function showModal() {
  *
  * @return {Object} plain object redux action
  */
-export function hideModal() {
-    return {type: types.MODAL_CREATE_TEAM_HIDE}
+export function hideCreateTeamModal() {
+    return {type: types.MODAL_CREATE_TEAM_HIDE};
 }
 
 /**
@@ -156,6 +156,24 @@ export function updateTeam(team) {
             remote: (client) => requests.updateTeam(client, team),
         },
     };
+}
+
+/**
+ * Show the team edit modal
+ *
+ * @return {Object} plain object redux action
+ */
+export function showTeamEditModal() {
+    return {type: types.MODAL_TEAM_EDIT_SHOW};
+}
+
+/**
+ * Hide the team edit modal
+ *
+ * @return {Object} plain object redux action
+ */
+export function hideTeamEditModal() {
+    return {type: types.MODAL_TEAM_EDIT_HIDE};
 }
 
 export function updateTeamSlug(team, previousSlug, nextSlug) {

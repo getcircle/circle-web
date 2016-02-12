@@ -49,7 +49,7 @@ export default class Form extends CSSComponent {
         return {
             default: {
                 form: {
-                    padding: '0 16px 16px 16px',
+                    padding: '10px 40px 40px 40px',
                 },
             },
         };

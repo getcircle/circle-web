@@ -6,6 +6,7 @@ import { shallow } from 'enzyme';
 import * as formBehaviors from './formBehaviors';
 
 import FormPhotoField from '../../../src/common/components/FormPhotoField';
+import { getDefaultContext } from '../../componentWithContext';
 
 function setup(overrides) {
     const defaults = {
@@ -16,8 +17,9 @@ function setup(overrides) {
         value: {},
     };
     const props = Object.assign({}, defaults, overrides);
+    const context = getDefaultContext();
 
-    const wrapper = shallow(<FormPhotoField {...props} />);
+    const wrapper = shallow(<FormPhotoField {...props} />, {context});
 
     return {
         props,

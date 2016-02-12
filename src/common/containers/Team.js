@@ -14,6 +14,7 @@ import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import TeamDetail from '../components/TeamDetail';
+import TeamEditForm from '../components/TeamEditForm';
 
 const selector = createSelector(
     [
@@ -128,6 +129,7 @@ class Team extends CSSComponent {
         return (
             <Container title={title}>
                 {content}
+                <TeamEditForm team={team} />
             </Container>
         );
     }

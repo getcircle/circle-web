@@ -10,6 +10,7 @@ export default class FormDialog extends CSSComponent {
     static propTypes = {
         children: PropTypes.node,
         error: PropTypes.string,
+        modal: PropTypes.bool,
         onCancel: PropTypes.func.isRequired,
         onSubmit: PropTypes.func.isRequired,
         pageType: PropTypes.string.isRequired,
@@ -17,8 +18,8 @@ export default class FormDialog extends CSSComponent {
         submitLabel: PropTypes.string.isRequired,
         submitting: PropTypes.bool,
         title: PropTypes.string,
-        warning: PropTypes.string,
         visible: PropTypes.bool.isRequired,
+        warning: PropTypes.string,
     };
 
     componentWillReceiveProps(nextProps) {
@@ -61,6 +62,7 @@ export default class FormDialog extends CSSComponent {
     render() {
         const {
             error,
+            modal,
             onCancel,
             onSubmit,
             pageType,
@@ -75,6 +77,7 @@ export default class FormDialog extends CSSComponent {
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={submitLabel}
                     error={error}
+                    modal={modal}
                     onRequestClose={onCancel}
                     onSave={onSubmit}
                     pageType={pageType}

@@ -1,58 +1,43 @@
 import React, { PropTypes } from 'react';
 
-import { fontColors } from '../constants/styles';
-
-import FormField from  './FormField';
 import FormFieldError from './FormFieldError';
 
-export default class FormTextField extends FormField {
-
-    static propTypes = {
-        name: PropTypes.string,
-        onBlur: PropTypes.func,
-        onChange: PropTypes.func.isRequired,
-        onFocus: PropTypes.func,
-        placeholder: PropTypes.string,
-        value: PropTypes.string,
+const FormTextField = ({error, invalid, touched, ...other}, {muiTheme}) => {
+    const styles = {
+        ...muiTheme.luno.form.field,
+        height: 40,
+    };
+    const showError = invalid && touched;
+    if (showError) {
+        Object.assign(styles, muiTheme.luno.form.fieldError);
     }
+    return (
+        <div>
+            <input
+                invalid={invalid}
+                style={styles}
+                touched={touched}
+                type="text"
+                {...other}
+            />
+            <FormFieldError error={showError ? error : undefined} />
+        </div>
+    );
+};
 
-    classes() {
-        return {
-            default: {
-                input: {
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '3px',
-                    boxSizing: 'border-box',
-                    display: 'flex',
-                    fontSize: 14,
-                    height: '50px',
-                    lineHeight: '14px',
-                    outline: 'none',
-                    padding: '10px',
-                    width: '100%',
-                    ...fontColors.dark,
-                },
-            },
-            'showError': {
-                input: {
-                    border: '1px solid rgba(200, 0, 0, 0.8)',
-                },
-            },
-        };
-    }
+FormTextField.propTypes = {
+    invalid: PropTypes.bool,
+    name: PropTypes.string,
+    onBlur: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
+    onFocus: PropTypes.func,
+    placeholder: PropTypes.string,
+    touched: PropTypes.bool,
+    value: PropTypes.string,
+};
 
-    render() {
-        const { error } = this.props;
+FormTextField.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
 
-        return (
-            <div>
-                <input
-                    style={this.styles().input}
-                    type="text"
-                    {...this.props}
-                 />
-                 <FormFieldError error={this.showError() ? error : undefined} />
-            </div>
-        );
-    }
-}
+export default FormTextField;

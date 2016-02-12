@@ -16,4 +16,6 @@ export default {
     blue700: '#7A8EFF',
     blue500: '#5C6BBF',
     blue200: '#D7DDFF',
-}
+
+    red700: '#C20000',
+};

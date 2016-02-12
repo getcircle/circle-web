@@ -6,7 +6,7 @@ import { FADE } from '../constants/animations';
 import t from '../utils/gettext';
 
 import DetailHeader from './DetailHeader';
-import GroupIcon from './GroupIcon'
+import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 
 function getCoordinatorNames(coordinators) {

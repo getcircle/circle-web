@@ -123,6 +123,17 @@ export default function cache(state = initialState, action) {
                         if (oldEntity) {
                             newEntity = mergeEntities(newEntity, oldEntity);
                         }
+
+                        // Remove any old normalizations
+                        if (
+                            action.payload.normalizations &&
+                            (
+                                !action.payload.normalizations[entitiesType] ||
+                                !action.payload.normalizations[entitiesType][entityId]
+                            )
+                        ) {
+                            map.deleteIn(['normalizations', entitiesType, entityId]);
+                        }
                     }
                 }
             }

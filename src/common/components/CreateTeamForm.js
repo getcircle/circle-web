@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 
-import { createTeam, hideModal } from '../actions/teams';
+import { createTeam, hideCreateTeamModal } from '../actions/teams';
 import { CREATE_TEAM } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToTeam } from '../utils/routes';
@@ -14,9 +14,9 @@ import FormLabel from './FormLabel';
 import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
 
-const teamSelector = selectors.createImmutableSelector(
+const selector = selectors.createImmutableSelector(
     [
-        selectors.teamSelector,
+        selectors.createTeamSelector,
     ],
     (
         teamState,
@@ -52,27 +52,27 @@ export class CreateTeamForm extends Component {
         }
     }
 
-    buildCreateHandler() {
-        return this.props.handleSubmit(({name, description}, dispatch) => {
-            dispatch(createTeam(name, description));
-        });
+    submit = ({name, description}, dispatch) => {
+        dispatch(createTeam(name, description));
     }
 
     handleCancel() {
-        this.props.dispatch(hideModal());
+        this.props.dispatch(hideCreateTeamModal());
     }
 
     render() {
         const {
             fields: { name, description },
             formSubmitting,
+            handleSubmit,
             visible,
         } = this.props;
 
         return (
             <FormDialog
+                modal={true}
                 onCancel={this.handleCancel.bind(this)}
-                onSubmit={this.buildCreateHandler()}
+                onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.CREATE_TEAM}
                 submitLabel={t('Save')}
                 submitting={formSubmitting}
@@ -101,5 +101,5 @@ export default reduxForm(
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
       validate: teamValidator,
     },
-    teamSelector
+    selector
 )(CreateTeamForm);

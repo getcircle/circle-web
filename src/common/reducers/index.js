@@ -4,6 +4,7 @@ import Immutable from 'immutable';
 export { default as authentication } from './authentication';
 export { default as autocomplete } from './autocomplete';
 export { default as cache } from './cache';
+export { default as createTeam} from './createTeam';
 export { default as explore } from './explore';
 export { default as extendedProfiles } from './extendedProfiles';
 export { default as extendedTeams } from './extendedTeams';
@@ -16,10 +17,10 @@ export { default as posts } from './posts';
 export { default as profiles } from './profiles';
 export { default as responsive } from './responsive';
 export { default as search } from './search';
-export { default as team} from './team';
 export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';
 export { default as updateProfile } from './profile';
+export { default as updateTeam } from './updateTeam';
 
 // external reducers
 export function form(state, action) {

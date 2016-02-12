@@ -58,6 +58,7 @@ export const explorePostsSelector = exploreSelectorFactory(EXPLORE_TYPES.POSTS);
 export const explorePostsLoadingSelector = exploreTypeLoadingSelectorFactory(explorePostsSelector);
 export const explorePostsIdsSelector = exploreTypeIdsSelectorFactory(explorePostsSelector);
 
+export const createTeamSelector = state => state.get('createTeam');
 export const extendedProfilesSelector = state => state.get('extendedProfiles');
 export const extendedTeamsSelector = state => state.get('extendedTeams');
 export const filesSelector = state => state.get('files');
@@ -70,7 +71,7 @@ export const profilesSelector = state => state.get('profiles');
 export const responsiveSelector = state => state.get('responsive');
 export const routerParametersSelector = (_, props) => props.params;
 export const searchSelector = state => state.get('search');
-export const teamSelector = state => state.get('team');
 export const teamCoordinatorsSelector = state => state.get('teamCoordinators');
 export const teamMembersSelector = state => state.get('teamMembers');
 export const updateProfileSelector = state => state.get('updateProfile');
+export const updateTeamSelector = state => state.get('updateTeam');
