@@ -33,7 +33,7 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
         const onEdit = () => dispatch(showTeamEditModal());
         editIcon = (
             <EditIcon
-                onClick={onEdit}
+                onTouchTap={onEdit}
                 stroke={muiTheme.luno.tintColor}
                 style={styles.edit}
             />
