@@ -85,6 +85,19 @@ export function getAuthenticationInstructions(email, url) {
     };
 }
 
+export function getSlackAuthenticationInstructions(url) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_SLACK_AUTHENTICATION_INSTRUCTIONS,
+                types.GET_SLACK_AUTHENTICATION_INSTRUCTIONS_SUCCESS,
+                types.GET_SLACK_AUTHENTICATION_INSTRUCTIONS_FAILURE,
+            ],
+            remote: (client) => userService.getSlackAuthenticationInstructions(client, url),
+        },
+    };
+}
+
 export function requestAccess(domain, userInfo) {
     return {
         [SERVICE_REQUEST]: {
