@@ -69,6 +69,9 @@ export function getCustomTheme(userAgent) {
             fieldError: {
                 border: `1px solid ${Colors.red700}`,
             },
+            removeCross: {
+                color: '#F46F6F',
+            },
         },
         header: {
             primaryText: {

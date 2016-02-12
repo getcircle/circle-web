@@ -56,7 +56,7 @@ const ContactRecord = ({record}) => {
         },
         value: {
             float: 'left',
-            width: 392,
+            width: 384,
         },
     };
 

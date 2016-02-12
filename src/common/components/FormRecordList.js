@@ -3,7 +3,9 @@ import React, { PropTypes } from 'react';
 import { fontColors } from '../constants/styles';
 import t from '../utils/gettext';
 
-const RecordWrapper = (props) => {
+import CrossIcon from './CrossIcon';
+
+const RecordWrapper = (props, {muiTheme}) => {
     const {
         RecordComponent,
         index,
@@ -14,10 +16,9 @@ const RecordWrapper = (props) => {
     const styles = {
         remove: {
             cursor: 'pointer',
-            fontSize: 16,
+            display: 'inline-block',
             marginLeft: 10,
             marginTop: 8,
-            ...fontColors.red,
         },
         row: {
             marginBottom: 15,
@@ -27,16 +28,28 @@ const RecordWrapper = (props) => {
     return (
         <div className="row" key={index} style={styles.row}>
             <RecordComponent record={record} />
-            <a onTouchTap={remove} style={styles.remove}>{t('x')}</a>
+            <CrossIcon
+                height={22}
+                onTouchTap={remove}
+                stroke={muiTheme.luno.form.removeCross.color}
+                style={styles.remove}
+                width={22}
+            />
         </div>
     );
 };
+
 RecordWrapper.propTypes = {
     RecordComponent: PropTypes.func.isRequired,
     index: PropTypes.number.isRequired,
     onRemove: PropTypes.func.isRequired,
     record: PropTypes.object.isRequired,
 };
+
+RecordWrapper.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
+
 export { RecordWrapper };
 
 /**
