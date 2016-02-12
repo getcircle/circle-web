@@ -11,7 +11,6 @@ import { fontColors, fontWeights } from '../constants/styles';
 import * as selectors from '../selectors';
 import { getNextPathname } from '../utils/routes';
 import t from '../utils/gettext';
-import connectData from '../utils/connectData';
 
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';

@@ -2,6 +2,7 @@ import { Dialog, FlatButton } from 'material-ui';
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import { provideHooks } from 'redial';
 
 import { clearPosts, createPost, getPost, updatePost } from '../actions/posts';
 import { canvasColor, tintColor, fontColors } from '../constants/styles';
@@ -14,7 +15,6 @@ import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
 import { routeToPost, routeToPosts } from '../utils/routes';
 import * as selectors from '../selectors';
-import connectData from '../utils/connectData';
 import tracker from '../utils/tracker';
 import { trimNewLinesAndWhitespace } from '../utils/string';
 import t from '../utils/gettext';
@@ -67,12 +67,14 @@ function fetchPost(dispatch, params) {
     return dispatch(getPost(params.postId));
 }
 
-function fetchData(getState, dispatch, location, params) {
-    const promises = [];
-    if (params && params.postId) {
-        promises.push(fetchPost(dispatch, params));
-    }
-    return Promise.all(promises);
+const hooks = {
+    fetch: ({ dispatch, params }) => {
+        const promises = [];
+        if (params && params.postId) {
+            promises.push(fetchPost(dispatch, params));
+        }
+        return promises;
+    },
 }
 
 class PostEditor extends CSSComponent {
@@ -583,4 +585,4 @@ class PostEditor extends CSSComponent {
 // us to test the component individually rather than relying on the store
 // passing down the state.
 export { PostEditor };
-export default connectData(fetchData)(connect(selector)(PostEditor));
+export default provideHooks(hooks)(connect(selector)(PostEditor));

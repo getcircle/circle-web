@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services, soa } from 'protobufs';
+import { provideHooks } from 'redial';
 
-import connectData from '../utils/connectData';
 import { deletePost, getPostsPaginationKey, getPosts } from '../actions/posts';
 import { fontColors, fontWeights } from '../constants/styles';
 import { PostStateURLString } from '../utils/post';
@@ -57,14 +57,14 @@ function fetchPosts(dispatch, postState, authenticatedProfile, postsNextRequest)
     return dispatch(getPosts(postState, authenticatedProfile, postsNextRequest));
 }
 
-function fetchData(getState, dispatch, location, params) {
-    const props = selector(getState(), {location, params});
-    return Promise.all([
-        fetchPosts(dispatch, props.postState, props.authenticatedProfile, props.postsNextRequest),
-    ]);
+const hooks = {
+    fetch: ({getState, dispatch, location, params}) => {
+        const props = selector(getState(), {location, params});
+        return fetchPosts(dispatch, props.postState, props.authenticatedProfile, props.postsNextRequest);
+    },
 }
 
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class Posts extends CSSComponent {
 

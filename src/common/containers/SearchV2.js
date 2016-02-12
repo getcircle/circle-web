@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { createSelector } from 'reselect';
+import { provideHooks } from 'redial';
 
 import { clearSearchResults, loadSearchResults } from '../actions/search';
 import * as selectors from '../selectors';
-import connectData from '../utils/connectData';
 import t from '../utils/gettext';
 
 import Container from '../components/Container';
@@ -27,13 +27,11 @@ function fetchSearchResults(dispatch, query) {
     return dispatch(loadSearchResults(query));
 }
 
-function fetchData(getState, dispatch, location, params) {
-    const promises = [];
-    promises.push(fetchSearchResults(dispatch, params.query));
-    return Promise.all(promises);
-}
+const hooks = {
+    fetch: ({dispatch, params}) => fetchSearchResults(dispatch, params.query),
+};
 
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class SearchV2 extends CSSComponent {
 

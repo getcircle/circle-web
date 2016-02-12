@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { soa } from 'protobufs';
+import { provideHooks } from 'redial';
 
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
 import { getPostsPaginationKey, getPosts } from '../actions/posts';
@@ -8,7 +9,6 @@ import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile, retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
-import connectData from '../utils/connectData';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -74,14 +74,16 @@ function fetchProfile(dispatch, params) {
     return dispatch(getExtendedProfile(params.profileId));
 }
 
-function fetchData(getState, dispatch, location, params) {
-    return Promise.all([
-        fetchProfile(dispatch, params),
-        fetchPosts(dispatch, params, null),
-    ]);
-}
+const hooks = {
+    fetch: ({ dispatch, params }) => {
+        return [
+            fetchProfile(dispatch, params),
+            fetchPosts(dispatch, params, null),
+        ];
+    },
+};
 
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class Profile extends PureComponent {
 

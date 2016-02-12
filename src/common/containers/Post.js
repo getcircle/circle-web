@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
+import { provideHooks } from 'redial';
 
 import { deletePost, getPost } from '../actions/posts';
 import { fontColors } from '../constants/styles';
 
-import connectData from '../utils/connectData';
 import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
@@ -46,11 +46,11 @@ function fetchPost(dispatch, params) {
     return dispatch(getPost(params.postId));
 }
 
-function fetchData(getState, dispatch, location, params) {
-    return Promise.all([fetchPost(dispatch, params)]);
-}
+const hooks = {
+    fetch: ({ dispatch, params }) => fetchPost(dispatch, params),
+};
 
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class Post extends CSSComponent {
 
