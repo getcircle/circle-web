@@ -42,7 +42,7 @@ export { RecordWrapper };
 /**
  * A list of addable/removable records in a form
  *
- * The Component provided must take a prop of `record`.
+ * The component provided must take a prop of `record`.
  * A minimal example:
  *
  *  const ExampleRecord = ({record}) => {
@@ -55,9 +55,6 @@ export { RecordWrapper };
  *      );
  *  };
  *
- * @param {React component} RecordComponent the component to render for each record
- * @param {Array} records the redux-forms records array
- * @return {React component}
  */
 const FormRecordList = ({component, defaultRecord, records}) => {
     const handleAdd = () => {
