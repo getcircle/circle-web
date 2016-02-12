@@ -12,6 +12,7 @@ import TeamDetailTabs, { SLUGS } from './TeamDetailTabs';
 const TeamDetail = (props) => {
     const {
         coordinators,
+        dispatch,
         members,
         membersLoading,
         onLoadMoreMembers,
@@ -26,7 +27,13 @@ const TeamDetail = (props) => {
     let content;
     switch (slug) {
     case SLUGS.ABOUT:
-        content = <TeamDetailAbout coordinators={coordinators} team={team} />;
+        content = (
+            <TeamDetailAbout
+                coordinators={coordinators}
+                dispatch={dispatch}
+                team={team}
+            />
+        );
         break;
     case SLUGS.PEOPLE:
         content = (
@@ -56,6 +63,7 @@ const TeamDetail = (props) => {
 
 TeamDetail.propTypes = {
     coordinators: PropTypes.array,
+    dispatch: PropTypes.func.isRequired,
     members: PropTypes.array,
     membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,
