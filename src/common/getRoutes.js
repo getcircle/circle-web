@@ -181,14 +181,6 @@ export default function (store, url) {
                 path="/posts/:postState"
             />
             <Route
-                component={require('./containers/Location')}
-                onEnter={applyMiddleware(
-                    ...defaultMiddleware,
-                    trackPageView(PAGE_TYPE.LOCATION_DETAIL, 'locationId')
-                )}
-                path="/location/:locationId"
-            />
-            <Route
                 component={require('./containers/Login')}
                 onEnter={applyMiddleware(loginOnce)}
                 path="/login"
