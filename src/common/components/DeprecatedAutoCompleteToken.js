@@ -5,7 +5,7 @@ import { fontColors, fontWeights, tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
 
-class AutoCompleteToken extends CSSComponent {
+class DeprecatedAutoCompleteToken extends CSSComponent {
 
     static propTypes = {
         buttonStyle: PropTypes.object,
@@ -61,4 +61,4 @@ class AutoCompleteToken extends CSSComponent {
     }
 }
 
-export default AutoCompleteToken;
+export default DeprecatedAutoCompleteToken;

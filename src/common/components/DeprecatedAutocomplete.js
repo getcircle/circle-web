@@ -6,13 +6,13 @@ import { backgroundColors, fontColors, iconColors } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
 import SearchIcon from './SearchIcon';
-import AutoCompleteToken from './AutoCompleteToken'
+import DeprecatedAutoCompleteToken from './DeprecatedAutoCompleteToken'
 
 const {
     FlatButton,
 } = mui;
 
-class AutoComplete extends CSSComponent {
+class DeprecatedAutoComplete extends CSSComponent {
 
     static propTypes = {
         alwaysActive: PropTypes.bool,
@@ -335,7 +335,7 @@ class AutoComplete extends CSSComponent {
         if (tokens) {
             return tokens.map((token, index) => {
                 return (
-                    <AutoCompleteToken
+                    <DeprecatedAutoCompleteToken
                         key={`token-${index}`}
                         label={token.value}
                         onTouchTap={onClearToken}
@@ -389,4 +389,4 @@ class AutoComplete extends CSSComponent {
 
 }
 
-export default AutoComplete;
+export default DeprecatedAutoComplete;

@@ -4,7 +4,7 @@ import {services} from 'protobufs';
 import Dialog from './Dialog';
 import CSSComponent from './CSSComponent';
 import InternalPropTypes from './InternalPropTypes';
-import Search from './Search';
+import DeprecatedSearch from './DeprecatedSearch';
 
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 
@@ -124,7 +124,7 @@ class DetailViewAll extends CSSComponent {
                     {...this.styles().Dialog}
                 >
                     <div className="row center-xs" style={this.styles().searchContainer}>
-                        <Search
+                        <DeprecatedSearch
                             alwaysActive={!this.shouldHideFilterInput()}
                             canExplore={false}
                             defaults={items}

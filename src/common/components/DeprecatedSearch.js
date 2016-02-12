@@ -40,7 +40,7 @@ import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 import { stripTags, trimNewLinesAndWhitespace } from '../utils/string';
 
-import AutoComplete from './AutoComplete';
+import DeprecatedAutoComplete from './DeprecatedAutoComplete';
 import CSSComponent from './CSSComponent';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
@@ -173,7 +173,7 @@ const selector = selectors.createImmutableSelector(
 );
 
 @connect(selector, undefined, undefined, {withRef: true})
-class Search extends CSSComponent {
+class DeprecatedSearch extends CSSComponent {
 
     static propTypes = {
         alwaysActive: PropTypes.bool,
@@ -1500,7 +1500,7 @@ class Search extends CSSComponent {
         } = this.props;
         return (
             <div {...other} style={{...this.styles().searchContainer, ...style}}>
-                <AutoComplete
+                <DeprecatedAutoComplete
                     alwaysActive={alwaysActive}
                     clearValueOnSelection={!canExplore}
                     focusOnSelect={canExplore}
@@ -1530,4 +1530,4 @@ class Search extends CSSComponent {
 
 }
 
-export default Search;
+export default DeprecatedSearch;

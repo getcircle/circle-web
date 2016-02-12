@@ -4,7 +4,7 @@ import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
 import createStore from '../../../src/common/createStore';
-import Search from '../../../src/common/components/Search';
+import DeprecatedSearch from '../../../src/common/components/DeprecatedSearch';
 
 import componentWithContext from '../../componentWithContext';
 import SearchResultFactory from '../../factories/SearchResultFactory';
@@ -22,9 +22,9 @@ function setup(propsOverrides, contextOverrides) {
     }
     const props = Object.assign({}, defaultProps, propsOverrides);
 
-    const Container = componentWithContext(<Search {...props} />, contextOverrides);
+    const Container = componentWithContext(<DeprecatedSearch {...props} />, contextOverrides);
     let container = TestUtils.renderIntoDocument(<Container />);
-    const searchComponent = TestUtils.findRenderedComponentWithType(container, Search).getWrappedInstance();
+    const searchComponent = TestUtils.findRenderedComponentWithType(container, DeprecatedSearch).getWrappedInstance();
     return {
         searchComponent,
         props,
