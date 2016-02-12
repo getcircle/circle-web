@@ -5,9 +5,9 @@ import TestUtils from 'react-addons-test-utils';
 import { ListItem } from 'material-ui';
 
 import componentWithContext from '../../../componentWithContext';
-import Core from '../../../../src/common/components/QuickSearch/Core';
-import List from '../../../../src/common/components/QuickSearch/List';
-import Section from '../../../../src/common/components/QuickSearch/Section';
+import Search from '../../../../src/common/components/Search';
+import List from '../../../../src/common/components/Search/List';
+import Section from '../../../../src/common/components/Search/Section';
 
 function setup(overrides, includeSections) {
     const defaults = {
@@ -17,13 +17,13 @@ function setup(overrides, includeSections) {
         defaults.sections = [new Section([{}, {}], 'Section - 1'), new Section([{}, {}], 'Section - 2')];
     }
     const props = Object.assign({}, defaults, overrides);
-    const Container = componentWithContext(<Core {...props} />);
+    const Container = componentWithContext(<Search {...props} />);
     const container = TestUtils.renderIntoDocument(<Container />);
-    const output = TestUtils.findRenderedComponentWithType(container, Core);
+    const output = TestUtils.findRenderedComponentWithType(container, Search);
     return {props, output};
 }
 
-describe('Core', () => {
+describe('Search', () => {
 
     describe('sections', () => {
 

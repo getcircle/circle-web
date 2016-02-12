@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import * as selectors from '../../selectors';
+import * as selectors from '../selectors';
 
-import CSSComponent from '../CSSComponent';
+import CSSComponent from './CSSComponent';
 
-import * as itemFactory from './factories';
-import Core from './Core';
-import ResultsSection from './ResultsSection';
-import Section from './Section';
+import Search from './Search';
+import ResultsSection from './Search/ResultsSection';
+import Section from './Search/Section';
+import * as itemFactory from './Search/factories';
 
 const selector = selectors.createImmutableSelector(
     [
@@ -24,7 +24,7 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-class QuickSearch extends CSSComponent {
+class AutoComplete extends CSSComponent {
 
     static propTypes = {
         defaults: PropTypes.arrayOf(PropTypes.instanceOf(Section)),
@@ -77,7 +77,7 @@ class QuickSearch extends CSSComponent {
         } = this.props;
         const sections = this.getSections();
         return (
-            <Core
+            <Search
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}
                 sections={sections}
@@ -87,5 +87,5 @@ class QuickSearch extends CSSComponent {
     }
 }
 
-export { QuickSearch };
-export default connect(selector)(QuickSearch);
+export { AutoComplete };
+export default connect(selector)(AutoComplete);

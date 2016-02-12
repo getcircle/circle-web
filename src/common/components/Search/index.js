@@ -24,13 +24,13 @@ const UPDATE_QUERY_DELAY = 100;
  * - copy over trackSearch logic from search component
  */
 
-/** Core search logic for QuickSearch.
+/** Search component.
  *
  * This can be built on top of to compose different behaviors, ie. including
  * the search trigger as the first result.
  *
  */
-class Core extends CSSComponent {
+class Search extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
@@ -364,4 +364,4 @@ class Core extends CSSComponent {
     }
 }
 
-export default Core;
+export default Search;

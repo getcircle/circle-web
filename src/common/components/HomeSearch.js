@@ -4,7 +4,7 @@ import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import InternalPropTypes from './InternalPropTypes';
-import QuickSearch from './QuickSearch';
+import AutoComplete from './AutoComplete';
 
 class HomeSearch extends CSSComponent {
 
@@ -26,7 +26,7 @@ class HomeSearch extends CSSComponent {
 
     render() {
         return (
-            <QuickSearch
+            <AutoComplete
                 placeholder={t('Search your coworker\'s knowledge')}
                 searchContainerWidth={660}
                 {...this.styles().SearchComponent}

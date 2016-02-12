@@ -4,7 +4,7 @@ import TestUtils from 'react-addons-test-utils';
 
 import { ListItem } from 'material-ui';
 
-import List from '../../../../src/common/components/QuickSearch/List';
+import List from '../../../../src/common/components/Search/List';
 
 function setup(overrides) {
     const defaults = {};

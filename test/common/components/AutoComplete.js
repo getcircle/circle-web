@@ -2,23 +2,23 @@ import expect from 'expect';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import componentWithContext from '../../../componentWithContext';
-import List from '../../../../src/common/components/QuickSearch/List';
-import Section from '../../../../src/common/components/QuickSearch/Section';
-import { QuickSearch } from '../../../../src/common/components/QuickSearch';
+import componentWithContext from '../../componentWithContext';
+import { AutoComplete } from '../../../src/common/components/AutoComplete';
+import List from '../../../src/common/components/Search/List';
+import Section from '../../../src/common/components/Search/Section';
 
 function setup(overrides) {
     const defaults = {
         dispatch: expect.createSpy(),
     };
     const props = Object.assign({}, defaults, overrides);
-    const Container = componentWithContext(<QuickSearch {...props} />);
+    const Container = componentWithContext(<AutoComplete {...props} />);
     const container = TestUtils.renderIntoDocument(<Container />);
-    const output = TestUtils.findRenderedComponentWithType(container, QuickSearch);
+    const output = TestUtils.findRenderedComponentWithType(container, AutoComplete);
     return {props, output};
 }
 
-describe('QuickSearch', () => {
+describe('AutoComplete', () => {
 
     it('doesn\'t render any results if no defaults are present and query is empty', () => {
         const { output } = setup();

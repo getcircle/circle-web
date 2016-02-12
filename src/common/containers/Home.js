@@ -8,7 +8,7 @@ import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
 import HeaderMenu from '../components/HeaderMenu';
 import HomeSearch from '../components/HomeSearch';
-import { SEARCH_CONTAINER_WIDTH } from '../components/QuickSearch';
+import { SEARCH_CONTAINER_WIDTH } from '../components/AutoComplete';
 
 const ORGANIZATION_LOGO_HEIGHT = 200;
 

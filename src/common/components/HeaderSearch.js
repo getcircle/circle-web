@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CSSComponent from './CSSComponent';
-import QuickSearch from './QuickSearch';
+import AutoComplete from './AutoComplete';
 
 class HeaderSearch extends CSSComponent {
 
@@ -28,7 +28,7 @@ class HeaderSearch extends CSSComponent {
 
     render() {
         return (
-            <QuickSearch
+            <AutoComplete
                 {...this.styles().SearchComponent}
                 {...this.props}
             />
