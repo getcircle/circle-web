@@ -29,7 +29,6 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
     }
 
     let editIcon;
-    console.log(team);
     if (team.permissions && team.permissions.can_edit) {
         const onEdit = () => dispatch(showTeamEditModal());
         editIcon = (
