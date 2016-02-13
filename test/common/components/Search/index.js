@@ -123,7 +123,7 @@ describe('Search', () => {
             const item = TestUtils.findRenderedComponentWithType(output, ListItem);
             item.props.onTouchTap();
             expect(onTouchTapSpy.calls.length).toEqual(1, 'Should have triggered onTouchTap for item');
-            expect(onBlurSpy.calls.length).toEqual(1, 'SHould have triggered onBlur when item is selected');
+            expect(onBlurSpy.calls.length).toEqual(1, 'Should have triggered onBlur when item is selected');
         });
     });
 

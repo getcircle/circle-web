@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import { clearResults, autocomplete } from '../actions/autocomplete';
 import * as selectors from '../selectors';
 
 import CSSComponent from './CSSComponent';
@@ -28,13 +29,12 @@ class AutoComplete extends CSSComponent {
 
     static propTypes = {
         defaults: PropTypes.arrayOf(PropTypes.instanceOf(Section)),
-        onBlur: PropTypes.func,
+        dispatch: PropTypes.func.isRequired,
         results: PropTypes.object,
     }
 
     static defaultProps = {
         defaults: [],
-        onBlur: () => {},
         results: {},
     }
 
@@ -46,9 +46,13 @@ class AutoComplete extends CSSComponent {
         this.setState({query: value});
     }
 
+    handleDelayedChange = (value) => {
+        this.props.dispatch(autocomplete(inputValue));
+    }
+
     handleBlur = () => {
         this.setState({query: ''});
-        this.props.onBlur();
+        this.props.dispatch(clearResults());
     }
 
     getTriggerAndResults() {
@@ -72,7 +76,6 @@ class AutoComplete extends CSSComponent {
     render() {
         const {
             defaults,
-            onBlur,
             ...other,
         } = this.props;
         const sections = this.getSections();
@@ -80,6 +83,7 @@ class AutoComplete extends CSSComponent {
             <Search
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}
+                onDelayedChange={this.handleDelayedChange}
                 sections={sections}
                 {...other}
             />

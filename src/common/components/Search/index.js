@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import ReactDOM from 'react-dom';
 
-import { clearResults, autocomplete } from '../../actions/autocomplete';
 import { backgroundColors, fontColors, iconColors } from '../../constants/styles';
 import t from '../../utils/gettext';
 
@@ -33,12 +32,12 @@ const UPDATE_QUERY_DELAY = 100;
 class Search extends CSSComponent {
 
     static propTypes = {
-        dispatch: PropTypes.func.isRequired,
         inputContainerStyle: PropTypes.object,
         listContainerStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
         onBlur: PropTypes.func,
         onChange: PropTypes.func,
+        onDelayedChange: PropTypes.func,
         onFocus: PropTypes.func,
         placeholder: PropTypes.string,
         searchContainerWidth: PropTypes.number,
@@ -61,15 +60,15 @@ class Search extends CSSComponent {
     static defaultProps = {
         maxListHeight: RESULT_HEIGHT * 10,
         onBlur: () => {},
-        onFocus: () => {},
         onChange: () => {},
+        onDelayedChange: () => {},
+        onFocus: () => {},
         placeholder: t('Search knowledge, people, & teams'),
         searchContainerWidth: SEARCH_CONTAINER_WIDTH,
     }
 
     state = {
         highlightedIndex: null,
-        query: '',
     }
 
     configure(props, state) {
@@ -125,11 +124,7 @@ class Search extends CSSComponent {
 
     cleanupAndBlur = () => {
         ReactDOM.findDOMNode(this.refs.input).blur();
-        this.setState({
-            highlightedIndex: null,
-            query: '',
-        })
-        this.props.dispatch(clearResults());
+        this.setState({highlightedIndex: null})
         this.props.onBlur();
     }
 
@@ -218,8 +213,7 @@ class Search extends CSSComponent {
         const inputValue = event.target.value;
         clearTimeout(this.updateQueryTimer);
         this.updateQueryTimer = setTimeout(() => {
-            this.props.dispatch(autocomplete(inputValue))
-            this.setState({'query': inputValue});
+            this.props.onDelayedChange(inputValue)
         }, UPDATE_QUERY_DELAY);
         this.setState({'highlightedIndex': inputValue !== '' ? 0 : null});
         this.props.onChange(inputValue);
