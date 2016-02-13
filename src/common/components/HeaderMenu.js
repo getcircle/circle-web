@@ -15,6 +15,7 @@ import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
 import InternalPropTypes from './InternalPropTypes';
+import LightBulbIcon from './LightBulbIcon';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from '../components/RoundedButton';
 
@@ -92,6 +93,14 @@ class HeaderMenu extends CSSComponent {
                 container: {
                     cursor: 'pointer',
                 },
+                LightBulbIcon: {
+                    height: 30,
+                    stroke: this.context.muiTheme.luno.tintColor,
+                    style: {
+                        margin: 0,
+                    },
+                    width: 30,
+                },
                 menu: {
                     backgroundColor: 'transparent',
                 },
@@ -128,7 +137,7 @@ class HeaderMenu extends CSSComponent {
                 },
                 RoundedButton: {
                     labelStyle: {
-                        padding: '0 6px',
+                        padding: '0 14px 0 0',
                     },
                     style: {
                         marginRight: 12,
@@ -246,6 +255,7 @@ class HeaderMenu extends CSSComponent {
         ) {
             return (
                 <RoundedButton
+                    icon={<LightBulbIcon {...this.styles().LightBulbIcon} />}
                     label={t('Add Knowledge')}
                     onTouchTap={::this.onAddPostTapped}
                     {...this.styles().RoundedButton}

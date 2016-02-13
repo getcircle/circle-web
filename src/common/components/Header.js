@@ -85,8 +85,8 @@ class Header extends CSSComponent {
     }
 
     renderHeader() {
-        let actionsContainerClasses = 'col-xs-4 col-sm-6 col-md-7 col-lg-8 center-xs';
-        let menuContainerClasses = 'col-xs-6 col-sm-4 col-md-3 col-lg-2 end-xs';
+        let actionsContainerClasses = 'col-xs-4 col-sm-6 col-md-7 col-lg-7 center-xs';
+        let menuContainerClasses = 'col-xs-6 col-sm-4 col-md-3 col-lg-3 end-xs';
 
         if (this.context.showCTAsInHeader === false) {
             menuContainerClasses = 'col-xs-2 end-xs';

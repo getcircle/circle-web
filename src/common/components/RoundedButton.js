@@ -1,8 +1,6 @@
 import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { fontWeights } from '../constants/styles.js';
-
 import CSSComponent from './CSSComponent';
 
 class RoundedButton extends CSSComponent {
@@ -17,18 +15,24 @@ class RoundedButton extends CSSComponent {
         disabled: false,
     }
 
+    static contextTypes = {
+        muiTheme: PropTypes.object.isRequired,
+    }
+
     classes() {
+        const lunoTheme = this.context.muiTheme.luno;
         return {
             default: {
                 labelStyle: {
-                    color: '#7A8EFF',
-                    fontSize: 12,
-                    letterSpacing: '1px',
-                    ...fontWeights.semiBold,
+                    color: lunoTheme.tintColor,
+                    fontFamily: lunoTheme.fontFamilies.medium,
+                    fontSize: lunoTheme.fontSizes.buttonText,
+                    letterSpacing: '0.5pt',
                 },
                 buttonStyle: {
                     backgroundColor: 'transparent',
                     border: '1px solid #7A8EFF',
+                    borderRadius: '22px',
                 },
             },
             'disabled-true': {

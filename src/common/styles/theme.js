@@ -34,6 +34,14 @@ export function getCustomTheme(userAgent) {
     const { palette } = muiTheme.baseTheme;
 
     muiTheme.luno = {
+        fontFamilies: {
+            regular: '"Lato", Arial, sans-serif',
+            medium: '"Lato-Black", Arial, sans-serif',
+            bold: '"Lato-Bold", Arial, sans-serif',
+        },
+        fontSizes: {
+            buttonText: '1.1rem',
+        },
         tintColor: tintColor,
         detail: {
             h1: {
