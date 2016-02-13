@@ -39,6 +39,7 @@ class Search extends CSSComponent {
         onChange: PropTypes.func,
         onDelayedChange: PropTypes.func,
         onFocus: PropTypes.func,
+        onSelectItem: PropTypes.func,
         placeholder: PropTypes.string,
         searchContainerWidth: PropTypes.number,
         sections: PropTypes.array.isRequired,
@@ -63,6 +64,7 @@ class Search extends CSSComponent {
         onChange: () => {},
         onDelayedChange: () => {},
         onFocus: () => {},
+        onSelectItem: () => {},
         placeholder: t('Search knowledge, people, & teams'),
         searchContainerWidth: SEARCH_CONTAINER_WIDTH,
     }
@@ -110,8 +112,7 @@ class Search extends CSSComponent {
             for (let section of this.props.sections) {
                 let highlightedIndex = this.highlightedIndexForSection(section);
                 if (highlightedIndex !== null) {
-                    section.getItems()[highlightedIndex].onTouchTap();
-                    this.cleanupAndBlur();
+                    this.handleSelectItem(section.getItems()[highlightedIndex]);
                     break;
                 }
             }
@@ -128,7 +129,8 @@ class Search extends CSSComponent {
         this.props.onBlur();
     }
 
-    handleOnSelectItem = () => {
+    handleSelectItem = (item) => {
+        this.props.onSelectItem(item);
         this.cleanupAndBlur();
     }
 
@@ -318,7 +320,7 @@ class Search extends CSSComponent {
                     itemStyle={{...this.styles().listItem}}
                     items={section.getItems(maxItems)}
                     key={`list-${sectionIndex}`}
-                    onSelectItem={this.handleOnSelectItem}
+                    onSelectItem={this.handleSelectItem}
                     style={{...this.styles().list}}
                     title={section.title}
                 />

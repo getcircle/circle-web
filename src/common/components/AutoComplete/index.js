@@ -1,15 +1,15 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { clearResults, autocomplete } from '../actions/autocomplete';
-import * as selectors from '../selectors';
+import { clearResults, autocomplete } from '../../actions/autocomplete';
+import * as selectors from '../../selectors';
+import * as routes from '../../utils/routes';
 
-import CSSComponent from './CSSComponent';
+import CSSComponent from '../CSSComponent';
+import Search from '../Search';
+import Section from '../Search/Section';
 
-import Search from './Search';
-import ResultsSection from './Search/ResultsSection';
-import Section from './Search/Section';
-import * as itemFactory from './Search/factories';
+import * as factories from './factories';
 
 const selector = selectors.createImmutableSelector(
     [
@@ -24,6 +24,18 @@ const selector = selectors.createImmutableSelector(
         };
     }
 );
+
+function createResult(result) {
+    let searchResult = null;
+    if (result.profile) {
+        searchResult = factories.createProfileResult(result)
+    } else if (result.team) {
+        searchResult = factories.createTeamResult(result);
+    } else if (result.post) {
+        searchResult = factories.createPostResult(result);
+    }
+    return searchResult;
+}
 
 class AutoComplete extends CSSComponent {
 
@@ -47,7 +59,7 @@ class AutoComplete extends CSSComponent {
     }
 
     handleDelayedChange = (value) => {
-        this.props.dispatch(autocomplete(inputValue));
+        this.props.dispatch(autocomplete(value));
     }
 
     handleBlur = () => {
@@ -55,13 +67,27 @@ class AutoComplete extends CSSComponent {
         this.props.dispatch(clearResults());
     }
 
+    handleSelectItem = ({ type, payload }) => {
+        // TODO track search results and recents here
+        switch (type) {
+        case factories.TYPES.TRIGGER:
+            return routes.routeToSearch(payload);
+        case factories.TYPES.PROFILE:
+            return routes.routeToProfile(payload);
+        case factories.TYPES.TEAM:
+            return routes.routeToTeam(payload);
+        case factories.TYPES.POST:
+            return routes.routeToPost(payload);
+        }
+    }
+
     getTriggerAndResults() {
         const { query } = this.state;
-        const trigger = itemFactory.getSearchTrigger(query, 0);
+        const trigger = factories.createSearchTrigger(query);
         const querySpecificResults = this.props.results[query];
         return [
             new Section([trigger], undefined, 0),
-            new ResultsSection(querySpecificResults),
+            new Section(querySpecificResults, undefined, undefined, createResult),
         ];
     }
 
@@ -84,6 +110,7 @@ class AutoComplete extends CSSComponent {
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}
                 onDelayedChange={this.handleDelayedChange}
+                onSelectItem={this.handleSelectItem}
                 sections={sections}
                 {...other}
             />

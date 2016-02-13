@@ -7,8 +7,9 @@ import { ListItem } from 'material-ui';
 import List from '../../../../src/common/components/Search/List';
 
 function setup(overrides) {
-    const defaults = {};
-    const props = Object.assign({}, defaults, overrides);
+    const props = {
+        ...overrides
+    };
     let output = TestUtils.renderIntoDocument(<List {...props} />);
     return {props, output};
 }
@@ -29,13 +30,15 @@ describe('List', () => {
 
     describe('items', () => {
 
-        it('calls onTouchTap when selected', () => {
-            const onTouchTapSpy = expect.createSpy();
-            const item = {onTouchTap: onTouchTapSpy};
-            const { output } = setup({items: [item]});
+        it('calls onSelectItem when selected', () => {
+            const item = {type: 'RESULT', payload: true};
+            const { output, props } = setup({items: [item], onSelectItem: expect.createSpy()});
             const listItem = TestUtils.findRenderedComponentWithType(output, ListItem);
             listItem.props.onTouchTap();
-            expect(onTouchTapSpy.calls.length).toEqual(1);
+            expect(props.onSelectItem.calls.length).toEqual(1);
+            const callArg = props.onSelectItem.calls[0].arguments[0];
+            expect(callArg.type).toEqual('RESULT');
+            expect(callArg.payload).toExist();
         });
 
     });
@@ -43,13 +46,11 @@ describe('List', () => {
     describe('onSelectItem', () => {
 
         it('is called when onTouch tap is triggered for an item', () => {
-            const onTouchTapSpy = expect.createSpy();
             const onSelectItemSpy = expect.createSpy();
-            const item = {onTouchTap: onTouchTapSpy};
+            const item = {type: 'RESULT'};
             const { output } = setup({items: [item], onSelectItem: onSelectItemSpy});
             const listItem = TestUtils.findRenderedComponentWithType(output, ListItem);
             listItem.props.onTouchTap();
-            expect(onTouchTapSpy.calls.length).toEqual(1, 'Should have called the item\'s onTouchTap');
             expect(onSelectItemSpy.calls.length).toEqual(1, 'Should have called the list\'s onTouchTap');
         });
 

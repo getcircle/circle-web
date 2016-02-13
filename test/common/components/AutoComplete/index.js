@@ -2,10 +2,10 @@ import expect from 'expect';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import componentWithContext from '../../componentWithContext';
-import { AutoComplete } from '../../../src/common/components/AutoComplete';
-import List from '../../../src/common/components/Search/List';
-import Section from '../../../src/common/components/Search/Section';
+import componentWithContext from '../../../componentWithContext';
+import { AutoComplete } from '../../../../src/common/components/AutoComplete';
+import List from '../../../../src/common/components/Search/List';
+import Section from '../../../../src/common/components/Search/Section';
 
 function setup(overrides) {
     const defaults = {
@@ -35,7 +35,7 @@ describe('AutoComplete', () => {
     });
 
     it('renders any defaults provided', () => {
-        const defaults = [new Section([{}]), new Section([{}])];
+        const defaults = [new Section([{type: 'RESULT'}]), new Section([{type: 'RESULT'}])];
         const { output } = setup({defaults: defaults});
         const lists = TestUtils.scryRenderedComponentsWithType(output, List);
         expect(lists.length).toEqual(2);

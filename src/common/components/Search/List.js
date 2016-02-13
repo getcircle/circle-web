@@ -8,9 +8,8 @@ import CSSComponent from '../CSSComponent';
 /**
  * Handles item selection logic.
  *
- * When an item is selected, we want to call the item's onTouchTap as well as
- * whatever onSelectItem handler was passed to the `List` component. `ListItem`
- * avoids creating new functions for each render per:
+ * `ListItem` allows us to call a handler with whatever item was selected while
+ * avoiding creating new functions for each render per:
  *
  *   https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-bind.md
  *
@@ -19,31 +18,25 @@ import CSSComponent from '../CSSComponent';
 class ListItem extends CSSComponent {
 
     static propTypes = {
+        item: PropTypes.shape({
+            item: PropTypes.object,
+            type: PropTypes.string.isRequired,
+            payload: PropTypes.any,
+        }).isRequired,
         onSelectItem: PropTypes.func,
-        onTouchTap: PropTypes.func,
     }
 
-    // TODO add support for tracking recent
     handleOnTouchTap = () => {
-        const {
-            onTouchTap,
-            onSelectItem,
-        } = this.props;
-        if (typeof onTouchTap === 'function') {
-            onTouchTap();
-        }
+        const { item, onSelectItem } = this.props;
         if (typeof onSelectItem === 'function') {
-            onSelectItem();
+            onSelectItem(item);
         }
     }
 
     render() {
-        const {
-            onTouchTap,
-            onSelectItem,
-            ...other,
-        } = this.props;
-        return <MaterialListItem onTouchTap={this.handleOnTouchTap} {...other} />;
+        const { item: { item }, onSelectItem, ...other } = this.props;
+        const props = Object.assign({}, item, other);
+        return <MaterialListItem onTouchTap={this.handleOnTouchTap} {...props} />;
     }
 }
 
@@ -99,8 +92,8 @@ class List extends CSSComponent {
                 key={`item-${index}`}
             >
                 <ListItem
+                    item={item}
                     onSelectItem={this.props.onSelectItem}
-                    {...item}
                     style={{...this.props.itemStyle, ...style}}
                 />
                 <Divider />
