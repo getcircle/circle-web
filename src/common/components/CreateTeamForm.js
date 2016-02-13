@@ -56,7 +56,7 @@ export class CreateTeamForm extends Component {
         dispatch(createTeam(name, description));
     }
 
-    handleCancel() {
+    handleCancel = () => {
         this.props.dispatch(hideCreateTeamModal());
     }
 
@@ -71,7 +71,7 @@ export class CreateTeamForm extends Component {
         return (
             <FormDialog
                 modal={true}
-                onCancel={this.handleCancel.bind(this)}
+                onCancel={this.handleCancel}
                 onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.CREATE_TEAM}
                 submitLabel={t('Save')}
