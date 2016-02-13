@@ -1,5 +1,8 @@
-import React, { PropTypes } from 'react';
-import { services } from 'protobufs';
+import React, { Component, PropTypes } from 'react';
+import IconMenu from 'material-ui/lib/menus/icon-menu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+import IconButton from 'material-ui/lib/icon-button';
+import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
 
 import { IconButton } from 'material-ui';
 
@@ -14,8 +17,63 @@ import PlusIcon from './PlusIcon';
 import ProfilesGrid from './ProfilesGrid';
 import TeamAddMembersForm from './TeamAddMembersForm';
 
+class TeamCoordinatorMenu extends Component {
+
+    state = {
+        open: false,
+    }
+
+    handleRequestChange = (open) => {
+        const { onClose, onOpen } = this.props;
+        this.setState({open: open});
+
+        if (open) {
+            onOpen();
+        } else {
+            onClose();
+        }
+    }
+
+    render() {
+        const styles = {
+            root: {
+                position: 'absolute',
+                right: 5,
+                top: 16,
+            },
+        };
+        return (
+            <IconMenu
+                anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
+                iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+                onRequestChange={this.handleRequestChange}
+                open={this.state.open}
+                style={styles.root}
+                targetOrigin={{horizontal: 'middle', vertical: 'top'}}
+            >
+                <MenuItem primaryText="Make Member" />
+                <MenuItem primaryText="Remove" />
+            </IconMenu>
+        );
+    }
+};
+
+TeamCoordinatorMenu.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onOpen: PropTypes.func.isRequired,
+    profile: InternalPropTypes.ProfileV1.isRequired,
+};
+
 const TeamDetailPeople = (props, { device, muiTheme }) => {
-    const { coordinators, dispatch, members, membersLoading, onLoadMoreMembers, team } = props;
+    const {
+        coordinators,
+        dispatch,
+        members,
+        membersLoading,
+        onLoadMoreMembers,
+        team,
+    } = props;
     const theme = muiTheme.luno.detail;
 
     let coordinatorsSection;
@@ -23,7 +81,11 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
         const coordinatorProfiles = coordinators.map(c => c.profile);
         coordinatorsSection = (
             <DetailSection dividerStyle={{marginBottom: 0}} title={t('Coordinators')}>
-                <ProfilesGrid profiles={coordinatorProfiles} />
+                <ProfilesGrid
+                    MenuComponent={TeamCoordinatorMenu}
+                    dispatch={dispatch}
+                    profiles={coordinatorProfiles}
+                />
             </DetailSection>
         );
     }
@@ -55,6 +117,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
                 title={t('Members')}
             >
                 <InfiniteProfilesGrid
+                    dispatch={dispatch}
                     loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}
                     profiles={memberProfiles}
