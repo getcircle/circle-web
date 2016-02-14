@@ -10,6 +10,7 @@ import t from '../utils/gettext';
 import { teamValidator } from '../utils/validators';
 
 import FormDialog from './FormDialog';
+import FormPeopleSelector from './FormPeopleSelector';
 import FormLabel from './FormLabel';
 import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
@@ -52,7 +53,9 @@ export class CreateTeamForm extends Component {
         }
     }
 
-    submit = ({name, description}, dispatch) => {
+    submit = (form, dispatch) => {
+        debugger;
+        const {name, description} = form;
         dispatch(createTeam(name, description));
     }
 
@@ -62,7 +65,7 @@ export class CreateTeamForm extends Component {
 
     render() {
         const {
-            fields: { name, description },
+            fields: { name, description, people},
             formSubmitting,
             handleSubmit,
             visible,
@@ -83,7 +86,9 @@ export class CreateTeamForm extends Component {
                 <FormTextField
                     placeholder={t('Marketing, IT, etc.')}
                     {...name}
-                 />
+                />
+                <FormLabel text={t('Invite Others To Join')} />
+                <FormPeopleSelector {...people} />
                 <FormLabel text={t('Description')} />
                 <FormTextArea
                     placeholder={t('What are the responsibilities or the purpose of this team?')}
@@ -97,7 +102,7 @@ export class CreateTeamForm extends Component {
 export default reduxForm(
     {
       form: CREATE_TEAM,
-      fields: ['name', 'description'],
+      fields: ['name', 'description', 'people'],
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
       validate: teamValidator,
     },

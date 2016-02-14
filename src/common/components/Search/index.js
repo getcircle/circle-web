@@ -7,7 +7,6 @@ import t from '../../utils/gettext';
 
 import CSSComponent from '../CSSComponent';
 import InternalPropTypes from '../InternalPropTypes';
-import SearchIcon from '../SearchIcon';
 
 import List from './List';
 
@@ -33,6 +32,7 @@ class Search extends CSSComponent {
 
     static propTypes = {
         inputContainerStyle: PropTypes.object,
+        inputStyle: PropTypes.object,
         listContainerStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
         onBlur: PropTypes.func,
@@ -188,16 +188,6 @@ class Search extends CSSComponent {
                 listItem: {
                     height: RESULT_HEIGHT,
                 },
-                SearchIcon: {
-                    strokeWidth: 3,
-                    style: {
-                        alignSelf: 'center',
-                        height: 25,
-                        marginLeft: 14,
-                        width: 25,
-                    },
-                    ...iconColors.medium,
-                },
             },
             'largerDevice': {
                 inputContainer: {
@@ -301,6 +291,7 @@ class Search extends CSSComponent {
     render() {
         const {
             className,
+            inputStyle,
             inputContainerStyle,
             onFocus,
             placeholder,
@@ -340,13 +331,12 @@ class Search extends CSSComponent {
                 <div
                     className="row middle-xs"
                     style={{...this.styles().inputContainer, ...inputContainerStyle}}>
-                    <SearchIcon {...this.styles().SearchIcon} />
                     <input
                         onBlur={::this.handleInputBlur}
                         onChange={::this.handleChange}
                         placeholder={placeholder}
                         ref="input"
-                        style={this.styles().input}
+                        style={{...this.styles().input, ...inputStyle}}
                     />
                 </div>
                 <Paper
