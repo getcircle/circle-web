@@ -31,6 +31,7 @@ const UPDATE_QUERY_DELAY = 100;
 class Search extends CSSComponent {
 
     static propTypes = {
+        hasItemDivider: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
         inputStyle: PropTypes.object,
         listContainerStyle: PropTypes.object,
@@ -41,6 +42,7 @@ class Search extends CSSComponent {
         onFocus: PropTypes.func,
         onSelectItem: PropTypes.func,
         placeholder: PropTypes.string,
+        resultHeight: PropTypes.number,
         searchContainerWidth: PropTypes.number,
         sections: PropTypes.array.isRequired,
         style: PropTypes.object,
@@ -59,6 +61,7 @@ class Search extends CSSComponent {
     }
 
     static defaultProps = {
+        hasItemDivider: true,
         maxListHeight: RESULT_HEIGHT * 10,
         onBlur: () => {},
         onChange: () => {},
@@ -66,6 +69,7 @@ class Search extends CSSComponent {
         onFocus: () => {},
         onSelectItem: () => {},
         placeholder: t('Search knowledge, people, & teams'),
+        resultHeight: RESULT_HEIGHT,
         searchContainerWidth: SEARCH_CONTAINER_WIDTH,
     }
 
@@ -181,12 +185,11 @@ class Search extends CSSComponent {
                     ...backgroundColors.light,
                 },
                 list: {
-                    backgroundColor: 'white',
                     paddingTop: 0,
                     paddingBottom: 0,
                 },
                 listItem: {
-                    height: RESULT_HEIGHT,
+                    height: this.props.resultHeight,
                 },
             },
             'largerDevice': {
@@ -273,7 +276,7 @@ class Search extends CSSComponent {
     numberOfItemsInSection(section) {
         if (section.hasItems()) {
             const numberOfItemsInPreviousSections = this.numberOfItemsBeforeSection(section);
-            const maxNumberOfResultsVisible = Math.floor(this.props.maxListHeight / RESULT_HEIGHT);
+            const maxNumberOfResultsVisible = Math.floor(this.props.maxListHeight / this.props.resultHeight);
             const maxNumberOfResults = maxNumberOfResultsVisible - numberOfItemsInPreviousSections;
             return section.getNumberOfItems(maxNumberOfResults);
         }
@@ -307,6 +310,7 @@ class Search extends CSSComponent {
             const maxItems = this.numberOfItemsInSection(section);
             lists.push(
                 <List
+                    hasItemDivider={this.props.hasItemDivider}
                     highlightedIndex={this.highlightedIndexForSection(section)}
                     itemStyle={{...this.styles().listItem}}
                     items={section.getItems(maxItems)}

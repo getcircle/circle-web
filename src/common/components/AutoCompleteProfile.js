@@ -6,7 +6,6 @@ import * as selectors from '../selectors';
 
 import { clearResults, search } from '../actions/search';
 
-import { createProfileResult } from './Autocomplete/factories';
 import Search from './Search';
 import Section from './Search/Section';
 
@@ -23,11 +22,35 @@ const selector = selectors.createImmutableSelector(
     },
 );
 
+const createResult = ({ profile, highlight }) => {
+    let primaryText = profile.full_name;
+    if (highlight && highlight.get('full_name')) {
+        primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} />);
+    }
+    const item = {
+        primaryText: primaryText,
+        innerDivStyle: {
+            paddingTop: 10,
+            paddingLeft: 20,
+        },
+        style: {
+            fontSize: '14px',
+        },
+    };
+    return {
+        item,
+        type: 'profile',
+        payload: profile,
+    };
+
+};
+
 class AutoCompleteProfile extends Component {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         onSelectProfile: PropTypes.func.isRequired,
+        // TODO add an "ignore" props so we can filter out items that have already been selected from the results
         results: PropTypes.object,
     }
 
@@ -56,7 +79,7 @@ class AutoCompleteProfile extends Component {
             section = new Section([]);
         } else {
             const querySpecificResults = this.props.results[query];
-            section = new Section(querySpecificResults, undefined, undefined, createProfileResult);
+            section = new Section(querySpecificResults, undefined, undefined, createResult);
         }
         return [section];
     }
@@ -70,9 +93,12 @@ class AutoCompleteProfile extends Component {
         const sections = this.getSections();
         return (
             <Search
+                maxListHeight={300}
                 onBlur={this.handleBlur}
                 onDelayedChange={this.handleDelayedChange}
                 onSelectItem={this.handleSelectItem}
+                resultHeight={40}
+                searchContainerWidth={280}
                 sections={sections}
                 {...other}
             />

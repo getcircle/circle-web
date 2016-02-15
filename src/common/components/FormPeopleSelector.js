@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import merge from 'lodash.merge';
+import React, { Component, PropTypes } from 'react';
 
 import t from '../utils/gettext';
 
@@ -54,56 +54,84 @@ Token.propTypes = {
     }),
 };
 
-const FormPeopleSelector = ({ onBlur, onChange, value, ...other }, { muiTheme }) => {
-    const styles = {
-        autoComplete: {
-            height: 40,
-            marginTop: 10,
-        },
-        container: {
-            flexWrap: 'wrap',
-            ...muiTheme.luno.form.field,
-            paddingLeft: 10,
-            paddingRight: 10,
-            paddingTop: 0,
-            paddingBottom: 0,
-        },
-    };
-    const profiles = value || [];
-    const handleSelectProfile = (profile) => {
-        profiles.push(profile);
-        onChange(profiles);
-    };
+class FormPeopleSelector extends Component {
 
-    const handleRemove = (index) => {
-        _.pullAt(profiles, index);
-        onChange(profiles);
-    };
+    state = {
+        muiTheme: this.context.muiTheme,
+    }
 
-    const tokens = profiles.map((profile, index) => {
+    getChildContext() {
+        return {
+            muiTheme: this.state.muiTheme,
+        }
+    }
+
+    componentWillMount() {
+        const muiTheme = merge({}, this.state.muiTheme);
+        muiTheme.paper.backgroundColor = '#FCFCFC';
+        this.setState({muiTheme});
+    }
+
+    render() {
+        const { onBlur, onChange, value, ...other } = this.props;
+        const { muiTheme } = this.context;
+        const styles = {
+            autoComplete: {
+                height: 40,
+                marginTop: 10,
+            },
+            container: {
+                flexWrap: 'wrap',
+                ...muiTheme.luno.form.field,
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 0,
+                paddingBottom: 0,
+                position: 'relative',
+            },
+            listContainerStyle: {
+                boxShadow: '0px 12px 24px black',
+                position: 'absolute',
+            },
+        };
+        const profiles = value || [];
+        const handleSelectProfile = (profile) => {
+            profiles.push(profile);
+            onChange(profiles);
+        };
+
+        const handleRemove = (index) => {
+            _.pullAt(profiles, index);
+            onChange(profiles);
+        };
+
+        const tokens = profiles.map((profile, index) => {
+            return (
+                <Token
+                    index={index}
+                    key={index}
+                    onRemove={handleRemove}
+                    profile={profile}
+                />
+            );
+        });
+
         return (
-            <Token
-                index={index}
-                key={index}
-                onRemove={handleRemove}
-                profile={profile}
-            />
+            <div style={styles.container}>
+                {tokens}
+                <AutoCompleteProfile
+                    hasItemDivider={false}
+                    inputContainerStyle={{height: 'none'}}
+                    inputStyle={{paddingLeft: 0}}
+                    listContainerStyle={styles.listContainerStyle}
+                    onSelectProfile={handleSelectProfile}
+                    placeholder={t('Search by Name')}
+                    style={styles.autoComplete}
+                    {...other}
+                />
+            </div>
         );
-    });
-
-    return (
-        <div style={styles.container}>
-            {tokens}
-            <AutoCompleteProfile
-                inputContainerStyle={{height: 'none'}}
-                inputStyle={{paddingLeft: 0}}
-                onSelectProfile={handleSelectProfile}
-                placeholder={t('Search by Name')}
-                style={styles.autoComplete}
-                {...other}
-            />
-        </div>
-    );
+    }
 };
 
 FormPeopleSelector.propTypes = {
@@ -115,6 +143,10 @@ FormPeopleSelector.propTypes = {
 
 FormPeopleSelector.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
+};
+
+FormPeopleSelector.childContextTypes = {
+    muiTheme: PropTypes.object,
 };
 
 export default FormPeopleSelector;

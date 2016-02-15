@@ -1,3 +1,4 @@
+import merge from 'lodash.merge';
 import React, { PropTypes } from 'react';
 
 import { Divider, List as MaterialList, ListItem as MaterialListItem } from 'material-ui';
@@ -35,7 +36,7 @@ class ListItem extends CSSComponent {
 
     render() {
         const { item: { item }, onSelectItem, ...other } = this.props;
-        const props = Object.assign({}, item, other);
+        const props = merge(item, other);
         return <MaterialListItem onTouchTap={this.handleOnTouchTap} {...props} />;
     }
 }
@@ -43,6 +44,7 @@ class ListItem extends CSSComponent {
 class List extends CSSComponent {
 
     static propTypes = {
+        hasItemDivider: PropTypes.bool,
         highlightedIndex: PropTypes.number,
         itemStyle: PropTypes.object,
         items: PropTypes.array,
@@ -52,6 +54,7 @@ class List extends CSSComponent {
     }
 
     static defaultProps = {
+        hasItemDivider: true,
         onSelectItem: () => {},
     }
 
@@ -87,6 +90,7 @@ class List extends CSSComponent {
                 backgroundColor: '#e6e6e6',
             };
         }
+        const divider = this.props.hasItemDivider ? <Divider /> : null;
         return (
             <div
                 key={`item-${index}`}
@@ -96,7 +100,7 @@ class List extends CSSComponent {
                     onSelectItem={this.props.onSelectItem}
                     style={{...this.props.itemStyle, ...style}}
                 />
-                <Divider />
+                {divider}
             </div>
         );
     }

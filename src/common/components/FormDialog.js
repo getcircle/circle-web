@@ -74,6 +74,7 @@ export default class FormDialog extends CSSComponent {
         return (
             <div >
                 <Dialog
+                    bodyStyle={{padding: '10px 0 0', overflow: 'visible'}}
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={submitLabel}
                     error={error}
