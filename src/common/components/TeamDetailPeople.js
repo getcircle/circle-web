@@ -1,8 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import IconMenu from 'material-ui/lib/menus/icon-menu';
+import React, { PropTypes } from 'react';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import IconButton from 'material-ui/lib/icon-button';
-import MoreVertIcon from 'material-ui/lib/svg-icons/navigation/more-vert';
 
 import { IconButton } from 'material-ui';
 
@@ -14,52 +11,37 @@ import InternalPropTypes from './InternalPropTypes';
 import DetailSection from './DetailSectionV2';
 import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 import PlusIcon from './PlusIcon';
+import MoreMenu from './MoreMenu';
 import ProfilesGrid from './ProfilesGrid';
 import TeamAddMembersForm from './TeamAddMembersForm';
 
-class TeamCoordinatorMenu extends Component {
-
-    state = {
-        open: false,
-    }
-
-    handleRequestChange = (open) => {
-        this.setState({open: open});
-    }
-
-    render() {
-        const { hover } = this.props;
-        const { open } = this.state;
-        const styles = {
-            root: {
-                position: 'absolute',
-                right: 5,
-                top: 16,
-            },
-            menu: {},
-        };
-        if (!hover && !open) {
-            styles.root.display = 'none';
-            styles.menu.display = 'none';
-        }
-        return (
-            <IconMenu
-                anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
-                iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-                menuStyle={styles.menu}
-                onRequestChange={this.handleRequestChange}
-                open={this.state.open}
-                style={styles.root}
-                targetOrigin={{horizontal: 'middle', vertical: 'top'}}
-            >
-                <MenuItem primaryText="Make Member" />
-                <MenuItem primaryText="Remove" />
-            </IconMenu>
-        );
-    }
+const TeamCoordinatorMenu = ({hover}) => {
+    return (
+        <MoreMenu
+            hover={hover}
+        >
+            <MenuItem primaryText="Make Member" />
+            <MenuItem primaryText="Remove" />
+        </MoreMenu>
+    );
+};
+TeamCoordinatorMenu.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    hover: PropTypes.bool,
+    profile: InternalPropTypes.ProfileV1.isRequired,
 };
 
-TeamCoordinatorMenu.propTypes = {
+const TeamMemberMenu = ({hover}) => {
+    return (
+        <MoreMenu
+            hover={hover}
+        >
+            <MenuItem primaryText="Make Coordinator" />
+            <MenuItem primaryText="Remove" />
+        </MoreMenu>
+    );
+};
+TeamMemberMenu.propTypes = {
     dispatch: PropTypes.func.isRequired,
     hover: PropTypes.bool,
     profile: InternalPropTypes.ProfileV1.isRequired,
@@ -117,6 +99,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
                 title={t('Members')}
             >
                 <InfiniteProfilesGrid
+                    MenuComponent={TeamMemberMenu}
                     dispatch={dispatch}
                     loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}

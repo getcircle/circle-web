@@ -3,10 +3,11 @@ import React, { PropTypes } from 'react';
 import InfiniteGrid from './InfiniteGrid';
 import DetailListItemProfile from './DetailListItemProfile';
 
-const InfiniteProfilesGrid = ({ dispatch, profiles, ...other }) => {
+const InfiniteProfilesGrid = ({ MenuComponent, dispatch, profiles, ...other }) => {
     const items = profiles.map((p, i) => {
         return (
             <DetailListItemProfile
+                MenuComponent={MenuComponent}
                 className="col-xs-6"
                 dispatch={dispatch}
                 key={`detail-list-item-profile-${i}`}
@@ -18,6 +19,7 @@ const InfiniteProfilesGrid = ({ dispatch, profiles, ...other }) => {
 };
 
 InfiniteProfilesGrid.propTypes = {
+    MenuComponent: PropTypes.func,
     dispatch: PropTypes.func.isRequired,
     loading: PropTypes.bool,
     onLoadMore: PropTypes.func,
