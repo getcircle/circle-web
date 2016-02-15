@@ -13,8 +13,12 @@ import { services } from 'protobufs';
  * const team = new services.team.containers.TeamV1({name: name, description: {value: descriptionText});
  * createTeam(client, team);
  */
-export function createTeam(client, team) {
-    const request = new services.team.actions.create_team.RequestV1({team});
+export function createTeam(client, team, members) {
+    const parameters = {team};
+    if (members) {
+        parameters.members = members;
+    }
+    const request = new services.team.actions.create_team.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => response.finish(resolve, reject, response.result.team.id))

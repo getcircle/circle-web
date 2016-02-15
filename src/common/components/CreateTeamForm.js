@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
+import { services } from 'protobufs';
 
 import { createTeam, hideCreateTeamModal } from '../actions/teams';
 import { CREATE_TEAM } from '../constants/forms';
@@ -54,9 +55,14 @@ export class CreateTeamForm extends Component {
     }
 
     submit = (form, dispatch) => {
-        debugger;
-        const {name, description} = form;
-        dispatch(createTeam(name, description));
+        let members;
+        const { name, description, people } = form;
+        if (people) {
+            /*eslint-disable camelcase*/
+            members = people.map(profile => new services.team.containers.TeamMemberV1({profile_id: profile.id}));
+            /*eslint-enable camelcase*/
+        }
+        dispatch(createTeam(name, description, members));
     }
 
     handleCancel = () => {
