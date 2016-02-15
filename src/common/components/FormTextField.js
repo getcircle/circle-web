@@ -14,6 +14,7 @@ const FormTextField = ({error, invalid, touched, ...other}, {muiTheme}) => {
     return (
         <div>
             <input
+                autoComplete="off"
                 invalid={invalid}
                 style={styles}
                 touched={touched}
