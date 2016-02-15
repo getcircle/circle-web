@@ -210,4 +210,22 @@ describe('paginate reducer', function () {
         expect(keyState.get('ids').toJS()).to.eql(ids);
     });
 
+    describe('rewind', () => {
+
+        it('handles not having a nextRequest', () => {
+            const state = Immutable.fromJS({
+                'key': {
+                    nextRequest: null,
+                    currentPage: 1,
+                },
+            });
+
+            const rewound = rewind('key', state);
+            const keyState = rewound.get('key');
+            expect(keyState.get('nextRequest')).to.be(null);
+            expect(keyState.get('currentPage')).to.be(1);
+        });
+
+    });
+
 });
