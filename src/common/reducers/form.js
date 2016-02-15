@@ -1,6 +1,5 @@
 import Immutable from 'immutable';
-
-import { RESET_FORM } from '../constants/actionTypes';
+import { actionTypes } from 'redux-form';
 
 const initialState = Immutable.fromJS({
     formSubmitting: false,
@@ -20,7 +19,7 @@ export default function form(types) {
 
     return function reducer(state = initialState, action) {
         switch(action.type) {
-        case RESET_FORM:
+        case actionTypes.RESET:
             if (action.form === form) {
                 return state.merge({
                     formSubmitting: false,
