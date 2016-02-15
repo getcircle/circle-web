@@ -31,6 +31,7 @@ const UPDATE_QUERY_DELAY = 100;
 class Search extends CSSComponent {
 
     static propTypes = {
+        focused: PropTypes.bool,
         hasItemDivider: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
         inputStyle: PropTypes.object,
@@ -60,7 +61,14 @@ class Search extends CSSComponent {
         this.configure(nextProps, Object.assign(this.state, nextState));
     }
 
+    componentDidUpdate() {
+        if (this.props.focused) {
+            ReactDOM.findDOMNode(this.refs.input).focus();
+        }
+    }
+
     static defaultProps = {
+        focused: true,
         hasItemDivider: true,
         maxListHeight: RESULT_HEIGHT * 10,
         onBlur: () => {},
@@ -336,6 +344,7 @@ class Search extends CSSComponent {
                     className="row middle-xs"
                     style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <input
+                        autoFocus={this.props.focused}
                         onBlur={::this.handleInputBlur}
                         onChange={::this.handleChange}
                         placeholder={placeholder}

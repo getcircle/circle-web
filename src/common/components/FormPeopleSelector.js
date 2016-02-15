@@ -120,7 +120,7 @@ class FormPeopleSelector extends Component {
     }
 
     render() {
-        const { onBlur, onChange, value, ...other } = this.props;
+        const { active, onBlur, onChange, value, ...other } = this.props;
         const { muiTheme } = this.context;
         const styles = {
             autoComplete: {
@@ -141,6 +141,7 @@ class FormPeopleSelector extends Component {
                 position: 'absolute',
             },
         };
+
         const profiles = value || [];
         const handleSelectProfile = (profile) => {
             profiles.push(profile);
@@ -167,6 +168,7 @@ class FormPeopleSelector extends Component {
             <div style={styles.container}>
                 {tokens}
                 <AutoCompleteProfile
+                    focused={active}
                     hasItemDivider={false}
                     ignoreProfileIds={profiles.map(profile => profile.id)}
                     inputContainerStyle={{height: 'none'}}
@@ -184,6 +186,7 @@ class FormPeopleSelector extends Component {
 };
 
 FormPeopleSelector.propTypes = {
+    active: PropTypes.bool,
     onBlur: PropTypes.func,
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
