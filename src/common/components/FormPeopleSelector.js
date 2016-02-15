@@ -168,6 +168,7 @@ class FormPeopleSelector extends Component {
                 {tokens}
                 <AutoCompleteProfile
                     hasItemDivider={false}
+                    ignoreProfileIds={profiles.map(profile => profile.id)}
                     inputContainerStyle={{height: 'none'}}
                     inputStyle={{paddingLeft: 0}}
                     listContainerStyle={styles.listContainerStyle}

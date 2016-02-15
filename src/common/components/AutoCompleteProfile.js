@@ -26,10 +26,14 @@ class AutoCompleteProfile extends Component {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        ignoreProfileIds: PropTypes.arrayOf(PropTypes.string),
         onSelectProfile: PropTypes.func.isRequired,
-        // TODO add an "ignore" props so we can filter out items that have already been selected from the results
         resultFactoryFunction: PropTypes.func.isRequired,
         results: PropTypes.object,
+    }
+
+    static defaultProps = {
+        ignoreProfileIds: [],
     }
 
     state = {
@@ -52,12 +56,16 @@ class AutoCompleteProfile extends Component {
 
     getSections() {
         const { query } = this.state;
+        const { ignoreProfileIds, resultFactoryFunction, results } = this.props;
         let section;
         if (query === '') {
             section = new Section([]);
         } else {
-            const querySpecificResults = this.props.results[query];
-            section = new Section(querySpecificResults, undefined, undefined, this.props.resultFactoryFunction);
+            let querySpecificResults = results[query];
+            if (querySpecificResults) {
+                querySpecificResults = querySpecificResults.filter(result => !ignoreProfileIds.includes(result.profile.id));
+            }
+            section = new Section(querySpecificResults, undefined, undefined, resultFactoryFunction);
         }
         return [section];
     }
