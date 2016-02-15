@@ -11,14 +11,12 @@ class DetailListItemProfile extends Component {
 
     state = {
         hover: false,
-        menuShown: false,
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         const profileChanged = this.props.profile.id !== nextProps.profile.id;
         const hoverChanged = this.state.hover !== nextState.hover;
-        const menuChanged = this.state.menuShown !== nextState.menuShown;
-        return profileChanged || hoverChanged || menuChanged;
+        return profileChanged || hoverChanged;
     }
 
     handleMouseEnter = () => {
@@ -27,17 +25,6 @@ class DetailListItemProfile extends Component {
 
     handleMouseLeave = () => {
         this.setState({hover: false});
-    }
-
-    handleMenuOpen = () => {
-        this.setState({menuShown: true});
-    }
-
-    handleMenuClose = () => {
-        // HACK: Need to ensure Popover's handlers run prior to being removed
-        setTimeout(() => {
-            this.setState({menuShown: false});
-        }, 0);
     }
 
     handleTouchTap = () => {
@@ -69,12 +56,11 @@ class DetailListItemProfile extends Component {
             },
         };
         let menu;
-        if (MenuComponent && (this.state.hover || this.state.menuShown)) {
+        if (MenuComponent) {
             menu = (
                 <MenuComponent
                     dispatch={dispatch}
-                    onClose={this.handleMenuClose}
-                    onOpen={this.handleMenuOpen}
+                    hover={this.state.hover}
                     profile={profile}
                 />
             );

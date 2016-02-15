@@ -24,28 +24,29 @@ class TeamCoordinatorMenu extends Component {
     }
 
     handleRequestChange = (open) => {
-        const { onClose, onOpen } = this.props;
         this.setState({open: open});
-
-        if (open) {
-            onOpen();
-        } else {
-            onClose();
-        }
     }
 
     render() {
+        const { hover } = this.props;
+        const { open } = this.state;
         const styles = {
             root: {
                 position: 'absolute',
                 right: 5,
                 top: 16,
             },
+            menu: {},
         };
+        if (!hover && !open) {
+            styles.root.display = 'none';
+            styles.menu.display = 'none';
+        }
         return (
             <IconMenu
                 anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
                 iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+                menuStyle={styles.menu}
                 onRequestChange={this.handleRequestChange}
                 open={this.state.open}
                 style={styles.root}
@@ -60,8 +61,7 @@ class TeamCoordinatorMenu extends Component {
 
 TeamCoordinatorMenu.propTypes = {
     dispatch: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onOpen: PropTypes.func.isRequired,
+    hover: PropTypes.bool,
     profile: InternalPropTypes.ProfileV1.isRequired,
 };
 
