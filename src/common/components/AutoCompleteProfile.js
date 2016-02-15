@@ -23,10 +23,34 @@ const selector = selectors.createImmutableSelector(
 );
 
 const createResult = ({ profile, highlight }) => {
-    let primaryText = profile.full_name;
+    const styles = {
+        name: {
+            fontSize: '14px',
+        },
+        title: {
+            color: '#808080',
+            fontSize: '11px',
+        },
+    };
+
+    let fullName, title;
     if (highlight && highlight.get('full_name')) {
-        primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} />);
+        fullName = <span style={styles.name} dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} />;
+    } else {
+        fullName = <span style={styles.name}>{profile.full_name}</span>;
     }
+
+    if (highlight && highlight.get('title')) {
+        title = <span dangerouslySetInnerHTML={{__html: highlight.get('title')}} />;
+    } else {
+        title = <span>{profile.title}</span>;
+    }
+
+    const primaryText = (
+        <div>
+            {fullName}<span style={styles.title}>{' ('}{title}{')'}</span>
+        </div>
+    );
     const item = {
         primaryText: primaryText,
         innerDivStyle: {
