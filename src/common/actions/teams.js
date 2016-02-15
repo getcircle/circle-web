@@ -180,6 +180,25 @@ export function updateTeam(team) {
 }
 
 /**
+ * Update team members
+ *
+ * @param {Array[services.team.containers.TeamMemberV1]} members an array of team members
+ *
+ */
+export function updateMembers(teamId, members) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.UPDATE_MEMBERS,
+                types.UPDATE_MEMBERS_SUCCESS,
+                types.UPDATE_MEMBERS_FAILURE,
+            ],
+            remote: (client) => requests.updateMembers(client, teamId, members),
+        },
+    };
+}
+
+/**
  * Show the team edit modal
  *
  * @return {Object} plain object redux action

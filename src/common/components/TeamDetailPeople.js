@@ -1,49 +1,60 @@
-import React, { PropTypes } from 'react';
 import MenuItem from 'material-ui/lib/menus/menu-item';
+import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
 import { IconButton } from 'material-ui';
 
 import { showAddMembersModal } from '../actions/teams';
+import { updateMembers } from '../actions/teams';
 import t from '../utils/gettext';
-
-import InternalPropTypes from './InternalPropTypes';
 
 import DetailSection from './DetailSectionV2';
 import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 import PlusIcon from './PlusIcon';
+import InternalPropTypes from './InternalPropTypes';
 import MoreMenu from './MoreMenu';
 import ProfilesGrid from './ProfilesGrid';
 import TeamAddMembersForm from './TeamAddMembersForm';
 
-const TeamCoordinatorMenu = ({hover}) => {
+const menuChoices = {
+    MAKE_COORDINATOR: 'MAKE_COORDINATOR',
+    MAKE_MEMBER: 'MAKE_MEMBER',
+    REMOVE: 'REMOVE',
+};
+
+const TeamCoordinatorMenu = ({ hover, onMenuChoice, profile }) => {
+    function makeMember() { onMenuChoice(menuChoices.MAKE_MEMBER, profile); }
+    function remove() { onMenuChoice(menuChoices.REMOVE, profile); }
     return (
         <MoreMenu
             hover={hover}
         >
-            <MenuItem primaryText="Make Member" />
-            <MenuItem primaryText="Remove" />
+            <MenuItem onTouchTap={makeMember} primaryText="Make Member" />
+            <MenuItem onTouchTap={remove} primaryText="Remove" />
         </MoreMenu>
     );
 };
 TeamCoordinatorMenu.propTypes = {
-    dispatch: PropTypes.func.isRequired,
     hover: PropTypes.bool,
+    onMenuChoice: PropTypes.func.isRequired,
     profile: InternalPropTypes.ProfileV1.isRequired,
 };
 
-const TeamMemberMenu = ({hover}) => {
+const TeamMemberMenu = ({ hover, onMenuChoice, profile }) => {
+    function makeCoordinator() { onMenuChoice(menuChoices.MAKE_COORDINATOR, profile); }
+    function remove() { onMenuChoice(menuChoices.REMOVE, profile); }
     return (
         <MoreMenu
             hover={hover}
         >
-            <MenuItem primaryText="Make Coordinator" />
-            <MenuItem primaryText="Remove" />
+            <MenuItem onTouchTap={makeCoordinator} primaryText="Make Coordinator" />
+            <MenuItem onTouchTap={remove} primaryText="Remove" />
         </MoreMenu>
     );
 };
 TeamMemberMenu.propTypes = {
-    dispatch: PropTypes.func.isRequired,
     hover: PropTypes.bool,
+    onMenuChoice: PropTypes.func.isRequired,
     profile: InternalPropTypes.ProfileV1.isRequired,
 };
 
@@ -58,6 +69,21 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     } = props;
     const theme = muiTheme.luno.detail;
 
+    const handleMenuChoice = (choice, profile) => {
+        const allMembers = coordinators.concat(members);
+        const member = allMembers.find(m => m.profile.id === profile.id);
+        switch(choice) {
+        case menuChoices.MAKE_MEMBER:
+            member.role = services.team.containers.TeamMemberV1.RoleV1.MEMBER;
+            dispatch(updateMembers(team.id, [member]));
+            break;
+        case menuChoices.MAKE_COORDINATOR:
+            member.role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+            dispatch(updateMembers(team.id, [member]));
+            break;
+        }
+    };
+
     let coordinatorsSection;
     if (coordinators && coordinators.length) {
         const coordinatorProfiles = coordinators.map(c => c.profile);
@@ -65,7 +91,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
             <DetailSection dividerStyle={{marginBottom: 0}} title={t('Coordinators')}>
                 <ProfilesGrid
                     MenuComponent={TeamCoordinatorMenu}
-                    dispatch={dispatch}
+                    onMenuChoice={handleMenuChoice}
                     profiles={coordinatorProfiles}
                 />
             </DetailSection>
@@ -100,9 +126,9 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
             >
                 <InfiniteProfilesGrid
                     MenuComponent={TeamMemberMenu}
-                    dispatch={dispatch}
                     loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}
+                    onMenuChoice={handleMenuChoice}
                     profiles={memberProfiles}
                 />
             </DetailSection>
@@ -128,7 +154,7 @@ TeamDetailPeople.propTypes = {
     members: PropTypes.array,
     membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,
-    team: PropTypes.instanceOf(services.team.containers.TeamV1),
+    team: InternalPropTypes.TeamV1.isRequired,
 };
 
 TeamDetailPeople.contextTypes = {

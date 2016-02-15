@@ -128,3 +128,36 @@ export function updateTeam(client, team) {
             .catch(error => reject(error));
     });
 }
+
+/**
+ * Update members
+ *
+ * @param {Object} client the service client
+ * @param {String} teamId the id of the team
+ * @param {Array[services.team.containers.TeamMemberV1]} members an array of team members
+ *
+ * Example of how to call:
+ *
+ * (with an existing team member object)
+ * member.role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+ * updateMembers(client, [member]);
+ */
+export function updateMembers(client, teamId, members) {
+    const request = new services.team.actions.update_members.RequestV1({
+        /*eslint-disable camelcase*/
+        team_id: teamId,
+        /*eslint-enable camelcase*/
+        members,
+    });
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => {
+                if (response.isSuccess()) {
+                    resolve(members);
+                } else {
+                    reject('Members weren\'t updated');
+                }
+            })
+            .catch(error => reject(error));
+    });
+}

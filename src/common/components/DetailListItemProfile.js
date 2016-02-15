@@ -32,7 +32,7 @@ class DetailListItemProfile extends Component {
     }
 
     render() {
-        const { MenuComponent, dispatch, profile, ...other } = this.props;
+        const { MenuComponent, onMenuChoice, profile, ...other } = this.props;
         const styles = {
             avatar: {
                 height: 50,
@@ -59,8 +59,8 @@ class DetailListItemProfile extends Component {
         if (MenuComponent) {
             menu = (
                 <MenuComponent
-                    dispatch={dispatch}
                     hover={this.state.hover}
+                    onMenuChoice={onMenuChoice}
                     profile={profile}
                 />
             );
@@ -88,7 +88,7 @@ class DetailListItemProfile extends Component {
 
 DetailListItemProfile.propTypes = {
     MenuComponent: PropTypes.func,
-    dispatch: PropTypes.func.isRequired,
+    onMenuChoice: PropTypes.func,
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
 };
 

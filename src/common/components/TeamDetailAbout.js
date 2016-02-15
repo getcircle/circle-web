@@ -23,7 +23,7 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
         const profiles = coordinators.map(c => c.profile);
         coordinatorsSection = (
             <DetailSection dividerStyle={{marginBottom: 0}} title={t('Coordinators')}>
-                <DetailListProfiles dispatch={dispatch} profiles={profiles} />
+                <DetailListProfiles profiles={profiles} />
             </DetailSection>
         );
     }
