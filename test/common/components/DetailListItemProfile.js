@@ -12,6 +12,7 @@ import ProfileFactory from '../../factories/ProfileFactory';
 function setup(propOverrides) {
     const profile = ProfileFactory.getProfile();
     const props = {
+        dispatch: expect.createSpy(),
         profile,
         ...propOverrides,
     };
