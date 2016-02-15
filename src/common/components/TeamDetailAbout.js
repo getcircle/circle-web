@@ -40,16 +40,23 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
         );
     }
 
-    return (
-        <div>
-            <section>
-                <h1 style={theme.h1}>{t('About')} {editIcon}</h1>
-            </section>
+    let descriptionSection;
+    if (team.description && team.description.value) {
+        descriptionSection = (
             <DetailSection title={t('Description')}>
                 <div>
                     <p style={theme.primaryText}>{team.description.value}</p>
                 </div>
             </DetailSection>
+        );
+    }
+
+    return (
+        <div>
+            <section>
+                <h1 style={theme.h1}>{t('About')} {editIcon}</h1>
+            </section>
+            {descriptionSection}
             {coordinatorsSection}
         </div>
     );

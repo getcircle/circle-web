@@ -21,15 +21,22 @@ const noPermissions = new services.common.containers.PermissionsV1({
 
 export default {
 
-    getTeam(overrides = {}) {
-        return new services.team.containers.TeamV1({
+    getTeam(overrides = {}, hasPermissions = false) {
+        if (hasPermissions) {
+            overrides.permissions = noPermissions;
+        } else {
+            overrides.permissions = allPermissions;
+        }
+
+        const params = {
             id: faker.random.uuid(),
             name: faker.hacker.noun(),
             description: {
                 value: faker.lorem.paragraph(),
             },
-            permissions: overrides.noPermissions ? noPermissions : allPermissions,
-        });
+            ...overrides,
+        };
+        return new services.team.containers.TeamV1(params);
     },
 
     getTeamMember(role = services.team.containers.TeamMemberV1.RoleV1.MEMBER, profile = ProfileFactory.getProfile()) {
