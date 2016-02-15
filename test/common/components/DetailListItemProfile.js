@@ -8,7 +8,6 @@ import DetailListItemProfile from '../../../src/common/components/DetailListItem
 import ProfileAvatar from '../../../src/common/components/ProfileAvatar';
 
 import ProfileFactory from '../../factories/ProfileFactory';
-import TeamFactory from '../../factories/TeamFactory';
 
 function setup(propOverrides) {
     const profile = ProfileFactory.getProfile();
