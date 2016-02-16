@@ -68,11 +68,12 @@ class Dialog extends CSSComponent {
                 },
                 DialogCloseButton: {
                     style: {
+                        marginLeft: 10,
                         minWidth: 15,
                     },
                     labelStyle: {
                         color: muiTheme.luno.tintColor,
-                        fontSize: 11,
+                        fontSize: '1.1rem',
                         padding: '0 15px',
                         textTransform: 'uppercase',
                     },
@@ -84,8 +85,6 @@ class Dialog extends CSSComponent {
                         borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                         paddingBottom: 10,
                     },
-                },
-                DialogSave: {
                 },
                 DialogSaveButton: {
                     style: {
@@ -99,16 +98,6 @@ class Dialog extends CSSComponent {
                         padding: '0 15px',
                         textTransform: 'uppercase',
                         ...fontColors.white,
-                    },
-                },
-                DialogTitle: {
-                    className: 'row col-xs middle-xs center-xs',
-                    style: {
-                        alignSelf: 'center',
-                        display: 'flex',
-                        fontSize: '18px',
-                        letterSpacing: '1px',
-                        ...fontColors.dark,
                     },
                 },
                 placeholder: {
@@ -158,7 +147,7 @@ class Dialog extends CSSComponent {
 
         if (dialogSaveLabel !== '') {
             return (
-                <div {...this.styles().DialogSave}>
+                <div>
                     <FlatButton
                         disabled={!this.state.saveEnabled}
                         label={dialogSaveLabel}
@@ -202,7 +191,7 @@ class Dialog extends CSSComponent {
                             {...this.styles().DialogCloseButton}
                         />
                     </div>
-                    <span {...this.styles().DialogTitle}>
+                    <span className="row col-xs middle-xs center-xs" style={this.context.muiTheme.luno.dialog.title}>
                         {title}
                     </span>
                     {this.renderSaveButton()}

@@ -43,6 +43,17 @@ export function getCustomTheme(userAgent) {
             buttonText: '1.1rem',
         },
         tintColor: tintColor,
+        dialog: {
+            title: {
+                color: Colors.black,
+                fontSize: '1.8rem',
+                fontWeight: fontWeights.bold,
+                lineHeight: '22px',
+                alignSelf: 'center',
+                display: 'flex',
+                letterSpacing: '1px',
+            },
+        },
         detail: {
             h1: {
                 fontSize: '21px',

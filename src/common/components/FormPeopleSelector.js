@@ -116,7 +116,7 @@ class FormPeopleSelector extends Component {
 
     componentWillMount() {
         const muiTheme = merge({}, this.state.muiTheme);
-        muiTheme.paper.backgroundColor = '#FCFCFC';
+        muiTheme.paper.backgroundColor = Colors.offWhite,
         this.setState({muiTheme});
     }
 

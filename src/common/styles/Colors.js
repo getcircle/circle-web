@@ -1,6 +1,7 @@
 export default {
     black: '#000000',
     white: '#ffffff',
+    offWhite: '#FCFCFC',
 
     darkWhite: 'rgba(255, 255, 255, 0.8)',
     minWhite: 'rgba(255, 255, 255, 0.1)',

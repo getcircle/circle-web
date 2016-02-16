@@ -1,5 +1,7 @@
+import merge from 'lodash.merge';
 import React, { PropTypes } from 'react';
 
+import Colors from '../styles/Colors';
 import t from '../utils/gettext';
 
 import CSSComponent from  './CSSComponent';
@@ -7,6 +9,7 @@ import Dialog from './Dialog';
 import Form from './Form';
 
 export default class FormDialog extends CSSComponent {
+
     static propTypes = {
         children: PropTypes.node,
         error: PropTypes.string,
@@ -22,6 +25,24 @@ export default class FormDialog extends CSSComponent {
         warning: PropTypes.string,
     };
 
+    static contextTypes = {
+        muiTheme: PropTypes.object.isRequired,
+    }
+
+    static childContextTypes = {
+        muiTheme: PropTypes.object,
+    }
+
+    state = {
+        muiTheme: this.context.muiTheme,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: this.state.muiTheme,
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         if (!this.props.visible && nextProps.visible) {
             this.refs.modal.show();
@@ -32,11 +53,16 @@ export default class FormDialog extends CSSComponent {
         }
     }
 
+    componentWillMount() {
+        const muiTheme = merge({}, this.state.muiTheme);
+        muiTheme.paper.backgroundColor = Colors.offWhite;
+        this.setState({muiTheme});
+    }
+
     classes() {
         return {
             default: {
                 formContainer: {
-                    backgroundColor: 'rgb(255, 255, 255)',
                     padding: 0,
                     width: '100%',
                 },
@@ -71,10 +97,17 @@ export default class FormDialog extends CSSComponent {
             warning,
         } = this.props;
 
+        const styles = {
+            body: {
+                padding: '10px 0 0',
+                overflow: 'visible',
+            },
+        };
+
         return (
             <div >
                 <Dialog
-                    bodyStyle={{padding: '10px 0 0', overflow: 'visible'}}
+                    bodyStyle={styles.body}
                     dialogDismissLabel={t('Cancel')}
                     dialogSaveLabel={submitLabel}
                     error={error}
