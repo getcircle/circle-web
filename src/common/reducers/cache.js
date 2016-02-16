@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import * as types from '../constants/actionTypes';
 
 // in seconds
-const TIME_TO_LIVE = 60 * 5;
+const TIME_TO_LIVE = 60 * 60 * 24;
 
 const initialState = Immutable.fromJS({
     entities: Immutable.Map(),
