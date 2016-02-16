@@ -1,4 +1,5 @@
 import expect from 'expect';
+import { IconButton } from 'material-ui';
 import { shallow } from 'enzyme';
 import React from 'react';
 
@@ -9,7 +10,6 @@ import { showTeamEditModal } from '../../../../src/common/actions/teams';
 
 import DetailSection from '../../../../src/common/components/DetailSectionV2';
 import DetailListProfiles from '../../../../src/common/components/DetailListProfiles';
-import EditIcon from '../../../../src/common/components/EditIcon';
 import TeamDetailAbout from '../../../../src/common/components/TeamDetailAbout';
 
 import TeamFactory from '../../../factories/TeamFactory';
@@ -46,12 +46,12 @@ describe('TeamDetailAbout', () => {
 
         it('is shown when the user has edit permissions', () => {
             const { wrapper } = setup({}, undefined, false);
-            expect(wrapper.find(EditIcon).length).toBe(1);
+            expect(wrapper.find(IconButton).length).toBe(1);
         });
 
         it('is not shown when the user does not have edit permissions', () => {
             const { wrapper } = setup({}, undefined, true);
-            expect(wrapper.find(EditIcon).length).toBe(0);
+            expect(wrapper.find(IconButton).length).toBe(0);
         });
 
         it('onTouchTap dispatches the show modal action', () => {
