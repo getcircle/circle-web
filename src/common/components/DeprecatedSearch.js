@@ -40,7 +40,7 @@ import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 import { stripTags, trimNewLinesAndWhitespace } from '../utils/string';
 
-import DeprecatedAutoComplete from './DeprecatedAutoComplete';
+import DeprecatedAutoComplete from './DeprecatedAutocomplete';
 import CSSComponent from './CSSComponent';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
