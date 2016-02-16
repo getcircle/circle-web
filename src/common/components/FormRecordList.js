@@ -81,14 +81,12 @@ const FormRecordList = ({component, defaultRecord, records}) => {
     const styles = {
         addWrapper: {
             display: 'block',
-            marginLeft: 5,
             marginTop: 15,
             textAlign: 'left',
         },
         add: {
             cursor: 'pointer',
             fontSize: 12,
-            padding: 5,
             ...fontColors.light,
         },
     };

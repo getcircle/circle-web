@@ -89,13 +89,6 @@ export class TeamEditForm extends CSSComponent {
         visible: PropTypes.bool.isRequired,
     };
 
-    componentDidMount() {
-        const { contacts } = this.props.fields;
-        if (contacts.length === 0) {
-            contacts.addField();
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
         if (!this.props.visible && nextProps.visible) {
             this.props.resetForm();
@@ -109,9 +102,6 @@ export class TeamEditForm extends CSSComponent {
         const contacts = team.contact_methods.map(c => {
             return {type: c.type || ContactMethodV1.TypeV1.EMAIL, value: c.value};
         });
-        if (contacts.length === 0) {
-            contacts.push({type: ContactMethodV1.TypeV1.EMAIL, value: ''});
-        }
 
         const action = initialize(EDIT_TEAM, {
             contacts,
