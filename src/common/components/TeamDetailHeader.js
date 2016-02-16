@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import { Link } from 'react-router';
 
+import { getProfilePath } from '../utils/routes';
 import t from '../utils/gettext';
 
 import DetailHeader from './DetailHeader';
@@ -9,7 +11,16 @@ import IconContainer from './IconContainer';
 
 function getCoordinatorNames(coordinators, style) {
     return coordinators.map((c, i) => {
-        return <span key={`coordinator-${i}`} style={style}>{c.profile.full_name}</span>
+        return (
+            <Link
+                className="team-detail-header-coordinator"
+                key={`coordinator-${i}`}
+                style={style}
+                to={getProfilePath(c.profile)}
+            >
+                {c.profile.full_name}
+            </Link>
+        )
     });
 }
 
@@ -18,18 +29,19 @@ function getCoordinatorDetails(coordinators, muiTheme) {
         return <span />;
     }
 
-    const main = <span>{t('Coordinated by ')}</span>;
-    const black = {
+    const style = {
         fontWeight: muiTheme.luno.fontWeights.black,
     };
+
+    const main = <span>{t('Coordinated by ')}</span>;
+    const fullNames = getCoordinatorNames(coordinators, style);
+
     let byLine;
     if (coordinators.length === 1) {
-        byLine = <span><span style={black}>{coordinators[0].profile.full_name}</span></span>;
+        byLine = <span>{fullNames[0]}</span>;
     } else if (coordinators.length === 2) {
-        const fullNames = getCoordinatorNames(coordinators, black);
         byLine = <span>{fullNames[0]}{' & '}{fullNames[1]}</span>;
     } else {
-        const fullNames = getCoordinatorNames(coordinators, black);
         const commaSeparatedItems = fullNames.slice(0, fullNames.length - 2).map((n, i) => <span key={`comma-delimited-${i}`}>{n}{", "}</span>);
         const andSeparatedItems = fullNames.slice(fullNames.length - 2);
         byLine = <span>{commaSeparatedItems}{andSeparatedItems[0]}{" & "}{andSeparatedItems[1]}</span>;

@@ -1,9 +1,14 @@
-.detail-blur-canvas > canvas {
-    top: 64px;
-    z-index: 0;
+a:link.team-detail-header-coordinator {
+    color: white;
+    text-decoration: none;
 }
 
-.detail-blur-canvas-notop > canvas {
-    top: 0;
-    z-index: 0;
+a:visited.team-detail-header-coordinator {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover.team-detail-header-coordinator {
+    color: white;
+    text-decoration: underline;
 }

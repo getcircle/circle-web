@@ -2,8 +2,12 @@ import { browserHistory } from 'react-router';
 
 const NEXT_PATHNAME_KEY = 'n:p';
 
+export function getProfilePath(profile) {
+    return `/profile/${profile.id}`;
+}
+
 export function routeToProfile(profile) {
-    browserHistory.push(`/profile/${profile.id}`);
+    browserHistory.push(getProfilePath(profile));
 }
 
 export function replaceProfileSlug(profile, slug) {
