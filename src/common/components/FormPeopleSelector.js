@@ -121,7 +121,7 @@ class FormPeopleSelector extends Component {
     }
 
     render() {
-        const { active, onBlur, onChange, value, ...other } = this.props;
+        const { active, onChange, value, ...other } = this.props;
         const { muiTheme } = this.context;
         const styles = {
             autoComplete: {

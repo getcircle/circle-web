@@ -26,18 +26,36 @@ class AutoCompleteProfile extends Component {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
+        focused: PropTypes.bool,
         ignoreProfileIds: PropTypes.arrayOf(PropTypes.string),
+        onBlur: PropTypes.func,
         onSelectProfile: PropTypes.func.isRequired,
         resultFactoryFunction: PropTypes.func.isRequired,
         results: PropTypes.object,
     }
 
     static defaultProps = {
+        focued: false,
         ignoreProfileIds: [],
+        onBlur: () => {},
     }
 
     state = {
         query: '',
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        // If the props haven't changed, we don't want to update the component.
+        // Since we focus the Search input if `focused` is true, we can run
+        // into an issue where it keeps focusing even if it hasn't lost focus.
+        // This causes an issue when using this as a form field.
+        const hasChanged = (
+            nextProps.ignoreProfileIds !== this.props.ignoreProfileIds ||
+            nextProps.results !== this.props.results ||
+            nextState.query !== this.state.query ||
+            nextProps.focused !== this.props.focused
+        );
+        return !!hasChanged;
     }
 
     handleDelayedChange = (value) => {
@@ -48,6 +66,7 @@ class AutoCompleteProfile extends Component {
     handleBlur = () => {
         this.setState({query: ''});
         this.props.dispatch(clearResults());
+        this.props.onBlur();
     }
 
     handleSelectItem = ({ payload }) => {
@@ -72,6 +91,7 @@ class AutoCompleteProfile extends Component {
 
     render() {
         const {
+            onBlur,
             onSelectProfile,
             results,
             ...other,
