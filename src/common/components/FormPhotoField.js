@@ -40,10 +40,10 @@ export default class FormPhotoField extends FormField {
                 },
                 profileImage: {
                     border: '0',
-                    borderRadius: 25,
-                    height: 50,
+                    borderRadius: '50%',
+                    height: 60,
                     objectFit: 'cover',
-                    width: 50,
+                    width: 60,
                 },
                 profileImageButton: {
                     backgroundColor: 'transparent',
@@ -51,8 +51,8 @@ export default class FormPhotoField extends FormField {
                     marginRight: 10,
                     padding: 0,
                     outline: 'none',
-                    width: 50,
-                    height: 50,
+                    width: 60,
+                    height: 60,
                 },
                 profileImageUploadContainer: {
                     alignItems: 'center',
