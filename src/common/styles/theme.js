@@ -135,6 +135,7 @@ export function getCustomTheme(userAgent) {
         tabs: {
             tab: {
                 alignItems: 'center',
+                color: Colors.lightBlack,
                 display: 'flex',
                 textTransform: 'uppercase',
                 fontSize: '1.1rem',
