@@ -161,3 +161,31 @@ export function updateMembers(client, teamId, members) {
             .catch(error => reject(error));
     });
 }
+
+/**
+ * Remove members
+ *
+ * @param {Object} client the service client
+ * @param {String} teamId the id of the team
+ * @param {Array[String]} profileIds an array of the profile ids of members to remove
+ *
+ */
+export function removeMembers(client, teamId, profileIds) {
+    const request = new services.team.actions.remove_members.RequestV1({
+        /*eslint-disable camelcase*/
+        team_id: teamId,
+        profile_ids: profileIds,
+        /*eslint-enable camelcase*/
+    });
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => {
+                if (response.isSuccess()) {
+                    resolve({profileIds});
+                } else {
+                    reject('Members weren\'t removed');
+                }
+            })
+            .catch(error => reject(error));
+    });
+}

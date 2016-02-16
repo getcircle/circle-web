@@ -7,6 +7,7 @@ import { IconButton } from 'material-ui';
 import { showAddMembersModal } from '../actions/teams';
 import { updateMembers } from '../actions/teams';
 import t from '../utils/gettext';
+import { removeMembers, updateMembers } from '../actions/teams';
 
 import DetailSection from './DetailSectionV2';
 import InfiniteProfilesGrid from './InfiniteProfilesGrid';
@@ -80,6 +81,9 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
         case menuChoices.MAKE_COORDINATOR:
             member.role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
             dispatch(updateMembers(team.id, [member]));
+            break;
+        case menuChoices.REMOVE:
+            dispatch(removeMembers(team.id, [profile.id]));
             break;
         }
     };
