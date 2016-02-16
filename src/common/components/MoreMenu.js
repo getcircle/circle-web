@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import IconMenu from './IconMenu';
+import HoverIconMenu from './HoverIconMenu';
 import MoreIcon from './MoreIcon';
 
 const MoreMenu = ({children, hover}, {muiTheme}) => {
@@ -38,13 +38,13 @@ const MoreMenu = ({children, hover}, {muiTheme}) => {
         </div>
     );
     return (
-        <IconMenu
+        <HoverIconMenu
             hover={hover}
             iconElement={icon}
             style={styles.root}
         >
             {children}
-        </IconMenu>
+        </HoverIconMenu>
     );
 };
 MoreMenu.propTypes = {
