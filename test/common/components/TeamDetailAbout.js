@@ -12,11 +12,11 @@ import TeamDetailAbout from '../../../src/common/components/TeamDetailAbout';
 
 import TeamFactory from '../../factories/TeamFactory';
 
-function setup(propsOverrides, teamOverrides) {
+function setup(propsOverrides, teamOverrides, hasPermissions) {
     const params = {
         ...teamOverrides,
     };
-    const team = TeamFactory.getTeam(params);
+    const team = TeamFactory.getTeam(params, hasPermissions);
 
     const props = {
         team,
@@ -42,12 +42,12 @@ describe('TeamDetailAbout', () => {
     describe('edit button', () => {
 
         it('is shown when the user has edit permissions', () => {
-            const { wrapper } = setup({}, {noPermissions: false});
+            const { wrapper } = setup({}, undefined, false);
             expect(wrapper.find(EditIcon).length).toBe(1);
         });
 
         it('is not shown when the user does not have edit permissions', () => {
-            const { wrapper } = setup({}, {noPermissions: true});
+            const { wrapper } = setup({}, undefined, true);
             expect(wrapper.find(EditIcon).length).toBe(0);
         });
 
@@ -71,6 +71,11 @@ describe('TeamDetailAbout', () => {
         it('renders the team description', () => {
             const { wrapper, props } = setup();
             expect(wrapper.find('p').text()).toInclude(props.team.description.value);
+        });
+
+        it('won\'t render if we don\'t have a description', () => {
+            const { wrapper } = setup(undefined, {description: null});
+            expect(wrapper.find(DetailSection).at(0).props().title).toNotEqual('Description');
         });
 
     });

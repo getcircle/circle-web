@@ -9,12 +9,27 @@ import Search from '../../../../src/common/components/Search';
 import List from '../../../../src/common/components/Search/List';
 import Section from '../../../../src/common/components/Search/Section';
 
+function result(overrides) {
+    return {
+        type: 'RESULT',
+        ...overrides,
+    };
+}
+
+function results(num, overrides) {
+    const output = [];
+    for (let i = 0; i < num; i++) {
+        output.push(result(overrides));
+    }
+    return output;
+}
+
 function setup(overrides, includeSections) {
     const defaults = {
         dispatch: expect.createSpy(),
     };
     if (includeSections) {
-        defaults.sections = [new Section([{}, {}], 'Section - 1'), new Section([{}, {}], 'Section - 2')];
+        defaults.sections = [new Section(results(2), 'Section - 1'), new Section(results(2), 'Section - 2')];
     }
     const props = Object.assign({}, defaults, overrides);
     const Container = componentWithContext(<Search {...props} />);
@@ -28,8 +43,8 @@ describe('Search', () => {
     describe('sections', () => {
 
         it('renders them in the order provided', () => {
-            const sectionOneItems = [{className: '1-1'}, {className: '1-2'}, {className: '1-3'}];
-            const sectionTwoItems = [{className: '2-1'}, {className: '2-2'}, {className: '2-3'}];
+            const sectionOneItems = results(3, {'className': '1'});
+            const sectionTwoItems = results(3, {className: '2'});
             const sections = [new Section(sectionOneItems, 'Section One'), new Section(sectionTwoItems, 'Section Two')];
             const { output } = setup({sections});
             const lists = TestUtils.scryRenderedComponentsWithType(output, List);
@@ -41,7 +56,7 @@ describe('Search', () => {
         });
 
         it('renders a title for the section if present', () => {
-            const section = new Section([{}, {}], 'Section');
+            const section = new Section(results(2), 'Section');
             const { output } = setup({sections: [section]});
             const title = TestUtils.scryRenderedDOMComponentsWithTag(output, 'span')[0];
             expect(title.textContent).toEqual('Section');
@@ -53,7 +68,7 @@ describe('Search', () => {
         });
 
         it('loops through available items when highlighting', () => {
-            const sections = [new Section([{}, {}]), new Section([{}, {}])];
+            const sections = [new Section(results(2)), new Section(results(2))];
             const { output } = setup({sections});
             for (let i = 0; i < 5; i++) {
                 TestUtils.Simulate.keyDown(output.refs.input, {key: 'ArrowDown'});
@@ -75,7 +90,10 @@ describe('Search', () => {
         });
 
         it('allows a section to specify an initially highlighted index', () => {
-            const sections = [new Section([{}, {}]), new Section([{}, {}], undefined, 0)];
+            const sections = [
+                new Section(results(2)),
+                new Section(results(2), undefined, 0),
+            ];
             const { output } = setup({sections});
             expect(output.state.highlightedIndex).toEqual(2);
         });
@@ -98,33 +116,19 @@ describe('Search', () => {
     describe('keyDownHandlers', () => {
 
         it('calls onBlur when we select an item with Enter', () => {
-            const onTouchTapSpy = expect.createSpy();
+            const onSelectItemSpy = expect.createSpy();
             const onBlurSpy = expect.createSpy();
-            const sections = [new Section([{onTouchTap: onTouchTapSpy}])];
-            const { output } = setup({sections, onBlur: onBlurSpy});
+            const sections = [new Section(results(1))];
+            const { output } = setup({sections, onBlur: onBlurSpy, onSelectItem: onSelectItemSpy});
             // select the first item
             TestUtils.Simulate.keyDown(output.refs.input, {key: 'ArrowDown'});
             // select item with enter
             TestUtils.Simulate.keyDown(output.refs.input, {key: 'Enter'});
 
-            expect(onTouchTapSpy.calls.length).toBe(1, 'Should have triggered onTouchTap');
+            expect(onSelectItemSpy.calls.length).toBe(1, 'Should have triggered onSelectItem');
             expect(onBlurSpy.calls.length).toBe(1, 'Should have triggered onBlur');
         });
 
-    });
-
-    describe('item onTouchTap', () => {
-
-        it('triggers an onBlur', () => {
-            const onTouchTapSpy = expect.createSpy();
-            const onBlurSpy = expect.createSpy();
-            const sections = [new Section([{onTouchTap: onTouchTapSpy}])];
-            const { output } = setup({sections, onBlur: onBlurSpy});
-            const item = TestUtils.findRenderedComponentWithType(output, ListItem);
-            item.props.onTouchTap();
-            expect(onTouchTapSpy.calls.length).toEqual(1, 'Should have triggered onTouchTap for item');
-            expect(onBlurSpy.calls.length).toEqual(1, 'SHould have triggered onBlur when item is selected');
-        });
     });
 
 });

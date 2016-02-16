@@ -2,10 +2,10 @@ import expect from 'expect';
 import React from 'react';
 import TestUtils from 'react-addons-test-utils';
 
-import componentWithContext from '../../componentWithContext';
-import { AutoComplete } from '../../../src/common/components/AutoComplete';
-import List from '../../../src/common/components/Search/List';
-import Section from '../../../src/common/components/Search/Section';
+import componentWithContext from '../../../componentWithContext';
+import { AutoComplete } from '../../../../src/common/components/AutoComplete';
+import List from '../../../../src/common/components/Search/List';
+import Section from '../../../../src/common/components/Search/Section';
 
 function setup(overrides) {
     const defaults = {
@@ -35,7 +35,7 @@ describe('AutoComplete', () => {
     });
 
     it('renders any defaults provided', () => {
-        const defaults = [new Section([{}]), new Section([{}])];
+        const defaults = [new Section([{type: 'RESULT'}]), new Section([{type: 'RESULT'}])];
         const { output } = setup({defaults: defaults});
         const lists = TestUtils.scryRenderedComponentsWithType(output, List);
         expect(lists.length).toEqual(2);
@@ -48,17 +48,6 @@ describe('AutoComplete', () => {
         expect(output.state.query).toEqual('a');
         TestUtils.Simulate.keyDown(input, {key: 'Escape'});
         expect(output.state.query).toEqual('');
-    });
-
-    it('calls the provided onBlur handler and clears the query on escape', () => {
-        const onBlurSpy = expect.createSpy();
-        const { output } = setup({onBlur: onBlurSpy});
-        const input = TestUtils.findRenderedDOMComponentWithTag(output, 'input');
-        TestUtils.Simulate.change(input, {target: {value: 'a'}});
-        expect(output.state.query).toEqual('a');
-        TestUtils.Simulate.keyDown(input, {key: 'Escape'});
-        expect(output.state.query).toEqual('');
-        expect(onBlurSpy.calls.length).toBe(1);
     });
 
 });

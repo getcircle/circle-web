@@ -149,7 +149,7 @@ class App extends CSSComponent {
     }
 
     renderHeaderActionsContainer() {
-        return <HeaderSearch dispatch={this.props.dispatch} />;
+        return <HeaderSearch />;
     }
 
     render() {

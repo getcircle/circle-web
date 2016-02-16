@@ -2,13 +2,11 @@ import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import ReactDOM from 'react-dom';
 
-import { clearResults, autocomplete } from '../../actions/autocomplete';
 import { backgroundColors, fontColors, iconColors } from '../../constants/styles';
 import t from '../../utils/gettext';
 
 import CSSComponent from '../CSSComponent';
 import InternalPropTypes from '../InternalPropTypes';
-import SearchIcon from '../SearchIcon';
 
 import List from './List';
 
@@ -33,14 +31,19 @@ const UPDATE_QUERY_DELAY = 100;
 class Search extends CSSComponent {
 
     static propTypes = {
-        dispatch: PropTypes.func.isRequired,
+        focused: PropTypes.bool,
+        hasItemDivider: PropTypes.bool,
         inputContainerStyle: PropTypes.object,
+        inputStyle: PropTypes.object,
         listContainerStyle: PropTypes.object,
         maxListHeight: PropTypes.number,
         onBlur: PropTypes.func,
         onChange: PropTypes.func,
+        onDelayedChange: PropTypes.func,
         onFocus: PropTypes.func,
+        onSelectItem: PropTypes.func,
         placeholder: PropTypes.string,
+        resultHeight: PropTypes.number,
         searchContainerWidth: PropTypes.number,
         sections: PropTypes.array.isRequired,
         style: PropTypes.object,
@@ -58,18 +61,28 @@ class Search extends CSSComponent {
         this.configure(nextProps, Object.assign(this.state, nextState));
     }
 
+    componentDidUpdate() {
+        if (this.props.focused) {
+            ReactDOM.findDOMNode(this.refs.input).focus();
+        }
+    }
+
     static defaultProps = {
+        focused: true,
+        hasItemDivider: true,
         maxListHeight: RESULT_HEIGHT * 10,
         onBlur: () => {},
-        onFocus: () => {},
         onChange: () => {},
+        onDelayedChange: () => {},
+        onFocus: () => {},
+        onSelectItem: () => {},
         placeholder: t('Search knowledge, people, & teams'),
+        resultHeight: RESULT_HEIGHT,
         searchContainerWidth: SEARCH_CONTAINER_WIDTH,
     }
 
     state = {
         highlightedIndex: null,
-        query: '',
     }
 
     configure(props, state) {
@@ -111,8 +124,7 @@ class Search extends CSSComponent {
             for (let section of this.props.sections) {
                 let highlightedIndex = this.highlightedIndexForSection(section);
                 if (highlightedIndex !== null) {
-                    section.getItems()[highlightedIndex].onTouchTap();
-                    this.cleanupAndBlur();
+                    this.handleSelectItem(section.getItems()[highlightedIndex]);
                     break;
                 }
             }
@@ -125,15 +137,12 @@ class Search extends CSSComponent {
 
     cleanupAndBlur = () => {
         ReactDOM.findDOMNode(this.refs.input).blur();
-        this.setState({
-            highlightedIndex: null,
-            query: '',
-        })
-        this.props.dispatch(clearResults());
+        this.setState({highlightedIndex: null})
         this.props.onBlur();
     }
 
-    handleOnSelectItem = () => {
+    handleSelectItem = (item) => {
+        this.props.onSelectItem(item);
         this.cleanupAndBlur();
     }
 
@@ -184,22 +193,11 @@ class Search extends CSSComponent {
                     ...backgroundColors.light,
                 },
                 list: {
-                    backgroundColor: 'white',
                     paddingTop: 0,
                     paddingBottom: 0,
                 },
                 listItem: {
-                    height: RESULT_HEIGHT,
-                },
-                SearchIcon: {
-                    strokeWidth: 3,
-                    style: {
-                        alignSelf: 'center',
-                        height: 25,
-                        marginLeft: 14,
-                        width: 25,
-                    },
-                    ...iconColors.medium,
+                    height: this.props.resultHeight,
                 },
             },
             'largerDevice': {
@@ -218,8 +216,7 @@ class Search extends CSSComponent {
         const inputValue = event.target.value;
         clearTimeout(this.updateQueryTimer);
         this.updateQueryTimer = setTimeout(() => {
-            this.props.dispatch(autocomplete(inputValue))
-            this.setState({'query': inputValue});
+            this.props.onDelayedChange(inputValue)
         }, UPDATE_QUERY_DELAY);
         this.setState({'highlightedIndex': inputValue !== '' ? 0 : null});
         this.props.onChange(inputValue);
@@ -287,7 +284,7 @@ class Search extends CSSComponent {
     numberOfItemsInSection(section) {
         if (section.hasItems()) {
             const numberOfItemsInPreviousSections = this.numberOfItemsBeforeSection(section);
-            const maxNumberOfResultsVisible = Math.floor(this.props.maxListHeight / RESULT_HEIGHT);
+            const maxNumberOfResultsVisible = Math.floor(this.props.maxListHeight / this.props.resultHeight);
             const maxNumberOfResults = maxNumberOfResultsVisible - numberOfItemsInPreviousSections;
             return section.getNumberOfItems(maxNumberOfResults);
         }
@@ -305,6 +302,7 @@ class Search extends CSSComponent {
     render() {
         const {
             className,
+            inputStyle,
             inputContainerStyle,
             onFocus,
             placeholder,
@@ -320,11 +318,12 @@ class Search extends CSSComponent {
             const maxItems = this.numberOfItemsInSection(section);
             lists.push(
                 <List
+                    hasItemDivider={this.props.hasItemDivider}
                     highlightedIndex={this.highlightedIndexForSection(section)}
                     itemStyle={{...this.styles().listItem}}
                     items={section.getItems(maxItems)}
                     key={`list-${sectionIndex}`}
-                    onSelectItem={this.handleOnSelectItem}
+                    onSelectItem={this.handleSelectItem}
                     style={{...this.styles().list}}
                     title={section.title}
                 />
@@ -344,13 +343,13 @@ class Search extends CSSComponent {
                 <div
                     className="row middle-xs"
                     style={{...this.styles().inputContainer, ...inputContainerStyle}}>
-                    <SearchIcon {...this.styles().SearchIcon} />
                     <input
+                        autoFocus={this.props.focused}
                         onBlur={::this.handleInputBlur}
                         onChange={::this.handleChange}
                         placeholder={placeholder}
                         ref="input"
-                        style={this.styles().input}
+                        style={{...this.styles().input, ...inputStyle}}
                     />
                 </div>
                 <Paper

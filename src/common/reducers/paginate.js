@@ -27,6 +27,10 @@ export function slice(state) {
 export function rewind(key, state) {
     return mutateStateForKey(key, state, undefined, (keyState, action) => {
         const nextRequest = keyState.get('nextRequest');
+        if (!nextRequest) {
+            return keyState;
+        }
+
         const paginator = getPaginator(nextRequest);
         paginator.page = 2;
         /*eslint-disable camelcase*/

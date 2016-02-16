@@ -21,9 +21,10 @@ function paginatedShouldBail(key, teamId, nextRequest, state) {
  *
  * @param {String} name name of the team
  * @param {String} description description of the team
+ * @param {Array[services.team.containers.TeamMemberV1]} members an array of members to add to the team
  * @return {Object} thunk compliant redux action
  */
-export function createTeam(name, description = null) {
+export function createTeam(name, description = null, members = []) {
     const team = new services.team.containers.TeamV1({name, description: {value: description}});
     return {
         [SERVICE_REQUEST]: {
@@ -32,7 +33,7 @@ export function createTeam(name, description = null) {
                 types.CREATE_TEAM_SUCCESS,
                 types.CREATE_TEAM_FAILURE,
             ],
-            remote: client => requests.createTeam(client, team),
+            remote: client => requests.createTeam(client, team, members),
         },
     };
 }

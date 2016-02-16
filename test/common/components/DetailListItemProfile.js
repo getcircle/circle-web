@@ -27,7 +27,6 @@ describe('DetailListItemProfile', () => {
 
     it('renders a ListItem with appropriate props', () => {
         const { wrapper, props: { profile } } = setup();
-        debugger;
         const props = wrapper.find(ListItem).props();
         expect(props.leftAvatar.type).toBe(ProfileAvatar);
         expect(props.leftAvatar.props.profile).toEqual(profile);

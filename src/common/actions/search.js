@@ -2,7 +2,7 @@ import * as types from '../constants/actionTypes';
 import { SERVICE_REQUEST } from '../middleware/services';
 
 import * as notificationService from '../services/notification';
-import { search, searchV2 } from '../services/search';
+import * as requests from '../services/search';
 
 function loadSearchResultsV1(query, category, attribute, attributeValue) {
     return {
@@ -12,7 +12,7 @@ function loadSearchResultsV1(query, category, attribute, attributeValue) {
                 types.SEARCH_SUCCESS,
                 types.SEARCH_FAILURE,
             ],
-            remote: (client) => search(client, query, category, attribute, attributeValue),
+            remote: (client) => requests.search(client, query, category, attribute, attributeValue),
             bailout: (state) => state.get('search').getIn(['results', query]),
         },
         payload: { query, category, attribute, attributeValue},
@@ -21,7 +21,7 @@ function loadSearchResultsV1(query, category, attribute, attributeValue) {
 
 function loadSearchResultsV2(query, category) {
     const action = loadSearchResultsV1(query, category);
-    action[SERVICE_REQUEST].remote = (client) =>  searchV2(client, query, category);
+    action[SERVICE_REQUEST].remote = (client) =>  requests.searchV2(client, query, category);
     return action;
 }
 
@@ -32,6 +32,14 @@ export function loadSearchResults(query, category, attribute, attributeValue) {
     } else {
         return loadSearchResultsV1(query, category, attribute, attributeValue);
     }
+}
+
+export function search(query, category) {
+    return loadSearchResultsV2(query, category);
+}
+
+export function clearResults() {
+    return clearSearchResults();
 }
 
 export function clearSearchResults() {

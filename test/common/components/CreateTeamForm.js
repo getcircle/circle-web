@@ -12,6 +12,7 @@ function setup(overrides) {
         fields: {
             description: {onChange: expect.createSpy(), value: ''},
             name: {onChange: expect.createSpy(), value: ''},
+            people: {onChange: expect.createSpy(), value: []},
         },
         formSubmitting: false,
         handleSubmit: () => expect.createSpy(),

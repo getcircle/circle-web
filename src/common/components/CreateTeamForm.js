@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
+import { services } from 'protobufs';
 
 import { createTeam, hideCreateTeamModal } from '../actions/teams';
 import { CREATE_TEAM } from '../constants/forms';
@@ -10,6 +11,7 @@ import t from '../utils/gettext';
 import { teamValidator } from '../utils/validators';
 
 import FormDialog from './FormDialog';
+import FormPeopleSelector from './FormPeopleSelector';
 import FormLabel from './FormLabel';
 import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
@@ -52,17 +54,24 @@ export class CreateTeamForm extends Component {
         }
     }
 
-    submit = ({name, description}, dispatch) => {
-        dispatch(createTeam(name, description));
+    submit = (form, dispatch) => {
+        let members;
+        const { name, description, people } = form;
+        if (people) {
+            /*eslint-disable camelcase*/
+            members = people.map(profile => new services.team.containers.TeamMemberV1({profile_id: profile.id}));
+            /*eslint-enable camelcase*/
+        }
+        dispatch(createTeam(name, description, members));
     }
 
-    handleCancel() {
+    handleCancel = () => {
         this.props.dispatch(hideCreateTeamModal());
     }
 
     render() {
         const {
-            fields: { name, description },
+            fields: { name, description, people},
             formSubmitting,
             handleSubmit,
             visible,
@@ -71,7 +80,7 @@ export class CreateTeamForm extends Component {
         return (
             <FormDialog
                 modal={true}
-                onCancel={this.handleCancel.bind(this)}
+                onCancel={this.handleCancel}
                 onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.CREATE_TEAM}
                 submitLabel={t('Save')}
@@ -83,7 +92,9 @@ export class CreateTeamForm extends Component {
                 <FormTextField
                     placeholder={t('Marketing, IT, etc.')}
                     {...name}
-                 />
+                />
+                <FormLabel text={t('Invite Others To Join')} />
+                <FormPeopleSelector {...people} />
                 <FormLabel text={t('Description')} />
                 <FormTextArea
                     placeholder={t('What are the responsibilities or the purpose of this team?')}
@@ -97,7 +108,7 @@ export class CreateTeamForm extends Component {
 export default reduxForm(
     {
       form: CREATE_TEAM,
-      fields: ['name', 'description'],
+      fields: ['name', 'description', 'people'],
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
       validate: teamValidator,
     },
