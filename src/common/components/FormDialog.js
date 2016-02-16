@@ -105,7 +105,7 @@ export default class FormDialog extends CSSComponent {
         };
 
         return (
-            <div >
+            <div>
                 <Dialog
                     bodyStyle={styles.body}
                     dialogDismissLabel={t('Cancel')}
