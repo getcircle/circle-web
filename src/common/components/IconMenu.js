@@ -7,7 +7,7 @@ export default class IconMenu extends Component {
     static propTypes = {
         children: PropTypes.node,
         hover: PropTypes.bool,
-        iconElement: PropTypes.func.isRequired,
+        iconElement: PropTypes.object.isRequired,
         style: PropTypes.object,
     }
 
