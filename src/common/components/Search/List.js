@@ -27,7 +27,7 @@ class ListItem extends CSSComponent {
         onSelectItem: PropTypes.func,
     }
 
-    handleOnTouchTap = () => {
+    handleTouchTap = () => {
         const { item, onSelectItem } = this.props;
         if (typeof onSelectItem === 'function') {
             onSelectItem(item);
@@ -37,7 +37,7 @@ class ListItem extends CSSComponent {
     render() {
         const { item: { item }, onSelectItem, ...other } = this.props;
         const props = merge(item, other);
-        return <MaterialListItem onTouchTap={this.handleOnTouchTap} {...props} />;
+        return <MaterialListItem onTouchTap={this.handleTouchTap} {...props} />;
     }
 }
 
