@@ -54,9 +54,13 @@ const selector = createSelector(
 );
 
 const hooks = {
-    fetch: ({ dispatch, params }) => fetchTeam(dispatch, params),
+    fetch: ({ dispatch, params }) => {
+        return Promise.all([
+            fetchTeam(dispatch, params),
+            fetchTeamCoordinators(dispatch, params),
+        ]);
+    },
     defer: ({ dispatch, params }) => {
-        fetchTeamCoordinators(dispatch, params);
         fetchTeamMembers(dispatch, params);
     },
 };
