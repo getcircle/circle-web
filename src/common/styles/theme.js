@@ -2,14 +2,7 @@ import merge from 'lodash.merge';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 
 import Colors from './Colors';
-import Fonts from './Fonts';
-
-export const fontWeights = {
-    light: 300,
-    bold: 'bold',
-    normal: 'normal',
-    semiBold: 600,
-};
+import FontWeights from './FontWeights';
 
 export function getCustomTheme(userAgent) {
     const tintColor = Colors.blue700;
@@ -45,7 +38,7 @@ export function getCustomTheme(userAgent) {
             title: {
                 color: Colors.black,
                 fontSize: '1.8rem',
-                fontWeight: fontWeights.bold,
+                fontWeight: FontWeights.bold,
                 lineHeight: '22px',
                 alignSelf: 'center',
                 display: 'flex',
@@ -57,7 +50,7 @@ export function getCustomTheme(userAgent) {
                 fontSize: '21px',
                 lineHeight: '25px',
                 color: palette.primaryTextColor,
-                fontWeight: fontWeights.normal,
+                fontWeight: FontWeights.normal,
             },
             h2: {
                 fontSize: '1.1rem',
@@ -65,7 +58,7 @@ export function getCustomTheme(userAgent) {
                 letterSpacing: '1px',
                 color: Colors.extraLightBlack,
                 textTransform: 'uppercase',
-                fontWeight: fontWeights.bold,
+                fontWeight: FontWeights.bold,
             },
             primaryText: {
                 fontSize: '13px',
@@ -98,7 +91,7 @@ export function getCustomTheme(userAgent) {
                 marginBottom: 5,
                 textAlign: 'left',
                 color: Colors.mediumBlack,
-                fontWeight: fontWeights.bold,
+                fontWeight: FontWeights.bold,
             },
             removeCross: {
                 color: '#F46F6F',
@@ -109,7 +102,7 @@ export function getCustomTheme(userAgent) {
                 fontSize: '2.8rem',
                 lineHeight: '3.4rem',
                 color: palette.alternateTextColor,
-                fontWeight: fontWeights.bold,
+                fontWeight: FontWeights.bold,
             },
             secondaryText: {
                 fontSize: '1.4rem',
