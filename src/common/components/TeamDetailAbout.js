@@ -11,6 +11,7 @@ import { mailto } from '../utils/contact';
 import DetailListProfiles from './DetailListProfiles';
 import DetailSection from './DetailSectionV2';
 import EditIcon from './EditIcon';
+import TeamEditForm from '../components/TeamEditForm';
 
 const ContactMethod = ({ method }, { muiTheme }) => {
     const styles = {
@@ -143,14 +144,16 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
 
     return (
         <div>
-            <section>
-                <h1 style={theme.h1}>{t('About')} {editIcon}</h1>
+            <section className="row middle-xs">
+                <h1 style={theme.h1}>{t('About')}</h1>
+                {editIcon}
             </section>
             <section className="row">
                 {descriptionSection}
                 {contactSection}
             </section>
             {coordinatorsSection}
+            <TeamEditForm team={team} />
         </div>
     );
 };

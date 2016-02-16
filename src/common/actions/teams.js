@@ -39,6 +39,26 @@ export function createTeam(name, description = null, members = []) {
 }
 
 /**
+ * Action to add members to a team
+ *
+ * @param {String} teamId id of the team
+ * @param {Array} members members to add to the team
+ * @return {Object} thunk compliant redux action
+ */
+export function addMembers(teamId, members) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.ADD_MEMBERS,
+                types.ADD_MEMBERS_SUCCESS,
+                types.ADD_MEMBERS_FAILURE,
+            ],
+            remote: client => requests.addMembers(client, teamId, members),
+        },
+    };
+}
+
+/**
  * Get team
  *
  * @param {String} teamId id of the team
@@ -175,6 +195,24 @@ export function showTeamEditModal() {
  */
 export function hideTeamEditModal() {
     return {type: types.MODAL_TEAM_EDIT_HIDE};
+}
+
+/**
+ * Show the add members modal
+ *
+ * @return {Object} redux action
+ */
+export function showAddMembersModal() {
+    return {type: types.MODAL_ADD_MEMBERS_SHOW};
+}
+
+/**
+ * Hide the add members modal
+ *
+ * @return {Object} redux action
+ */
+export function hideAddMembersModal() {
+    return {type: types.MODAL_ADD_MEMBERS_HIDE};
 }
 
 export function updateTeamSlug(team, previousSlug, nextSlug) {

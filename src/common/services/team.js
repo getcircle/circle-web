@@ -27,6 +27,27 @@ export function createTeam(client, team, members) {
 }
 
 /**
+ * Add members to a team
+ *
+ * @param {Object} client service client
+ * @param {String} teamId id of the team
+ * @param {Array[services.team.containers.TeamMemberV1]} members members to add to the team
+ */
+export function addMembers(client, teamId, members) {
+    const request = new services.team.actions.add_members.RequestV1({
+        /*eslint-disable camelcase*/
+        team_id: teamId,
+        /*eslint-enable camelcase*/
+        members: members,
+    });
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.simple(resolve, reject))
+            .catch(error => reject(error));
+    });
+};
+
+/**
  * Get a team
  *
  * @param {Object} client the service client

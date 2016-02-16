@@ -39,9 +39,11 @@ const TeamDetail = (props) => {
         content = (
             <TeamDetailPeople
                 coordinators={coordinators}
+                dispatch={dispatch}
                 members={members}
                 membersLoading={membersLoading}
                 onLoadMoreMembers={onLoadMoreMembers}
+                team={team}
             />
         );
         break;

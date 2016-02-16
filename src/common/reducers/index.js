@@ -1,6 +1,7 @@
 import { reducer as formReducer } from 'redux-form';
 import Immutable from 'immutable';
 
+export { default as addMembers } from './addMembers';
 export { default as authentication } from './authentication';
 export { default as autocomplete } from './autocomplete';
 export { default as cache } from './cache';

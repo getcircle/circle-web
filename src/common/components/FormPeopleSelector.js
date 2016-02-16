@@ -121,7 +121,7 @@ class FormPeopleSelector extends Component {
     }
 
     render() {
-        const { active, onChange, value, ...other } = this.props;
+        const { active, listContainerStyle, onChange, value, ...other } = this.props;
         const { muiTheme } = this.context;
         const styles = {
             autoComplete: {
@@ -166,6 +166,8 @@ class FormPeopleSelector extends Component {
             );
         });
 
+        const listStyle = merge({}, listContainerStyle, styles.listContainerStyle);
+
         return (
             <div style={styles.container}>
                 {tokens}
@@ -175,7 +177,7 @@ class FormPeopleSelector extends Component {
                     ignoreProfileIds={profiles.map(profile => profile.id)}
                     inputContainerStyle={{height: 'none'}}
                     inputStyle={{paddingLeft: 0}}
-                    listContainerStyle={styles.listContainerStyle}
+                    listContainerStyle={listStyle}
                     onSelectProfile={handleSelectProfile}
                     placeholder={t('Search by Name')}
                     resultFactoryFunction={createResult}
@@ -189,6 +191,7 @@ class FormPeopleSelector extends Component {
 
 FormPeopleSelector.propTypes = {
     active: PropTypes.bool,
+    listContainerStyle: PropTypes.object,
     onBlur: PropTypes.func,
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
