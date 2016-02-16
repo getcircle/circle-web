@@ -6,6 +6,7 @@ import Colors from './Colors';
 export const fontWeights = {
     light: 300,
     bold: 'bold',
+    normal: 'normal',
     semiBold: 600,
 };
 
@@ -35,7 +36,7 @@ export function getCustomTheme(userAgent) {
 
     muiTheme.luno = {
         fontFamilies: {
-            regular: '"Lato", Arial, sans-serif',
+            normal: '"Lato", Arial, sans-serif',
             medium: '"Lato-Black", Arial, sans-serif',
             bold: '"Lato-Bold", Arial, sans-serif',
         },
@@ -59,12 +60,15 @@ export function getCustomTheme(userAgent) {
                 fontSize: '21px',
                 lineHeight: '25px',
                 color: palette.primaryTextColor,
+                fontWeight: fontWeights.normal,
             },
             h2: {
-                fontSize: '11px',
-                lineHeight: '13px',
+                fontSize: '1.1rem',
+                lineHeight: '1.3rem',
+                letterSpacing: '1px',
                 color: Colors.extraLightBlack,
                 textTransform: 'uppercase',
+                fontWeight: fontWeights.bold,
             },
             primaryText: {
                 fontSize: '13px',
@@ -105,18 +109,15 @@ export function getCustomTheme(userAgent) {
         },
         header: {
             primaryText: {
-                fontSize: '36px',
-                lineHeight: '49px',
+                fontSize: '2.8rem',
+                lineHeight: '3.4rem',
                 color: palette.alternateTextColor,
-                fontWeight: fontWeights.light,
+                fontWeight: fontWeights.bold,
             },
             secondaryText: {
-                textTransform: 'uppercase',
-                fontSize: '12px',
-                lineHeight: '17px',
-                letterSpacing: '2px',
+                fontSize: '1.4rem',
+                lineHeight: '1.7rem',
                 color: palette.alternateTextColor,
-                fontWeight: fontWeights.semiBold,
             },
             tertiaryText: {
                 display: 'flex',

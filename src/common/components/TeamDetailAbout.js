@@ -15,14 +15,21 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
             cursor: 'pointer',
             marginBottom: 2,
             verticalAlign: 'middle',
-        }
+        },
+        mainSection: {
+            width: '70%',
+        },
     };
 
     let coordinatorsSection;
     if (coordinators) {
         const profiles = coordinators.map(c => c.profile);
         coordinatorsSection = (
-            <DetailSection dividerStyle={{marginBottom: 0}} title={t('Coordinators')}>
+            <DetailSection
+                dividerStyle={{marginBottom: 0}}
+                style={styles.mainSection}
+                title={t('Coordinators')}
+            >
                 <DetailListProfiles profiles={profiles} />
             </DetailSection>
         );
@@ -43,7 +50,7 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
     let descriptionSection;
     if (team.description && team.description.value) {
         descriptionSection = (
-            <DetailSection title={t('Description')}>
+            <DetailSection style={styles.mainSection} title={t('Description')}>
                 <div>
                     <p style={theme.primaryText}>{team.description.value}</p>
                 </div>

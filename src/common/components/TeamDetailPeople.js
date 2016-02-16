@@ -16,7 +16,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     if (coordinators && coordinators.length) {
         const coordinatorProfiles = coordinators.map(c => c.profile);
         coordinatorsSection = (
-            <DetailSection title={t('Coordinators')}>
+            <DetailSection dividerStyle={{marginBottom: 0}} title={t('Coordinators')}>
                 <ProfilesGrid profiles={coordinatorProfiles} />
             </DetailSection>
         );
@@ -26,7 +26,11 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     if (members && members.length) {
         const memberProfiles = members.map(m => m.profile);
         membersSection = (
-            <DetailSection key="members-section" title={t('Members')}>
+            <DetailSection
+                dividerStyle={{marginBottom: 0}}
+                key="members-section"
+                title={t('Members')}
+            >
                 <InfiniteProfilesGrid
                     loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}
