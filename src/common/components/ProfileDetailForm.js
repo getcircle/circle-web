@@ -244,6 +244,7 @@ export class ProfileDetailForm extends CSSComponent {
 
         return (
             <FormDialog
+                modal={true}
                 onCancel={this.handleCancel.bind(this)}
                 onSubmit={this.buildUpdateHandler()}
                 pageType={PAGE_TYPE.EDIT_PROFILE}
