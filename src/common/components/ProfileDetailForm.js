@@ -247,7 +247,7 @@ export class ProfileDetailForm extends CSSComponent {
                 onCancel={this.handleCancel.bind(this)}
                 onSubmit={this.buildUpdateHandler()}
                 pageType={PAGE_TYPE.EDIT_PROFILE}
-                submitLabel={t('Save')}
+                submitLabel={t('Update')}
                 submitting={formSubmitting}
                 title={t('Edit Profile')}
                 visible={visible}
