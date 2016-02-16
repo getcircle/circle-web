@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 
 import { ListItem } from 'material-ui';
 
+import { routeToProfile } from '../utils/routes';
 import Colors from '../styles/Colors';
 import ProfileAvatar from './ProfileAvatar';
 
@@ -10,6 +11,10 @@ class DetailListItemProfile extends Component {
 
     shouldComponentUpdate(nextProps) {
         return this.props.profile.id !== nextProps.profile.id;
+    }
+
+    handleTouchTap = () => {
+        routeToProfile(this.props.profile);
     }
 
     render() {
@@ -37,6 +42,7 @@ class DetailListItemProfile extends Component {
                 <ListItem
                     innerDivStyle={styles.innerDivStyle}
                     leftAvatar={<ProfileAvatar profile={profile} style={styles.avatar} />}
+                    onTouchTap={this.handleTouchTap}
                     primaryText={<span style={styles.primaryText}>{profile.full_name}</span>}
                     secondaryText={<div style={styles.secondaryText}>{profile.title}</div>}
                 />
