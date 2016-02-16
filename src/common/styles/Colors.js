@@ -12,6 +12,8 @@ export default {
     extraLightBlack: '#A2A2A9',
     minBlack: 'rgba(0, 0, 0, 0.1)',
 
+    shadow: 'rgba(0, 0, 0, 0.5)',
+
     // Not sure if this is actually blue, previous comment:
     // All of them are shades of tint color generated from:
     // http://mcg.mbitson.com/#/

@@ -20,6 +20,16 @@ export function getCustomTheme(userAgent) {
 
     muiTheme.appBar.color = Colors.white;
     muiTheme.flatButton.color = Colors.white;
+    muiTheme.paper.zDepthShadows = [
+        [12, 24, 2, 4],
+        [3, 10, 3, 10],
+        [10, 30, 6, 10],
+        [14, 45, 10, 18],
+        [19, 60, 15, 20],
+    ].map((d) => (
+        `0 ${d[0]}px ${d[1]}px ${Colors.shadow},
+        0 ${d[2]}px ${d[3]}px ${Colors.shadow}`
+    ));
     muiTheme.tabs.backgroundColor = Colors.white;
     muiTheme.tabs.textColor = Colors.lightBalck;
     muiTheme.tabs.selectedTextColor = tintColor;
