@@ -206,7 +206,6 @@ export class ProfileDetailForm extends CSSComponent {
 
         return (
             <div>
-                <FormLabel text={t('Photo')} />
                 <FormPhotoField
                     {...photo}
                 />
