@@ -7,24 +7,29 @@ import DetailHeader from './DetailHeader';
 import GroupIcon from './GroupIcon';
 import IconContainer from './IconContainer';
 
-function getCoordinatorNames(coordinators) {
-    return coordinators.map((c, i) => <b key={`coordinator-${i}`}>{c.profile.full_name}</b>);
+function getCoordinatorNames(coordinators, style) {
+    return coordinators.map((c, i) => {
+        return <span key={`coordinator-${i}`} style={style}>{c.profile.full_name}</span>
+    });
 }
 
-function getCoordinatorDetails(coordinators) {
+function getCoordinatorDetails(coordinators, muiTheme) {
     if (!coordinators) {
         return <span />;
     }
 
     const main = <span>{t('Coordinated by ')}</span>;
+    const black = {
+        fontWeight: muiTheme.luno.fontWeights.black,
+    };
     let byLine;
     if (coordinators.length === 1) {
-        byLine = <span><b>{coordinators[0].profile.full_name}</b></span>;
+        byLine = <span><span style={black}>{coordinators[0].profile.full_name}</span></span>;
     } else if (coordinators.length === 2) {
-        const fullNames = getCoordinatorNames(coordinators);
+        const fullNames = getCoordinatorNames(coordinators, black);
         byLine = <span>{fullNames[0]}{' & '}{fullNames[1]}</span>;
     } else {
-        const fullNames = getCoordinatorNames(coordinators);
+        const fullNames = getCoordinatorNames(coordinators, black);
         const commaSeparatedItems = fullNames.slice(0, fullNames.length - 2).map((n, i) => <span key={`comma-delimited-${i}`}>{n}{", "}</span>);
         const andSeparatedItems = fullNames.slice(fullNames.length - 2);
         byLine = <span>{commaSeparatedItems}{andSeparatedItems[0]}{" & "}{andSeparatedItems[1]}</span>;
@@ -53,7 +58,7 @@ const Details = ({coordinators, muiTheme, team}) => {
             paddingTop: 10,
         },
     };
-    const coordinatorDetails = getCoordinatorDetails(coordinators);
+    const coordinatorDetails = getCoordinatorDetails(coordinators, muiTheme);
     return (
         <section style={styles.container}>
             <div className="row start-xs">

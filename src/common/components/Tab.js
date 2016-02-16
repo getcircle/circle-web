@@ -2,23 +2,11 @@ import React, { PropTypes } from 'react';
 
 import { ListItem } from 'material-ui';
 
-const Tab = ({ label, style, ...other }) => {
-    const styles = {
-        item: {
-            alignItems: 'center',
-            display: 'flex',
-            textTransform: 'uppercase',
-            fontSize: '1.1rem',
-            fontWeight: 'bold',
-            lineHeight: '1.3rem',
-            letterSpacing: '1px',
-            height: '64px',
-        },
-    };
+const Tab = ({ label, style, ...other }, { muiTheme }) => {
     return (
         <ListItem
             primaryText={label}
-            style={{...styles.item, ...style}}
+            style={{...muiTheme.luno.tabs.tab, ...style}}
             {...other}
         />
     );
@@ -30,6 +18,9 @@ Tab.displayName = 'ListItem';
 Tab.propTypes = {
     label: PropTypes.string.isRequired,
     value: PropTypes.any.isRequired,
+};
+Tab.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
 };
 Tab.defaultProps = {
     nestedItems: [],

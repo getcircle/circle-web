@@ -29,7 +29,7 @@ export function getCustomTheme(userAgent) {
     const { palette } = muiTheme.baseTheme;
 
     muiTheme.luno = {
-        fontFamilies: Fonts,
+        fontWeights: FontWeights,
         fontSizes: {
             buttonText: '1.1rem',
         },
@@ -130,6 +130,18 @@ export function getCustomTheme(userAgent) {
                 top: 0,
                 left: 0,
                 backgroundColor: Colors.minWhite,
+            },
+        },
+        tabs: {
+            tab: {
+                alignItems: 'center',
+                display: 'flex',
+                textTransform: 'uppercase',
+                fontSize: '1.1rem',
+                fontWeight: FontWeights.black,
+                lineHeight: '1.3rem',
+                letterSpacing: '1px',
+                height: '64px',
             },
         },
     };

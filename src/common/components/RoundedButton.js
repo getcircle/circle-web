@@ -25,7 +25,7 @@ class RoundedButton extends CSSComponent {
             default: {
                 labelStyle: {
                     color: lunoTheme.tintColor,
-                    fontFamily: lunoTheme.fontFamilies.medium,
+                    fontWeight: lunoTheme.fontWeights.black,
                     fontSize: lunoTheme.fontSizes.buttonText,
                     letterSpacing: '0.5pt',
                 },
