@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
@@ -11,7 +11,6 @@ import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 import { uploadMedia } from '../actions/media';
 
-import CSSComponent from  './CSSComponent';
 import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
 import FormPhotoField from './FormPhotoField';
@@ -40,12 +39,14 @@ const selector = selectors.createImmutableSelector(
 );
 
 
-export class ProfileDetailForm extends CSSComponent {
+export class ProfileDetailForm extends Component {
     static propTypes = {
         contactMethods: PropTypes.arrayOf(
             PropTypes.instanceOf(services.profile.containers.ContactMethodV1),
         ),
+        dirty: PropTypes.bool,
         dispatch: PropTypes.func.isRequired,
+        fields: PropTypes.object.isRequired,
         formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
         mediaUrl: PropTypes.string,
@@ -53,14 +54,6 @@ export class ProfileDetailForm extends CSSComponent {
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         resetForm: PropTypes.func.isRequired,
         visible: PropTypes.bool.isRequired,
-    };
-
-    directAttributesToStateMapping = {
-        /*eslint-disable camelcase*/
-        'first_name': 'firstName',
-        'last_name': 'lastName',
-        'title': 'title',
-        /*eslint-enable camelcase*/
     };
 
     state = {
@@ -84,6 +77,14 @@ export class ProfileDetailForm extends CSSComponent {
         }
     }
 
+    directAttributesToStateMapping = {
+        /*eslint-disable camelcase*/
+        'first_name': 'firstName',
+        'last_name': 'lastName',
+        'title': 'title',
+        /*eslint-enable camelcase*/
+    };
+
     setInitialValues() {
         const { dispatch, profile } = this.props;
 
@@ -96,19 +97,6 @@ export class ProfileDetailForm extends CSSComponent {
         }, fieldNames);
 
         dispatch(action);
-    }
-
-    classes() {
-        return {
-            'default': {
-                firstField: {
-                    paddingLeft: 0,
-                },
-                lastField: {
-                    paddingRight: 0,
-                },
-            },
-        };
     }
 
     // Public Methods
@@ -173,23 +161,21 @@ export class ProfileDetailForm extends CSSComponent {
         return cellNumber;
     }
 
-    buildUpdateHandler() {
-        const { handleSubmit, profile } = this.props;
+    submit = (values, dispatch) => {
+        const { profile } = this.props;
 
-        return handleSubmit((values, dispatch) => {
-            if (!values.photo.existing) {
-                dispatch(uploadMedia(
-                    values.photo,
-                    MediaTypeV1.PROFILE,
-                    profile.id
-                ));
-            } else {
-                this.updateProfile();
-            }
-        });
+        if (!values.photo.existing) {
+            dispatch(uploadMedia(
+                values.photo,
+                MediaTypeV1.PROFILE,
+                profile.id
+            ));
+        } else {
+            this.updateProfile();
+        }
     }
 
-    handleCancel() {
+    handleCancel = () => {
         this.props.dispatch(hideModal());
     }
 
@@ -203,21 +189,32 @@ export class ProfileDetailForm extends CSSComponent {
                 title,
             },
         } = this.props;
+        const styles = {
+            root: {
+                marginTop: 20,
+            },
+            firstField: {
+                paddingLeft: 0,
+            },
+            lastField: {
+                paddingRight: 0,
+            },
+        };
 
         return (
-            <div>
+            <div style={styles.root}>
                 <FormPhotoField
                     {...photo}
                 />
                 <div className="row">
-                    <div className="col-xs" style={this.styles().firstField}>
+                    <div className="col-xs" style={styles.firstField}>
                         <FormLabel text={t('First Name')} />
                         <FormTextField
                             placeholder={t('First Name')}
                             {...firstName}
                          />
                     </div>
-                    <div className="col-xs" style={this.styles().lastField}>
+                    <div className="col-xs" style={styles.lastField}>
                         <FormLabel text={t('Last Name')} />
                         <FormTextField
                             placeholder={t('Last Name')}
@@ -240,13 +237,13 @@ export class ProfileDetailForm extends CSSComponent {
     }
 
     render() {
-        const { formSubmitting, visible } = this.props;
+        const { formSubmitting, handleSubmit, visible } = this.props;
 
         return (
             <FormDialog
                 modal={true}
-                onCancel={this.handleCancel.bind(this)}
-                onSubmit={this.buildUpdateHandler()}
+                onCancel={this.handleCancel}
+                onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.EDIT_PROFILE}
                 submitLabel={t('Update')}
                 submitting={formSubmitting}
