@@ -6,6 +6,7 @@ const FormTextArea = ({error, invalid, touched, ...other}, {muiTheme}) => {
     const styles = {
         ...muiTheme.luno.form.field,
         height: 72,
+        resize: 'none',
     };
     const showError = invalid && touched;
     if (showError) {

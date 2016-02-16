@@ -1,45 +1,32 @@
 import React, { PropTypes } from 'react';
 
-import { fontColors } from '../constants/styles';
 import t from '../utils/gettext';
 
-import CSSComponent from  './CSSComponent';
 
-export default class FormLabel extends CSSComponent {
+const FormLabel = ({ optional, text }, { muiTheme }) => {
+    const optionalText = optional ? t('(optional)') : '';
 
-    static propTypes = {
-        text: PropTypes.string.isRequired,
-    }
+    const styles = {
+        mainText: {
+            textTransform: 'uppercase',
+        }
+    };
 
-    classes() {
-        return {
-            default: {
-                label: {
-                    display: 'block',
-                    fontSize: 11,
-                    letterSpacing: '1px',
-                    lineHeight: '11px',
-                    marginTop: 20,
-                    marginBottom: 5,
-                    textAlign: 'left',
-                    ...fontColors.light,
-                },
-                mainText: {
-                    textTransform: 'uppercase',
-                },
-            },
-        };
-    }
-
-    render() {
-        const { optional, text } = this.props;
-        const optionalText = optional ? t('(optional)') : '';
-
-        return (
-            <label style={this.styles().label}>
-                <span style={this.styles().mainText}>{text}</span>
-                <span> {optionalText}</span>
-            </label>
-        );
-    }
+    return (
+        <label style={muiTheme.luno.form.label}>
+            <span style={styles.mainText}>{text}</span>
+            <span> {optionalText}</span>
+        </label>
+    );
 }
+
+FormLabel.propTypes = {
+    optional: PropTypes.bool,
+    text: PropTypes.string.isRequired,
+};
+
+FormLabel.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
+
+export default FormLabel;

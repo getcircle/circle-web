@@ -43,6 +43,17 @@ export function getCustomTheme(userAgent) {
             buttonText: '1.1rem',
         },
         tintColor: tintColor,
+        dialog: {
+            title: {
+                color: Colors.black,
+                fontSize: '1.8rem',
+                fontWeight: fontWeights.bold,
+                lineHeight: '22px',
+                alignSelf: 'center',
+                display: 'flex',
+                letterSpacing: '1px',
+            },
+        },
         detail: {
             h1: {
                 fontSize: '21px',
@@ -66,7 +77,7 @@ export function getCustomTheme(userAgent) {
                 border: `1px solid ${Colors.minBlack}`,
                 borderRadius: '2px',
                 boxSizing: 'border-box',
-                color: Colors.darkBlack,
+                color: Colors.black,
                 display: 'flex',
                 fontSize: 14,
                 lineHeight: '14px',
@@ -76,6 +87,17 @@ export function getCustomTheme(userAgent) {
             },
             fieldError: {
                 border: `1px solid ${Colors.red700}`,
+            },
+            label: {
+                display: 'block',
+                fontSize: 11,
+                letterSpacing: '1px',
+                lineHeight: '11px',
+                marginTop: 20,
+                marginBottom: 5,
+                textAlign: 'left',
+                color: Colors.mediumBlack,
+                fontWeight: fontWeights.bold,
             },
             removeCross: {
                 color: '#F46F6F',
