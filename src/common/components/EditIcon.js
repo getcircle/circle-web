@@ -22,10 +22,10 @@ EditIcon.propTypes = {
     width: PropTypes.number,
 };
 EditIcon.defaultProps = {
-    height: 26,
+    height: 24,
     stroke: '#000000',
     strokeWidth: 2,
-    width: 26,
+    width: 24,
 };
 
 export default EditIcon;

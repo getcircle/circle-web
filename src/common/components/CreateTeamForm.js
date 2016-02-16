@@ -83,7 +83,7 @@ export class CreateTeamForm extends Component {
                 onCancel={this.handleCancel}
                 onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.CREATE_TEAM}
-                submitLabel={t('Save')}
+                submitLabel={t('Create')}
                 submitting={formSubmitting}
                 title={t('Create Team')}
                 visible={visible}

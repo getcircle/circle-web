@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { IconButton } from 'material-ui';
+
 import Colors from '../styles/Colors';
 import { showTeamEditModal } from '../actions/teams';
 import t from '../utils/gettext';
@@ -112,11 +114,9 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
     if (team.permissions && team.permissions.can_edit) {
         const onEdit = () => dispatch(showTeamEditModal());
         editIcon = (
-            <EditIcon
-                onTouchTap={onEdit}
-                stroke={muiTheme.luno.tintColor}
-                style={styles.edit}
-            />
+            <IconButton onTouchTap={onEdit}>
+                <EditIcon stroke={muiTheme.luno.tintColor} />
+            </IconButton>
         );
     }
 
