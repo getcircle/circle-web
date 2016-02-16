@@ -6,6 +6,7 @@ export default {
     minWhite: 'rgba(255, 255, 255, 0.1)',
 
     darkBlack: 'rgba(0, 0, 0, 0.8)',
+    mediumBlack: '#808080',
     lightBlack: '#616166',
     extraLightBlack: '#A2A2A9',
     minBlack: 'rgba(0, 0, 0, 0.1)',

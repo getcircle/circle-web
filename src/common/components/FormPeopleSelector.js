@@ -1,6 +1,7 @@
 import merge from 'lodash.merge';
 import React, { Component, PropTypes } from 'react';
 
+import Colors from '../styles/Colors';
 import t from '../utils/gettext';
 
 import CrossIcon from './CrossIcon';
@@ -21,7 +22,7 @@ const Token = ({ index, profile, onRemove }) => {
             paddingTop: 10,
         },
         text: {
-            fontSize: '13px',
+            fontSize: '1.3rem',
             paddingRight: 5,
         },
     };
@@ -37,7 +38,7 @@ const Token = ({ index, profile, onRemove }) => {
             </div>
             <CrossIcon
                 height={16}
-                stroke={'#808080'}
+                stroke={Colors.mediumBlack}
                 width={16}
             />
         </div>
@@ -57,11 +58,11 @@ Token.propTypes = {
 const createResult = ({ profile, highlight }) => {
     const styles = {
         name: {
-            fontSize: '14px',
+            fontSize: '1.4rem',
         },
         title: {
-            color: '#808080',
-            fontSize: '11px',
+            color: Colors.mediumBlack,
+            fontSize: '1.1rem',
         },
     };
 
@@ -90,7 +91,7 @@ const createResult = ({ profile, highlight }) => {
             paddingLeft: 20,
         },
         style: {
-            fontSize: '14px',
+            fontSize: '1.4rem',
         },
     };
     return {
@@ -124,8 +125,9 @@ class FormPeopleSelector extends Component {
         const { muiTheme } = this.context;
         const styles = {
             autoComplete: {
-                height: 40,
+                height: 'initial',
                 marginTop: 10,
+                marginBottom: 10,
             },
             container: {
                 flexWrap: 'wrap',
