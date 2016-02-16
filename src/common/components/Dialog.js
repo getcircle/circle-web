@@ -2,15 +2,12 @@ import mui from 'material-ui';
 
 import React, { PropTypes } from 'react';
 
-import { fontColors, fontWeights } from '../constants/styles';
+import { FlatButton } from 'material-ui';
+
 import tracker from '../utils/tracker';
 
 import CSSComponent from './CSSComponent';
 import InternalPropTypes from './InternalPropTypes';
-
-const {
-    FlatButton,
-} = mui;
 
 class Dialog extends CSSComponent {
 
@@ -64,8 +61,6 @@ class Dialog extends CSSComponent {
                         paddingTop: 10,
                     },
                 },
-                DialogClose: {
-                },
                 DialogCloseButton: {
                     style: {
                         marginLeft: 10,
@@ -74,6 +69,7 @@ class Dialog extends CSSComponent {
                     labelStyle: {
                         color: muiTheme.luno.tintColor,
                         fontSize: '1.1rem',
+                        fontWeight: muiTheme.luno.fontWeights.black,
                         padding: '0 15px',
                         textTransform: 'uppercase',
                     },
@@ -94,10 +90,11 @@ class Dialog extends CSSComponent {
                         minWidth: 15,
                     },
                     labelStyle: {
-                        fontSize: 11,
-                        padding: '0 15px',
+                        fontSize: '1.1rem',
+                        fontWeight: muiTheme.luno.fontWeights.black,
+                        padding: '0 20px',
                         textTransform: 'uppercase',
-                        ...fontColors.white,
+                        color: muiTheme.baseTheme.palette.alternateTextColor,
                     },
                 },
                 placeholder: {
