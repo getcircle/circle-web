@@ -69,6 +69,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
         team,
     } = props;
     const theme = muiTheme.luno.detail;
+    const canEdit = team.permissions && team.permissions.can_edit;
 
     const handleMenuChoice = (choice, profile) => {
         const allMembers = coordinators.concat(members);
@@ -94,7 +95,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
         coordinatorsSection = (
             <DetailSection dividerStyle={{marginBottom: 0}} title={t('Coordinators')}>
                 <ProfilesGrid
-                    MenuComponent={TeamCoordinatorMenu}
+                    MenuComponent={canEdit && TeamCoordinatorMenu}
                     onMenuChoice={handleMenuChoice}
                     profiles={coordinatorProfiles}
                 />
@@ -103,7 +104,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     }
 
     let plusIcon;
-    if (team.permissions && team.permissions.can_edit) {
+    if (canEdit) {
         const styles = {
             icon: {
                 border: '1px solid',
@@ -129,7 +130,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
                 title={t('Members')}
             >
                 <InfiniteProfilesGrid
-                    MenuComponent={TeamMemberMenu}
+                    MenuComponent={canEdit && TeamMemberMenu}
                     loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}
                     onMenuChoice={handleMenuChoice}
