@@ -5,9 +5,12 @@ import { ListItem } from 'material-ui';
 const Tab = ({ label, style, ...other }) => {
     const styles = {
         item: {
+            alignItems: 'center',
+            display: 'flex',
             textTransform: 'uppercase',
             fontSize: '11px',
             lineHeight: '13px',
+            height: '64px',
         },
     };
     return (
