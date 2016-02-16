@@ -48,7 +48,8 @@ describe('TeamDetailHeader', () => {
             const { wrapper } = setup({coordinators});
             const html = wrapper.html();
             expect(html).toInclude('Coordinated by');
-            expect(html).toInclude(`<b>${coordinators[0].profile.full_name}</b>`);
+            expect(wrapper.find('a').length).toEqual(1);
+            expect(html).toInclude(coordinators[0].profile.full_name);
         });
 
         it('displays correctly with 2 coordinators', () => {
@@ -56,9 +57,7 @@ describe('TeamDetailHeader', () => {
             const { wrapper } = setup({coordinators});
             const html = wrapper.html();
             expect(html).toInclude('Coordinated by');
-            expect(html).toInclude(
-                `<b>${coordinators[0].profile.full_name}</b><span> &amp; </span><b>${coordinators[1].profile.full_name}</b>`
-            );
+            expect(wrapper.find('a').length).toEqual(2);
         });
 
         it('displays correctly with 3 coordinators', () => {
@@ -66,9 +65,7 @@ describe('TeamDetailHeader', () => {
             const { wrapper } = setup({coordinators});
             const html = wrapper.html();
             expect(html).toInclude('Coordinated by');
-            expect(html).toInclude(
-                `<b>${coordinators[0].profile.full_name}</b><span>, </span></span><b>${coordinators[1].profile.full_name}</b><span> &amp; </span><b>${coordinators[2].profile.full_name}</b>`
-            );
+            expect(wrapper.find('a').length).toEqual(3);
         });
 
     });

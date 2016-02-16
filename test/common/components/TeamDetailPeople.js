@@ -14,8 +14,11 @@ import TeamFactory from '../../factories/TeamFactory';
 
 function setup(propOverrides) {
     const coordinators = TeamFactory.getCoordinators(2);
+    const team = TeamFactory.getTeam();
     const props = {
         coordinators,
+        dispatch: expect.createSpy(),
+        team,
         ...propOverrides,
     };
     const wrapper = shallow(

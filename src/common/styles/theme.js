@@ -60,6 +60,11 @@ export function getCustomTheme(userAgent) {
                 textTransform: 'uppercase',
                 fontWeight: FontWeights.bold,
             },
+            link: {
+                color: tintColor,
+                cursor: 'pointer',
+                textDecoration: 'none',
+            },
             primaryText: {
                 fontSize: '13px',
                 lineHeight: '20px',
