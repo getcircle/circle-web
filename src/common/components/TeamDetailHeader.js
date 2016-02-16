@@ -49,14 +49,17 @@ const Details = ({coordinators, muiTheme, team}) => {
         container: {
             paddingTop: 20,
         },
+        secondaryHeader: {
+            paddingTop: 10,
+        },
     };
     const coordinatorDetails = getCoordinatorDetails(coordinators);
     return (
         <section style={styles.container}>
-            <div className="row center-xs start-md">
+            <div className="row start-xs">
                 <span style={muiTheme.luno.header.primaryText}>{team.name}</span>
             </div>
-            <div className="row center-xs start-md">
+            <div className="row start-xs" style={styles.secondaryHeader}>
                 <span key="team-coordinators" style={muiTheme.luno.header.secondaryText}>{coordinatorDetails}</span>
             </div>
         </section>
@@ -66,24 +69,30 @@ const Details = ({coordinators, muiTheme, team}) => {
 const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
     const styles = {
         container: {
+            flexWrap: 'nowrap',
             paddingTop: 35,
             paddingLeft: 35,
+        },
+        details: {
+            paddingLeft: 22,
         },
     };
     return (
         <DetailHeader>
-            <section className="row center-xs start-md" style={styles.container}>
-                <div className="col-xs-12 col-md-2">
-                    <div className="row center-xs">
-                        <Icon muiTheme={muiTheme}/>
+            <section className="wrap">
+                <div className="row start-xs" style={styles.container}>
+                    <div>
+                        <div className="row">
+                            <Icon muiTheme={muiTheme}/>
+                        </div>
                     </div>
-                </div>
-                <div className="col-xs-12 col-md-6">
-                    <Details
-                        coordinators={coordinators}
-                        muiTheme={muiTheme}
-                        team={team}
-                    />
+                    <div style={styles.details}>
+                        <Details
+                            coordinators={coordinators}
+                            muiTheme={muiTheme}
+                            team={team}
+                        />
+                    </div>
                 </div>
             </section>
         </DetailHeader>

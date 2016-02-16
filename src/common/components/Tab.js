@@ -8,8 +8,10 @@ const Tab = ({ label, style, ...other }) => {
             alignItems: 'center',
             display: 'flex',
             textTransform: 'uppercase',
-            fontSize: '11px',
-            lineHeight: '13px',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            lineHeight: '1.3rem',
+            letterSpacing: '1px',
             height: '64px',
         },
     };

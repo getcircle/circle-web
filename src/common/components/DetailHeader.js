@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 const styles = {
     root: {
         backgroundColor: 'rgb(67, 69, 76)',
-        height: 200,
+        height: 164,
         position: 'relative',
         zIndex: 1,
     }

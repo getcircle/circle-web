@@ -2,6 +2,7 @@ import merge from 'lodash.merge';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 
 import Colors from './Colors';
+import Fonts from './Fonts';
 
 export const fontWeights = {
     light: 300,
@@ -35,11 +36,7 @@ export function getCustomTheme(userAgent) {
     const { palette } = muiTheme.baseTheme;
 
     muiTheme.luno = {
-        fontFamilies: {
-            normal: '"Lato", Arial, sans-serif',
-            medium: '"Lato-Black", Arial, sans-serif',
-            bold: '"Lato-Bold", Arial, sans-serif',
-        },
+        fontFamilies: Fonts,
         fontSizes: {
             buttonText: '1.1rem',
         },
@@ -134,8 +131,8 @@ export function getCustomTheme(userAgent) {
             },
             iconContainer: {
                 position: 'relative',
-                height: 120,
-                width: 120,
+                height: 100,
+                width: 100,
                 border: 'none',
                 top: 0,
                 left: 0,
