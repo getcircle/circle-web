@@ -20,7 +20,7 @@ import FormTextField from './FormTextField';
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const fieldNames = ['bio', 'cellNumber', 'firstName', 'lastName', 'photo', 'title'];
+const fieldNames = ['bio', 'email', 'firstName', 'lastName', 'photo', 'title'];
 
 const selector = selectors.createImmutableSelector(
     [
@@ -80,6 +80,7 @@ export class ProfileDetailForm extends Component {
 
     directAttributesToStateMapping = {
         /*eslint-disable camelcase*/
+        'email': 'email',
         'first_name': 'firstName',
         'last_name': 'lastName',
         'title': 'title',
@@ -94,7 +95,7 @@ export class ProfileDetailForm extends Component {
             lastName: profile.last_name,
             photo: {existing: true, preview: profile.image_url},
             title: profile.title,
-            cellNumber: this.getCellNumberFromProps(this.props),
+            email: profile.email,
         }, fieldNames);
 
         dispatch(action);
@@ -116,19 +117,7 @@ export class ProfileDetailForm extends Component {
     getUpdatedProfile(overrides = {}) {
         const { fields, profile } = this.props;
 
-        let contactMethods = [new ContactMethodV1({
-            label: 'Cell Phone',
-            value: fields.cellNumber.value,
-            /*eslint-disable camelcase*/
-            contact_method_type: ContactMethodV1.ContactMethodTypeV1.CELL_PHONE,
-            /*eslint-enable camelcase*/
-        })];
-
-        let updatedProfile = {
-            /*eslint-disable camelcase*/
-            contact_methods: contactMethods,
-            /*eslint-enable camelcase*/
-        };
+        let updatedProfile = {};
         for (let attribute in this.directAttributesToStateMapping) {
             updatedProfile[attribute] = fields[this.directAttributesToStateMapping[attribute]].value;
         }
@@ -139,27 +128,6 @@ export class ProfileDetailForm extends Component {
 
     getFieldsThatChanged() {
         return fieldNames.filter(field => this.props.fields[field].dirty);
-    }
-
-    getCellNumberFromProps(props) {
-        let cellNumber = '';
-        if (props.contactMethods && props.contactMethods.length > 0) {
-            for (let key in props.contactMethods) {
-                let contactMethod = props.contactMethods[key];
-                if (
-                    contactMethod &&
-                    (
-                        contactMethod.contact_method_type === ContactMethodV1.ContactMethodTypeV1.CELL_PHONE ||
-                        contactMethod.contact_method_type === null
-                    )
-                ) {
-                    cellNumber = contactMethod.value;
-                    break;
-                }
-            }
-        }
-
-        return cellNumber;
     }
 
     submit = (values, dispatch) => {
@@ -184,7 +152,7 @@ export class ProfileDetailForm extends Component {
         const {
             fields: {
                 bio,
-                cellNumber,
+                email,
                 firstName,
                 photo,
                 lastName,
@@ -234,10 +202,10 @@ export class ProfileDetailForm extends Component {
                     placeholder={t('')}
                     {...bio}
                 />
-                <FormLabel text={t('Contact')} />
+                <FormLabel text={t('Email')} />
                 <FormTextField
-                    placeholder={t('Add your cell number')}
-                    {...cellNumber}
+                    placeholder={t('Add your email')}
+                    {...email}
                  />
             </div>
         );
