@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 
 import Tab from '../../../src/common/components/Tab';
-import Tabs from '../../../src/common/components/Tabs';
+import DetailTabs from '../../../src/common/components/DetailTabs';
 import TeamDetailTabs, { SLUGS } from '../../../src/common/components/TeamDetailTabs';
 
 import TeamFactory from '../../factories/TeamFactory';
@@ -41,14 +41,14 @@ describe('TeamDetailTabs', () => {
 
         it('activates the "ABOUT" tab when the about slug is present', () => {
             const { wrapper } = setup({slug: SLUGS.ABOUT});
-            const tabs = wrapper.find(Tabs);
-            expect(tabs.props().value).toEqual(SLUGS.ABOUT);
+            const tabs = wrapper.find(DetailTabs);
+            expect(tabs.props().slug).toEqual(SLUGS.ABOUT);
         });
 
         it('activates the "PEOPLE" tab when the people slug is present', () => {
             const { wrapper } = setup({slug: SLUGS.PEOPLE});
-            const tabs = wrapper.find(Tabs);
-            expect(tabs.props().value).toEqual(SLUGS.PEOPLE);
+            const tabs = wrapper.find(DetailTabs);
+            expect(tabs.props().slug).toEqual(SLUGS.PEOPLE);
         });
 
     });
@@ -57,7 +57,7 @@ describe('TeamDetailTabs', () => {
 
         it('is called when a tab is selected', () => {
             const { wrapper, props: { onRequestChange } } = setup({slug: SLUGS.PEOPLE});
-            const tabs = wrapper.find(Tabs);
+            const tabs = wrapper.find(DetailTabs);
             tabs.simulate('requestChange', {}, SLUGS.ABOUT);
             expect(onRequestChange.calls.length).toEqual(1);
             expect(onRequestChange.calls[0].arguments[1].endsWith(SLUGS.ABOUT));
