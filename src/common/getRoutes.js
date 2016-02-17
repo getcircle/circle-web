@@ -186,7 +186,7 @@ export default function (store, url) {
                 path="/login"
             />
             <Route
-                component={require('./containers/Profile')}
+                component={require('./containers/ProfileV2').default}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
@@ -194,7 +194,7 @@ export default function (store, url) {
                 path="/profile/:profileId/:slug"
             />
             <Route
-                component={require('./containers/Profile')}
+                component={require('./containers/ProfileV2').default}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')

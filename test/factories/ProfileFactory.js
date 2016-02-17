@@ -34,5 +34,27 @@ export default {
             profiles.push(this.getProfile());
         }
         return profiles;
-    }
+    },
+
+    getProfileWithContactMethods(types, overrides) {
+        /*eslint-disable camelcase*/
+        const methods = [];
+        for (let type of types) {
+            const method = this.getProfileContactMethod({contact_method_type: type});
+            methods.push(method);
+        }
+        return this.getProfile({contact_methods: methods});
+        /*eslint-enable camelcase*/
+    },
+
+    getProfileContactMethod(overrides) {
+        /*eslint-disable camelcase*/
+        return new services.profile.containers.ContactMethodV1({
+            value: faker.internet.email(),
+            contact_method_type: 0,
+            ...overrides
+        });
+        /*eslint-enable camelcase*/
+    },
+
 }

@@ -12,7 +12,7 @@ import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import InternalPropTypes from './InternalPropTypes';
 import Posts from './Posts';
-import ProfileDetailAbout from './ProfileDetailAbout';
+import ProfileDetailAbout from './ProfileDetailAboutDeprecated';
 import ProfileDetailForm from './ProfileDetailForm';
 import ProfileDetailHeader from './ProfileDetailHeader';
 

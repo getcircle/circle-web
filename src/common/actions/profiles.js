@@ -1,6 +1,7 @@
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/profile';
+import { retrieveProfile } from '../reducers/denormalizations';
 
 export function getProfiles(parameters, nextRequest) {
     return {
@@ -37,6 +38,31 @@ export function updateProfile(profile, manager) {
                 types.UPDATE_PROFILE_FAILURE,
             ],
             remote: (client) => requests.updateProfile(client, profile, manager),
+        },
+    };
+}
+
+/**
+ * Get a profile
+ *
+ * @param {String} profileId id of the profile
+ * @returns {Object} redux action
+ */
+export function getProfile(profileId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_PROFILE,
+                types.GET_PROFILE_SUCCESS,
+                types.GET_PROFILE_FAILURE,
+            ],
+            /*eslint-disable camelcase */
+            remote: (client) => requests.getProfile(client, {profile_id: profileId}),
+            /*eslint-enable camelcase */
+            bailout: (state) => {
+                const profile = retrieveProfile(profileId, state.get('cache').toJS());
+                return profile !== null && profile !== undefined;
+            },
         },
     };
 }
