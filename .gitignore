@@ -30,3 +30,4 @@ dist
 *.sublime*
 .DS_Store
 webpack-assets.json
+.editorconfig
