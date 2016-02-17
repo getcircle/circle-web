@@ -7,7 +7,6 @@ import t from '../utils/gettext';
 
 import DetailHeader from './DetailHeader';
 import GroupIcon from './GroupIcon';
-import IconContainer from './IconContainer';
 
 function getCoordinatorNames(coordinators, style) {
     return coordinators.map((c, i) => {
@@ -49,19 +48,7 @@ function getCoordinatorDetails(coordinators, muiTheme) {
     return <span>{main}{byLine}</span>;
 }
 
-const Icon = ({muiTheme}) => {
-    return (
-        <IconContainer
-            IconClass={GroupIcon}
-            iconStyle={{...muiTheme.luno.header.icon}}
-            stroke={muiTheme.luno.header.icon.color}
-            strokeWidth={muiTheme.luno.header.icon.strokeWidth}
-            style={muiTheme.luno.header.iconContainer}
-        />
-    );
-};
-
-const Details = ({coordinators, muiTheme, team}) => {
+const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
     const styles = {
         container: {
             paddingTop: 20,
@@ -72,44 +59,13 @@ const Details = ({coordinators, muiTheme, team}) => {
     };
     const coordinatorDetails = getCoordinatorDetails(coordinators, muiTheme);
     return (
-        <section style={styles.container}>
-            <div className="row start-xs">
-                <span style={muiTheme.luno.header.primaryText}>{team.name}</span>
-            </div>
-            <div className="row start-xs" style={styles.secondaryHeader}>
-                <span key="team-coordinators" style={muiTheme.luno.header.secondaryText}>{coordinatorDetails}</span>
-            </div>
-        </section>
-    );
-};
-
-const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
-    const styles = {
-        container: {
-            flexWrap: 'nowrap',
-            paddingTop: 35,
-            paddingLeft: 35,
-        },
-        details: {
-            paddingLeft: 22,
-        },
-    };
-    return (
-        <DetailHeader>
-            <section className="wrap">
-                <div className="row start-xs" style={styles.container}>
-                    <div>
-                        <div className="row">
-                            <Icon muiTheme={muiTheme}/>
-                        </div>
-                    </div>
-                    <div style={styles.details}>
-                        <Details
-                            coordinators={coordinators}
-                            muiTheme={muiTheme}
-                            team={team}
-                        />
-                    </div>
+        <DetailHeader Icon={GroupIcon}>
+            <section style={styles.container}>
+                <div className="row start-xs">
+                    <span style={muiTheme.luno.header.primaryText}>{team.name}</span>
+                </div>
+                <div className="row start-xs" style={styles.secondaryHeader}>
+                    <span key="team-coordinators" style={muiTheme.luno.header.secondaryText}>{coordinatorDetails}</span>
                 </div>
             </section>
         </DetailHeader>
