@@ -7,6 +7,7 @@ import DetailSection from '../DetailSectionV2';
 import DetailListProfiles from '../DetailListProfiles';
 
 import ContactMethods from './ContactMethods';
+import Items from './Items';
 
 function buildProfileList(title) {
     return ({ profiles }) => {
@@ -34,6 +35,7 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
     const managerSection = manager ? <Manager profiles={[manager]} /> : null;
     const peersSection = peers && peers.length ? <Peers profiles={peers} /> : null;
     const directReportsSection = directReports && directReports.length ? <DirectReports profiles={directReports} /> : null;
+    const itemsSection = profile.items && profile.items.length ? <Items items={profile.items} /> : null;
     return (
         <div>
             <section className="row middle-xs">
@@ -47,6 +49,7 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
                 </section>
                 <section className="col-xs-offset-1 col-xs-3">
                     <ContactMethods profile={profile}/ >
+                    {itemsSection}
                 </section>
             </section>
         </div>

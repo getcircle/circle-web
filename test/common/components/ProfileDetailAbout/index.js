@@ -6,6 +6,7 @@ import { services } from 'protobufs';
 import ContactMethods, { ContactMethod } from '../../../../src/common/components/ProfileDetailAbout/ContactMethods';
 import DetailListProfiles from '../../../../src/common/components/DetailListProfiles';
 import DetailSection from '../../../../src/common/components/DetailSectionV2';
+import Items from '../../../../src/common/components/ProfileDetailAbout/Items';
 import ProfileDetailAbout, { DirectReports, Manager, Peers } from '../../../../src/common/components/ProfileDetailAbout';
 
 import { getDefaultContext } from '../../../componentWithContext';
@@ -171,7 +172,25 @@ describe('ProfileDetailAbout', () => {
             expect(wrapper.find('li').length).toEqual(1);
             expect(wrapper.find('a').length).toEqual(1);
         });
+    });
 
+    describe('Items', () => {
+        it('doesn\'t render profile items if the profile doesn\'t contain any', () => {
+            const { wrapper } = setup();
+            expect(wrapper.find(Items).length).toNotExist();
+        });
+
+        it('renders the profile items if the profile contains items', () => {
+            const { wrapper, props: { profile } } = setup({profile: ProfileFactory.getProfileWithItems(2)});
+            expect(wrapper.find(Items).length).toEqual(1);
+            expect(wrapper.find(Items).prop('items')).toEqual(profile.items);
+        });
+
+        it('renders the profile items in a list', () => {
+            const profile = ProfileFactory.getProfileWithItems(2);
+            const { wrapper } = setup({items: profile.items}, Items);
+            expect(wrapper.find('li').length).toEqual(2);
+        });
     });
 
 });

@@ -57,4 +57,20 @@ export default {
         /*eslint-enable camelcase*/
     },
 
+    getProfileWithItems(number) {
+        const items = [];
+        for (let i = 0; i < number; i++) {
+            items.push(this.getProfileItem());
+        }
+        return this.getProfile({items: items});
+    },
+
+    getProfileItem(overrides) {
+        return new services.profile.containers.ProfileItemV1({
+            key: faker.hacker.noun(),
+            value: faker.hacker.noun(),
+            ...overrides,
+        });
+    },
+
 }

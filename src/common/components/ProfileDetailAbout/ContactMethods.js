@@ -78,7 +78,7 @@ const ContactMethods = ({ profile }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     let value;
-    if (profile.contact_methods.length) {
+    if (profile.contact_methods && profile.contact_methods.length) {
         value = (
             <ul>
                 {profile.contact_methods.map((method, index) => <ContactMethod key={`contact-method-${index}`} method={method} />)}
