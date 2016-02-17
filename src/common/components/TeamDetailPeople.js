@@ -1,8 +1,6 @@
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import { IconButton, MenuItem } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
-
-import { IconButton } from 'material-ui';
 
 import { showAddMembersModal } from '../actions/teams';
 import t from '../utils/gettext';
