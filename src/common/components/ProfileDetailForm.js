@@ -14,12 +14,13 @@ import { uploadMedia } from '../actions/media';
 import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
 import FormPhotoField from './FormPhotoField';
+import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
 
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const fieldNames = ['cellNumber', 'firstName', 'lastName', 'photo', 'title'];
+const fieldNames = ['bio', 'cellNumber', 'firstName', 'lastName', 'photo', 'title'];
 
 const selector = selectors.createImmutableSelector(
     [
@@ -182,6 +183,7 @@ export class ProfileDetailForm extends Component {
     renderFields() {
         const {
             fields: {
+                bio,
                 cellNumber,
                 firstName,
                 photo,
@@ -227,6 +229,11 @@ export class ProfileDetailForm extends Component {
                     placeholder={t('Job Title')}
                     {...title}
                  />
+                <FormLabel text={t('Bio')} />
+                <FormTextArea
+                    placeholder={t('')}
+                    {...bio}
+                />
                 <FormLabel text={t('Contact')} />
                 <FormTextField
                     placeholder={t('Add your cell number')}
