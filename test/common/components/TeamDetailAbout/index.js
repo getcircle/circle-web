@@ -1,5 +1,4 @@
 import expect from 'expect';
-import { IconButton } from 'material-ui';
 import { shallow } from 'enzyme';
 import React from 'react';
 

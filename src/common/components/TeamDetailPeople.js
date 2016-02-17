@@ -5,7 +5,6 @@ import { services } from 'protobufs';
 import { IconButton } from 'material-ui';
 
 import { showAddMembersModal } from '../actions/teams';
-import { updateMembers } from '../actions/teams';
 import t from '../utils/gettext';
 import { removeMembers, updateMembers } from '../actions/teams';
 
