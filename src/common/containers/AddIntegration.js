@@ -1,13 +1,12 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import { services } from 'protobufs';
 
 import * as selectors from '../selectors';
 import connectData from '../utils/connectData';
 import { getIntegrationAuthenticationInstructions } from '../actions/authentication';
 import { getNextPathname, routeToURL } from '../utils/routes';
-import { IntegrationString } from '../utils/Integrations';
+import { providerForIntegration } from '../utils/Integrations';
 
 import CSSComponent from '../components/CSSComponent';
 import Container from '../components/Container';
@@ -27,14 +26,6 @@ function fetchData(getState, dispatch, location, params, url) {
     return Promise.all([
         dispatch(getIntegrationAuthenticationInstructions(providerForIntegration(integration), url)),
     ]);
-}
-
-function providerForIntegration(integration) {
-    switch (integration) {
-        case IntegrationString.SLACK:
-            return services.user.containers.IdentityV1.ProviderV1.SLACK;
-            break;
-    }
 }
 
 @connectData(fetchData)
