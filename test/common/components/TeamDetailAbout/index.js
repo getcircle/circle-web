@@ -44,18 +44,18 @@ describe('TeamDetailAbout', () => {
     describe('edit button', () => {
 
         it('is shown when the user has edit permissions', () => {
-            const { wrapper } = setup({}, undefined, false);
+            const { wrapper } = setup({}, undefined, true);
             expect(wrapper.find(IconButton).length).toBe(1);
         });
 
         it('is not shown when the user does not have edit permissions', () => {
-            const { wrapper } = setup({}, undefined, true);
+            const { wrapper } = setup({}, undefined, false);
             expect(wrapper.find(IconButton).length).toBe(0);
         });
 
         it('onTouchTap dispatches the show modal action', () => {
             const dispatchSpy = expect.createSpy();
-            const { wrapper } = setup({dispatch: dispatchSpy});
+            const { wrapper } = setup({dispatch: dispatchSpy}, undefined, true);
             wrapper.find(IconButton).prop('onTouchTap')();
             const action = showTeamEditModal();
             expect(dispatchSpy).toHaveBeenCalledWith(action);

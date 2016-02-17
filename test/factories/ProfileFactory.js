@@ -10,6 +10,7 @@ export default {
         return new services.profile.containers.ProfileV1({
             /*eslint-disable camelcase*/
             id: faker.random.uuid(),
+            bio: faker.lorem.sentence(),
             email: faker.internet.email(),
             first_name: firstName,
             last_name: lastName,

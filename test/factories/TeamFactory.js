@@ -23,9 +23,9 @@ export default {
 
     getTeam(overrides = {}, hasPermissions = false) {
         if (hasPermissions) {
-            overrides.permissions = noPermissions;
-        } else {
             overrides.permissions = allPermissions;
+        } else {
+            overrides.permissions = noPermissions;
         }
 
         const params = {
@@ -59,6 +59,14 @@ export default {
 
     getCoordinators(number) {
         return this.getMembers(number, services.team.containers.TeamMemberV1.RoleV1.COORDINATOR);
-    }
+    },
+
+    getTeams(number, hasPermissions = false) {
+        const teams = [];
+        for (let i = 0; i < number; i++) {
+            teams.push(this.getTeam(undefined, hasPermissions));
+        }
+        return teams;
+    },
 
 }

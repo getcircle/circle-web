@@ -3,14 +3,17 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import { services } from 'protobufs';
 
+import Bio from '../../../../src/common/components/ProfileDetailAbout/Bio';
 import ContactMethods, { ContactMethod } from '../../../../src/common/components/ProfileDetailAbout/ContactMethods';
 import DetailListProfiles from '../../../../src/common/components/DetailListProfiles';
+import DetailListTeamsMinimal from '../../../../src/common/components/DetailListTeamsMinimal';
 import DetailSection from '../../../../src/common/components/DetailSectionV2';
 import Items from '../../../../src/common/components/ProfileDetailAbout/Items';
-import ProfileDetailAbout, { DirectReports, Manager, Peers } from '../../../../src/common/components/ProfileDetailAbout';
+import ProfileDetailAbout, { DirectReports, Manager, Peers, Teams } from '../../../../src/common/components/ProfileDetailAbout';
 
 import { getDefaultContext } from '../../../componentWithContext';
 import ProfileFactory from '../../../factories/ProfileFactory';
+import TeamFactory from '../../../factories/TeamFactory';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
@@ -33,6 +36,20 @@ describe('ProfileDetailAbout', () => {
     it('renders the "About" heading', () => {
         const { wrapper } = setup();
         expect(wrapper.find('h1').text()).toEqual('About');
+    });
+
+    describe('Bio', () => {
+
+        it('renders if bio doesn\'t exist', () => {
+            const { wrapper } = setup({profile: ProfileFactory.getProfile({bio: null})});
+            expect(wrapper.find(Bio).length).toExist();
+        });
+
+        it('renders if the bio does exist', () => {
+            const { wrapper } = setup();
+            expect(wrapper.find(Bio).length).toExist();
+        });
+
     });
 
     describe('Manager', () => {
@@ -191,6 +208,29 @@ describe('ProfileDetailAbout', () => {
             const { wrapper } = setup({items: profile.items}, Items);
             expect(wrapper.find('li').length).toEqual(2);
         });
+    });
+
+    describe('Teams', () => {
+        it('doesn\'t render if there are no teams', () => {
+            const { wrapper } = setup();
+            expect(wrapper.find(Teams).length).toNotExist();
+        });
+
+        it('renders the teams if the profile is a member of teams', () => {
+            const teams = TeamFactory.getTeams(3);
+            const { wrapper } = setup({teams});
+            expect(wrapper.find(Teams).length).toEqual(1);
+            expect(wrapper.find(Teams).prop('teams')).toEqual(teams);
+        });
+
+        it('renders DetailListTeamsMinimal', () => {
+            const teams = TeamFactory.getTeams(3);
+            const { wrapper } = setup({teams}, Teams);
+            expect(wrapper.find(DetailSection).prop('title')).toEqual('Teams');
+            expect(wrapper.find(DetailListTeamsMinimal).length).toEqual(1);
+            expect(wrapper.find(DetailListTeamsMinimal).prop('teams')).toEqual(teams);
+        });
+
     });
 
 });
