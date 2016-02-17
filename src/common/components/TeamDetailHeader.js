@@ -49,26 +49,13 @@ function getCoordinatorDetails(coordinators, muiTheme) {
 }
 
 const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
-    const styles = {
-        container: {
-            paddingTop: 20,
-        },
-        secondaryHeader: {
-            paddingTop: 10,
-        },
-    };
     const coordinatorDetails = getCoordinatorDetails(coordinators, muiTheme);
     return (
-        <DetailHeader Icon={GroupIcon}>
-            <section style={styles.container}>
-                <div className="row start-xs">
-                    <span style={muiTheme.luno.header.primaryText}>{team.name}</span>
-                </div>
-                <div className="row start-xs" style={styles.secondaryHeader}>
-                    <span key="team-coordinators" style={muiTheme.luno.header.secondaryText}>{coordinatorDetails}</span>
-                </div>
-            </section>
-        </DetailHeader>
+        <DetailHeader
+            Icon={GroupIcon}
+            primaryText={team.name}
+            secondaryText={coordinatorDetails}
+        />
     );
 };
 
@@ -76,7 +63,7 @@ TeamDetailHeader.propTypes = {
     team: PropTypes.instanceOf(services.team.containers.TeamV1),
 };
 TeamDetailHeader.contextTypes = {
-    muiTheme: PropTypes.object,
+    muiTheme: PropTypes.object.isRequired,
 };
 
 export default TeamDetailHeader;
