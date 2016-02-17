@@ -85,15 +85,15 @@ export function getAuthenticationInstructions(email, url) {
     };
 }
 
-export function getSlackAuthenticationInstructions(url) {
+export function getIntegrationAuthenticationInstructions(integration, url) {
     return {
         [SERVICE_REQUEST]: {
             types: [
-                types.GET_SLACK_AUTHENTICATION_INSTRUCTIONS,
-                types.GET_SLACK_AUTHENTICATION_INSTRUCTIONS_SUCCESS,
-                types.GET_SLACK_AUTHENTICATION_INSTRUCTIONS_FAILURE,
+                types.GET_INTEGRATION_AUTHENTICATION_INSTRUCTIONS,
+                types.GET_INTEGRATION_AUTHENTICATION_INSTRUCTIONS_SUCCESS,
+                types.GET_INTEGRATION_AUTHENTICATION_INSTRUCTIONS_FAILURE,
             ],
-            remote: (client) => userService.getSlackAuthenticationInstructions(client, url),
+            remote: (client) => userService.getIntegrationAuthenticationInstructions(client, integration, url),
         },
     };
 }

@@ -112,7 +112,7 @@ export default function authentication(state = initialState, action) {
         return handleAuthenticationFailure(state, action);
     case types.GET_AUTHENTICATION_INSTRUCTIONS_SUCCESS:
         return handleGetAuthenticationInstructionsSuccess(state, action);
-    case types.GET_SLACK_AUTHENTICATION_INSTRUCTIONS_SUCCESS:
+    case types.GET_INTEGRATION_AUTHENTICATION_INSTRUCTIONS_SUCCESS:
         return handleGetAuthenticationInstructionsSuccess(state, action);
     case types.LOGOUT_SUCCESS:
         return getInitialState();

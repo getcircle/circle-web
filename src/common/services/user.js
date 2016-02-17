@@ -68,21 +68,21 @@ export function getAuthenticationInstructions(client, email, url) {
     });
 }
 
-export function getSlackAuthenticationInstructions(client, url) {
+export function getIntegrationAuthenticationInstructions(client, integration, url) {
     const parameters = {
         /*eslint-disable camelcase*/
         organization_domain: url.subdomain,
         redirect_uri: `${url.protocol}//${url.host}/auth`,
+        provider: integration,
         /*eslint-enable camelcase*/
     };
-    let request = new services.user.actions.get_slack_authentication_instructions.RequestV1(parameters);
+    let request = new services.user.actions.get_integration_authentication_instructions.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then((response) => {
                 if (response.isSuccess()) {
                     resolve({
                         authorizationUrl: response.result.authorization_url,
-                        organizationDomain: url.subdomain,
                     });
                 } else {
                     reject(response.reject());
