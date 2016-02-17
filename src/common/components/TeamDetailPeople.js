@@ -20,6 +20,27 @@ const menuChoices = {
     REMOVE: 'REMOVE',
 };
 
+const TeamMenuItem = ({onTouchTap, text}) => {
+    const styles = {
+        innerDiv: {
+            fontSize: '1.4rem',
+            paddingLeft: 20,
+            paddingRight: 20,
+        },
+        root: {
+            lineHeight: '30px',
+        },
+    };
+    return (
+        <MenuItem
+            innerDivStyle={styles.innerDiv}
+            onTouchTap={onTouchTap}
+            primaryText={text}
+            style={styles.root}
+        />
+    );
+}
+
 const TeamCoordinatorMenu = ({ hover, onMenuChoice, profile }) => {
     function makeMember() { onMenuChoice(menuChoices.MAKE_MEMBER, profile); }
     function remove() { onMenuChoice(menuChoices.REMOVE, profile); }
@@ -27,8 +48,8 @@ const TeamCoordinatorMenu = ({ hover, onMenuChoice, profile }) => {
         <MoreMenu
             hover={hover}
         >
-            <MenuItem onTouchTap={makeMember} primaryText="Make Member" />
-            <MenuItem onTouchTap={remove} primaryText="Remove" />
+            <TeamMenuItem onTouchTap={makeMember} text="Make Member" />
+            <TeamMenuItem onTouchTap={remove} text="Remove" />
         </MoreMenu>
     );
 };
@@ -45,8 +66,8 @@ const TeamMemberMenu = ({ hover, onMenuChoice, profile }) => {
         <MoreMenu
             hover={hover}
         >
-            <MenuItem onTouchTap={makeCoordinator} primaryText="Make Coordinator" />
-            <MenuItem onTouchTap={remove} primaryText="Remove" />
+            <TeamMenuItem onTouchTap={makeCoordinator} text="Make Coordinator" />
+            <TeamMenuItem onTouchTap={remove} text="Remove" />
         </MoreMenu>
     );
 };
