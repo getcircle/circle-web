@@ -11,6 +11,7 @@ import t from '../utils/gettext';
 import tracker from '../utils/tracker';
 import { uploadMedia } from '../actions/media';
 
+import FormContactList from './FormContactList';
 import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
 import FormPhotoField from './FormPhotoField';
@@ -20,7 +21,16 @@ import FormTextField from './FormTextField';
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const fieldNames = ['bio', 'email', 'firstName', 'lastName', 'photo', 'title'];
+const fieldNames = [
+    'bio',
+    'contacts[].type',
+    'contacts[].value',
+    'email',
+    'firstName',
+    'lastName',
+    'photo',
+    'title'
+];
 
 const selector = selectors.createImmutableSelector(
     [
@@ -90,12 +100,20 @@ export class ProfileDetailForm extends Component {
     setInitialValues() {
         const { dispatch, profile } = this.props;
 
+        const defaultContactType = ContactMethodV1.ContactMethodTypeV1.EMAIL;
+        const contacts = profile.contact_methods.map(c => {
+            /*eslint-disable camelcase*/
+            return {type: c.contact_method_type || defaultContactType, value: c.value};
+            /*eslint-enable camelcase*/
+        });
+
         const action = initialize(PROFILE_DETAIL, {
+            contacts,
+            email: profile.email,
             firstName: profile.first_name,
             lastName: profile.last_name,
             photo: {existing: true, preview: profile.image_url},
             title: profile.title,
-            email: profile.email,
         }, fieldNames);
 
         dispatch(action);
@@ -117,7 +135,20 @@ export class ProfileDetailForm extends Component {
     getUpdatedProfile(overrides = {}) {
         const { fields, profile } = this.props;
 
-        let updatedProfile = {};
+        const contactMethods = fields.contacts.map(c => {
+            return new ContactMethodV1({
+                /*eslint-disable camelcase*/
+                value: c.value.value,
+                contact_method_type: c.type.value,
+                /*eslint-enable camelcase*/
+            })
+        });
+
+        let updatedProfile = {
+            /*eslint-disable camelcase*/
+            contact_methods: contactMethods,
+            /*eslint-enable camelcase*/
+        };
         for (let attribute in this.directAttributesToStateMapping) {
             updatedProfile[attribute] = fields[this.directAttributesToStateMapping[attribute]].value;
         }
@@ -127,7 +158,14 @@ export class ProfileDetailForm extends Component {
     }
 
     getFieldsThatChanged() {
-        return fieldNames.filter(field => this.props.fields[field].dirty);
+        return fieldNames.filter(fieldName => {
+            if (fieldName.includes('[].')) {
+                const [first, second] = fieldName.split('[].');
+                return this.props.fields[first].some(f => f[second].dirty);
+            } else {
+                return this.props.fields[fieldName].dirty;
+            }
+        });
     }
 
     submit = (values, dispatch) => {
@@ -152,6 +190,7 @@ export class ProfileDetailForm extends Component {
         const {
             fields: {
                 bio,
+                contacts,
                 email,
                 firstName,
                 photo,
@@ -207,6 +246,12 @@ export class ProfileDetailForm extends Component {
                     placeholder={t('Add your email')}
                     {...email}
                  />
+                <FormLabel text={t('Other Contact')} />
+                <FormContactList
+                    contacts={contacts}
+                    defaultType={ContactMethodV1.ContactMethodTypeV1.EMAIL}
+                    types={ContactMethodV1.ContactMethodTypeV1}
+                />
             </div>
         );
     }

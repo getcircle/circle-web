@@ -10,7 +10,8 @@ import FormTextField from './FormTextField';
 function contactRecordComponent(types) {
     const contactTypes = [];
     _.forIn(types, (value, type) => {
-        const label = _.capitalize(type.toLowerCase());
+        const words = type.toLowerCase().split('_');
+        const label = _.map(words, _.capitalize).join(' ');
         contactTypes.push({label: t(label), value: value});
     });
 
