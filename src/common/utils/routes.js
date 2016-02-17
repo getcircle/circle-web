@@ -38,6 +38,10 @@ export function routeToSearch(history, query) {
     history.pushState(null, `/search/${query}`);
 }
 
+export function routeToAddIntegration(history, integration) {
+    history.pushState(null, `/add-integration/${integration}`);
+}
+
 export function replaceSearchQuery(history, query) {
     history.replaceState(null, `/search/${query}`);
 }

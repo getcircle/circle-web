@@ -223,6 +223,11 @@ export default function (store, url) {
                 path="/team/:teamId"
             />
             <Route
+                component={require('./containers/AddIntegration')}
+                onEnter={applyMiddleware(...defaultMiddleware)}
+                path="/add-integration/:integration"
+            />
+            <Route
                 component={require('./containers/NoMatch')}
                 onEnter={applyMiddleware(...defaultMiddleware)}
                 path="*"
@@ -230,4 +235,3 @@ export default function (store, url) {
         </Route>
     );
 }
-
