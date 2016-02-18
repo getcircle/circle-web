@@ -1,5 +1,5 @@
 import { IconButton, IconMenu as MaterialIconMenu } from 'material-ui';
-import merge from 'merge';
+import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
 
 const IconMenu = (props) => {
