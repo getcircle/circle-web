@@ -38,7 +38,6 @@ const IconMenu = (props) => {
 
 IconMenu.propTypes = {
     children: PropTypes.node,
-    hover: PropTypes.bool,
     iconElement: PropTypes.object.isRequired,
     menuStyle: PropTypes.object,
     onRequestChange: PropTypes.func,
