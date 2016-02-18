@@ -12,6 +12,27 @@ export function slice(state) {
     return state.get('ids').slice(0, pageSize * currentPage);
 }
 
+
+/**
+ * Determine whether or not we should bail from a paginated reducer.
+ *
+ * @param {String} key key to look up in the state (paginated reducer name)
+ * @param {String} paginateBy key we're paginating by
+ * @param {Object} nextRequest the next request if any
+ * @param {Object} state redux state
+ * @returns {Object} returns an object with {bail: <should bail boolean>, paginator: <new paginator if applicable>}
+ *
+ */
+export function paginatedShouldBail(key, paginateBy, nextRequest, state) {
+    if (state.get(key).has(paginateBy)) {
+        if (nextRequest === null) return {bail: true};
+        const paginator = getPaginator(nextRequest);
+        const bail = state.get(key).get(paginateBy).get('pages').has(paginator.page);
+        return {bail, paginator}
+    }
+    return {bail: false};
+}
+
 /**
  * Rewind paginated data back to just the first page.
  *

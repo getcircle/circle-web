@@ -3,18 +3,8 @@ import { services } from 'protobufs';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/team';
-import { getPaginator } from '../services/helpers';
 import { retrieveTeam } from '../reducers/denormalizations';
-
-function paginatedShouldBail(key, teamId, nextRequest, state) {
-    if (state.get(key).has(teamId)) {
-        if (nextRequest === null) return {bail: true};
-        const paginator = getPaginator(nextRequest);
-        const bail = state.get(key).get(teamId).get('pages').has(paginator.page);
-        return {bail, paginator}
-    }
-    return {bail: false};
-}
+import { paginatedShouldBail } from '../reducers/paginate';
 
 /**
  * Redux action to create a team
