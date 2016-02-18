@@ -18,9 +18,12 @@ function setup(overrides) {
         contactMethods: [],
         dispatch: expect.createSpy(),
         fields: {
-            cellNumber: {onChange: expect.createSpy(), value: ''},
+            bio: {onChange: expect.createSpy(), value: ''},
+            contacts: [],
+            email: {onChange: expect.createSpy(), value: ''},
             firstName: {onChange: expect.createSpy(), value: ''},
             lastName: {onChange: expect.createSpy(), value: ''},
+            manager: {onChange: expect.createSpy(), value: {}},
             photo: {onChange: expect.createSpy(), value: {}},
             title: {onChange: expect.createSpy(), value: ''},
         },
@@ -44,12 +47,23 @@ function setup(overrides) {
 
 function initializeAction(profile) {
     return initialize(PROFILE_DETAIL, {
+        contacts: [],
+        email: profile.email,
         firstName: profile.first_name,
         lastName: profile.last_name,
         photo: { existing: true, preview: profile.image_url },
         title: profile.title,
-        cellNumber: '',
-    }, ['cellNumber', 'firstName', 'lastName', 'photo', 'title']);
+    }, [
+        'bio',
+        'contacts[].type',
+        'contacts[].value',
+        'email',
+        'firstName',
+        'lastName',
+        'manager',
+        'photo',
+        'title'
+    ]);
 }
 
 describe('ProfileDetailForm', () => {

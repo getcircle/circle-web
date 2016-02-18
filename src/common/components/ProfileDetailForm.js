@@ -15,6 +15,7 @@ import FormContactList from './FormContactList';
 import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
 import FormPhotoField from './FormPhotoField';
+import FormPersonSelector from './FormPersonSelector';
 import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
 
@@ -28,6 +29,7 @@ const fieldNames = [
     'email',
     'firstName',
     'lastName',
+    'manager',
     'photo',
     'title'
 ];
@@ -193,6 +195,7 @@ export class ProfileDetailForm extends Component {
                 contacts,
                 email,
                 firstName,
+                manager,
                 photo,
                 lastName,
                 title,
@@ -241,6 +244,8 @@ export class ProfileDetailForm extends Component {
                     placeholder={t('')}
                     {...bio}
                 />
+                <FormLabel text={t('Reports To')} />
+                <FormPersonSelector {...manager} />
                 <FormLabel text={t('Email')} />
                 <FormTextField
                     placeholder={t('Add your email')}
