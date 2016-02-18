@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { merge } from 'lodash';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
 
 import Colors from './Colors';

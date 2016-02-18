@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Menu, MenuItem, Popover } from 'material-ui';

@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { merge } from 'lodash';
 import { Tabs, Tab } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
