@@ -40,11 +40,6 @@ const Peers = buildProfileList(t('Peers'));
 const ProfileDetailAbout = (props, { muiTheme }) => {
     const { directReports, manager, peers, profile, memberships } = props;
     const theme = muiTheme.luno.detail;
-    const styles = {
-        section: {
-            padding: 0,
-        },
-    };
 
     const managerSection = manager ? <Manager profiles={[manager]} /> : null;
     const peersSection = peers && peers.length ? <Peers profiles={peers} /> : null;
@@ -57,7 +52,7 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
                 <h1 style={theme.h1}>{t('About')}</h1>
             </section>
             <section className="row">
-                <section className="col-xs-8" style={styles.section}>
+                <section className="col-xs-8" style={theme.section}>
                     <Bio profile={profile} />
                     {managerSection}
                     {peersSection}

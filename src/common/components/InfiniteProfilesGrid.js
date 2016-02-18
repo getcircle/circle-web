@@ -15,7 +15,7 @@ const InfiniteProfilesGrid = ({ MenuComponent, onMenuChoice, profiles, ...other 
             />
         );
     });
-    return <InfiniteGrid children={items} elementHeight={75} {...other} />;
+    return <InfiniteGrid children={items} {...other} />;
 };
 
 InfiniteProfilesGrid.propTypes = {

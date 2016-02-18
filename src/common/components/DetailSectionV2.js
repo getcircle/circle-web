@@ -10,9 +10,10 @@ const DetailSection = (props, { muiTheme }) => {
         },
     };
     const theme = muiTheme.luno.detail;
+    const header = title ? <h2 style={theme.h2}>{title}</h2> : null;
     return (
         <section style={{...styles.root, ...style}} {...other}>
-            <h2 style={theme.h2}>{title}</h2>
+            {header}
             <DetailDivider style={dividerStyle} />
             {children}
         </section>
@@ -23,7 +24,7 @@ DetailSection.propTypes = {
     children: PropTypes.node,
     dividerStyle: PropTypes.object,
     style: PropTypes.object,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
 };
 
 DetailSection.contextTypes = {

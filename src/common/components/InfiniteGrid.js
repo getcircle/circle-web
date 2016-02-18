@@ -27,12 +27,13 @@ Loader.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-const InfiniteGrid = ({ children, elementHeight, loading, onLoadMore }, { muiTheme }) => {
+const InfiniteGrid = ({ children, hasMore, loading, onLoadMore }, { muiTheme }) => {
     return (
         <List>
             <InfiniteScroll
                 className="row"
                 elementIsScrollable={false}
+                hasMore={hasMore}
                 loadMore={onLoadMore}
                 loader={<Loader theme={muiTheme.luno}/>}
                 loadingMore={loading}
@@ -46,7 +47,7 @@ const InfiniteGrid = ({ children, elementHeight, loading, onLoadMore }, { muiThe
 
 InfiniteGrid.propTypes = {
     children: PropTypes.node,
-    elementHeight: PropTypes.number.isRequired,
+    hasMore: PropTypes.bool.isRequired,
     loading: PropTypes.bool,
     onLoadMore: PropTypes.func.isRequired,
 };

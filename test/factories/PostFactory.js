@@ -39,4 +39,12 @@ export default {
     getPostWithState(state) {
         return this.getPost({state});
     },
+
+    getPosts(number, state) {
+        const posts = [];
+        for (let i = 0; i < number; i++) {
+            posts.push(this.getPost(state));
+        }
+        return posts;
+    },
 }

@@ -7,6 +7,7 @@ import { getProfile, getReportingDetails } from '../actions/profiles';
 import { getListedPosts, getListedPostsPaginationKey } from '../actions/posts';
 import { getMembersForProfileId } from '../actions/teams';
 import { resetScroll } from '../utils/window';
+import { slice } from '../reducers/paginate';
 import { retrieveProfile, retrieveReportingDetails, retrievePosts, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
@@ -22,7 +23,7 @@ const selector = selectors.createImmutableSelector(
         selectors.postsSelector,
     ],
     (cacheState, parametersState, membershipsState, postsState) => {
-        let memberships, posts;
+        let memberships, posts, postsLoading, postsNextRequest;
 
         const { profileId } = parametersState;
         const cache = cacheState.toJS();
@@ -38,16 +39,20 @@ const selector = selectors.createImmutableSelector(
 
         const key = getListedPostsPaginationKey(profileId);
         if (postsState.has(key)) {
-            const ids = postsState.get(key).get('ids');
+            const ids = slice(postsState.get(key));
             if (ids.size) {
                 // TODO: support Immutable
                 posts = retrievePosts(ids.toJS(), cache);
+                postsNextRequest = postsState.get(key).get('nextRequest');
             }
+            postsLoading = postsState.get(key).get('loading');
         }
 
         return {
             memberships,
             posts,
+            postsLoading,
+            postsNextRequest,
             profile,
             reportingDetails,
         };
@@ -98,8 +103,20 @@ class Profile extends CSSComponent {
             slug: PropTypes.string,
             profileId: PropTypes.string.isRequired,
         }),
+        posts: PropTypes.array,
+        postsLoading: PropTypes.bool,
+        postsNextRequest: PropTypes.object,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         reportingDetails: PropTypes.instanceOf(services.profile.containers.ReportingDetailsV1),
+    }
+
+    static defaultProps = {
+        postsLoading: false,
+    }
+
+    handleLoadMorePosts = () => {
+        const { dispatch, params: { profileId }, postsNextRequest } = this.props;
+        dispatch(getListedPosts(profileId, postsNextRequest));
     }
 
     componentWillReceiveProps(nextProps, nextState) {
@@ -122,7 +139,9 @@ class Profile extends CSSComponent {
             <Container title={title}>
                 <ProfileDetail
                     directReports={directReports}
+                    hasMorePosts={!!this.props.postsNextRequest}
                     manager={manager}
+                    onLoadMorePosts={this.handleLoadMorePosts}
                     peers={peers}
                     slug={slug}
                     {...this.props}

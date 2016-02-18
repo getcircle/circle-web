@@ -80,6 +80,9 @@ export function getCustomTheme(userAgent) {
                 lineHeight: '20px',
                 color: Colors.lightBlack,
             },
+            section: {
+                padding: 0,
+            },
         },
         form: {
             field: {

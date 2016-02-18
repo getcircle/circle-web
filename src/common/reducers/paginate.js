@@ -25,7 +25,7 @@ export function slice(state) {
  */
 export function paginatedShouldBail(key, paginateBy, nextRequest, state) {
     if (state.get(key).has(paginateBy)) {
-        if (nextRequest === null) return {bail: true};
+        if (nextRequest === null || nextRequest === undefined) return {bail: true};
         const paginator = getPaginator(nextRequest);
         const bail = state.get(key).get(paginateBy).get('pages').has(paginator.page);
         return {bail, paginator}

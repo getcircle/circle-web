@@ -81,6 +81,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     const {
         coordinators,
         dispatch,
+        hasMoreMembers,
         members,
         membersLoading,
         onLoadMoreMembers,
@@ -149,6 +150,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
             >
                 <InfiniteProfilesGrid
                     MenuComponent={canEdit && TeamMemberMenu}
+                    hasMore={hasMoreMembers}
                     loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}
                     onMenuChoice={handleMenuChoice}
@@ -174,6 +176,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
 TeamDetailPeople.propTypes = {
     coordinators: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    hasMoreMembers: PropTypes.bool.isRequired,
     members: PropTypes.array,
     membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,

@@ -13,6 +13,7 @@ const TeamDetail = (props) => {
     const {
         coordinators,
         dispatch,
+        hasMoreMembers,
         members,
         membersLoading,
         onLoadMoreMembers,
@@ -36,6 +37,7 @@ const TeamDetail = (props) => {
             <TeamDetailPeople
                 coordinators={coordinators}
                 dispatch={dispatch}
+                hasMoreMembers={hasMoreMembers}
                 members={members}
                 membersLoading={membersLoading}
                 onLoadMoreMembers={onLoadMoreMembers}

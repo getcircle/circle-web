@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
+import { paginatedShouldBail } from '../reducers/paginate';
 
 export function createPost(post) {
     return {
@@ -35,6 +36,7 @@ export function getPostsPaginationKey(profileId, state) {
 }
 
 export function getPosts(profileId, state, nextRequest) {
+    const paginateBy = getPostsPaginationKey(profileId, state);
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -43,10 +45,12 @@ export function getPosts(profileId, state, nextRequest) {
                 types.GET_POSTS_FAILURE,
             ],
             remote: (client) => requests.getPosts(client, profileId, state, nextRequest),
+            bailout: (state) => {
+                const { bail } = paginatedShouldBail('posts', paginateBy, nextRequest, state);
+                return bail;
+            },
         },
-        meta: {
-            paginateBy: getPostsPaginationKey(profileId, state),
-        },
+        meta: {paginateBy},
     };
 }
 

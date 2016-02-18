@@ -121,6 +121,7 @@ class Team extends CSSComponent {
         if (team) {
             content = (
                 <TeamDetail
+                    hasMoreMembers={!!this.props.membersNextRequest}
                     onLoadMoreMembers={this.handleLoadMoreMembers}
                     slug={slug}
                     {...this.props}
