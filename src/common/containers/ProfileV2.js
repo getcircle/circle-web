@@ -86,7 +86,6 @@ class Profile extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
-            debugger;
             resetScroll();
             loadProfile(nextProps);
         }
