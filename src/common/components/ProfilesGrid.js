@@ -3,12 +3,14 @@ import React, { PropTypes } from 'react';
 import DetailListItemProfile from './DetailListItemProfile';
 import Grid from './Grid';
 
-const ProfilesGrid = ({ profiles }) => {
+const ProfilesGrid = ({ MenuComponent, onMenuChoice, profiles }) => {
     const items = profiles.map((p, i) => {
         return (
             <DetailListItemProfile
+                MenuComponent={MenuComponent}
                 className="col-xs-6"
                 key={`detail-list-item-profile-${i}`}
+                onMenuChoice={onMenuChoice}
                 profile={p}
             />
         );
@@ -17,6 +19,8 @@ const ProfilesGrid = ({ profiles }) => {
 };
 
 ProfilesGrid.propTypes = {
+    MenuComponent: PropTypes.func,
+    onMenuChoice: PropTypes.func,
     profiles: PropTypes.array.isRequired,
 };
 

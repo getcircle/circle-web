@@ -180,6 +180,45 @@ export function updateTeam(team) {
 }
 
 /**
+ * Update team members
+ *
+ * @param {String} teamId the id of the team
+ * @param {Array[services.team.containers.TeamMemberV1]} members an array of team members
+ *
+ */
+export function updateMembers(teamId, members) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.UPDATE_MEMBERS,
+                types.UPDATE_MEMBERS_SUCCESS,
+                types.UPDATE_MEMBERS_FAILURE,
+            ],
+            remote: (client) => requests.updateMembers(client, teamId, members),
+        },
+    };
+}
+
+/**
+ * Remove team members
+ *
+ * @param {String} teamId the id of the team
+ * @param {Array[String]} profileIds an array of the profile ids of members to remove
+ */
+export function removeMembers(teamId, profileIds) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.REMOVE_MEMBERS,
+                types.REMOVE_MEMBERS_SUCCESS,
+                types.REMOVE_MEMBERS_FAILURE,
+            ],
+            remote: (client) => requests.removeMembers(client, teamId, profileIds),
+        },
+    };
+}
+
+/**
  * Show the team edit modal
  *
  * @return {Object} plain object redux action

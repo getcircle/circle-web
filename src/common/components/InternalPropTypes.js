@@ -25,6 +25,7 @@ const InternalPropTypes = {
         enumValues(services.search.containers.search.CategoryV1)
     ),
     TeamV1: PropTypes.instanceOf(services.team.containers.TeamV1),
+    TeamMemberV1: PropTypes.instanceOf(services.team.containers.TeamMemberV1),
     URLContext: PropTypes.shape({
         raw: PropTypes.string.isRequired,
         protocol: PropTypes.oneOf(['http:', 'https:']).isRequired,
