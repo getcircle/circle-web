@@ -4,32 +4,34 @@ import React from 'react';
 
 import { ListItem } from 'material-ui';
 
-import DetailListItemTeamMinimal from '../../../src/common/components/DetailListItemTeamMinimal';
+import DetailListItemProfile from '../../../src/common/components/DetailListItemProfile';
+import ProfileAvatar from '../../../src/common/components/ProfileAvatar';
 
-import TeamFactory from '../../factories/TeamFactory';
+import ProfileFactory from '../../factories/ProfileFactory';
 
 function setup(propOverrides) {
-    const team = TeamFactory.getTeam();
+    const profile = ProfileFactory.getProfile();
     const props = {
-        team,
+        profile,
         ...propOverrides,
     };
 
-    const wrapper = mount(<DetailListItemTeamMinimal {...props} />);
+    const wrapper = mount(<DetailListItemProfile {...props} />);
     return {
         props,
         wrapper,
     };
 }
 
-describe('DetailListItemTeamMinimal', () => {
+describe('DetailListItemProfile', () => {
 
     it('renders a ListItem with appropriate props', () => {
-        const { wrapper, props: { team } } = setup();
-        expect(wrapper.find(ListItem).length).toEqual(1);
-        const html = wrapper.html();
-        expect(html).toExclude('Coordinator');
-        expect(html).toInclude(team.name);
+        const { wrapper, props: { profile } } = setup();
+        const props = wrapper.find(ListItem).props();
+        expect(props.leftAvatar.type).toBe(ProfileAvatar);
+        expect(props.leftAvatar.props.profile).toEqual(profile);
+        expect(props.primaryText.props.children).toEqual(profile.full_name);
+        expect(props.secondaryText.props.children).toEqual(profile.title);
     });
 
 });

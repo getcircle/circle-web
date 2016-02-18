@@ -1,6 +1,9 @@
 import React, { PropTypes } from 'react';
 
 import Colors from '../../styles/Colors';
+import t from '../../utils/gettext';
+
+import DetailSection from '../DetailSectionV2';
 
 const Items = ({ items }, { muiTheme }) => {
     const styles = {
@@ -10,6 +13,7 @@ const Items = ({ items }, { muiTheme }) => {
         label: {
             color: Colors.lightBlack,
             fontSize: '1.3rem',
+            paddingLeft: 0,
         },
         value: {
             fontWeight: muiTheme.luno.fontWeights.bold,
@@ -32,9 +36,11 @@ const Items = ({ items }, { muiTheme }) => {
     }
 
     return (
-        <ul>
-            {elements}
-        </ul>
+        <DetailSection title={t('Info')}>
+            <ul>
+                {elements}
+            </ul>
+        </DetailSection>
     );
 };
 

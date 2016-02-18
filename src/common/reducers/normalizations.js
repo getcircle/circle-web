@@ -59,6 +59,22 @@ export function getTeamMemberNormalizations(action, role = services.team.contain
 }
 
 /**
+ * Return the team member ids that have been normalized in the payload. We
+ * don't use a cache key to segment on role when fetching for profiles.
+ *
+ * @param {Object} action redux action
+ *
+ */
+export function getTeamMemberForProfileNormalizations(action) {
+    return getNormalizations(
+        'members',
+        action.meta.paginateBy,
+        services.team.actions.get_members.ResponseV1,
+        action.payload,
+    );
+}
+
+/**
  * Return the team member ids that have been normalized in the payload.
  *
  * Only returns coordinator team member ids.

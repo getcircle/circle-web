@@ -102,6 +102,26 @@ export function getMembers(client, teamId, role = services.team.containers.TeamM
 }
 
 /**
+ * Get the team member objects for the given profile id
+ *
+ * @param {Object} client the service client
+ * @param {String} profileId the id of the profile
+ *
+ */
+export function getMembersForProfileId(client, profileId) {
+    const request =new services.team.actions.get_members.RequestV1({
+        /*eslint-disable camelcase*/
+        profile_id: profileId,
+        /*eslint-enable camelcase*/
+    });
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => response.finish(resolve, reject, profileId))
+            .catch(error => reject(error));
+    });
+}
+
+/**
  * Update a team
  *
  * @param {Object} client the service client

@@ -115,6 +115,24 @@ export function getMembers(teamId, nextRequest = null) {
     };
 }
 
+export function getMembersForProfileId(profileId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_TEAM_MEMBERS_FOR_PROFILE,
+                types.GET_TEAM_MEMBERS_FOR_PROFILE_SUCCESS,
+                types.GET_TEAM_MEMBERS_FOR_PROFILE_FAILURE,
+            ],
+            remote: client => requests.getMembersForProfileId(client, profileId),
+            bailout: (state) => state.get('profileMemberships').has(profileId),
+        },
+        meta: {
+            paginateBy: profileId,
+        },
+    };
+}
+
+
 /**
  * Get team coordinators
  *

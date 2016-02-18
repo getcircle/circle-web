@@ -20,10 +20,6 @@ const TeamDetail = (props) => {
         team,
     } = props;
 
-    function handleRequestChange(team, nextSlug) {
-        replaceTeamSlug(team, nextSlug);
-    }
-
     let content;
     switch (slug) {
     case SLUGS.ABOUT:
@@ -52,7 +48,7 @@ const TeamDetail = (props) => {
         <div>
             <TeamDetailHeader coordinators={coordinators} team={team} />
             <TeamDetailTabs
-                onRequestChange={handleRequestChange}
+                onRequestChange={replaceTeamSlug}
                 slug={slug}
                 team={team}
             />

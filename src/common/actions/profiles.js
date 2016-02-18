@@ -1,7 +1,7 @@
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/profile';
-import { retrieveProfile } from '../reducers/denormalizations';
+import { retrieveProfile, retrieveReportingDetails } from '../reducers/denormalizations';
 
 export function getProfiles(parameters, nextRequest) {
     return {
@@ -38,6 +38,23 @@ export function updateProfile(profile, manager) {
                 types.UPDATE_PROFILE_FAILURE,
             ],
             remote: (client) => requests.updateProfile(client, profile, manager),
+        },
+    };
+}
+
+export function getReportingDetails(profileId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_PROFILE_REPORTING_DETAILS,
+                types.GET_PROFILE_REPORTING_DETAILS_SUCCESS,
+                types.GET_PROFILE_REPORTING_DETAILS_FAILURE,
+            ],
+            remote: (client) => requests.getReportingDetails(client, profileId),
+            bailout: (state) => {
+                const details = retrieveReportingDetails(profileId, state.get('cache').toJS());
+                return details !== null && details !== undefined;
+            },
         },
     };
 }

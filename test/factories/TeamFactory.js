@@ -46,6 +46,7 @@ export default {
             /*eslint-enable camelcase*/
             role: role,
             profile: profile,
+            team: this.getTeam(),
         });
     },
 

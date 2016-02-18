@@ -7,26 +7,21 @@ import t from '../utils/gettext';
 import { routeToTeam } from '../utils/routes';
 import Colors from '../styles/Colors';
 
-class DetailListItemTeamMinimal extends Component {
+class DetailListItemTeamMembership extends Component {
 
     shouldComponentUpdate(nextProps) {
-        return this.props.team.id !== nextProps.team.id;
+        return this.props.member.id !== nextProps.member.id;
     }
 
     handleTouchTap = () => {
-        routeToTeam(this.props.team);
+        routeToTeam(this.props.member.team);
     }
 
     render() {
-        const { team, ...other } = this.props;
+        const { member: { role, team }, ...other } = this.props;
         const styles = {
-            avatar: {
-                height: 50,
-                width: 50,
-                marginRight: 16,
-            },
             innerDivStyle: {
-                paddingLeft: 86,
+                paddingLeft: 10,
             },
             primaryText: {
                 fontSize: '16px',
@@ -39,10 +34,10 @@ class DetailListItemTeamMinimal extends Component {
         };
 
         let primaryText;
-        if (team.permissions.can_edit) {
+        if (role === services.team.containers.TeamMemberV1.RoleV1.COORDINATOR) {
             primaryText = (
                 <span>
-                    <span style={styles.primaryText}>{team.name}</span><span style={styles.secondaryText}>{`(${t('Coordinator')})`}</span>
+                    <span style={styles.primaryText}>{team.name}</span><span style={styles.secondaryText}>{` (${t('Coordinator')})`}</span>
                 </span>
             );
         } else {
@@ -55,15 +50,15 @@ class DetailListItemTeamMinimal extends Component {
                     innerDivStyle={styles.innerDivStyle}
                     onTouchTap={this.handleTouchTap}
                     primaryText={primaryText}
-                    secondaryText={<span style={styles.secondaryText}>{`${team.total_members} ${t('People')}`}</span>}
+                    secondaryText={<div><span style={styles.secondaryText}>{`${team.total_members} ${t('People')}`}</span></div>}
                 />
             </div>
         );
     }
 }
 
-DetailListItemTeamMinimal.propTypes = {
-    team: PropTypes.instanceOf(services.team.containers.TeamV1),
+DetailListItemTeamMembership.propTypes = {
+    member: PropTypes.instanceOf(services.team.containers.TeamMemberV1),
 };
 
-export default DetailListItemTeamMinimal;
+export default DetailListItemTeamMembership;

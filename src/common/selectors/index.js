@@ -76,3 +76,4 @@ export const teamMembersSelector = state => state.get('teamMembers');
 export const updateProfileSelector = state => state.get('updateProfile');
 export const updateTeamSelector = state => state.get('updateTeam');
 export const addMembersSelector = state => state.get('addMembers');
+export const profileMembershipsSelector = state => state.get('profileMemberships');

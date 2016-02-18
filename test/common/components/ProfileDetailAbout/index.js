@@ -6,7 +6,7 @@ import { services } from 'protobufs';
 import Bio from '../../../../src/common/components/ProfileDetailAbout/Bio';
 import ContactMethods, { ContactMethod } from '../../../../src/common/components/ProfileDetailAbout/ContactMethods';
 import DetailListProfiles from '../../../../src/common/components/DetailListProfiles';
-import DetailListTeamsMinimal from '../../../../src/common/components/DetailListTeamsMinimal';
+import DetailListTeamMemberships from '../../../../src/common/components/DetailListTeamMemberships';
 import DetailSection from '../../../../src/common/components/DetailSectionV2';
 import Items from '../../../../src/common/components/ProfileDetailAbout/Items';
 import ProfileDetailAbout, { DirectReports, Manager, Peers, Teams } from '../../../../src/common/components/ProfileDetailAbout';
@@ -206,6 +206,7 @@ describe('ProfileDetailAbout', () => {
         it('renders the profile items in a list', () => {
             const profile = ProfileFactory.getProfileWithItems(2);
             const { wrapper } = setup({items: profile.items}, Items);
+            expect(wrapper.find(DetailSection).prop('title')).toEqual('Info');
             expect(wrapper.find('li').length).toEqual(2);
         });
     });
@@ -217,18 +218,18 @@ describe('ProfileDetailAbout', () => {
         });
 
         it('renders the teams if the profile is a member of teams', () => {
-            const teams = TeamFactory.getTeams(3);
-            const { wrapper } = setup({teams});
+            const memberships = TeamFactory.getMembers(3);
+            const { wrapper } = setup({ memberships });
             expect(wrapper.find(Teams).length).toEqual(1);
-            expect(wrapper.find(Teams).prop('teams')).toEqual(teams);
+            expect(wrapper.find(Teams).prop('members')).toEqual(memberships);
         });
 
-        it('renders DetailListTeamsMinimal', () => {
-            const teams = TeamFactory.getTeams(3);
-            const { wrapper } = setup({teams}, Teams);
+        it('renders DetailListTeamMemberships', () => {
+            const members = TeamFactory.getMembers(3);
+            const { wrapper } = setup({members}, Teams);
             expect(wrapper.find(DetailSection).prop('title')).toEqual('Teams');
-            expect(wrapper.find(DetailListTeamsMinimal).length).toEqual(1);
-            expect(wrapper.find(DetailListTeamsMinimal).prop('teams')).toEqual(teams);
+            expect(wrapper.find(DetailListTeamMemberships).length).toEqual(1);
+            expect(wrapper.find(DetailListTeamMemberships).prop('members')).toEqual(members);
         });
 
     });
