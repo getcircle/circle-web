@@ -64,7 +64,7 @@ export function getTeam(teamId) {
             ],
             remote: client => requests.getTeam(client, teamId),
             bailout: (state) => {
-                const team = retrieveTeam(teamId, state.get('cache').toJS());
+                const team = retrieveTeam(teamId, state.get('cache').toJS(), ['permissions']);
                 return team !== null && team !== undefined;
             },
         },

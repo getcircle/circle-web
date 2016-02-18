@@ -76,8 +76,8 @@ export function retrieveTeams(teamIds, cache) {
     return retrieve(teamIds, services.organization.containers.TeamV1, cache);
 }
 
-export function retrieveTeam(teamId, cache) {
-    return retrieve(teamId, services.team.containers.TeamV1, cache);
+export function retrieveTeam(teamId, cache, requiredFields) {
+    return retrieve(teamId, services.team.containers.TeamV1, cache, requiredFields);
 }
 
 /**
