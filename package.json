@@ -57,6 +57,10 @@
   "dependencies": {
     "autoprefix": "^0.1.4",
     "babel": "^5.8.23",
+    "babel-core": "^5.8.25",
+    "babel-loader": "^5.3.2",
+    "babel-plugin-react-transform": "^1.1.1",
+    "babel-runtime": "^5.8.25",
     "body-parser": "~1.5.2",
     "bytebuffer": "^4.1.0",
     "compression": "1.6.0",
@@ -116,11 +120,7 @@
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",
-    "babel-core": "^5.8.25",
     "babel-eslint": "^4.1.8",
-    "babel-loader": "^5.3.2",
-    "babel-plugin-react-transform": "^1.1.1",
-    "babel-runtime": "^5.8.25",
     "better-npm-run": "^0.0.3",
     "concurrently": "^0.1.1",
     "css-loader": "^0.15.6",
