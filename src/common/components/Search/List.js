@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Divider, List as MaterialList, ListItem as MaterialListItem } from 'material-ui';
