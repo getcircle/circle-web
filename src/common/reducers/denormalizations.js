@@ -3,8 +3,6 @@ import combine from 'protobuf-normalizr/lib/combine';
 import { createRequiredFieldsValidator } from 'protobuf-normalizr/lib/validators';
 import { services } from 'protobufs';
 
-import { getMembersCacheKey } from '../services/team';
-
 import { isEntityStale } from './cache';
 
 function createTTLValidator(cache) {
