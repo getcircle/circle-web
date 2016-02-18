@@ -1,4 +1,4 @@
-import merge from 'merge';
+import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
 
 import CSSComponent from './CSSComponent';
@@ -38,19 +38,19 @@ class DetailSection extends CSSComponent {
                 FirstCard: {
                     ...common.Card,
                 },
-                SecondCard: merge.recursive({
+                SecondCard: merge({
                     style: {
                         marginTop: 12,
                     },
                 }, common.Card),
             },
             'largerDevice': {
-                FirstCard: merge.recursive({
+                FirstCard: merge({
                     style: {
                         borderRadius: '3px 0px 0px 3px',
                     },
                 }),
-                SecondCard: merge.recursive({
+                SecondCard: merge({
                     style: {
                         marginTop: 0,
                         borderRadius: '0px 3px 3px 0px',
