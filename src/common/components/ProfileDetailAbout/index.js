@@ -73,7 +73,7 @@ ProfileDetailAbout.propTypes = {
     manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     memberships: PropTypes.array,
     peers: PropTypes.array,
-    profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+    profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
 };
 
 ProfileDetailAbout.contextTypes = {

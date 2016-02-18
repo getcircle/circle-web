@@ -106,7 +106,7 @@ class Profile extends CSSComponent {
         posts: PropTypes.array,
         postsLoading: PropTypes.bool,
         postsNextRequest: PropTypes.object,
-        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         reportingDetails: PropTypes.instanceOf(services.profile.containers.ReportingDetailsV1),
     }
 

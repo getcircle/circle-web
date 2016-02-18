@@ -29,6 +29,11 @@ function setup(propsOverrides, teamOverrides) {
 
 describe('TeamDetailHeader', () => {
 
+    it('handles rendering without a team', () => {
+        const { wrapper } = setup({team: null});
+        wrapper.html().startsWith('header');
+    });
+
     it('displays the team name', () => {
         const { wrapper, props: { team } } = setup();
         const html = wrapper.html();

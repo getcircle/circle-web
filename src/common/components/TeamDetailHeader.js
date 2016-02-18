@@ -49,12 +49,16 @@ function getCoordinatorDetails(coordinators, muiTheme) {
 }
 
 const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
-    const coordinatorDetails = getCoordinatorDetails(coordinators, muiTheme);
+    let primaryText, secondaryText;
+    if (team) {
+        primaryText = team.name;
+        secondaryText = getCoordinatorDetails(coordinators, muiTheme);
+    }
     return (
         <DetailHeader
             Icon={GroupIcon}
-            primaryText={team.name}
-            secondaryText={coordinatorDetails}
+            primaryText={primaryText}
+            secondaryText={secondaryText}
         />
     );
 };

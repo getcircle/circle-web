@@ -30,14 +30,16 @@ const DetailHeader = ({avatar, children, primaryText, secondaryText, Icon, ...ot
     let icon;
     if (avatar) {
         icon = avatar;
-    } else {
-        icon = <IconContainer
-            IconClass={Icon}
-            iconStyle={{...theme.icon}}
-            stroke={theme.icon.color}
-            strokeWidth={theme.icon.strokeWidth}
-            style={theme.iconContainer}
-        />
+    } else if (Icon) {
+        icon = (
+            <IconContainer
+                IconClass={Icon}
+                iconStyle={{...theme.icon}}
+                stroke={theme.icon.color}
+                strokeWidth={theme.icon.strokeWidth}
+                style={theme.iconContainer}
+            />
+        );
     };
 
     return (
