@@ -92,6 +92,7 @@ export function getMembers(client, teamId, role = services.team.containers.TeamM
         team_id: teamId,
         /*eslint-enable camelcase*/
         role: role,
+        inflations: new services.common.containers.InflationsV1({exclude: ['[]members.team']}),
     });
     const cacheKey = getMembersCacheKey(teamId, role);
     return new Promise((resolve, reject) => {
@@ -109,10 +110,24 @@ export function getMembers(client, teamId, role = services.team.containers.TeamM
  *
  */
 export function getMembersForProfileId(client, profileId) {
-    const request =new services.team.actions.get_members.RequestV1({
+    const request = new services.team.actions.get_members.RequestV1({
         /*eslint-disable camelcase*/
         profile_id: profileId,
         /*eslint-enable camelcase*/
+        fields: new services.common.containers.FieldsV1({
+            only: [
+                '[]members.team.id',
+                '[]members.team.name',
+                '[]members.id',
+                '[]members.role',
+            ],
+        }),
+        inflations: new services.common.containers.InflationsV1({
+            only: [
+                '[]members.team',
+                '[]members.team.total_members',
+            ],
+        }),
     });
     return new Promise((resolve, reject) => {
         client.send(request)

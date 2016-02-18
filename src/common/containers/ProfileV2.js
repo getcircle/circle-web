@@ -69,7 +69,7 @@ const hooks = {
     },
     defer: (locals) => {
         fetchReportingDetails(locals);
-        fetchTeams(locals);
+        fetchMemberships(locals);
     },
 };
 
@@ -81,7 +81,7 @@ function fetchReportingDetails({ dispatch, params: { profileId }}) {
     return dispatch(getReportingDetails(profileId));
 }
 
-function fetchTeams({ dispatch, params: { profileId }}) {
+function fetchMemberships({ dispatch, params: { profileId }}) {
     return dispatch(getMembersForProfileId(profileId));
 }
 
@@ -92,7 +92,7 @@ function fetchPosts({ dispatch, params: { profileId }}) {
 function loadProfile(locals) {
     fetchProfile(locals);
     fetchReportingDetails(locals);
-    fetchTeams(locals);
+    fetchMemberships(locals);
     fetchPosts(locals);
 }
 
