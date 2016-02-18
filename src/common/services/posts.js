@@ -64,21 +64,25 @@ export function getPost(
     });
 }
 
-export function getPosts(client, postStateURLString, byProfile, nextRequest=null, key=null, inflations=new services.common.containers.InflationsV1({disabled: true}), fields=new services.common.containers.FieldsV1({exclude: ['content']})) {
+export function getPosts(
+        client,
+        profileId,
+        state,
+        nextRequest = null,
+        inflations = new services.common.containers.InflationsV1({disabled: true}),
+        fields = new services.common.containers.FieldsV1({exclude: ['content']}),
+    ) {
 
     let parameters = {
         /*eslint-disable camelcase*/
-        by_profile_id: byProfile ? byProfile.id : undefined,
-        state: getPostStateFromURLString(postStateURLString),
+        by_profile_id: profileId ? profileId : undefined,
+        state: state,
         inflations: inflations,
         fields: fields,
         /*eslint-enable camelcase*/
     };
 
-    if (key === null) {
-        key = getPostsPaginationKey(postStateURLString, byProfile);
-    }
-
+    const key = getPostsPaginationKey(profileId, state);
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.send(request)

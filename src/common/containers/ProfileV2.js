@@ -4,9 +4,10 @@ import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
 import { getProfile, getReportingDetails } from '../actions/profiles';
+import { getListedPosts, getListedPostsPaginationKey } from '../actions/posts';
 import { getMembersForProfileId } from '../actions/teams';
 import { resetScroll } from '../utils/window';
-import { retrieveProfile, retrieveReportingDetails, retrieveTeamMembers } from '../reducers/denormalizations';
+import { retrieveProfile, retrieveReportingDetails, retrievePosts, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
 import Container from '../components/Container';
@@ -18,9 +19,10 @@ const selector = selectors.createImmutableSelector(
         selectors.cacheSelector,
         selectors.routerParametersSelector,
         selectors.profileMembershipsSelector,
+        selectors.postsSelector,
     ],
-    (cacheState, parametersState, membershipsState) => {
-        let memberships;
+    (cacheState, parametersState, membershipsState, postsState) => {
+        let memberships, posts;
 
         const { profileId } = parametersState;
         const cache = cacheState.toJS();
@@ -34,8 +36,18 @@ const selector = selectors.createImmutableSelector(
             }
         }
 
+        const key = getListedPostsPaginationKey(profileId);
+        if (postsState.has(key)) {
+            const ids = postsState.get(key).get('ids');
+            if (ids.size) {
+                // TODO: support Immutable
+                posts = retrievePosts(ids.toJS(), cache);
+            }
+        }
+
         return {
             memberships,
+            posts,
             profile,
             reportingDetails,
         };
@@ -44,8 +56,10 @@ const selector = selectors.createImmutableSelector(
 
 const hooks = {
     fetch: (locals) => {
+        // XXX this should defer based on which slug we're loading
         return Promise.all([
             fetchProfile(locals),
+            fetchPosts(locals),
         ]);
     },
     defer: (locals) => {
@@ -66,11 +80,15 @@ function fetchTeams({ dispatch, params: { profileId }}) {
     return dispatch(getMembersForProfileId(profileId));
 }
 
+function fetchPosts({ dispatch, params: { profileId }}) {
+    return dispatch(getListedPosts(profileId));
+}
+
 function loadProfile(locals) {
     fetchProfile(locals);
     fetchReportingDetails(locals);
     fetchTeams(locals);
-    // fetch knowledge
+    fetchPosts(locals);
 }
 
 class Profile extends CSSComponent {

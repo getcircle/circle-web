@@ -1,3 +1,5 @@
+import { services } from 'protobufs';
+
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
@@ -28,11 +30,11 @@ export function updatePost(post) {
     };
 }
 
-export function getPostsPaginationKey(postStateURLString, byProfile) {
-    return (byProfile ? byProfile.id : 'all') + '-' + postStateURLString;
+export function getPostsPaginationKey(profileId, state) {
+    return `${profileId ? profileId : 'all'}:${state}`;
 }
 
-export function getPosts(postStateURLString, byProfile, nextRequest) {
+export function getPosts(profileId, state, nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -40,12 +42,22 @@ export function getPosts(postStateURLString, byProfile, nextRequest) {
                 types.GET_POSTS_SUCCESS,
                 types.GET_POSTS_FAILURE,
             ],
-            remote: (client) => requests.getPosts(client, postStateURLString, byProfile, nextRequest),
+            remote: (client) => requests.getPosts(client, profileId, state, nextRequest),
         },
         meta: {
-            paginateBy: getPostsPaginationKey(postStateURLString, byProfile),
+            paginateBy: getPostsPaginationKey(profileId, state),
         },
     };
+}
+
+export function getListedPostsPaginationKey(profileId) {
+    const state = services.post.containers.PostStateV1.LISTED;
+    return getPostsPaginationKey(profileId, state);
+}
+
+export function getListedPosts(profileId, nextRequest) {
+    const state = services.post.containers.PostStateV1.LISTED;
+    return getPosts(profileId, state, nextRequest);
 }
 
 export function clearPosts(postStateURLString, forProfile) {
