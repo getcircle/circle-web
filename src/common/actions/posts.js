@@ -43,11 +43,16 @@ export function getPosts(profileId, state, nextRequest) {
                 types.GET_POSTS,
                 types.GET_POSTS_SUCCESS,
                 types.GET_POSTS_FAILURE,
+                types.GET_POSTS_BAIL,
             ],
             remote: (client) => requests.getPosts(client, profileId, state, nextRequest),
             bailout: (state) => {
-                const { bail } = paginatedShouldBail('posts', paginateBy, nextRequest, state);
-                return bail;
+                const { bail, paginator } = paginatedShouldBail('posts', paginateBy, nextRequest, state);
+                if (bail && paginator) {
+                    return { paginator };
+                } else {
+                    return bail;
+                }
             },
         },
         meta: {paginateBy},

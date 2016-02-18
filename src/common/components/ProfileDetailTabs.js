@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+import { updateProfileSlug } from '../actions/profiles';
 import t from '../utils/gettext';
 
 import InternalPropTypes from './InternalPropTypes';
@@ -14,6 +15,7 @@ export const SLUGS = {
 
 const ProfileDetailTabs = ({ onRequestChange, profile, slug, ...other }, { store: { dispatch } }) => {
     function handleRequestChange(e, nextSlug) {
+        dispatch(updateProfileSlug(profile, slug, nextSlug));
         onRequestChange(profile, nextSlug);
     }
 

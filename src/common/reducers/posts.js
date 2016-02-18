@@ -1,10 +1,12 @@
 import Immutable from 'immutable';
 
 import { getPostsNormalizations } from './normalizations';
-import paginate from './paginate';
+import paginate, { rewind } from './paginate';
 
-import { getPostsPaginationKey } from '../actions/posts';
+import { getPostsPaginationKey, getListedPostsPaginationKey } from '../actions/posts';
 import * as types from '../constants/actionTypes';
+
+import { SLUGS } from '../components/ProfileDetailTabs';
 
 function additionalTypes(state, action) {
     switch (action.type) {
@@ -22,15 +24,18 @@ function additionalTypes(state, action) {
                 return set ? set.delete(postId) : set;
             });
         }
-        break;
-
     case types.CLEAR_POSTS_CACHE:
         if (action.payload.key === null || action.payload.key === undefined) {
             return Immutable.Map();
         } else if (action.payload.key) {
             return state.deleteIn([action.payload.key]);
         }
-        break;
+    case types.UPDATE_PROFILE_SLUG:
+        const { payload: { previousSlug, profileId } } = action;
+        if (previousSlug === SLUGS.KNOWLEDGE) {
+            const key = getListedPostsPaginationKey(profileId);
+            return rewind(key, state);
+        }
     }
     return state;
 }
@@ -42,6 +47,7 @@ const posts = paginate({
         types.GET_POSTS,
         types.GET_POSTS_SUCCESS,
         types.GET_POSTS_FAILURE,
+        types.GET_POSTS_BAIL,
     ],
     additionalTypesCallback: additionalTypes,
 });

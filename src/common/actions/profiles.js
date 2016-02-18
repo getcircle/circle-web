@@ -101,3 +101,14 @@ export function showModal() {
 export function hideModal() {
     return {type: types.MODAL_UPDATE_PROFILE_HIDE};
 }
+
+export function updateProfileSlug(profile, previousSlug, nextSlug) {
+    return {
+        type: types.UPDATE_PROFILE_SLUG,
+        payload: {
+            previousSlug,
+            nextSlug,
+            profileId: profile.id,
+        },
+    };
+}

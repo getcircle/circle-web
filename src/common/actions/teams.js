@@ -96,7 +96,6 @@ export function getMembers(teamId, nextRequest = null) {
                 } else {
                     return bail;
                 }
-                return false;
             },
         },
         meta: {
