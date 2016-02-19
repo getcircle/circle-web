@@ -42,7 +42,7 @@ export function addMembers(client, teamId, members) {
     });
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.simple(resolve, reject))
+            .then(response => response.finish(resolve, reject, teamId))
             .catch(error => reject(error));
     });
 };

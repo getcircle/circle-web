@@ -1,4 +1,4 @@
-import { getTeamMemberNormalizations } from './normalizations';
+import { getAddMemberNormalizations, getTeamMemberNormalizations } from './normalizations';
 import paginate, { rewind } from './paginate';
 import * as types from '../constants/actionTypes';
 
@@ -11,6 +11,9 @@ function additionalTypes(state, action) {
         if (previousSlug === SLUGS.PEOPLE) {
             return rewind(teamId, state);
         }
+    case types.ADD_MEMBERS_SUCCESS:
+        const members = getAddMemberNormalizations(action);
+        return state.updateIn([action.payload.result, 'ids'], set => set.union(members));
     }
     return state;
 }

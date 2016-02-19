@@ -3,6 +3,15 @@ import { services } from 'protobufs';
 
 import * as requests from '../services/team';
 
+export function getAddMemberNormalizations(action) {
+    return getNormalizations(
+        'members',
+        action.payload.result,
+        services.team.actions.add_members.ResponseV1,
+        action.payload,
+    );
+}
+
 export function getLocationNormalizations(action) {
     return getNormalizations(
         'locations',
