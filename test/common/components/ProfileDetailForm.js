@@ -20,7 +20,6 @@ function setup(overrides) {
         fields: {
             bio: {onChange: expect.createSpy(), value: ''},
             contacts: [],
-            email: {onChange: expect.createSpy(), value: ''},
             firstName: {onChange: expect.createSpy(), value: ''},
             lastName: {onChange: expect.createSpy(), value: ''},
             manager: {onChange: expect.createSpy(), value: {}},
@@ -49,16 +48,15 @@ function initializeAction(profile) {
     return initialize(PROFILE_DETAIL, {
         bio: profile.bio,
         contacts: [],
-        email: profile.email,
         firstName: profile.first_name,
         lastName: profile.last_name,
+        manager: undefined,
         photo: { existing: true, preview: profile.image_url },
         title: profile.title,
     }, [
         'bio',
         'contacts[].type',
         'contacts[].value',
-        'email',
         'firstName',
         'lastName',
         'manager',
