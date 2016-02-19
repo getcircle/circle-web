@@ -163,7 +163,7 @@ class HeaderMenu extends CSSComponent {
         routeToPosts(this.context.history, PostStateURLString.LISTED);
     }
 
-    handleAddToSlack(event) {
+    handleAddToSlack = () => {
         routeToAddIntegration(this.context.history, IntegrationString.SLACK);
     }
 
@@ -275,7 +275,7 @@ class HeaderMenu extends CSSComponent {
                 <MenuItem
                     desktop={true}
                     innerDivStyle={{...this.styles().menuItemDivStyle}}
-                    onTouchTap={(e) => this.handleAddToSlack(e)}
+                    onTouchTap={this.handleAddToSlack}
                     primaryText={t('Add to Slack')}
                 />
             );
