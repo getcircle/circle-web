@@ -44,7 +44,7 @@ export function createProfileResult(result, theme) {
     if (highlight && highlight.get('display_title')) {
         secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('display_title')}} />;
     } else {
-        secondaryText = <span style={theme.secondaryText} style={theme.secondaryText}>{profile.display_title}</span>;
+        secondaryText = <span style={theme.secondaryText}>{profile.display_title}</span>;
     }
 
     return {
