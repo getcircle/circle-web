@@ -36,7 +36,7 @@ class ListItem extends CSSComponent {
 
     render() {
         const { item: { item }, onSelectItem, ...other } = this.props;
-        const props = merge(item, other);
+        const props = merge({}, item, other);
         return <MaterialListItem onTouchTap={this.handleTouchTap} {...props} />;
     }
 }
