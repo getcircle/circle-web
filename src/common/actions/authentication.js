@@ -2,19 +2,18 @@ import * as types from '../constants/actionTypes';
 import * as userService from '../services/user';
 import { getFlags } from '../services/feature';
 import { getOrganization } from '../services/organization';
-import { getExtendedProfile } from '../services/profile';
-import { retrieveExtendedProfile } from '../reducers/denormalizations';
+import { getProfile } from '../services/profile';
+import { retrieveProfile } from '../reducers/denormalizations';
 import { SERVICE_REQUEST } from '../middleware/services';
 
 function getAuthenticatedObjectsPayload(client, payload = {}) {
     return new Promise((resolve, reject) => {
-        Promise.all([getExtendedProfile(client), getOrganization(client), getFlags(client)])
-            .then(([extendedProfileResponse, organization, flags]) => {
-                payload = Object.assign({}, payload, extendedProfileResponse);
-                const extendedProfile = retrieveExtendedProfile(extendedProfileResponse.result, extendedProfileResponse);
-                payload.profile = extendedProfile.profile;
+        Promise.all([getProfile(client), getOrganization(client), getFlags(client)])
+            .then(([profileResponse, organization, flags]) => {
+                payload = Object.assign({}, payload, profileResponse);
+                const profile = retrieveProfile(profileResponse.result, profileResponse);
+                payload.profile = profile;
                 payload.organization = organization;
-                payload.profileLocation = extendedProfile.locations && extendedProfile.locations.length > 0 ? extendedProfile.locations[0] : null;
                 payload.flags = flags;
                 resolve(payload);
             })
