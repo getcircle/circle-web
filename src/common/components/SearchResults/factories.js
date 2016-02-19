@@ -1,6 +1,7 @@
 import keymirror from 'keymirror';
 import React from 'react';
 
+import Colors from '../../styles/Colors';
 import t from '../../utils/gettext';
 
 import GroupIcon from '../GroupIcon';
@@ -19,7 +20,7 @@ export function createResult(result, theme) {
     if (result.profile) {
         func = createProfileResult;
     } else if (result.post) {
-        func = getPostResult;
+        func = createPostResult;
     } else if (result.team) {
         func = createTeamResult;
     } else if (result.location) {
@@ -58,23 +59,36 @@ export function createProfileResult(result, theme) {
     }
 }
 
-export function createPostResult(result) {
+export function createPostResult(result, theme) {
     const { post, highlight } = result;
 
-    const leftAvatar = <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" />;
-    let primaryText = post.title;
+    let text;
     // posts always return content in the highlight, even if nothing is
     // highlighted
-    const secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} />;
+    const secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} style={theme.secondaryText} />;
     if (highlight.get('title')) {
-        primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('title')}} />;
+        text = <div dangerouslySetInnerHTML={{__html: highlight.get('title')}} style={theme.primaryText} />;
+    } else {
+        text = <span style={theme.primaryText}>{post.title}</span>;
     }
+
+    const primaryText = (
+        <div>
+            <LightBulbIcon
+                height={35}
+                style={{position: 'absolute', left: 10, top: 16}}
+                stroke={Colors.black}
+                width={35}
+            />
+            {text}
+        </div>
+    );
 
     return {
         item: {
             primaryText,
             secondaryText,
-            leftAvatar,
+            innerDivStyle: theme.innerDivStyle,
         },
         type: TYPES.POST,
         payload: post,
