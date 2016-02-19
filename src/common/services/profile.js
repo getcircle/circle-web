@@ -76,3 +76,14 @@ export function updateProfile(client, profile, manager) {
         return updateProfile;
     }
 }
+
+export function getReportingDetails(client, profileId) {
+    /*eslint-disable camelcase*/
+    const request = new services.profile.actions.get_reporting_details.RequestV1({profile_id: profileId});
+    /*eslint-enable camelcase*/
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => response.finish(resolve, reject, profileId))
+            .catch(error => reject(error));
+    });
+}

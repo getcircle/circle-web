@@ -3,7 +3,6 @@ import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import Infinite from 'react-infinite';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { tintColor, iconColors } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
@@ -42,10 +41,6 @@ class SelectField extends CSSComponent {
         value: PropTypes.string,
     }
 
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
     static defaultProps = {
         onBlur: () => {},
         onInputChange: () => {},
@@ -53,21 +48,6 @@ class SelectField extends CSSComponent {
 
     state = {
         focused: false,
-        muiTheme: CurrentTheme,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        }
-    }
-
-    componentWillMount() {
-        this.customizeTheme();
-    }
-
-    componentWillReceiveProps(nextProps, nextState) {
-        this.customizeTheme();
     }
 
     componentDidUpdate() {
@@ -75,16 +55,6 @@ class SelectField extends CSSComponent {
         if (!!searchInput) {
             searchInput.focus();
         }
-    }
-
-    customizeTheme() {
-        let customTheme = mui.Styles.ThemeManager.modifyRawThemePalette(
-            CurrentTheme,
-            {
-                canvasColor: '#ffffff',
-            },
-        );
-        this.setState({muiTheme: customTheme});
     }
 
     ignoreBlur = false

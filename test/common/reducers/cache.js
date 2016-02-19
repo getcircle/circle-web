@@ -6,6 +6,7 @@ import { services } from 'protobufs';
 import cache from '../../../src/common/reducers/cache';
 
 import PostFactory from '../../factories/PostFactory';
+import ProfileFactory from '../../factories/ProfileFactory';
 
 function mockPayloadWithPost(postId = faker.random.uuid(), normalizationFields = {}, entityFields = {}) {
     const normalizations = {};
@@ -108,6 +109,78 @@ describe('cache reducer', () => {
         expect(cached.snippet).to.equal(nextPost.snippet);
         expect(cached.content).to.equal(initialPost.content);
         expect(cached.title).to.equal(initialPost.title);
+    });
+
+    it('preserves normalizations in the cache if they weren\'t requested in the new entity', () => {
+        const teamMember = new services.team.containers.TeamMemberV1({
+            id: faker.random.uuid(),
+            role: 1,
+            /*eslint-disable camelcase*/
+            profile_id: faker.random.uuid(),
+            /*eslint-enable camelcase*/
+        });
+        const team = new services.team.containers.TeamV1({
+            id: faker.random.uuid(),
+            name: faker.hacker.noun(),
+            /*eslint-disable camelcase*/
+            total_members: 4,
+            /*eslint-enable camelcase*/
+        });
+
+        const profile = ProfileFactory.getProfile();
+
+        // simulate state we get from fetching team member and inflating team
+        const initialState = Immutable.fromJS({
+            entities: {
+                '.services.team.containers.teammemberv1': {
+                    [teamMember.id]: teamMember,
+                },
+                '.services.team.containers.teamv1': {
+                    [team.id]: team,
+                },
+            },
+            normalizations: {
+                '.services.team.containers.teammemberv1': {
+                    [teamMember.id]: {team: team.id},
+                },
+            },
+        });
+
+        // simulate payload we get from fetching team member without inflating team
+        const payload = {
+            entities: {
+                '.services.team.containers.teammemberv1': {
+                    [teamMember.id]: new services.team.containers.TeamMemberV1({
+                        id: teamMember.id,
+                        inflations: new services.common.containers.InflationsV1({exclude: ['team']}),
+                        role: 1,
+                        profile: null,
+                        /*eslint-disable camelcase*/
+                        profile_id: profile.id,
+                        /*eslint-enable camelcase*/
+                        team: null,
+                    }),
+                },
+                '.services.profile.containers.profilev1': {
+                    [profile.id]: profile,
+                },
+            },
+            normalizations: {
+                '.services.team.containers.teammemberv1': {
+                    [teamMember.id]: {profile: profile.id},
+                },
+            },
+        };
+
+        const state = cache(initialState, { payload });
+        const memberNormalizations = state.getIn([
+            'normalizations',
+            '.services.team.containers.teammemberv1',
+            teamMember.id,
+        ]).toJS();
+        expect(Object.keys(memberNormalizations).length).to.equal(2);
+        expect(memberNormalizations.profile).to.equal(profile.id);
+        expect(memberNormalizations.team).to.equal(team.id);
     });
 
 });

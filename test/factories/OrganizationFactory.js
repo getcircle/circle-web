@@ -1,10 +1,10 @@
 import faker from 'faker';
 import { services } from 'protobufs';
 
-class OrganizationFactory {
+export default {
 
-    constructor() {
-        this._organization = new services.organization.containers.OrganizationV1({
+    getOrganization(overrides) {
+        return new services.organization.containers.OrganizationV1({
             /*eslint-disable camelcase*/
             id: faker.random.uuid(),
             name: faker.company.companyName(),
@@ -15,12 +15,8 @@ class OrganizationFactory {
             location_count: faker.random.number(),
             post_count: faker.random.number(),
             /*eslint-enable camelcase*/
+            ...overrides,
         });
     }
 
-    getOrganization() {
-        return this._organization;
-    }
 }
-
-export default new OrganizationFactory();

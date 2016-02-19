@@ -2,12 +2,12 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import { provideHooks } from 'redial';
 
 import { canvasColor, fontColors } from '../constants/styles';
 import { loadSearchResults } from '../actions/search';
 import { resetScroll } from '../utils/window';
 import { replaceSearchQuery } from '../utils/routes';
-import connectData from '../utils/connectData';
 import { SEARCH_LOCATION } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
@@ -35,13 +35,11 @@ function fetchSearchResults(dispatch, query) {
     return dispatch(loadSearchResults(query));
 }
 
-function fetchData(getState, dispatch, location, params) {
-    const promises = [];
-    promises.push(fetchSearchResults(dispatch, params.query));
-    return Promise.all(promises);
-}
+const hooks = {
+    fetch: ({ dispatch, params }) => fetchSearchResults(dispatch, params.query),
+};
 
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class Search extends CSSComponent {
 

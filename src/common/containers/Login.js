@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import mui from 'material-ui';
 import React, { PropTypes } from 'react';
+import { browserHistory } from 'react-router';
+import { provideHooks } from 'redial';
 
 import { authenticate, getAuthenticationInstructions, requestAccess, } from '../actions/authentication';
 import { AUTH_BACKENDS } from '../services/user';
@@ -9,7 +11,6 @@ import { fontColors, fontWeights } from '../constants/styles';
 import * as selectors from '../selectors';
 import { getNextPathname } from '../utils/routes';
 import t from '../utils/gettext';
-import connectData from '../utils/connectData';
 
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
@@ -45,20 +46,20 @@ function isAccessRequest(location) {
     return false;
 }
 
+const hooks = {
+    fetch: ({ getState, dispatch, location, params, url }) => {
+        const props = selector(getState());
+        return fetchAuthenticationInstructions(dispatch, location, url, props);
+    },
+};
+
 function fetchAuthenticationInstructions(dispatch, location, url, props) {
     if ((props.backend === undefined || props.backend === null) && !isAccessRequest(location)) {
         return dispatch(getAuthenticationInstructions(null, url));
     }
 }
 
-function fetchData(getState, dispatch, location, params, url) {
-    const props = selector(getState());
-    return Promise.all([
-        fetchAuthenticationInstructions(dispatch, location, url, props),
-    ]);
-}
-
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class Login extends CSSComponent {
 
@@ -77,9 +78,6 @@ class Login extends CSSComponent {
     }
 
     static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }),
         muiTheme: PropTypes.object.isRequired,
         url: InternalPropTypes.URLContext.isRequired,
     }
@@ -87,7 +85,7 @@ class Login extends CSSComponent {
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.authenticated) {
             const pathname = getNextPathname(this.props.location, '/');
-            this.context.history.pushState(null, pathname);
+            browserHistory.push(pathname);
             return false;
         }
         return true;

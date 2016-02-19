@@ -2,6 +2,7 @@ import keymirror from 'keymirror';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import { Tabs, Tab } from 'material-ui';
+import { browserHistory } from 'react-router';
 
 import { routeToProfile } from '../utils/routes';
 
@@ -21,9 +22,6 @@ class TabBar extends CSSComponent {
 
     static contextTypes = {
         mixins: PropTypes.object,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }),
         location: PropTypes.object,
     }
 
@@ -81,10 +79,10 @@ class TabBar extends CSSComponent {
     handleChange(value, event, tab) {
         switch(value) {
         case TABS.SEARCH:
-            this.context.history.pushState(null, '/');
+            browserHistory.push('/');
             break;
         case TABS.USER_PROFILE:
-            routeToProfile(this.context.history, this.props.profile);
+            routeToProfile(this.props.profile);
             break;
         }
         this.setState({tabValue: value});

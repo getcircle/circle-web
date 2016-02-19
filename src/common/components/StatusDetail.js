@@ -19,12 +19,6 @@ class StatusDetail extends CSSComponent {
         status: PropTypes.instanceOf(services.profile.containers.ProfileStatusV1).isRequired,
     }
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    }
-
     classes() {
         return {
             default: {
@@ -75,7 +69,7 @@ class StatusDetail extends CSSComponent {
                                 <CardListItem
                                     innerDivStyle={{...this.styles().cardListItemInnerDivStyle}}
                                     leftAvatar={<ProfileAvatar profile={author} style={this.styles().cardListAvatar} />}
-                                    onTouchTap={routeToProfile.bind(null, this.context.history, author)}
+                                    onTouchTap={routeToProfile.bind(null, author)}
                                     primaryText={author.full_name}
                                     secondaryText={author.title}
                                 />

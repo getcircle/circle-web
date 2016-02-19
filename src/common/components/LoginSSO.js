@@ -20,7 +20,6 @@ class LoginSSO extends CSSComponent {
     }
 
     static contextTypes = {
-        history: PropTypes.object,
         location: PropTypes.object,
     }
 

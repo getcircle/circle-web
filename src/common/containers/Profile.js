@@ -1,15 +1,14 @@
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 import { soa } from 'protobufs';
+import { provideHooks } from 'redial';
 
 import { getExtendedProfile, updateProfile } from '../actions/profiles';
 import { getPostsPaginationKey, getPosts } from '../actions/posts';
 import { PostStateURLString } from '../utils/post';
-import { clearTeamMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { retrieveExtendedProfile, retrievePosts } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
-import connectData from '../utils/connectData';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
@@ -75,14 +74,16 @@ function fetchProfile(dispatch, params) {
     return dispatch(getExtendedProfile(params.profileId));
 }
 
-function fetchData(getState, dispatch, location, params) {
-    return Promise.all([
-        fetchProfile(dispatch, params),
-        fetchPosts(dispatch, params, null),
-    ]);
-}
+const hooks = {
+    fetch: ({ dispatch, params }) => {
+        return [
+            fetchProfile(dispatch, params),
+            fetchPosts(dispatch, params, null),
+        ];
+    },
+};
 
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class Profile extends PureComponent {
 
@@ -110,9 +111,6 @@ class Profile extends PureComponent {
             if (this.props.extendedProfile.team &&
                 nextProps.extendedProfile.team &&
                 nextProps.extendedProfile.team.id !== this.props.extendedProfile.team.id) {
-                // When user switches teams, clear cached team members for old & new team
-                nextProps.dispatch(clearTeamMembers(this.props.extendedProfile.team.id));
-                nextProps.dispatch(clearTeamMembers(nextProps.extendedProfile.team.id));
             }
         }
     }
@@ -127,16 +125,13 @@ class Profile extends PureComponent {
         fetchPosts(dispatch, params, postsNextRequest);
     }
 
-    onUpdateProfile(profile, manager) {
-        if (manager !== this.props.extendedProfile.manager) {
-            this.props.dispatch(updateProfile(profile, manager));
-        } else {
-            this.props.dispatch(updateProfile(profile));
-        }
+    onUpdateProfile(profile) {
+        this.props.dispatch(updateProfile(profile));
     }
 
     renderProfile() {
         const {
+            dispatch,
             extendedProfile,
             isLoggedInUser,
             posts,
@@ -153,6 +148,7 @@ class Profile extends PureComponent {
             return (
                 <DocumentTitle title={extendedProfile.profile.full_name}>
                     <ProfileDetail
+                        dispatch={dispatch}
                         extendedProfile={extendedProfile}
                         isLoggedInUser={isLoggedInUser}
                         onUpdateProfile={::this.onUpdateProfile}

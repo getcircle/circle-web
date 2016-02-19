@@ -1,5 +1,6 @@
 import { AppBar } from 'material-ui';
 import React, { PropTypes } from 'react';
+import { browserHistory } from 'react-router';
 
 import CSSComponent from '../components/CSSComponent';
 import HeaderMenu from '../components/HeaderMenu';
@@ -15,9 +16,6 @@ class Header extends CSSComponent {
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
         mixins: PropTypes.object.isRequired,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
         showCTAsInHeader: PropTypes.bool,
     }
 
@@ -35,9 +33,12 @@ class Header extends CSSComponent {
                     style: {
                         paddingLeft: 0,
                         paddingRight: 0,
-                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, .10)',
+                        boxShadow: '0px 1px 0px 0px rgba(0, 0, 0, .09)',
                         position: 'fixed',
                         zIndex: 10,
+                    },
+                    titleStyle: {
+                        overflow: 'initial',
                     },
                 },
                 headerContainer: {
@@ -84,9 +85,8 @@ class Header extends CSSComponent {
     }
 
     renderHeader() {
-        const { history } = this.context;
-        let actionsContainerClasses = 'col-xs-4 col-sm-6 col-md-7 col-lg-8 center-xs';
-        let menuContainerClasses = 'col-xs-6 col-sm-4 col-md-3 col-lg-2 end-xs';
+        let actionsContainerClasses = 'col-xs-4 col-sm-6 col-md-7 col-lg-7 center-xs';
+        let menuContainerClasses = 'col-xs-6 col-sm-4 col-md-3 col-lg-3 end-xs';
 
         if (this.context.showCTAsInHeader === false) {
             menuContainerClasses = 'col-xs-2 end-xs';
@@ -97,7 +97,7 @@ class Header extends CSSComponent {
             <div className="row" style={this.styles().root}>
                 <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2" style={this.styles().logoContainer}>
                     <img
-                        onTouchTap={() => history.pushState(null, '/')}
+                        onTouchTap={() => browserHistory.push('/')}
                         src={this.getImageUrl()}
                         style={this.styles().image}
                     />

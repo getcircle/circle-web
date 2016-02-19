@@ -1,7 +1,6 @@
 import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { tintColor } from '../constants/styles';
 
 import CSSComponent from './CSSComponent';
@@ -12,28 +11,6 @@ class CardFooter extends CSSComponent {
         actionText: PropTypes.string,
         children: PropTypes.node,
         onClick: PropTypes.func,
-    }
-
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
-    state = {
-        muiTheme: CurrentTheme,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        };
-    }
-
-    componentWillMount() {
-        this.customizeTheme();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.customizeTheme();
     }
 
     classes() {
@@ -63,12 +40,6 @@ class CardFooter extends CSSComponent {
                 },
             },
         };
-    }
-
-    customizeTheme() {
-        let customTheme = Object.assign({}, CurrentTheme);
-        customTheme.flatButton.color = '#FFFFFF';
-        this.setState({muiTheme: customTheme});
     }
 
     render() {

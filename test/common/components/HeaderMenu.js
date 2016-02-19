@@ -3,28 +3,25 @@ import Immutable from 'immutable';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import React from 'react';
-import TestUtils from 'react-addons-test-utils';
-
-import then from '../utils/then';
+import { shallow } from 'enzyme';
 
 import HeaderMenu from '../../../src/common/components/HeaderMenu';
 import ProfileAvatar from '../../../src/common/components/ProfileAvatar';
 
-import componentWithContext from '../../componentWithContext';
-import AuthContextFactory from '../../factories/AuthContextFactory';
-import TeamFactory from '../../factories/TeamFactory';
+import { getDefaultContext } from '../../componentWithContext';
+
+const MENU_SELECTOR = '.middle-xs';
 
 function setup(propOverrides, contextOverrides) {
     const defaultProps = {
         dispatch: expect.createSpy(),
-    }
+    };
     const props = Object.assign({}, defaultProps, propOverrides);
+    const context = Object.assign({}, getDefaultContext({}), contextOverrides);
 
-    const Container = componentWithContext(<HeaderMenu {...props} />, contextOverrides);
-    const container = TestUtils.renderIntoDocument(<Container />);
-    const headerMenu = TestUtils.findRenderedComponentWithType(container, HeaderMenu);
+    const wrapper = shallow(<HeaderMenu {...props} />, {context: context});
     return {
-        headerMenu,
+        wrapper,
         props,
     };
 }
@@ -32,121 +29,104 @@ function setup(propOverrides, contextOverrides) {
 describe('HeaderMenu', () => {
 
     it('menu is hidden by default', () => {
-        const { headerMenu } = setup();
-        const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
+        const { wrapper } = setup();
+        const menuItems = wrapper.find(MenuItem);
         expect(menuItems.length).toBe(0);
     });
 
-    it('menu toggles state on click', () => {
-        const { headerMenu } = setup();
+    it('menu toggles visibility on click', () => {
+        const { wrapper } = setup();
 
-        TestUtils.Simulate.click(headerMenu.refs.container);
-        then(() => {
-            expect(headerMenu.state.menuDisplayed).toBe(true);
-        });
-
-        TestUtils.Simulate.click(headerMenu.refs.container);
-        then(() => {
-            expect(headerMenu.state.menuDisplayed).toBe(false);
-        });
+        wrapper.find(MENU_SELECTOR).prop('onTouchTap')();
+        wrapper.update();
+        const menu = wrapper.find(Menu);
+        expect(menu.length).toBe(1);
     });
 
     it('menu dismisses on esc', () => {
-        const { headerMenu } = setup();
+        const { wrapper } = setup();
 
-        TestUtils.Simulate.click(headerMenu.refs.container);
-        then(() => {
-            let menu = TestUtils.findRenderedComponentWithType(headerMenu, Menu);
-            menu.props.onEscKeyDown();
-        }).then(() => {
-            expect(headerMenu.state.menuDisplayed).toBe(false);
-        }, 100);
+        wrapper.find(MENU_SELECTOR).prop('onTouchTap')();
+        wrapper.update();
+        wrapper.find(Menu).prop('onEscKeyDown')();
+        wrapper.update();
+        const menu = wrapper.find(Menu);
+        expect(menu.length).toBe(0);
     });
 
-    //it.only('renders a profile avatar', () => {
-        //const { headerMenu } = setup();
-        //const profileAvatar = TestUtils.findRenderedComponentWithType(headerMenu, ProfileAvatar);
-        //expect(profileAvatar).toExist();
-        //expect(profileAvatar.props.profile.id).toBe(headerMenu.context.auth.profile.id);
-    //});
+    it('renders a profile avatar', () => {
+        const { wrapper } = setup();
+        const profileAvatar = wrapper.find(ProfileAvatar);
+        expect(profileAvatar.length).toBe(1);
+        expect(profileAvatar.prop('profile').id).toBe(wrapper.context('auth').profile.id);
+    });
 
     it('shows profile name in expanded mode and defaults to it', () => {
-        const { headerMenu } = setup();
-        const output = headerMenu.renderProfileName();
-        expect(output).toExist();
+        const { wrapper } = setup();
+        const name = wrapper.context('auth').profile.first_name;
+        expect(wrapper.contains(<span>{name}</span>)).toBe(true);
     });
 
     it('doesn\'t show profile name if expanded view is not requested', () => {
-        const { headerMenu } = setup({
+        const { wrapper } = setup({
             expandedView: false,
         });
 
-        const output = headerMenu.renderProfileName();
-        expect(output).toNotExist();
+        const name = wrapper.context('auth').profile.first_name;
+        expect(wrapper.contains(<span>{name}</span>)).toBe(false);
     });
 
-    it('shows two menu items (My Profile and Logout) by default for everyone', () => {
-        const { headerMenu } = setup();
-        TestUtils.Simulate.click(headerMenu.refs.container);
+    it('shows three menu items (My Profile, Create Team, and Logout) by default for everyone', () => {
+        const { wrapper } = setup();
 
-        then(() => {
-            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-            expect(menuItems.length).toBe(2);
+        wrapper.find(MENU_SELECTOR).prop('onTouchTap')();
+        wrapper.update();
 
-            const viewProfileHandlerSpy = expect.spyOn(headerMenu, 'handleViewProfile');
-            const logoutHandlerSpy = expect.spyOn(headerMenu, 'handleLogout');
-            menuItems.map((item) => {
-                item.props.onTouchTap();
-            });
+        const menuItems = wrapper.find(MenuItem);
+        expect(menuItems.length).toBe(3);
 
-            expect(viewProfileHandlerSpy.calls.length).toBe(1);
-            expect(logoutHandlerSpy.calls.length).toBe(1);
+        const viewProfileHandlerSpy = expect.spyOn(wrapper.instance(), 'handleViewProfile');
+        const createTeamSpy = expect.spyOn(wrapper.instance(), 'handleCreateTeam');
+        const logoutHandlerSpy = expect.spyOn(wrapper.instance(), 'handleLogout');
+        menuItems.map((item) => {
+            item.props().onTouchTap();
         });
-    });
 
-    it('shows team menu item if user manages a team', () => {
-        const auth = AuthContextFactory.getContext(undefined, TeamFactory.getTeam());
-        const { headerMenu } = setup({}, {auth});
-        TestUtils.Simulate.click(headerMenu.refs.container);
-        then(() => {
-            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-            expect(menuItems.length).toBe(3);
-
-            const viewTeamHandlerSpy = expect.spyOn(headerMenu, 'handleViewTeam');
-            menuItems[1].props.onTouchTap();
-            expect(viewTeamHandlerSpy.calls.length).toBe(1);
-        });
+        expect(viewProfileHandlerSpy.calls.length).toBe(1);
+        expect(createTeamSpy.calls.length).toBe(1);
+        expect(logoutHandlerSpy.calls.length).toBe(1);
     });
 
     it('shows my knowledge if feature flag is set', () => {
-        const { headerMenu } = setup({}, {
+        const { wrapper } = setup({}, {
             flags: Immutable.Map({posts: true}),
         });
-        TestUtils.Simulate.click(headerMenu.refs.container);
 
-        then(() => {
-            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-            expect(menuItems.length).toBe(3);
+        wrapper.find(MENU_SELECTOR).prop('onTouchTap')();
+        wrapper.update();
 
-            const viewKnowledgeHandlerSpy = expect.spyOn(headerMenu, 'handleViewKnowledge');
-            menuItems[1].props.onTouchTap();
-            expect(viewKnowledgeHandlerSpy.calls.length).toBe(1);
-        });
+        const menuItems = wrapper.find(MenuItem);
+        expect(menuItems.length).toBe(4);
+
+        const viewKnowledgeHandlerSpy = expect.spyOn(wrapper.instance(), 'handleViewKnowledge');
+        menuItems.at(1).prop('onTouchTap')();
+        expect(viewKnowledgeHandlerSpy.calls.length).toBe(1);
     });
 
     it('hides my knowledge if feature flag is there but set to false', () => {
-        const { headerMenu } = setup({}, {
+        const { wrapper } = setup({}, {
             flags: Immutable.Map({posts: false}),
         });
-        TestUtils.Simulate.click(headerMenu.refs.container);
 
-        then(() => {
-            const menuItems = TestUtils.scryRenderedComponentsWithType(headerMenu, MenuItem);
-            expect(menuItems.length).toBe(2);
+        wrapper.find(MENU_SELECTOR).prop('onTouchTap')();
+        wrapper.update();
 
-            const output = headerMenu.renderMyKnowledgeMenuItem();
-            expect(output.type).toBe('span');
-        });
+        const menuItems = wrapper.find(MenuItem);
+        expect(menuItems.length).toBe(3);
+
+        const hasMyKnowledge = menuItems.map(item => item.html())
+                                        .some(html => html.match('My Knowledge'));
+        expect(hasMyKnowledge).toBe(false);
     });
 
 });

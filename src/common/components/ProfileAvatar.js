@@ -1,5 +1,5 @@
 import { capitalize } from 'lodash';
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import TextFallbackAvatar from './TextFallbackAvatar';
@@ -14,16 +14,24 @@ export function getInitials(profile) {
     return characters.join('');
 }
 
-const ProfileAvatar = ({profile, ...other}) => {
-    const initials = getInitials(profile);
-    return (
-        <TextFallbackAvatar
-            {...other}
-            fallbackText={initials}
-            src={profile.image_url || profile.small_image_url}
-        />
-    );
-};
+class ProfileAvatar extends Component {
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (nextProps.profile.id !== this.props.profile.id);
+    }
+
+    render() {
+        const { profile, ...other } = this.props;
+        const initials = getInitials(profile);
+        return (
+            <TextFallbackAvatar
+                {...other}
+                fallbackText={initials}
+                src={profile.image_url || profile.small_image_url}
+            />
+        );
+    }
+}
 
 ProfileAvatar.propTypes = {
     profile: PropTypes.instanceOf(

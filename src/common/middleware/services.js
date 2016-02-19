@@ -19,8 +19,8 @@ export default function createServicesMiddleware(client) {
             return next(action);
         }
 
-        if (!Array.isArray(types) || types.length !== 3) {
-            throw new Error('Expected an array of three action types.');
+        if (!Array.isArray(types) || !(types.length >= 3)) {
+            throw new Error('Expected an array of at least three action types.');
         }
 
         if (!types.every(type => typeof type === 'string')) {
@@ -35,17 +35,21 @@ export default function createServicesMiddleware(client) {
             throw new Error('Expected bailout to be a function or undefined');
         }
 
-        if (bailout(getState())) {
-            return;
-        }
-
         function actionWith(data) {
             const finalAction = Object.assign({}, action, data);
             delete finalAction[SERVICE_REQUEST];
             return finalAction;
         }
 
-        const [requestType, successType, failureType] = types;
+        const [requestType, successType, failureType, bailType] = types;
+
+        const bail = bailout(getState());
+        if (!!bail) {
+            if (bailType && typeof bail === 'object') {
+                next(actionWith({type: bailType, payload: bail}));
+            }
+            return;
+        }
 
         next(actionWith({type: requestType}));
 

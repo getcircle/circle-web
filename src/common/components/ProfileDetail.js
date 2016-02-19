@@ -1,17 +1,18 @@
+import { merge } from 'lodash';
 import { Tabs, Tab } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { PostStateURLString } from '../utils/post';
 import { replaceProfileSlug } from '../utils/routes';
+import { showModal } from '../actions/profiles';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
 import DetailContent from './DetailContent';
 import InternalPropTypes from './InternalPropTypes';
 import Posts from './Posts';
-import ProfileDetailAbout from './ProfileDetailAbout';
+import ProfileDetailAbout from './ProfileDetailAboutDeprecated';
 import ProfileDetailForm from './ProfileDetailForm';
 import ProfileDetailHeader from './ProfileDetailHeader';
 
@@ -25,6 +26,7 @@ export const PROFILE_TAB_VALUES = {
 class ProfileDetail extends CSSComponent {
 
     static propTypes = {
+        dispatch: PropTypes.func.isRequired,
         extendedProfile: PropTypes.object.isRequired,
         isLoggedInUser: PropTypes.bool.isRequired,
         onUpdateProfile: PropTypes.func.isRequired,
@@ -43,9 +45,7 @@ class ProfileDetail extends CSSComponent {
 
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
+        muiTheme: PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
@@ -53,7 +53,7 @@ class ProfileDetail extends CSSComponent {
     }
 
     state = {
-        muiTheme: CurrentTheme,
+        muiTheme: this.context.muiTheme,
         selectedTabValue: null,
     }
 
@@ -64,13 +64,20 @@ class ProfileDetail extends CSSComponent {
     }
 
     componentWillMount() {
-        this.customizeTheme(this.props);
+        this.customizeTheme();
         this.mergeStateAndProps(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.customizeTheme(nextProps);
         this.mergeStateAndProps(nextProps);
+    }
+
+    customizeTheme() {
+        const muiTheme = merge({}, this.state.muiTheme);
+        muiTheme.tabs.backgroundColor = 'transparent';
+        muiTheme.tabs.textColor = 'rgba(255, 255, 255, 0.5)';
+        muiTheme.tabs.selectedTextColor = 'rgb(255, 255, 255)';
+        this.setState({muiTheme});
     }
 
     classes() {
@@ -115,18 +122,6 @@ class ProfileDetail extends CSSComponent {
         }
     }
 
-    customizeTheme(props) {
-        let customTheme = Object.assign({}, CurrentTheme, {
-            tabs: {
-                backgroundColor: 'transparent',
-                textColor: 'rgba(255, 255, 255, 0.5)',
-                selectedTextColor: 'rgb(255, 255, 255)',
-            },
-        });
-
-        this.setState({muiTheme: customTheme});
-    }
-
     // Handlers
 
     onTabChange(value, event, tab) {
@@ -134,14 +129,14 @@ class ProfileDetail extends CSSComponent {
             profile,
         } = this.props.extendedProfile;
 
-        replaceProfileSlug(this.context.history, profile, value);
+        replaceProfileSlug(profile, value);
         this.setState({
             selectedTabValue: value,
         });
     }
 
     editButtonTapped() {
-        this.refs.profileDetailForm.getWrappedInstance().show();
+        this.props.dispatch(showModal());
     }
 
     // Helpers

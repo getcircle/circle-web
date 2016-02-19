@@ -12,6 +12,8 @@ export const authenticatedSelector = createImmutableSelector(
     (authenticationState) => { return { authenticated: authenticationState.get('authenticated') } },
 );
 
+export const autocompleteSelector = state => state.get('autocomplete');
+
 export const cacheSelector = state => state.get('cache');
 export const exploreSelector = state => state.get('explore');
 
@@ -56,6 +58,7 @@ export const explorePostsSelector = exploreSelectorFactory(EXPLORE_TYPES.POSTS);
 export const explorePostsLoadingSelector = exploreTypeLoadingSelectorFactory(explorePostsSelector);
 export const explorePostsIdsSelector = exploreTypeIdsSelectorFactory(explorePostsSelector);
 
+export const createTeamSelector = state => state.get('createTeam');
 export const extendedProfilesSelector = state => state.get('extendedProfiles');
 export const extendedTeamsSelector = state => state.get('extendedTeams');
 export const filesSelector = state => state.get('files');
@@ -68,5 +71,9 @@ export const profilesSelector = state => state.get('profiles');
 export const responsiveSelector = state => state.get('responsive');
 export const routerParametersSelector = (_, props) => props.params;
 export const searchSelector = state => state.get('search');
+export const teamCoordinatorsSelector = state => state.get('teamCoordinators');
 export const teamMembersSelector = state => state.get('teamMembers');
 export const updateProfileSelector = state => state.get('updateProfile');
+export const updateTeamSelector = state => state.get('updateTeam');
+export const addMembersSelector = state => state.get('addMembers');
+export const profileMembershipsSelector = state => state.get('profileMemberships');

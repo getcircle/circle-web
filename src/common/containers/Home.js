@@ -2,14 +2,13 @@ import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
 
 import { fontColors, fontWeights, } from '../constants/styles';
-import { resetScroll } from '../utils/window';
 import t from '../utils/gettext';
 
 import CSSComponent from '../components/CSSComponent';
 import InternalPropTypes from '../components/InternalPropTypes';
 import HeaderMenu from '../components/HeaderMenu';
-import { default as SearchComponent, SEARCH_CONTAINER_WIDTH } from '../components/Search';
-import { SEARCH_LOCATION } from '../constants/trackerProperties';
+import HomeSearch from '../components/HomeSearch';
+import { SEARCH_CONTAINER_WIDTH } from '../components/AutoComplete';
 
 const ORGANIZATION_LOGO_HEIGHT = 200;
 
@@ -27,15 +26,9 @@ class Home extends CSSComponent {
         muiTheme: PropTypes.object.isRequired,
     }
 
-    state = {
-        focused: false,
-    }
-
     styles() {
         const { largerDevice, mobileOS } = this.context.device;
         return this.css({
-            focused: this.state.focused || largerDevice,
-            smallerDeviceFocused: this.state.focused && !largerDevice && mobileOS,
             searchHeader: largerDevice || !mobileOS,
         });
     }
@@ -78,56 +71,11 @@ class Home extends CSSComponent {
                     paddingLeft: 20,
                     paddingRight: 20,
                 },
-                SearchComponent: {
-                    inputContainerStyle: {
-                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, .09)',
-                    },
-                },
                 wrap: {
                     position: 'relative',
                 },
             },
-            focused: {
-                SearchComponent: {
-                    inputContainerStyle: {
-                        borderRadius: '0px',
-                    },
-                    focused: true,
-                    resultsListStyle: {
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    },
-                },
-            },
-            'smallerDeviceFocused': {
-                organizationLogoSection: {
-                    display: 'none',
-                },
-                poweredBySection: {
-                    display: 'none',
-                },
-                'root': {
-                    paddingBottom: 0,
-                },
-                'searchSection': {
-                    paddingTop: 0,
-                    paddingLeft: 0,
-                    paddingRight: 0,
-                },
-                SearchComponent: {
-                    inputContainerStyle: {
-                        boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.2)',
-                    },
-                    showCancel: true,
-                    style: {
-                        paddingLeft: 0,
-                        paddingRight: 0,
-                    },
-                },
-                wrap: {
-                    marginBottom: 0,
-                },
-            },
-            'searchHeader': {
+            searchHeader: {
                 header: {
                     display: 'block',
                     position: 'relative',
@@ -141,10 +89,7 @@ class Home extends CSSComponent {
                 organizationLogoSection: {
                     paddingTop: '2vh',
                 },
-                SearchComponent: {
-                    alwaysActive: true,
-                },
-            },
+            }
         };
     }
 
@@ -152,22 +97,14 @@ class Home extends CSSComponent {
         const { organization } = this.context.auth;
         const imageUrl = organization.image_url;
         if (imageUrl) {
-            return <img className="row" src={imageUrl} style={this.styles().organizationLogo} />;
+            return (
+                <div style={this.styles().organizationLogoPlaceholder}>
+                    <img className="row" src={imageUrl} style={this.styles().organizationLogo} />
+                </div>
+            );
         } else {
             return <div style={this.styles().organizationLogoPlaceholder} />;
         }
-    }
-
-    handleFocusSearch(event) {
-        this.setState({focused: true});
-        // Offset mobile browsers trying to scroll to focus the element.
-        if (this.context.device.mobileOS) {
-            resetScroll();
-        }
-    }
-
-    handleCancelSearch() {
-        this.setState({focused: false});
     }
 
     render() {
@@ -175,10 +112,7 @@ class Home extends CSSComponent {
             <div style={this.styles().root}>
                 <header style={this.styles().header}>
                     <div className="row end-xs">
-                        <HeaderMenu
-                            dispatch={this.props.dispatch}
-                            {...this.styles().HeaderMenu}
-                        />
+                        <HeaderMenu dispatch={this.props.dispatch} {...this.styles().HeaderMenu} />
                     </div>
                 </header>
                 <section className="wrap" style={this.styles().wrap}>
@@ -190,18 +124,9 @@ class Home extends CSSComponent {
                         </div>
                     </section>
                     <section style={this.styles().searchSection}>
-                        <div style={{position: 'absolute', 'top': '250px', 'width': '100%'}}>
-                            <SearchComponent
-                                className="row center-xs"
-                                onCancel={::this.handleCancelSearch}
-                                onFocus={::this.handleFocusSearch}
-                                searchContainerWidth={660}
-                                searchLocation={SEARCH_LOCATION.HOME}
-                                {...this.styles().SearchComponent}
-                            />
-                            <div className="row center-xs" style={this.styles().poweredBySection}>
-                                <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
-                            </div>
+                        <HomeSearch className="row center-xs" />
+                        <div className="row center-xs" style={this.styles().poweredBySection}>
+                            <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
                         </div>
                     </section>
                 </section>

@@ -101,6 +101,7 @@ class ProfileDetailHeader extends CSSComponent {
             profile,
         } = this.props;
         const { organization } = this.context.auth;
+        const headerStyles = this.context.muiTheme.luno.header;
 
         let tenureText = '';
         if (profile.hire_date) {
@@ -118,17 +119,17 @@ class ProfileDetailHeader extends CSSComponent {
                     <ProfileAvatar profile={profile} style={this.styles().avatar} />
                 </div>
                 <div className="row center-xs" style={this.styles().nameSection}>
-                    <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>
+                    <span style={headerStyles.primaryText}>
                         {profile.full_name}
                     </span>
                 </div>
                 <div className="row center-xs" style={this.styles().titleSection}>
-                    <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>
+                    <span style={headerStyles.secondaryText}>
                         {profile.display_title}
                     </span>
                 </div>
                 <div className="row center-xs" style={this.styles().tenureSection}>
-                    <span style={this.context.muiTheme.commonStyles.headerTertiaryText}>
+                    <span style={headerStyles.tertiaryText}>
                         {tenureText}
                     </span>
                 </div>

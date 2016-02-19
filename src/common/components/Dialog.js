@@ -1,16 +1,13 @@
 import mui from 'material-ui';
+
 import React, { PropTypes } from 'react';
 
-import CurrentTheme from '../utils/ThemeManager';
-import { fontColors, fontWeights } from '../constants/styles';
+import { FlatButton } from 'material-ui';
+
 import tracker from '../utils/tracker';
 
 import CSSComponent from './CSSComponent';
 import InternalPropTypes from './InternalPropTypes';
-
-const {
-    FlatButton,
-} = mui;
 
 class Dialog extends CSSComponent {
 
@@ -18,6 +15,7 @@ class Dialog extends CSSComponent {
         children: PropTypes.node,
         dialogDismissLabel: PropTypes.string,
         dialogSaveLabel: PropTypes.string,
+        modal: PropTypes.bool,
         onRequestClose: PropTypes.func,
         onSave: PropTypes.func,
         pageType: PropTypes.string.isRequired,
@@ -26,10 +24,7 @@ class Dialog extends CSSComponent {
 
     static contextTypes = {
         device: InternalPropTypes.DeviceContext.isRequired,
-    }
-
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
+        muiTheme: PropTypes.object.isRequired,
     }
 
     static defaultProps = {
@@ -42,46 +37,7 @@ class Dialog extends CSSComponent {
 
     state = {
         open: false,
-        muiTheme: CurrentTheme,
         saveEnabled: true,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        };
-    }
-
-    componentWillMount() {
-        this.customizeTheme(this.props, this.context);
-    }
-
-    componentWillReceiveProps(nextProps, nextContext) {
-        this.customizeTheme(nextProps, nextContext);
-    }
-
-    originalDesktopKeylineIncrement = CurrentTheme.rawTheme.spacing.desktopKeylineIncrement;
-
-    customizeTheme(props, context) {
-        let customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
-            canvasColor: 'rgb(242, 242, 242)',
-        });
-
-        customDialogTheme = mui.Styles.ThemeManager.modifyRawThemePalette(customDialogTheme, {
-            alternateTextColor: 'rgb(242, 242, 242)',
-        });
-
-        if (!context.device.largerDevice) {
-            customDialogTheme = mui.Styles.ThemeManager.modifyRawThemeSpacing(customDialogTheme, {
-                desktopKeylineIncrement: 0,
-            });
-        } else {
-            customDialogTheme = mui.Styles.ThemeManager.modifyRawThemeSpacing(customDialogTheme, {
-                desktopKeylineIncrement: this.originalDesktopKeylineIncrement,
-            });
-        }
-
-        this.setState({muiTheme: customDialogTheme});
     }
 
     styles() {
@@ -91,29 +47,31 @@ class Dialog extends CSSComponent {
     }
 
     classes() {
+        const { muiTheme } = this.context;
+
         return {
             default: {
                 Dialog: {
                     contentStyle: {
-                        maxWidth: 480,
-                        width: 480,
+                        maxWidth: 640,
+                        width: 640,
                     },
                     bodyStyle: {
                         padding: 0,
                         paddingTop: 10,
                     },
                 },
-                DialogClose: {
-                },
                 DialogCloseButton: {
                     style: {
+                        marginLeft: 10,
                         minWidth: 15,
                     },
                     labelStyle: {
-                        fontSize: '14px',
+                        color: muiTheme.luno.tintColor,
+                        fontSize: '1.1rem',
+                        fontWeight: muiTheme.luno.fontWeights.black,
                         padding: '0 15px',
-                        textTransform: 'none',
-                        ...fontColors.dark,
+                        textTransform: 'uppercase',
                     },
                 },
                 DialogHeader: {
@@ -121,31 +79,22 @@ class Dialog extends CSSComponent {
                         display: 'flex',
                         justifyContent: 'space-between',
                         borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        paddingBottom: 10,
                     },
-                },
-                DialogSave: {
                 },
                 DialogSaveButton: {
                     style: {
+                        backgroundColor: muiTheme.luno.tintColor,
+                        borderRadius: 100,
+                        marginRight: 10,
                         minWidth: 15,
                     },
                     labelStyle: {
-                        fontSize: '14px',
-                        padding: '0 15px',
-                        textTransform: 'none',
-                        ...fontColors.dark,
-                    },
-                },
-                DialogTitle: {
-                    className: 'row col-xs middle-xs center-xs',
-                    style: {
-                        alignSelf: 'center',
-                        display: 'flex',
-                        fontSize: '12px',
-                        letterSpacing: '1px',
+                        fontSize: '1.1rem',
+                        fontWeight: muiTheme.luno.fontWeights.black,
+                        padding: '0 20px',
                         textTransform: 'uppercase',
-                        ...fontColors.light,
-                        ...fontWeights.semiBold,
+                        color: muiTheme.baseTheme.palette.alternateTextColor,
                     },
                 },
                 placeholder: {
@@ -195,7 +144,7 @@ class Dialog extends CSSComponent {
 
         if (dialogSaveLabel !== '') {
             return (
-                <div {...this.styles().DialogSave}>
+                <div>
                     <FlatButton
                         disabled={!this.state.saveEnabled}
                         label={dialogSaveLabel}
@@ -218,6 +167,7 @@ class Dialog extends CSSComponent {
         const {
             children,
             dialogDismissLabel,
+            modal,
             title,
             ...other,
         } = this.props;
@@ -225,6 +175,7 @@ class Dialog extends CSSComponent {
 
         return (
             <mui.Dialog
+                modal={modal}
                 open={this.state.open}
                 ref="modal"
                 {...dialogProps}
@@ -237,7 +188,7 @@ class Dialog extends CSSComponent {
                             {...this.styles().DialogCloseButton}
                         />
                     </div>
-                    <span {...this.styles().DialogTitle}>
+                    <span className="row col-xs middle-xs center-xs" style={this.context.muiTheme.luno.dialog.title}>
                         {title}
                     </span>
                     {this.renderSaveButton()}

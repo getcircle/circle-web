@@ -14,7 +14,7 @@ const constants = {
     horizontalUnit: 10,
 };
 
-export const canvasColor = 'rgb(247, 249, 250)';
+export const canvasColor = 'white';
 export const tintColor = '#7A8EFF';
 
 export const iconColors = {
@@ -34,7 +34,7 @@ export const backgroundColors = {
         backgroundColor: 'white',
     },
     dark: {
-        backgroundColor: 'rgb(47, 55, 62)',
+        backgroundColor: 'rgb(67, 69, 76)',
     },
 }
 
@@ -54,8 +54,14 @@ export const fontColors = {
     white: {
         color: 'white',
     },
+    medium: {
+        color: '#616166',
+    },
     dark: {
         color: 'rgba(0, 0, 0, 0.8)',
+    },
+    red: {
+        color: 'rgba(200, 0, 0, 0.8)',
     },
 }
 
@@ -71,7 +77,7 @@ export const fontWeights = {
     },
 }
 
-export const fontFamily = '"Open Sans", Arial, sans-serif';
+export const fontFamily = '"Lato", Arial, sans-serif';
 
 export const backgroundImage = 'https://s3.amazonaws.com/otterbots-media/locations/san-franc.jpg';
 

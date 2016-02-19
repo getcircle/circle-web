@@ -12,6 +12,7 @@ const InternalPropTypes = {
         deviceSize: PropTypes.oneOf(Object.values(Sizes)).isRequired,
         largerDevice: PropTypes.bool.isRequired,
         mobileOS: PropTypes.bool.isRequired,
+        mounted: PropTypes.bool,
     }),
     LocationV1: PropTypes.instanceOf(services.organization.containers.LocationV1),
     OrganizationV1: PropTypes.instanceOf(services.organization.containers.OrganizationV1),
@@ -23,7 +24,8 @@ const InternalPropTypes = {
     SearchCategoryV1: PropTypes.oneOf(
         enumValues(services.search.containers.search.CategoryV1)
     ),
-    TeamV1: PropTypes.instanceOf(services.organization.containers.TeamV1),
+    TeamV1: PropTypes.instanceOf(services.team.containers.TeamV1),
+    TeamMemberV1: PropTypes.instanceOf(services.team.containers.TeamMemberV1),
     URLContext: PropTypes.shape({
         raw: PropTypes.string.isRequired,
         protocol: PropTypes.oneOf(['http:', 'https:']).isRequired,
@@ -33,9 +35,7 @@ const InternalPropTypes = {
 };
 InternalPropTypes.AuthContext = PropTypes.shape({
     location: InternalPropTypes.LocationV1,
-    managesTeam: InternalPropTypes.TeamV1,
     organization: InternalPropTypes.OrganizationV1,
     profile: InternalPropTypes.ProfileV1,
-    team: InternalPropTypes.TeamV1,
 });
 export default InternalPropTypes;

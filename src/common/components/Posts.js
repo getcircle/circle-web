@@ -1,11 +1,10 @@
 import { CircularProgress, Dialog, FlatButton, IconButton, IconMenu, ListItem } from 'material-ui';
 import Infinite from 'react-infinite';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import mui from 'material-ui';
+
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { canvasColor, fontColors } from '../constants/styles';
 import moment from '../utils/moment';
 import { PostStateURLString } from '../utils/post';
@@ -41,35 +40,10 @@ class Posts extends CSSComponent {
         showEditDelete: false,
     }
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    }
-
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
     state = {
         loading: false,
-        muiTheme: CurrentTheme,
         postToBeDeleted: null,
         showConfirmDeleteModal: false,
-    }
-
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        };
-    }
-
-    componentWillMount() {
-        this.customizeTheme(this.props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.customizeTheme(nextProps);
     }
 
     classes() {
@@ -159,21 +133,13 @@ class Posts extends CSSComponent {
         };
     }
 
-    customizeTheme(props) {
-        let customTheme = mui.Styles.ThemeManager.modifyRawThemePalette(CurrentTheme, {
-            canvasColor: 'rgb(255, 255, 255)',
-        });
-
-        this.setState({muiTheme: customTheme});
-    }
-
     // Event Handlers
 
     onPostTapped(post) {
         if (post.state === PostStateV1.DRAFT || !post.state) {
-            routeToEditPost(this.context.history, post);
+            routeToEditPost(post);
         } else if (post.state === PostStateV1.LISTED) {
-            routeToPost(this.context.history, post);
+            routeToPost(post);
         }
     }
 
@@ -295,7 +261,7 @@ class Posts extends CSSComponent {
             return (
                 <IconMenu iconButtonElement={this.renderMoreButton()}>
                     <MenuItem
-                        onTouchTap={routeToEditPost.bind(null, this.context.history, post)}
+                        onTouchTap={routeToEditPost.bind(null, post)}
                         primaryText={t('Edit')}
                         {...this.styles().MenuItem}
                     />

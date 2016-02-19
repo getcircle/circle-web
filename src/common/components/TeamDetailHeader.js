@@ -1,144 +1,73 @@
-import { FlatButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import { Link } from 'react-router';
 
-import { fontColors, fontWeights } from '../constants/styles';
+import { getProfilePath } from '../utils/routes';
 import t from '../utils/gettext';
 
-import CSSComponent from './CSSComponent';
 import DetailHeader from './DetailHeader';
-import GroupIcon from './GroupIcon'
-import IconContainer from './IconContainer';
+import GroupIcon from './GroupIcon';
 
-class TeamDetailHeader extends CSSComponent {
-
-    static propTypes = {
-        isEditable: PropTypes.bool,
-        onEditTapped: PropTypes.func,
-        team: PropTypes.instanceOf(services.organization.containers.TeamV1).isRequired,
-    }
-
-    static contextTypes = {
-        muiTheme: PropTypes.object.isRequired,
-    }
-
-    classes() {
-        return {
-            default: {
-                editButtonContainer: {
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    maxWidth: 800,
-                    margin: '0 auto',
-                    padding: '0 10px',
-                },
-                editButton: {
-                    backgroundColor: 'transparent',
-                    border: '1px solid white',
-                    marginTop: '16px',
-                    fontSize: 11,
-                    letterSpacing: '1px',
-                    ...fontColors.white,
-                    ...fontWeights.semiBold,
-                },
-                icon: {
-                    height: 80,
-                    width: 80,
-                    color: 'white',
-                    strokeWidth: 1,
-                },
-                iconSection: {
-                    position: 'relative',
-                },
-                iconContainer: {
-                    position: 'relative',
-                    height: 120,
-                    width: 120,
-                    border: '1px solid white',
-                    top: 0,
-                    left: 0,
-                },
-                infoSection: {
-                    paddingTop: 10,
-                },
-                nameSection: {
-                    paddingTop: 20,
-                },
-            },
-            'isEditable-false': {
-                iconSection: {
-                    paddingTop: 60,
-                },
-            },
-        };
-    }
-
-    _getTeamInfo(team) {
-        let parts = [];
-        if (team.child_team_count > 1) {
-            parts.push(`${team.child_team_count} teams`);
-        } else if (team.child_team_count === 1) {
-            parts.push(`${team.child_team_count} team`);
-        }
-
-        if (team.profile_count > 1) {
-            parts.push(`${team.profile_count} people`);
-        } else if (team.profile_count === 1) {
-            parts.push(`${team.profile_count} person`);
-        }
-
-        return parts.join(' | ');
-    }
-
-    renderEditButton() {
-        const {
-            isEditable,
-        } = this.props;
-
-        if (!isEditable) {
-            return;
-        }
-
+function getCoordinatorNames(coordinators, style) {
+    return coordinators.map((c, i) => {
         return (
-            <div className="row end-xs" style={this.styles().editButtonContainer}>
-                <FlatButton
-                    label={t('Edit Team')}
-                    onTouchTap={() => {
-                        this.props.onEditTapped();
-                    }}
-                    style={this.styles().editButton}
-                />
-            </div>
-        );
-
-    }
-
-    render() {
-        const { team } = this.props;
-        let iconColor = {...this.styles().icon}.color;
-        let iconStrokeWidth = {...this.styles().icon}.strokeWidth;
-        return (
-            <DetailHeader>
-                {this.renderEditButton()}
-                <div className="row center-xs" style={this.styles().iconSection}>
-                    <IconContainer
-                        IconClass={GroupIcon}
-                        iconStyle={{...this.styles().icon}}
-                        stroke={iconColor}
-                        strokeWidth={iconStrokeWidth}
-                        style={this.styles().iconContainer}
-                    />
-                </div>
-                <div className="row center-xs" style={this.styles().nameSection}>
-                    <span style={this.context.muiTheme.commonStyles.headerPrimaryText}>{team.display_name}</span>
-                </div>
-                <div className="row center-xs" style={this.styles().infoSection}>
-                    <span style={this.context.muiTheme.commonStyles.headerSecondaryText}>{this._getTeamInfo(team)}</span>
-                </div>
-            </DetailHeader>
-        );
-    }
-
+            <Link
+                className="team-detail-header-coordinator"
+                key={`coordinator-${i}`}
+                style={style}
+                to={getProfilePath(c.profile)}
+            >
+                {c.profile.full_name}
+            </Link>
+        )
+    });
 }
+
+function getCoordinatorDetails(coordinators, muiTheme) {
+    if (!coordinators) {
+        return <span />;
+    }
+
+    const style = {
+        fontWeight: muiTheme.luno.fontWeights.black,
+    };
+
+    const main = <span>{t('Coordinated by ')}</span>;
+    const fullNames = getCoordinatorNames(coordinators, style);
+
+    let byLine;
+    if (coordinators.length === 1) {
+        byLine = <span>{fullNames[0]}</span>;
+    } else if (coordinators.length === 2) {
+        byLine = <span>{fullNames[0]}{' & '}{fullNames[1]}</span>;
+    } else {
+        const commaSeparatedItems = fullNames.slice(0, fullNames.length - 2).map((n, i) => <span key={`comma-delimited-${i}`}>{n}{", "}</span>);
+        const andSeparatedItems = fullNames.slice(fullNames.length - 2);
+        byLine = <span>{commaSeparatedItems}{andSeparatedItems[0]}{" & "}{andSeparatedItems[1]}</span>;
+    }
+    return <span>{main}{byLine}</span>;
+}
+
+const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
+    let primaryText, secondaryText;
+    if (team) {
+        primaryText = team.name;
+        secondaryText = getCoordinatorDetails(coordinators, muiTheme);
+    }
+    return (
+        <DetailHeader
+            Icon={GroupIcon}
+            primaryText={primaryText}
+            secondaryText={secondaryText}
+        />
+    );
+};
+
+TeamDetailHeader.propTypes = {
+    team: PropTypes.instanceOf(services.team.containers.TeamV1),
+};
+TeamDetailHeader.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
 
 export default TeamDetailHeader;

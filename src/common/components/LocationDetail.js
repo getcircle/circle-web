@@ -20,12 +20,6 @@ class LocationDetail extends CSSComponent {
         onUpdateLocationCallback: PropTypes.func.isRequired,
     }
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    }
-
     static defaultProps = {
         members: [],
     }
@@ -88,7 +82,7 @@ class LocationDetail extends CSSComponent {
                     actionText={actionText}
                     members={members}
                     membersLoadMore={this.props.membersLoadMore}
-                    onClickMember={routeToProfile.bind(null, this.context.history)}
+                    onClickMember={routeToProfile}
                     pageType={PAGE_TYPE.LOCATION_MEMBERS}
                     style={this.styles().section}
                     title={title}

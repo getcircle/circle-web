@@ -1,29 +1,26 @@
-import { decorate } from 'react-mixin';
-import ClickAwayable from 'material-ui/lib/mixins/click-awayable';
-import Menu from 'material-ui/lib/menus/menu';
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
-import ReactTransitionGroup from 'react-addons-transition-group';
 
-import autoBind from '../utils/autoBind';
-import CurrentTheme from '../utils/ThemeManager';
+import { Menu, MenuItem, Popover } from 'material-ui';
+
 import { logout } from '../actions/authentication';
 import { PostStateURLString } from '../utils/post';
 import { routeToNewPost, routeToPosts, routeToProfile, routeToTeam } from '../utils/routes';
+import { showCreateTeamModal } from '../actions/teams';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 
+import CreateTeamForm from './CreateTeamForm';
 import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
 import IconContainer from './IconContainer';
 import InternalPropTypes from './InternalPropTypes';
+import LightBulbIcon from './LightBulbIcon';
 import ProfileAvatar from './ProfileAvatar';
 import RoundedButton from '../components/RoundedButton';
 
 const BACKGROUND_COLOR = 'rgb(42, 42, 42)';
 
-@decorate(ClickAwayable)
-@decorate(autoBind(ClickAwayable))
 class HeaderMenu extends CSSComponent {
 
     static propTypes = {
@@ -34,11 +31,8 @@ class HeaderMenu extends CSSComponent {
     static contextTypes = {
         auth: InternalPropTypes.AuthContext.isRequired,
         flags: PropTypes.object,
-        mixins: PropTypes.object,
+        muiTheme: PropTypes.object.isRequired,
         showCTAsInHeader: PropTypes.bool,
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
     }
 
     static childContextTypes = {
@@ -51,13 +45,13 @@ class HeaderMenu extends CSSComponent {
 
     state = {
         menuDisplayed: false,
-        inHeader: false,
+        muiTheme: this.context.muiTheme,
     }
 
     getChildContext() {
         return {
-            muiTheme: this.getCustomTheme(),
-        };
+            muiTheme: this.state.muiTheme,
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState, nextContext) {
@@ -67,15 +61,18 @@ class HeaderMenu extends CSSComponent {
         return true;
     }
 
+    componentWillMount() {
+        this.customizeTheme();
+    }
+
     componentClickAway() {
         this.hideMenu();
     }
 
-    getCustomTheme() {
-        return Object.assign({},
-            CurrentTheme,
-            {paper: {backgroundColor: BACKGROUND_COLOR}},
-        );
+    customizeTheme() {
+        const muiTheme = merge({}, this.state.muiTheme);
+        muiTheme.paper.backgroundColor = BACKGROUND_COLOR;
+        this.setState({muiTheme});
     }
 
     classes() {
@@ -96,10 +93,16 @@ class HeaderMenu extends CSSComponent {
                 container: {
                     cursor: 'pointer',
                 },
+                LightBulbIcon: {
+                    height: 30,
+                    stroke: this.context.muiTheme.luno.tintColor,
+                    style: {
+                        margin: 0,
+                    },
+                    width: 30,
+                },
                 menu: {
                     backgroundColor: 'transparent',
-                    top: 65,
-                    right: 10,
                 },
                 menuListStyle: {
                     backgroundColor: BACKGROUND_COLOR,
@@ -122,6 +125,9 @@ class HeaderMenu extends CSSComponent {
                     height: 28,
                     width: 28,
                 },
+                popover: {
+                    marginTop: 20,
+                },
                 profileName: {
                     color: tintColor,
                     fontSize: '1.6rem',
@@ -131,7 +137,7 @@ class HeaderMenu extends CSSComponent {
                 },
                 RoundedButton: {
                     labelStyle: {
-                        padding: '0 6px',
+                        padding: '0 14px 0 0',
                     },
                     style: {
                         marginRight: 12,
@@ -143,7 +149,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     onAddPostTapped() {
-        routeToNewPost(this.context.history);
+        routeToNewPost();
     }
 
     handleTouchTap(event) {
@@ -151,15 +157,15 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewProfile(event) {
-        routeToProfile(this.context.history, this.context.auth.profile);
-    }
-
-    handleViewTeam(event) {
-        routeToTeam(this.context.history, this.context.auth.managesTeam);
+        routeToProfile(this.context.auth.profile);
     }
 
     handleViewKnowledge(event) {
-        routeToPosts(this.context.history, PostStateURLString.LISTED);
+        routeToPosts(PostStateURLString.LISTED);
+    }
+
+    handleCreateTeam(event) {
+        this.props.dispatch(showCreateTeamModal());
     }
 
     handleLogout(event) {
@@ -174,7 +180,6 @@ class HeaderMenu extends CSSComponent {
         if (this.state.menuDisplayed) {
             return (
                 <Menu
-                    animated={true}
                     desktop={true}
                     listStyle={this.styles().menuListStyle}
                     onEscKeyDown={::this.hideMenu}
@@ -189,7 +194,7 @@ class HeaderMenu extends CSSComponent {
                         primaryText={t('My Profile')}
                     />
                     {this.renderMyKnowledgeMenuItem()}
-                    {this.renderMyTeamMenuItem()}
+                    {this.renderCreateTeamMenuItem()}
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
@@ -214,34 +219,14 @@ class HeaderMenu extends CSSComponent {
     renderDownArrow() {
         if (this.props.expandedView) {
             return (
-                <IconContainer
-                    IconClass={DownArrowIcon}
-                    iconStyle={{...this.styles().arrowIcon}}
-                    stroke={tintColor}
-                    style={this.styles().arrowContainer}
-                />
-            );
-        }
-    }
-
-    renderMyTeamMenuItem() {
-        const { managesTeam } = this.context.auth;
-        if (managesTeam && managesTeam.id) {
-            return (
-                <MenuItem
-                    desktop={true}
-                    innerDivStyle={{...this.styles().menuItemDivStyle}}
-                    onTouchTap={(e) => this.handleViewTeam(e)}
-                    primaryText={t('My Team')}
-                />
-            );
-        } else {
-            // We need to return something because material-ui
-            // doesn't handle empty children. They show up as null in a for loop
-            // and they don't have any checks around it.
-            // Not returning anything or returning empty breaks the component
-            return (
-                <span />
+                <div ref="downArrow">
+                    <IconContainer
+                        IconClass={DownArrowIcon}
+                        iconStyle={{...this.styles().arrowIcon}}
+                        stroke={tintColor}
+                        style={this.styles().arrowContainer}
+                    />
+                </div>
             );
         }
     }
@@ -270,6 +255,7 @@ class HeaderMenu extends CSSComponent {
         ) {
             return (
                 <RoundedButton
+                    icon={<LightBulbIcon {...this.styles().LightBulbIcon} />}
                     label={t('Add Knowledge')}
                     onTouchTap={::this.onAddPostTapped}
                     {...this.styles().RoundedButton}
@@ -278,9 +264,35 @@ class HeaderMenu extends CSSComponent {
         }
     }
 
+    renderCreateTeamMenuItem() {
+        return (
+            <MenuItem
+                desktop={true}
+                innerDivStyle={{...this.styles().menuItemDivStyle}}
+                onTouchTap={(e) => this.handleCreateTeam(e)}
+                primaryText={t('Create Team')}
+            />
+        );
+    }
+
+    renderCreateTeamForm() {
+        const {
+            dispatch,
+        } = this.props;
+
+        return (
+            <CreateTeamForm dispatch={dispatch} />
+        );
+    }
+
     render() {
         const { profile } = this.context.auth;
-
+        let anchorEl;
+        if (this.props.expandedView) {
+            anchorEl = this.refs.downArrow;
+        } else {
+            anchorEl = this.refs.avatar;
+        }
         return (
             <div {...this.props}>
                 <div
@@ -290,17 +302,23 @@ class HeaderMenu extends CSSComponent {
                     style={this.styles().container}
                 >
                     {this.renderAddKnowledgeButton()}
-                    <div>
+                    <div ref="avatar">
                         <ProfileAvatar profile={profile} />
                     </div>
                     {this.renderProfileName()}
                     {this.renderDownArrow()}
                 </div>
-                <div className="row start-xs">
-                    <ReactTransitionGroup>
-                        {this.renderMenu()}
-                    </ReactTransitionGroup>
-                </div>
+                <Popover
+                    anchorEl={anchorEl}
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                    onRequestClose={() => { this.setState({menuDisplayed: false})}}
+                    open={this.state.menuDisplayed}
+                    style={this.styles().popover}
+                    targetOrigin={{vertical: 'top', horizontal: 'right'}}
+                >
+                    {this.renderMenu()}
+                </Popover>
+                {this.renderCreateTeamForm()}
             </div>
         );
     }

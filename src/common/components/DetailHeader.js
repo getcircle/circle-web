@@ -1,65 +1,83 @@
 import React, { PropTypes } from 'react';
 
-import Blur from './Blur';
-import CSSComponent from './CSSComponent';
-import InternalPropTypes from './InternalPropTypes';
+import IconContainer from './IconContainer';
 
-class DetailHeader extends CSSComponent {
+const DetailHeader = ({avatar, children, primaryText, secondaryText, Icon, ...other}, { muiTheme }) => {
+    const styles = {
+        container: {
+            flexWrap: 'nowrap',
+            paddingTop: 35,
+            paddingLeft: 35,
+        },
+        details: {
+            paddingLeft: 22,
+        },
+        detailsSection: {
+            paddingTop: 20,
+        },
+        root: {
+            backgroundColor: 'rgb(67, 69, 76)',
+            height: 164,
+            position: 'relative',
+            zIndex: 1,
+        },
+        secondaryHeader: {
+            paddingTop: 10,
+        },
+    };
+    const theme = muiTheme.luno.header;
 
-    static propTypes = {
-        children: PropTypes.node,
-        img: PropTypes.string,
-        style: PropTypes.object,
-    }
+    let icon;
+    if (avatar) {
+        icon = avatar;
+    } else if (Icon) {
+        icon = (
+            <IconContainer
+                IconClass={Icon}
+                iconStyle={{...theme.icon}}
+                stroke={theme.icon.color}
+                strokeWidth={theme.icon.strokeWidth}
+                style={theme.iconContainer}
+            />
+        );
+    };
 
-    static contextTypes = {
-        device: InternalPropTypes.DeviceContext.isRequired,
-    }
+    return (
+        <header {...other} style={styles.root}>
+            <section className="wrap">
+                <div className="row start-xs" style={styles.container}>
+                    <div>
+                        <div className="row">
+                            {icon}
+                        </div>
+                    </div>
+                    <div style={styles.details}>
+                        <section style={styles.detailsSection}>
+                            <div className="row start-xs">
+                                <span style={theme.primaryText}>{primaryText}</span>
+                            </div>
+                            <div className="row start-xs" style={styles.secondaryHeader}>
+                                <span style={theme.secondaryText}>{secondaryText}</span>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </header>
+    );
+};
 
-    classes() {
-        return {
-            default: {
-                root: {
-                    backgroundColor: 'rgb(51, 51, 51)',
-                    height: 290,
-                    position: 'relative',
-                    zIndex: 1,
-                },
-                nonBlurHeader: {
-                    backgroundColor: 'rgb(51, 51, 51)',
-                    height: 290,
-                    position: 'relative',
-                },
-            },
-        };
-    }
+DetailHeader.propTypes = {
+    IconComponent: PropTypes.func,
+    avatar: PropTypes.node,
+    children: PropTypes.node,
+    primaryText: PropTypes.node,
+    secondaryText: PropTypes.node,
+    style: PropTypes.object,
+};
 
-    render() {
-        const {
-            img,
-            style,
-            ...other,
-        } = this.props;
-        const { largerDevice } = this.context.device;
-
-        const headerImage = img && img !== '' ? img : '';
-        if (headerImage) {
-            return (
-                <Blur
-                    blurRadius={50}
-                    className={largerDevice ? 'detail-blur-canvas' : 'detail-blur-canvas-notop'}
-                    img={headerImage}
-                >
-                    <header {...other} style={{...this.styles().root, ...style}} />
-                </Blur>
-            );
-        } else {
-            return (
-                <header {...other} style={{...this.styles().nonBlurHeader, ...style}} />
-            );
-        }
-    }
-
-}
+DetailHeader.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
 
 export default DetailHeader;

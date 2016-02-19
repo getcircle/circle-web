@@ -1,5 +1,5 @@
 import { ListItem } from 'material-ui';
-import merge from 'merge';
+import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { fontColors } from '../constants/styles';
@@ -63,7 +63,7 @@ class CardListItem extends CSSComponent {
     }
 
     mergeAvatarStyles(element, baseStyles) {
-        const styles = merge.recursive(baseStyles, element.props.style);
+        const styles = merge(baseStyles, element.props.style);
         return React.cloneElement(element, {style: styles});
     }
 

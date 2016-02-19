@@ -1,6 +1,9 @@
+import { services } from 'protobufs';
+
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
+import { paginatedShouldBail } from '../reducers/paginate';
 
 export function createPost(post) {
     return {
@@ -28,24 +31,42 @@ export function updatePost(post) {
     };
 }
 
-export function getPostsPaginationKey(postStateURLString, byProfile) {
-    return (byProfile ? byProfile.id : 'all') + '-' + postStateURLString;
+export function getPostsPaginationKey(profileId, state) {
+    return `${profileId ? profileId : 'all'}:${state}`;
 }
 
-export function getPosts(postStateURLString, byProfile, nextRequest) {
+export function getPosts(profileId, state, nextRequest) {
+    const paginateBy = getPostsPaginationKey(profileId, state);
     return {
         [SERVICE_REQUEST]: {
             types: [
                 types.GET_POSTS,
                 types.GET_POSTS_SUCCESS,
                 types.GET_POSTS_FAILURE,
+                types.GET_POSTS_BAIL,
             ],
-            remote: (client) => requests.getPosts(client, postStateURLString, byProfile, nextRequest),
+            remote: (client) => requests.getPosts(client, profileId, state, nextRequest),
+            bailout: (state) => {
+                const { bail, paginator } = paginatedShouldBail('posts', paginateBy, nextRequest, state);
+                if (bail && paginator) {
+                    return { paginator };
+                } else {
+                    return bail;
+                }
+            },
         },
-        meta: {
-            paginateBy: getPostsPaginationKey(postStateURLString, byProfile),
-        },
+        meta: {paginateBy},
     };
+}
+
+export function getListedPostsPaginationKey(profileId) {
+    const state = services.post.containers.PostStateV1.LISTED;
+    return getPostsPaginationKey(profileId, state);
+}
+
+export function getListedPosts(profileId, nextRequest) {
+    const state = services.post.containers.PostStateV1.LISTED;
+    return getPosts(profileId, state, nextRequest);
 }
 
 export function clearPosts(postStateURLString, forProfile) {

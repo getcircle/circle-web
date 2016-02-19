@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import { UPDATE_PATH } from 'redux-simple-router'
+import { UPDATE_PATH } from 'react-router-redux'
 
 import * as types from '../constants/actionTypes';
 

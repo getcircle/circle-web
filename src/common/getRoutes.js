@@ -73,6 +73,19 @@ export default function (store, url) {
     }
 
     /**
+     * Redirect to "/" and exit.
+     *
+     * Unlike "bail", this is used when we want to intentially route to '/'
+     * (ie. empty search query)
+     */
+    function redirectHome(next) {
+        return (nextState, replaceState, exit) => {
+            replaceState(null, '/');
+            exit();
+        }
+    }
+
+    /**
      * Simply redirect to "/" and exit.
      *
      * This middleware is meant as a catch all for routes such as "/auth" that
@@ -99,7 +112,6 @@ export default function (store, url) {
                     tracker.initSession(
                         authenticationState.get('profile'),
                         authenticationState.get('organization'),
-                        authenticationState.get('team'),
                         authenticationState.get('profileLocation')
                     );
                     tracker.trackPageView(pageType, pageId);
@@ -169,20 +181,12 @@ export default function (store, url) {
                 path="/posts/:postState"
             />
             <Route
-                component={require('./containers/Location')}
-                onEnter={applyMiddleware(
-                    ...defaultMiddleware,
-                    trackPageView(PAGE_TYPE.LOCATION_DETAIL, 'locationId')
-                )}
-                path="/location/:locationId"
-            />
-            <Route
                 component={require('./containers/Login')}
                 onEnter={applyMiddleware(loginOnce)}
                 path="/login"
             />
             <Route
-                component={require('./containers/Profile')}
+                component={require('./containers/ProfileV2').default}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
@@ -190,7 +194,7 @@ export default function (store, url) {
                 path="/profile/:profileId/:slug"
             />
             <Route
-                component={require('./containers/Profile')}
+                component={require('./containers/ProfileV2').default}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.PROFILE_DETAIL, 'profileId')
@@ -198,29 +202,33 @@ export default function (store, url) {
                 path="/profile/:profileId"
             />
             <Route
-                component={require('./containers/Search')}
+                component={require('./containers/SearchV2').default}
                 onEnter={applyMiddleware(
-                    requireAuth,
-                    hideHeader,
+                    ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.SEARCH, 'query')
                 )}
                 path="/search/:query"
             />
             <Route
-                component={require('./containers/Search')}
-                onEnter={applyMiddleware(
-                    requireAuth,
-                    hideHeader,
-                )}
+                component={require('./containers/NoMatch')}
+                onEnter={applyMiddleware(redirectHome)}
                 path="/search"
             />
             <Route
-                component={require('./containers/Team')}
+                component={require('./containers/Team').default}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.TEAM_DETAIL, 'teamId')
                 )}
                 path="/team/:teamId"
+            />
+            <Route
+                component={require('./containers/Team').default}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.TEAM_DETAIL, 'teamId')
+                )}
+                path="/team/:teamId/:slug"
             />
             <Route
                 component={require('./containers/NoMatch')}

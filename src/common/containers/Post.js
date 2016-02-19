@@ -1,12 +1,11 @@
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
+import { provideHooks } from 'redial';
 
-import CurrentTheme from '../utils/ThemeManager';
 import { deletePost, getPost } from '../actions/posts';
 import { fontColors } from '../constants/styles';
 
-import connectData from '../utils/connectData';
 import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
@@ -47,11 +46,11 @@ function fetchPost(dispatch, params) {
     return dispatch(getPost(params.postId));
 }
 
-function fetchData(getState, dispatch, location, params) {
-    return Promise.all([fetchPost(dispatch, params)]);
-}
+const hooks = {
+    fetch: ({ dispatch, params }) => fetchPost(dispatch, params),
+};
 
-@connectData(fetchData)
+@provideHooks(hooks)
 @connect(selector)
 class Post extends CSSComponent {
 
@@ -69,41 +68,24 @@ class Post extends CSSComponent {
         errorDetails: Immutable.List(),
     }
 
-    static contextTypes = {
-        history: PropTypes.shape({
-            pushState: PropTypes.func.isRequired,
-        }).isRequired,
-    }
-
-    static childContextTypes = {
-        muiTheme: PropTypes.object,
-    }
-
     state = {
-        muiTheme: CurrentTheme,
         deleteRequested: false,
     }
 
-    getChildContext() {
-        return {
-            muiTheme: this.state.muiTheme,
-        };
-    }
-
     componentWillMount() {
-        this.configure(this.props);
+        resetScroll();
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.postId !== this.props.params.postId) {
             fetchPost(nextProps.dispatch, nextProps.params);
-            this.configure(nextProps);
+            resetScroll();
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         if (!nextProps.post && nextProps.errorDetails.size === 0 && this.state.deleteRequested) {
-            routeToPosts(this.context.history, PostStateURLString.LISTED);
+            routeToPosts(PostStateURLString.LISTED);
             return false;
         }
 
@@ -137,17 +119,6 @@ class Post extends CSSComponent {
                 },
             },
         };
-    }
-
-    configure(props) {
-        resetScroll();
-        this.customizeTheme();
-    }
-
-    customizeTheme() {
-        let customTheme = Object.assign({}, CurrentTheme);
-        customTheme.flatButton.color = '#FFF';
-        this.setState({muiTheme: customTheme});
     }
 
     onDeletePostTapped(post) {

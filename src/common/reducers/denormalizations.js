@@ -75,3 +75,22 @@ export function retrievePosts(postIds, cache) {
 export function retrieveTeams(teamIds, cache) {
     return retrieve(teamIds, services.organization.containers.TeamV1, cache);
 }
+
+export function retrieveTeam(teamId, cache, requiredFields) {
+    return retrieve(teamId, services.team.containers.TeamV1, cache, requiredFields);
+}
+
+/**
+ * Retrieve team members from the cache.
+ *
+ * @param {Array} ids team member ids
+ * @param {Object} cache cache state
+ *
+ */
+export function retrieveTeamMembers(ids, cache) {
+    return retrieve(ids, services.team.containers.TeamMemberV1, cache);
+}
+
+export function retrieveReportingDetails(profileId, cache) {
+    return retrieve(profileId, services.profile.containers.ReportingDetailsV1, cache);
+}

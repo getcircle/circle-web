@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import * as types from '../constants/actionTypes';
 
 // in seconds
-const TIME_TO_LIVE = 60 * 5;
+const TIME_TO_LIVE = 60 * 60 * 24;
 
 const initialState = Immutable.fromJS({
     entities: Immutable.Map(),
@@ -19,6 +19,10 @@ const initialState = Immutable.fromJS({
  * @return {Array[str]} array of field names within `entity` that aren't within `fields`
  */
 function difference(entity, fields) {
+    if (!entity) {
+        return [];
+    }
+
     let otherFields = entity.$type._fields.map((field) => {
         if (fields.indexOf(field.name) < 0) {
             return field.name;
@@ -102,7 +106,17 @@ export default function cache(state = initialState, action) {
                 for (let normalizationsType in action.payload.normalizations) {
                     const normalizations = action.payload.normalizations[normalizationsType];
                     for (let normalizationId in normalizations) {
-                        map.deleteIn(['normalizations', normalizationsType, normalizationId]);
+                        const newEntity = action.payload.entities[normalizationsType][normalizationId];
+                        const oldEntity = map.getIn(['entities', normalizationsType, normalizationId]);
+                        const excludedFields = getExcludedFields(newEntity, oldEntity);
+                        const typeNormalizations = map.getIn(['normalizations', normalizationsType, normalizationId]);
+                        if (typeNormalizations) {
+                            for (let key of typeNormalizations.keys()) {
+                                if (!excludedFields.includes(key)) {
+                                    map.deleteIn(['normalizations', normalizationsType, normalizationId, key]);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -122,6 +136,17 @@ export default function cache(state = initialState, action) {
                         const oldEntity = map.getIn(['entities', entitiesType, entityId]);
                         if (oldEntity) {
                             newEntity = mergeEntities(newEntity, oldEntity);
+                        }
+
+                        // Remove any old normalizations
+                        if (
+                            action.payload.normalizations &&
+                            (
+                                !action.payload.normalizations[entitiesType] ||
+                                !action.payload.normalizations[entitiesType][entityId]
+                            )
+                        ) {
+                            map.deleteIn(['normalizations', entitiesType, entityId]);
                         }
                     }
                 }
