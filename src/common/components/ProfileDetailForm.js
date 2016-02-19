@@ -26,7 +26,6 @@ const fieldNames = [
     'bio',
     'contacts[].type',
     'contacts[].value',
-    'email',
     'firstName',
     'lastName',
     'manager',
@@ -93,7 +92,6 @@ export class ProfileDetailForm extends Component {
     directAttributesToStateMapping = {
         /*eslint-disable camelcase*/
         'bio': 'bio',
-        'email': 'email',
         'first_name': 'firstName',
         'last_name': 'lastName',
         'title': 'title',
@@ -113,7 +111,6 @@ export class ProfileDetailForm extends Component {
         const action = initialize(PROFILE_DETAIL, {
             bio: profile.bio,
             contacts,
-            email: profile.email,
             firstName: profile.first_name,
             lastName: profile.last_name,
             manager: manager,
@@ -198,7 +195,6 @@ export class ProfileDetailForm extends Component {
             fields: {
                 bio,
                 contacts,
-                email,
                 firstName,
                 manager,
                 photo,
@@ -251,11 +247,6 @@ export class ProfileDetailForm extends Component {
                 />
                 <FormLabel text={t('Reports To')} />
                 <FormPersonSelector {...manager} />
-                <FormLabel text={t('Email')} />
-                <FormTextField
-                    placeholder={t('Add your email')}
-                    {...email}
-                 />
                 <FormLabel text={t('Other Contact')} />
                 <FormContactList
                     contacts={contacts}
