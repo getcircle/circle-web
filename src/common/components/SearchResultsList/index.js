@@ -74,4 +74,5 @@ SearchResultsList.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
+export { SearchResultItem };
 export default SearchResultsList;
