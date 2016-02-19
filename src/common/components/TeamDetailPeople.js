@@ -1,5 +1,5 @@
 import { IconButton, MenuItem } from 'material-ui';
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { showAddMembersModal } from '../actions/teams';
@@ -20,25 +20,32 @@ const menuChoices = {
     REMOVE: 'REMOVE',
 };
 
-const TeamMenuItem = ({onTouchTap, text}) => {
-    const styles = {
-        innerDiv: {
-            fontSize: '1.4rem',
-            paddingLeft: 20,
-            paddingRight: 20,
-        },
-        root: {
-            lineHeight: '30px',
-        },
-    };
-    return (
-        <MenuItem
-            innerDivStyle={styles.innerDiv}
-            onTouchTap={onTouchTap}
-            primaryText={text}
-            style={styles.root}
-        />
-    );
+class TeamMenuItem extends Component {
+    render() {
+        const { onTouchTap, text } = this.props;
+        const styles = {
+            innerDiv: {
+                fontSize: '1.4rem',
+                paddingLeft: 20,
+                paddingRight: 20,
+            },
+            root: {
+                lineHeight: '30px',
+            },
+        };
+        return (
+            <MenuItem
+                innerDivStyle={styles.innerDiv}
+                onTouchTap={onTouchTap}
+                primaryText={text}
+                style={styles.root}
+            />
+        );
+    }
+}
+TeamMenuItem.propTypes = {
+    onTouchTap: PropTypes.func.isRequired,
+    text: PropTypes.string.isRequired,
 }
 
 const TeamCoordinatorMenu = ({ hover, onMenuChoice, profile }) => {
