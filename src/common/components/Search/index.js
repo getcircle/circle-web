@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import ReactDOM from 'react-dom';
 
-import { backgroundColors, fontColors, iconColors } from '../../constants/styles';
+import { backgroundColors, fontColors } from '../../constants/styles';
 import t from '../../utils/gettext';
 
 import CSSComponent from '../CSSComponent';
