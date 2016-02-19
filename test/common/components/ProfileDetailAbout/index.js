@@ -8,6 +8,7 @@ import ContactMethods, { ContactMethod } from '../../../../src/common/components
 import DetailListProfiles from '../../../../src/common/components/DetailListProfiles';
 import DetailListTeamMemberships from '../../../../src/common/components/DetailListTeamMemberships';
 import DetailSection from '../../../../src/common/components/DetailSectionV2';
+import EditButton from '../../../../src/common/components/ProfileDetailAbout/EditButton';
 import Items from '../../../../src/common/components/ProfileDetailAbout/Items';
 import ProfileDetailAbout, { DirectReports, Manager, Peers, Teams } from '../../../../src/common/components/ProfileDetailAbout';
 
@@ -20,6 +21,8 @@ const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 function setup(propsOverrides, Component = ProfileDetailAbout) {
     const profile = ProfileFactory.getProfile();
     const props = {
+        dispatch: expect.createSpy(),
+        isLoggedInUser: true,
         profile,
         ...propsOverrides,
     };
@@ -134,8 +137,13 @@ describe('ProfileDetailAbout', () => {
         describe('no contact methods, not the current user', () => {
 
             it('renders "No info" text', () => {
-                const { wrapper } = setup(undefined, ContactMethods);
+                const { wrapper } = setup({isLoggedInUser: false}, ContactMethods);
                 expect(wrapper.find('p').text()).toEqual('No info');
+            });
+
+            it('does not render a link to the edit profile modal', () => {
+                const { wrapper } = setup({isLoggedInUser: false}, ContactMethods);
+                expect(wrapper.find(EditButton).length).toBe(0);
             });
 
         });
@@ -143,7 +151,8 @@ describe('ProfileDetailAbout', () => {
         describe('no contact methods, current user', () => {
 
             it('renders a link to the edit profile modal', () => {
-                console.log('add a test once we merge the new edit profile modal');
+                const { wrapper } = setup();
+                expect(wrapper.find(EditButton).length).toBe(1);
             });
 
         });

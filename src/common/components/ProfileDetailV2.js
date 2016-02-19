@@ -11,8 +11,10 @@ import ProfileDetailKnowledge from './ProfileDetailKnowledge';
 
 const ProfileDetail = (props) => {
     const {
+        dispatch,
         directReports,
         hasMorePosts,
+        isLoggedInUser,
         manager,
         memberships,
         peers,
@@ -28,7 +30,9 @@ const ProfileDetail = (props) => {
     case SLUGS.ABOUT:
         content = (
             <ProfileDetailAbout
+                dispatch={dispatch}
                 directReports={directReports}
+                isLoggedInUser={isLoggedInUser}
                 manager={manager}
                 memberships={memberships}
                 peers={peers}
@@ -67,6 +71,7 @@ ProfileDetail.propTypes = {
     directReports: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
     hasMorePosts: PropTypes.bool.isRequired,
+    isLoggedInUser: PropTypes.bool.isRequired,
     manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     memberships: PropTypes.array,
     onLoadMorePosts: PropTypes.func,

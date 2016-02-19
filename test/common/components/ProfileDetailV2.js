@@ -12,12 +12,13 @@ function setup(propsOverrides, profileOverrides) {
     const params = {
         ...profileOverrides,
     };
-    const team = ProfileFactory.getProfile(params);
+    const profile = ProfileFactory.getProfile(params);
 
     const props = {
         dispatch: expect.createSpy(),
         hasMorePosts: false,
-        team,
+        isLoggedInUser: true,
+        profile,
         coordinators: [],
         ...propsOverrides,
     };

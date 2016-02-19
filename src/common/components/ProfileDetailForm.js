@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
-import { hideModal } from '../actions/profiles';
+import { hideModal, updateProfile } from '../actions/profiles';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { profileValidator } from '../utils/validators';
 import { PROFILE_DETAIL } from '../constants/forms';
@@ -92,6 +92,7 @@ export class ProfileDetailForm extends Component {
 
     directAttributesToStateMapping = {
         /*eslint-disable camelcase*/
+        'bio': 'bio',
         'email': 'email',
         'first_name': 'firstName',
         'last_name': 'lastName',
@@ -110,6 +111,7 @@ export class ProfileDetailForm extends Component {
         });
 
         const action = initialize(PROFILE_DETAIL, {
+            bio: profile.bio,
             contacts,
             email: profile.email,
             firstName: profile.first_name,
@@ -124,14 +126,16 @@ export class ProfileDetailForm extends Component {
     // Public Methods
 
     updateProfile(overrides) {
-        if (this.props.dirty) {
+        const { dispatch, dirty, profile } = this.props;
+        if (dirty) {
             tracker.trackProfileUpdate(
-                this.props.profile.id,
+                profile.id,
                 this.getFieldsThatChanged(),
             );
         }
 
-        this.props.onSaveCallback(this.getUpdatedProfile(overrides));
+        const updatedProfile = this.getUpdatedProfile(overrides);
+        dispatch(updateProfile(updatedProfile));
     }
 
     getUpdatedProfile(overrides = {}) {

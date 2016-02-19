@@ -5,7 +5,7 @@ import React from 'react';
 import { services } from 'protobufs';
 
 import { getProfile } from '../../factories/ProfileFactory';
-import { hideModal } from '../../../src/common/actions/profiles';
+import { hideModal, updateProfile } from '../../../src/common/actions/profiles';
 import { PROFILE_DETAIL } from '../../../src/common/constants/forms';
 import { ProfileDetailForm } from '../../../src/common/components/ProfileDetailForm';
 import FormDialog from '../../../src/common/components/FormDialog';
@@ -47,6 +47,7 @@ function setup(overrides) {
 
 function initializeAction(profile) {
     return initialize(PROFILE_DETAIL, {
+        bio: profile.bio,
         contacts: [],
         email: profile.email,
         firstName: profile.first_name,
@@ -115,16 +116,17 @@ describe('ProfileDetailForm', () => {
     describe('submitting', () => {
 
         it('calls onSaveCallback if a new photo has not been added', () => {
-            const callbackSpy = expect.createSpy();
+            const profile = getProfile();
             const handleSubmit = (fn) => () => fn({
                 photo: {existing: true},
-            });
-            const { wrapper } = setup({
+            }, props.dispatch);
+            const { wrapper, props } = setup({
                 handleSubmit: handleSubmit,
-                onSaveCallback: callbackSpy,
+                profile: profile,
             });
             wrapper.find(FormDialog).prop('onSubmit')();
-            expect(callbackSpy).toHaveBeenCalled();
+            const action = updateProfile(profile, null);
+            expect(props.dispatch).toHaveBeenCalledWith(action);
         });
 
         it('dispatches the upload media action if a photo has been added', () => {

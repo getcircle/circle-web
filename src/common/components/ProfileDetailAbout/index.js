@@ -8,8 +8,10 @@ import DetailListProfiles from '../DetailListProfiles';
 import DetailListTeamMemberships from '../DetailListTeamMemberships';
 
 import Bio from './Bio';
+import EditButton from './EditButton';
 import ContactMethods from './ContactMethods';
 import Items from './Items';
+import ProfileDetailForm from '../ProfileDetailForm';
 
 export const Teams = ({ members }) => {
     return (
@@ -38,9 +40,18 @@ const Manager = buildProfileList(t('Manager'));
 const Peers = buildProfileList(t('Peers'));
 
 const ProfileDetailAbout = (props, { muiTheme }) => {
-    const { directReports, manager, peers, profile, memberships } = props;
+    const {
+        dispatch,
+        directReports,
+        isLoggedInUser,
+        manager,
+        peers,
+        profile,
+        memberships
+    } = props;
     const theme = muiTheme.luno.detail;
 
+    const editButton = isLoggedInUser ? <EditButton dispatch={dispatch} /> : null;
     const managerSection = manager ? <Manager profiles={[manager]} /> : null;
     const peersSection = peers && peers.length ? <Peers profiles={peers} /> : null;
     const directReportsSection = directReports && directReports.length ? <DirectReports profiles={directReports} /> : null;
@@ -50,6 +61,7 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
         <div>
             <section className="row middle-xs">
                 <h1 style={theme.h1}>{t('About')}</h1>
+                {editButton}
             </section>
             <section className="row">
                 <section className="col-xs-8" style={theme.section}>
@@ -64,12 +76,15 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
                     {teamsSection}
                 </section>
             </section>
+            <ProfileDetailForm profile={profile} />
         </div>
     );
 };
 
 ProfileDetailAbout.propTypes = {
     directReports: PropTypes.array,
+    dispatch: PropTypes.func.isRequired,
+    isLoggedInUser: PropTypes.bool,
     manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     memberships: PropTypes.array,
     peers: PropTypes.array,
