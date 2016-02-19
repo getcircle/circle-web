@@ -64,7 +64,6 @@ export class ProfileDetailForm extends Component {
         handleSubmit: PropTypes.func.isRequired,
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         mediaUrl: PropTypes.string,
-        onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         resetForm: PropTypes.func.isRequired,
         visible: PropTypes.bool.isRequired,
