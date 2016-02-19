@@ -5,6 +5,7 @@ import t from '../utils/gettext';
 
 import DetailContent from './DetailContent';
 import DetailSection from './DetailSectionV2';
+import RoundedButton from './RoundedButton';
 import SearchResults from './SearchResults';
 
 export const SearchDetailHeader = ({ totalResults, query }) => {
@@ -17,6 +18,22 @@ export const SearchDetailHeader = ({ totalResults, query }) => {
     );
 };
 
+const SearchDetailMissingInfo = () => {
+    const styles = {
+        text: {
+            fontSize: '1.8rem',
+            color: Colors.lightBlack,
+            lineHeight: '2.8rem',
+        },
+    };
+    return (
+        <DetailSection>
+            <div style={styles.text}>{t('Didn\'t find what you were looking for?')}</div>
+            <RoundedButton label={t('Request Missing Info')} style={{marginTop: 10}} />
+        </DetailSection>
+    );
+};
+
 const SearchDetail = (props) => {
     const { query, totalResults, ...other } = props;
     return (
@@ -24,6 +41,7 @@ const SearchDetail = (props) => {
             <SearchDetailHeader query={query} totalResults={totalResults} />
             <section className="row">
                 <section className="col-xs-3">
+                    <SearchDetailMissingInfo />
                 </section>
                 <section className="col-xs-8 col-xs-offset-1">
                     <DetailSection dividerStyle={{marginBottom: 0}}>

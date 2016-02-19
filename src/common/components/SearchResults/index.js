@@ -21,7 +21,7 @@ class SearchResultItem extends Component {
         const props = merge(item, other);
         return (
             <div className={className}>
-                <ListItem onTouchTap={this.handleTouchTap} {...props} />
+                <ListItem className="search-results" onTouchTap={this.handleTouchTap} {...props} />
             </div>
         );
     }
