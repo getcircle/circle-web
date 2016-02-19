@@ -2,12 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { services } from 'protobufs';
 
-import * as selectors from '../selectors';
+import * as selectors from '../../selectors';
 
-import { clearResults, search } from '../actions/search';
+import { clearResults, search } from '../../actions/search';
 
-import Search from './Search';
-import Section from './Search/Section';
+import Search from '../Search';
+import Section from '../Search/Section';
 
 const category = services.search.containers.search.CategoryV1.PROFILES;
 
@@ -113,5 +113,6 @@ class AutoCompleteProfile extends Component {
 
 }
 
+export { createProfileWithTitle } from './factories';
 export { AutoCompleteProfile };
 export default connect(selector)(AutoCompleteProfile);
