@@ -157,8 +157,8 @@ export function getCustomTheme(userAgent) {
             },
             innerDivStyle: {
                 paddingLeft: 55,
-                paddingBottom: 10,
-                paddingTop: 10,
+                paddingBottom: 15,
+                paddingTop: 15,
             },
             primaryText: {
                 fontSize: '1.6rem',

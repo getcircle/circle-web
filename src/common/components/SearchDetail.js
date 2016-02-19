@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import Colors from '../styles/Colors';
+import FontWeights from '../styles/FontWeights';
 import t from '../utils/gettext';
 
 import DetailContent from './DetailContent';
@@ -25,11 +26,23 @@ const SearchDetailMissingInfo = () => {
             color: Colors.lightBlack,
             lineHeight: '2.8rem',
         },
+        button: {
+            marginTop: 10,
+            lineHeight: '2.8rem',
+        },
+        label: {
+            fontSize: '0.9rem',
+            fontWeight: FontWeights.black,
+        },
     };
     return (
         <DetailSection>
             <div style={styles.text}>{t('Didn\'t find what you were looking for?')}</div>
-            <RoundedButton label={t('Request Missing Info')} style={{marginTop: 10}} />
+            <RoundedButton
+                label={t('Request Missing Info')}
+                labelStyle={styles.label}
+                style={styles.button}
+            />
         </DetailSection>
     );
 };
