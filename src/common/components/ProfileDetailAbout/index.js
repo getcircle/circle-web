@@ -76,7 +76,7 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
                     {teamsSection}
                 </section>
             </section>
-            <ProfileDetailForm profile={profile} />
+            <ProfileDetailForm manager={manager} profile={profile} />
         </div>
     );
 };

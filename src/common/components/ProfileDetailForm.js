@@ -62,6 +62,7 @@ export class ProfileDetailForm extends Component {
         fields: PropTypes.object.isRequired,
         formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
+        manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         mediaUrl: PropTypes.string,
         onSaveCallback: PropTypes.func.isRequired,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
@@ -101,7 +102,7 @@ export class ProfileDetailForm extends Component {
     };
 
     setInitialValues() {
-        const { dispatch, profile } = this.props;
+        const { dispatch, manager, profile } = this.props;
 
         const defaultContactType = ContactMethodV1.ContactMethodTypeV1.EMAIL;
         const contacts = profile.contact_methods.map(c => {
@@ -116,6 +117,7 @@ export class ProfileDetailForm extends Component {
             email: profile.email,
             firstName: profile.first_name,
             lastName: profile.last_name,
+            manager: manager,
             photo: {existing: true, preview: profile.image_url},
             title: profile.title,
         }, fieldNames);
@@ -126,7 +128,7 @@ export class ProfileDetailForm extends Component {
     // Public Methods
 
     updateProfile(overrides) {
-        const { dispatch, dirty, profile } = this.props;
+        const { dispatch, dirty, fields, profile } = this.props;
         if (dirty) {
             tracker.trackProfileUpdate(
                 profile.id,
@@ -135,7 +137,7 @@ export class ProfileDetailForm extends Component {
         }
 
         const updatedProfile = this.getUpdatedProfile(overrides);
-        dispatch(updateProfile(updatedProfile));
+        dispatch(updateProfile(updatedProfile, fields.manager.value));
     }
 
     getUpdatedProfile(overrides = {}) {
