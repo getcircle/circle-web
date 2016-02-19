@@ -21,6 +21,7 @@ class Section {
         const items = [];
         this._items.forEach((item, index) => {
             if (noMax || index < maxItems) {
+                // TODO verify this isn't called in a way that would slow us down
                 const searchResult = this.factoryFunction(item);
                 if (searchResult) {
                     items.push(searchResult);

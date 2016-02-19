@@ -1,52 +1,67 @@
+import keymirror from 'keymirror';
 import React from 'react';
 
-import * as routes from '../../utils/routes';
 import t from '../../utils/gettext';
 
 import GroupIcon from '../GroupIcon';
 import IconContainer from '../IconContainer';
 import LightBulbIcon from '../LightBulbIcon';
-import OfficeIcon from '../OfficeIcon';
 import ProfileAvatar from '../ProfileAvatar';
 
-export function getResult(result, index) {
+export const TYPES = keymirror({
+    PROFILE: null,
+    POST: null,
+    TEAM: null,
+});
+
+export function createResult(result, theme) {
     let func;
     if (result.profile) {
-        func = getProfileResult;
+        func = createProfileResult;
     } else if (result.post) {
         func = getPostResult;
     } else if (result.team) {
-        func = getTeamResult;
+        func = createTeamResult;
     } else if (result.location) {
-        func = getLocationResult;
+        func = createLocationResult;
     }
     if (func) {
-        return func(result, index);
+        return func(result, theme);
     }
 }
 
-export function getProfileResult(result, index) {
+export function createProfileResult(result, theme) {
     const { profile, highlight } = result;
-    let primaryText = profile.full_name;
-    let secondaryText = profile.display_title;
+    const leftAvatar = <ProfileAvatar profile={profile} style={theme.avatar} />;
+    let primaryText, secondaryText;
     if (highlight && highlight.get('full_name')) {
-        primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} />;
+        primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} style={theme.primaryText} />;
+    } else {
+        primaryText = <span style={theme.primaryText}>{profile.full_name}</span>;
     }
+
     if (highlight && highlight.get('display_title')) {
         secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('display_title')}} />;
+    } else {
+        secondaryText = <span style={theme.secondaryText} style={theme.secondaryText}>{profile.display_title}</span>;
     }
+
     return {
-        index,
-        primaryText,
-        secondaryText,
-        leftAvatar: <ProfileAvatar profile={profile} />,
-        onTouchTap: routes.routeToProfile.bind(null, profile),
-        instance: profile,
-    };
+        item: {
+            primaryText,
+            secondaryText,
+            leftAvatar,
+            innerDivStyle: theme.innerDivStyle,
+        },
+        type: TYPES.PROFILE,
+        payload: profile,
+    }
 }
 
-export function getPostResult(result, index) {
+export function createPostResult(result) {
     const { post, highlight } = result;
+
+    const leftAvatar = <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" />;
     let primaryText = post.title;
     // posts always return content in the highlight, even if nothing is
     // highlighted
@@ -54,49 +69,33 @@ export function getPostResult(result, index) {
     if (highlight.get('title')) {
         primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('title')}} />;
     }
+
     return {
-        index,
-        primaryText,
-        secondaryText,
-        leftAvatar: <IconContainer IconClass={LightBulbIcon} stroke="#7c7b7b" />,
-        onTouchTap: routes.routeToPost.bind(null, post),
-        instance: post,
-    };
+        item: {
+            primaryText,
+            secondaryText,
+            leftAvatar,
+        },
+        type: TYPES.POST,
+        payload: post,
+    }
 }
 
-export function getTeamResult(result, index) {
+export function createTeamResult(result) {
     const { team, highlight } = result;
+    const leftAvatar = <IconContainer IconClass={GroupIcon} />;
     let primaryText = team.display_name;
     const secondaryText = t(`${team.profile_count} People`);
     if (highlight && highlight.get('display_name')) {
         primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('display_name')}} />;
     }
     return {
-        index,
-        primaryText,
-        secondaryText,
-        leftAvatar: <IconContainer IconClass={GroupIcon} />,
-        onTouchTap: routes.routeToTeam.bind(null, team),
-        instance: team,
-    };
-}
-
-export function getLocationResult(result, index) {
-    const { location, highlight } = result;
-    let primaryText = location.name;
-    let secondaryText = location.full_address;
-    if (highlight && highlight.get('name')) {
-        primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('name')}} />;
-    }
-    if (highlight && highlight.get('full_address')) {
-        secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('full_address')}} />;
-    }
-    return {
-        index,
-        primaryText,
-        secondaryText,
-        leftAvatar: <IconContainer IconClass={OfficeIcon} />,
-        onTouchTap: routes.routeToLocation.bind(null, location),
-        instance: location,
+        item: {
+            primaryText,
+            secondaryText,
+            leftAvatar,
+        },
+        type: TYPES.TEAM,
+        payload: team,
     }
 }

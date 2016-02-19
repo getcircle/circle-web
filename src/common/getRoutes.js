@@ -202,7 +202,7 @@ export default function (store, url) {
                 path="/profile/:profileId"
             />
             <Route
-                component={require('./containers/SearchV2')}
+                component={require('./containers/SearchV2').default}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.SEARCH, 'query')

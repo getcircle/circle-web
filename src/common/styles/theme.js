@@ -150,6 +150,27 @@ export function getCustomTheme(userAgent) {
                 backgroundColor: Colors.minWhite,
             },
         },
+        searchResults: {
+            avatar: {
+                height: 28,
+                width: 28,
+            },
+            innerDivStyle: {
+                paddingLeft: 55,
+                paddingBottom: 10,
+                paddingTop: 10,
+            },
+            primaryText: {
+                fontSize: '1.6rem',
+                fontWeight: FontWeights.bold,
+                lineHeight: '2.4rem',
+            },
+            secondaryText: {
+                fontSize: '1.4rem',
+                lineHeight: '2.0rem',
+                color: Colors.lightBlack,
+            },
+        },
         tabs: {
             tab: {
                 alignItems: 'center',
