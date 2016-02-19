@@ -1,25 +1,27 @@
-import { getAddMemberNormalizations, getTeamMemberNormalizations } from './normalizations';
+import { getTeamMemberNormalizationsFromAddMembers, getTeamMemberNormalizations } from './normalizations';
 import paginate, { rewind } from './paginate';
 import * as types from '../constants/actionTypes';
 
 import { SLUGS } from '../components/TeamDetailTabs';
 
-function additionalTypes(state, action) {
+function additionalTypesCallback(state, action) {
     switch(action.type) {
     case types.UPDATE_TEAM_SLUG:
         const { payload: { previousSlug, teamId } } = action;
         if (previousSlug === SLUGS.PEOPLE) {
             return rewind(teamId, state);
         }
+        break;
     case types.ADD_MEMBERS_SUCCESS:
-        const members = getAddMemberNormalizations(action);
-        return state.updateIn([action.payload.result, 'ids'], set => set.union(members));
+        const ids = getTeamMemberNormalizationsFromAddMembers(action);
+        return state.updateIn([action.payload.result, 'ids'], set => set.union(ids));
+        break;
     }
     return state;
 }
 
 export default paginate({
-    additionalTypesCallback: additionalTypes,
+    additionalTypesCallback,
     mapActionToKey: action => action.meta.paginateBy,
     mapActionToResults: getTeamMemberNormalizations,
     types: [

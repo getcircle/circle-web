@@ -7,9 +7,15 @@ import { getPaginator } from '../services/helpers';
 const TTL_INTERVAL = 300000
 
 export function slice(state) {
+    let buffer = 0;
     const pageSize = state.get('pageSize');
     const currentPage = state.get('currentPage');
-    return state.get('ids').slice(0, pageSize * currentPage);
+    // if there are no more requests, add a buffer to handle any in memory
+    // additions (ie. adding members and directly updating the cache)
+    if (!state.get('nextRequest')) {
+        buffer = 100;
+    }
+    return state.get('ids').slice(0, pageSize * currentPage + buffer);
 }
 
 
@@ -113,6 +119,7 @@ export default function paginate({
     function updatePagination(state = Immutable.fromJS({
         loading: false,
         nextRequest: null,
+        paginator: null,
         ids: Immutable.OrderedSet(),
         ttl: null,
         pages: Immutable.OrderedSet(),
@@ -125,22 +132,20 @@ export default function paginate({
             return state.set('loading', true);
         case successType:
             return state.withMutations(map => {
-                let paginator;
-                if (payload.nextRequest) {
-                    paginator = getPaginator(payload.nextRequest);
-                }
+                const { paginator } = payload;
                 const results = mapActionToResults(action);
                 return map.updateIn(['ids'], set => set.union(results))
                     .set('loading', false)
                     .set('ttl', Date.now() + TTL_INTERVAL)
                     .set('nextRequest', payload.nextRequest)
+                    .set('paginator', paginator)
                     .updateIn(['pages'], (set) => {
                         if (!paginator) return;
-                        if (paginator.previous_page !== null) {
-                            return set.add(paginator.previous_page);
+                        if (paginator.page !== null) {
+                            return set.add(paginator.page);
                         }
                     })
-                    .set('currentPage', paginator ? paginator.previous_page : 1)
+                    .set('currentPage', paginator ? paginator.page : 1)
                     .set('pageSize', paginator ? paginator.page_size : state.get('pageSize'));
             });
         case failureType:
@@ -156,7 +161,8 @@ export default function paginate({
             }
             return state.withMutations(map => {
                 return map.set('currentPage', action.payload.paginator.page)
-                    .set('nextRequest', nextRequest);
+                    .set('nextRequest', nextRequest)
+                    .set('paginator', paginator);
             });
         default:
             return state;

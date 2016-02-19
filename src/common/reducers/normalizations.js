@@ -1,16 +1,8 @@
 import { getNormalizations } from 'protobuf-normalizr';
 import { services } from 'protobufs';
+import { retrieveTeamMembers } from './denormalizations';
 
 import * as requests from '../services/team';
-
-export function getAddMemberNormalizations(action) {
-    return getNormalizations(
-        'members',
-        action.payload.result,
-        services.team.actions.add_members.ResponseV1,
-        action.payload,
-    );
-}
 
 export function getLocationNormalizations(action) {
     return getNormalizations(
@@ -94,4 +86,30 @@ export function getTeamMemberForProfileNormalizations(action) {
 export function getTeamCoordinatorNormalizations(action) {
     const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
     return getTeamMemberNormalizations(action, role);
+}
+
+export function getTeamMemberNormalizationsFromAddMembers(action, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER) {
+    const ids = getNormalizations(
+        'members',
+        action.payload.result,
+        services.team.actions.add_members.ResponseV1,
+        action.payload,
+    );
+    const members = retrieveTeamMembers(ids, action.payload);
+    const memberIds = [];
+    for (let member of members) {
+        if (
+            member.role === role ||
+            // default protobuf enum is returend as null
+            (member.role === null && role === services.team.containers.TeamMemberV1.RoleV1.MEMBER)
+        ) {
+            memberIds.push(member.id);
+        }
+    }
+    return memberIds;
+}
+
+export function getTeamCoordinatorNormalizationsFromAddMembers(action) {
+    const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+    return getTeamMemberNormalizationsFromAddMembers(action, role);
 }
