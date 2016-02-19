@@ -115,7 +115,7 @@ describe('ProfileDetailForm', () => {
 
     describe('submitting', () => {
 
-        it('calls onSaveCallback if a new photo has not been added', () => {
+        it('dispatches the update profile action if a new photo has not been added', () => {
             const profile = getProfile();
             const handleSubmit = (fn) => () => fn({
                 photo: {existing: true},

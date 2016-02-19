@@ -32,7 +32,7 @@ describe('SelectedProfile', () => {
             expect(wrapper.children().at(0).text()).toEqual('');
         });
 
-        it('shows the name only when there is no title' , () => {
+        it('shows only the name when there is no title' , () => {
             const profile = ProfileFactory.getProfile({
                 /*eslint-disable camelcase*/
                 full_name: 'Joe User',
