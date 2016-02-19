@@ -42,11 +42,13 @@ class AutoComplete extends CSSComponent {
     static propTypes = {
         defaults: PropTypes.arrayOf(PropTypes.instanceOf(Section)),
         dispatch: PropTypes.func.isRequired,
+        onBlur: PropTypes.func,
         results: PropTypes.object,
     }
 
     static defaultProps = {
         defaults: [],
+        onBlur: () => {},
         results: {},
     }
 
@@ -62,7 +64,8 @@ class AutoComplete extends CSSComponent {
         this.props.dispatch(autocomplete(value));
     }
 
-    handleBlur = () => {
+    handleBlur = (event) => {
+        this.props.onBlur(event, this.state.query);
         this.setState({query: ''});
         this.props.dispatch(clearResults());
     }
@@ -102,6 +105,7 @@ class AutoComplete extends CSSComponent {
     render() {
         const {
             defaults,
+            onBlur,
             ...other,
         } = this.props;
         const sections = this.getSections();

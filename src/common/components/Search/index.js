@@ -128,14 +128,14 @@ class Search extends CSSComponent {
         },
 
         Escape(event) {
-            this.cleanupAndBlur();
+            this.cleanupAndBlur(event);
         },
     }
 
-    cleanupAndBlur = () => {
+    cleanupAndBlur = (event) => {
         ReactDOM.findDOMNode(this.refs.input).blur();
         this.setState({highlightedIndex: null})
-        this.props.onBlur();
+        this.props.onBlur(event);
     }
 
     handleSelectItem = (item) => {
@@ -213,7 +213,7 @@ class Search extends CSSComponent {
         if (this.ignoreBlur) {
             event.preventDefault();
         } else {
-            this.cleanupAndBlur();
+            this.cleanupAndBlur(event);
         }
     }
 

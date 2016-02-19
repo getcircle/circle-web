@@ -4,9 +4,12 @@ import { FlatButton } from 'material-ui';
 
 import Colors from '../styles/Colors';
 import t from '../utils/gettext';
+import * as routes from '../utils/routes';
 
 import AutoComplete from './AutoComplete';
 import SearchIcon from './SearchIcon';
+
+const SEARCH_BUTTON_CLASSNAME = 'search-button';
 
 const HomeSearch = (props, { muiTheme }) => {
     const styles = {
@@ -33,18 +36,32 @@ const HomeSearch = (props, { muiTheme }) => {
             paddingLeft: 17,
         },
     };
+
+    function handleBlur(event, query) {
+        if (
+            event &&
+            query &&
+            event.relatedTarget &&
+            event.relatedTarget.className === SEARCH_BUTTON_CLASSNAME
+        ) {
+            routes.routeToSearch(query);
+        }
+    }
+
     return (
         <div {...props}>
             <AutoComplete
                 className="col-xs"
                 inputContainerStyle={styles.inputContainer}
                 inputStyle={styles.inputStyle}
+                onBlur={handleBlur}
                 placeholder={t('Search your coworker\'s knowledge')}
                 searchContainerWidth={550}
                 style={styles.autoComplete}
             />
             <FlatButton
                 backgroundColor={muiTheme.luno.tintColor}
+                className="search-button"
                 style={styles.button}
             >
                 <div className="row center-xs middle-xs">
