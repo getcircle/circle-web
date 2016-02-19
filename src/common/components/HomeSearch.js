@@ -6,12 +6,25 @@ import Colors from '../styles/Colors';
 import t from '../utils/gettext';
 import * as routes from '../utils/routes';
 
+import InternalPropTypes from './InternalPropTypes';
 import AutoComplete from './AutoComplete';
 import SearchIcon from './SearchIcon';
 
 const SEARCH_BUTTON_CLASSNAME = 'search-button';
 
-const HomeSearch = (props, { muiTheme }) => {
+// TODO if we require the component to be mounted before displaying placeholder
+// text, we can use moment.js to get local time for the user
+function getPlaceHolderText(profile) {
+    let text;
+    if (profile.full_name) {
+        text = t(`Hello ${profile.first_name}, what can we help you find today?`);
+    } else {
+        text = t('Search People, Knowledge & Teams');
+    }
+    return text;
+};
+
+const HomeSearch = (props, { auth, muiTheme }) => {
     const styles = {
         autoComplete: {
             flexGrow: 1,
@@ -47,7 +60,6 @@ const HomeSearch = (props, { muiTheme }) => {
             routes.routeToSearch(query);
         }
     }
-
     return (
         <div {...props}>
             <AutoComplete
@@ -55,8 +67,7 @@ const HomeSearch = (props, { muiTheme }) => {
                 inputContainerStyle={styles.inputContainer}
                 inputStyle={styles.inputStyle}
                 onBlur={handleBlur}
-                placeholder={t('Search your coworker\'s knowledge')}
-                searchContainerWidth={550}
+                placeholder={getPlaceHolderText(auth.profile)}
                 style={styles.autoComplete}
             />
             <FlatButton
@@ -79,6 +90,7 @@ const HomeSearch = (props, { muiTheme }) => {
 };
 
 HomeSearch.contextTypes = {
+    auth: InternalPropTypes.AuthContext,
     muiTheme: PropTypes.object.isRequired,
 };
 

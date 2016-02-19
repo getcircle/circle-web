@@ -7,7 +7,7 @@ import t from '../utils/gettext';
 import DetailContent from './DetailContent';
 import DetailSection from './DetailSectionV2';
 import RoundedButton from './RoundedButton';
-import SearchResults from './SearchResults';
+import SearchResultsList from './SearchResultsList';
 
 export const SearchDetailHeader = ({ totalResults, query }) => {
     const resultsKeyword = totalResults === 1 ? 'Result' : 'Results';
@@ -48,7 +48,16 @@ const SearchDetailMissingInfo = () => {
 };
 
 const SearchDetail = (props) => {
-    const { query, totalResults, ...other } = props;
+    const {
+        hasMore,
+        loading,
+        onLoadMore,
+        onSelectResult,
+        query,
+        results,
+        totalResults,
+        ...other
+    } = props;
     return (
         <DetailContent>
             <SearchDetailHeader query={query} totalResults={totalResults} />
@@ -58,7 +67,13 @@ const SearchDetail = (props) => {
                 </section>
                 <section className="col-xs-8 col-xs-offset-1">
                     <DetailSection dividerStyle={{marginBottom: 0}}>
-                        <SearchResults {...other} />
+                        <SearchResultsList
+                            hasMore={hasMore}
+                            loading={loading}
+                            onLoadMore={onLoadMore}
+                            onSelectItem={onSelectResult}
+                            results={results}
+                        />
                     </DetailSection>
                 </section>
             </section>

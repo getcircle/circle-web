@@ -1,13 +1,13 @@
 import expect from 'expect';
 import { ListItem } from 'material-ui';
 
-import * as itemFactory from '../../../../src/common/components/SearchResults/factories';
+import * as itemFactory from '../../../../src/common/components/SearchResultsList/factories';
 
 import SearchResultFactory from '../../../factories/SearchResultFactory';
 
 const setup = buildSetup(ListItem);
 
-describe('SearchResults factories', () => {
+describe('SearchResultsList factories', () => {
 
     describe('createProfileResult', () => {
 

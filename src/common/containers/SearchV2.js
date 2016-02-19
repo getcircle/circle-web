@@ -6,11 +6,13 @@ import { provideHooks } from 'redial';
 import { clearSearchResults, search } from '../actions/search';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
+import * as routes from '../utils/routes';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import SearchDetail from '../components/SearchDetail';
+import { TYPES } from '../components/SearchResultsList/factories';
 
 const selector = createSelector(
     [
@@ -44,9 +46,20 @@ class Search extends CSSComponent {
     handleLoadMore = () => {
     }
 
-    handleSelectResult = () => {
+    handleSelectResult = ({ payload, type }) => {
         // TODO track search result
         // TODO ensure we have access to the index of the result that was clicked
+        switch(type) {
+        case TYPES.PROFILE:
+            routes.routeToProfile(payload);
+            break;
+        case TYPES.POST:
+            routes.routeToPost(payload);
+            break;
+        case TYPES.TEAM:
+            routes.routeToTeam(payload);
+            break;
+        }
     }
 
     componentWillReceiveProps(nextProps, nextState) {

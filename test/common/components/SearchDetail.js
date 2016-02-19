@@ -1,6 +1,6 @@
 import expect from 'expect';
 
-import SearchResults from '../../../src/common/components/SearchResults';
+import SearchResultsList from '../../../src/common/components/SearchResultsList';
 import SearchDetail, { SearchDetailHeader } from '../../../src/common/components/SearchDetail';
 
 const setup = buildSetup(SearchDetail, () => {
@@ -40,9 +40,9 @@ describe('SearchDetail', () => {
         expect(header.prop('query')).toEqual(props.query);
     });
 
-    it('renders the SearchResults', () => {
+    it('renders the SearchResultsList', () => {
         const { wrapper, props } = setup();
-        const results = wrapper.find(SearchResults);
+        const results = wrapper.find(SearchResultsList);
         expect(results.length).toEqual(1);
         expect(results.prop('results')).toEqual(props.results);
     });

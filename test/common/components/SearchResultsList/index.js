@@ -4,18 +4,18 @@ import TestUtils from 'react-addons-test-utils';
 
 import { ListItem } from 'material-ui';
 
-import SearchResults from '../../../../src/common/components/SearchResults';
+import SearchResultsList from '../../../../src/common/components/SearchResultsList';
 
 import SearchResultFactory from '../../../factories/SearchResultFactory';
 
 function setup(overrides) {
     const defaults = {};
     const props = Object.assign({}, defaults, overrides);
-    const output = TestUtils.renderIntoDocument(<SearchResults {...props} />);
+    const output = TestUtils.renderIntoDocument(<SearchResultsList {...props} />);
     return { props, output };
 };
 
-describe('SearchResults', () => {
+describe('SearchResultsList', () => {
 
     it('renders a set of profile results', () => {
         const results = [];
