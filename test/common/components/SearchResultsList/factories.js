@@ -4,8 +4,11 @@ import { ListItem } from 'material-ui';
 import * as itemFactory from '../../../../src/common/components/SearchResultsList/factories';
 
 import SearchResultFactory from '../../../factories/SearchResultFactory';
+import { getDefaultContext } from '../../../componentWithContext';
 
 const setup = buildSetup(ListItem);
+const context = getDefaultContext();
+const theme = context.muiTheme.luno.searchResults;
 
 describe('SearchResultsList factories', () => {
 
@@ -13,7 +16,7 @@ describe('SearchResultsList factories', () => {
 
         it('handles profiles with no highlights', () => {
             const result = SearchResultFactory.getSearchResultWithProfile();
-            const searchResult = itemFactory.createProfileResult(result);
+            const searchResult = itemFactory.createProfileResult(result, theme);
             expect(searchResult.type).toEqual(itemFactory.TYPES.PROFILE);
             expect(searchResult.payload).toEqual(result.profile);
 
@@ -25,7 +28,7 @@ describe('SearchResultsList factories', () => {
 
         it('handles profiles with a highlighted name', () => {
             const result = SearchResultFactory.getSearchResultWithProfile(true);
-            const searchResult = itemFactory.createProfileResult(result);
+            const searchResult = itemFactory.createProfileResult(result, theme);
             const { wrapper } = setup(searchResult.item);
             const html = wrapper.html();
             expect(html.includes(result.highlight.get('full_name'))).toExist();
@@ -33,7 +36,7 @@ describe('SearchResultsList factories', () => {
 
         it('handles profiles with a highlighted title', () => {
             const result = SearchResultFactory.getSearchResultWithProfile(false, true);
-            const searchResult = itemFactory.createProfileResult(result);
+            const searchResult = itemFactory.createProfileResult(result, theme);
             const { wrapper } = setup(searchResult.item);
             const html = wrapper.html();
             expect(html.includes(result.highlight.get('display_title'))).toExist();
@@ -45,7 +48,7 @@ describe('SearchResultsList factories', () => {
 
         it('handles posts with no highlights', () => {
             const result = SearchResultFactory.getSearchResultWithPost();
-            const searchResult = itemFactory.createPostResult(result);
+            const searchResult = itemFactory.createPostResult(result, theme);
             expect(searchResult.type).toEqual(itemFactory.TYPES.POST);
             expect(searchResult.payload).toEqual(result.post);
 
@@ -57,7 +60,7 @@ describe('SearchResultsList factories', () => {
 
         it('handles posts with a highlighted title', () => {
             const result = SearchResultFactory.getSearchResultWithPost(true);
-            const searchResult = itemFactory.createPostResult(result);
+            const searchResult = itemFactory.createPostResult(result, theme);
             const { wrapper } = setup(searchResult.item);
             const html = wrapper.html();
             expect(html.includes(result.highlight.get('title'))).toExist();
@@ -65,7 +68,7 @@ describe('SearchResultsList factories', () => {
 
         it('handles posts with a highlighted content', () => {
             const result = SearchResultFactory.getSearchResultWithPost(false, true);
-            const searchResult = itemFactory.createPostResult(result);
+            const searchResult = itemFactory.createPostResult(result, theme);
             const { wrapper } = setup(searchResult.item);
             const html = wrapper.html();
             expect(html.includes(result.highlight.get('content'))).toExist();
