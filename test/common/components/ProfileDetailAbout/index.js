@@ -158,7 +158,7 @@ describe('ProfileDetailAbout', () => {
         });
 
         it('renders contact methods in a list', () => {
-            const { wrapper } = setup({profile: ProfileFactory.getProfileWithContactMethods([2, 2, 3])}, ContactMethods);
+            const { wrapper } = setup({profile: ProfileFactory.getProfileWithContactMethods([1, 1, 2])}, ContactMethods);
             expect(wrapper.find(DetailSection).prop('title')).toEqual('Contact');
             expect(wrapper.find(ContactMethod).length).toEqual(3);
         });
@@ -166,19 +166,6 @@ describe('ProfileDetailAbout', () => {
     });
 
     describe('ContactMethod', () => {
-        it('doesn\'t render contact methods we haven\'t supported yet', () => {
-            const unsupportedTypes = [0, 1, 4, 5, 6, 7];
-            for (let type of unsupportedTypes) {
-                /*eslint-disable camelcase*/
-                const { wrapper } = setup(
-                    {method: ProfileFactory.getProfileContactMethod({contact_method_type: type})},
-                    ContactMethod,
-                );
-                /*eslint-enable camelcase*/
-                expect(wrapper.find('li').length).toEqual(0);
-                expect(wrapper.find('span').length).toEqual(1);
-            }
-        });
 
         it('renders slack contact method', () => {
             /*eslint-disable camelcase*/
@@ -188,6 +175,17 @@ describe('ProfileDetailAbout', () => {
             expect(wrapper.find('li').length).toEqual(1);
             // we render slack as a span right now since we haven't setup deep linking
             expect(wrapper.find('span').length).toEqual(2);
+            expect(wrapper.find('span').nodes[1].props.children).toEqual(method.value);
+        });
+
+        it('renders slack contact method', () => {
+            /*eslint-disable camelcase*/
+            const method = ProfileFactory.getProfileContactMethod({contact_method_type: ContactMethodTypeV1.SLACK});
+            /*eslint-enable camelcase*/
+            const { wrapper } = setup({method}, ContactMethod);
+            expect(wrapper.find('li').length).toEqual(1);
+            expect(wrapper.find('span').length).toEqual(2);
+            expect(wrapper.find('span').nodes[1].props.children).toEqual(method.value);
         });
 
         it('renders email contact method', () => {
@@ -197,6 +195,7 @@ describe('ProfileDetailAbout', () => {
             const { wrapper } = setup({method}, ContactMethod);
             expect(wrapper.find('li').length).toEqual(1);
             expect(wrapper.find('a').length).toEqual(1);
+            expect(wrapper.find('a').nodes[0].props.children).toEqual(method.value);
         });
     });
 
