@@ -65,13 +65,13 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
             </section>
             <section className="row">
                 <section className="col-xs-8" style={theme.section}>
-                    <Bio profile={profile} />
+                    <Bio canEdit={isLoggedInUser} dispatch={dispatch} profile={profile} />
                     {managerSection}
                     {peersSection}
                     {directReportsSection}
                 </section>
                 <section className="col-xs-offset-1 col-xs-3">
-                    <ContactMethods profile={profile} />
+                    <ContactMethods canEdit={isLoggedInUser} dispatch={dispatch} profile={profile} />
                     {itemsSection}
                     {teamsSection}
                 </section>

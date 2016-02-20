@@ -6,6 +6,7 @@ import { mailto } from '../../utils/contact';
 import t from '../../utils/gettext';
 
 import DetailSection from '../DetailSectionV2';
+import { buildShowModal } from './helpers';
 
 const { ContactMethodTypeV1 } = services.profile.containers.ContactMethodV1;
 
@@ -79,7 +80,7 @@ ContactMethod.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-const ContactMethods = ({ profile }, { muiTheme }) => {
+const ContactMethods = ({ dispatch, canEdit, profile }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     let value;
@@ -89,6 +90,8 @@ const ContactMethods = ({ profile }, { muiTheme }) => {
                 {profile.contact_methods.map((method, index) => <ContactMethod key={`contact-method-${index}`} method={method} />)}
             </ul>
         );
+    } else if (canEdit) {
+        value = <a onTouchTap={buildShowModal(dispatch)} style={{...theme.primaryText, ...theme.link}}>{t('Add info')}</a>;
     } else {
         value = <p style={theme.primaryText}>{t('No info')}</p>;
     }
@@ -101,7 +104,13 @@ const ContactMethods = ({ profile }, { muiTheme }) => {
 };
 
 ContactMethods.propTypes = {
+    canEdit: PropTypes.bool,
+    dispatch: PropTypes.func.isRequired,
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+};
+
+ContactMethods.defaultProps = {
+    canEdit: false,
 };
 
 ContactMethods.contextTypes = {

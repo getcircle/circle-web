@@ -41,7 +41,17 @@ describe('ProfileDetailAbout', () => {
         expect(wrapper.find('h1').text()).toEqual('About');
     });
 
+    it('renders a link to the edit profile modal', () => {
+        const { wrapper } = setup();
+        expect(wrapper.find(EditButton).length).toBe(1);
+    });
+
     describe('Bio', () => {
+
+        it('renders with canEdit if the user is logged in', () => {
+            const { wrapper } = setup();
+            expect(wrapper.find(Bio).prop('canEdit')).toExist();
+        });
 
         it('renders if bio doesn\'t exist', () => {
             const { wrapper } = setup({profile: ProfileFactory.getProfile({bio: null})});
@@ -51,6 +61,32 @@ describe('ProfileDetailAbout', () => {
         it('renders if the bio does exist', () => {
             const { wrapper } = setup();
             expect(wrapper.find(Bio).length).toExist();
+        });
+
+        describe('no bio, not the current user', () => {
+
+            it('renders "No info" text', () => {
+                const profile = ProfileFactory.getProfile({bio: null});
+                const { wrapper } = setup({profile, canEdit: false}, Bio);
+                expect(wrapper.find('p').text()).toEqual('No info');
+            });
+
+            it('does not render a link to the edit profile modal if the user can\'t edit', () => {
+                const profile = ProfileFactory.getProfile({bio: null});
+                const { wrapper } = setup({profile, canEdit: false}, Bio);
+                expect(wrapper.find('a').length).toBe(0);
+            });
+        });
+
+        describe('no bio, current user', () => {
+
+            it('renders a link to the edit profile modal', () => {
+                const profile = ProfileFactory.getProfile({bio: null});
+                const { wrapper } = setup({profile, canEdit: true}, Bio);
+                expect(wrapper.find('a').length).toBe(1);
+                expect(wrapper.find('a').prop('children')).toEqual('Add bio');
+            });
+
         });
 
     });
@@ -128,6 +164,11 @@ describe('ProfileDetailAbout', () => {
             expect(wrapper.find(ContactMethods).length).toExist();
         });
 
+        it('renders the ContactMethods section with canEdit if the logged in user', () => {
+            const { wrapper } = setup();
+            expect(wrapper.find(ContactMethods).prop('canEdit')).toExist();
+        });
+
         it('renders the ContactMethods section if contact methods exist', () => {
             const { wrapper, props } = setup({profile: ProfileFactory.getProfileWithContactMethods([0])});
             expect(wrapper.find(ContactMethods).length).toExist();
@@ -141,18 +182,18 @@ describe('ProfileDetailAbout', () => {
                 expect(wrapper.find('p').text()).toEqual('No info');
             });
 
-            it('does not render a link to the edit profile modal', () => {
-                const { wrapper } = setup({isLoggedInUser: false}, ContactMethods);
-                expect(wrapper.find(EditButton).length).toBe(0);
+            it('does not render a link to the edit profile modal if the user can\'t edit', () => {
+                const { wrapper } = setup({canEdit: false}, ContactMethods);
+                expect(wrapper.find('a').length).toBe(0);
             });
-
         });
 
         describe('no contact methods, current user', () => {
 
             it('renders a link to the edit profile modal', () => {
-                const { wrapper } = setup();
-                expect(wrapper.find(EditButton).length).toBe(1);
+                const { wrapper } = setup({canEdit: true}, ContactMethods);
+                expect(wrapper.find('a').length).toBe(1);
+                expect(wrapper.find('a').prop('children')).toEqual('Add info');
             });
 
         });
