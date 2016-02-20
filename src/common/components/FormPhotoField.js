@@ -23,14 +23,6 @@ export default class FormPhotoField extends FormField {
         return {
             default: {
                 dropzone: {
-                    ...muiTheme.luno.form.field,
-                    alignItems: 'center',
-                    boxShadow: 'none',
-                    height: '50px',
-                    justifyContent: 'flex-start',
-                    padding: 0,
-                },
-                dropzone: {
                     border: '0',
                     color: muiTheme.luno.tintColor,
                     fontSize: '1.4rem',
