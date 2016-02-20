@@ -180,7 +180,8 @@ describe('ProfileDetailAbout', () => {
 
         it('renders slack contact method', () => {
             /*eslint-disable camelcase*/
-            const method = ProfileFactory.getProfileContactMethod({contact_method_type: ContactMethodTypeV1.SLACK});
+            // null simulates ContactMethodTypeV1.CELL_PHONE
+            const method = ProfileFactory.getProfileContactMethod({contact_method_type: null});
             /*eslint-enable camelcase*/
             const { wrapper } = setup({method}, ContactMethod);
             expect(wrapper.find('li').length).toEqual(1);
