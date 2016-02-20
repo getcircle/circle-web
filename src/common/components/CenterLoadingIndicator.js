@@ -1,41 +1,40 @@
 import { CircularProgress } from 'material-ui';
 import React from 'react';
 
-import CSSComponent from './CSSComponent';
+import InternalPropTypes from './InternalPropTypes';
 
-class CenterLoadingIndicator extends CSSComponent {
-
-    classes() {
-        return {
-            'default': {
-                container: {
-                    display: 'table',
-                    height: '100%',
-                    left: 0,
-                    minHeight: '100vh',
-                    position: 'absolute',
-                    top: 0,
-                    width: '100%',
-                },
-                innerDiv: {
-                    display: 'table-cell',
-                    textAlign: 'center',
-                    verticalAlign: 'middle',
-                },
-            },
-        }
+const CenterLoadingIndicator = (props, { device: { mounted }}) => {
+    const styles = {
+        container: {
+            display: 'table',
+            height: '100%',
+            left: 0,
+            minHeight: '100vh',
+            position: 'absolute',
+            top: 0,
+            width: '100%',
+        },
+        innerDiv: {
+            display: 'table-cell',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+        },
+    };
+    let indicator;
+    if (mounted) {
+        indicator = <CircularProgress mode="indeterminate" size={1} />;
     }
-
-
-    render() {
-        return (
-            <div style={this.styles().container}>
-                <div style={this.styles().innerDiv}>
-                    <CircularProgress mode="indeterminate" size={1} />
-                </div>
+    return (
+        <div style={styles.container}>
+            <div style={styles.innerDiv}>
+                {indicator}
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
+
+CenterLoadingIndicator.contextTypes = {
+    device: InternalPropTypes.DeviceContext.isRequired,
+};
 
 export default CenterLoadingIndicator;
