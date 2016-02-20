@@ -3,12 +3,10 @@ import React, { PropTypes } from 'react';
 import t from '../utils/gettext';
 
 import CenterLoadingIndicator from './CenterLoadingIndicator';
-import DetailContent from './DetailContent';
-import DetailSection from './DetailSectionV2';
+import Explore from './Explore';
 import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 
 const ExplorePeople = ({ hasMore, loading, onLoadMore, profiles, profilesCount, ...other }, { muiTheme }) => {
-    const theme = muiTheme.luno.detail;
     let content;
     if (!profiles) {
         content = <CenterLoadingIndicator />;
@@ -23,16 +21,10 @@ const ExplorePeople = ({ hasMore, loading, onLoadMore, profiles, profilesCount, 
         );
     }
 
-    const count = profilesCount ? ` (${profilesCount})` : '';
     return (
-        <DetailContent>
-            <section className="row middle-xs">
-                <h1 style={theme.h1}>{t(`People ${count}`)}</h1>
-            </section>
-            <DetailSection dividerStyle={{marginBottom: 0}}>
-                {content}
-            </DetailSection>
-        </DetailContent>
+        <Explore count={profilesCount} noun={t('People')}>
+            {content}
+        </Explore>
     );
 };
 
