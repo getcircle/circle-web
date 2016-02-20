@@ -2,6 +2,8 @@ import Immutable from 'immutable';
 
 import * as types from '../constants/actionTypes';
 
+const INFLATION_OPTION = '(services.common.containers.inflation)';
+
 // in seconds
 const TIME_TO_LIVE = 60 * 60 * 24;
 
@@ -10,6 +12,25 @@ const initialState = Immutable.fromJS({
     normalizations: Immutable.Map(),
     timestamps: Immutable.Map(),
 });
+
+/**
+ * Return any field names of inflations that aren't within inflations.
+ *
+ * @param {Object} entity the protobuf entity
+ * @param {Array[str]} inflations array of inflation names we're checking against.
+ * @return {Array[str]} array of inflation names within `entity` that aren't within `inflations`
+ */
+function getExcludedInflations(entity, inflations) {
+    if (!entity) {
+        return [];
+    }
+    let otherInflations = entity.$type._fields.map((field) => {
+        if (field.options[INFLATION_OPTION] && inflations.indexOf(field.name) < 0) {
+            return field.name;
+        }
+    });
+    return otherInflations.filter((elem) => elem !== undefined && elem !== null);
+}
 
 /**
  * Return any field names within entity that aren't within fields.
@@ -24,7 +45,7 @@ function difference(entity, fields) {
     }
 
     let otherFields = entity.$type._fields.map((field) => {
-        if (fields.indexOf(field.name) < 0) {
+        if (!field.options[INFLATION_OPTION] && fields.indexOf(field.name) < 0) {
             return field.name;
         }
     });
@@ -53,8 +74,8 @@ function getExcludedFields(newEntity, oldEntity) {
         if (newEntity.inflations.exclude.length > 0) {
             excludedFields = excludedFields.concat(newEntity.inflations.exclude);
         } else if (newEntity.inflations.only.length > 0) {
-            const otherFields = difference(oldEntity, newEntity.inflations.only);
-            excludedFields = excludedFields.concat(otherFields);
+            const inflations = getExcludedInflations(oldEntity, newEntity.inflations.only);
+            excludedFields = excludedFields.concat(inflations);
         }
     }
     return excludedFields;
@@ -69,7 +90,7 @@ function getExcludedFields(newEntity, oldEntity) {
  * @param {Object} newEntity the new entity we're loading into the cache
  * @param {Object} oldEntity the existing entity in the cache
  */
-function mergeEntities(newEntity, oldEntity) {
+export function mergeEntities(newEntity, oldEntity) {
     const excludedFields = getExcludedFields(newEntity, oldEntity);
     excludedFields.forEach((field) => {
         newEntity.set(field, oldEntity.get(field));

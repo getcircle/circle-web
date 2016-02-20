@@ -3,10 +3,13 @@ import Immutable from 'immutable';
 import faker from 'faker';
 import { services } from 'protobufs';
 
-import cache from '../../../src/common/reducers/cache';
+import cache, { mergeEntities } from '../../../src/common/reducers/cache';
 
 import PostFactory from '../../factories/PostFactory';
 import ProfileFactory from '../../factories/ProfileFactory';
+import TeamFactory from '../../factories/TeamFactory';
+
+const { RoleV1 } = services.team.containers.TeamMemberV1;
 
 function mockPayloadWithPost(postId = faker.random.uuid(), normalizationFields = {}, entityFields = {}) {
     const normalizations = {};
@@ -24,6 +27,36 @@ function mockPayloadWithPost(postId = faker.random.uuid(), normalizationFields =
 }
 
 describe('cache reducer', () => {
+
+    describe('mergeEntities', () => {
+        it('only merges fields from old entity if new entity doesn\'t have them', () => {
+            const profile = ProfileFactory.getProfile();
+            const newEntity = TeamFactory.getTeamMember(
+                RoleV1.COORDINATOR,
+                profile,
+                {inflations: new services.common.containers.InflationsV1({only: ['profile']})},
+            );
+            newEntity.team = null;
+            const oldEntity = TeamFactory.getTeamMember(undefined, profile);
+            mergeEntities(newEntity, oldEntity);
+            expect(newEntity.role).to.equal(RoleV1.COORDINATOR);
+            expect(newEntity.team).to.equal(oldEntity.team);
+        });
+
+        it('merges fields from old entity if new entity doesn\'t have them', () => {
+            const profile = ProfileFactory.getProfile();
+            const newEntity = TeamFactory.getTeamMember(
+                RoleV1.COORDINATOR,
+                profile,
+                {inflations: new services.common.containers.InflationsV1({exclude: ['profile']})},
+            );
+            newEntity.profile = null;
+            const oldEntity = TeamFactory.getTeamMember(undefined, profile);
+            mergeEntities(newEntity, oldEntity);
+            expect(newEntity.role).to.equal(RoleV1.COORDINATOR);
+            expect(newEntity.profile).to.equal(oldEntity.profile);
+        });
+    });
 
     it('replaces normalizations for objects already in cache instead of merging them', () => {
         const postId = faker.random.uuid();
