@@ -125,6 +125,7 @@ export default function paginate({
         pages: Immutable.OrderedSet(),
         currentPage: 1,
         pageSize: 15,
+        count: 0,
     }), action) {
         const { payload } = action;
         switch (action.type) {
@@ -146,7 +147,8 @@ export default function paginate({
                         }
                     })
                     .set('currentPage', paginator ? paginator.page : 1)
-                    .set('pageSize', paginator ? paginator.page_size : state.get('pageSize'));
+                    .set('pageSize', paginator ? paginator.page_size : state.get('pageSize'))
+                    .set('count', paginator ? paginator.count : 0);
             });
         case failureType:
             return state.set('loading', false);

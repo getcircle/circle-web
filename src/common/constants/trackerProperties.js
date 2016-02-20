@@ -32,6 +32,7 @@ export const PAGE_TYPE = {
     NEW_POST: 'New Post',
     SEARCH: 'Search',
     SETTINGS: 'Settings',
+    EXPLORE_PEOPLE: 'Explore People',
 
     // Detail pages
     LOCATION_DETAIL: 'Location Detail',

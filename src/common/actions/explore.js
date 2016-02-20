@@ -5,13 +5,9 @@ import * as types from '../constants/actionTypes';
 
 import { getPosts } from '../services/posts';
 import { getProfiles } from '../services/profile';
-import {
-    getLocations,
-    getTeams,
-} from '../services/organization';
+import { getTeams } from '../services/organization';
 import { PostStateURLString } from '../utils/post';
 import {
-    retrieveLocations,
     retrievePosts,
     retrieveProfiles,
     retrieveTeams
@@ -27,7 +23,6 @@ export const EXPLORE_TYPES = keymirror({
     POSTS: null,
     PROFILES: null,
     TEAMS: null,
-    LOCATIONS: null,
 });
 
 function shouldBail(state, nextRequest, type) {
@@ -37,8 +32,6 @@ function shouldBail(state, nextRequest, type) {
         const ids = exploreState.get('ids').toJS();
         if (ids.length > 0) {
             switch(type) {
-            case EXPLORE_TYPES.LOCATIONS:
-                return retrieveLocations(ids, cacheState) !== null;
             case EXPLORE_TYPES.POSTS:
                 return retrievePosts(ids, cacheState) !== null;
             case EXPLORE_TYPES.PROFILES:
@@ -79,22 +72,6 @@ export function exploreTeams(nextRequest) {
         meta: {
             paginateBy: TEAMS,
         }
-    }
-}
-
-export function exploreLocations(nextRequest) {
-    const { LOCATIONS } = EXPLORE_TYPES;
-    return {
-        [SERVICE_REQUEST]: {
-            types: exploreActionTypes,
-            remote: (client) => getLocations(client, null, nextRequest, LOCATIONS),
-            bailout: (state) => {
-                return shouldBail(state, nextRequest, LOCATIONS);
-            },
-        },
-        meta: {
-            paginateBy: LOCATIONS,
-        },
     }
 }
 

@@ -106,7 +106,7 @@ export default function (store, url) {
             return (nextState, replaceState, exit) => {
                 let state = store.getState();
                 if (isAuthenticated(state)) {
-                    let pageId = paramKey !== '' ? nextState.params[paramKey] : '';
+                    let pageId = paramKey !== undefined ? nextState.params[paramKey] : '';
                     // Init session is idempotent
                     let authenticationState = state.get('authentication');
                     tracker.initSession(
@@ -129,7 +129,7 @@ export default function (store, url) {
                 onEnter={applyMiddleware(
                     requireAuth,
                     hideHeader,
-                    trackPageView(PAGE_TYPE.HOME, '')
+                    trackPageView(PAGE_TYPE.HOME)
                 )}
             />
             <Route
@@ -141,7 +141,7 @@ export default function (store, url) {
                 component={require('./containers/Billing')}
                 onEnter={applyMiddleware(
                     displayHeader,
-                    trackPageView(PAGE_TYPE.BILLING, '')
+                    trackPageView(PAGE_TYPE.BILLING)
                 )}
                 path="/billing"
             />
@@ -150,7 +150,7 @@ export default function (store, url) {
                 onEnter={applyMiddleware(
                     requireAuth,
                     hideHeader,
-                    trackPageView(PAGE_TYPE.NEW_POST, '')
+                    trackPageView(PAGE_TYPE.NEW_POST)
                 )}
                 path="/new-post"
             />
@@ -207,6 +207,14 @@ export default function (store, url) {
                     trackPageView(PAGE_TYPE.SEARCH, 'query')
                 )}
                 path="/search/:query"
+            />
+            <Route
+                component={require('./containers/ExplorePeople').default}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.EXPLORE_PEOPLE),
+                )}
+                path="/explore/people"
             />
             <Route
                 component={require('./containers/NoMatch')}

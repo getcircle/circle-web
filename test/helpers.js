@@ -3,6 +3,8 @@ import { shallow } from 'enzyme';
 
 import { getDefaultContext } from './componentWithContext';
 
+import * as factories from './factories';
+
 global.then = function (callback, timeout) {
   setTimeout(callback, timeout > 0 ? timeout : 0);
   return {then: then};
@@ -25,3 +27,5 @@ global.buildSetup = (DefaultComponent, defaultPropsFunc) => (propsOverrides, Com
         props,
     };
 };
+
+global.factories = factories;

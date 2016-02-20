@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 
 import { fontColors, fontWeights, } from '../constants/styles';
 import t from '../utils/gettext';
@@ -121,6 +122,9 @@ class Home extends CSSComponent {
                             <div className="row center-xs">
                                 {this.getOrganizationImage()}
                             </div>
+                        </div>
+                        <div>
+                            <Link to="/explore/people">{t('People')}</Link>
                         </div>
                     </section>
                     <section style={this.styles().searchSection}>

@@ -1,5 +1,4 @@
 import {
-    getLocationNormalizations,
     getPostsNormalizations,
     getProfileNormalizations,
     getTeamNormalizations,
@@ -12,8 +11,6 @@ const explore = paginate({
     mapActionToKey: action => action.meta.paginateBy,
     mapActionToResults: (action) => {
         switch(action.meta.paginateBy) {
-        case EXPLORE_TYPES.LOCATIONS:
-            return getLocationNormalizations(action);
         case EXPLORE_TYPES.POSTS:
             return getPostsNormalizations(action);
         case EXPLORE_TYPES.PROFILES:
