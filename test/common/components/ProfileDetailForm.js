@@ -7,7 +7,7 @@ import { services } from 'protobufs';
 import { getProfile } from '../../factories/ProfileFactory';
 import { hideModal, updateProfile } from '../../../src/common/actions/profiles';
 import { PROFILE_DETAIL } from '../../../src/common/constants/forms';
-import { ProfileDetailForm } from '../../../src/common/components/ProfileDetailForm';
+import { ProfileDetailForm, fieldNames, getUpdatedProfile } from '../../../src/common/components/ProfileDetailForm';
 import FormDialog from '../../../src/common/components/FormDialog';
 import { uploadMedia } from '../../../src/common/actions/media';
 
@@ -20,6 +20,7 @@ function setup(overrides) {
         fields: {
             bio: {onChange: expect.createSpy(), value: ''},
             contacts: [],
+            email: {onChange: expect.createSpy(), value: ''},
             firstName: {onChange: expect.createSpy(), value: ''},
             lastName: {onChange: expect.createSpy(), value: ''},
             manager: {onChange: expect.createSpy(), value: {}},
@@ -48,21 +49,13 @@ function initializeAction(profile) {
     return initialize(PROFILE_DETAIL, {
         bio: profile.bio,
         contacts: [],
+        email: profile.email,
         firstName: profile.first_name,
         lastName: profile.last_name,
         manager: undefined,
         photo: { existing: true, preview: profile.image_url },
         title: profile.title,
-    }, [
-        'bio',
-        'contacts[].type',
-        'contacts[].value',
-        'firstName',
-        'lastName',
-        'manager',
-        'photo',
-        'title'
-    ]);
+    }, fieldNames);
 }
 
 describe('ProfileDetailForm', () => {
@@ -146,6 +139,26 @@ describe('ProfileDetailForm', () => {
             );
             expect(dispatchSpy).toHaveBeenCalledWith(action);
         });
+
+        it('saves the profile successfully', () => {
+            const profile = getProfile();
+            const handleSubmit = (fn) => () => fn({photo: {existing: true}});
+            const { wrapper, props } = setup({handleSubmit, profile});
+            wrapper.find(FormDialog).prop('onSubmit')();
+            const action = updateProfile(profile, null);
+            expect(props.dispatch).toHaveBeenCalledWith(action);
+        });
+    });
+
+    describe('getUpdatedProfile', () => {
+
+        it('returns a valid profile that can be used to instantiate a ProfileV1 protobuf', () => {
+            const profile = getProfile();
+            const { props } = setup({profile});
+            const updatedProfile = getUpdatedProfile({fields: props.fields, profile: props.profile});
+            new services.profile.containers.ProfileV1(updatedProfile);
+        });
+
     });
 
 });

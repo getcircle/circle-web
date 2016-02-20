@@ -22,10 +22,11 @@ import FormTextField from './FormTextField';
 const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
-const fieldNames = [
+export const fieldNames = [
     'bio',
     'contacts[].type',
     'contacts[].value',
+    'email',
     'firstName',
     'lastName',
     'manager',
@@ -50,6 +51,32 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
+export function getUpdatedProfile({ fields, profile }, overrides) {
+    const contactMethods = fields.contacts.map(c => {
+        return new ContactMethodV1({
+            /*eslint-disable camelcase*/
+            value: c.value.value,
+            contact_method_type: c.type.value,
+            /*eslint-enable camelcase*/
+        })
+    });
+
+    // pull out fields that don't directly map to the profile protobuf
+    const { contacts, firstName, lastName, manager, photo, ...protobufFields } = fields;
+
+    let updatedProfile = {
+        /*eslint-disable camelcase*/
+        contact_methods: contactMethods,
+        first_name: firstName.value,
+        last_name: lastName.value,
+        /*eslint-enable camelcase*/
+    };
+    for (let field in protobufFields) {
+        updatedProfile[field] = protobufFields[field].value;
+    }
+    updatedProfile = Object.assign({}, profile, updatedProfile, overrides);
+    return updatedProfile;
+}
 
 export class ProfileDetailForm extends Component {
     static propTypes = {
@@ -89,15 +116,6 @@ export class ProfileDetailForm extends Component {
         }
     }
 
-    directAttributesToStateMapping = {
-        /*eslint-disable camelcase*/
-        'bio': 'bio',
-        'first_name': 'firstName',
-        'last_name': 'lastName',
-        'title': 'title',
-        /*eslint-enable camelcase*/
-    };
-
     setInitialValues() {
         const { dispatch, manager, profile } = this.props;
 
@@ -111,6 +129,7 @@ export class ProfileDetailForm extends Component {
         const action = initialize(PROFILE_DETAIL, {
             bio: profile.bio,
             contacts,
+            email: profile.email,
             firstName: profile.first_name,
             lastName: profile.last_name,
             manager: manager,
@@ -132,33 +151,8 @@ export class ProfileDetailForm extends Component {
             );
         }
 
-        const updatedProfile = this.getUpdatedProfile(overrides);
+        const updatedProfile = getUpdatedProfile({ fields, profile }, overrides);
         dispatch(updateProfile(updatedProfile, fields.manager.value));
-    }
-
-    getUpdatedProfile(overrides = {}) {
-        const { fields, profile } = this.props;
-
-        const contactMethods = fields.contacts.map(c => {
-            return new ContactMethodV1({
-                /*eslint-disable camelcase*/
-                value: c.value.value,
-                contact_method_type: c.type.value,
-                /*eslint-enable camelcase*/
-            })
-        });
-
-        let updatedProfile = {
-            /*eslint-disable camelcase*/
-            contact_methods: contactMethods,
-            /*eslint-enable camelcase*/
-        };
-        for (let attribute in this.directAttributesToStateMapping) {
-            updatedProfile[attribute] = fields[this.directAttributesToStateMapping[attribute]].value;
-        }
-
-        updatedProfile = Object.assign({}, profile, updatedProfile, overrides);
-        return updatedProfile;
     }
 
     getFieldsThatChanged() {
@@ -195,6 +189,7 @@ export class ProfileDetailForm extends Component {
             fields: {
                 bio,
                 contacts,
+                email,
                 firstName,
                 manager,
                 photo,
@@ -247,6 +242,11 @@ export class ProfileDetailForm extends Component {
                 />
                 <FormLabel text={t('Reports To')} />
                 <FormPersonSelector {...manager} />
+                <FormLabel text={t('Email')} />
+                <FormTextField
+                    placeholder={t('Email')}
+                    {...email}
+                />
                 <FormLabel text={t('Other Contact')} />
                 <FormContactList
                     contacts={contacts}
