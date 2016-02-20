@@ -48,6 +48,14 @@ describe('TeamDetailPeople', () => {
             expect(wrapper.find(ProfilesGrid).at(0).props().profiles.length).toEqual(coordinators.length);
         });
 
+        it('doesn\'t render the MenuComponent if we don\'t have more than one coordinator', () => {
+            const { wrapper } = setup({
+                coordinators: TeamFactory.getCoordinators(1),
+                team: TeamFactory.getTeam(undefined, true),
+            });
+            expect(wrapper.find(ProfilesGrid).at(0).prop('MenuComponent')).toNotExist();
+        });
+
         it('doesn\'t render the "Coordinators" section if we don\'t have coordinators yet', () => {
             const { wrapper } = setup({coordinators: []});
             expect(wrapper.find(DetailSection).length).toEqual(0);
