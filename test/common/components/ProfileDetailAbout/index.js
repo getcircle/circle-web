@@ -175,33 +175,11 @@ describe('ProfileDetailAbout', () => {
             expect(wrapper.find(ContactMethods).prop('profile')).toBe(props.profile);
         });
 
-        describe('no contact methods, not the current user', () => {
-
-            it('renders "No info" text', () => {
-                const { wrapper } = setup({isLoggedInUser: false}, ContactMethods);
-                expect(wrapper.find('p').text()).toEqual('No info');
-            });
-
-            it('does not render a link to the edit profile modal if the user can\'t edit', () => {
-                const { wrapper } = setup({canEdit: false}, ContactMethods);
-                expect(wrapper.find('a').length).toBe(0);
-            });
-        });
-
-        describe('no contact methods, current user', () => {
-
-            it('renders a link to the edit profile modal', () => {
-                const { wrapper } = setup({canEdit: true}, ContactMethods);
-                expect(wrapper.find('a').length).toBe(1);
-                expect(wrapper.find('a').prop('children')).toEqual('Add info');
-            });
-
-        });
-
         it('renders contact methods in a list', () => {
             const { wrapper } = setup({profile: ProfileFactory.getProfileWithContactMethods([1, 1, 2])}, ContactMethods);
             expect(wrapper.find(DetailSection).prop('title')).toEqual('Contact');
-            expect(wrapper.find(ContactMethod).length).toEqual(3);
+            // 3 contact methods + 1 for default email
+            expect(wrapper.find(ContactMethod).length).toEqual(4);
         });
 
     });
@@ -219,7 +197,7 @@ describe('ProfileDetailAbout', () => {
             expect(wrapper.find('span').nodes[1].props.children).toEqual(method.value);
         });
 
-        it('renders slack contact method', () => {
+        it('renders cell phone contact method', () => {
             /*eslint-disable camelcase*/
             // null simulates ContactMethodTypeV1.CELL_PHONE
             const method = ProfileFactory.getProfileContactMethod({contact_method_type: null});
