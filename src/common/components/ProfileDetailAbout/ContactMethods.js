@@ -52,6 +52,11 @@ const ContactMethod = ({ method }, { muiTheme }) => {
             </a>
         );
         break;
+    case null:
+    case ContactMethodTypeV1.CELL_PHONE:
+        label = t('Cell Phone:');
+        value = <span className="col-xs" style={{...styles.value, ...styles.slack}}>{method.value}</span>;
+        break;
     }
 
     if (label && value) {

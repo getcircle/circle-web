@@ -3,16 +3,14 @@ import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
 
-import EditProfileCameraIcon from './EditProfileCameraIcon';
 import FormField from  './FormField';
 import FormFieldError from './FormFieldError';
-import IconContainer from './IconContainer';
 
 export default class FormPhotoField extends FormField {
 
     static propTypes = {
         onChange: PropTypes.func.isRequired,
-        value: PropTypes.object.isRequired,
+        value: PropTypes.object,
     }
 
     static contextTypes = {
@@ -25,37 +23,19 @@ export default class FormPhotoField extends FormField {
         return {
             default: {
                 dropzone: {
-                    ...muiTheme.luno.form.field,
-                    alignItems: 'center',
-                    borderRadius: '4px',
-                    boxShadow: 'none',
-                    height: '50px',
-                    justifyContent: 'flex-start',
-                    padding: 0,
+                    border: '0',
+                    color: muiTheme.luno.tintColor,
+                    fontSize: '1.4rem',
                 },
                 dropzoneActive: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    boxShadow: '-1px 1px 1px rgba(0, 0, 0, 0.2)',
-                },
-                editProfileCameraIconContainer: {
-                    border: 0,
-                    left: 0,
-                    height: 50,
-                    position: 'relative',
-                    top: 0,
-                    width: 45,
-                },
-                editProfileCameraIcon: {
-                    height: 50,
-                    width: 50,
+                    border: '0',
                 },
                 profileImage: {
                     border: '0',
-                    borderRadius: 25,
-                    height: 50,
+                    borderRadius: '50%',
+                    height: 60,
                     objectFit: 'cover',
-                    width: 50,
+                    width: 60,
                 },
                 profileImageButton: {
                     backgroundColor: 'transparent',
@@ -63,8 +43,8 @@ export default class FormPhotoField extends FormField {
                     marginRight: 10,
                     padding: 0,
                     outline: 'none',
-                    width: 50,
-                    height: 50,
+                    width: 60,
+                    height: 60,
                 },
                 profileImageUploadContainer: {
                     alignItems: 'center',
@@ -115,13 +95,7 @@ export default class FormPhotoField extends FormField {
                         style={this.styles().dropzone}
                     >
                         <div className="row center-xs middle-xs dropzone-trigger">
-                            <IconContainer
-                                IconClass={EditProfileCameraIcon}
-                                iconStyle={{...this.styles().editProfileCameraIcon}}
-                                stroke="rgba(0, 0, 0, 0.4)"
-                                style={this.styles().editProfileCameraIconContainer}
-                            />
-                            <div className="row col-xs start-xs">{t('Update Photo')}</div>
+                            <div className="row col-xs start-xs">{t('Change photo')}</div>
                         </div>
                     </Dropzone>
                 </div>

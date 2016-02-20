@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import merge from 'lodash/object/merge';
 import { services } from 'protobufs';
 import * as organizationRequests from '../services/organization';
 
@@ -66,10 +67,14 @@ export function updateProfile(client, profile, manager) {
     });
 
     if (!!manager) {
+        const updateManager = new Promise((resolve, reject) => {
+            organizationRequests.setManager(client, profile.id, manager.id)
+                .then(() => getReportingDetails(client, profile.id))
+                .then(response => resolve(response));
+        });
         return new Promise((resolve, reject) => {
-            Promise.all([updateProfile, organizationRequests.setManager(client, profile.id, manager.id)])
-                .then(() => getExtendedProfile(client, profile.id))
-                .then(response => resolve(response))
+            Promise.all([updateProfile, updateManager])
+                .then(values => resolve(merge(...values)))
                 .catch(error => reject(error));
         });
     } else {

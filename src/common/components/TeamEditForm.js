@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
@@ -10,11 +9,10 @@ import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { teamValidator } from '../utils/validators';
 
-import FormDialog from './FormDialog';
 import CSSComponent from  './CSSComponent';
+import FormContactList from './FormContactList';
+import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
-import FormRecordList from './FormRecordList';
-import FormSelectField from './FormSelectField';
 import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
 
@@ -40,42 +38,6 @@ const fieldNames = [
     'contacts[].value',
     'description',
 ];
-
-const contactTypes = [];
-_.forIn(ContactMethodV1.TypeV1, (value, type) => {
-    const label = _.capitalize(type.toLowerCase());
-    contactTypes.push({label: t(label), value: value});
-});
-
-const ContactRecord = ({record}) => {
-    const styles = {
-        type: {
-            float: 'left',
-            marginRight: 15,
-            width: 128,
-        },
-        value: {
-            float: 'left',
-            width: 384,
-        },
-    };
-
-    return (
-        <div>
-            <div style={styles.type}>
-                <FormSelectField
-                    choices={contactTypes}
-                    {...record.type}
-                />
-            </div>
-            <div style={styles.value}>
-                <FormTextField
-                    {...record.value}
-                />
-            </div>
-        </div>
-    );
-};
 
 export class TeamEditForm extends CSSComponent {
 
@@ -162,10 +124,10 @@ export class TeamEditForm extends CSSComponent {
                     {...description}
                 />
                 <FormLabel text={t('Contact')} />
-                <FormRecordList
-                    component={ContactRecord}
-                    defaultRecord={{type: ContactMethodV1.TypeV1.EMAIL, value: ''}}
-                    records={contacts}
+                <FormContactList
+                    contacts={contacts}
+                    defaultType={ContactMethodV1.TypeV1.EMAIL}
+                    types={ContactMethodV1.TypeV1}
                 />
             </FormDialog>
         );
