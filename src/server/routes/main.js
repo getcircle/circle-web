@@ -4,7 +4,7 @@ import { trigger } from 'redial';
 
 import PrettyError from 'pretty-error';
 import { Provider } from 'react-redux';
-import { match, RoutingContext } from 'react-router';
+import { match, RouterContext } from 'react-router';
 
 import Client from '../../common/services/Client';
 import createStore from '../../common/createStore';
@@ -83,7 +83,7 @@ export default function (req, res) {
                             content = renderToString(
                                 <Root url={url} userAgent={req.headers['user-agent']}>
                                     <Provider key="provider" store={store}>
-                                        <RoutingContext {...renderProps} />
+                                        <RouterContext {...renderProps} />
                                     </Provider>
                                 </Root>
                             );
