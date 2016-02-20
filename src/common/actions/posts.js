@@ -45,7 +45,7 @@ export function getPosts(profileId, state, nextRequest) {
                 types.GET_POSTS_FAILURE,
                 types.GET_POSTS_BAIL,
             ],
-            remote: (client) => requests.getPosts(client, profileId, state, nextRequest),
+            remote: (client) => requests.getPosts({client, profileId, state, nextRequest}),
             bailout: (state) => {
                 const { bail, paginator } = paginatedShouldBail('posts', paginateBy, nextRequest, state);
                 if (bail && paginator) {

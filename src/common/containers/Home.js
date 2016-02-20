@@ -125,6 +125,7 @@ class Home extends CSSComponent {
                         </div>
                         <div>
                             <Link to="/explore/people">{t('People')}</Link>
+                            <Link to="/explore/knowledge">{t('Knowledge')}</Link>
                         </div>
                     </section>
                     <section style={this.styles().searchSection}>

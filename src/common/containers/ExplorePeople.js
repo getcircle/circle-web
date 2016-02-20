@@ -46,10 +46,6 @@ class ExplorePeople extends Component {
         dispatch(exploreProfiles(nextRequest));
     }
 
-    handleSelectItem = () => {
-        debugger;
-    }
-
     render() {
         const { nextRequest } = this.props;
         return (
@@ -57,7 +53,6 @@ class ExplorePeople extends Component {
                 <ExplorePeopleComponent
                     hasMore={!!nextRequest}
                     onLoadMore={this.handleLoadMorePeople}
-                    onSelectItem={this.handleSelectItem}
                     {...this.props}
                 />
             </Container>
@@ -73,5 +68,4 @@ ExplorePeople.propTypes = {
     profiles: PropTypes.array,
 };
 
-export { ExplorePeople };
 export default provideHooks(hooks)(connect(selector)(ExplorePeople));

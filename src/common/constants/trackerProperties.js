@@ -33,6 +33,7 @@ export const PAGE_TYPE = {
     SEARCH: 'Search',
     SETTINGS: 'Settings',
     EXPLORE_PEOPLE: 'Explore People',
+    EXPLORE_KNOWLEDGE: 'Explore Knowledge',
 
     // Detail pages
     LOCATION_DETAIL: 'Location Detail',

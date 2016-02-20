@@ -59,17 +59,21 @@ export function createProfileResult(result, theme) {
     }
 }
 
-export function createPostResult(result, theme) {
-    const { post, highlight } = result;
+export function createPostResult({ post, highlight }, theme) {
 
-    let text;
+    let text, secondaryText;
     // posts always return content in the highlight, even if nothing is
     // highlighted
-    const secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} style={theme.secondaryText} />;
     if (highlight.get('title')) {
         text = <div dangerouslySetInnerHTML={{__html: highlight.get('title')}} style={theme.primaryText} />;
     } else {
         text = <span style={theme.primaryText}>{post.title}</span>;
+    }
+
+    if (highlight.get('content')) {
+        secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} style={theme.secondaryText} />;
+    } else {
+        secondaryText = <span style={theme.secondaryText}>{post.snippet}</span>;
     }
 
     const primaryText = (

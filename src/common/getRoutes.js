@@ -209,12 +209,20 @@ export default function (store, url) {
                 path="/search/:query"
             />
             <Route
-                component={require('./containers/ExplorePeople').default}
+                component={require('./containers/ExplorePeople')}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.EXPLORE_PEOPLE),
                 )}
                 path="/explore/people"
+            />
+            <Route
+                component={require('./containers/ExploreKnowledge')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.EXPLORE_KNOWLEDGE),
+                )}
+                path="/explore/knowledge"
             />
             <Route
                 component={require('./containers/NoMatch')}

@@ -64,14 +64,16 @@ export function getPost(
     });
 }
 
-export function getPosts(
+export function getPosts(args) {
+    let {
         client,
         profileId,
         state,
         nextRequest = null,
         inflations = new services.common.containers.InflationsV1({disabled: true}),
         fields = new services.common.containers.FieldsV1({exclude: ['content']}),
-    ) {
+        key = getPostsPaginationKey(profileId, state),
+    } = args;
 
     let parameters = {
         /*eslint-disable camelcase*/
@@ -82,7 +84,6 @@ export function getPosts(
         /*eslint-enable camelcase*/
     };
 
-    const key = getPostsPaginationKey(profileId, state);
     const request = nextRequest ? nextRequest : new services.post.actions.get_posts.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.send(request)

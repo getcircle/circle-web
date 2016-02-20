@@ -1,4 +1,5 @@
 import keymirror from 'keymirror';
+import { services } from 'protobufs';
 
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
@@ -80,7 +81,12 @@ export function explorePosts(nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: (client) => getPosts(client, PostStateURLString.LISTED, null, nextRequest, POSTS),
+            remote: (client) => getPosts({
+                client,
+                nextRequest,
+                state: services.post.containers.PostStateV1.LISTED,
+                key: POSTS,
+            }),
             bailout: (state) => {
                 return shouldBail(state, nextRequest, POSTS);
             },
