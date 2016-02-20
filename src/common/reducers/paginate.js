@@ -151,9 +151,10 @@ export default function paginate({
         case failureType:
             return state.set('loading', false);
         case bailType:
+            let paginator;
             const nextRequest = state.get('nextRequest');
             if (nextRequest) {
-                const paginator = getPaginator(nextRequest);
+                paginator = getPaginator(nextRequest);
                 /*eslint-disable camelcase*/
                 paginator.previous_page = action.payload.paginator.page;
                 /*eslint-enable camelcase*/

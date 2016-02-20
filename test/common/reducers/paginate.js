@@ -69,6 +69,7 @@ describe('paginate reducer', function () {
             payload: {
                 result: ids.toJS(),
                 nextRequest: ServiceRequestFactory.getRequest(),
+                paginator: {page: 1},
             },
             meta: {
                 key: 'key',
@@ -109,6 +110,7 @@ describe('paginate reducer', function () {
                     /*eslint-disable camelcase*/
                     nextRequest: ServiceRequestFactory.getRequest({previous_page: i, page: i + 1}),
                     /*eslint-enable camelcase*/
+                    paginator: {page: i},
                 },
                 meta: {
                     key: 'key',
