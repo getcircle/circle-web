@@ -88,28 +88,45 @@ export function getTeamCoordinatorNormalizations(action) {
     return getTeamMemberNormalizations(action, role);
 }
 
-export function getTeamMemberNormalizationsFromAddMembers(action, role = services.team.containers.TeamMemberV1.RoleV1.MEMBER) {
+function getTeamMemberNormalizationsFromResponse(action, response, role = null) {
     const ids = getNormalizations(
         'members',
         action.payload.result,
-        services.team.actions.add_members.ResponseV1,
+        response,
         action.payload,
     );
     const members = retrieveTeamMembers(ids, action.payload);
     const memberIds = [];
     for (let member of members) {
-        if (
-            member.role === role ||
-            // default protobuf enum is returend as null
-            (member.role === null && role === services.team.containers.TeamMemberV1.RoleV1.MEMBER)
-        ) {
+        if (member.role === role) {
             memberIds.push(member.id);
         }
     }
     return memberIds;
 }
 
+export function getTeamMemberNormalizationsFromAddMembers(action, role = null) {
+    return getTeamMemberNormalizationsFromResponse(
+        action,
+        services.team.actions.add_members.ResponseV1,
+        role,
+    );
+}
+
 export function getTeamCoordinatorNormalizationsFromAddMembers(action) {
     const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
     return getTeamMemberNormalizationsFromAddMembers(action, role);
+}
+
+export function getTeamMemberNormalizationsFromUpdateMembers(action, role = null) {
+    return getTeamMemberNormalizationsFromResponse(
+        action,
+        services.team.actions.update_members.ResponseV1,
+        role,
+    );
+}
+
+export function getTeamCoordinatorNormalizationsFromUpdateMembers(action) {
+    const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+    return getTeamMemberNormalizationsFromUpdateMembers(action, role);
 }

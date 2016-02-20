@@ -186,13 +186,7 @@ export function updateMembers(client, teamId, members) {
     });
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => {
-                if (response.isSuccess()) {
-                    resolve(members);
-                } else {
-                    reject('Members weren\'t updated');
-                }
-            })
+            .then(response => response.finish(resolve, reject, teamId))
             .catch(error => reject(error));
     });
 }

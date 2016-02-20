@@ -16,7 +16,6 @@ describe('Search', () => {
 
     it('renders the SearchDetail', () => {
         const { wrapper } = setup();
-        debugger;
         const detail = wrapper.find(SearchDetail);
         expect(detail.length).toEqual(1);
     });
