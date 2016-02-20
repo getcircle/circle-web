@@ -110,7 +110,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
             dispatch(updateMembers(team.id, [member]));
             break;
         case menuChoices.REMOVE:
-            dispatch(removeMembers(team.id, [profile.id]));
+            dispatch(removeMembers(team.id, [member]));
             break;
         }
     };

@@ -9,8 +9,31 @@ import * as types from '../constants/actionTypes';
 
 import { SLUGS } from '../components/TeamDetailTabs';
 
+function handleUpdateMembersSuccess(state, action) {
+    // remove any members that were updated to coordinators
+    const subtractIds = getTeamCoordinatorNormalizationsFromUpdateMembers(action);
+    // add any coordinators that were updated to members
+    const addIds = getTeamMemberNormalizationsFromUpdateMembers(action);
+    return state.updateIn([action.payload.result, 'ids'], set => {
+        return set.subtract(subtractIds)
+            .union(addIds);
+    });
+}
+
+function handleRemoveMembersSuccess(state, action) {
+    // remove any members that were removed
+    const subtractIds = []
+    action.payload.members.forEach((member) => {
+        if (member.role === null) {
+            subtractIds.push(member.id);
+        }
+    })
+    return state.updateIn([action.payload.teamId, 'ids'], set => {
+        return set.subtract(subtractIds);
+    });
+}
+
 function additionalTypesCallback(state, action) {
-    let ids;
     switch(action.type) {
     case types.UPDATE_TEAM_SLUG:
         const { payload: { previousSlug, teamId } } = action;
@@ -19,19 +42,12 @@ function additionalTypesCallback(state, action) {
         }
         break;
     case types.ADD_MEMBERS_SUCCESS:
-        ids = getTeamMemberNormalizationsFromAddMembers(action);
+        const ids = getTeamMemberNormalizationsFromAddMembers(action);
         return state.updateIn([action.payload.result, 'ids'], set => set.union(ids));
-        break;
     case types.UPDATE_MEMBERS_SUCCESS:
-        // remove any members that were updated to coordinators
-        const subtractIds = getTeamCoordinatorNormalizationsFromUpdateMembers(action);
-        // add any coordinators that were updated to members
-        const addIds = getTeamMemberNormalizationsFromUpdateMembers(action);
-        return state.updateIn([action.payload.result, 'ids'], set => {
-            return set.subtract(subtractIds)
-                .union(addIds);
-        });
-        break;
+        return handleUpdateMembersSuccess(state, action);
+    case types.REMOVE_MEMBERS_SUCCESS:
+        return handleRemoveMembersSuccess(state, action);
     }
     return state;
 }
