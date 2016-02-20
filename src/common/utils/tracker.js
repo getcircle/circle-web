@@ -57,10 +57,8 @@ class Tracker {
      *
      * @param {ProfileV1} profile Profile of the logged in user
      * @param {OrganizationV1} organization Organization of the the logged in user
-     * @param {TeamV1} team Team which logged in user belongs to
-     * @param {LocationV1} location Office location of the logged in user
      */
-    initSession(profile, organization, team, location) {
+    initSession(profile, organization) {
         this.withMixpanel(() => {
             if (this._sessionInitialized && mixpanel.cookie) {
                 return;
@@ -95,16 +93,6 @@ class Tracker {
                 'User ID': profile.user_id,
                 'Hire Date': profile.hire_date,
             };
-
-            // Add team name if it is set
-            if (team && team.name && team.name.trim() !== '') {
-                peopleProperties.Team = team.name;
-            }
-
-            // Add location name if it set
-            if (location && location.name && location.name !== '') {
-                peopleProperties.Location = location.name;
-            }
 
             // Set properties for the user
             mixpanel.people.set(peopleProperties);

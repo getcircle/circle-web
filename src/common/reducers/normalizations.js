@@ -1,5 +1,6 @@
 import { getNormalizations } from 'protobuf-normalizr';
 import { services } from 'protobufs';
+import { retrieveTeamMembers } from './denormalizations';
 
 import * as requests from '../services/team';
 
@@ -85,4 +86,47 @@ export function getTeamMemberForProfileNormalizations(action) {
 export function getTeamCoordinatorNormalizations(action) {
     const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
     return getTeamMemberNormalizations(action, role);
+}
+
+function getTeamMemberNormalizationsFromResponse(action, response, role = null) {
+    const ids = getNormalizations(
+        'members',
+        action.payload.result,
+        response,
+        action.payload,
+    );
+    const members = retrieveTeamMembers(ids, action.payload);
+    const memberIds = [];
+    for (let member of members) {
+        if (member.role === role) {
+            memberIds.push(member.id);
+        }
+    }
+    return memberIds;
+}
+
+export function getTeamMemberNormalizationsFromAddMembers(action, role = null) {
+    return getTeamMemberNormalizationsFromResponse(
+        action,
+        services.team.actions.add_members.ResponseV1,
+        role,
+    );
+}
+
+export function getTeamCoordinatorNormalizationsFromAddMembers(action) {
+    const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+    return getTeamMemberNormalizationsFromAddMembers(action, role);
+}
+
+export function getTeamMemberNormalizationsFromUpdateMembers(action, role = null) {
+    return getTeamMemberNormalizationsFromResponse(
+        action,
+        services.team.actions.update_members.ResponseV1,
+        role,
+    );
+}
+
+export function getTeamCoordinatorNormalizationsFromUpdateMembers(action) {
+    const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+    return getTeamMemberNormalizationsFromUpdateMembers(action, role);
 }

@@ -58,7 +58,7 @@ describe('WrappedResponse', function () {
             const profileId = 'some-id';
             const resolved = this.response.resolve(profileId);
             const expected = Object.assign({},
-                {type: this.response.result.$type, nextRequest: null},
+                {type: this.response.result.$type, nextRequest: null, paginator: null},
                 normalize(this.response.result, profileId)
             );
             expect(resolved).to.eql(expected);
@@ -93,8 +93,8 @@ describe('WrappedResponse', function () {
             })
                 .then((resolved) => {
                     const expected = Object.assign({},
-                        {type: this.response.result.$type, nextRequest: null},
-                        normalize(this.response.result, profileId)
+                        {type: this.response.result.$type, nextRequest: null, paginator: null},
+                        normalize(this.response.result, profileId),
                     );
                     expect(resolved).to.eql(expected);
                     done();

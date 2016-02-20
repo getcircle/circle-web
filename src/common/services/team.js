@@ -42,7 +42,7 @@ export function addMembers(client, teamId, members) {
     });
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.simple(resolve, reject))
+            .then(response => response.finish(resolve, reject, teamId))
             .catch(error => reject(error));
     });
 };
@@ -186,13 +186,7 @@ export function updateMembers(client, teamId, members) {
     });
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => {
-                if (response.isSuccess()) {
-                    resolve(members);
-                } else {
-                    reject('Members weren\'t updated');
-                }
-            })
+            .then(response => response.finish(resolve, reject, teamId))
             .catch(error => reject(error));
     });
 }
@@ -205,20 +199,20 @@ export function updateMembers(client, teamId, members) {
  * @param {Array[String]} profileIds an array of the profile ids of members to remove
  *
  */
-export function removeMembers(client, teamId, profileIds) {
+export function removeMembers(client, teamId, members) {
     const request = new services.team.actions.remove_members.RequestV1({
         /*eslint-disable camelcase*/
         team_id: teamId,
-        profile_ids: profileIds,
+        profile_ids: members.map(member => member.profile.id),
         /*eslint-enable camelcase*/
     });
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => {
                 if (response.isSuccess()) {
-                    resolve({profileIds});
+                    resolve({teamId, members});
                 } else {
-                    reject('Members weren\'t removed');
+                    reject(response.reject());
                 }
             })
             .catch(error => reject(error));

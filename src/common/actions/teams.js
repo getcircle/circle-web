@@ -212,7 +212,7 @@ export function updateMembers(teamId, members) {
  * @param {String} teamId the id of the team
  * @param {Array[String]} profileIds an array of the profile ids of members to remove
  */
-export function removeMembers(teamId, profileIds) {
+export function removeMembers(teamId, members) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -220,7 +220,7 @@ export function removeMembers(teamId, profileIds) {
                 types.REMOVE_MEMBERS_SUCCESS,
                 types.REMOVE_MEMBERS_FAILURE,
             ],
-            remote: (client) => requests.removeMembers(client, teamId, profileIds),
+            remote: (client) => requests.removeMembers(client, teamId, members),
         },
     };
 }

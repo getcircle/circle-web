@@ -14,9 +14,6 @@ function getInitialState() {
         organizationDomain: null,
         providerName: null,
         organizationImageUrl: null,
-        team: null,
-        managesTeam: null,
-        profileLocation: null,
         flags: null,
         loaded: false,
     });
@@ -26,18 +23,12 @@ function handleAuthenticateSuccess(state, action) {
     const {
         user,
         profile,
-        team,
-        managesTeam,
-        profileLocation,
         organization,
         flags,
     } = action.payload;
     const nextState = state.merge({
         user,
         profile,
-        team,
-        managesTeam,
-        profileLocation,
         organization,
         flags,
         authenticated: true,
@@ -48,17 +39,11 @@ function handleAuthenticateSuccess(state, action) {
 function handleLoadAuthSuccess(state, action) {
     const {
         profile,
-        team,
-        managesTeam,
-        profileLocation,
         organization,
         flags,
     } = action.payload;
     const nextState = state.merge({
         profile,
-        team,
-        managesTeam,
-        profileLocation,
         organization,
         flags,
         loaded: true,

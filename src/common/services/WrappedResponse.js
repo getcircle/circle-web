@@ -2,7 +2,7 @@ import _ from 'lodash';
 import normalize from 'protobuf-normalizr';
 import protobufs from 'protobufs';
 
-import { getNextRequest } from './helpers';
+import { getNextRequest, getPaginator } from './helpers';
 import ServiceError from './ServiceError';
 
 export function getResponseExtensionName(action) {
@@ -48,8 +48,13 @@ export default class WrappedResponse {
     resolve(key = null) {
         const copy = this.result.$type.decode(this.result.encode());
         const normalized = normalize(copy, key);
+        const paginator = getPaginator(this.response);
         return Object.assign({},
-            {type: this.result.$type, nextRequest: getNextRequest(this.request, this.response)},
+            {
+                paginator,
+                type: this.result.$type,
+                nextRequest: getNextRequest(this.request, this.response),
+            },
             normalized
         );
     }

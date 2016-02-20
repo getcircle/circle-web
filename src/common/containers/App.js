@@ -44,7 +44,6 @@ const selector = createSelector(
             displayHeader: responsiveState.get('displayHeader'),
             organization: authenticationState.get('organization'),
             profile: profile,
-            profileLocation: authenticationState.get('profileLocation'),
             flags: authenticationState.get('flags'),
             mobileOS: responsiveState.get('mobileOS'),
         }
@@ -66,11 +65,9 @@ class App extends CSSComponent {
         flags: PropTypes.object,
         largerDevice: PropTypes.bool.isRequired,
         location: PropTypes.object,
-        managesTeam: PropTypes.object,
         organization: PropTypes.object,
         params: PropTypes.object,
         profile: PropTypes.object,
-        profileLocation: PropTypes.object,
         team: PropTypes.object,
     }
 
@@ -87,8 +84,6 @@ class App extends CSSComponent {
     getChildContext() {
         return {
             auth: {
-                location: this.props.profileLocation,
-                managesTeam: this.props.managesTeam,
                 organization: this.props.organization,
                 profile: this.props.profile,
                 team: this.props.team,
@@ -131,8 +126,6 @@ class App extends CSSComponent {
             tracker.initSession(
                 this.props.profile,
                 this.props.organization,
-                this.props.team,
-                this.props.profileLocation
             );
         }
     }

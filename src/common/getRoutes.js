@@ -112,7 +112,6 @@ export default function (store, url) {
                     tracker.initSession(
                         authenticationState.get('profile'),
                         authenticationState.get('organization'),
-                        authenticationState.get('profileLocation')
                     );
                     tracker.trackPageView(pageType, pageId);
                 }
@@ -202,7 +201,7 @@ export default function (store, url) {
                 path="/profile/:profileId"
             />
             <Route
-                component={require('./containers/SearchV2')}
+                component={require('./containers/SearchV2').default}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
                     trackPageView(PAGE_TYPE.SEARCH, 'query')

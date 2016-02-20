@@ -110,7 +110,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
             dispatch(updateMembers(team.id, [member]));
             break;
         case menuChoices.REMOVE:
-            dispatch(removeMembers(team.id, [profile.id]));
+            dispatch(removeMembers(team.id, [member]));
             break;
         }
     };
@@ -118,10 +118,11 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     let coordinatorsSection;
     if (coordinators && coordinators.length) {
         const coordinatorProfiles = coordinators.map(c => c.profile);
+        const MenuComponent = canEdit && coordinators.length > 1 ? TeamCoordinatorMenu : null;
         coordinatorsSection = (
             <DetailSection dividerStyle={{marginBottom: 0}} title={t('Coordinators')}>
                 <ProfilesGrid
-                    MenuComponent={canEdit && TeamCoordinatorMenu}
+                    MenuComponent={MenuComponent}
                     onMenuChoice={handleMenuChoice}
                     profiles={coordinatorProfiles}
                 />
@@ -149,6 +150,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     let membersSection;
     if (members && members.length) {
         const memberProfiles = members.map(m => m.profile);
+        const MenuComponent = canEdit ? TeamMemberMenu : null;
         membersSection = (
             <DetailSection
                 dividerStyle={{marginBottom: 0}}
@@ -156,7 +158,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
                 title={t('Members')}
             >
                 <InfiniteProfilesGrid
-                    MenuComponent={canEdit && TeamMemberMenu}
+                    MenuComponent={MenuComponent}
                     hasMore={hasMoreMembers}
                     loading={membersLoading}
                     onLoadMore={onLoadMoreMembers}

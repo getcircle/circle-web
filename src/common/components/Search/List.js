@@ -1,4 +1,4 @@
-import merge from 'lodash.merge';
+import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
 
 import { Divider, List as MaterialList, ListItem as MaterialListItem } from 'material-ui';
@@ -36,7 +36,7 @@ class ListItem extends CSSComponent {
 
     render() {
         const { item: { item }, onSelectItem, ...other } = this.props;
-        const props = merge(item, other);
+        const props = merge({}, item, other);
         return <MaterialListItem onTouchTap={this.handleTouchTap} {...props} />;
     }
 }

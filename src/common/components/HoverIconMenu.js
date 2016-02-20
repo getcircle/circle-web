@@ -1,4 +1,4 @@
-import merge from 'merge';
+import { merge } from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 import IconMenu from './IconMenu';

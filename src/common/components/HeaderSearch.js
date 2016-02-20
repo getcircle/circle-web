@@ -8,6 +8,7 @@ const HeaderSearch = (props) => {
         justifyContent: 'center',
         flex: 1,
         position: 'relative',
+        maxWidth: 550,
     };
     return (
         <AutoComplete

@@ -39,7 +39,7 @@ export default {
         return new services.team.containers.TeamV1(params);
     },
 
-    getTeamMember(role = services.team.containers.TeamMemberV1.RoleV1.MEMBER, profile = ProfileFactory.getProfile()) {
+    getTeamMember(role = services.team.containers.TeamMemberV1.RoleV1.MEMBER, profile = ProfileFactory.getProfile(), overrides) {
         return new services.team.containers.TeamMemberV1({
             /*eslint-disable camelcase*/
             profile_id: profile.id,
@@ -47,6 +47,7 @@ export default {
             role: role,
             profile: profile,
             team: this.getTeam(),
+            ...overrides,
         });
     },
 

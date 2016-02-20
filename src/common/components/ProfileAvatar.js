@@ -1,40 +1,42 @@
-import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import { capitalize } from 'lodash';
+import React, { Component, PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import StyleableComponent from './StyleableComponent';
 import TextFallbackAvatar from './TextFallbackAvatar';
 
-class ProfileAvatar extends StyleableComponent {
-
-    static propTypes = {
-        profile: PropTypes.instanceOf(
-            services.profile.containers.ProfileV1,
-        ).isRequired,
+export function getInitials(profile) {
+    const characters = [];
+    for (let name of [profile.first_name]) {
+        if (name && typeof name === 'string') {
+            characters.push(capitalize(name[0]));
+        }
     }
+    return characters.join('');
+}
+
+class ProfileAvatar extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (nextProps.profile.id !== this.props.profile.id);
     }
 
-    _getInitials() {
-        const profile = this.props.profile;
-        return [profile.first_name[0]].map((character, index) => _.capitalize(character)).join('');
-    }
-
     render() {
-        const {
-            profile,
-            ...other
-        } = this.props;
+        const { profile, ...other } = this.props;
+        const initials = getInitials(profile);
         return (
             <TextFallbackAvatar
                 {...other}
-                fallbackText={this._getInitials()}
+                fallbackText={initials}
                 src={profile.image_url || profile.small_image_url}
             />
         );
     }
 }
+
+ProfileAvatar.propTypes = {
+    profile: PropTypes.instanceOf(
+        services.profile.containers.ProfileV1,
+    ).isRequired,
+};
 
 export default ProfileAvatar;

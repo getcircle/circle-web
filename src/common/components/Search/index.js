@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import mui from 'material-ui';
 import ReactDOM from 'react-dom';
 
-import { backgroundColors, fontColors, iconColors } from '../../constants/styles';
+import { backgroundColors, fontColors } from '../../constants/styles';
 import t from '../../utils/gettext';
 
 import CSSComponent from '../CSSComponent';
@@ -12,7 +12,6 @@ import List from './List';
 
 const { Paper } = mui;
 
-const SEARCH_CONTAINER_WIDTH = 800;
 const SEARCH_RESULTS_MAX_HEIGHT = 620;
 
 const RESULT_HEIGHT = 56;
@@ -44,7 +43,6 @@ class Search extends CSSComponent {
         onSelectItem: PropTypes.func,
         placeholder: PropTypes.string,
         resultHeight: PropTypes.number,
-        searchContainerWidth: PropTypes.number,
         sections: PropTypes.array.isRequired,
         style: PropTypes.object,
     }
@@ -78,7 +76,6 @@ class Search extends CSSComponent {
         onSelectItem: () => {},
         placeholder: t('Search knowledge, people, & teams'),
         resultHeight: RESULT_HEIGHT,
-        searchContainerWidth: SEARCH_CONTAINER_WIDTH,
     }
 
     state = {
@@ -131,14 +128,14 @@ class Search extends CSSComponent {
         },
 
         Escape(event) {
-            this.cleanupAndBlur();
+            this.cleanupAndBlur(event);
         },
     }
 
-    cleanupAndBlur = () => {
+    cleanupAndBlur = (event) => {
         ReactDOM.findDOMNode(this.refs.input).blur();
         this.setState({highlightedIndex: null})
-        this.props.onBlur();
+        this.props.onBlur(event);
     }
 
     handleSelectItem = (item) => {
@@ -148,12 +145,6 @@ class Search extends CSSComponent {
 
     setIgnoreBlur(ignoreBlur) {
         this.ignoreBlur = ignoreBlur;
-    }
-
-    styles() {
-        return this.css({
-            'largerDevice': this.context.device.largerDevice,
-        });
     }
 
     classes() {
@@ -171,6 +162,7 @@ class Search extends CSSComponent {
                     borderRadius: '0px 0px 3px 3px',
                     boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
                     backgroundColor: 'white',
+                    maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
                 },
                 root: {
                     padding: 0,
@@ -200,15 +192,6 @@ class Search extends CSSComponent {
                     height: this.props.resultHeight,
                 },
             },
-            'largerDevice': {
-                inputContainer: {
-                    maxWidth: this.props.searchContainerWidth,
-                },
-                listContainer: {
-                    maxWidth: this.props.searchContainerWidth,
-                    maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
-                },
-            },
         }
     }
 
@@ -230,7 +213,7 @@ class Search extends CSSComponent {
         if (this.ignoreBlur) {
             event.preventDefault();
         } else {
-            this.cleanupAndBlur();
+            this.cleanupAndBlur(event);
         }
     }
 
