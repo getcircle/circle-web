@@ -174,8 +174,9 @@ export default function (store, url) {
             <Route
                 component={require('./containers/DraftPosts')}
                 onEnter={applyMiddleware(
-                    ...defaultMiddleware,
-                    trackPageView(PAGE_TYPE.MY_DRAFTS)
+                    requireAuth,
+                    hideHeader,
+                    trackPageView(PAGE_TYPE.MY_DRAFTS),
                 )}
                 path="/posts/drafts"
             />

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const DetailContent = ({ children }) => {
+const DetailContent = ({ children, style }) => {
     const styles = {
         root: {
             padding: '0 100px 0 100px',
@@ -9,7 +9,7 @@ const DetailContent = ({ children }) => {
     };
 
     return (
-        <section className="wrap" style={styles.root}>
+        <section className="wrap" style={{...styles.root, ...style}}>
             {children}
         </section>
     );

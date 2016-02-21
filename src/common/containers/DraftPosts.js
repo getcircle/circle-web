@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
+import { merge } from 'lodash';
 
 import t from '../utils/gettext';
 import * as selectors from '../selectors';
@@ -17,6 +18,7 @@ import { retrievePosts } from '../reducers/denormalizations';
 import Container from '../components/Container';
 import DeletePostConfirmation from '../components/DeletePostConfirmation';
 import { default as DraftPostsComponent } from '../components/DraftPosts';
+import Header from '../components/Header';
 
 const selector = selectors.createImmutableSelector(
     [
@@ -64,6 +66,31 @@ function fetchPosts({ dispatch, getState }) {
 
 class DraftPosts extends Component {
 
+    state = {
+        muiTheme: this.context.muiTheme,
+    }
+
+    getChildContext() {
+        return {
+            muiTheme: this.state.muiTheme,
+        };
+    }
+
+    componentWillMount() {
+        this.customizeTheme(this.state);
+    }
+
+    comonentWillReceiveProps(nextProps, nextState) {
+        this.customizeTheme(nextState);
+    }
+
+    customizeTheme(state) {
+        const muiTheme = merge({}, state.muiTheme);
+        muiTheme.paper.backgroundColor = muiTheme.luno.colors.offWhite;
+        muiTheme.appBar.color = muiTheme.luno.colors.offWhite;
+        this.setState({muiTheme});
+    }
+
     handleLoadMore = () => {
         const { dispatch, profile, nextRequest } = this.props;
         dispatch(getDraftPosts(profile.id, nextRequest));
@@ -80,9 +107,18 @@ class DraftPosts extends Component {
     }
 
     render() {
-        const { modalVisible, pendingPostToDelete } = this.props;
+        const { dispatch, modalVisible, pendingPostToDelete } = this.props;
+        const { muiTheme } = this.context;
+        const styles = {
+            root: {
+                backgroundColor: muiTheme.luno.colors.offWhite,
+                height: '100%',
+                width: '100%',
+            },
+        };
         return (
-            <Container title={t('My Drafts')}>
+            <Container style={styles.root} title={t('My Drafts')}>
+                <Header appBarStyle={{boxShadow: 'none'}} dispatch={dispatch} />
                 <DraftPostsComponent
                     onLoadMore={this.handleLoadMore}
                     {...this.props}
@@ -106,6 +142,14 @@ DraftPosts.propTypes = {
     nextRequest: PropTypes.object,
     pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+};
+
+DraftPosts.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
+
+DraftPosts.childContextTypes = {
+    muiTheme: PropTypes.object,
 };
 
 export default provideHooks(hooks)(connect(selector)(DraftPosts));

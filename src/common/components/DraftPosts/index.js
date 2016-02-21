@@ -6,6 +6,7 @@ import { routeToEditPost } from '../../utils/routes';
 
 import CenterLoadingIndicator from '../CenterLoadingIndicator';
 import DetailContent from '../DetailContent';
+import DetailDivider from '../DetailDivider';
 import InfinitePostsList from '../InfinitePostsList';
 
 import PostItemMenu, { MENU_CHOICES } from '../PostItemMenu';
@@ -64,10 +65,11 @@ const DraftPosts = ({ dispatch, loaded, loading, nextRequest, onLoadMore, posts 
 
     return (
         <div>
-            <DetailContent>
-                <h1 style={theme.h1}>{t('My Knowledge')}</h1>
+            <DetailContent style={{paddingTop: 30}}>
+                <h1 style={theme.h1}>{t('My Drafts')}</h1>
             </DetailContent>
-            <DetailContent>
+            <DetailDivider style={{marginBottom: 0, marginTop: 30}}/>
+            <DetailContent style={{paddingTop: 10}}>
                 {content}
             </DetailContent>
         </div>

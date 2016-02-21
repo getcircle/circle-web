@@ -1,3 +1,4 @@
+import { merge } from 'lodash';
 import { AppBar } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { browserHistory } from 'react-router';
@@ -9,7 +10,8 @@ import InternalPropTypes from '../components/InternalPropTypes';
 class Header extends CSSComponent {
 
     static propTypes = {
-        actionsContainer: React.PropTypes.element,
+        actionsContainer: PropTypes.element,
+        appBarStyle: PropTypes.object,
         dispatch: PropTypes.func.isRequired,
     }
 
@@ -29,17 +31,8 @@ class Header extends CSSComponent {
     classes() {
         return {
             default: {
-                AppBar: {
-                    style: {
-                        paddingLeft: 0,
-                        paddingRight: 0,
-                        boxShadow: '0px 1px 0px 0px rgba(0, 0, 0, .09)',
-                        position: 'fixed',
-                        zIndex: 10,
-                    },
-                    titleStyle: {
-                        overflow: 'initial',
-                    },
+                titleStyle: {
+                    overflow: 'initial',
                 },
                 headerContainer: {
                     display: 'block',
@@ -116,12 +109,23 @@ class Header extends CSSComponent {
     }
 
     render() {
+        const { appBarStyle } = this.props;
+        const styles = {
+            appBar: {
+                paddingLeft: 0,
+                paddingRight: 0,
+                boxShadow: '0px 1px 0px 0px rgba(0, 0, 0, .09)',
+                position: 'fixed',
+                zIndex: 10,
+            },
+        };
         return (
             <header style={this.styles().headerContainer}>
                 <AppBar
                     showMenuIconButton={false}
+                    style={merge(styles.appBar, appBarStyle)}
                     title={this.renderHeader()}
-                    {...this.styles().AppBar}
+                    titleStyle={this.styles().titleStyle}
                 />
             </header>
         );
