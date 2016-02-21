@@ -7,6 +7,8 @@ import { getPaginator } from '../services/helpers';
 const TTL_INTERVAL = 300000
 
 export function slice(state) {
+    if (!state.get('ids')) { return };
+
     let buffer = 0;
     const pageSize = state.get('pageSize');
     const currentPage = state.get('currentPage');
@@ -134,7 +136,7 @@ export default function paginate({
         case successType:
             return state.withMutations(map => {
                 const { paginator } = payload;
-                const results = mapActionToResults(action);
+                const results = mapActionToResults(action) || [];
                 return map.updateIn(['ids'], set => set.union(results))
                     .set('loading', false)
                     .set('ttl', Date.now() + TTL_INTERVAL)

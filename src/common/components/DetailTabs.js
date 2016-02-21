@@ -38,7 +38,7 @@ const DetailTabs = ({ children, onRequestChange, slug, ...other}) => {
 DetailTabs.propTypes = {
     children: PropTypes.node,
     onRequestChange: PropTypes.func.isRequired,
-    slug: PropTypes.string,
+    slug: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 
 export default DetailTabs;

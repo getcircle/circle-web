@@ -46,13 +46,17 @@ export default class WrappedResponse {
     }
 
     resolve(key = null) {
-        const copy = this.result.$type.decode(this.result.encode());
-        const normalized = normalize(copy, key);
+        let normalized, type;
+        if (this.result) {
+            const copy = this.result.$type.decode(this.result.encode());
+            normalized = normalize(copy, key);
+            type = this.result.$type;
+        }
         const paginator = getPaginator(this.response);
         return Object.assign({},
             {
                 paginator,
-                type: this.result.$type,
+                type,
                 nextRequest: getNextRequest(this.request, this.response),
             },
             normalized

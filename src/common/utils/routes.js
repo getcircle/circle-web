@@ -1,4 +1,5 @@
 import { browserHistory } from 'react-router';
+import { getPostStateURLString } from './post';
 
 const NEXT_PATHNAME_KEY = 'n:p';
 
@@ -18,6 +19,11 @@ export function replaceProfileSlug(profile, slug) {
 
 export function replaceTeamSlug(team, slug) {
     browserHistory.replace(`/team/${team.id}/${slug}`);
+}
+
+export function replacePostState(state) {
+    const stateString = getPostStateURLString(state);
+    browserHistory.replace(`/posts/${stateString}`);
 }
 
 export function routeToTeam(team) {
