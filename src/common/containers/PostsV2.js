@@ -35,10 +35,11 @@ const selector = selectors.createImmutableSelector(
             const key = getPostsPaginationKey(profile.id, state);
             if (postsState.has(key)) {
                 const ids = slice(postsState.get(key));
-                if (ids) {
+                if (ids.size) {
                     posts[state].posts = retrievePosts(ids.toJS(), cache);
                     posts[state].nextRequest = postsState.get(key).get('nextRequest');
                 }
+                posts[state].loaded = postsState.get(key).get('loaded');
                 posts[state].loading = postsState.get(key).get('loading');
             }
         }

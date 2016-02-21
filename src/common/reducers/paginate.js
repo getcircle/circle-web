@@ -119,6 +119,7 @@ export default function paginate({
     }
 
     function updatePagination(state = Immutable.fromJS({
+        loaded: false,
         loading: false,
         nextRequest: null,
         paginator: null,
@@ -138,6 +139,7 @@ export default function paginate({
                 const { paginator } = payload;
                 const results = mapActionToResults(action) || [];
                 return map.updateIn(['ids'], set => set.union(results))
+                    .set('loaded', true)
                     .set('loading', false)
                     .set('ttl', Date.now() + TTL_INTERVAL)
                     .set('nextRequest', payload.nextRequest)

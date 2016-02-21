@@ -62,25 +62,28 @@ const Posts = ({ dispatch, onLoadMore, posts, state }, { muiTheme }) => {
 
     let content;
     const postsState = posts[state]
-    if (postsState && postsState.posts) {
-        if (postsState.posts.length) {
-            content = (
-                <div className="row">
-                    <InfinitePostsList
-                        ItemComponent={PostItem}
-                        MenuComponent={PostItemMenu}
-                        className="col-xs-6"
-                        hasMore={!!postsState.nextRequest}
-                        loading={postsState.loading}
-                        onLoadMore={onLoadMore}
-                        onMenuChoice={handleMenuChoice}
-                        posts={postsState.posts}
-                    />
-                </div>
-            );
-        } else {
-            content = <EmptyState />;
-        }
+    const hasPosts = (
+        postsState &&
+        postsState.posts &&
+        postsState.posts.length
+    );
+    if (hasPosts) {
+        content = (
+            <div className="row">
+                <InfinitePostsList
+                    ItemComponent={PostItem}
+                    MenuComponent={PostItemMenu}
+                    className="col-xs-6"
+                    hasMore={!!postsState.nextRequest}
+                    loading={postsState.loading}
+                    onLoadMore={onLoadMore}
+                    onMenuChoice={handleMenuChoice}
+                    posts={postsState.posts}
+                />
+            </div>
+        );
+    } else if (!hasPosts && postsState.loaded) {
+        content = <EmptyState />;
     } else {
         content = <CenterLoadingIndicator />;
     };
@@ -104,6 +107,7 @@ const Posts = ({ dispatch, onLoadMore, posts, state }, { muiTheme }) => {
 const PostStatePropType = PropTypes.shape({
     posts: PropTypes.array,
     nextRequest: PropTypes.object,
+    loaded: PropTypes.bool,
     loading: PropTypes.bool,
     count: PropTypes.number,
 });

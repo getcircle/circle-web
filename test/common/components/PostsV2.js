@@ -55,7 +55,7 @@ describe('Posts', () => {
 
     it('doesn\'t load a loading indicator if we don\'t have any posts', () => {
         const props = {
-            posts: {[LISTED]: {loading: false, posts: []}},
+            posts: {[LISTED]: {loading: false, posts: [], loaded: true}},
         };
         const { wrapper } = setup(props);
         expect(wrapper.find(CenterLoadingIndicator).length).toEqual(0);
