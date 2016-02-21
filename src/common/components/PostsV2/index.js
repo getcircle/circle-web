@@ -1,41 +1,27 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import t from '../utils/gettext';
-import { replacePostState } from '../utils/routes';
+import t from '../../utils/gettext';
+import { replacePostState } from '../../utils/routes';
 
-import CenterLoadingIndicator from './CenterLoadingIndicator';
-import DetailTabs from './DetailTabs';
-import InfinitePostsList from './InfinitePostsList';
-import Tab from './Tab';
+import CenterLoadingIndicator from '../CenterLoadingIndicator';
+import InfinitePostsList from '../InfinitePostsList';
+
+import PostItem from './PostItem';
+import Tabs from './Tabs';
 
 const { LISTED, DRAFT } = services.post.containers.PostStateV1;
 
-const Tabs = ({ onRequestChange, state, ...other }, { store: { dispatch } }) => {
-    function handleRequestChange(e, nextState) {
-        //dispatch(updateKnowledgeState(state, nextState));
-        onRequestChange(nextState);
-    }
-
-    return (
-        <DetailTabs
-            onRequestChange={handleRequestChange}
-            slug={state}
-            {...other}
-        >
-            <Tab label={t('Published')} value={LISTED} />
-            <Tab label={t('Drafts')} value={DRAFT} />
-        </DetailTabs>
-    );
+const Post = ({ post }, { muiTheme }) => {
+    return
 };
 
-Tabs.propTypes = {
-    onRequestChange: PropTypes.func.isRequired,
-    state: PropTypes.oneOf([LISTED, DRAFT]).isRequired,
+Post.propTypes = {
+    post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 
-Tabs.contextTypes = {
-    store: PropTypes.object.isRequired,
+Post.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
 };
 
 const EmptyState = () => {
@@ -55,6 +41,7 @@ const Posts = ({ onLoadMore, posts, state }, { muiTheme }) => {
         if (postsState.posts.length) {
             content = (
                 <InfinitePostsList
+                    ItemComponent={PostItem}
                     hasMore={!!postsState.nextRequest}
                     loading={postsState.loading}
                     onLoadMore={onLoadMore}
