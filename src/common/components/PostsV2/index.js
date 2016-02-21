@@ -38,10 +38,15 @@ PostItemMenu.propTypes = {
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 
-const EmptyState = () => {
+const EmptyState = (state) => {
+    const styles = {
+        text: {
+            fontSize: '1.6rem',
+        },
+    };
     return (
-        <div>
-            <p>{t('No posts in this state')}</p>
+        <div className="row center-xs">
+            <p style={styles.text}>{t('You have no draft knowledge posts.')}</p>
         </div>
     );
 };
