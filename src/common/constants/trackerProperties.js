@@ -34,6 +34,7 @@ export const PAGE_TYPE = {
     SETTINGS: 'Settings',
     EXPLORE_PEOPLE: 'Explore People',
     EXPLORE_KNOWLEDGE: 'Explore Knowledge',
+    EXPLORE_TEAMS: 'Explore Teams',
 
     // Detail pages
     LOCATION_DETAIL: 'Location Detail',

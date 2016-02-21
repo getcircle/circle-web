@@ -41,7 +41,7 @@ const hooks = {
 
 class ExploreKnowledge extends Component {
 
-    handleLoadMorePeople = () => {
+    handleLoadMore = () => {
         const { dispatch, nextRequest } = this.props;
         dispatch(explorePosts(nextRequest));
     }
@@ -52,7 +52,7 @@ class ExploreKnowledge extends Component {
             <Container title={t('Explore Knowledge')}>
                 <ExploreKnowledgeComponent
                     hasMore={!!nextRequest}
-                    onLoadMore={this.handleLoadMorePeople}
+                    onLoadMore={this.handleLoadMore}
                     {...this.props}
                 />
             </Container>

@@ -7,28 +7,27 @@ import routes from '../utils/routes';
 import CenterLoadingIndicator from './CenterLoadingIndicator';
 import Explore from './Explore';
 import ExploreList from './ExploreList';
-import { createPostResult } from './SearchResultsList/factories';
+import { createTeamResult } from './SearchResultsList/factories';
 
-function handleSelectItem({ item: { payload } }) {
-    routes.routeToPost(payload);
+function handleSelectItem({ item: { payload }}) {
+    routes.routeToTeam(payload);
 }
 
-
-const ExploreKnowledge = ({ hasMore, loading, onLoadMore, posts, postsCount, ...other }, { muiTheme }) => {
+const ExploreTeams = ({ hasMore, loading, onLoadMore, teams, teamsCount, ...other }, { muiTheme }) => {
     const theme = muiTheme.luno.searchResults;
-    function createExploreItem(post) {
-        return createPostResult({post, highlight: Immutable.Map()}, theme);
+    function createExploreItem(team) {
+        return createTeamResult({team, highlight: Immutable.Map()}, theme);
     }
 
     let content;
-    if (!posts) {
+    if (!teams) {
         content = <CenterLoadingIndicator />;
     } else {
         content = (
             <ExploreList
                 factory={createExploreItem}
                 hasMore={hasMore}
-                items={posts}
+                items={teams}
                 loading={loading}
                 onLoadMore={onLoadMore}
                 onSelectItem={handleSelectItem}
@@ -37,13 +36,13 @@ const ExploreKnowledge = ({ hasMore, loading, onLoadMore, posts, postsCount, ...
     }
 
     return (
-        <Explore count={postsCount} noun={t('Posts')}>
+        <Explore count={teamsCount} noun={t('Teams')}>
             {content}
         </Explore>
     );
 };
 
-ExploreKnowledge.propTypes = {
+ExploreTeams.propTypes = {
     hasMore: PropTypes.bool,
     loading: PropTypes.bool,
     nextRequest: PropTypes.object,
@@ -53,12 +52,8 @@ ExploreKnowledge.propTypes = {
     postsCount: PropTypes.number,
 };
 
-ExploreKnowledge.defaultProps = {
-    onSelectItem: () => {},
-};
-
-ExploreKnowledge.contextTypes = {
+ExploreTeams.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-export default ExploreKnowledge;
+export default ExploreTeams;

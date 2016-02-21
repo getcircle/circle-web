@@ -225,6 +225,14 @@ export default function (store, url) {
                 path="/explore/knowledge"
             />
             <Route
+                component={require('./containers/ExploreTeams')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.EXPLORE_TEAMS),
+                )}
+                path="/explore/teams"
+            />
+            <Route
                 component={require('./containers/NoMatch')}
                 onEnter={applyMiddleware(redirectHome)}
                 path="/search"
