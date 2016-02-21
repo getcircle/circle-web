@@ -29,17 +29,7 @@ export function deletePost(client, post) {
     let request = new services.post.actions.delete_post.RequestV1({id: post.id});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => {
-                if (response.isSuccess()) {
-                    resolve({
-                        postId: post.id,
-                        postState: getPostStateURLString(post.state),
-                        postAuthorId: post.by_profile_id,
-                    });
-                } else {
-                    reject('Post wasn\'t deleted');
-                }
-            })
+            .then(response => response.simple(resolve, reject, { post }))
             .catch(error => reject(error));
     });
 }

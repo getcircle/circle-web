@@ -11,19 +11,9 @@ import { SLUGS } from '../components/ProfileDetailTabs';
 function additionalTypes(state, action) {
     switch (action.type) {
     case types.DELETE_POST_SUCCESS:
-        if (action.payload.postId &&
-            action.payload.postState !== undefined &&
-            action.payload.postAuthorId !== undefined
-        ) {
-            const postId = action.payload.postId;
-            const postState = action.payload.postState;
-            const key = getPostsPaginationKey(postState, {
-                id: action.payload.postAuthorId,
-            })
-            return state.updateIn([key, 'ids'], set => {
-                return set ? set.delete(postId) : set;
-            });
-        }
+        const { post } = action.payload;
+        const key = getPostsPaginationKey(post.by_profile_id, post.state);
+        return state.updateIn([key, 'ids'], set => set ? set.delete(post.id) : set);
     case types.CLEAR_POSTS_CACHE:
         if (action.payload.key === null || action.payload.key === undefined) {
             return Immutable.Map();

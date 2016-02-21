@@ -75,9 +75,9 @@ export default class WrappedResponse {
         }
     }
 
-    simple(resolve, reject) {
+    simple(resolve, reject, result) {
         if (this.isSuccess()) {
-            return resolve();
+            return resolve(result);
         } else {
             return reject(this.reject());
         }
