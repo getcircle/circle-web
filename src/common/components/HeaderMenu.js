@@ -25,7 +25,6 @@ class HeaderMenu extends CSSComponent {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
-        expandedView: PropTypes.bool,
     }
 
     static contextTypes = {
@@ -37,10 +36,6 @@ class HeaderMenu extends CSSComponent {
 
     static childContextTypes = {
         muiTheme: PropTypes.object,
-    }
-
-    static defaultProps = {
-        expandedView: true,
     }
 
     state = {
@@ -206,31 +201,6 @@ class HeaderMenu extends CSSComponent {
         }
     }
 
-    renderProfileName() {
-        if (this.props.expandedView) {
-            return (
-                <div style={this.styles().profileName}>
-                    <span>{this.context.auth.profile.first_name}</span>
-                </div>
-            );
-        }
-    }
-
-    renderDownArrow() {
-        if (this.props.expandedView) {
-            return (
-                <div ref="downArrow">
-                    <IconContainer
-                        IconClass={DownArrowIcon}
-                        iconStyle={{...this.styles().arrowIcon}}
-                        stroke={tintColor}
-                        style={this.styles().arrowContainer}
-                    />
-                </div>
-            );
-        }
-    }
-
     renderMyKnowledgeMenuItem() {
         if (this.context.flags && this.context.flags.get('posts')) {
             return (
@@ -287,12 +257,6 @@ class HeaderMenu extends CSSComponent {
 
     render() {
         const { profile } = this.context.auth;
-        let anchorEl;
-        if (this.props.expandedView) {
-            anchorEl = this.refs.downArrow;
-        } else {
-            anchorEl = this.refs.avatar;
-        }
         return (
             <div {...this.props}>
                 <div
@@ -305,11 +269,9 @@ class HeaderMenu extends CSSComponent {
                     <div ref="avatar">
                         <ProfileAvatar profile={profile} />
                     </div>
-                    {this.renderProfileName()}
-                    {this.renderDownArrow()}
                 </div>
                 <Popover
-                    anchorEl={anchorEl}
+                    anchorEl={this.refs.avatar}
                     anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                     onRequestClose={() => { this.setState({menuDisplayed: false})}}
                     open={this.state.menuDisplayed}

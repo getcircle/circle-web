@@ -61,21 +61,6 @@ describe('HeaderMenu', () => {
         expect(profileAvatar.prop('profile').id).toBe(wrapper.context('auth').profile.id);
     });
 
-    it('shows profile name in expanded mode and defaults to it', () => {
-        const { wrapper } = setup();
-        const name = wrapper.context('auth').profile.first_name;
-        expect(wrapper.contains(<span>{name}</span>)).toBe(true);
-    });
-
-    it('doesn\'t show profile name if expanded view is not requested', () => {
-        const { wrapper } = setup({
-            expandedView: false,
-        });
-
-        const name = wrapper.context('auth').profile.first_name;
-        expect(wrapper.contains(<span>{name}</span>)).toBe(false);
-    });
-
     it('shows three menu items (My Profile, Create Team, and Logout) by default for everyone', () => {
         const { wrapper } = setup();
 

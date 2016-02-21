@@ -108,7 +108,6 @@ class Header extends CSSComponent {
                 <div className={menuContainerClasses} style={this.styles().menuContainer}>
                     <HeaderMenu
                         dispatch={this.props.dispatch}
-                        expandedView={false}
                         {...this.styles().HeaderMenu}
                     />
                 </div>
