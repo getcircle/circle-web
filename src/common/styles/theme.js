@@ -21,7 +21,7 @@ export function getCustomTheme(userAgent) {
     muiTheme.appBar.color = Colors.white;
     muiTheme.flatButton.color = Colors.white;
     muiTheme.paper.zDepthShadows = [
-        [12, 24, 2, 4],
+        [12, 24, 0, 0],
         [3, 10, 3, 10],
         [10, 30, 6, 10],
         [14, 45, 10, 18],
