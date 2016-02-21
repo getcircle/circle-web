@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import keymirror from 'keymirror';
 import { services } from 'protobufs';
 
+import { showConfirmDeleteModal } from '../../actions/posts';
 import t from '../../utils/gettext';
 import { replacePostState, routeToEditPost } from '../../utils/routes';
 
@@ -45,13 +46,16 @@ const EmptyState = () => {
     );
 };
 
-const Posts = ({ onLoadMore, posts, state }, { muiTheme }) => {
+const Posts = ({ dispatch, onLoadMore, posts, state }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     function handleMenuChoice(choice, post) {
         switch(choice) {
         case menuChoices.EDIT:
             routeToEditPost(post);
+            break;
+        case menuChoices.DELETE:
+            dispatch(showConfirmDeleteModal(post));
             break;
         }
     };
@@ -105,6 +109,7 @@ const PostStatePropType = PropTypes.shape({
 });
 
 Posts.propTypes = {
+    dispatch: PropTypes.func.isRequired,
     onLoadMore: PropTypes.func,
     onSelectItem: PropTypes.func,
     posts: PropTypes.shape({

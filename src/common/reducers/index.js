@@ -23,6 +23,7 @@ export { default as teamMembers } from './teamMembers';
 export { default as updateProfile } from './profile';
 export { default as updateTeam } from './updateTeam';
 export { default as profileMemberships } from './profileMemberships';
+export { default as myKnowledge } from './myKnowledge';
 
 // external reducers
 export function form(state, action) {

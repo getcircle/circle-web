@@ -43,16 +43,6 @@ export default class FormDialog extends CSSComponent {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.props.visible && nextProps.visible) {
-            this.refs.modal.show();
-        }
-
-        if (this.props.visible && !nextProps.visible) {
-            this.refs.modal.dismiss();
-        }
-    }
-
     componentWillMount() {
         const muiTheme = merge({}, this.state.muiTheme);
         muiTheme.paper.backgroundColor = Colors.offWhite;
@@ -94,6 +84,7 @@ export default class FormDialog extends CSSComponent {
             pageType,
             submitLabel,
             title,
+            visible,
             warning,
         } = this.props;
 
@@ -108,15 +99,16 @@ export default class FormDialog extends CSSComponent {
             <div>
                 <Dialog
                     bodyStyle={styles.body}
-                    dialogDismissLabel={t('Cancel')}
-                    dialogSaveLabel={submitLabel}
+                    dismissLabel={t('Cancel')}
                     error={error}
                     modal={modal}
                     onRequestClose={onCancel}
                     onSave={onSubmit}
+                    open={visible}
                     pageType={pageType}
                     ref="modal"
                     repositionOnUpdate={false}
+                    saveLabel={submitLabel}
                     title={title}
                     warning={warning}
                 >

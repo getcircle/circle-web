@@ -110,3 +110,11 @@ export function deletePost(post) {
         },
     };
 }
+
+export function showConfirmDeleteModal(post) {
+    return {type: types.SHOW_CONFIRM_DELETE_MODAL, payload: post};
+}
+
+export function hideConfirmDeleteModal() {
+    return {type: types.HIDE_CONFIRM_DELETE_MODAL};
+}
