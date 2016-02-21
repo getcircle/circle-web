@@ -63,17 +63,6 @@ class Home extends CSSComponent {
                 organizationLogoPlaceholder: {
                     height: ORGANIZATION_LOGO_HEIGHT,
                 },
-                poweredBy: {
-                    fontSize: '10px',
-                    lineHeight: '14px',
-                    letterSpacing: '1px',
-                    textTransform: 'uppercase',
-                    ...fontColors.extraLight,
-                    ...fontWeights.semiBold,
-                },
-                poweredBySection: {
-                    paddingTop: 20,
-                },
                 root: {
                     height: '100%',
                     paddingBottom: 20,
@@ -143,9 +132,6 @@ class Home extends CSSComponent {
                     </section>
                     <section style={this.styles().searchSection}>
                         <HomeSearch className="row center-xs" />
-                        <div className="row center-xs" style={this.styles().poweredBySection}>
-                            <span style={this.styles().poweredBy}>{t('Built by Luno. Powered by you.')}</span>
-                        </div>
                     </section>
                 </section>
             </div>
