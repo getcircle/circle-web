@@ -39,6 +39,7 @@ export function getCustomTheme(userAgent) {
     const { palette } = muiTheme.baseTheme;
 
     muiTheme.luno = {
+        colors: Colors,
         fontWeights: FontWeights,
         fontSizes: {
             buttonText: '1.1rem',

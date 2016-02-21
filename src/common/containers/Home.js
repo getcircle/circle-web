@@ -35,8 +35,19 @@ class Home extends CSSComponent {
     }
 
     classes() {
+        const { muiTheme } = this.context;
         return {
             'default': {
+                exploreLink: {
+                    fontSize: '1.4rem',
+                    lineHeight: '1.7rem',
+                    characterSpacing: '1.27px',
+                    fontWeight: muiTheme.luno.fontWeights.black,
+                    color: muiTheme.luno.colors.extraLightBlack,
+                    textDecoration: 'none',
+                    paddingLeft: 30,
+                    textTransform: 'uppercase',
+                },
                 header: {
                     display: 'none',
                 },
@@ -71,6 +82,7 @@ class Home extends CSSComponent {
                 searchSection: {
                     paddingLeft: 20,
                     paddingRight: 20,
+                    paddingTop: 50,
                 },
                 wrap: {
                     position: 'relative',
@@ -123,10 +135,10 @@ class Home extends CSSComponent {
                                 {this.getOrganizationImage()}
                             </div>
                         </div>
-                        <div>
-                            <Link to="/explore/people">{t('People')}</Link>
-                            <Link to="/explore/knowledge">{t('Knowledge')}</Link>
-                            <Link to="/explore/teams">{t('Teams')}</Link>
+                        <div className="row center-xs">
+                            <Link style={this.styles().exploreLink} to="/explore/people">{t('People')}</Link>
+                            <Link style={this.styles().exploreLink} to="/explore/knowledge">{t('Knowledge')}</Link>
+                            <Link style={this.styles().exploreLink} to="/explore/teams">{t('Teams')}</Link>
                         </div>
                     </section>
                     <section style={this.styles().searchSection}>
