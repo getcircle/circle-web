@@ -29,7 +29,7 @@ const IconMenu = (props) => {
             onRequestChange={onRequestChange}
             open={open}
             style={merge(styles.root, style)}
-            targetOrigin={{horizontal: 'right', vertical: 'top'}}
+            targetOrigin={{horizontal: 'middle', vertical: 'top'}}
         >
             {children}
         </MaterialIconMenu>
