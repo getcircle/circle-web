@@ -48,7 +48,7 @@ const DraftPosts = ({ dispatch, loaded, loading, nextRequest, onLoadMore, posts 
                 <InfinitePostsList
                     ItemComponent={PostItem}
                     MenuComponent={PostItemMenu}
-                    className="col-xs-6"
+                    className="col-xs-8"
                     hasMore={!!nextRequest}
                     loading={loading}
                     onLoadMore={onLoadMore}

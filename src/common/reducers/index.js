@@ -6,7 +6,7 @@ export { default as authentication } from './authentication';
 export { default as autocomplete } from './autocomplete';
 export { default as cache } from './cache';
 export { default as createTeam} from './createTeam';
-export { default as drafts } from './drafts';
+export { default as deletePost } from './deletePost';
 export { default as explore } from './explore';
 export { default as extendedProfiles } from './extendedProfiles';
 export { default as extendedTeams } from './extendedTeams';

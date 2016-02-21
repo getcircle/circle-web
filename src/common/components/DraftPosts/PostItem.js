@@ -20,7 +20,7 @@ class PostItem extends DetailListItem {
         routeToEditPost(this.props.post);
     }
 
-    getItem(menu) {
+    getItem() {
         const { post } = this.props;
         const { muiTheme } = this.context;
         const styles = {

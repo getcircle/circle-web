@@ -4,7 +4,12 @@ import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
 import { getProfile, getReportingDetails } from '../actions/profiles';
-import { getListedPosts, getListedPostsPaginationKey } from '../actions/posts';
+import {
+    deletePost,
+    hideConfirmDeleteModal,
+    getListedPosts,
+    getListedPostsPaginationKey,
+} from '../actions/posts';
 import { getMembersForProfileId } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { slice } from '../reducers/paginate';
@@ -13,6 +18,7 @@ import * as selectors from '../selectors';
 
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
+import DeletePostConfirmation from '../components/DeletePostConfirmation';
 import ProfileDetail from '../components/ProfileDetailV2';
 
 const selector = selectors.createImmutableSelector(
@@ -22,8 +28,9 @@ const selector = selectors.createImmutableSelector(
         selectors.routerParametersSelector,
         selectors.profileMembershipsSelector,
         selectors.postsSelector,
+        selectors.deletePostSelector,
     ],
-    (authenticationState, cacheState, parametersState, membershipsState, postsState) => {
+    (authenticationState, cacheState, parametersState, membershipsState, postsState, deletePostState) => {
         let memberships, posts, postsLoading, postsNextRequest;
 
         const { profileId } = parametersState;
@@ -65,6 +72,8 @@ const selector = selectors.createImmutableSelector(
             postsNextRequest,
             profile,
             reportingDetails,
+            modalVisible: deletePostState.get('modalVisible'),
+            pendingPostToDelete: deletePostState.get('pendingPostToDelete'),
         };
     },
 );
@@ -109,10 +118,12 @@ function loadProfile(locals) {
 class Profile extends CSSComponent {
 
     static propTypes = {
+        modalVisible: PropTypes.bool,
         params: PropTypes.shape({
             slug: PropTypes.string,
             profileId: PropTypes.string.isRequired,
         }),
+        pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
         posts: PropTypes.array,
         postsLoading: PropTypes.bool,
         postsNextRequest: PropTypes.object,
@@ -129,6 +140,16 @@ class Profile extends CSSComponent {
         dispatch(getListedPosts(profileId, postsNextRequest));
     }
 
+    handleRequestClose = () => {
+        this.props.dispatch(hideConfirmDeleteModal());
+    }
+
+    handleSave = () => {
+        const { dispatch, pendingPostToDelete } = this.props;
+        dispatch(hideConfirmDeleteModal());
+        dispatch(deletePost(pendingPostToDelete));
+    }
+
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
             resetScroll();
@@ -138,7 +159,7 @@ class Profile extends CSSComponent {
 
     render() {
         let directReports, manager, peers;
-        const { profile, reportingDetails, params: { slug } } = this.props;
+        const { modalVisible, pendingPostToDelete, profile, reportingDetails, params: { slug } } = this.props;
         if (reportingDetails) {
             directReports = reportingDetails.direct_reports;
             manager = reportingDetails.manager;
@@ -155,6 +176,12 @@ class Profile extends CSSComponent {
                     peers={peers}
                     slug={slug}
                     {...this.props}
+                />
+                <DeletePostConfirmation
+                    onRequestClose={this.handleRequestClose}
+                    onSave={this.handleSave}
+                    open={modalVisible}
+                    post={pendingPostToDelete}
                 />
             </Container>
         );

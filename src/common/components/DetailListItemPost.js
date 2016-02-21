@@ -7,6 +7,8 @@ import moment from '../utils/moment';
 import Colors from '../styles/Colors';
 import { routeToPost } from '../utils/routes';
 
+import DetailListItem from './DetailListItem';
+
 const SecondaryText = ({ post }) => {
     const styles = {
         created: {
@@ -30,17 +32,19 @@ const SecondaryText = ({ post }) => {
     );
 };
 
-class DetailListItemPost extends Component {
+class DetailListItemPost extends DetailListItem {
 
-    shouldComponentUpdate(nextProps) {
-        return this.props.post.id !== nextProps.post.id;
+    shouldComponentUpdate(nextProps, nextState) {
+        const superChanged = super.shouldComponentUpdate(nextProps, nextState);
+        const postChanged = this.props.post.id !== nextProps.post.id;
+        return superChanged || postChanged;
     }
 
     handleTouchTap = () => {
         routeToPost(this.props.post);
     }
 
-    render() {
+    getItem() {
         const { post, ...other } = this.props;
         const { muiTheme } = this.context;
         const styles = {
@@ -50,7 +54,7 @@ class DetailListItemPost extends Component {
                 lineHeight: '2.4rem',
             },
         };
-        return (
+        const item = (
             <div {...other}>
                 <ListItem
                     onTouchTap={this.handleTouchTap}
@@ -59,12 +63,13 @@ class DetailListItemPost extends Component {
                 />
             </div>
         );
+        return { item };
     }
 }
 
-DetailListItemPost.propTypes = {
-    post: PropTypes.instanceOf(services.post.containers.PostV1),
-};
+const propTypes = Object.assign({}, DetailListItem.propTypes);
+propTypes.post = PropTypes.instanceOf(services.post.containers.PostV1),
+DetailListItemPost.propTypes = propTypes;
 
 DetailListItemPost.contextTypes = {
     muiTheme: PropTypes.object.isRequired,

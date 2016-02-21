@@ -26,9 +26,9 @@ const selector = selectors.createImmutableSelector(
         selectors.cacheSelector,
         selectors.postsSelector,
         selectors.routerParametersSelector,
-        selectors.draftsSelector,
+        selectors.deletePostSelector,
     ],
-    (authenticationState, cacheState, postsState, parametersState, draftsState) => {
+    (authenticationState, cacheState, postsState, parametersState, deletePostState) => {
         let loaded, loading, posts, nextRequest;
         const cache = cacheState.toJS();
         const profile = authenticationState.get('profile');
@@ -49,8 +49,8 @@ const selector = selectors.createImmutableSelector(
             nextRequest,
             posts,
             profile,
-            modalVisible: draftsState.get('modalVisible'),
-            pendingPostToDelete: draftsState.get('pendingPostToDelete'),
+            modalVisible: deletePostState.get('modalVisible'),
+            pendingPostToDelete: deletePostState.get('pendingPostToDelete'),
         };
     },
 );

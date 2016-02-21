@@ -1,16 +1,41 @@
 import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
+import { routeToPost } from '../utils/routes';
+import { showConfirmDeleteModal } from '../actions/posts';
 
 import DetailSection from './DetailSectionV2';
 import InfinitePostsList from './InfinitePostsList';
+import PostItemMenu, { MENU_CHOICES } from './PostItemMenu';
 
-export const Posts = (props) => {
+const Posts = (props, { store: { dispatch } }) => {
+
+    function handleMenuChoice(choice, post) {
+        switch(choice) {
+        case MENU_CHOICES.EDIT:
+            routeToPost(post);
+            break;
+        case MENU_CHOICES.DELETE:
+            dispatch(showConfirmDeleteModal(post));
+            break;
+        }
+    };
+
     return (
         <DetailSection dividerStyle={{marginBottom: 0}}>
-            <InfinitePostsList {...props} />
+            <InfinitePostsList
+                MenuComponent={PostItemMenu}
+                onMenuChoice={handleMenuChoice}
+                {...props}
+            />
         </DetailSection>
     );
+};
+
+Posts.contextTypes = {
+    store: PropTypes.shape({
+        dispatch: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsLoading }, { muiTheme }) => {
@@ -52,4 +77,5 @@ ProfileDetailKnowledge.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
+export { Posts };
 export default ProfileDetailKnowledge;
