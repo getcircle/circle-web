@@ -20,6 +20,9 @@ export function getDefaultContext(contextOverrides) {
         },
         mixins: {},
         muiTheme: getCustomTheme(global.navigator.userAgent),
+        store: {
+            dispatch: expect.createSpy(),
+        },
         url: URLContextFactory.getContext(),
         ...contextOverrides,
     }
@@ -39,6 +42,9 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
             }).isRequired,
             mixins: PropTypes.object,
             muiTheme: PropTypes.object,
+            store: PropTypes.shape({
+                dispatch: PropTypes.func.isRequired,
+            }),
             url: InternalPropTypes.URLContext,
             ...childContextTypesOverrides,
         }
