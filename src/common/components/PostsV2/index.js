@@ -3,7 +3,7 @@ import keymirror from 'keymirror';
 import { services } from 'protobufs';
 
 import t from '../../utils/gettext';
-import { replacePostState } from '../../utils/routes';
+import { replacePostState, routeToEditPost } from '../../utils/routes';
 
 import CenterLoadingIndicator from '../CenterLoadingIndicator';
 import DetailContent from '../DetailContent';
@@ -24,12 +24,8 @@ const menuChoices = keymirror({
 const PostItemMenu = ({ hover, onMenuChoice, post }) => {
     function editPost() { onMenuChoice(menuChoices.EDIT, post); }
     function deletePost() { onMenuChoice(menuChoices.DELETE, post); }
-    const styles = {
-        root: {
-        },
-    };
     return (
-        <MoreMenu hover={hover} style={styles.root}>
+        <MoreMenu hover={hover}>
             <MoreMenuItem onTouchTap={editPost} text={t('Edit')} />
             <MoreMenuItem onTouchTap={deletePost} text={t('Delete')} />
         </MoreMenu>
@@ -53,7 +49,11 @@ const Posts = ({ onLoadMore, posts, state }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     function handleMenuChoice(choice, post) {
-        console.log(choice, post);
+        switch(choice) {
+        case menuChoices.EDIT:
+            routeToEditPost(post);
+            break;
+        }
     };
 
     let content;

@@ -34,6 +34,7 @@ class DetailListItem extends Component {
                 <MenuComponent
                     hover={this.state.hover}
                     onMenuChoice={onMenuChoice}
+                    {...other}
                 />
             );
         }
