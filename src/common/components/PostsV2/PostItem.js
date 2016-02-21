@@ -1,21 +1,25 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { ListItem } from 'material-ui';
 
 import moment from '../../utils/moment';
 
-class PostItem extends Component {
+import DetailListItem from '../DetailListItem';
 
-    shouldComponentUpdate(nextProps) {
-        return this.props.post.id !== nextProps.post.id;
+class PostItem extends DetailListItem {
+
+    shouldComponentUpdate(nextProps, nextState) {
+        const superChanged = super.shouldComponentUpdate(nextProps, nextState);
+        const postChanged = this.props.post.id !== nextProps.post.id;
+        return  postChanged || superChanged;
     }
 
     handleTouchTap = () => {
     }
 
-    render() {
-        const { post, ...other } = this.props;
+    getItem(menu) {
+        const { post } = this.props;
         const { muiTheme } = this.context;
         const styles = {
             primaryText: {
@@ -35,23 +39,22 @@ class PostItem extends Component {
                 <span style={styles.secondaryText}>{moment(post.created).fromNow()}</span>
             </div>
         );
-        return (
-            <div {...other}>
-                <ListItem
-                    onTouchTap={this.handleTouchTap}
-                    primaryText={<span style={styles.primaryText}>{post.title}</span>}
-                    secondaryText={secondaryText}
-                    secondaryTextLines={2}
-                />
-            </div>
+        const item = (
+            <ListItem
+                onTouchTap={this.handleTouchTap}
+                primaryText={<span style={styles.primaryText}>{post.title}</span>}
+                secondaryText={secondaryText}
+                secondaryTextLines={2}
+            />
         );
+        return { item };
     }
 
 }
 
-PostItem.propTypes = {
-    post: PropTypes.instanceOf(services.post.containers.PostV1),
-};
+const propTypes = Object.assign({}, DetailListItem.propTypes);
+propTypes.post = PropTypes.instanceOf(services.post.containers.PostV1),
+PostItem.propTypes = propTypes;
 
 PostItem.contextTypes = {
     muiTheme: PropTypes.object.isRequired,

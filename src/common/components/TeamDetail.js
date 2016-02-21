@@ -64,6 +64,7 @@ const TeamDetail = (props) => {
 TeamDetail.propTypes = {
     coordinators: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    hasMoreMembers: PropTypes.bool,
     members: PropTypes.array,
     membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,

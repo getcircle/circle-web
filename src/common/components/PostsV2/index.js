@@ -1,27 +1,44 @@
 import React, { PropTypes } from 'react';
+import keymirror from 'keymirror';
 import { services } from 'protobufs';
 
 import t from '../../utils/gettext';
 import { replacePostState } from '../../utils/routes';
 
 import CenterLoadingIndicator from '../CenterLoadingIndicator';
+import DetailContent from '../DetailContent';
 import InfinitePostsList from '../InfinitePostsList';
+import MoreMenu from '../MoreMenu';
+import MoreMenuItem from '../MoreMenuItem';
 
 import PostItem from './PostItem';
 import Tabs from './Tabs';
 
 const { LISTED, DRAFT } = services.post.containers.PostStateV1;
 
-const Post = ({ post }, { muiTheme }) => {
-    return
-};
+const menuChoices = keymirror({
+    EDIT: null,
+    DELETE: null,
+});
 
-Post.propTypes = {
+const PostItemMenu = ({ hover, onMenuChoice, post }) => {
+    function editPost() { onMenuChoice(menuChoices.EDIT, post); }
+    function deletePost() { onMenuChoice(menuChoices.DELETE, post); }
+    const styles = {
+        root: {
+        },
+    };
+    return (
+        <MoreMenu hover={hover} style={styles.root}>
+            <MoreMenuItem onTouchTap={editPost} text={t('Edit')} />
+            <MoreMenuItem onTouchTap={deletePost} text={t('Delete')} />
+        </MoreMenu>
+    );
+};
+PostItemMenu.propTypes = {
+    hover: PropTypes.bool,
+    onMenuChoice: PropTypes.func.isRequired,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
-};
-
-Post.contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
 };
 
 const EmptyState = () => {
@@ -35,18 +52,27 @@ const EmptyState = () => {
 const Posts = ({ onLoadMore, posts, state }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
+    function handleMenuChoice(choice, post) {
+        console.log(choice, post);
+    };
+
     let content;
     const postsState = posts[state]
     if (postsState && postsState.posts) {
         if (postsState.posts.length) {
             content = (
-                <InfinitePostsList
-                    ItemComponent={PostItem}
-                    hasMore={!!postsState.nextRequest}
-                    loading={postsState.loading}
-                    onLoadMore={onLoadMore}
-                    posts={postsState.posts}
-                />
+                <div className="row">
+                    <InfinitePostsList
+                        ItemComponent={PostItem}
+                        MenuComponent={PostItemMenu}
+                        className="col-xs-6"
+                        hasMore={!!postsState.nextRequest}
+                        loading={postsState.loading}
+                        onLoadMore={onLoadMore}
+                        onMenuChoice={handleMenuChoice}
+                        posts={postsState.posts}
+                    />
+                </div>
             );
         } else {
             content = <EmptyState />;
@@ -57,14 +83,16 @@ const Posts = ({ onLoadMore, posts, state }, { muiTheme }) => {
 
     return (
         <div>
-            <section className="row middle-xs">
-                <h1 style={theme.hi}>{t('My Knowledge')}</h1>
-            </section>
+            <DetailContent>
+                <h1 style={theme.h1}>{t('My Knowledge')}</h1>
+            </DetailContent>
             <Tabs
                 onRequestChange={replacePostState}
                 state={state}
             />
-            {content}
+            <DetailContent>
+                {content}
+            </DetailContent>
         </div>
     );
 };

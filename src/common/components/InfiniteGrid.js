@@ -27,9 +27,9 @@ Loader.propTypes = {
     theme: PropTypes.object.isRequired,
 };
 
-const InfiniteGrid = ({ children, hasMore, loading, onLoadMore }, { muiTheme }) => {
+const InfiniteGrid = ({ children, hasMore, loading, onLoadMore, ...other }, { muiTheme }) => {
     return (
-        <List>
+        <List {...other}>
             <InfiniteScroll
                 className="row"
                 elementIsScrollable={false}

@@ -1,38 +1,27 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { ListItem } from 'material-ui';
 
 import { routeToProfile } from '../utils/routes';
 import Colors from '../styles/Colors';
+import DetailListItem from './DetailListItem';
 import ProfileAvatar from './ProfileAvatar';
 
-class DetailListItemProfile extends Component {
-
-    state = {
-        hover: false,
-    }
+class DetailListItemProfile extends DetailListItem {
 
     shouldComponentUpdate(nextProps, nextState) {
+        const superChanged = super.shouldComponentUpdate(nextProps, nextState);
         const profileChanged = this.props.profile.id !== nextProps.profile.id;
-        const hoverChanged = this.state.hover !== nextState.hover;
-        return profileChanged || hoverChanged;
-    }
-
-    handleMouseEnter = () => {
-        this.setState({hover: true});
-    }
-
-    handleMouseLeave = () => {
-        this.setState({hover: false});
+        return profileChanged || superChanged;
     }
 
     handleTouchTap = () => {
         routeToProfile(this.props.profile);
     }
 
-    render() {
-        const { MenuComponent, onMenuChoice, profile, ...other } = this.props;
+    getItem() {
+        const { profile } = this.props;
         const styles = {
             avatar: {
                 height: 50,
@@ -47,49 +36,28 @@ class DetailListItemProfile extends Component {
                 fontSize: '16px',
                 lineHeight: '19px',
             },
-            root: {
-                position: 'relative',
-            },
             secondaryText: {
                 fontSize: '13px',
                 color: Colors.lightBlack,
             },
         };
-        let menu;
-        if (MenuComponent) {
-            menu = (
-                <MenuComponent
-                    hover={this.state.hover}
-                    onMenuChoice={onMenuChoice}
-                    profile={profile}
-                />
-            );
-        }
-        return (
-            <div
-                onMouseEnter={this.handleMouseEnter}
-                onMouseLeave={this.handleMouseLeave}
-                style={styles.root}
-                {...other}
-            >
-                <ListItem
-                    innerDivStyle={styles.innerDivStyle}
-                    leftAvatar={<ProfileAvatar profile={profile} style={styles.avatar} />}
-                    onTouchTap={this.handleTouchTap}
-                    primaryText={<span style={styles.primaryText}>{profile.full_name}</span>}
-                    secondaryText={<div style={styles.secondaryText}>{profile.title}</div>}
-                />
-
-                {menu}
-            </div>
+        const item = (
+            <ListItem
+                innerDivStyle={styles.innerDivStyle}
+                leftAvatar={<ProfileAvatar profile={profile} style={styles.avatar} />}
+                onTouchTap={this.handleTouchTap}
+                primaryText={<span style={styles.primaryText}>{profile.full_name}</span>}
+                secondaryText={<div style={styles.secondaryText}>{profile.title}</div>}
+            />
         );
+        return { item };
     }
+
 }
 
-DetailListItemProfile.propTypes = {
-    MenuComponent: PropTypes.func,
-    onMenuChoice: PropTypes.func,
-    profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-};
+const propTypes = Object.assign({}, DetailListItem.propTypes);
+propTypes.profile = PropTypes.instanceOf(services.profile.containers.ProfileV1);
+
+DetailListItem.propTypes = propTypes;
 
 export default DetailListItemProfile;

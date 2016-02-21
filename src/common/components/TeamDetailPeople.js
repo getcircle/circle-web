@@ -1,5 +1,5 @@
-import { IconButton, MenuItem } from 'material-ui';
-import React, { Component, PropTypes } from 'react';
+import { IconButton } from 'material-ui';
+import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
 import { showAddMembersModal } from '../actions/teams';
@@ -11,6 +11,7 @@ import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 import PlusIcon from './PlusIcon';
 import InternalPropTypes from './InternalPropTypes';
 import MoreMenu from './MoreMenu';
+import MoreMenuItem from './MoreMenuItem';
 import ProfilesGrid from './ProfilesGrid';
 import TeamAddMembersForm from './TeamAddMembersForm';
 
@@ -20,34 +21,6 @@ const menuChoices = {
     REMOVE: 'REMOVE',
 };
 
-class TeamMenuItem extends Component {
-    render() {
-        const { onTouchTap, text } = this.props;
-        const styles = {
-            innerDiv: {
-                fontSize: '1.4rem',
-                paddingLeft: 20,
-                paddingRight: 20,
-            },
-            root: {
-                lineHeight: '30px',
-            },
-        };
-        return (
-            <MenuItem
-                innerDivStyle={styles.innerDiv}
-                onTouchTap={onTouchTap}
-                primaryText={text}
-                style={styles.root}
-            />
-        );
-    }
-}
-TeamMenuItem.propTypes = {
-    onTouchTap: PropTypes.func.isRequired,
-    text: PropTypes.string.isRequired,
-}
-
 const TeamCoordinatorMenu = ({ hover, onMenuChoice, profile }) => {
     function makeMember() { onMenuChoice(menuChoices.MAKE_MEMBER, profile); }
     function remove() { onMenuChoice(menuChoices.REMOVE, profile); }
@@ -55,8 +28,8 @@ const TeamCoordinatorMenu = ({ hover, onMenuChoice, profile }) => {
         <MoreMenu
             hover={hover}
         >
-            <TeamMenuItem onTouchTap={makeMember} text="Make Member" />
-            <TeamMenuItem onTouchTap={remove} text="Remove" />
+            <MoreMenuItem onTouchTap={makeMember} text={t('Make Member')} />
+            <MoreMenuItem onTouchTap={remove} text={t('Remove')} />
         </MoreMenu>
     );
 };
@@ -73,8 +46,8 @@ const TeamMemberMenu = ({ hover, onMenuChoice, profile }) => {
         <MoreMenu
             hover={hover}
         >
-            <TeamMenuItem onTouchTap={makeCoordinator} text="Make Coordinator" />
-            <TeamMenuItem onTouchTap={remove} text="Remove" />
+            <MoreMenuItem onTouchTap={makeCoordinator} text={t('Make Coordinator')} />
+            <MoreMenuItem onTouchTap={remove} text={t('Remove')} />
         </MoreMenu>
     );
 };
