@@ -7,7 +7,7 @@ const initialState = Immutable.fromJS({
     pendingPostToDelete: null,
 });
 
-export default function myKnowledge(state = initialState, action) {
+export default function (state = initialState, action) {
     switch(action.type) {
     case types.HIDE_CONFIRM_DELETE_MODAL:
         return state.set('modalVisible', false).set('pendingPostToDelete', null);

@@ -42,8 +42,8 @@ export function routeToNewPost() {
     browserHistory.push('/new-post');
 }
 
-export function routeToPosts(postState) {
-    browserHistory.push(`/posts/${postState}`);
+export function routeToDrafts() {
+    browserHistory.push('/posts/drafts');
 }
 
 export function routeToPost(post) {

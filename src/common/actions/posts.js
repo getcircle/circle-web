@@ -32,6 +32,9 @@ export function updatePost(post) {
 }
 
 export function getPostsPaginationKey(profileId, state) {
+    if (state === null) {
+        state = services.post.containers.PostStateV1.DRAFT;
+    }
     return `${profileId ? profileId : 'all'}:${state}`;
 }
 
@@ -57,6 +60,16 @@ export function getPosts(profileId, state, nextRequest) {
         },
         meta: {paginateBy},
     };
+}
+
+export function getDraftPostsPaginationKey(profileId) {
+    const state = services.post.containers.PostStateV1.DRAFT;
+    return getPostsPaginationKey(profileId, state);
+}
+
+export function getDraftPosts(profileId, nextRequest) {
+    const state = services.post.containers.PostStateV1.DRAFT;
+    return getPosts(profileId, state, nextRequest);
 }
 
 export function getListedPostsPaginationKey(profileId) {

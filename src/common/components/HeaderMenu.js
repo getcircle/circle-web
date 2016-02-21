@@ -5,7 +5,7 @@ import { Menu, MenuItem, Popover } from 'material-ui';
 
 import { logout } from '../actions/authentication';
 import { PostStateURLString } from '../utils/post';
-import { routeToNewPost, routeToPosts, routeToProfile, routeToTeam } from '../utils/routes';
+import { routeToNewPost, routeToDrafts, routeToProfile, routeToTeam } from '../utils/routes';
 import { showCreateTeamModal } from '../actions/teams';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
@@ -156,7 +156,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleViewKnowledge(event) {
-        routeToPosts(PostStateURLString.LISTED);
+        routeToDrafts();
     }
 
     handleCreateTeam(event) {
@@ -208,7 +208,7 @@ class HeaderMenu extends CSSComponent {
                     desktop={true}
                     innerDivStyle={{...this.styles().menuItemDivStyle}}
                     onTouchTap={(e) => this.handleViewKnowledge(e)}
-                    primaryText={t('My Knowledge')}
+                    primaryText={t('My Drafts')}
                 />
             );
         } else {

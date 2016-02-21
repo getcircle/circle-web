@@ -28,7 +28,7 @@ export const PAGE_TYPE = {
     // Global pages
     HOME: 'Home',
     BILLING: 'Billing',
-    MY_KNOWLEDGE: 'My Knowledge',
+    MY_DRAFTS: 'My Drafts',
     NEW_POST: 'New Post',
     SEARCH: 'Search',
     SETTINGS: 'Settings',

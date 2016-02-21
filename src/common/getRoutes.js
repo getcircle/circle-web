@@ -172,12 +172,12 @@ export default function (store, url) {
                 path="/post/:postId"
             />
             <Route
-                component={require('./containers/PostsV2')}
+                component={require('./containers/DraftPosts')}
                 onEnter={applyMiddleware(
                     ...defaultMiddleware,
-                    trackPageView(PAGE_TYPE.MY_KNOWLEDGE, 'state')
+                    trackPageView(PAGE_TYPE.MY_DRAFTS)
                 )}
-                path="/posts/:state"
+                path="/posts/drafts"
             />
             <Route
                 component={require('./containers/Login')}
