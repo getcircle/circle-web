@@ -64,9 +64,10 @@ class Home extends CSSComponent {
                     height: ORGANIZATION_LOGO_HEIGHT,
                 },
                 root: {
-                    height: '100%',
+                    backgroundColor: muiTheme.luno.colors.offWhite,
+                    height: '100vh',
                     paddingBottom: 20,
-                    width: '100%',
+                    width: '100vw',
                 },
                 searchSection: {
                     paddingLeft: 20,

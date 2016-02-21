@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-import mui from 'material-ui';
 import React, { PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 
@@ -10,14 +9,13 @@ import resizable from '../decorators/resizable';
 import * as selectors from '../selectors';
 import tracker from '../utils/tracker';
 
+import Canvas from '../components/Canvas';
 import CSSComponent from '../components/CSSComponent';
 import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import Header from '../components/Header';
 import HeaderSearch from '../components/HeaderSearch';
 import TabBar from '../components/TabBar';
-
-const { AppCanvas } = mui;
 
 const UNAUTHENTICATED_ROUTES = [
     '/auth',
@@ -69,10 +67,6 @@ class App extends CSSComponent {
         params: PropTypes.object,
         profile: PropTypes.object,
         team: PropTypes.object,
-    }
-
-    static contextTypes = {
-        muiTheme: PropTypes.object.isRequired,
     }
 
     static childContextTypes = {
@@ -162,13 +156,13 @@ class App extends CSSComponent {
         return (
             <DocumentTitle>
                 <div style={this.styles().root}>
-                    <AppCanvas>
+                    <Canvas>
                         <div>
                             {header}
                             {this.props.children}
                             {footer}
                         </div>
-                    </AppCanvas>
+                    </Canvas>
                 </div>
             </DocumentTitle>
         );
