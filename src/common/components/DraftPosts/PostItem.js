@@ -4,6 +4,7 @@ import { services } from 'protobufs';
 import { ListItem } from 'material-ui';
 
 import moment from '../../utils/moment';
+import { routeToEditPost } from '../../utils/routes';
 
 import DetailListItem from '../DetailListItem';
 
@@ -16,6 +17,7 @@ class PostItem extends DetailListItem {
     }
 
     handleTouchTap = () => {
+        routeToEditPost(this.props.post);
     }
 
     getItem(menu) {
