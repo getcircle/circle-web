@@ -33,7 +33,7 @@ const AuthorOptionsMenu = ({ post }, { store: { dispatch } }) => {
     function handleDelete() { dispatch(showConfirmDeleteModal(post)); }
 
     return (
-        <MoreMenu style={{marginLeft: 10}}>
+        <MoreMenu style={{marginRight: 10}}>
             <MenuItem onTouchTap={handleEdit} text={t('Edit')} />
             <MenuItem onTouchTap={handleDelete} text={t('Delete')} />
         </MoreMenu>
@@ -68,8 +68,8 @@ const Header = ({ post }, { auth, muiTheme }) => {
             <div className="row between-xs middle-xs">
                 <Author className="col-xs" post={post} />
                 <div className="col-xs-3 row end-xs">
-                    <ShareShortcutMenu post={post} />
                     {authorOptions}
+                    <ShareShortcutMenu post={post} />
                 </div>
             </div>
         </header>
