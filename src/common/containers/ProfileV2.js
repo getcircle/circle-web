@@ -31,7 +31,7 @@ const selector = selectors.createImmutableSelector(
         selectors.deletePostSelector,
     ],
     (authenticationState, cacheState, parametersState, membershipsState, postsState, deletePostState) => {
-        let memberships, posts, postsLoading, postsNextRequest;
+        let memberships, posts, postsLoaded, postsLoading, postsNextRequest;
 
         const { profileId } = parametersState;
         const cache = cacheState.toJS();
@@ -62,12 +62,14 @@ const selector = selectors.createImmutableSelector(
                 postsNextRequest = postsState.get(key).get('nextRequest');
             }
             postsLoading = postsState.get(key).get('loading');
+            postsLoaded = postsState.get(key).get('loaded');
         }
 
         return {
             isLoggedInUser,
             memberships,
             posts,
+            postsLoaded,
             postsLoading,
             postsNextRequest,
             profile,
@@ -125,6 +127,7 @@ class Profile extends CSSComponent {
         }),
         pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
         posts: PropTypes.array,
+        postsLoaded: PropTypes.bool,
         postsLoading: PropTypes.bool,
         postsNextRequest: PropTypes.object,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),

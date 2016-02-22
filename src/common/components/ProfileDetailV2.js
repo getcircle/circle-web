@@ -19,6 +19,7 @@ const ProfileDetail = (props) => {
         memberships,
         peers,
         posts,
+        postsLoaded,
         postsLoading,
         profile,
         onLoadMorePosts,
@@ -46,6 +47,7 @@ const ProfileDetail = (props) => {
                 hasMorePosts={hasMorePosts}
                 onLoadMorePosts={onLoadMorePosts}
                 posts={posts}
+                postsLoaded={postsLoaded}
                 postsLoading={postsLoading}
             />
         );

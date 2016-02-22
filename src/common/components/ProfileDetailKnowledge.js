@@ -4,6 +4,7 @@ import t from '../utils/gettext';
 import { routeToDrafts, routeToNewPost, routeToPost } from '../utils/routes';
 import { showConfirmDeleteModal } from '../actions/posts';
 
+import CenterLoadingIndicator from './CenterLoadingIndicator';
 import DetailSection from './DetailSectionV2';
 import InfinitePostsList from './InfinitePostsList';
 import PostItemMenu, { MENU_CHOICES } from './PostItemMenu';
@@ -47,13 +48,11 @@ const Posts = (props, { store: { dispatch } }) => {
     };
 
     return (
-        <DetailSection dividerStyle={{marginBottom: 0}}>
-            <InfinitePostsList
-                MenuComponent={PostItemMenu}
-                onMenuChoice={handleMenuChoice}
-                {...props}
-            />
-        </DetailSection>
+        <InfinitePostsList
+            MenuComponent={PostItemMenu}
+            onMenuChoice={handleMenuChoice}
+            {...props}
+        />
     );
 };
 
@@ -63,7 +62,15 @@ Posts.contextTypes = {
     }).isRequired,
 };
 
-const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsLoading }, { muiTheme }) => {
+const EmptyState = () => {
+    return (
+        <div className="row center-xs">
+            <span style={{fontSize: '1.6rem', marginTop: 30}}>{t('No knowledge here yet')}</span>
+        </div>
+    );
+};
+
+const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsLoaded, postsLoading }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     let postsSection;
@@ -76,6 +83,10 @@ const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsLoa
                 posts={posts}
             />
         );
+    } else if (postsLoaded) {
+        postsSection = <EmptyState />;
+    } else {
+        postsSection = <CenterLoadingIndicator />;
     }
     return (
         <div>
@@ -85,7 +96,9 @@ const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsLoa
             </section>
             <section className="row">
                 <section className="col-xs-8" style={theme.section}>
-                    {postsSection}
+                    <DetailSection dividerStyle={{marginBottom: 0}}>
+                        {postsSection}
+                    </DetailSection>
                 </section>
             </section>
         </div>
@@ -103,5 +116,5 @@ ProfileDetailKnowledge.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-export { Posts };
+export { EmptyState, Posts };
 export default ProfileDetailKnowledge;

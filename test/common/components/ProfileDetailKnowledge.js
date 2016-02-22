@@ -5,7 +5,8 @@ import React from 'react';
 import { getDefaultContext } from '../../componentWithContext';
 import PostFactory from '../../factories/PostFactory';
 
-import ProfileDetailKnowledge, { Posts } from '../../../src/common/components/ProfileDetailKnowledge';
+import CenterLoadingIndicator from '../../../src/common/components/CenterLoadingIndicator';
+import ProfileDetailKnowledge, { EmptyState, Posts } from '../../../src/common/components/ProfileDetailKnowledge';
 import InfinitePostsList from '../../../src/common/components/InfinitePostsList';
 
 function setup(propsOverrides, Component = ProfileDetailKnowledge) {
@@ -32,6 +33,16 @@ describe('ProfileDetailKnowledge', () => {
     it('renders the Posts', () => {
         const { wrapper } = setup();
         expect(wrapper.find(Posts).length).toEqual(1);
+    });
+
+    it('renders a loading indicator if we\'re still loading', () => {
+        const { wrapper } = setup({posts: [], postsLoaded: false});
+        expect(wrapper.find(CenterLoadingIndicator).length).toEqual(1);
+    });
+
+    it('renders EmptyState if we don\'t have any posts', () => {
+        const { wrapper } = setup({posts: [], postsLoaded: true});
+        expect(wrapper.find(EmptyState).length).toEqual(1);
     });
 
     describe('DetailListPosts', () => {
