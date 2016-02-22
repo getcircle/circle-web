@@ -15,7 +15,7 @@ import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
-import { default as PostComponent } from '../components/Post';
+import { default as PostComponent } from '../components/PostV2';
 
 const selector = selectors.createImmutableSelector(
     [

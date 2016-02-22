@@ -45,6 +45,28 @@ export function getCustomTheme(userAgent) {
             buttonText: '1.1rem',
         },
         tintColor: tintColor,
+        avatar: {
+            left: 5,
+            height: 50,
+            width: 50,
+        },
+        circularIconMenu: {
+            button: {
+                padding: 0,
+                height: 40,
+                width: 40,
+            },
+            Icon: {
+                height: 30,
+                width: 30,
+                strokeWidth: 1,
+                stroke: tintColor,
+            },
+            menu: {
+                border: `1px solid ${tintColor}`,
+                borderRadius: '50%',
+            },
+        },
         dialog: {
             title: {
                 color: Colors.black,

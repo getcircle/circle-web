@@ -6,6 +6,8 @@ const IconMenu = (props) => {
     const {
         children,
         iconElement,
+        iconButtonStyle,
+        iconButtonElement,
         menuStyle,
         onRequestChange,
         open,
@@ -20,7 +22,18 @@ const IconMenu = (props) => {
         menu: {},
         root: {},
     };
-    const button = <IconButton>{iconElement}</IconButton>;
+
+    let button;
+    if (iconButtonElement) {
+        button = iconButtonElement;
+    } else {
+        button = (
+            <IconButton style={iconButtonStyle}>
+                {iconElement}
+            </IconButton>
+        );
+    }
+
     return (
         <MaterialIconMenu
             anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
@@ -38,7 +51,7 @@ const IconMenu = (props) => {
 
 IconMenu.propTypes = {
     children: PropTypes.node,
-    iconElement: PropTypes.object.isRequired,
+    iconElement: PropTypes.node.isRequired,
     menuStyle: PropTypes.object,
     onRequestChange: PropTypes.func,
     open: PropTypes.bool,
