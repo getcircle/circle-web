@@ -1,21 +1,18 @@
 import { connect } from 'react-redux';
 import Immutable from 'immutable';
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
 
 import { deletePost, getPost } from '../actions/posts';
-import { fontColors } from '../constants/styles';
 
-import { PostStateURLString } from '../utils/post';
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
-import { routeToPosts } from '../utils/routes';
+import { routeToProfile } from '../utils/routes';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
-import CSSComponent from '../components/CSSComponent';
 import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import { default as PostComponent } from '../components/Post';
@@ -42,35 +39,53 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-function fetchPost(dispatch, params) {
+function fetchPost({ dispatch, params }) {
     return dispatch(getPost(params.postId));
 }
 
 const hooks = {
-    fetch: ({ dispatch, params }) => fetchPost(dispatch, params),
+    fetch: locals => fetchPost(locals),
 };
 
-@provideHooks(hooks)
-@connect(selector)
-class Post extends CSSComponent {
+const ErrorMessage = ({ details }, { muiTheme }) => {
+    const styles = {
+        container: {
+            fontSize: '16px',
+            height: '100%',
+            lineHeight: '40px',
+            minHeight: '50vh',
+            whiteSpace: 'pre-wrap',
+            width: '100%',
+            color: muiTheme.luno.colors.lightBlack,
+        },
+    };
 
-    static propTypes = {
-        dispatch: PropTypes.func.isRequired,
-        errorDetails: PropTypes.object,
-        params: PropTypes.shape({
-            postId: PropTypes.string.isRequired,
-        }).isRequired,
-        post: InternalPropTypes.PostV1,
-        postId: PropTypes.string,
-    }
+    let message;
+    details.forEach(error => {
+        switch (error.detail) {
+        case 'INVALID':
+        case 'DOES_NOT_EXIST':
+            message = t('No knowledge post found.\nThe post has either been deleted by the author or you have an incorrect URL.');
+            break;
+        }
+    });
 
-    static defaultProps = {
-        errorDetails: Immutable.List(),
-    }
+    return (
+        <p className="row center-xs middle-xs" style={styles.container}>
+            {message}
+        </p>
+    );
+};
 
-    state = {
-        deleteRequested: false,
-    }
+ErrorMessage.propTypes = {
+    details: PropTypes.object.isRequired,
+};
+
+ErrorMessage.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
+
+class Post extends Component {
 
     componentWillMount() {
         resetScroll();
@@ -78,107 +93,70 @@ class Post extends CSSComponent {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.postId !== this.props.params.postId) {
-            fetchPost(nextProps.dispatch, nextProps.params);
+            fetchPost(nextProps);
             resetScroll();
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        if (!nextProps.post && nextProps.errorDetails.size === 0 && this.state.deleteRequested) {
-            routeToPosts(PostStateURLString.LISTED);
-            return false;
-        }
-
-        return super.shouldComponentUpdate(nextProps, nextState);
-    }
-
-    classes() {
-        return {
-            default: {
-                Container: {
-                    style: {
-                        paddingTop: '50px',
-                    },
-                },
-                emptyStateMessageContainer: {
-                    fontSize: '16px',
-                    height: '100%',
-                    lineHeight: '40px',
-                    minHeight: '50vh',
-                    whiteSpace: 'pre-wrap',
-                    width: '100%',
-                    ...fontColors.light,
-                },
-                PostComponent: {
-                    style: {
-                        background: '#FFF',
-                        borderRadius: '3px',
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        padding: '20px',
-                    },
-                },
-            },
-        };
-    }
-
-    onDeletePostTapped(post) {
+    handleDeletePost = (post) => {
+        const { auth: { profile } } = this.context;
         this.props.dispatch(deletePost(post));
-        this.setState({
-            deleteRequested: true,
-        });
-    }
-
-    renderErrorMessage() {
-        const {
-            errorDetails,
-        } = this.props;
-
-        let message = '';
-        errorDetails.forEach(error => {
-            switch (error.detail) {
-                case 'INVALID':
-                case 'DOES_NOT_EXIST':
-                    message = t('No knowledge post found.\nThe post has either been deleted by the author or you have an incorrect URL.');
-                    break;
-            }
-        });
-
-        if (message) {
-            return (
-                <p className="row center-xs middle-xs" style={this.styles().emptyStateMessageContainer}>
-                    {message}
-                </p>
-            );
-        }
-
-    }
-
-    renderPost() {
-        const {
-            errorDetails,
-            post,
-        } = this.props;
-        if (post) {
-            return (
-                <DocumentTitle title={post.title}>
-                    <PostComponent onDeletePostCallback={::this.onDeletePostTapped} post={post} {...this.styles().PostComponent} />
-                </DocumentTitle>
-            );
-        } else if (errorDetails) {
-            return this.renderErrorMessage();
-        } else  {
-            return <CenterLoadingIndicator />;
-        }
+        routeToProfile(profile);
     }
 
     render() {
+        const styles = {
+            container: {
+                paddingTop: '50px',
+            },
+            component: {
+                background: '#FFF',
+                borderRadius: '3px',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                padding: '20px',
+            },
+        };
+
+        const { errorDetails, post } = this.props;
+
+        let content;
+        if (post) {
+            content = (
+                <DocumentTitle title={post.title}>
+                    <PostComponent
+                        onDeletePost={this.handleDeletePost}
+                        post={post}
+                        style={styles.component}
+                    />
+                </DocumentTitle>
+            );
+        } else if (errorDetails.size) {
+            content = <ErrorMessage details={errorDetails} />;
+        } else  {
+            content = <CenterLoadingIndicator />;
+        }
+
         return (
-            <Container {...this.styles().Container} >
-                {this.renderPost()}
+            <Container style={styles.container}>
+                {content}
             </Container>
         );
     }
 
 }
 
-export default Post;
+Post.propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    errorDetails: PropTypes.object,
+    params: PropTypes.shape({
+        postId: PropTypes.string.isRequired,
+    }).isRequired,
+    post: InternalPropTypes.PostV1,
+    postId: PropTypes.string,
+};
+
+Post.contextTypes = {
+    auth: InternalPropTypes.AuthContext.isRequired,
+};
+
+export default provideHooks(hooks)(connect(selector)(Post));
