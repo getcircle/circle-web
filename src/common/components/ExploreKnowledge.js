@@ -2,15 +2,15 @@ import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
-import routes from '../utils/routes';
+import { routeToPost } from '../utils/routes';
 
 import CenterLoadingIndicator from './CenterLoadingIndicator';
 import Explore from './Explore';
 import ExploreList from './ExploreList';
 import { createPostResult } from './SearchResultsList/factories';
 
-function handleSelectItem({ item: { payload } }) {
-    routes.routeToPost(payload);
+function handleSelectItem({ payload }) {
+    routeToPost(payload);
 }
 
 
