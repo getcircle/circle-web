@@ -31,6 +31,7 @@ function createValidator(rules) {
 }
 
 export const profileValidator = createValidator({
+    contacts: arrayOf({type: [required], value: [required]}),
     firstName: [required],
     lastName: [required],
     title: [required],
