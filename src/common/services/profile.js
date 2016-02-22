@@ -1,7 +1,11 @@
 import _ from 'lodash';
 import merge from 'lodash/object/merge';
 import { services } from 'protobufs';
+
+import * as mediaRequests from '../services/media';
 import * as organizationRequests from '../services/organization';
+
+const { MediaTypeV1 } = services.media.containers.media;
 
 export function getProfile(client, parameters={}) {
     let key = Object.values(parameters)[0];
@@ -58,28 +62,44 @@ export function getInitialsForProfile(profile) {
     return [profile.first_name[0], profile.last_name[0]].map((character) => _.capitalize(character)).join('');
 }
 
-export function updateProfile(client, profile, manager) {
-    let request = new services.profile.actions.update_profile.RequestV1({profile: profile});
-    let updateProfile = new Promise((resolve, reject) => {
-        client.sendRequest(request)
-            .then(response => response.finish(resolve, reject, profile))
-            .catch(error => reject(error));
-    });
-
-    if (!!manager) {
-        const updateManager = new Promise((resolve, reject) => {
-            organizationRequests.setManager(client, profile.id, manager.id)
-                .then(() => getReportingDetails(client, profile.id))
+export function updateProfile(client, profile, manager, photo) {
+    let photoPromise;
+    if (!!photo) {
+        photoPromise = new Promise((resolve, reject) => {
+            mediaRequests.uploadMedia(client, photo, MediaTypeV1.PROFILE, profile.id)
                 .then(response => resolve(response));
         });
-        return new Promise((resolve, reject) => {
-            Promise.all([updateProfile, updateManager])
+    } else {
+        photoPromise = Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+        photoPromise.then(data => {
+            /*eslint-disable camelcase*/
+            profile.image_url = data && data.mediaUrl;
+            /*eslint-enable camelcase*/
+            let promises = [];
+
+            let request = new services.profile.actions.update_profile.RequestV1({profile: profile});
+            promises.push(new Promise((resolve, reject) => {
+                client.sendRequest(request)
+                    .then(response => response.finish(resolve, reject, profile))
+                    .catch(error => reject(error));
+            }));
+
+            if (!!manager) {
+                promises.push(new Promise((resolve, reject) => {
+                    organizationRequests.setManager(client, profile.id, manager.id)
+                        .then(() => getReportingDetails(client, profile.id))
+                        .then(response => resolve(response));
+                }));
+            }
+
+            Promise.all(promises)
                 .then(values => resolve(merge(...values)))
                 .catch(error => reject(error));
         });
-    } else {
-        return updateProfile;
-    }
+    });
 }
 
 export function getReportingDetails(client, profileId) {

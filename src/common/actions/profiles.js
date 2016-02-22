@@ -29,7 +29,7 @@ export function getExtendedProfile(profileId) {
     };
 }
 
-export function updateProfile(profile, manager) {
+export function updateProfile(profile, manager, photo) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -37,7 +37,7 @@ export function updateProfile(profile, manager) {
                 types.UPDATE_PROFILE_SUCCESS,
                 types.UPDATE_PROFILE_FAILURE,
             ],
-            remote: (client) => requests.updateProfile(client, profile, manager),
+            remote: (client) => requests.updateProfile(client, profile, manager, photo),
         },
     };
 }

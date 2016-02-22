@@ -19,7 +19,6 @@ import FormPersonSelector from './FormPersonSelector';
 import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
 
-const { MediaTypeV1 } = services.media.containers.media;
 const { ContactMethodV1 } = services.profile.containers;
 
 export const fieldNames = [
@@ -51,7 +50,7 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-export function getUpdatedProfile({ fields, profile }, overrides) {
+export function getUpdatedProfile({ fields, profile }) {
     const contactMethods = fields.contacts.map(c => {
         return new ContactMethodV1({
             /*eslint-disable camelcase*/
@@ -74,7 +73,7 @@ export function getUpdatedProfile({ fields, profile }, overrides) {
     for (let field in protobufFields) {
         updatedProfile[field] = protobufFields[field].value;
     }
-    updatedProfile = Object.assign({}, profile, updatedProfile, overrides);
+    updatedProfile = Object.assign({}, profile, updatedProfile);
     return updatedProfile;
 }
 
@@ -108,12 +107,6 @@ export class ProfileDetailForm extends Component {
             this.setInitialValues();
             this.props.resetForm();
         }
-
-        if (this.props.mediaUrl  === '' && nextProps.mediaUrl) {
-            /*eslint-disable camelcase*/
-            this.updateProfile({image_url: nextProps.mediaUrl});
-            /*eslint-enable camelcase*/
-        }
     }
 
     setInitialValues() {
@@ -140,21 +133,6 @@ export class ProfileDetailForm extends Component {
         dispatch(action);
     }
 
-    // Public Methods
-
-    updateProfile(overrides) {
-        const { dispatch, dirty, fields, profile } = this.props;
-        if (dirty) {
-            tracker.trackProfileUpdate(
-                profile.id,
-                this.getFieldsThatChanged(),
-            );
-        }
-
-        const updatedProfile = getUpdatedProfile({ fields, profile }, overrides);
-        dispatch(updateProfile(updatedProfile, fields.manager.value));
-    }
-
     getFieldsThatChanged() {
         return fieldNames.filter(fieldName => {
             if (fieldName.includes('[].')) {
@@ -167,17 +145,18 @@ export class ProfileDetailForm extends Component {
     }
 
     submit = (values, dispatch) => {
-        const { profile } = this.props;
-
-        if (!values.photo.existing) {
-            dispatch(uploadMedia(
-                values.photo,
-                MediaTypeV1.PROFILE,
-                profile.id
-            ));
-        } else {
-            this.updateProfile();
+        const { dirty, fields, profile } = this.props;
+        const { manager, photo } = values;
+        if (dirty) {
+            tracker.trackProfileUpdate(
+                profile.id,
+                this.getFieldsThatChanged(),
+            );
         }
+
+        const updatedProfile = getUpdatedProfile({ fields, profile });
+        const newPhoto = photo.existing ? null : photo;
+        dispatch(updateProfile(updatedProfile, manager, newPhoto));
     }
 
     handleCancel = () => {

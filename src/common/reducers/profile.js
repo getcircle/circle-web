@@ -9,7 +9,7 @@ const initialState = Immutable.fromJS({
 
 export default function updateProfile(state = initialState, action) {
     switch(action.type) {
-    case types.UPDATE_PROFILE, types.MEDIA_UPLOAD:
+    case types.UPDATE_PROFILE:
         return state.merge({formSubmitting: true});
 
     case types.UPDATE_PROFILE_FAILURE:
