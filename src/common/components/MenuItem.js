@@ -19,7 +19,7 @@ class MenuItem extends Component {
 
 MenuItem.propTypes = {
     desktop: PropTypes.bool,
-    onTouchTap: PropTypes.func.isRequired,
+    onTouchTap: PropTypes.func,
     text: PropTypes.string.isRequired,
 }
 

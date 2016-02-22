@@ -51,7 +51,9 @@ const IconMenu = (props) => {
 
 IconMenu.propTypes = {
     children: PropTypes.node,
-    iconElement: PropTypes.node.isRequired,
+    iconButtonElement: PropTypes.node,
+    iconButtonStyle: PropTypes.object,
+    iconElement: PropTypes.node,
     menuStyle: PropTypes.object,
     onRequestChange: PropTypes.func,
     open: PropTypes.bool,

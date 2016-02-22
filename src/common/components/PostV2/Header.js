@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 
+import { showConfirmDeleteModal } from '../../actions/posts';
 import t from '../../utils/gettext';
+import { routeToEditPost } from '../../utils/routes';
 
 import CircularShareShortcutMenu from '../CircularShareMenu';
 import InternalPropTypes from '../InternalPropTypes';
@@ -26,13 +28,22 @@ ShareShortcutMenu.contextTypes = {
     }).isRequired,
 };
 
-const AuthorOptionsMenu = ({ post }) => {
+const AuthorOptionsMenu = ({ post }, { store: { dispatch } }) => {
+    function handleEdit() { routeToEditPost(post); }
+    function handleDelete() { dispatch(showConfirmDeleteModal(post)); }
+
     return (
         <MoreMenu style={{marginLeft: 10}}>
-            <MenuItem text={t('Edit')} />
-            <MenuItem text={t('Delete')} />
+            <MenuItem onTouchTap={handleEdit} text={t('Edit')} />
+            <MenuItem onTouchTap={handleDelete} text={t('Delete')} />
         </MoreMenu>
     );
+};
+
+AuthorOptionsMenu.contextTypes = {
+    store: PropTypes.shape({
+        dispatch: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 const Header = ({ post }, { auth, muiTheme }) => {

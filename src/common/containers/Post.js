@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
+import { services } from 'protobufs';
 
 import { Snackbar } from 'material-ui';
 
-import { deletePost, getPost, hideLinkCopiedSnackbar } from '../actions/posts';
+import { deletePost, hideConfirmDeleteModal, hideLinkCopiedSnackbar, getPost } from '../actions/posts';
 
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
@@ -14,6 +15,7 @@ import t from '../utils/gettext';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
+import DeletePostConfirmation from '../components/DeletePostConfirmation';
 import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import { default as PostComponent } from '../components/PostV2';
@@ -23,8 +25,9 @@ const selector = selectors.createImmutableSelector(
         selectors.cacheSelector,
         selectors.postSelector,
         selectors.routerParametersSelector,
+        selectors.deletePostSelector,
     ],
-    (cacheState, postState, paramsState) => {
+    (cacheState, postState, paramsState, deletePostState) => {
         let post;
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
@@ -38,6 +41,8 @@ const selector = selectors.createImmutableSelector(
             errorDetails: postState.get('errorDetails'),
             post: post,
             postId: postId,
+            modalVisible: deletePostState.get('modalVisible'),
+            pendingPostToDelete: deletePostState.get('pendingPostToDelete'),
         };
     }
 );
@@ -101,40 +106,30 @@ class Post extends Component {
         }
     }
 
-    handleDeletePost = (post) => {
-        const { auth: { profile } } = this.context;
-        this.props.dispatch(deletePost(post));
-        routeToProfile(profile);
-    }
-
-    handleRequestClose = () => {
+    handleCloseSnackbar = () => {
         this.props.dispatch(hideLinkCopiedSnackbar());
     }
 
-    render() {
-        const styles = {
-            container: {
-                paddingTop: '50px',
-            },
-            component: {
-                background: '#FFF',
-                borderRadius: '3px',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                padding: '20px',
-            },
-        };
+    handleCloseDeleteConfirmation = () => {
+        this.props.dispatch(hideConfirmDeleteModal());
+    }
 
-        const { errorDetails, post } = this.props;
+    handleDeleteConfirmation = () => {
+        const { dispatch, pendingPostToDelete } = this.props;
+        const { auth: { profile } } = this.context;
+        dispatch(hideConfirmDeleteModal());
+        dispatch(deletePost(pendingPostToDelete));
+        routeToProfile(profile);
+    }
+
+    render() {
+        const { errorDetails, modalVisible, pendingPostToDelete, post } = this.props;
 
         let content;
         if (post) {
             content = (
                 <DocumentTitle title={post.title}>
-                    <PostComponent
-                        onDeletePost={this.handleDeletePost}
-                        post={post}
-                        style={styles.component}
-                    />
+                    <PostComponent post={post} />
                 </DocumentTitle>
             );
         } else if (errorDetails.size) {
@@ -143,20 +138,22 @@ class Post extends Component {
             content = <CenterLoadingIndicator />;
         }
 
-        const snackbar = (
-            <Snackbar
-                autoHideDuration={2000}
-                bodyStyle={{minWidth: 'inherit'}}
-                message={t('Link copied to clipboard!')}
-                onRequestClose={this.handleRequestClose}
-                open={this.props.showLinkCopied}
-            />
-        );
-
         return (
-            <Container style={styles.container}>
+            <Container style={{paddingTop: '50px'}}>
                 {content}
-                {snackbar}
+                <Snackbar
+                    autoHideDuration={2000}
+                    bodyStyle={{minWidth: 'inherit'}}
+                    message={t('Link copied to clipboard!')}
+                    onRequestClose={this.handleCloseSnackbar}
+                    open={this.props.showLinkCopied}
+                />
+                <DeletePostConfirmation
+                    onRequestClose={this.handleCloseDeleteConfirmation}
+                    onSave={this.handleDeleteConfirmation}
+                    open={modalVisible}
+                    post={pendingPostToDelete}
+                />
             </Container>
         );
     }
@@ -166,9 +163,11 @@ class Post extends Component {
 Post.propTypes = {
     dispatch: PropTypes.func.isRequired,
     errorDetails: PropTypes.object,
+    modalVisible: PropTypes.bool,
     params: PropTypes.shape({
         postId: PropTypes.string.isRequired,
     }).isRequired,
+    pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
     post: InternalPropTypes.PostV1,
     postId: PropTypes.string,
     showLinkCopied: PropTypes.bool,
