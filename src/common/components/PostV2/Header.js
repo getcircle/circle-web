@@ -66,8 +66,8 @@ const Header = ({ post }, { auth, muiTheme }) => {
                 <h1 style={styles.header}>{post.title}</h1>
             </div>
             <div className="row between-xs middle-xs">
-                <Author className="col-xs-6" post={post} />
-                <div>
+                <Author className="col-xs" post={post} />
+                <div className="col-xs-3 row end-xs">
                     <ShareShortcutMenu post={post} />
                     {authorOptions}
                 </div>
