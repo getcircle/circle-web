@@ -1,12 +1,37 @@
 import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
-import { routeToPost } from '../utils/routes';
+import { routeToDrafts, routeToNewPost, routeToPost } from '../utils/routes';
 import { showConfirmDeleteModal } from '../actions/posts';
 
 import DetailSection from './DetailSectionV2';
 import InfinitePostsList from './InfinitePostsList';
 import PostItemMenu, { MENU_CHOICES } from './PostItemMenu';
+import EditIcon from './EditIcon';
+import IconMenu from './IconMenu';
+import MenuItem from './MenuItem';
+
+const EditKnowledgeMenu = (props, { muiTheme }) => {
+    const icon = (
+        <EditIcon stroke={muiTheme.luno.tintColor} />
+    );
+    return (
+        <IconMenu
+            iconElement={icon}
+        >
+            <MenuItem onTouchTap={routeToNewPost} text={t('Add Knowledge')} />
+            <MenuItem onTouchTap={routeToDrafts} text={t('My Drafts')} />
+        </IconMenu>
+    );
+};
+
+EditKnowledgeMenu.propTypes = {
+    hover: PropTypes.bool,
+};
+
+EditKnowledgeMenu.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
 
 const Posts = (props, { store: { dispatch } }) => {
 
@@ -56,6 +81,7 @@ const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsLoa
         <div>
             <section className="row middle-xs">
                 <h1 style={theme.h1}>{t('Knowledge')}</h1>
+                <EditKnowledgeMenu />
             </section>
             <section className="row">
                 <section className="col-xs-8" style={theme.section}>

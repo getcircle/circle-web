@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { MenuItem } from 'material-ui';
+import { MenuItem as MaterialMenuItem } from 'material-ui';
 
-class MoreMenuItem extends Component {
+class MenuItem extends Component {
 
     render() {
         const { onTouchTap, text } = this.props;
@@ -16,7 +16,7 @@ class MoreMenuItem extends Component {
             },
         };
         return (
-            <MenuItem
+            <MaterialMenuItem
                 innerDivStyle={styles.innerDiv}
                 onTouchTap={onTouchTap}
                 primaryText={text}
@@ -27,10 +27,10 @@ class MoreMenuItem extends Component {
 
 };
 
-MoreMenuItem.propTypes = {
+MenuItem.propTypes = {
     onTouchTap: PropTypes.func.isRequired,
     text: PropTypes.string.isRequired,
 }
 
-export default MoreMenuItem;
+export default MenuItem;
 

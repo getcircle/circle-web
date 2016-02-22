@@ -11,7 +11,7 @@ import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 import PlusIcon from './PlusIcon';
 import InternalPropTypes from './InternalPropTypes';
 import MoreMenu from './MoreMenu';
-import MoreMenuItem from './MoreMenuItem';
+import MenuItem from './MenuItem';
 import ProfilesGrid from './ProfilesGrid';
 import TeamAddMembersForm from './TeamAddMembersForm';
 
@@ -28,8 +28,8 @@ const TeamCoordinatorMenu = ({ hover, onMenuChoice, profile }) => {
         <MoreMenu
             hover={hover}
         >
-            <MoreMenuItem onTouchTap={makeMember} text={t('Make Member')} />
-            <MoreMenuItem onTouchTap={remove} text={t('Remove')} />
+            <MenuItem onTouchTap={makeMember} text={t('Make Member')} />
+            <MenuItem onTouchTap={remove} text={t('Remove')} />
         </MoreMenu>
     );
 };
@@ -46,8 +46,8 @@ const TeamMemberMenu = ({ hover, onMenuChoice, profile }) => {
         <MoreMenu
             hover={hover}
         >
-            <MoreMenuItem onTouchTap={makeCoordinator} text={t('Make Coordinator')} />
-            <MoreMenuItem onTouchTap={remove} text={t('Remove')} />
+            <MenuItem onTouchTap={makeCoordinator} text={t('Make Coordinator')} />
+            <MenuItem onTouchTap={remove} text={t('Remove')} />
         </MoreMenu>
     );
 };
