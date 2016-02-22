@@ -4,7 +4,7 @@ import { services } from 'protobufs';
 
 import t from '../utils/gettext';
 
-import MoreMenu from './MoreMenu';
+import HoverMoreMenu from './HoverMoreMenu';
 import MenuItem from './MenuItem';
 
 export const MENU_CHOICES = keymirror({
@@ -16,10 +16,10 @@ const PostItemMenu = ({ hover, onMenuChoice, post }) => {
     function editPost() { onMenuChoice(MENU_CHOICES.EDIT, post); }
     function deletePost() { onMenuChoice(MENU_CHOICES.DELETE, post); }
     return (
-        <MoreMenu hover={hover}>
+        <HoverMoreMenu hover={hover}>
             <MenuItem onTouchTap={editPost} text={t('Edit')} />
             <MenuItem onTouchTap={deletePost} text={t('Delete')} />
-        </MoreMenu>
+        </HoverMoreMenu>
     );
 };
 

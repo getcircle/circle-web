@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import HoverIconMenu from './HoverIconMenu';
 import MoreIcon from './MoreIcon';
 
-const MoreMenu = ({children, hover}, {muiTheme}) => {
+const HoverMoreMenu = ({children, hover}, {muiTheme}) => {
     const { tintColor } = muiTheme.luno;
     const styles = {
         button: {
@@ -47,12 +47,12 @@ const MoreMenu = ({children, hover}, {muiTheme}) => {
         </HoverIconMenu>
     );
 };
-MoreMenu.propTypes = {
+HoverMoreMenu.propTypes = {
     children: PropTypes.node,
     hover: PropTypes.bool,
 };
-MoreMenu.contextTypes = {
+HoverMoreMenu.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-export default MoreMenu;
+export default HoverMoreMenu;

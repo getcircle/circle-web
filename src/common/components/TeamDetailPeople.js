@@ -10,7 +10,7 @@ import DetailSection from './DetailSectionV2';
 import InfiniteProfilesGrid from './InfiniteProfilesGrid';
 import PlusIcon from './PlusIcon';
 import InternalPropTypes from './InternalPropTypes';
-import MoreMenu from './MoreMenu';
+import HoverMoreMenu from './HoverMoreMenu';
 import MenuItem from './MenuItem';
 import ProfilesGrid from './ProfilesGrid';
 import TeamAddMembersForm from './TeamAddMembersForm';
@@ -25,12 +25,12 @@ const TeamCoordinatorMenu = ({ hover, onMenuChoice, profile }) => {
     function makeMember() { onMenuChoice(menuChoices.MAKE_MEMBER, profile); }
     function remove() { onMenuChoice(menuChoices.REMOVE, profile); }
     return (
-        <MoreMenu
+        <HoverMoreMenu
             hover={hover}
         >
             <MenuItem onTouchTap={makeMember} text={t('Make Member')} />
             <MenuItem onTouchTap={remove} text={t('Remove')} />
-        </MoreMenu>
+        </HoverMoreMenu>
     );
 };
 TeamCoordinatorMenu.propTypes = {
@@ -43,12 +43,12 @@ const TeamMemberMenu = ({ hover, onMenuChoice, profile }) => {
     function makeCoordinator() { onMenuChoice(menuChoices.MAKE_COORDINATOR, profile); }
     function remove() { onMenuChoice(menuChoices.REMOVE, profile); }
     return (
-        <MoreMenu
+        <HoverMoreMenu
             hover={hover}
         >
             <MenuItem onTouchTap={makeCoordinator} text={t('Make Coordinator')} />
             <MenuItem onTouchTap={remove} text={t('Remove')} />
-        </MoreMenu>
+        </HoverMoreMenu>
     );
 };
 TeamMemberMenu.propTypes = {
