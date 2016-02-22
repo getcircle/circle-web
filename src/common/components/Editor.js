@@ -335,11 +335,12 @@ class Editor extends CSSComponent {
     render() {
         const {
             placeholder,
+            ...other,
         } = this.props;
 
         const className = 'luno-editor-container ' + (this.state.dragStart ? 'dropzone' : '');
         return (
-            <div className={className} ref="lunoEditorContainer">
+            <div className={className} ref="lunoEditorContainer" {...other}>
                 <input
                     id={this.inputId}
                     onChange={::this.handleChange}

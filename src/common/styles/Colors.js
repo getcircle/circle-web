@@ -4,6 +4,7 @@ export default {
     offWhite: '#FCFCFC',
 
     darkWhite: 'rgba(255, 255, 255, 0.8)',
+    lightWhite: '#E6E6E6',
     minWhite: 'rgba(255, 255, 255, 0.1)',
 
     darkBlack: 'rgba(0, 0, 0, 0.8)',

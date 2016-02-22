@@ -1,4 +1,5 @@
-$fontSize: 18px;
+$fontSize: 1.8rem;
+$lineHeight: 2.6rem;
 $marginTop: 0px;
 $toolbarHighlightColor: rgba($tintColor, 0.2);
 
@@ -137,7 +138,7 @@ trix-editor:empty:not(:focus)::before {
 // Edit mode only
 trix-editor.luno-editor {
     background-color: #fff;
-    padding: 16px;
+    padding-top: 30px;
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
@@ -148,14 +149,10 @@ trix-editor.luno-editor {
 .luno-editor, trix-editor.luno-editor {
     border: 0;
     border-radius: 0;
-    color: rgba(0,0,0,0.8);
     font-size: $fontSize;
-    font-weight: 400;
-    font-style: normal;
-    line-height: 1.78;
-    letter-spacing: -0.003em;
+    line-height: $lineHeight;
     margin: 0;
-    min-height: 300px;
+    min-height: 200px;
     outline: none;
 }
 
