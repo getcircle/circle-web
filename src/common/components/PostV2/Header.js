@@ -1,18 +1,29 @@
 import React, { PropTypes } from 'react';
 
+import t from '../../utils/gettext';
+
 import CircularShareShortcutMenu from '../CircularShareMenu';
+import InternalPropTypes from '../InternalPropTypes';
 import MenuItem from '../MenuItem';
 import MoreMenu from '../MoreMenu';
 
 import Author from './Author';
+import { createShareMenuItems } from './helpers';
 
-const ShareShortcutMenu = ({ post }) => {
+const ShareShortcutMenu = ({ post }, { auth, store: { dispatch } }) => {
+    // TODO track sharing of the post
     return (
         <CircularShareShortcutMenu>
-            <MenuItem text={t('Email')} />
-            <MenuItem text={t('Copy')} />
+            {createShareMenuItems(post, auth, dispatch)}
         </CircularShareShortcutMenu>
     );
+};
+
+ShareShortcutMenu.contextTypes = {
+    auth: InternalPropTypes.AuthContext.isRequired,
+    store: PropTypes.shape({
+        dispatch: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 const AuthorOptionsMenu = ({ post }) => {

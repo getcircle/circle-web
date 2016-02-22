@@ -4,6 +4,7 @@ import { UPDATE_PATH } from 'react-router-redux'
 import * as types from '../constants/actionTypes';
 
 const initialState = Immutable.fromJS({
+    showLinkCopied: false,
     ids: Immutable.Set(),
     loading: false,
     draftPost: null,
@@ -18,6 +19,11 @@ export default function post(state = initialState, action) {
         return state.merge({
             loading: true,
         });
+
+    case types.SHOW_POST_LINK_COPIED_SNACKBAR:
+        return state.set('showLinkCopied', true);
+    case types.HIDE_POST_LINK_COPIED_SNACKBAR:
+        return state.set('showLinkCopied', false);
 
     case types.CREATE_POST_SUCCESS:
         return state.merge({

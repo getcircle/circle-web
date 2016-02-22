@@ -131,3 +131,11 @@ export function showConfirmDeleteModal(post) {
 export function hideConfirmDeleteModal() {
     return {type: types.HIDE_CONFIRM_DELETE_MODAL};
 }
+
+export function showLinkCopiedSnackbar() {
+    return {type: types.SHOW_POST_LINK_COPIED_SNACKBAR};
+}
+
+export function hideLinkCopiedSnackbar() {
+    return {type: types.HIDE_POST_LINK_COPIED_SNACKBAR};
+}

@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
-import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
 
-import { deletePost, getPost } from '../actions/posts';
+import { Snackbar } from 'material-ui';
+
+import { deletePost, getPost, hideLinkCopiedSnackbar } from '../actions/posts';
 
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
@@ -31,7 +32,9 @@ const selector = selectors.createImmutableSelector(
             post = retrievePost(postId, cache, ['content', 'by_profile']);
         }
 
+        const showLinkCopied = postState.get('showLinkCopied');
         return {
+            showLinkCopied,
             errorDetails: postState.get('errorDetails'),
             post: post,
             postId: postId,
@@ -104,6 +107,10 @@ class Post extends Component {
         routeToProfile(profile);
     }
 
+    handleRequestClose = () => {
+        this.props.dispatch(hideLinkCopiedSnackbar());
+    }
+
     render() {
         const styles = {
             container: {
@@ -136,9 +143,20 @@ class Post extends Component {
             content = <CenterLoadingIndicator />;
         }
 
+        const snackbar = (
+            <Snackbar
+                autoHideDuration={2000}
+                bodyStyle={{minWidth: 'inherit'}}
+                message={t('Link copied to clipboard!')}
+                onRequestClose={this.handleRequestClose}
+                open={this.props.showLinkCopied}
+            />
+        );
+
         return (
             <Container style={styles.container}>
                 {content}
+                {snackbar}
             </Container>
         );
     }
@@ -153,6 +171,7 @@ Post.propTypes = {
     }).isRequired,
     post: InternalPropTypes.PostV1,
     postId: PropTypes.string,
+    showLinkCopied: PropTypes.bool,
 };
 
 Post.contextTypes = {

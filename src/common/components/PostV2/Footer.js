@@ -1,12 +1,16 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import t from '../../utils/gettext';
+
+import InternalPropTypes from '../InternalPropTypes';
 import IconMenu from '../IconMenu';
-import MenuItem from '../MenuItem';
 import RoundedButton from '../RoundedButton';
 import ShareIcon from '../ShareIconV2';
 
-const ShareMenu = ({ post }, { muiTheme}) => {
+import { createShareMenuItems } from './helpers';
+
+const ShareMenu = ({ post }, { auth, muiTheme, store: { dispatch } }) => {
     const styles = {
         shareLabel: {
             paddingLeft: 0,
@@ -33,8 +37,7 @@ const ShareMenu = ({ post }, { muiTheme}) => {
         <IconMenu
             iconButtonElement={iconButton}
         >
-            <MenuItem text={t('Email')} />
-            <MenuItem text={t('Copy')} />
+            {createShareMenuItems(post, auth, dispatch)}
         </IconMenu>
     );
 };
@@ -44,7 +47,11 @@ ShareMenu.propTypes = {
 };
 
 ShareMenu.contextTypes = {
+    auth: InternalPropTypes.AuthContext.isRequired,
     muiTheme: PropTypes.object.isRequired,
+    store: PropTypes.shape({
+        dispatch: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 const Footer = ({ post }, { muiTheme }) => {
