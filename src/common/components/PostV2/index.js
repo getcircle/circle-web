@@ -4,7 +4,7 @@ import { services } from 'protobufs';
 import DetailContent from '../DetailContent';
 
 import Content from './Content';
-import Header from './Header';
+import Header, { Author, AuthorOptionsMenu } from './Header';
 import Footer from './Footer';
 
 const Post = ({ onDelete, post, ...other }) => {
@@ -22,5 +22,6 @@ Post.propTypes = {
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 
-export { Content, Footer, Header };
+// export for testing
+export { Author, AuthorOptionsMenu, Content, Footer, Header };
 export default Post;

@@ -35,7 +35,7 @@ const AuthorOptionsMenu = ({ post }) => {
     );
 };
 
-const Header = ({ post }, { muiTheme }) => {
+const Header = ({ post }, { auth, muiTheme }) => {
     const styles = {
         header: {
             fontSize: '3.2rem',
@@ -43,6 +43,11 @@ const Header = ({ post }, { muiTheme }) => {
             fontWeight: muiTheme.luno.fontWeights.bold,
         },
     };
+
+    let authorOptions;
+    if (post.by_profile.id === auth.profile.id) {
+        authorOptions = <AuthorOptionsMenu post={post} />;
+    }
 
     return (
         <header>
@@ -53,7 +58,7 @@ const Header = ({ post }, { muiTheme }) => {
                 <Author className="col-xs-6" post={post} />
                 <div>
                     <ShareShortcutMenu post={post} />
-                    <AuthorOptionsMenu post={post} />
+                    {authorOptions}
                 </div>
             </div>
         </header>
@@ -61,7 +66,10 @@ const Header = ({ post }, { muiTheme }) => {
 };
 
 Header.contextTypes = {
+    auth: InternalPropTypes.AuthContext.isRequired,
     muiTheme: PropTypes.object.isRequired,
 };
 
+// export for testing
+export { Author, AuthorOptionsMenu };
 export default Header;
