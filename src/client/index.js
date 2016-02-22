@@ -47,9 +47,9 @@ browserHistory.listen(location => {
         };
 
         // Don't fetch data for initial route, server has done the work
-        if (window.INITIAL_STATE) {
+        if (window.__INITIAL_STATE) {
             // Delete global data so subsequent data fetches can occur
-            delete window.INITIAL_STATE;
+            delete window.__INITIAL_STATE;
         } else {
             trigger('fetch', renderProps.components, locals);
         }
