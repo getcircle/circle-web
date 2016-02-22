@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
-import { routeToDrafts, routeToNewPost, routeToPost } from '../utils/routes';
+import { routeToDrafts, routeToNewPost, routeToEditPost } from '../utils/routes';
 import { showConfirmDeleteModal } from '../actions/posts';
 
 import CenterLoadingIndicator from './CenterLoadingIndicator';
@@ -39,7 +39,7 @@ const Posts = (props, { store: { dispatch } }) => {
     function handleMenuChoice(choice, post) {
         switch(choice) {
         case MENU_CHOICES.EDIT:
-            routeToPost(post);
+            routeToEditPost(post);
             break;
         case MENU_CHOICES.DELETE:
             dispatch(showConfirmDeleteModal(post));
