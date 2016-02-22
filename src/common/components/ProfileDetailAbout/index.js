@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import InternalPropTypes from '../InternalPropTypes';
 import t from '../../utils/gettext';
 
 import DetailSection from '../DetailSectionV2';
@@ -39,17 +40,17 @@ const DirectReports = buildProfileList(t('Direct Reports'));
 const Manager = buildProfileList(t('Manager'));
 const Peers = buildProfileList(t('Peers'));
 
-const ProfileDetailAbout = (props, { muiTheme }) => {
+const ProfileDetailAbout = (props, { muiTheme, auth }) => {
     const {
         dispatch,
         directReports,
-        isLoggedInUser,
         manager,
         peers,
         profile,
         memberships
     } = props;
     const theme = muiTheme.luno.detail;
+    const isLoggedInUser = profile.id === auth.profile.id;
 
     const editButton = isLoggedInUser ? <EditButton dispatch={dispatch} /> : null;
     const managerSection = manager ? <Manager profiles={[manager]} /> : null;
@@ -92,6 +93,7 @@ ProfileDetailAbout.propTypes = {
 };
 
 ProfileDetailAbout.contextTypes = {
+    auth: InternalPropTypes.AuthContext.isRequired,
     muiTheme: PropTypes.object.isRequired,
 };
 

@@ -17,7 +17,6 @@ function setup(propsOverrides, profileOverrides) {
     const props = {
         dispatch: expect.createSpy(),
         hasMorePosts: false,
-        isLoggedInUser: true,
         profile,
         coordinators: [],
         ...propsOverrides,

@@ -23,26 +23,18 @@ import ProfileDetail from '../components/ProfileDetailV2';
 
 const selector = selectors.createImmutableSelector(
     [
-        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.routerParametersSelector,
         selectors.profileMembershipsSelector,
         selectors.postsSelector,
         selectors.deletePostSelector,
     ],
-    (authenticationState, cacheState, parametersState, membershipsState, postsState, deletePostState) => {
+    (cacheState, parametersState, membershipsState, postsState, deletePostState) => {
         let memberships, posts, postsLoaded, postsLoading, postsNextRequest;
 
         const { profileId } = parametersState;
         const cache = cacheState.toJS();
         const profile = retrieveProfile(profileId, cache);
-        const authenticatedProfile = authenticationState.get('profile');
-        let isLoggedInUser;
-        if (authenticatedProfile && authenticatedProfile.id === profileId) {
-            isLoggedInUser = true;
-        } else {
-            isLoggedInUser = false;
-        }
 
         const reportingDetails = retrieveReportingDetails(profileId, cache);
         if (membershipsState.has(profileId)) {
@@ -66,7 +58,6 @@ const selector = selectors.createImmutableSelector(
         }
 
         return {
-            isLoggedInUser,
             memberships,
             posts,
             postsLoaded,
