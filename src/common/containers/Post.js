@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
+import { browserHistory } from 'react-router';
 
 import { Snackbar } from 'material-ui';
 
@@ -9,7 +10,6 @@ import { deletePost, hideConfirmDeleteModal, hideLinkCopiedSnackbar, getPost } f
 
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
-import { routeToProfile } from '../utils/routes';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
@@ -116,10 +116,9 @@ class Post extends Component {
 
     handleDeleteConfirmation = () => {
         const { dispatch, pendingPostToDelete } = this.props;
-        const { auth: { profile } } = this.context;
         dispatch(hideConfirmDeleteModal());
         dispatch(deletePost(pendingPostToDelete));
-        routeToProfile(profile);
+        browserHistory.goBack();
     }
 
     render() {
@@ -171,10 +170,6 @@ Post.propTypes = {
     post: InternalPropTypes.PostV1,
     postId: PropTypes.string,
     showLinkCopied: PropTypes.bool,
-};
-
-Post.contextTypes = {
-    auth: InternalPropTypes.AuthContext.isRequired,
 };
 
 export default provideHooks(hooks)(connect(selector)(Post));
