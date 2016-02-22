@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
+import { browserHistory } from 'react-router';
 
 import { showConfirmDeleteModal } from '../../actions/posts';
 import t from '../../utils/gettext';
-import { routeToEditPost } from '../../utils/routes';
 
 import CircularShareShortcutMenu from '../CircularShareMenu';
 import InternalPropTypes from '../InternalPropTypes';
@@ -29,7 +29,7 @@ ShareShortcutMenu.contextTypes = {
 };
 
 const AuthorOptionsMenu = ({ post }, { store: { dispatch } }) => {
-    function handleEdit() { routeToEditPost(post); }
+    function handleEdit() { browserHistory.goBack(); }
     function handleDelete() { dispatch(showConfirmDeleteModal(post)); }
 
     return (
