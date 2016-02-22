@@ -65,14 +65,17 @@ class FormPersonSelector extends Component {
         const { expanded } = this.state;
         const styles = {
             autoComplete: {
-                borderTop: `1px solid ${Colors.minBlack}`,
                 height: 'initial',
-                padding: '10px',
+                padding: 0,
                 zIndex: 10000,
             },
+            autoCompleteInput: {
+                borderLeft: `1px solid ${Colors.minBlack}`,
+                borderRadius: 2,
+                borderRight: `1px solid ${Colors.minBlack}`,
+                padding: '10px',
+            },
             container: {
-                border: `1px solid ${Colors.minBlack}`,
-                borderRadius: '2px',
                 flexWrap: 'wrap',
                 paddingLeft: 0,
                 paddingRight: 0,
@@ -81,7 +84,11 @@ class FormPersonSelector extends Component {
                 position: 'relative',
             },
             listContainerStyle: {
+                borderLeft: `1px solid ${Colors.minBlack}`,
+                borderRight: `1px solid ${Colors.minBlack}`,
+                borderBottom: `1px solid ${Colors.minBlack}`,
                 boxShadow: '0px 12px 24px black',
+                marginTop: 0,
                 position: 'absolute',
                 zIndex: 10,
             },
@@ -97,7 +104,7 @@ class FormPersonSelector extends Component {
                     hasItemDivider={false}
                     ignoreProfileIds={ignoreProfileIds}
                     inputContainerStyle={{height: 'none'}}
-                    inputStyle={{paddingLeft: 0}}
+                    inputStyle={styles.autoCompleteInput}
                     listContainerStyle={listStyle}
                     onBlur={this.handleBlurAutoComplete}
                     onSelectProfile={this.handleSelectProfile}
