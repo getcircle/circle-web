@@ -109,15 +109,8 @@ class DraftPosts extends Component {
     render() {
         const { dispatch, modalVisible, pendingPostToDelete } = this.props;
         const { muiTheme } = this.context;
-        const styles = {
-            root: {
-                backgroundColor: muiTheme.luno.colors.offWhite,
-                height: '100%',
-                width: '100%',
-            },
-        };
         return (
-            <Container style={styles.root} title={t('My Drafts')}>
+            <Container style={muiTheme.luno.managePage.container} title={t('My Drafts')}>
                 <Header appBarStyle={{boxShadow: 'none'}} dispatch={dispatch} />
                 <DraftPostsComponent
                     onLoadMore={this.handleLoadMore}

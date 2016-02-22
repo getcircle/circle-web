@@ -45,11 +45,6 @@ export function getCustomTheme(userAgent) {
             buttonText: '1.1rem',
         },
         tintColor: tintColor,
-        avatar: {
-            left: 5,
-            height: 50,
-            width: 50,
-        },
         circularIconMenu: {
             button: {
                 padding: 0,
@@ -171,6 +166,33 @@ export function getCustomTheme(userAgent) {
                 top: 0,
                 left: 0,
                 backgroundColor: Colors.minWhite,
+            },
+        },
+        listItemProfile: {
+            avatar: {
+                left: 5,
+                height: 50,
+                width: 50,
+            },
+            secondaryText: {
+                fontSize: '1.3rem',
+                color: Colors.lightBlack,
+                marginTop: 5,
+            },
+            primaryText: {
+                fontSize: '1.6rem',
+                lineHeight: '1.9rem',
+            },
+            innerDivStyle: {
+                paddingBottom: 20,
+                paddingTop: 24,
+            },
+        },
+        managePage: {
+            container: {
+                backgroundColor: Colors.offWhite,
+                height: '100%',
+                width: '100%',
             },
         },
         searchResults: {

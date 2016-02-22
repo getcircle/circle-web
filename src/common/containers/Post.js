@@ -40,7 +40,6 @@ const selector = selectors.createImmutableSelector(
             showLinkCopied,
             errorDetails: postState.get('errorDetails'),
             post: post,
-            postId: postId,
             modalVisible: deletePostState.get('modalVisible'),
             pendingPostToDelete: deletePostState.get('pendingPostToDelete'),
         };
@@ -168,7 +167,6 @@ Post.propTypes = {
     }).isRequired,
     pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
     post: InternalPropTypes.PostV1,
-    postId: PropTypes.string,
     showLinkCopied: PropTypes.bool,
 };
 
