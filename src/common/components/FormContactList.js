@@ -7,7 +7,7 @@ import FormRecordList from './FormRecordList';
 import FormSelectField from './FormSelectField';
 import FormTextField from './FormTextField';
 
-function contactRecordComponent(types) {
+function createContactRecordComponent(types) {
     const contactTypes = [];
     _.forIn(types, (value, type) => {
         const words = type.toLowerCase().split('_');
@@ -49,7 +49,7 @@ function contactRecordComponent(types) {
 export default class FormContactList extends Component {
     constructor(props) {
         super(props);
-        this.recordComponent = contactRecordComponent(props.types);
+        this.recordComponent = createContactRecordComponent(props.types);
     }
 
     render() {
