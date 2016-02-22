@@ -13,6 +13,7 @@ const HeaderSearch = (props) => {
     return (
         <AutoComplete
             focused={false}
+            hasItemDivider={false}
             inputContainerStyle={{border: '1px solid rgba(0, 0, 0, 0.2)'}}
             listContainerStyle={{position: 'absolute'}}
             style={style}

@@ -64,6 +64,7 @@ const HomeSearch = (props, { auth, muiTheme }) => {
         <div {...props}>
             <AutoComplete
                 className="col-xs"
+                hasItemDivider={false}
                 inputContainerStyle={styles.inputContainer}
                 inputStyle={styles.inputStyle}
                 onBlur={handleBlur}
