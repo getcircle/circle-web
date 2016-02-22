@@ -87,7 +87,7 @@ const FormRecordList = ({component, defaultRecord, records}) => {
         add: {
             cursor: 'pointer',
             fontSize: 12,
-            marginLeft: 16,
+            marginLeft: records.length > 0 ? 16 : 0,
             ...fontColors.light,
         },
     };
