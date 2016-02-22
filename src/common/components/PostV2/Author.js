@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react';
+import { ListItem } from 'material-ui';
+
+import { routeToProfile } from '../../utils/routes';
 import moment from '../../utils/moment';
 
-import { ListItem } from 'material-ui';
 import ProfileAvatar from '../ProfileAvatar';
 
 import t from '../../utils/gettext';
@@ -47,11 +49,14 @@ const Author = ({ post, ...other }, { muiTheme }) => {
         </div>
     );
 
+    function handleTouchTap() { routeToProfile(profile); }
+
     return (
         <div style={styles.container} {...other}>
             <ListItem
                 innerDivStyle={styles.innerDiv}
                 leftAvatar={<ProfileAvatar profile={profile} style={muiTheme.luno.avatar}/>}
+                onTouchTap={handleTouchTap}
                 primaryText={primaryText}
                 secondaryText={secondaryText}
             />
