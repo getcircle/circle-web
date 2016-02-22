@@ -230,7 +230,7 @@ export class ProfileDetailForm extends Component {
                 <FormLabel text={t('Other Contact')} />
                 <FormContactList
                     contacts={contacts}
-                    defaultType={ContactMethodV1.ContactMethodTypeV1.EMAIL}
+                    defaultType={ContactMethodV1.ContactMethodTypeV1.CELL_PHONE}
                     types={ContactMethodV1.ContactMethodTypeV1}
                 />
             </div>
