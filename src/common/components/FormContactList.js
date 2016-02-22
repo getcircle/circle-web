@@ -20,11 +20,11 @@ function createContactRecordComponent(types) {
             type: {
                 float: 'left',
                 marginRight: 15,
-                width: 128,
+                width: 150,
             },
             value: {
                 float: 'left',
-                width: 384,
+                width: 362,
             },
         };
 
