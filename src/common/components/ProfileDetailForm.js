@@ -175,6 +175,7 @@ export class ProfileDetailForm extends Component {
                 lastName,
                 title,
             },
+            profile,
         } = this.props;
         const styles = {
             root: {
@@ -220,7 +221,7 @@ export class ProfileDetailForm extends Component {
                     {...bio}
                 />
                 <FormLabel text={t('Reports To')} />
-                <FormPersonSelector {...manager} />
+                <FormPersonSelector ignoreProfileIds={[profile.id]} {...manager} />
                 <FormLabel text={t('Email')} />
                 <FormTextField
                     placeholder={t('Email')}

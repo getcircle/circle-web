@@ -54,6 +54,7 @@ class FormPersonSelector extends Component {
 
     render() {
         const {
+            ignoreProfileIds,
             listContainerStyle,
             onBlur,
             onChange,
@@ -94,7 +95,7 @@ class FormPersonSelector extends Component {
                 <AutoCompleteProfile
                     focused={true}
                     hasItemDivider={false}
-                    ignoreProfileIds={[value && value.id]}
+                    ignoreProfileIds={ignoreProfileIds}
                     inputContainerStyle={{height: 'none'}}
                     inputStyle={{paddingLeft: 0}}
                     listContainerStyle={listStyle}
@@ -123,6 +124,7 @@ class FormPersonSelector extends Component {
 };
 
 FormPersonSelector.propTypes = {
+    ignoreProfileIds: PropTypes.arrayOf(PropTypes.string),
     listContainerStyle: PropTypes.object,
     onBlur: PropTypes.func,
     onChange: PropTypes.func.isRequired,
