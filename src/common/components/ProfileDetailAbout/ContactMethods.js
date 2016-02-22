@@ -13,6 +13,7 @@ const ContactMethod = ({ method }, { muiTheme }) => {
     const styles = {
         container: {
             paddingBottom: 10,
+            flexWrap: 'nowrap',
         },
         label: {
             color: Colors.lightBlack,
