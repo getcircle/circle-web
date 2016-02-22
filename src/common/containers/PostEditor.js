@@ -56,7 +56,7 @@ const selector = selectors.createImmutableSelector(
             isSaving: postState.get('loading'),
             post: post,
             shouldAutoSave: !post || (post && (!post.state || post.state === PostStateV1.DRAFT)),
-            uploadProgress: filesState.get('filesProgress'),
+            uploadProgress: filesState.get('progress'),
             uploadedFiles: filesState.get('files'),
             uploadingFiles: filesState.get('loading'),
         }

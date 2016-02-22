@@ -78,3 +78,4 @@ export const updateTeamSelector = state => state.get('updateTeam');
 export const addMembersSelector = state => state.get('addMembers');
 export const profileMembershipsSelector = state => state.get('profileMemberships');
 export const deletePostSelector = state => state.get('deletePost');
+export const editorSelector = state => state.get('editor');

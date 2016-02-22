@@ -10,8 +10,8 @@ class Editor extends CSSComponent {
 
     static propTypes = {
         onChange: PropTypes.func.isRequired,
-        onFileDeleteCallback: PropTypes.func.isRequired,
-        onUploadCallback: PropTypes.func.isRequired,
+        onFileDelete: PropTypes.func.isRequired,
+        onFileUpload: PropTypes.func.isRequired,
         placeholder: PropTypes.string,
         uploadProgress: PropTypes.object,
         uploadedFiles: PropTypes.object,
@@ -20,8 +20,8 @@ class Editor extends CSSComponent {
 
     static defaultProps = {
         onChange: () => {},
-        onFileDeleteCallback: () => {},
-        onUploadCallback: () => {},
+        onFileDelete: () => {},
+        onFileUpload: () => {},
         placeholder: '',
         uploadProgress: Immutable.Map(),
         uploadedFiles: Immutable.Map(),
@@ -240,21 +240,21 @@ class Editor extends CSSComponent {
 
     handleFileAdd(event) {
         if (event && event.attachment && event.attachment.file && typeof event.attachment.file === 'object') {
-            const { onUploadCallback } = this.props;
+            const { onFileUpload } = this.props;
             const file = event.attachment.file;
             if (file.name) {
                 this.attachmentObjects[file.name] = event.attachment;
-                onUploadCallback(file);
+                onFileUpload(file);
             }
         }
     }
 
     handleFileDelete(event) {
         if (event && event.attachment && event.attachment.getAttribute('fileId')) {
-            const { onFileDeleteCallback } = this.props;
+            const { onFileDelete } = this.props;
             const fileId = event.attachment.getAttribute('fileId');
             if (fileId) {
-                onFileDeleteCallback(fileId);
+                onFileDelete(fileId);
             }
         }
     }

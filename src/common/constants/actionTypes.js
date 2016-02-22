@@ -178,3 +178,8 @@ export const FILE_DELETE_FAILURE = 'FILE_DELETE_FAILURE';
 
 // Clear file uploads
 export const CLEAR_FILE_UPLOADS = 'CLEAR_FILE_UPLOADS';
+
+// Editor actions
+export const EDITOR_TITLE_CHANGED = 'EDITOR_TITLE_CHANGED';
+export const EDITOR_CONTENT_CHANGED = 'EDITOR_BODY_CHANGED';
+export const EDITOR_RESET = 'EDITOR_RESET'

@@ -1,10 +1,13 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 import { services } from 'protobufs';
+import Immutable from 'immutable';
 
 import { FlatButton } from 'material-ui';
 
+import { titleChanged, contentChanged } from '../actions/editor';
 import t from '../utils/gettext';
+import { routeToPost } from '../utils/routes';
 
 import InternalPropTypes from './InternalPropTypes';
 import AutogrowTextarea from './AutogrowTextarea';
@@ -58,7 +61,12 @@ PublishButton.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-const Header = () => {
+const Header = ({ post, onPublish }) => {
+    function handleTouchTap() {
+        onPublish(post);
+        routeToPost(post);
+    }
+
     return (
         <header style={{paddingLeft: 10, paddingRight: 10}}>
             <section className="row between-xs">
@@ -66,14 +74,22 @@ const Header = () => {
                     <BackButton />
                 </div>
                 <div className="end-xs col-xs">
-                    <PublishButton />
+                    <PublishButton onTouchTap={handleTouchTap} />
                 </div>
             </section>
         </header>
     );
 };
 
-const EditorContainer = ({ post }, { device: { mounted }, muiTheme }) => {
+Header.propTypes = {
+    onPublish: PropTypes.func.isRequired,
+    post: PropTypes.instanceOf(services.post.containers.Postv1),
+};
+
+const EditorContainer = (props, context) => {
+    const { onFileDelete, onFileUpload, post, uploadProgress, uploadedFiles } = props;
+    const { device: { mounted }, muiTheme, store: { dispatch } } = context;
+
     const styles = {
         container: {
             backgroundColor: muiTheme.luno.colors.white,
@@ -96,6 +112,11 @@ const EditorContainer = ({ post }, { device: { mounted }, muiTheme }) => {
             minHeight: 49,
         },
     };
+
+    function handleTitleChange(event, value) {
+        dispatch(titleChanged(value, true))
+    };
+
     let editor;
     if (mounted) {
         // We add the editor related code only on the client
@@ -103,9 +124,19 @@ const EditorContainer = ({ post }, { device: { mounted }, muiTheme }) => {
         // It uses the global window object, event listeners, query
         // selectors, and the full Node and Element objects.
         const Editor = require('./Editor');
+
+        function handleContentChange(event) {
+            dispatch(contentChanged(event.target.value));
+        };
+
         editor = (
             <Editor
+                onChange={handleContentChange}
+                onFileDelete={onFileDelete}
+                onFileUpload={onFileUpload}
                 style={styles.editor}
+                uploadProgress={uploadProgress}
+                uploadedFiles={uploadedFiles}
                 value={post.content}
             />
         );
@@ -114,6 +145,7 @@ const EditorContainer = ({ post }, { device: { mounted }, muiTheme }) => {
         <div style={styles.container}>
             <AutogrowTextarea
                 autoFocus={true}
+                onChange={handleTitleChange}
                 placeholder={t('Title')}
                 singleLine={true}
                 style={styles.title}
@@ -125,27 +157,89 @@ const EditorContainer = ({ post }, { device: { mounted }, muiTheme }) => {
     );
 };
 
+EditorContainer.propTypes = {
+    onFileDelete: PropTypes.func,
+    onFileUpload: PropTypes.func,
+    post: PropTypes.instanceOf(services.post.containers.PostV1),
+    uploadProgress: PropTypes.object,
+    uploadedFiles: PropTypes.object,
+};
+
 EditorContainer.contextTypes = {
     device: InternalPropTypes.DeviceContext,
     muiTheme: PropTypes.object.isRequired,
+    store: PropTypes.shape({
+        dispatch: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
-const PostEditor = ({ post, profile }) => {
-    return (
-        <div>
-            { /* this could be an admin editing the post, we should still show the original author */ }
-            <Header profile={profile} />
-            <DetailContent>
-                <ListItemProfile disabled={true} profile={profile} />
-                <EditorContainer post={post} />
-            </DetailContent>
-        </div>
-    );
+class PostEditor extends Component {
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.post.id === nextProps.post.id) {
+            const hasChanged = (
+                this.props.post.content !== nextProps.post.content ||
+                this.props.post.title !== nextProps.post.title
+            );
+            if (hasChanged && nextProps.autoSave) {
+                this.save(nextProps);
+            }
+        }
+    }
+
+    saveTimeout = null
+
+    save(props) {
+        const { onSave, post } = props;
+        if (this.saveTimeout !== null) {
+            window.clearTimeout(this.saveTimeout);
+        }
+
+        this.saveTimeout = window.setTimeout(() => {
+            onSave(post);
+        }, 500);
+    }
+
+    render() {
+        const { onFileDelete, onFileUpload, onSave, post, profile, uploadProgress, uploadedFiles } = this.props;
+        return (
+            <div>
+                { /* this could be an admin editing the post, we should still show the original author */ }
+                <Header
+                    onPublish={onSave}
+                    post={post}
+                    profile={profile}
+                />
+                <DetailContent>
+                    <ListItemProfile disabled={true} profile={profile} />
+                    <EditorContainer
+                        onFileDelete={onFileDelete}
+                        onFileUpload={onFileUpload}
+                        post={post}
+                        uploadProgress={uploadProgress}
+                        uploadedFiles={uploadedFiles}
+                    />
+                </DetailContent>
+            </div>
+        );
+    }
+
 };
 
 PostEditor.propTypes = {
+    autoSave: PropTypes.bool,
+    onFileDelete: PropTypes.func,
+    onFileUpload: PropTypes.func,
+    onSave: PropTypes.func.isRequired,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+    uploadProgress: PropTypes.object,
+    uploadedFiles: PropTypes.object,
+};
+
+PostEditor.defaultProps = {
+    uploadProgress: Immutable.Map(),
+    uploadedFiles: Immutable.Map(),
 };
 
 export default PostEditor;

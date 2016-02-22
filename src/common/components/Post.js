@@ -49,7 +49,7 @@ class Post extends CSSComponent {
         header: PropTypes.element,
         isEditable: PropTypes.bool.isRequired,
         onDeletePostCallback: PropTypes.func,
-        onFileDeleteCallback: PropTypes.func,
+        onFileDelete: PropTypes.func,
         onFileUploadCallback: PropTypes.func,
         onSaveCallback: PropTypes.func,
         post: InternalPropTypes.PostV1,
@@ -320,7 +320,7 @@ class Post extends CSSComponent {
     }
 
     deleteFile(fileId) {
-       const { onFileDeleteCallback, post } = this.props;
+       const { onFileDelete, post } = this.props;
         if (post && post.state === PostStateV1.LISTED) {
             // We track the file being deleted and then
             // actually delete on Publish and not if the user discards changes.
@@ -332,8 +332,8 @@ class Post extends CSSComponent {
             return;
         }
 
-        if (onFileDeleteCallback) {
-            onFileDeleteCallback([fileId]);
+        if (onFileDelete) {
+            onFileDelete([fileId]);
         }
     }
 
@@ -719,8 +719,8 @@ class Post extends CSSComponent {
                     onChange={(event, plainTextValue) => {
                         this.handleBodyChange(event, event.target.value);
                     }}
-                    onFileDeleteCallback={(fileId) => this.deleteFile(fileId)}
-                    onUploadCallback={onFileUploadCallback}
+                    onFileDelete={(fileId) => this.deleteFile(fileId)}
+                    onFileUpload={onFileUploadCallback}
                     placeholder={t('Contribute Knowledge')}
                     ref="editor"
                     uploadProgress={uploadProgress}
