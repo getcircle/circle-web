@@ -20,6 +20,8 @@ import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import { default as PostComponent } from '../components/PostV2';
 
+const REQUIRED_FIELDS = ['content', 'by_profile'];
+
 const selector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
@@ -32,7 +34,7 @@ const selector = selectors.createImmutableSelector(
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
         if (postState.get('ids').has(postId)) {
-            post = retrievePost(postId, cache, ['content', 'by_profile']);
+            post = retrievePost(postId, cache, REQUIRED_FIELDS);
         }
 
         const showLinkCopied = postState.get('showLinkCopied');
@@ -47,7 +49,7 @@ const selector = selectors.createImmutableSelector(
 );
 
 function fetchPost({ dispatch, params }) {
-    return dispatch(getPost(params.postId));
+    return dispatch(getPost(params.postId, REQUIRED_FIELDS));
 }
 
 const hooks = {
