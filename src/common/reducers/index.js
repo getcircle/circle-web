@@ -1,5 +1,4 @@
 import { reducer as formReducer } from 'redux-form';
-import Immutable from 'immutable';
 
 export { default as addMembers } from './addMembers';
 export { default as authentication } from './authentication';
@@ -9,6 +8,7 @@ export { default as createTeam} from './createTeam';
 export { default as createCollection } from './createCollection';
 export { default as deleteCollection } from './deleteCollection';
 export { default as deletePost } from './deletePost';
+export { default as editCollection } from './editCollection';
 export { default as editor } from './editor';
 export { default as explore } from './explore';
 export { default as extendedProfiles } from './extendedProfiles';
@@ -21,6 +21,7 @@ export { default as post } from './post';
 export { default as posts } from './posts';
 export { default as profileMemberships } from './profileMemberships';
 export { default as profiles } from './profiles';
+export { default as rearrangeCollections } from './rearrangeCollections';
 export { default as responsive } from './responsive';
 export { default as search } from './search';
 export { default as teamCoordinators } from './teamCoordinators';

@@ -59,6 +59,7 @@ export const explorePostsLoadingSelector = exploreTypeLoadingSelectorFactory(exp
 export const explorePostsIdsSelector = exploreTypeIdsSelectorFactory(explorePostsSelector);
 
 export const createTeamSelector = state => state.get('createTeam');
+export const editCollectionSelector = state => state.get('editCollection');
 export const extendedProfilesSelector = state => state.get('extendedProfiles');
 export const extendedTeamsSelector = state => state.get('extendedTeams');
 export const filesSelector = state => state.get('files');
@@ -68,6 +69,7 @@ export const mediaUploadSelector = state => state.get('mediaUpload');
 export const postSelector = state => state.get('post');
 export const postsSelector = state => state.get('posts');
 export const profilesSelector = state => state.get('profiles');
+export const rearrangeCollectionsSelector = state => state.get('rearrangeCollections');
 export const responsiveSelector = state => state.get('responsive');
 export const routerParametersSelector = (_, props) => props.params;
 export const searchSelector = state => state.get('search');

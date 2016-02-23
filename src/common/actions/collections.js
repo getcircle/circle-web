@@ -5,11 +5,11 @@ import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
 import { retrieveCollection } from '../reducers/denormalizations';
 
-export function showCreateModal() {
+export function showCreateCollectionModal() {
     return {type: types.SHOW_CREATE_COLLECTION_MODAL};
 }
 
-export function hideCreateModal() {
+export function hideCreateCollectionModal() {
     return {type: types.HIDE_CREATE_COLLECTION_MODAL};
 }
 
@@ -73,4 +73,40 @@ export function deleteCollection(collection) {
             remote: client => requests.deleteCollection(client, collection),
         },
     };
+}
+
+/**
+ * Show the rearrange collections modal
+ *
+ * @return {Object} redux action
+ */
+export function showRearrangeCollectionsModal() {
+    return {type: types.MODAL_REARRANGE_COLLECTIONS_SHOW};
+}
+
+/**
+ * Hide the rearrange collections modal
+ *
+ * @return {Object} redux action
+ */
+export function hideRearrangeCollectionsModal() {
+    return {type: types.MODAL_REARRANGE_COLLECTIONS_HIDE};
+}
+
+/**
+ * Show the edit collection modal
+ *
+ * @return {Object} redux action
+ */
+export function showEditCollectionModal() {
+    return {type: types.SHOW_EDIT_COLLECTION_MODAL};
+}
+
+/**
+ * Hide the edit collection modal
+ *
+ * @return {Object} redux action
+ */
+export function hideEditCollectionModal() {
+    return {type: types.HIDE_EDIT_COLLECTION_MODAL};
 }

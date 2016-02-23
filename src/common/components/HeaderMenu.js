@@ -8,7 +8,7 @@ import { logout } from '../actions/authentication';
 import { PostStateURLString } from '../utils/post';
 import { routeToNewPost, routeToDrafts, routeToProfile, routeToTeam, routeToAddIntegration } from '../utils/routes';
 import { showCreateTeamModal } from '../actions/teams';
-import { showCreateModal as showCreateCollectionModal } from '../actions/collections';
+import { showCreateCollectionModal } from '../actions/collections';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 import { IntegrationString } from '../utils/integrations';
