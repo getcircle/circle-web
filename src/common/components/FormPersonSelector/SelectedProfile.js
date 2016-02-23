@@ -8,6 +8,8 @@ import UpChevronIcon from '../UpChevronIcon';
 const SelectedProfile = ({expanded, onHoverChange, onTouchTap, profile}) => {
     const styles = {
         root: {
+            border: `1px solid ${Colors.minBlack}`,
+            borderRadius: '2px',
             boxSizing: 'border-box',
             color: Colors.black,
             cursor: 'pointer',

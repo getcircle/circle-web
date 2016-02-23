@@ -106,7 +106,7 @@ describe('ProfileDetailForm', () => {
 
     describe('submitting', () => {
 
-        it('dispatches the update profile action if a new photo has not been added', () => {
+        it('dispatches the update profile action', () => {
             const profile = getProfile();
             const handleSubmit = (fn) => () => fn({
                 photo: {existing: true},
@@ -115,35 +115,6 @@ describe('ProfileDetailForm', () => {
                 handleSubmit: handleSubmit,
                 profile: profile,
             });
-            wrapper.find(FormDialog).prop('onSubmit')();
-            const action = updateProfile(profile, null);
-            expect(props.dispatch).toHaveBeenCalledWith(action);
-        });
-
-        it('dispatches the upload media action if a photo has been added', () => {
-            const profile = getProfile();
-            const photo = {preview: 'PREVIEW'};
-            const dispatchSpy = expect.createSpy();
-            const handleSubmit = (fn) => () => fn({
-                photo: photo,
-            }, dispatchSpy);
-            const { wrapper } = setup({
-                handleSubmit: handleSubmit,
-                profile: profile,
-            });
-            wrapper.find(FormDialog).prop('onSubmit')();
-            const action = uploadMedia(
-                photo,
-                MediaTypeV1.PROFILE,
-                profile.id
-            );
-            expect(dispatchSpy).toHaveBeenCalledWith(action);
-        });
-
-        it('saves the profile successfully', () => {
-            const profile = getProfile();
-            const handleSubmit = (fn) => () => fn({photo: {existing: true}});
-            const { wrapper, props } = setup({handleSubmit, profile});
             wrapper.find(FormDialog).prop('onSubmit')();
             const action = updateProfile(profile, null);
             expect(props.dispatch).toHaveBeenCalledWith(action);
