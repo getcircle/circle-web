@@ -5,6 +5,7 @@ import faker from 'faker';
 import { services } from 'protobufs'
 
 import createStore from '../../../src/common/createStore';
+import { createPost, updatePost } from '../../../src/common/actions/posts';
 import { PostEditor, selector } from '../../../src/common/containers/PostEditorV2';
 import { default as PostEditorComponent } from '../../../src/common/components/PostEditorV2';
 // test to ensure we redirect to view post if not the author
@@ -60,6 +61,22 @@ describe('PostEditor', () => {
             });
 
         });
+    });
+
+    describe('saving a post', () => {
+
+        it('fires an updatePost action if the post exists', () => {
+            const { wrapper, props } = setup({post: factories.post.getPost()});
+            wrapper.find(PostEditorComponent).prop('onSave')(props.post);
+            expect(props.dispatch).toHaveBeenCalledWith(updatePost(props.post));
+        });
+
+        it('fires a createPost action if the post doesn\'t exist', () => {
+            const { wrapper, props } = setup({post: factories.post.getPost({id: null})});
+            wrapper.find(PostEditorComponent).prop('onSave')(props.post);
+            expect(props.dispatch).toHaveBeenCalledWith(createPost(props.post));
+        });
+
     });
 
 });

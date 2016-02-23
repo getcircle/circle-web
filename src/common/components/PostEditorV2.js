@@ -181,7 +181,12 @@ class PostEditor extends Component {
                 this.props.post.content !== nextProps.post.content ||
                 this.props.post.title !== nextProps.post.title
             );
-            if (hasChanged && nextProps.autoSave) {
+            if (
+                hasChanged &&
+                nextProps.autoSave &&
+                nextProps.post.content &&
+                nextProps.post.title
+            ) {
                 this.save(nextProps);
             }
         }

@@ -8,9 +8,9 @@ export function createPost(client, post) {
     let request = new services.post.actions.create_post.RequestV1({post: post});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => {
+            .then((response) => {
                 const { post } = response.result;
-                resolve({post})
+                response.finish(resolve, reject, post.id, { post });
             })
             .catch(error => reject(error));
     });

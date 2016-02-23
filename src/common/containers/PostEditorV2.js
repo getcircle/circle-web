@@ -4,11 +4,13 @@ import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
-import { getPost, updatePost } from '../actions/posts';
+import { createPost, getPost, updatePost } from '../actions/posts';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
+import { reset } from '../actions/editor';
 
 import { resetScroll } from '../utils/window';
 import { retrievePost } from '../reducers/denormalizations';
+import { replaceWithEditPost } from '../utils/routes';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -17,25 +19,24 @@ import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import { default as PostEditorComponent } from '../components/PostEditorV2';
 
+const REQUIRED_FIELDS = ['content', 'by_profile'];
+
 const { PostStateV1 } = services.post.containers;
 
 const selector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
-        selectors.postSelector,
         selectors.routerParametersSelector,
         selectors.editorSelector,
         selectors.filesSelector,
     ],
-    (cacheState, postState, paramsState, editorState, filesState) => {
+    (cacheState, paramsState, editorState, filesState) => {
         let post;
 
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
         if (postId) {
-            if (postState.get('ids').has(postId)) {
-                post = retrievePost(postId, cache, ['content', 'by_profile']);
-            }
+            post = retrievePost(postId, cache, REQUIRED_FIELDS);
         } else {
             post = new services.post.containers.PostV1();
         }
@@ -51,14 +52,17 @@ const selector = selectors.createImmutableSelector(
 
         return {
             post,
+            draft: editorState.get('draft'),
             uploadProgress: filesState.get('progress'),
             uploadedFiles: filesState.get('files'),
         };
     }
 );
 
-function fetchPost({ dispatch, params }) {
-    return dispatch(getPost(params.postId));
+function fetchPost({ dispatch, params: { postId } }) {
+    if (postId) {
+        return dispatch(getPost(postId, REQUIRED_FIELDS));
+    }
 }
 
 const hooks = {
@@ -77,14 +81,23 @@ class PostEditor extends Component {
             fetchPost(nextProps);
             resetScroll();
         }
+        if (nextProps.draft) {
+            this.props.dispatch(reset());
+            replaceWithEditPost(nextProps.draft);
+        }
     }
 
     componentWillUnmount() {
         this.props.dispatch(clearFileUploads());
+        this.props.dispatch(reset());
     }
 
     handleSave = (post) => {
-        this.props.dispatch(updatePost(post));
+        if (post.id) {
+            this.props.dispatch(updatePost(post));
+        } else {
+            this.props.dispatch(createPost(post));
+        }
     }
 
     handleFileDelete = (fileIds) => {

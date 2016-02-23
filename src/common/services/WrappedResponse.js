@@ -45,7 +45,7 @@ export default class WrappedResponse {
         return this.action.result.success;
     }
 
-    resolve(key = null) {
+    resolve(key = null, extra = {}) {
         let normalized, type;
         if (this.result) {
             const copy = this.result.$type.decode(this.result.encode());
@@ -59,7 +59,8 @@ export default class WrappedResponse {
                 type,
                 nextRequest: getNextRequest(this.request, this.response),
             },
-            normalized
+            normalized,
+            extra,
         );
     }
 
@@ -67,9 +68,9 @@ export default class WrappedResponse {
         return new ServiceError(this.errors, this.errorDetails, this.request);
     }
 
-    finish(resolve, reject, key = null) {
+    finish(resolve, reject, key = null, extra) {
         if (this.isSuccess()) {
-            return resolve(this.resolve(key));
+            return resolve(this.resolve(key, extra));
         } else {
             return reject(this.reject());
         }

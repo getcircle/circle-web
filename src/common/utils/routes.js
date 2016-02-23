@@ -38,6 +38,10 @@ export function routeToEditPost(post) {
     browserHistory.push(`/post/${post.id}/edit`);
 }
 
+export function replaceWithEditPost(post) {
+    browserHistory.replace(`/post/${post.id}/edit`);
+}
+
 export function routeToNewPost() {
     browserHistory.push('/new-post');
 }

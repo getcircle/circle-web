@@ -4,6 +4,7 @@ import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
 import { paginatedShouldBail } from '../reducers/paginate';
+import { retrievePost } from '../reducers/denormalizations';
 
 export function createPost(post) {
     return {
@@ -98,7 +99,7 @@ export function clearPosts(postStateURLString, forProfile) {
     };
 }
 
-export function getPost(postId) {
+export function getPost(postId, requiredFields) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -107,6 +108,14 @@ export function getPost(postId) {
                 types.GET_POST_FAILURE,
             ],
             remote: (client) => requests.getPost(client, postId),
+            bailout: (state) => {
+                const post = retrievePost(
+                    postId,
+                    state.get('cache').toJS(),
+                    requiredFields,
+                );
+                return post !== null && post !== undefined;
+            },
         },
     };
 }
