@@ -12,6 +12,14 @@ import Footer from './Footer';
 class Post extends Component {
 
     componentDidMount() {
+        this.linkHashTags();
+    }
+
+    componentDidUpdate() {
+        this.linkHashTags();
+    }
+
+    linkHashTags() {
         const hashtags = document.getElementsByClassName('hashtag');
         for (let i = 0; i < hashtags.length; i++) {
             hashtags[i].addEventListener('click', (event) => {
