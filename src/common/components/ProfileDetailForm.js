@@ -112,7 +112,7 @@ export class ProfileDetailForm extends Component {
     setInitialValues() {
         const { dispatch, manager, profile } = this.props;
 
-        const defaultContactType = ContactMethodV1.ContactMethodTypeV1.EMAIL;
+        const defaultContactType = ContactMethodV1.ContactMethodTypeV1.CELL_PHONE;
         const contacts = profile.contact_methods.map(c => {
             /*eslint-disable camelcase*/
             return {type: c.contact_method_type || defaultContactType, value: c.value};
