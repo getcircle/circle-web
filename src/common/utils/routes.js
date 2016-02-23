@@ -63,6 +63,10 @@ export function replaceSearchQuery(query) {
     browserHistory.replace(`/search/${query}`);
 }
 
+export function routeToAddIntegration(history, integration) {
+    browserHistory.push(`/add-integration/${integration}`);
+}
+
 // TODO check if we still use this
 export function routeToURL(url, nextPathname = null) {
     if (nextPathname !== null) {

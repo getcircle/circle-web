@@ -5,10 +5,11 @@ import { Menu, MenuItem, Popover } from 'material-ui';
 
 import { logout } from '../actions/authentication';
 import { PostStateURLString } from '../utils/post';
-import { routeToNewPost, routeToDrafts, routeToProfile, routeToTeam } from '../utils/routes';
+import { routeToNewPost, routeToDrafts, routeToProfile, routeToTeam, routeToAddIntegration } from '../utils/routes';
 import { showCreateTeamModal } from '../actions/teams';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
+import { IntegrationString } from '../utils/integrations';
 
 import CreateTeamForm from './CreateTeamForm';
 import CSSComponent from './CSSComponent';
@@ -163,6 +164,10 @@ class HeaderMenu extends CSSComponent {
         this.props.dispatch(showCreateTeamModal());
     }
 
+    handleAddToSlack = () => {
+        routeToAddIntegration(this.context.history, IntegrationString.SLACK);
+    }
+
     handleLogout(event) {
         this.props.dispatch(logout());
     }
@@ -190,6 +195,7 @@ class HeaderMenu extends CSSComponent {
                     />
                     {this.renderMyKnowledgeMenuItem()}
                     {this.renderCreateTeamMenuItem()}
+                    {this.renderAddToSlackMenuItem()}
                     <MenuItem
                         desktop={true}
                         innerDivStyle={{...this.styles().menuItemDivStyle}}
@@ -209,6 +215,23 @@ class HeaderMenu extends CSSComponent {
                     innerDivStyle={{...this.styles().menuItemDivStyle}}
                     onTouchTap={(e) => this.handleViewKnowledge(e)}
                     primaryText={t('My Drafts')}
+                />
+            );
+        } else {
+            return (
+                <span />
+            );
+        }
+    }
+
+    renderAddToSlackMenuItem() {
+        if (this.context.auth.profile.is_admin) {
+            return (
+                <MenuItem
+                    desktop={true}
+                    innerDivStyle={{...this.styles().menuItemDivStyle}}
+                    onTouchTap={this.handleAddToSlack}
+                    primaryText={t('Add to Slack')}
                 />
             );
         } else {

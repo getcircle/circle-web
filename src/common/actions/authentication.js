@@ -82,6 +82,19 @@ export function getAuthenticationInstructions(email, url) {
     };
 }
 
+export function getIntegrationAuthenticationInstructions(integration, url) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_INTEGRATION_AUTHENTICATION_INSTRUCTIONS,
+                types.GET_INTEGRATION_AUTHENTICATION_INSTRUCTIONS_SUCCESS,
+                types.GET_INTEGRATION_AUTHENTICATION_INSTRUCTIONS_FAILURE,
+            ],
+            remote: (client) => userService.getIntegrationAuthenticationInstructions(client, integration, url),
+        },
+    };
+}
+
 export function requestAccess(domain, userInfo) {
     return {
         [SERVICE_REQUEST]: {
