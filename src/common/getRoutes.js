@@ -146,7 +146,7 @@ export default function (store, url) {
                 path="/billing"
             />
             <Route
-                component={require('./containers/PostEditor').default}
+                component={require('./containers/PostEditorV2').default}
                 onEnter={applyMiddleware(
                     requireAuth,
                     hideHeader,
@@ -155,7 +155,7 @@ export default function (store, url) {
                 path="/new-post"
             />
             <Route
-                component={require('./containers/EditPost')}
+                component={require('./containers/PostEditorV2').default}
                 onEnter={applyMiddleware(
                     requireAuth,
                     hideHeader,

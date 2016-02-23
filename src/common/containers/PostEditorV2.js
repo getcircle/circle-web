@@ -2,6 +2,7 @@ import { merge } from 'lodash';
 import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
+import { services } from 'protobufs';
 
 import { getPost, updatePost } from '../actions/posts';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
@@ -14,7 +15,9 @@ import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 import Container from '../components/Container';
 import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
-import PostEditor from '../components/PostEditorV2';
+import { default as PostEditorComponent } from '../components/PostEditorV2';
+
+const { PostStateV1 } = services.post.containers;
 
 const selector = selectors.createImmutableSelector(
     [
@@ -26,13 +29,17 @@ const selector = selectors.createImmutableSelector(
     ],
     (cacheState, postState, paramsState, editorState, filesState) => {
         let post;
+
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
-        if (postState.get('ids').has(postId)) {
-            post = retrievePost(postId, cache, ['content', 'by_profile']);
+        if (postId) {
+            if (postState.get('ids').has(postId)) {
+                post = retrievePost(postId, cache, ['content', 'by_profile']);
+            }
+        } else {
+            post = new services.post.containers.PostV1();
         }
 
-        // TODO add logic to derive title from body
         const title = editorState.get('title').get('value');
         if (title !== undefined && title !== null) {
             post.title = title;
@@ -58,7 +65,7 @@ const hooks = {
     fetch: locals => fetchPost(locals),
 };
 
-class EditPost extends Component {
+class PostEditor extends Component {
 
     componentWillMount() {
         resetScroll();
@@ -96,10 +103,11 @@ class EditPost extends Component {
 
         let content;
         if (post) {
+            const autoSave = [PostStateV1.DRAFT, null].includes(post.state) ? true : false;
             content = (
                 <DocumentTitle title={post.title}>
-                    <PostEditor
-                        autoSave={false}
+                    <PostEditorComponent
+                        autoSave={autoSave}
                         onFileDelete={this.handleFileDelete}
                         onFileUpload={this.handleFileUpload}
                         onSave={this.handleSave}
@@ -124,19 +132,20 @@ class EditPost extends Component {
 
 }
 
-EditPost.propTypes = {
+PostEditor.propTypes = {
     dispatch: PropTypes.func.isRequired,
     params: PropTypes.shape({
-        postId: PropTypes.string.isRequired,
-    }).isRequired,
+        postId: PropTypes.string,
+    }),
     post: InternalPropTypes.PostV1,
     uploadProgress: PropTypes.object,
     uploadedFiles: PropTypes.object,
 };
 
-EditPost.contextTypes = {
+PostEditor.contextTypes = {
     auth: InternalPropTypes.AuthContext.isRequired,
     muiTheme: PropTypes.object.isRequired,
 };
 
-export default provideHooks(hooks)(connect(selector)(EditPost));
+export { PostEditor, selector };
+export default provideHooks(hooks)(connect(selector)(PostEditor));
