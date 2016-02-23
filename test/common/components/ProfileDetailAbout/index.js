@@ -12,7 +12,10 @@ import EditButton from '../../../../src/common/components/ProfileDetailAbout/Edi
 import Items from '../../../../src/common/components/ProfileDetailAbout/Items';
 import ProfileDetailAbout, { DirectReports, Manager, Peers, Teams } from '../../../../src/common/components/ProfileDetailAbout';
 
+import AuthContextFactory from '../../../factories/AuthContextFactory';
 import { getDefaultContext } from '../../../componentWithContext';
+import LocationFactory from '../../../factories/LocationFactory';
+import OrganizationFactory from '../../../factories/OrganizationFactory';
 import ProfileFactory from '../../../factories/ProfileFactory';
 import TeamFactory from '../../../factories/TeamFactory';
 
@@ -22,11 +25,13 @@ function setup(propsOverrides, Component = ProfileDetailAbout) {
     const profile = ProfileFactory.getProfile();
     const props = {
         dispatch: expect.createSpy(),
-        isLoggedInUser: true,
         profile,
         ...propsOverrides,
     };
-    const context = getDefaultContext();
+    const location = LocationFactory.getLocation();
+    const organization = OrganizationFactory.getOrganization();
+    const auth = AuthContextFactory.getContext(location, organization, profile);
+    const context = getDefaultContext({auth});
     const wrapper = shallow(<Component {...props} />, { context });
     return {
         props,
