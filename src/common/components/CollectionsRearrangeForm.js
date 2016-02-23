@@ -39,7 +39,9 @@ const styles = {
 export default class CollectionsRearrangeForm extends Component {
 
     static propTypes = {
-        collections: PropTypes.array.isRequired,
+        collections: PropTypes.arrayOf(
+            PropTypes.instanceOf(services.post.containers.CollectionV1)
+        ).isRequired,
         dispatch: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
         formSubmitted: PropTypes.bool,
@@ -60,14 +62,14 @@ export default class CollectionsRearrangeForm extends Component {
         const { collections, dispatch } = this.props;
 
         const action = initialize(REARRANGE_COLLECTIONS, {
-            collections,
+            collections: collections.map(c => {return {id: c.id, text: c.name}}),
         }, fieldNames);
 
         dispatch(action);
     }
 
-    submit = (form, dispatch) => {
-        // TODO: dispatch rearrange action
+    submit = (values, dispatch) => {
+        // TODO: calculate diffs, send rearrange action
     }
 
     handleCancel = () => {
