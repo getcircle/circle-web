@@ -1,12 +1,41 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { showConfirmDeleteModal } from '../actions/collections';
 import t from '../utils/gettext';
 
 import CollectionIcon from './CollectionIcon';
 import DetailContent from './DetailContent';
 import DetailDivider from './DetailDivider';
 import DetailHeader from './DetailHeader';
+import EditIcon from './EditIcon';
+import IconMenu from './IconMenu';
+import MenuItem from './MenuItem';
+
+const EditCollectionMenu = ({ collection }, { store: { dispatch }, muiTheme }) => {
+    const icon = (
+        <EditIcon stroke={muiTheme.luno.tintColor} />
+    );
+
+    function handleDelete() { dispatch(showConfirmDeleteModal(collection)); }
+
+    return (
+        <IconMenu iconElement={icon}>
+            <MenuItem onTouchTap={handleDelete} text={t('Delete Collection')} />
+        </IconMenu>
+    );
+};
+
+EditCollectionMenu.propTypes = {
+    collection: PropTypes.instanceOf(services.post.containers.CollectionV1).isRequried,
+};
+
+EditCollectionMenu.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+    store: PropTypes.shape({
+        dispatch: PropTypes.func.isRequired,
+    }),
+};
 
 const CollectionDetailHeader = ({ collection }) => {
     let primaryText, secondaryText;
@@ -58,7 +87,7 @@ CollectionDetailKnowledge.propTypes = {
     itemsLoaded: PropTypes.bool,
 };
 
-const CollectionDetailTitle = ({ itemsLoaded, totalItems, ...other }, { muiTheme }) => {
+const CollectionDetailTitle = ({ collection, itemsLoaded, totalItems, ...other }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
     const styles = {
         divider: {
@@ -71,13 +100,18 @@ const CollectionDetailTitle = ({ itemsLoaded, totalItems, ...other }, { muiTheme
     // TODO if items have loaded, display totalItems next to knowledge
     return (
         <section {...other}>
-            <h1 style={theme.h1}>{t('Knowledge')}</h1>
+            <div className="row middle-xs">
+                <h1 style={theme.h1}>{t('Knowledge')}</h1>
+                { /* TODO add permissions check */ }
+                <EditCollectionMenu collection={collection} />
+            </div>
             <DetailDivider style={styles.divider} />
         </section>
     );
 };
 
 CollectionDetailTitle.propTypes = {
+    collection: PropTypes.instanceOf(services.post.containers.CollectionV1),
     items: PropTypes.array,
     itemsLoaded: PropTypes.bool,
 };
@@ -92,6 +126,7 @@ const CollectionDetail = ({ collection, items, itemsLoaded, totalItems }) => {
             <CollectionDetailHeader collection={collection} />
             <DetailContent>
                 <CollectionDetailTitle
+                    collection={collection}
                     itemsLoaded={itemsLoaded}
                     totalItems={totalItems}
                 />

@@ -2,26 +2,30 @@ import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
+import { browserHistory } from 'react-router';
 
-import { getCollection } from '../actions/collections';
+import { hideConfirmDeleteModal, getCollection, deleteCollection } from '../actions/collections';
 import { resetScroll } from '../utils/window';
 import { retrieveCollection } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
 import Container from '../components/Container';
 import CollectionDetail from '../components/CollectionDetail';
+import DeleteCollectionConfirmation from '../components/DeleteCollectionConfirmation';
 
 const selector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
         selectors.routerParametersSelector,
+        selectors.deleteCollectionSelector,
     ],
-    (cacheState, parametersState) => {
+    (cacheState, parametersState, deleteCollectionState) => {
         const { collectionId } = parametersState;
         const cache = cacheState.toJS();
         const collection = retrieveCollection(collectionId, cache);
         return {
             collection,
+            pendingCollectionToDelete: deleteCollectionState.get('pendingCollectionToDelete'),
         };
     },
 );
@@ -43,8 +47,19 @@ class Collection extends Component {
         }
     }
 
+    handleDeleteCollectionRequestClose = () => {
+        this.props.dispatch(hideConfirmDeleteModal());
+    }
+
+    handleDeleteCollection = () => {
+        const { dispatch, pendingCollectionToDelete } = this.props;
+        dispatch(hideConfirmDeleteModal());
+        dispatch(deleteCollection(pendingCollectionToDelete));
+        browserHistory.goBack();
+    }
+
     render() {
-        const { collection } = this.props;
+        const { collection, pendingCollectionToDelete } = this.props;
         const title = collection ? collection.name : null;
         return (
             <Container title={title}>
@@ -52,6 +67,12 @@ class Collection extends Component {
                     collection={collection}
                     itemsLoaded={true}
                     totalItems={0}
+                />
+                <DeleteCollectionConfirmation
+                    collection={pendingCollectionToDelete}
+                    onRequestClose={this.handleDeleteCollectionRequestClose}
+                    onSave={this.handleDeleteCollection}
+                    open={!!pendingCollectionToDelete}
                 />
             </Container>
         );
@@ -66,6 +87,7 @@ Collection.propTypes = {
     params: PropTypes.shape({
         collectionId: PropTypes.string.isRequired,
     }).isRequired,
+    pendingCollectionToDelete: PropTypes.instanceOf(services.post.containers.CollectionV1),
     totalItems: PropTypes.number,
 };
 

@@ -106,3 +106,16 @@ export function getCollection(client, collectionId) {
             .catch(error => reject(error));
     });
 }
+
+export function deleteCollection(client, collection) {
+    let request = new services.post.actions.delete_collection.RequestV1({
+        /*eslint-disable camelcase*/
+        collection_id: collection.id,
+        /*eslint-enable camelcase*/
+    });
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => response.simple(resolve, reject, { collection }))
+            .catch(error => reject(error));
+    });
+}

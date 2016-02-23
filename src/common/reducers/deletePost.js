@@ -9,9 +9,9 @@ const initialState = Immutable.fromJS({
 
 export default function (state = initialState, action) {
     switch(action.type) {
-    case types.HIDE_CONFIRM_DELETE_MODAL:
+    case types.HIDE_CONFIRM_DELETE_POST_MODAL:
         return state.set('modalVisible', false).set('pendingPostToDelete', null);
-    case types.SHOW_CONFIRM_DELETE_MODAL:
+    case types.SHOW_CONFIRM_DELETE_POST_MODAL:
         return state.set('modalVisible', true).set('pendingPostToDelete', action.payload);
     }
     return state;

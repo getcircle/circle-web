@@ -80,3 +80,4 @@ export const profileMembershipsSelector = state => state.get('profileMemberships
 export const deletePostSelector = state => state.get('deletePost');
 export const editorSelector = state => state.get('editor');
 export const createCollectionSelector = state => state.get('createCollection');
+export const deleteCollectionSelector = state => state.get('deleteCollection');
