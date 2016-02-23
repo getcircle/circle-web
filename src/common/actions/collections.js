@@ -24,7 +24,7 @@ export function hideRearrangeCollectionsModal() {
  * @return {Object} redux action
  */
 export function showEditCollectionModal() {
-    return {type: types.MODAL_EDIT_COLLECTION_SHOW};
+    return {type: types.SHOW_EDIT_COLLECTION_MODAL};
 }
 
 /**
@@ -33,5 +33,5 @@ export function showEditCollectionModal() {
  * @return {Object} redux action
  */
 export function hideEditCollectionModal() {
-    return {type: types.MODAL_EDIT_COLLECTION_HIDE};
+    return {type: types.HIDE_EDIT_COLLECTION_MODAL};
 }

@@ -6,6 +6,7 @@ export { default as autocomplete } from './autocomplete';
 export { default as cache } from './cache';
 export { default as createTeam} from './createTeam';
 export { default as deletePost } from './deletePost';
+export { default as editCollection } from './editCollection';
 export { default as editor } from './editor';
 export { default as explore } from './explore';
 export { default as extendedProfiles } from './extendedProfiles';
@@ -23,7 +24,6 @@ export { default as responsive } from './responsive';
 export { default as search } from './search';
 export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';
-export { default as updateCollection } from './updateCollection';
 export { default as updateProfile } from './profile';
 export { default as updateTeam } from './updateTeam';
 

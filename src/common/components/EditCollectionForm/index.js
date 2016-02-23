@@ -17,14 +17,14 @@ import FormTextField from '../FormTextField';
 
 const selector = selectors.createImmutableSelector(
     [
-        selectors.updateCollectionSelector,
+        selectors.editCollectionSelector,
     ],
     (
-        updateCollectionState,
+        editCollectionState,
     ) => {
         return {
-            formSubmitting: updateCollectionState.get('formSubmitting'),
-            visible: updateCollectionState.get('modalVisible'),
+            formSubmitting: editCollectionState.get('formSubmitting'),
+            visible: editCollectionState.get('modalVisible'),
         };
     }
 );
@@ -44,7 +44,7 @@ const styles = {
     }
 };
 
-export class CollectionEditForm extends CSSComponent {
+export class EditCollectionForm extends CSSComponent {
 
     static propTypes = {
         collection: PropTypes.instanceOf(services.post.containers.CollectionV1),
@@ -133,4 +133,4 @@ export default reduxForm(
       validate: collectionValidator,
     },
     selector
-)(CollectionEditForm);
+)(EditCollectionForm);
