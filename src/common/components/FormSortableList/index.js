@@ -29,16 +29,8 @@ class FormSortableList extends Component {
             return <span />;
         }
 
-        const styles = {
-            root: {
-                borderLeft: `1px solid ${Colors.minBlack}`,
-                borderRight: `1px solid ${Colors.minBlack}`,
-                borderTop: `1px solid ${Colors.minBlack}`,
-            },
-        };
-
         return (
-            <div style={styles.root}>
+            <div>
                 {value.map((item, i) => {
                     return (
                         <Item
