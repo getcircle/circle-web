@@ -6,7 +6,7 @@ import * as selectors from '../selectors';
 import connectData from '../utils/connectData';
 import { getIntegrationAuthenticationInstructions } from '../actions/authentication';
 import { getNextPathname, routeToURL } from '../utils/routes';
-import { providerForIntegration } from '../utils/Integrations';
+import { providerForIntegration } from '../utils/integrations';
 
 import CSSComponent from '../components/CSSComponent';
 import Container from '../components/Container';
