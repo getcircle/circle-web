@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 
-import { hideRearrangeCollectionsModal } from '../actions/rearrangeCollections';
+import { hideRearrangeCollectionsModal } from '../actions/collections';
 import { REARRANGE_COLLECTIONS } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
+import { services } from 'protobufs';
 import t from '../utils/gettext';
 
 import FormDialog from './FormDialog';

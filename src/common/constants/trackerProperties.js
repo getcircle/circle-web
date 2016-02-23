@@ -52,6 +52,7 @@ export const PAGE_TYPE = {
     TEAM_SUBTEAMS: SharedConstants.TEAM_SUBTEAMS,
 
     // Editable Form
+    EDIT_COLLECTION: 'Edit Collection',
     EDIT_POST: 'Edit Post',
     EDIT_PROFILE: 'Edit Profile',
     EDIT_TEAM: 'Edit Team',

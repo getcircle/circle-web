@@ -30,6 +30,10 @@ function createValidator(rules) {
   };
 }
 
+export const collectionValidator = createValidator({
+    name: [required],
+})
+
 export const profileValidator = createValidator({
     contacts: arrayOf({type: [required], value: [required]}),
     firstName: [required],

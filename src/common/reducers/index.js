@@ -23,6 +23,7 @@ export { default as responsive } from './responsive';
 export { default as search } from './search';
 export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';
+export { default as updateCollection } from './updateCollection';
 export { default as updateProfile } from './profile';
 export { default as updateTeam } from './updateTeam';
 
