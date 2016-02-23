@@ -4,6 +4,18 @@ import { getPostsPaginationKey } from '../actions/posts';
 
 import { getPostStateURLString, getPostStateFromURLString } from '../utils/post';
 
+export function createCollection(client, collection) {
+    let request = new services.post.actions.create_collection.RequestV1({collection});
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then((response) => {
+                const { collection } = response.result;
+                response.finish(resolve, reject, collection.id);
+            })
+            .catch(error => reject(error));
+    });
+}
+
 export function createPost(client, post) {
     let request = new services.post.actions.create_post.RequestV1({post: post});
     return new Promise((resolve, reject) => {

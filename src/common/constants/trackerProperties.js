@@ -59,6 +59,7 @@ export const PAGE_TYPE = {
 
     // Create forms
     CREATE_TEAM: 'Create Team',
+    CREATE_COLLECTION: 'Create Collection',
 
     // Selector pages
     PROFILE_SELECTOR: 'Profile Selector'
