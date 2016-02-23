@@ -19,6 +19,8 @@ export default function (state = initialState, action) {
     case types.CREATE_POST:
     case types.UPDATE_POST:
         return state.set('saving', true);
+    case types.UPDATE_POST_SUCCESS:
+        return state.set('saving', false);
     case types.CREATE_POST_SUCCESS:
         return state.merge({
             'draft': action.payload.post,

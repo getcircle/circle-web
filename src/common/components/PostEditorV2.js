@@ -16,6 +16,8 @@ import ListItemProfile from './ListItemProfile';
 import LeftChevronIcon from './LeftChevronIcon';
 import RoundedButton from './RoundedButton';
 
+const { PostStateV1 } = services.post.containers;
+
 const BackButton = (props, { muiTheme }) => {
     function handleTouchTap() { browserHistory.goBack(); }
     return (
@@ -61,10 +63,27 @@ PublishButton.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-const Header = ({ post, onPublish }) => {
+const Header = ({ post, onPublish, saving }, { muiTheme }) => {
     function handleTouchTap() {
+        post.state = PostStateV1.LISTED;
         onPublish(post);
         routeToPost(post);
+    }
+
+    let saveNotification;
+    if (post.id && [PostStateV1.DRAFT, null].includes(post.state)) {
+        let text;
+        if (saving) {
+            text = t('Draft Saving...');
+        } else {
+            text = t('Draft Saved');
+        }
+        const style = {
+            fontSize: '1.3rem',
+            color: muiTheme.luno.colors.extraLightBlack,
+            paddingRight: 30,
+        };
+        saveNotification = <span style={style}>{text}</span>;
     }
 
     return (
@@ -74,6 +93,7 @@ const Header = ({ post, onPublish }) => {
                     <BackButton />
                 </div>
                 <div className="end-xs col-xs">
+                    {saveNotification}
                     <PublishButton onTouchTap={handleTouchTap} />
                 </div>
             </section>
@@ -84,6 +104,11 @@ const Header = ({ post, onPublish }) => {
 Header.propTypes = {
     onPublish: PropTypes.func.isRequired,
     post: PropTypes.instanceOf(services.post.containers.Postv1),
+    saving: PropTypes.bool,
+};
+
+Header.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
 };
 
 const EditorContainer = (props, context) => {
@@ -206,7 +231,7 @@ class PostEditor extends Component {
     }
 
     render() {
-        const { onFileDelete, onFileUpload, onSave, post, profile, uploadProgress, uploadedFiles } = this.props;
+        const { onFileDelete, onFileUpload, onSave, post, profile, saving, uploadProgress, uploadedFiles } = this.props;
         return (
             <div>
                 { /* this could be an admin editing the post, we should still show the original author */ }
@@ -214,6 +239,7 @@ class PostEditor extends Component {
                     onPublish={onSave}
                     post={post}
                     profile={profile}
+                    saving={saving}
                 />
                 <DetailContent>
                     <ListItemProfile disabled={true} profile={profile} />
@@ -238,6 +264,7 @@ PostEditor.propTypes = {
     onSave: PropTypes.func.isRequired,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
+    saving: PropTypes.bool,
     uploadProgress: PropTypes.object,
     uploadedFiles: PropTypes.object,
 };

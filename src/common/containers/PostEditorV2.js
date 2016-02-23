@@ -53,6 +53,7 @@ const selector = selectors.createImmutableSelector(
         return {
             post,
             draft: editorState.get('draft'),
+            saving: editorState.get('saving'),
             uploadProgress: filesState.get('progress'),
             uploadedFiles: filesState.get('files'),
         };
@@ -111,7 +112,7 @@ class PostEditor extends Component {
     }
 
     render() {
-        const { post, uploadProgress, uploadedFiles } = this.props;
+        const { post, saving, uploadProgress, uploadedFiles } = this.props;
         const { auth: { profile }, muiTheme } = this.context;
 
         let content;
@@ -126,6 +127,7 @@ class PostEditor extends Component {
                         onSave={this.handleSave}
                         post={post}
                         profile={profile}
+                        saving={saving}
                         uploadProgress={uploadProgress}
                         uploadedFiles={uploadedFiles}
                     />
@@ -151,6 +153,7 @@ PostEditor.propTypes = {
         postId: PropTypes.string,
     }),
     post: InternalPropTypes.PostV1,
+    saving: PropTypes.bool,
     uploadProgress: PropTypes.object,
     uploadedFiles: PropTypes.object,
 };
