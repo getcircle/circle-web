@@ -55,6 +55,7 @@ export function routeToPost(post) {
 }
 
 export function routeToSearch(query) {
+    query = encodeURIComponent(query);
     browserHistory.push(`/search/${query}`);
 }
 
