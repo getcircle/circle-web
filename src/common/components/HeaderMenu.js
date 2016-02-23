@@ -12,7 +12,7 @@ import { PostStateURLString } from '../utils/post';
 import { routeToNewPost, routeToPosts, routeToProfile, routeToTeam, routeToAddIntegration } from '../utils/routes';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
-import { IntegrationString } from '../utils/Integrations';
+import { IntegrationString } from '../utils/integrations';
 
 import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
