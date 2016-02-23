@@ -56,6 +56,7 @@ export const PAGE_TYPE = {
     EDIT_PROFILE: 'Edit Profile',
     EDIT_TEAM: 'Edit Team',
     ADD_MEMBERS: 'Add Members',
+    REARRANGE_COLLECTIONS: 'Rearrange Collections',
 
     // Create forms
     CREATE_TEAM: 'Create Team',

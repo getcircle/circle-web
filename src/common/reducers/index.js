@@ -1,5 +1,4 @@
 import { reducer as formReducer } from 'redux-form';
-import Immutable from 'immutable';
 
 export { default as addMembers } from './addMembers';
 export { default as authentication } from './authentication';
@@ -19,6 +18,7 @@ export { default as post } from './post';
 export { default as posts } from './posts';
 export { default as profileMemberships } from './profileMemberships';
 export { default as profiles } from './profiles';
+export { default as rearrangeCollections } from './rearrangeCollections';
 export { default as responsive } from './responsive';
 export { default as search } from './search';
 export { default as teamCoordinators } from './teamCoordinators';
