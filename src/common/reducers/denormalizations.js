@@ -94,3 +94,7 @@ export function retrieveTeamMembers(ids, cache) {
 export function retrieveReportingDetails(profileId, cache) {
     return retrieve(profileId, services.profile.containers.ReportingDetailsV1, cache);
 }
+
+export function retrieveCollection(collectionId, cache) {
+    return retrieve(collectionId, services.post.containers.CollectionV1, cache);
+}

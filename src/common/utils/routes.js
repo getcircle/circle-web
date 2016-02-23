@@ -26,6 +26,10 @@ export function replacePostState(state) {
     browserHistory.replace(`/posts/${stateString}`);
 }
 
+export function routeToCollection(collection) {
+    browserHistory.push(`/collection/${collection.id}`);
+};
+
 export function routeToTeam(team) {
     browserHistory.push(`/team/${team.id}`);
 }

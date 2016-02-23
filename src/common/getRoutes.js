@@ -255,6 +255,14 @@ export default function (store, url) {
                 path="/team/:teamId/:slug"
             />
             <Route
+                component={require('./containers/Collection')}
+                onEnter={applyMiddleware(
+                    ...defaultMiddleware,
+                    trackPageView(PAGE_TYPE.COLLECTION_DETAIL, 'collectionId')
+                )}
+                path="/collection/:collectionId"
+            />
+            <Route
                 component={require('./containers/AddIntegration')}
                 onEnter={applyMiddleware(...defaultMiddleware)}
                 path="/add-integration/:integration"

@@ -41,6 +41,7 @@ export const PAGE_TYPE = {
     POST_DETAIL: 'Post Detail',
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
     TEAM_DETAIL: 'Team Detail',
+    COLLECTION_DETAIL: 'Collection Detail',
 
     // List pages
     CHANGE_POST_OWNER: 'Change Post Owner',

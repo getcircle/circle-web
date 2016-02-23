@@ -117,6 +117,8 @@ class Team extends CSSComponent {
         const { params: { slug }, team } = this.props;
         const title = team ? team.name : null;
 
+        // TODO move the center loading indicator within team detail so we have
+        // the header loaded
         let content;
         if (team) {
             content = (

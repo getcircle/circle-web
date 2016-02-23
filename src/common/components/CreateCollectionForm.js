@@ -8,6 +8,7 @@ import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { collectionValidator } from '../utils/validators';
+import { routeToCollection } from '../utils/routes';
 
 import FormDialog from './FormDialog';
 import FormLabel from './FormLabel';
@@ -38,7 +39,7 @@ class CreateCollectionForm extends Component {
         }
 
         if (!this.props.id && nextProps.id) {
-            console.log('route to collection page');
+            routeToCollection({id: nextProps.id});
         }
     }
 
