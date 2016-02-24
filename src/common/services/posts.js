@@ -5,7 +5,7 @@ import { getPostsPaginationKey } from '../actions/posts';
 import { getPostStateURLString, getPostStateFromURLString } from '../utils/post';
 
 export function createPost(client, post) {
-    let request = new services.post.actions.create_post.RequestV1({post: post});
+    const request = new services.post.actions.create_post.RequestV1({post: post});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then((response) => {
@@ -17,7 +17,7 @@ export function createPost(client, post) {
 }
 
 export function updatePost(client, post) {
-    let request = new services.post.actions.update_post.RequestV1({post: post});
+    const request = new services.post.actions.update_post.RequestV1({post: post});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => response.finish(resolve, reject, post.id))
@@ -26,7 +26,7 @@ export function updatePost(client, post) {
 }
 
 export function deletePost(client, post) {
-    let request = new services.post.actions.delete_post.RequestV1({id: post.id});
+    const request = new services.post.actions.delete_post.RequestV1({id: post.id});
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
             .then(response => response.simple(resolve, reject, { post }))
@@ -83,7 +83,7 @@ export function getPosts(args) {
 }
 
 export function createCollection(client, collection) {
-    let request = new services.post.actions.create_collection.RequestV1({collection});
+    const request = new services.post.actions.create_collection.RequestV1({collection});
     return new Promise((resolve, reject) => {
         client.send(request)
             .then((response) => {
@@ -95,7 +95,7 @@ export function createCollection(client, collection) {
 }
 
 export function getCollection(client, collectionId) {
-    let request = new services.post.actions.get_collection.RequestV1({
+    const request = new services.post.actions.get_collection.RequestV1({
         /*eslint-disable camelcase*/
         collection_id: collectionId,
         /*eslint-enable camelcase*/
@@ -108,7 +108,7 @@ export function getCollection(client, collectionId) {
 }
 
 export function deleteCollection(client, collection) {
-    let request = new services.post.actions.delete_collection.RequestV1({
+    const request = new services.post.actions.delete_collection.RequestV1({
         /*eslint-disable camelcase*/
         collection_id: collection.id,
         /*eslint-enable camelcase*/
@@ -116,6 +116,15 @@ export function deleteCollection(client, collection) {
     return new Promise((resolve, reject) => {
         client.send(request)
             .then(response => response.simple(resolve, reject, { collection }))
+            .catch(error => reject(error));
+    });
+}
+
+export function updateCollection(client, collection) {
+    const request = new services.post.actions.update_collection.RequestV1({collection});
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => response.finish(resolve, reject, collection.id))
             .catch(error => reject(error));
     });
 }

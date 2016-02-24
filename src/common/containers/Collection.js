@@ -12,6 +12,7 @@ import * as selectors from '../selectors';
 import Container from '../components/Container';
 import CollectionDetail from '../components/CollectionDetail';
 import DeleteCollectionConfirmation from '../components/DeleteCollectionConfirmation';
+import EditCollectionForm from '../components/EditCollectionForm';
 
 const selector = selectors.createImmutableSelector(
     [
@@ -59,7 +60,7 @@ class Collection extends Component {
     }
 
     render() {
-        const { collection, pendingCollectionToDelete } = this.props;
+        const { collection, dispatch, pendingCollectionToDelete } = this.props;
         const title = collection ? collection.name : null;
         return (
             <Container title={title}>
@@ -73,6 +74,10 @@ class Collection extends Component {
                     onRequestClose={this.handleDeleteCollectionRequestClose}
                     onSave={this.handleDeleteCollection}
                     open={!!pendingCollectionToDelete}
+                />
+                <EditCollectionForm
+                    collection={collection}
+                    dispatch={dispatch}
                 />
             </Container>
         );

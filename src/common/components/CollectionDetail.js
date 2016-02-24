@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { showConfirmDeleteModal } from '../actions/collections';
+import { showConfirmDeleteModal, showEditCollectionModal } from '../actions/collections';
 import t from '../utils/gettext';
 
 import CollectionIcon from './CollectionIcon';
@@ -18,16 +18,18 @@ const EditCollectionMenu = ({ collection }, { store: { dispatch }, muiTheme }) =
     );
 
     function handleDelete() { dispatch(showConfirmDeleteModal(collection)); }
+    function handleEdit() { dispatch(showEditCollectionModal()); }
 
     return (
         <IconMenu iconElement={icon}>
+            <MenuItem onTouchTap={handleEdit} text={t('Edit Collection')} />
             <MenuItem onTouchTap={handleDelete} text={t('Delete Collection')} />
         </IconMenu>
     );
 };
 
 EditCollectionMenu.propTypes = {
-    collection: PropTypes.instanceOf(services.post.containers.CollectionV1).isRequried,
+    collection: PropTypes.instanceOf(services.post.containers.CollectionV1).isRequired,
 };
 
 EditCollectionMenu.contextTypes = {

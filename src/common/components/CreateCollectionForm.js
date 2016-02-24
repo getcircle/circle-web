@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
-import { createCollection, hideCreateModal } from '../actions/collections';
+import { createCollection, hideCreateCollectionModal } from '../actions/collections';
 import { CREATE_COLLECTION } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
@@ -50,7 +50,7 @@ class CreateCollectionForm extends Component {
     }
 
     handleCancel = () => {
-        this.props.dispatch(hideCreateModal());
+        this.props.dispatch(hideCreateCollectionModal());
     }
 
     render() {

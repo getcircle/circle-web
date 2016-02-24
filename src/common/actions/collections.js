@@ -75,6 +75,19 @@ export function deleteCollection(collection) {
     };
 }
 
+export function updateCollection(collection) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.UPDATE_COLLECTION,
+                types.UPDATE_COLLECTION_SUCCESS,
+                types.UPDATE_COLLECTION_FAILURE,
+            ],
+            remote: client => requests.updateCollection(client, collection),
+        },
+    };
+}
+
 /**
  * Show the rearrange collections modal
  *

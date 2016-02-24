@@ -3,7 +3,7 @@ import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
 import { EDIT_COLLECTION } from '../../constants/forms';
-import { hideEditCollectionModal } from '../../actions/collections';
+import { hideEditCollectionModal, updateCollection } from '../../actions/collections';
 import { PAGE_TYPE } from '../../constants/trackerProperties';
 import * as selectors from '../../selectors';
 import t from '../../utils/gettext';
@@ -47,7 +47,7 @@ const styles = {
 export class EditCollectionForm extends CSSComponent {
 
     static propTypes = {
-        collection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+        collection: PropTypes.instanceOf(services.post.containers.CollectionV1).isRequired,
         dispatch: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
         formSubmitting: PropTypes.bool,
@@ -82,8 +82,14 @@ export class EditCollectionForm extends CSSComponent {
         }
     }
 
-    submit = ({items}, dispatch) => {
+    submit = ({ name, items }, dispatch) => {
+        const collection = {
+            ...this.props.collection,
+            name,
+        };
+
         // TODO: calculate diffs, send reorder action
+        dispatch(updateCollection(collection));
     }
 
     handleCancel() {
@@ -92,11 +98,26 @@ export class EditCollectionForm extends CSSComponent {
 
     render() {
         const {
+            collection,
             fields: { items, name },
             formSubmitting,
             handleSubmit,
             visible,
         } = this.props;
+
+        let sortItems;
+        if (collection.items.length) {
+            sortItems = (
+                <div>
+                    <label style={styles.label}>
+                        {t('Drag and drop to rearrange Knowledge.')}
+                    </label>
+                    <FormSortableList
+                        {...items}
+                    />
+                </div>
+            );
+        }
 
         return (
             <FormDialog
@@ -114,12 +135,7 @@ export class EditCollectionForm extends CSSComponent {
                     placeholder={t('Name your Collection')}
                     {...name}
                  />
-                <label style={styles.label}>
-                    {t('Drag and drop to rearrange Knowledge.')}
-                </label>
-                <FormSortableList
-                    {...items}
-                />
+                 {sortItems}
             </FormDialog>
         );
     }
