@@ -29,7 +29,7 @@ class AutoCompleteProfile extends Component {
         focused: PropTypes.bool,
         ignoreProfileIds: PropTypes.arrayOf(PropTypes.string),
         onBlur: PropTypes.func,
-        onSelectProfile: PropTypes.func.isRequired,
+        onSelectItem: PropTypes.func,
         resultFactoryFunction: PropTypes.func.isRequired,
         results: PropTypes.object,
     }
@@ -38,6 +38,7 @@ class AutoCompleteProfile extends Component {
         focued: false,
         ignoreProfileIds: [],
         onBlur: () => {},
+        onSelectItem: () => {},
     }
 
     state = {
@@ -70,7 +71,7 @@ class AutoCompleteProfile extends Component {
     }
 
     handleSelectItem = ({ payload }) => {
-        this.props.onSelectProfile(payload);
+        this.props.onSelectItem(payload);
     }
 
     getSections() {
@@ -92,7 +93,7 @@ class AutoCompleteProfile extends Component {
     render() {
         const {
             onBlur,
-            onSelectProfile,
+            onSelectItem,
             results,
             ...other,
         } = this.props;
