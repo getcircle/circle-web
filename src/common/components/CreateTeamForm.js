@@ -36,7 +36,6 @@ export class CreateTeamForm extends Component {
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
-        formSubmitted: PropTypes.bool,
         formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
         id: PropTypes.string,
