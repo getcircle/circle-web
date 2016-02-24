@@ -36,15 +36,11 @@ trix-toolbar.sticky {
     z-index: 10;
 }
 
-.luno-editor.sticky-toolbar, .luno-editor-container.sticky-toolbar .hints-container {
-    position: relative;
-    top: 35px;
-}
-
 .luno-editor-container .hints-container {
     color: $lightTextColor;
     font-size: 13px;
     padding-top: 10px;
+    padding-bottom: 10px;
     width: 100%;
     -webkit-user-select: none;
     -moz-user-select: none;
