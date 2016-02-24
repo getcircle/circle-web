@@ -5,11 +5,13 @@ import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
 import { createPost, getPost, updatePost } from '../actions/posts';
+import { getCollections } from '../actions/collections';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
 import { reset } from '../actions/editor';
 
 import { resetScroll } from '../utils/window';
-import { retrievePost } from '../reducers/denormalizations';
+import { retrievePost, retrieveCollections } from '../reducers/denormalizations';
+import { getCollectionsNormalizations } from '../reducers/normalizations';
 import { replaceWithEditPost } from '../utils/routes';
 import * as selectors from '../selectors';
 
@@ -22,6 +24,7 @@ import { default as PostEditorComponent } from '../components/PostEditorV2';
 const REQUIRED_FIELDS = ['content', 'by_profile'];
 
 const { PostStateV1 } = services.post.containers;
+const { SourceV1 } = services.post.containers.CollectionItemV1;
 
 const selector = selectors.createImmutableSelector(
     [
@@ -31,7 +34,7 @@ const selector = selectors.createImmutableSelector(
         selectors.filesSelector,
     ],
     (cacheState, paramsState, editorState, filesState) => {
-        let post;
+        let collections, post;
 
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
@@ -50,7 +53,12 @@ const selector = selectors.createImmutableSelector(
             post.content = content;
         }
 
+        const collectionIds = getCollectionsNormalizations(postId, cache);
+        if (collectionIds) {
+            collections = retrieveCollections(collectionIds, cache);
+        }
         return {
+            collections,
             post,
             draft: editorState.get('draft'),
             saving: editorState.get('saving'),
@@ -66,8 +74,15 @@ function fetchPost({ dispatch, params: { postId } }) {
     }
 }
 
+function fetchCollections({ dispatch, params: { postId } }) {
+    if (postId) {
+        return dispatch(getCollections({source: SourceV1.LUNO, sourceId: postId}));
+    }
+}
+
 const hooks = {
     fetch: locals => fetchPost(locals),
+    defer: locals => fetchCollections(locals),
 };
 
 class PostEditor extends Component {
@@ -112,7 +127,7 @@ class PostEditor extends Component {
     }
 
     render() {
-        const { post, saving, uploadProgress, uploadedFiles } = this.props;
+        const { collections, post, saving, uploadProgress, uploadedFiles } = this.props;
         const { auth: { profile }, muiTheme } = this.context;
 
         let content;
@@ -122,6 +137,7 @@ class PostEditor extends Component {
                 <DocumentTitle title={post.title}>
                     <PostEditorComponent
                         autoSave={autoSave}
+                        collections={collections}
                         onFileDelete={this.handleFileDelete}
                         onFileUpload={this.handleFileUpload}
                         onSave={this.handleSave}

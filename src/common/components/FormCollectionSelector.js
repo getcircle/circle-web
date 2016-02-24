@@ -2,22 +2,23 @@ import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
 
-import AutoCompleteProfile, { createProfileWithTitle } from './AutoCompleteProfile';
+import AutoCompleteCollection, { createCollectionItem } from './AutoCompleteCollection';
 import FormTokenizedSelector from './FormTokenizedSelector';
 
-function getItemName(profile) {
-    return profile.full_name;
+function getItemName(collection) {
+    // TODO if this is owned by a team add [<team name>]
+    return collection.name;
 }
 
-const FormPeopleSelector = ({ active, onChange, value, ...other }) => {
-    const profiles = value || [];
+const FormCollectionSelector = ({ active, onChange, value, ...other }) => {
+    const collections = value || [];
     const autoComplete = (
-        <AutoCompleteProfile
+        <AutoCompleteCollection
             focused={active}
             hasItemDivider={false}
-            ignoreProfileIds={profiles.map(profile => profile.id)}
+            ignoreCollectionIds={collections.map(collection => collection.id)}
             placeholder={t('Search by Name')}
-            resultFactoryFunction={createProfileWithTitle}
+            resultFactoryFunction={createCollectionItem}
         />
     );
     return (
@@ -29,12 +30,12 @@ const FormPeopleSelector = ({ active, onChange, value, ...other }) => {
             {...other}
         />
     );
-};
+}
 
-FormPeopleSelector.propTypes = {
+FormCollectionSelector.propTypes = {
     active: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array,
 };
 
-export default FormPeopleSelector;
+export default FormCollectionSelector;

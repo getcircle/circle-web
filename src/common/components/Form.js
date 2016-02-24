@@ -65,6 +65,7 @@ export default class Form extends CSSComponent {
                 <form
                     onSubmit={onSubmit}
                     style={this.styles().form}
+                    {...other}
                 >
                     {children}
                 </form>

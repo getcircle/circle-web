@@ -4,9 +4,22 @@ import Immutable from 'immutable';
 
 import DetailContent from '../DetailContent';
 import ListItemProfile from '../ListItemProfile';
+import EditPostCollections from '../EditPostCollections';
 
 import Editor from './Editor';
 import Header from './Header';
+
+const PostCollections = ({ collections, post }) => {
+    let content;
+    if (post) {
+        content = <EditPostCollections collections={collections} post={post} style={{paddingTop: 10}}/>;
+    }
+    return (
+        <div>
+            {content}
+        </div>
+    );
+}
 
 class PostEditor extends Component {
 
@@ -41,7 +54,7 @@ class PostEditor extends Component {
     }
 
     render() {
-        const { onFileDelete, onFileUpload, onSave, post, profile, saving, uploadProgress, uploadedFiles } = this.props;
+        const { collections, onFileDelete, onFileUpload, onSave, post, profile, saving, uploadProgress, uploadedFiles } = this.props;
         return (
             <div>
                 { /* this could be an admin editing the post, we should still show the original author */ }
@@ -60,6 +73,7 @@ class PostEditor extends Component {
                         uploadProgress={uploadProgress}
                         uploadedFiles={uploadedFiles}
                     />
+                    <PostCollections collections={collections} post={post} />
                 </DetailContent>
             </div>
         );

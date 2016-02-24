@@ -5,6 +5,8 @@ import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
 import { retrieveCollection } from '../reducers/denormalizations';
 
+const { SourceV1 } = services.post.containers.CollectionItemV1;
+
 export function showCreateCollectionModal() {
     return {type: types.SHOW_CREATE_COLLECTION_MODAL};
 }
@@ -122,4 +124,47 @@ export function showEditCollectionModal() {
  */
 export function hideEditCollectionModal() {
     return {type: types.HIDE_EDIT_COLLECTION_MODAL};
+}
+
+export function addPostToCollection(post, collection) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.ADD_TO_COLLECTION,
+                types.ADD_TO_COLLECTION_SUCCESS,
+                types.ADD_TO_COLLECTION_FAILURE,
+            ],
+            remote: client => requests.addToCollection(client, {
+                source: SourceV1.LUNO,
+                sourceId: post.id,
+                collectionId: collection.id,
+            }),
+        },
+    };
+}
+
+export function removeFromCollection({collectionId, collectionItemId}) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.REMOVE_FROM_COLLECTION,
+                types.REMOVE_FROM_COLLECTION_SUCCESS,
+                types.REMOVE_FROM_COLLECTION_FAILURE,
+            ],
+            remote: client => requests.removeFromCollection(client, {collectionId, collectionItemId}),
+        },
+    };
+}
+
+export function getCollections({source, sourceId}) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_COLLECTIONS,
+                types.GET_COLLECTIONS_SUCCESS,
+                types.GET_COLLECTIONS_FAILURE,
+            ],
+            remote: client => requests.getCollections(client, {source, sourceId}),
+        },
+    };
 }

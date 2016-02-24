@@ -98,3 +98,7 @@ export function retrieveReportingDetails(profileId, cache) {
 export function retrieveCollection(collectionId, cache) {
     return retrieve(collectionId, services.post.containers.CollectionV1, cache);
 }
+
+export function retrieveCollections(ids, cache) {
+    return retrieve(ids, services.post.containers.CollectionV1, cache);
+}

@@ -40,6 +40,15 @@ export function getPostsNormalizations(action) {
     );
 }
 
+export function getCollectionsNormalizations(postId, cache) {
+    return getNormalizations(
+        'collections',
+        postId,
+        services.post.actions.get_collections.ResponseV1,
+        cache,
+    );
+}
+
 /**
  * Return the team member ids that have been normalized in the payload.
  *
