@@ -68,7 +68,7 @@ describe('HeaderMenu', () => {
         wrapper.update();
 
         const menuItems = wrapper.find(MenuItem);
-        expect(menuItems.length).toBe(3);
+        expect(menuItems.length).toBe(4);
 
         const viewProfileHandlerSpy = expect.spyOn(wrapper.instance(), 'handleViewProfile');
         const createTeamSpy = expect.spyOn(wrapper.instance(), 'handleCreateTeam');
@@ -91,7 +91,7 @@ describe('HeaderMenu', () => {
         wrapper.update();
 
         const menuItems = wrapper.find(MenuItem);
-        expect(menuItems.length).toBe(4);
+        expect(menuItems.length).toBe(5);
 
         const viewKnowledgeHandlerSpy = expect.spyOn(wrapper.instance(), 'handleViewKnowledge');
         menuItems.at(1).prop('onTouchTap')();
@@ -107,7 +107,7 @@ describe('HeaderMenu', () => {
         wrapper.update();
 
         const menuItems = wrapper.find(MenuItem);
-        expect(menuItems.length).toBe(3);
+        expect(menuItems.length).toBe(4);
 
         const hasMyKnowledge = menuItems.map(item => item.html())
                                         .some(html => html.match('My Knowledge'));
