@@ -5,7 +5,6 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import React, { Component, PropTypes } from 'react';
 import update from 'react/lib/update';
 
-import Colors from '../../styles/Colors';
 import Item from './Item';
 
 class FormSortableList extends Component {
@@ -24,7 +23,7 @@ class FormSortableList extends Component {
     }
 
     render() {
-        const { value } = this.props;
+        const { MenuComponent, onMenuChoice, value } = this.props;
         if (!value) {
             return <span />;
         }
@@ -34,10 +33,12 @@ class FormSortableList extends Component {
                 {value.map((item, i) => {
                     return (
                         <Item
+                            MenuComponent={MenuComponent}
                             id={item.id}
                             index={i}
                             key={item.id}
                             moveItem={this.moveItem}
+                            onMenuChoice={onMenuChoice}
                             text={item.text}
                         />
                     );
@@ -48,8 +49,10 @@ class FormSortableList extends Component {
 };
 
 FormSortableList.propTypes = {
+    MenuComponent: PropTypes.func,
     name: PropTypes.string,
     onChange: PropTypes.func.isRequired,
+    onMenuChoice: PropTypes.func,
     value: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.node,
         text: PropTypes.string,

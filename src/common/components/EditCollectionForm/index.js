@@ -15,6 +15,8 @@ import FormLabel from '../FormLabel';
 import FormSortableList from '../FormSortableList';
 import FormTextField from '../FormTextField';
 
+import ItemMenu, { MENU_CHOICES } from './ItemMenu';
+
 const selector = selectors.createImmutableSelector(
     [
         selectors.editCollectionSelector,
@@ -113,6 +115,8 @@ export class EditCollectionForm extends CSSComponent {
                         {t('Drag and drop to rearrange Knowledge.')}
                     </label>
                     <FormSortableList
+                        MenuComponent={ItemMenu}
+                        onMenuChoice={this.handleMenuChoice}
                         {...items}
                     />
                 </div>

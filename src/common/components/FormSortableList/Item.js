@@ -74,12 +74,14 @@ const itemTarget = {
 }))
 export default class Item extends Component {
     static propTypes = {
+        MenuComponent: PropTypes.func,
         connectDragSource: PropTypes.func.isRequired,
         connectDropTarget: PropTypes.func.isRequired,
         id: PropTypes.any.isRequired,
         index: PropTypes.number.isRequired,
         isDragging: PropTypes.bool.isRequired,
         moveItem: PropTypes.func.isRequired,
+        onMenuChoice: PropTypes.func,
         text: PropTypes.string.isRequired,
     };
 
@@ -96,7 +98,14 @@ export default class Item extends Component {
     }
 
     render() {
-        const { text, isDragging, connectDragSource, connectDropTarget } = this.props;
+        const {
+            MenuComponent,
+            connectDragSource,
+            connectDropTarget,
+            isDragging,
+            onMenuChoice,
+            text,
+        } = this.props;
         const { hover } = this.state;
         const styles = {
             root: {
@@ -119,15 +128,34 @@ export default class Item extends Component {
                 top: '50%',
                 width: 20,
             },
+            menu: {
+                marginTop: -25,
+                position: 'absolute',
+                right: 20,
+                top: '50%',
+                width: 25,
+            },
             text: {
                 display: 'inline-block',
                 marginBottom: 7,
                 marginLeft: 25,
+                marginRight: 25,
                 marginTop: 7,
                 maxWidth: 500,
                 verticalAlign: 'top',
             },
         };
+
+        let menu;
+        if (MenuComponent) {
+            menu = (
+                <MenuComponent
+                    hover={hover}
+                    onMenuChoice={onMenuChoice}
+                    style={styles.menu}
+                />
+            );
+        }
 
         return connectDragSource(connectDropTarget(
             <div
@@ -139,6 +167,7 @@ export default class Item extends Component {
                 <span style={styles.text}>
                     {text}
                 </span>
+                {menu}
             </div>
         ));
     }
