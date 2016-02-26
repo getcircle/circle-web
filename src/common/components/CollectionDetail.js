@@ -66,7 +66,7 @@ const CollectionDetailKnowledge = ({ items, itemsLoaded }, { muiTheme }) => {
             lineHeight: '2.4rem',
         },
     };
-    if ((!items || !items.length) && itemsLoaded) {
+    if ((!items || (items && !items.length)) && itemsLoaded) {
         content = (
             <div>
                 <span style={styles.noContent}>{t('This Collection doesn\'t contain any Knowledge.')}</span>
@@ -100,12 +100,16 @@ const CollectionDetailTitle = ({ collection, itemsLoaded, totalItems, ...other }
         },
     };
     // TODO if items have loaded, display totalItems next to knowledge
+    let menu;
+    { /* TODO add permissions check */ }
+    if (collection) {
+        menu = <EditCollectionMenu collection={collection} />;
+    }
     return (
         <section {...other}>
             <div className="row middle-xs">
                 <h1 style={theme.h1}>{t('Knowledge')}</h1>
-                { /* TODO add permissions check */ }
-                <EditCollectionMenu collection={collection} />
+                {menu}
             </div>
             <DetailDivider style={styles.divider} />
         </section>

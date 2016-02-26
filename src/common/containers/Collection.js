@@ -62,6 +62,24 @@ class Collection extends Component {
     render() {
         const { collection, dispatch, pendingCollectionToDelete } = this.props;
         const title = collection ? collection.name : null;
+
+        let forms;
+        if (collection) {
+            forms = (
+                <div>
+                    <DeleteCollectionConfirmation
+                        collection={pendingCollectionToDelete}
+                        onRequestClose={this.handleDeleteCollectionRequestClose}
+                        onSave={this.handleDeleteCollection}
+                        open={!!pendingCollectionToDelete}
+                    />
+                    <EditCollectionForm
+                        collection={collection}
+                        dispatch={dispatch}
+                    />
+                </div>
+            );
+        }
         return (
             <Container title={title}>
                 <CollectionDetail
@@ -69,16 +87,7 @@ class Collection extends Component {
                     itemsLoaded={true}
                     totalItems={0}
                 />
-                <DeleteCollectionConfirmation
-                    collection={pendingCollectionToDelete}
-                    onRequestClose={this.handleDeleteCollectionRequestClose}
-                    onSave={this.handleDeleteCollection}
-                    open={!!pendingCollectionToDelete}
-                />
-                <EditCollectionForm
-                    collection={collection}
-                    dispatch={dispatch}
-                />
+                {forms}
             </Container>
         );
     }
