@@ -1,5 +1,6 @@
 import {
     getTeamCoordinatorNormalizationsFromUpdateMembers,
+    getTeamMemberNormalizationFromJoinTeam,
     getTeamMemberNormalizationsFromUpdateMembers,
     getTeamMemberNormalizationsFromAddMembers,
     getTeamMemberNormalizations,
@@ -48,6 +49,15 @@ function additionalTypesCallback(state, action) {
         return handleUpdateMembersSuccess(state, action);
     case types.REMOVE_MEMBERS_SUCCESS:
         return handleRemoveMembersSuccess(state, action);
+    case types.JOIN_TEAM_SUCCESS:
+        const id = getTeamMemberNormalizationFromJoinTeam(action);
+        return state.updateIn([action.payload.result, 'ids'], set => {
+            return set.add(id);
+        });
+    case types.LEAVE_TEAM_SUCCESS:
+        return state.updateIn([action.payload.teamId, 'ids'], set => {
+            return set.delete(action.payload.memberId);
+        });
     }
     return state;
 }

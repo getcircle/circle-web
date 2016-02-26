@@ -7,7 +7,7 @@ import { provideHooks } from 'redial';
 import { getTeam, getCoordinators, getMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { slice } from '../reducers/paginate';
-import { retrieveTeam, retrieveTeamMembers } from '../reducers/denormalizations';
+import { retrieveTeam, retrieveTeamMember, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -19,14 +19,17 @@ const selector = createSelector(
     [
         selectors.cacheSelector,
         selectors.routerParametersSelector,
+        selectors.teamMembershipSelector,
         selectors.teamCoordinatorsSelector,
         selectors.teamMembersSelector,
     ],
-    (cacheState, parametersState, coordinatorsState, membersState) => {
+    (cacheState, parametersState, teamMembershipState, coordinatorsState, membersState) => {
         let coordinators, members, membersNextRequest, membersLoading;
         const teamId = parametersState.teamId;
         const cache = cacheState.toJS();
         const team = retrieveTeam(teamId, cache);
+        const memberId = teamMembershipState.getIn([teamId, 'memberId']);
+        const currentUserMember = retrieveTeamMember(memberId, cache);
         if (coordinatorsState.has(teamId)) {
             const ids = coordinatorsState.get(teamId).get('ids');
             if (ids.size) {
@@ -44,6 +47,7 @@ const selector = createSelector(
         }
         return {
             coordinators,
+            currentUserMember,
             members,
             membersLoading,
             membersNextRequest,

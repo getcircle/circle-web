@@ -5,6 +5,7 @@ import * as types from '../constants/actionTypes';
 import * as requests from '../services/team';
 import { retrieveTeam } from '../reducers/denormalizations';
 import { paginatedShouldBail } from '../reducers/paginate';
+import * as selectors from '../selectors';
 
 /**
  * Redux action to create a team
@@ -65,7 +66,9 @@ export function getTeam(teamId) {
             remote: client => requests.getTeam(client, teamId),
             bailout: (state) => {
                 const team = retrieveTeam(teamId, state.get('cache').toJS(), ['permissions']);
-                return team !== null && team !== undefined;
+                const teamMembership = selectors.teamMembershipSelector(state)[teamId];
+                const memberId = teamMembership && teamMembership.memberId;
+                return team && memberId;
             },
         },
     };
@@ -210,7 +213,7 @@ export function updateMembers(teamId, members) {
  * Remove team members
  *
  * @param {String} teamId the id of the team
- * @param {Array[String]} profileIds an array of the profile ids of members to remove
+ * @param {Array[String]} members an array of the profile ids of members to remove
  */
 export function removeMembers(teamId, members) {
     return {
@@ -221,6 +224,43 @@ export function removeMembers(teamId, members) {
                 types.REMOVE_MEMBERS_FAILURE,
             ],
             remote: (client) => requests.removeMembers(client, teamId, members),
+        },
+    };
+}
+
+/**
+ * Join team
+ *
+ * @param {String} teamId the id of the team
+ */
+export function joinTeam(teamId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.JOIN_TEAM,
+                types.JOIN_TEAM_SUCCESS,
+                types.JOIN_TEAM_FAILURE,
+            ],
+            remote: (client) => requests.joinTeam(client, teamId),
+        },
+    };
+}
+
+/**
+ * Leave team
+ *
+ * @param {String} teamId the id of the team
+ * @param {String} memberId id of the team member
+ */
+export function leaveTeam(teamId, memberId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.LEAVE_TEAM,
+                types.LEAVE_TEAM_SUCCESS,
+                types.LEAVE_TEAM_FAILURE,
+            ],
+            remote: (client) => requests.leaveTeam(client, teamId, memberId),
         },
     };
 }

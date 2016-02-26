@@ -2,8 +2,23 @@ import React, { PropTypes } from 'react';
 
 import IconContainer from './IconContainer';
 
-const DetailHeader = ({avatar, children, primaryText, secondaryText, Icon, ...other}, { muiTheme }) => {
+const DetailHeader = (props, { muiTheme }) => {
+    const {
+        Icon,
+        avatar,
+        button,
+        children,
+        primaryText,
+        secondaryText,
+        ...other
+    } = props;
     const styles = {
+        button: {
+            alignItems: 'center',
+            display: 'flex',
+            marginLeft: 'auto',
+            paddingLeft: 20,
+        },
         container: {
             flexWrap: 'nowrap',
             paddingTop: 35,
@@ -61,6 +76,11 @@ const DetailHeader = ({avatar, children, primaryText, secondaryText, Icon, ...ot
                             </div>
                         </section>
                     </div>
+                    <div style={styles.button}>
+                        <div className="row">
+                            {button}
+                        </div>
+                    </div>
                 </div>
             </section>
         </header>
@@ -68,8 +88,9 @@ const DetailHeader = ({avatar, children, primaryText, secondaryText, Icon, ...ot
 };
 
 DetailHeader.propTypes = {
-    IconComponent: PropTypes.func,
+    Icon: PropTypes.func,
     avatar: PropTypes.node,
+    button: PropTypes.object,
     children: PropTypes.node,
     primaryText: PropTypes.node,
     secondaryText: PropTypes.node,

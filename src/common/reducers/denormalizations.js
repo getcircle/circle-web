@@ -91,6 +91,10 @@ export function retrieveTeamMembers(ids, cache) {
     return retrieve(ids, services.team.containers.TeamMemberV1, cache);
 }
 
+export function retrieveTeamMember(id, cache) {
+    return retrieve(id, services.team.containers.TeamMemberV1, cache);
+}
+
 export function retrieveReportingDetails(profileId, cache) {
     return retrieve(profileId, services.profile.containers.ReportingDetailsV1, cache);
 }

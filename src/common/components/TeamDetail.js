@@ -12,6 +12,7 @@ import TeamDetailTabs, { SLUGS } from './TeamDetailTabs';
 const TeamDetail = (props) => {
     const {
         coordinators,
+        currentUserMember,
         dispatch,
         hasMoreMembers,
         members,
@@ -48,7 +49,11 @@ const TeamDetail = (props) => {
     }
     return (
         <div>
-            <TeamDetailHeader coordinators={coordinators} team={team} />
+            <TeamDetailHeader
+                coordinators={coordinators}
+                currentUserMember={currentUserMember}
+                team={team}
+            />
             <TeamDetailTabs
                 onRequestChange={replaceTeamSlug}
                 slug={slug}
@@ -63,6 +68,7 @@ const TeamDetail = (props) => {
 
 TeamDetail.propTypes = {
     coordinators: PropTypes.array,
+    currentUserMember: PropTypes.instanceOf(services.team.containers.TeamMemberV1),
     dispatch: PropTypes.func.isRequired,
     hasMoreMembers: PropTypes.bool,
     members: PropTypes.array,
