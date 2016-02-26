@@ -2,15 +2,15 @@ import Immutable from 'immutable';
 import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
-import routes from '../utils/routes';
+import { routeToTeam } from '../utils/routes';
 
 import CenterLoadingIndicator from './CenterLoadingIndicator';
 import Explore from './Explore';
 import ExploreList from './ExploreList';
 import { createTeamResult } from './SearchResultsList/factories';
 
-function handleSelectItem({ item: { payload }}) {
-    routes.routeToTeam(payload);
+function handleSelectItem({ payload }) {
+    routeToTeam(payload);
 }
 
 const ExploreTeams = ({ hasMore, loading, onLoadMore, teams, teamsCount, ...other }, { muiTheme }) => {
