@@ -5,7 +5,6 @@ import Colors from '../../styles/Colors';
 import t from '../../utils/gettext';
 
 import GroupIcon from '../GroupIcon';
-import IconContainer from '../IconContainer';
 import LightBulbIcon from '../LightBulbIcon';
 import ProfileAvatar from '../ProfileAvatar';
 
@@ -93,25 +92,56 @@ export function createPostResult({ post, highlight }, theme) {
             primaryText,
             secondaryText,
             innerDivStyle: theme.innerDivStyle,
+            secondaryTextLines: 2,
         },
         type: TYPES.POST,
         payload: post,
     }
 }
 
-export function createTeamResult(result) {
-    const { team, highlight } = result;
-    const leftAvatar = <IconContainer IconClass={GroupIcon} />;
-    let primaryText = team.display_name;
-    const secondaryText = t(`${team.profile_count} People`);
-    if (highlight && highlight.get('display_name')) {
-        primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('display_name')}} />;
+export function createTeamResult({ team, highlight }, theme) {
+
+    let description, members;
+    const name = <span style={theme.primaryText}>{team.name}</span>;
+
+    if (highlight && highlight.get('description')) {
+        description = <div dangerouslySetInnerHTML={{__html: highlight.get('description')}} style={theme.secondaryText} />;
+    } else if (team.description) {
+        description = <span style={theme.secondaryText}>{team.description.value}</span>;
     }
+
+    if (team.total_members && team.total_members > 1) {
+        members = t(`${team.total_members} Members`);
+    } else {
+        members = t(`${team.total_members} Member`);
+    }
+
+    const primaryText = (
+        <div>
+            <GroupIcon
+                height={35}
+                stroke={Colors.black}
+                style={{position: 'absolute', left: 10, top: 10}}
+                width={35}
+            />
+            {name}
+        </div>
+    );
+
+    const secondaryText = (
+        <div style={{overflow: 'visible'}}>
+            <span style={{...theme.secondaryText, ...{color: Colors.extraLightBlack}}}>{members}</span>
+            <br />
+            {description}
+        </div>
+    );
+
     return {
         item: {
             primaryText,
             secondaryText,
-            leftAvatar,
+            innerDivStyle: theme.innerDivStyle,
+            secondaryTextLines: 2,
         },
         type: TYPES.TEAM,
         payload: team,

@@ -36,7 +36,6 @@ const selector = selectors.createImmutableSelector(
 );
 
 const hooks = {
-    // XXX this needs to be updated for new teams
     defer: ({ dispatch }) => dispatch(exploreTeams()),
 };
 
