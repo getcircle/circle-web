@@ -134,7 +134,7 @@ export function addToCollections(client, item, collections) {
     return new Promise((resolve, reject) => {
         client.send(request)
             .then((response) => {
-                return response.finish(resolve, reject, item.id, { item });
+                return response.finish(resolve, reject, item.source_id, { item });
             })
             .catch(error => reject(error));
     });
