@@ -108,7 +108,7 @@ class FormTokenizedSelector extends Component {
             },
         };
 
-        const items = value || [];
+        const items = value ? value.slice() : [];
         const handleSelectItem = (item) => {
             items.push(item);
             onChange(items);
