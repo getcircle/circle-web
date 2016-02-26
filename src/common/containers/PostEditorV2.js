@@ -102,18 +102,18 @@ function fetchEditableCollections({ dispatch, getState }) {
     dispatch(getEditableCollections(profile.id));
 }
 
-function updateCollections(dispatch, post, initialCollections, collections) {
+function updateCollections(dispatch, post, field) {
     const collectionsToAdd = [];
     const collectionsToRemove = [];
-    const initialCollectionIds = initialCollections.map(collection => collection.id);
-    const collectionIds = collections.map(collection => collection.id);
-    for (let collection of collections) {
+    const initialCollectionIds = field.initial.map(collection => collection.id);
+    const collectionIds = field.value.map(collection => collection.id);
+    for (let collection of field.value) {
         if (!initialCollectionIds.includes(collection.id)) {
             collectionsToAdd.push(collection);
         }
     }
 
-    for (let collection of initialCollections) {
+    for (let collection of field.initial) {
         if (!collectionIds.includes(collection.id)) {
             collectionsToRemove.push(collection);
         }
@@ -167,12 +167,10 @@ class PostEditor extends Component {
             // because the publish button drives the form submission
             const state = this.context.store.getState();
             const form = state.get('form').editPostCollections;
-            const initialCollections = this.props.collections;
             updateCollections(
                 this.props.dispatch,
                 post,
-                initialCollections,
-                form.collections.value,
+                form.collections,
             );
             this.props.dispatch(updatePost(post));
         } else {
