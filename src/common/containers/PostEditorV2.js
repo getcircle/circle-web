@@ -166,11 +166,13 @@ class PostEditor extends Component {
             // because the publish button drives the form submission
             const state = this.context.store.getState();
             const form = state.get('form').editPostCollections;
-            updateCollections(
-                this.props.dispatch,
-                post,
-                form.collections,
-            );
+            if (form) {
+                updateCollections(
+                    this.props.dispatch,
+                    post,
+                    form.collections,
+                );
+            }
             this.props.dispatch(updatePost(post));
         } else {
             this.props.dispatch(createPost(post));
