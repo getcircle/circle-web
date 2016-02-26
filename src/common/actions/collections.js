@@ -187,7 +187,7 @@ export function getEditableCollections(profileId) {
                 types.GET_EDITABLE_COLLECTIONS_FAILURE,
             ],
             remote: client => requests.getCollections(client, {profileId, permissions}),
-            bailout: state => !!state.get('editableCollections').get('collections').size,
+            bailout: state => !!state.get('editableCollections').get('collectionIds').size,
         },
     };
 }
@@ -198,4 +198,8 @@ export function filterCollections(query) {
 
 export function clearCollectionsFilter() {
     return {type: types.CLEAR_COLLECTIONS_FILTER};
+}
+
+export function initializeCollectionsFilter(collections) {
+    return {type: types.INITIALIZE_COLLECTIONS_FILTER, payload: collections};
 }

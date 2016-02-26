@@ -5,6 +5,7 @@ import { services } from 'protobufs';
 
 import t from '../utils/gettext';
 import { EDIT_POST_COLLECTIONS } from '../constants/forms';
+import { initializeCollectionsFilter } from '../actions/collections';
 
 import Form from './Form';
 import FormLabel from './FormLabel';
@@ -29,6 +30,10 @@ class EditPostCollections extends Component {
             nextProps.fields.collections.initialValue === undefined
         ) {
             this.setInitialValues(nextProps);
+        }
+
+        if (!isEqual(this.props.editableCollections, nextProps.editableCollections)) {
+            this.props.dispatch(initializeCollectionsFilter(nextProps.editableCollections));
         }
     }
 

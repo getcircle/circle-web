@@ -39,9 +39,8 @@ const selector = selectors.createImmutableSelector(
         selectors.editorSelector,
         selectors.filesSelector,
         selectors.editableCollectionsSelector,
-        selectors.authenticationSelector,
     ],
-    (cacheState, paramsState, editorState, filesState, editableCollectionsState, authenticationState) => {
+    (cacheState, paramsState, editorState, filesState, editableCollectionsState) => {
         let collections, editableCollections, post;
 
         const postId = paramsState.postId;
@@ -66,10 +65,9 @@ const selector = selectors.createImmutableSelector(
             collections = retrieveCollections(collectionIds, cache);
         }
 
-        const profile = authenticationState.get('profile');
-        const editableCollectionIds = getCollectionsNormalizations(profile.id, cache);
-        if (editableCollectionIds) {
-            editableCollections = retrieveCollections(editableCollectionIds, cache);
+        const editableCollectionIds = editableCollectionsState.get('collectionIds');
+        if (editableCollectionIds.size) {
+            editableCollections = retrieveCollections(editableCollectionIds.toJS(), cache);
         }
 
         return {
@@ -105,7 +103,8 @@ function fetchEditableCollections({ dispatch, getState }) {
 function updateCollections(dispatch, post, field) {
     const collectionsToAdd = [];
     const collectionsToRemove = [];
-    const initialCollectionIds = field.initial.map(collection => collection.id);
+    const initialCollections = field.initial || [];
+    const initialCollectionIds = initialCollections.map(collection => collection.id);
     const collectionIds = field.value.map(collection => collection.id);
     for (let collection of field.value) {
         if (!initialCollectionIds.includes(collection.id)) {
@@ -113,7 +112,7 @@ function updateCollections(dispatch, post, field) {
         }
     }
 
-    for (let collection of field.initial) {
+    for (let collection of initialCollections) {
         if (!collectionIds.includes(collection.id)) {
             collectionsToRemove.push(collection);
         }

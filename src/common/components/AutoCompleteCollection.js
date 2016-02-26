@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -9,10 +8,10 @@ import Search from './Search';
 import Section from './Search/Section';
 
 const selector = selectors.createImmutableSelector(
-    [selectors.editableCollectionsSelector],
-    (editableCollectionsState) => {
+    [selectors.filterCollectionsSelector],
+    (filterCollectionsState) => {
         return {
-            filteredCollections: editableCollectionsState.get('filteredCollections').toJS(),
+            filteredCollections: filterCollectionsState.get('filteredCollections').toJS(),
         };
     },
 );
