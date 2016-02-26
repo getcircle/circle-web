@@ -1,12 +1,11 @@
 import React, { PropTypes } from 'react';
 
 import Colors from '../styles/Colors';
-import FontWeights from '../styles/FontWeights';
 import t from '../utils/gettext';
 
 import DetailContent from './DetailContent';
+import DetailQuestionSection from './DetailQuestionSection';
 import DetailSection from './DetailSectionV2';
-import RoundedButton from './RoundedButton';
 import SearchResultsList from './SearchResultsList';
 
 export const SearchDetailHeader = ({ totalResults, query }) => {
@@ -16,34 +15,6 @@ export const SearchDetailHeader = ({ totalResults, query }) => {
         <section>
             <span style={{fontSize: '1.3rem', color: Colors.extraLightBlack}}>{title}</span>
         </section>
-    );
-};
-
-const SearchDetailMissingInfo = () => {
-    const styles = {
-        text: {
-            fontSize: '1.8rem',
-            color: Colors.lightBlack,
-            lineHeight: '2.8rem',
-        },
-        button: {
-            marginTop: 10,
-            lineHeight: '2.8rem',
-        },
-        label: {
-            fontSize: '0.9rem',
-            fontWeight: FontWeights.black,
-        },
-    };
-    return (
-        <DetailSection>
-            <div style={styles.text}>{t('Didn\'t find what you were looking for?')}</div>
-            <RoundedButton
-                label={t('Request Missing Info')}
-                labelStyle={styles.label}
-                style={styles.button}
-            />
-        </DetailSection>
     );
 };
 
@@ -63,7 +34,10 @@ const SearchDetail = (props) => {
             <SearchDetailHeader query={query} totalResults={totalResults} />
             <section className="row">
                 <section className="col-xs-3">
-                    <SearchDetailMissingInfo />
+                    <DetailQuestionSection
+                        buttonText={t('Request Missing Info')}
+                        questionText={t('Didn\'t find what you were looking for?')}
+                    />
                 </section>
                 <section className="col-xs-8 col-xs-offset-1">
                     <DetailSection dividerStyle={{marginBottom: 0}}>
