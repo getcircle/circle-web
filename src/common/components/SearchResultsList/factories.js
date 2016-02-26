@@ -4,6 +4,7 @@ import React from 'react';
 import Colors from '../../styles/Colors';
 import t from '../../utils/gettext';
 
+import CollectionIcon from '../CollectionIcon';
 import GroupIcon from '../GroupIcon';
 import LightBulbIcon from '../LightBulbIcon';
 import ProfileAvatar from '../ProfileAvatar';
@@ -12,6 +13,7 @@ export const TYPES = keymirror({
     PROFILE: null,
     POST: null,
     TEAM: null,
+    COLLECTION: null,
 });
 
 export function createResult(result, theme) {
@@ -24,6 +26,8 @@ export function createResult(result, theme) {
         func = createTeamResult;
     } else if (result.location) {
         func = createLocationResult;
+    } else if (result.collection) {
+        func = createCollectionResult;
     }
     if (func) {
         return func(result, theme);
@@ -138,4 +142,28 @@ export function createTeamResult({ team, highlight }, theme) {
         type: TYPES.TEAM,
         payload: team,
     }
+}
+
+export function createCollectionResult({ collection, highlight }, theme) {
+    const name = <span style={theme.primaryText}>{collection.name}</span>;
+    const primaryText = (
+        <div>
+            <CollectionIcon
+                height={35}
+                stroke={Colors.black}
+                style={{position: 'absolute', left: 10, top: 10}}
+                width={35}
+            />
+            {name}
+        </div>
+    );
+
+    return {
+        item: {
+            primaryText,
+            innerDivStyle: theme.innerDivStyle,
+        },
+        type: TYPES.COLLECTION,
+        payload: collection,
+    };
 }
