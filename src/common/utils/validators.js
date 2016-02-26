@@ -41,6 +41,11 @@ export const profileValidator = createValidator({
     title: [required],
 });
 
+export const questionValidator = createValidator({
+    subject: [required],
+    message: [required],
+});
+
 export const teamValidator = createValidator({
     name: [required],
     contacts: arrayOf({type: [required], value: [required]}),

@@ -61,6 +61,7 @@ export const PAGE_TYPE = {
     REARRANGE_COLLECTIONS: 'Rearrange Collections',
 
     // Create forms
+    ASK_QUESTION: 'Ask Question',
     CREATE_TEAM: 'Create Team',
     CREATE_COLLECTION: 'Create Collection',
 

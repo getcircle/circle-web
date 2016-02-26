@@ -47,6 +47,7 @@ const ProfileDetail = (props) => {
                 posts={posts}
                 postsLoaded={postsLoaded}
                 postsLoading={postsLoading}
+                profile={profile}
             />
         );
         break;
