@@ -63,6 +63,7 @@ export const editCollectionSelector = state => state.get('editCollection');
 export const extendedProfilesSelector = state => state.get('extendedProfiles');
 export const extendedTeamsSelector = state => state.get('extendedTeams');
 export const filesSelector = state => state.get('files');
+export const formDialogsSelector = state => state.get('formDialogs');
 export const locationMembersSelector = state => state.get('locationMembers');
 export const locationsSelector = state => state.get('locations');
 export const mediaUploadSelector = state => state.get('mediaUpload');

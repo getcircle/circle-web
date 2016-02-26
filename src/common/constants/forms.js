@@ -1,3 +1,4 @@
+export const ASK_QUESTION = 'askQuestion';
 export const CREATE_TEAM = 'createTeam';
 export const EDIT_COLLECTION = 'editCollection';
 export const EDIT_TEAM = 'editTeam';

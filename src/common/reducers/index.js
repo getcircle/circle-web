@@ -16,6 +16,7 @@ export { default as extendedProfiles } from './extendedProfiles';
 export { default as extendedTeams } from './extendedTeams';
 export { default as files } from './files';
 export { default as filterCollections } from './filterCollections';
+export { default as formDialogs } from './formDialogs';
 export { default as locationMembers } from './locationMembers';
 export { default as locations } from './locations';
 export { default as mediaUpload } from './media';
