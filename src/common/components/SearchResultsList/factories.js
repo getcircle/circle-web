@@ -33,12 +33,8 @@ export function createResult(result, theme) {
 export function createProfileResult(result, theme) {
     const { profile, highlight } = result;
     const leftAvatar = <ProfileAvatar profile={profile} style={theme.avatar} />;
-    let primaryText, secondaryText;
-    if (highlight && highlight.get('full_name')) {
-        primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('full_name')}} style={theme.primaryText} />;
-    } else {
-        primaryText = <span style={theme.primaryText}>{profile.full_name}</span>;
-    }
+    let secondaryText;
+    const primaryText = <span style={theme.primaryText}>{profile.full_name}</span>;
 
     if (highlight && highlight.get('display_title')) {
         secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('display_title')}} />;
@@ -60,15 +56,11 @@ export function createProfileResult(result, theme) {
 
 export function createPostResult({ post, highlight }, theme) {
 
-    let text, secondaryText;
+    let secondaryText;
+    const text = <span style={theme.primaryText}>{post.title}</span>;
+
     // posts always return content in the highlight, even if nothing is
     // highlighted
-    if (highlight.get('title')) {
-        text = <div dangerouslySetInnerHTML={{__html: highlight.get('title')}} style={theme.primaryText} />;
-    } else {
-        text = <span style={theme.primaryText}>{post.title}</span>;
-    }
-
     if (highlight.get('content')) {
         secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} style={theme.secondaryText} />;
     } else {
@@ -79,8 +71,8 @@ export function createPostResult({ post, highlight }, theme) {
         <div>
             <LightBulbIcon
                 height={35}
-                style={{position: 'absolute', left: 10, top: 16}}
                 stroke={Colors.black}
+                style={{position: 'absolute', left: 10, top: 10}}
                 width={35}
             />
             {text}
