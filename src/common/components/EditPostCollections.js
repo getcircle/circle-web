@@ -4,7 +4,6 @@ import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
 import t from '../utils/gettext';
-import { addPostToCollection, removeFromCollection } from '../actions/collections';
 import { EDIT_POST_COLLECTIONS } from '../constants/forms';
 
 import Form from './Form';
@@ -13,17 +12,20 @@ import FormCollectionSelector from './FormCollectionSelector';
 
 const FIELD_NAMES = ['collections'];
 
-// - should take an array of available collections the user can select
-// - needs to have some public "submit" method that can be called from the publish button
-// - should take an array of current collections the post is a part of
-// -> on submit we'll diff between whats in current collections and current
-// form values, calling add_to_collections and remove_from_collections as
-// required
-
+/**
+ * Form for editing collections a post belongs to.
+ *
+ * Because we save the collections a form belongs to when you publish the post,
+ * this is mostly used as a state container for the collections the user has
+ * added. The post gets added to the collections within the post editor.
+ */
 class EditPostCollections extends Component {
 
     componentWillReceiveProps(nextProps) {
-        if (!isEqual(nextProps.collections, this.props.collections)) {
+        if (
+            (this.props.pristine || nextProps.pristine) &&
+            !isEqual(nextProps.collections, this.props.collections)
+        ) {
             this.setInitialValues(nextProps);
         }
     }
@@ -32,10 +34,6 @@ class EditPostCollections extends Component {
         const { dispatch, collections } = props;
         const action = initialize(EDIT_POST_COLLECTIONS, {collections}, FIELD_NAMES);
         dispatch(action);
-    }
-
-    submit = (form, dispatch) => {
-        debugger;
     }
 
     render() {
@@ -64,6 +62,7 @@ EditPostCollections.propTypes = {
     fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
+    pristine: PropTypes.bool,
     resetForm: PropTypes.func.isRequired,
 };
 

@@ -129,39 +129,25 @@ export function updateCollection(client, collection) {
     });
 }
 
-export function addToCollection(client, parameters) {
-    const { collectionId, source, sourceId, isDefault, ownerId, ownerType } = parameters;
-    const request = new services.post.actions.add_to_collection.RequestV1({
-        /*eslint-disable camelcase*/
-        collection_id: collectionId,
-        source: source,
-        source_id: sourceId,
-        is_default: isDefault,
-        owner_id: ownerId,
-        owner_type: ownerType,
-        /*eslint-enable camelcase*/
-    });
+export function addToCollections(client, item, collections) {
+    const request = new services.post.actions.add_to_collections.RequestV1({item, collections});
     return new Promise((resolve, reject) => {
         client.send(request)
             .then((response) => {
-                const { item } = response.result;
                 return response.finish(resolve, reject, item.id, { item });
             })
             .catch(error => reject(error));
     });
 }
 
-export function removeFromCollection(client, parameters) {
-    const { collectionId, collectionItemId } = parameters;
-    const request = new services.post.actions.remove_from_collection.RequestV1({
-        /*eslint-disable*/
-        collection_id: collectionId,
-        collection_item_id: collectionItemId,
-        /*eslint-enable*/
+export function removeFromCollections(client, item, collections) {
+    const request = new services.post.actions.remove_from_collections.RequestV1({
+        item,
+        collections,
     });
     return new Promise((resolve, reject) => {
         client.send(request)
-            .then(response => response.simple(resolve, reject, parameters))
+            .then(response => response.simple(resolve, reject, {item, collections}))
             .catch(error => reject(error));
     });
 }

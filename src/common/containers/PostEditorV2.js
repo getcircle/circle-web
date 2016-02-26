@@ -3,9 +3,15 @@ import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
+import { reset as reduxFormReset } from 'redux-form';
 
 import { createPost, getPost, updatePost } from '../actions/posts';
-import { getCollections, getEditableCollections } from '../actions/collections';
+import {
+    addPostToCollections,
+    getCollections,
+    getEditableCollections,
+    removePostFromCollections,
+} from '../actions/collections';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
 import { reset } from '../actions/editor';
 
@@ -96,6 +102,33 @@ function fetchEditableCollections({ dispatch, getState }) {
     dispatch(getEditableCollections(profile.id));
 }
 
+function updateCollections(dispatch, post, initialCollections, collections) {
+    const collectionsToAdd = [];
+    const collectionsToRemove = [];
+    const initialCollectionIds = initialCollections.map(collection => collection.id);
+    const collectionIds = collections.map(collection => collection.id);
+    for (let collection of collections) {
+        if (!initialCollectionIds.includes(collection.id)) {
+            collectionsToAdd.push(collection);
+        }
+    }
+
+    for (let collection of initialCollections) {
+        if (!collectionIds.includes(collection.id)) {
+            collectionsToRemove.push(collection);
+        }
+    }
+
+    if (collectionsToRemove.length) {
+        dispatch(removePostFromCollections(post, collectionsToRemove));
+    }
+
+    if (collectionsToAdd.length) {
+        dispatch(addPostToCollections(post, collectionsToAdd));
+    }
+    dispatch(reduxFormReset('editPostCollections'));
+}
+
 const hooks = {
     fetch: locals => fetchPost(locals),
     defer: (locals) => {
@@ -129,6 +162,18 @@ class PostEditor extends Component {
 
     handleSave = (post) => {
         if (post.id) {
+            // not sure if there is a better way to hook into the state of the form
+            // than accessing the form state directly. we need to do this
+            // because the publish button drives the form submission
+            const state = this.context.store.getState();
+            const form = state.get('form').editPostCollections;
+            const initialCollections = this.props.collections;
+            updateCollections(
+                this.props.dispatch,
+                post,
+                initialCollections,
+                form.collections.value,
+            );
             this.props.dispatch(updatePost(post));
         } else {
             this.props.dispatch(createPost(post));
@@ -205,6 +250,7 @@ PostEditor.propTypes = {
 
 PostEditor.contextTypes = {
     auth: InternalPropTypes.AuthContext.isRequired,
+    store: PropTypes.object,
     muiTheme: PropTypes.object.isRequired,
 };
 

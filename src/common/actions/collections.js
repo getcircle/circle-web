@@ -5,8 +5,6 @@ import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
 import { retrieveCollection } from '../reducers/denormalizations';
 
-const { SourceV1 } = services.post.containers.CollectionItemV1;
-
 export function showCreateCollectionModal() {
     return {type: types.SHOW_CREATE_COLLECTION_MODAL};
 }
@@ -126,32 +124,38 @@ export function hideEditCollectionModal() {
     return {type: types.HIDE_EDIT_COLLECTION_MODAL};
 }
 
-export function addPostToCollection(post, collection) {
+export function addPostToCollections(post, collections) {
+    const item = new services.post.containers.CollectionItemV1({
+        /*eslint-disable camelcase*/
+        source_id: post.id,
+        /*eslint-enable camelcase*/
+    });
     return {
         [SERVICE_REQUEST]: {
             types: [
-                types.ADD_TO_COLLECTION,
-                types.ADD_TO_COLLECTION_SUCCESS,
-                types.ADD_TO_COLLECTION_FAILURE,
+                types.ADD_TO_COLLECTIONS,
+                types.ADD_TO_COLLECTIONS_SUCCESS,
+                types.ADD_TO_COLLECTIONS_FAILURE,
             ],
-            remote: client => requests.addToCollection(client, {
-                source: SourceV1.LUNO,
-                sourceId: post.id,
-                collectionId: collection.id,
-            }),
+            remote: client => requests.addToCollections(client, item, collections),
         },
     };
 }
 
-export function removeFromCollection({collectionId, collectionItemId}) {
+export function removePostFromCollections(post, collections) {
+    const item = new services.post.containers.CollectionItemV1({
+        /*eslint-disable camelcase*/
+        source_id: post.id,
+        /*eslint-enable camelcase*/
+    });
     return {
         [SERVICE_REQUEST]: {
             types: [
-                types.REMOVE_FROM_COLLECTION,
-                types.REMOVE_FROM_COLLECTION_SUCCESS,
-                types.REMOVE_FROM_COLLECTION_FAILURE,
+                types.REMOVE_FROM_COLLECTIONS,
+                types.REMOVE_FROM_COLLECTIONS_SUCCESS,
+                types.REMOVE_FROM_COLLECTIONS_FAILURE,
             ],
-            remote: client => requests.removeFromCollection(client, {collectionId, collectionItemId}),
+            remote: client => requests.removeFromCollections(client, item, collections),
         },
     };
 }

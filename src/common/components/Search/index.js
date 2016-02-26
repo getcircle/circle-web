@@ -118,6 +118,7 @@ class Search extends CSSComponent {
         },
 
         Enter(event) {
+            event.preventDefault();
             for (let section of this.props.sections) {
                 let highlightedIndex = this.highlightedIndexForSection(section);
                 if (highlightedIndex !== null) {
