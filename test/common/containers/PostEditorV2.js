@@ -13,6 +13,9 @@ import { default as PostEditorComponent } from '../../../src/common/components/P
 
 const { PostStateV1 } = services.post.containers;
 
+const store = createStore();
+const state = store.getState();
+
 const setup = buildSetup(PostEditor, () => {
     return {
         dispatch: expect.createSpy(),
@@ -23,9 +26,6 @@ function getNormalizedPost(post = factories.post.getPost()) {
     const copy = post.$type.decode(post.encode());
     return Immutable.fromJS(normalize(copy, post.id));
 };
-
-const store = createStore();
-const state = store.getState();
 
 describe('PostEditor', () => {
 
@@ -66,7 +66,7 @@ describe('PostEditor', () => {
     describe('saving a post', () => {
 
         it('fires an updatePost action if the post exists', () => {
-            const { wrapper, props } = setup({post: factories.post.getPost()});
+            const { wrapper, props } = setup({post: factories.post.getPost()}, undefined, {store: store});
             wrapper.find(PostEditorComponent).prop('onSave')(props.post);
             expect(props.dispatch).toHaveBeenCalledWith(updatePost(props.post));
         });

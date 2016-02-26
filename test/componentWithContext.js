@@ -22,6 +22,7 @@ export function getDefaultContext(contextOverrides) {
         muiTheme: getCustomTheme(global.navigator.userAgent),
         store: {
             dispatch: expect.createSpy(),
+            getState: expect.createSpy(),
         },
         url: URLContextFactory.getContext(),
         ...contextOverrides,
@@ -44,6 +45,7 @@ export default function (child, contextOverrides = {}, childContextTypesOverride
             muiTheme: PropTypes.object,
             store: PropTypes.shape({
                 dispatch: PropTypes.func.isRequired,
+                getState: PropTypes.func.isRequired,
             }),
             url: InternalPropTypes.URLContext,
             ...childContextTypesOverrides,
