@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 import FormFieldError from './FormFieldError';
 
-const FormTextArea = ({error, invalid, touched, ...other}, {muiTheme}) => {
+const FormTextArea = ({error, invalid, touched, value, ...other}, {muiTheme}) => {
     const styles = {
         ...muiTheme.luno.form.field,
         height: 72,
@@ -18,6 +18,7 @@ const FormTextArea = ({error, invalid, touched, ...other}, {muiTheme}) => {
                 invalid={invalid}
                 style={styles}
                 touched={touched}
+                value={value || ''} // See https://github.com/facebook/react/issues/2533
                 {...other}
             />
             <FormFieldError error={showError ? error : undefined} />
