@@ -18,13 +18,15 @@ const FIELD_NAMES = ['collections'];
  * Because we save the collections a form belongs to when you publish the post,
  * this is mostly used as a state container for the collections the user has
  * added. The post gets added to the collections within the post editor.
+ *
  */
 class EditPostCollections extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (
-            (this.props.pristine || nextProps.pristine) &&
-            !isEqual(nextProps.collections, this.props.collections)
+            nextProps.collections &&
+            nextProps.collections.length &&
+            nextProps.fields.collections.initialValue === undefined
         ) {
             this.setInitialValues(nextProps);
         }
