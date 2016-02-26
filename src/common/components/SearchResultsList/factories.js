@@ -104,7 +104,7 @@ export function createTeamResult({ team, highlight }, theme) {
 
     if (team.total_members && team.total_members > 1) {
         members = t(`${team.total_members} Members`);
-    } else {
+    } else if (members !== null && members !== undefined) {
         members = t(`${team.total_members} Member`);
     }
 
