@@ -167,16 +167,20 @@ export function removeFromCollection(client, parameters) {
 }
 
 export function getCollections(client, parameters) {
-    const { source, sourceId } = parameters;
+    const { source, sourceId, profileId, permissions } = parameters;
     const request = new services.post.actions.get_collections.RequestV1({
         /*eslint-disable camelcase*/
+        permissions,
         source,
         source_id: sourceId,
+        profile_id: profileId,
         /*eslint-enable camelcase*/
     });
+
+    const key = sourceId ? sourceId : profileId;
     return new Promise((resolve, reject) => {
         client.send(request)
-            .then(response => response.finish(resolve, reject, sourceId))
+            .then(response => response.finish(resolve, reject, key))
             .catch(error => reject(error));
     });
 }

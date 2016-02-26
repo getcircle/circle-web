@@ -168,3 +168,30 @@ export function getCollections({source, sourceId}) {
         },
     };
 }
+
+export function getEditableCollections(profileId) {
+    const permissions = new services.common.containers.PermissionsV1({
+        /*eslint-disable camelcase*/
+        can_edit: true,
+        /*eslint-enable camelcase*/
+    });
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_EDITABLE_COLLECTIONS,
+                types.GET_EDITABLE_COLLECTIONS_SUCCESS,
+                types.GET_EDITABLE_COLLECTIONS_FAILURE,
+            ],
+            remote: client => requests.getCollections(client, {profileId, permissions}),
+            bailout: state => !!state.get('editableCollections').get('collections').size,
+        },
+    };
+}
+
+export function filterCollections(query) {
+    return {type: types.FILTER_COLLECTIONS, payload: query};
+}
+
+export function clearCollectionsFilter() {
+    return {type: types.CLEAR_COLLECTIONS_FILTER};
+}

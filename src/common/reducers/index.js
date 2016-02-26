@@ -8,6 +8,7 @@ export { default as createTeam} from './createTeam';
 export { default as createCollection } from './createCollection';
 export { default as deleteCollection } from './deleteCollection';
 export { default as deletePost } from './deletePost';
+export { default as editableCollections } from './editableCollections';
 export { default as editCollection } from './editCollection';
 export { default as editor } from './editor';
 export { default as explore } from './explore';
@@ -28,7 +29,6 @@ export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';
 export { default as updateProfile } from './profile';
 export { default as updateTeam } from './updateTeam';
-export { default as editPostCollections } from './editPostCollections';
 
 // external reducers
 export function form(state, action) {

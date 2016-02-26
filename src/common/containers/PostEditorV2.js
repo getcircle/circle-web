@@ -5,7 +5,7 @@ import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
 import { createPost, getPost, updatePost } from '../actions/posts';
-import { getCollections } from '../actions/collections';
+import { getCollections, getEditableCollections } from '../actions/collections';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
 import { reset } from '../actions/editor';
 
@@ -32,9 +32,11 @@ const selector = selectors.createImmutableSelector(
         selectors.routerParametersSelector,
         selectors.editorSelector,
         selectors.filesSelector,
+        selectors.editableCollectionsSelector,
+        selectors.authenticationSelector,
     ],
-    (cacheState, paramsState, editorState, filesState) => {
-        let collections, post;
+    (cacheState, paramsState, editorState, filesState, editableCollectionsState, authenticationState) => {
+        let collections, editableCollections, post;
 
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
@@ -57,8 +59,16 @@ const selector = selectors.createImmutableSelector(
         if (collectionIds) {
             collections = retrieveCollections(collectionIds, cache);
         }
+
+        const profile = authenticationState.get('profile');
+        const editableCollectionIds = getCollectionsNormalizations(profile.id, cache);
+        if (editableCollectionIds) {
+            editableCollections = retrieveCollections(editableCollectionIds, cache);
+        }
+
         return {
             collections,
+            editableCollections,
             post,
             draft: editorState.get('draft'),
             saving: editorState.get('saving'),
@@ -80,9 +90,18 @@ function fetchCollections({ dispatch, params: { postId } }) {
     }
 }
 
+function fetchEditableCollections({ dispatch, getState }) {
+    const state = getState();
+    const profile = state.get('authentication').get('profile');
+    dispatch(getEditableCollections(profile.id));
+}
+
 const hooks = {
     fetch: locals => fetchPost(locals),
-    defer: locals => fetchCollections(locals),
+    defer: (locals) => {
+        fetchCollections(locals);
+        fetchEditableCollections(locals);
+    },
 };
 
 class PostEditor extends Component {
@@ -127,7 +146,14 @@ class PostEditor extends Component {
     }
 
     render() {
-        const { collections, post, saving, uploadProgress, uploadedFiles } = this.props;
+        const {
+            collections,
+            editableCollections,
+            post,
+            saving,
+            uploadProgress,
+            uploadedFiles,
+        } = this.props;
         const { auth: { profile }, muiTheme } = this.context;
 
         let content;
@@ -138,6 +164,7 @@ class PostEditor extends Component {
                     <PostEditorComponent
                         autoSave={autoSave}
                         collections={collections}
+                        editableCollections={editableCollections}
                         onFileDelete={this.handleFileDelete}
                         onFileUpload={this.handleFileUpload}
                         onSave={this.handleSave}
@@ -164,7 +191,9 @@ class PostEditor extends Component {
 }
 
 PostEditor.propTypes = {
+    collections: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    editableCollections: PropTypes.array,
     params: PropTypes.shape({
         postId: PropTypes.string,
     }),

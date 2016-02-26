@@ -83,4 +83,4 @@ export const deletePostSelector = state => state.get('deletePost');
 export const editorSelector = state => state.get('editor');
 export const createCollectionSelector = state => state.get('createCollection');
 export const deleteCollectionSelector = state => state.get('deleteCollection');
-export const editPostCollectionsSelector = state => state.get('editPostCollections');
+export const editableCollectionsSelector = state => state.get('editableCollections');

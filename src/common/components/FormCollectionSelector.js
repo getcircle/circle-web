@@ -10,10 +10,12 @@ function getItemName(collection) {
     return collection.name;
 }
 
-const FormCollectionSelector = ({ active, onChange, value, ...other }) => {
+const FormCollectionSelector = (props) => {
+    const { active, editableCollections, onChange, value, ...other } = props;
     const collections = value || [];
     const autoComplete = (
         <AutoCompleteCollection
+            collections={editableCollections}
             focused={active}
             hasItemDivider={false}
             ignoreCollectionIds={collections.map(collection => collection.id)}
@@ -34,6 +36,8 @@ const FormCollectionSelector = ({ active, onChange, value, ...other }) => {
 
 FormCollectionSelector.propTypes = {
     active: PropTypes.bool,
+    collections: PropTypes.array,
+    editableCollections: PropTypes.array,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array,
 };

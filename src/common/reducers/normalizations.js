@@ -40,10 +40,10 @@ export function getPostsNormalizations(action) {
     );
 }
 
-export function getCollectionsNormalizations(postId, cache) {
+export function getCollectionsNormalizations(key, cache) {
     return getNormalizations(
         'collections',
-        postId,
+        key,
         services.post.actions.get_collections.ResponseV1,
         cache,
     );

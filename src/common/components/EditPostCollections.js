@@ -1,12 +1,11 @@
+import { isEqual } from 'lodash';
 import React, { Component, PropTypes } from 'react';
-import Immutable from 'immutable';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
 import t from '../utils/gettext';
 import { addPostToCollection, removeFromCollection } from '../actions/collections';
 import { EDIT_POST_COLLECTIONS } from '../constants/forms';
-import * as selectors from '../selectors';
 
 import Form from './Form';
 import FormLabel from './FormLabel';
@@ -14,53 +13,34 @@ import FormCollectionSelector from './FormCollectionSelector';
 
 const FIELD_NAMES = ['collections'];
 
-const selector = selectors.createImmutableSelector(
-    [selectors.editPostCollectionsSelector],
-    (editPostCollectionsState) => {
-        return {
-            ids: editPostCollectionsState.get('ids'),
-            collectionToItem: editPostCollectionsState.get('collectionToItem'),
-        };
-    }
-);
+// - should take an array of available collections the user can select
+// - needs to have some public "submit" method that can be called from the publish button
+// - should take an array of current collections the post is a part of
+// -> on submit we'll diff between whats in current collections and current
+// form values, calling add_to_collections and remove_from_collections as
+// required
 
 class EditPostCollections extends Component {
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.collections !== this.props.collections) {
+        if (!isEqual(nextProps.collections, this.props.collections)) {
             this.setInitialValues(nextProps);
         }
     }
 
     setInitialValues(props) {
         const { dispatch, collections } = props;
-        debugger;
         const action = initialize(EDIT_POST_COLLECTIONS, {collections}, FIELD_NAMES);
         dispatch(action);
     }
 
-    buildHandleChange = (onChange) => (collections) => {
-        onChange(collections);
-        const { dispatch, post } = this.props;
-        const collectionIds = Immutable.Set();
-        for (let collection of collections) {
-            collectionIds.add(collection.id);
-            if (!this.props.ids.has(collection.id)) {
-                dispatch(addPostToCollection(post, collection));
-            }
-        }
-
-        // XXX This is fucked
-        for (let collectionId of this.props.ids) {
-            if (!collectionIds.has(collectionId)) {
-                const collectionItem = this.props.collectionToItem.get(collectionId);
-                dispatch(removeFromCollection({collectionId, collectionItemId: collectionItem.id}));
-            }
-        }
+    submit = (form, dispatch) => {
+        debugger;
     }
 
     render() {
         const {
+            editableCollections,
             fields: { collections },
             ...other,
         } = this.props;
@@ -68,8 +48,8 @@ class EditPostCollections extends Component {
             <Form {...other}>
                 <FormLabel text={t('Collections')} />
                 <FormCollectionSelector
+                    editableCollections={editableCollections}
                     {...collections}
-                    onChange={this.buildHandleChange(collections.onChange)}
                 />
             </Form>
         );
@@ -78,7 +58,9 @@ class EditPostCollections extends Component {
 };
 
 EditPostCollections.propTypes = {
+    collections: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    editableCollections: PropTypes.array,
     fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
@@ -91,5 +73,4 @@ export default reduxForm(
         fields: FIELD_NAMES,
         getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
     },
-    selector,
 )(EditPostCollections);

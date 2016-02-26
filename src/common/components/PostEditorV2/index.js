@@ -9,10 +9,17 @@ import EditPostCollections from '../EditPostCollections';
 import Editor from './Editor';
 import Header from './Header';
 
-const PostCollections = ({ collections, post }) => {
+const PostCollections = ({ collections, editableCollections, post }) => {
     let content;
     if (post) {
-        content = <EditPostCollections collections={collections} post={post} style={{paddingTop: 10}}/>;
+        content = (
+            <EditPostCollections
+                collections={collections}
+                editableCollections={editableCollections}
+                post={post}
+                style={{paddingTop: 10}}
+            />
+        );
     }
     return (
         <div>
@@ -54,7 +61,19 @@ class PostEditor extends Component {
     }
 
     render() {
-        const { collections, onFileDelete, onFileUpload, onSave, post, profile, saving, uploadProgress, uploadedFiles } = this.props;
+        const {
+            collections,
+            editableCollections,
+            onFileDelete,
+            onFileUpload,
+            onSave,
+            post,
+            profile,
+            saving,
+            uploadProgress,
+            uploadedFiles,
+        } = this.props;
+
         return (
             <div>
                 { /* this could be an admin editing the post, we should still show the original author */ }
@@ -73,7 +92,11 @@ class PostEditor extends Component {
                         uploadProgress={uploadProgress}
                         uploadedFiles={uploadedFiles}
                     />
-                    <PostCollections collections={collections} post={post} />
+                    <PostCollections
+                        collections={collections}
+                        editableCollections={editableCollections}
+                        post={post}
+                    />
                 </DetailContent>
             </div>
         );
@@ -83,6 +106,8 @@ class PostEditor extends Component {
 
 PostEditor.propTypes = {
     autoSave: PropTypes.bool,
+    collections: PropTypes.array,
+    editableCollections: PropTypes.array,
     onFileDelete: PropTypes.func,
     onFileUpload: PropTypes.func,
     onSave: PropTypes.func.isRequired,
