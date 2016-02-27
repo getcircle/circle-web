@@ -6,8 +6,7 @@ import AutoCompleteCollection, { createCollectionItem } from './AutoCompleteColl
 import FormTokenizedSelector from './FormTokenizedSelector';
 
 function getItemName(collection) {
-    // TODO if this is owned by a team add [<team name>]
-    return collection.name;
+    return collection.display_name;
 }
 
 const FormCollectionSelector = (props) => {
