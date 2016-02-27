@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 
 import { ListItem } from 'material-ui';
 
+import t from '../utils/gettext';
 import moment from '../utils/moment';
 import Colors from '../styles/Colors';
 import { routeToPost } from '../utils/routes';
@@ -14,7 +15,7 @@ const SecondaryText = ({ post }) => {
         created: {
             color: Colors.extraLightBlack,
         },
-        snippet: {
+        main: {
             color: Colors.lightBlack,
         },
         text: {
@@ -22,30 +23,39 @@ const SecondaryText = ({ post }) => {
             lineHeight: '2rem',
         },
     };
+
+    let author;
+    if (post.by_profile) {
+        const title = post.by_profile.title ? `(${post.by_profile.title})` : '';
+        const tagline = t(`By ${post.by_profile.full_name} ${title}`);
+        author = <span style={{...styles.text, ...styles.main}}>{tagline}</span>;
+    }
     return (
         <div>
             <div>
-                <span style={{...styles.text, ...styles.created}}>{moment(post.created).format('ll')} &ndash; </span>
-                <span style={{...styles.text, ...styles.snippet}}>{post.snippet}</span>
+                <span style={{...styles.text, ...styles.created}}>{moment(post.created).fromNow()} &ndash; </span>
+                {author}
+                <br />
+                <span style={{...styles.text, ...styles.main}}>{post.snippet}</span>
             </div>
         </div>
     );
 };
 
-class DetailListItemPost extends DetailListItem {
+class DetailListItemCollection extends DetailListItem {
 
     shouldComponentUpdate(nextProps, nextState) {
         const superChanged = super.shouldComponentUpdate(nextProps, nextState);
-        const postChanged = this.props.post.id !== nextProps.post.id;
-        return superChanged || postChanged;
+        const itemChanged = this.props.item.id !== nextProps.item.id;
+        return superChanged || itemChanged;
     }
 
     handleTouchTap = () => {
-        routeToPost(this.props.post);
+        routeToPost(this.props.item.post);
     }
 
     getItem() {
-        const { post, ...other } = this.props;
+        const { item: { post }, ...other } = this.props;
         const { muiTheme } = this.context;
         const styles = {
             primaryText: {
@@ -68,11 +78,11 @@ class DetailListItemPost extends DetailListItem {
 }
 
 const propTypes = Object.assign({}, DetailListItem.propTypes);
-propTypes.post = PropTypes.instanceOf(services.post.containers.PostV1),
-DetailListItemPost.propTypes = propTypes;
+propTypes.item = PropTypes.instanceOf(services.post.containers.CollectionItemV1),
+DetailListItemCollection.propTypes = propTypes;
 
-DetailListItemPost.contextTypes = {
+DetailListItemCollection.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-export default DetailListItemPost;
+export default DetailListItemCollection;

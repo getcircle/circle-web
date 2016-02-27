@@ -4,6 +4,7 @@ export { default as addMembers } from './addMembers';
 export { default as authentication } from './authentication';
 export { default as autocomplete } from './autocomplete';
 export { default as cache } from './cache';
+export { default as collectionItems } from './collectionItems';
 export { default as createTeam} from './createTeam';
 export { default as createCollection } from './createCollection';
 export { default as deleteCollection } from './deleteCollection';

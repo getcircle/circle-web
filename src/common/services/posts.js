@@ -170,3 +170,16 @@ export function getCollections(client, parameters) {
             .catch(error => reject(error));
     });
 }
+
+export function getCollectionItems(client, collectionId, nextRequest) {
+    const request = nextRequest ? nextRequest : new services.post.actions.get_collection_items.RequestV1({
+        /*eslint-disable camelcase*/
+        collection_id: collectionId,
+        /*eslint-enable camelcase*/
+    });
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => response.finish(resolve, reject, collectionId))
+            .catch(error => reject(error));
+    });
+}

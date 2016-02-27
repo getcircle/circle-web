@@ -40,6 +40,15 @@ export function getPostsNormalizations(action) {
     );
 }
 
+export function getCollectionItemsNormalizations(action) {
+    return getNormalizations(
+        'items',
+        action.meta.paginateBy,
+        services.post.actions.get_collection_items.ResponseV1,
+        action.payload,
+    );
+}
+
 export function getCollectionsNormalizations(key, cache) {
     return getNormalizations(
         'collections',

@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
+import { paginatedShouldBail } from '../reducers/paginate';
 import { retrieveCollection } from '../reducers/denormalizations';
 
 export function showCreateCollectionModal() {
@@ -202,4 +203,20 @@ export function clearCollectionsFilter() {
 
 export function initializeCollectionsFilter(collections) {
     return {type: types.INITIALIZE_COLLECTIONS_FILTER, payload: collections};
+}
+
+export function getCollectionItems(collectionId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_COLLECTION_ITEMS,
+                types.GET_COLLECTION_ITEMS_SUCCESS,
+                types.GET_COLLECTION_ITEMS_FAILURE,
+            ],
+            remote: client => requests.getCollectionItems(client, collectionId),
+        },
+        meta: {
+            paginateBy: collectionId,
+        },
+    }
 }

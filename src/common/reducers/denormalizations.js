@@ -102,3 +102,7 @@ export function retrieveCollection(collectionId, cache) {
 export function retrieveCollections(ids, cache) {
     return retrieve(ids, services.post.containers.CollectionV1, cache);
 }
+
+export function retrieveCollectionItems(ids, cache) {
+    return retrieve(ids, services.post.containers.CollectionItemV1, cache);
+}
