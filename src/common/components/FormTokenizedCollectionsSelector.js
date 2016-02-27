@@ -9,7 +9,7 @@ function getItemName(collection) {
     return collection.display_name;
 }
 
-const FormCollectionSelector = (props) => {
+const FormTokenizedCollectionsSelector = (props) => {
     const { active, editableCollections, onChange, value, ...other } = props;
     const collections = value || [];
     const autoComplete = (
@@ -18,7 +18,7 @@ const FormCollectionSelector = (props) => {
             focused={active}
             hasItemDivider={false}
             ignoreCollectionIds={collections.map(collection => collection.id)}
-            placeholder={t('Search by Name')}
+            placeholder={t('Search Collections')}
             resultFactoryFunction={createCollectionItem}
         />
     );
@@ -33,12 +33,11 @@ const FormCollectionSelector = (props) => {
     );
 }
 
-FormCollectionSelector.propTypes = {
+FormTokenizedCollectionsSelector.propTypes = {
     active: PropTypes.bool,
-    collections: PropTypes.array,
     editableCollections: PropTypes.array,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array,
 };
 
-export default FormCollectionSelector;
+export default FormTokenizedCollectionsSelector;

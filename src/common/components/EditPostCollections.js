@@ -9,7 +9,7 @@ import { initializeCollectionsFilter } from '../actions/collections';
 
 import Form from './Form';
 import FormLabel from './FormLabel';
-import FormCollectionSelector from './FormCollectionSelector';
+import FormTokenizedCollectionsSelector from './FormCollectionSelector';
 
 const FIELD_NAMES = ['collections'];
 
@@ -52,7 +52,7 @@ class EditPostCollections extends Component {
         return (
             <Form {...other}>
                 <FormLabel text={t('Collections')} />
-                <FormCollectionSelector
+                <FormTokenizedCollectionsSelector
                     editableCollections={editableCollections}
                     {...collections}
                 />
