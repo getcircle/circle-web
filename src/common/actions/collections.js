@@ -218,5 +218,18 @@ export function getCollectionItems(collectionId) {
         meta: {
             paginateBy: collectionId,
         },
-    }
+    };
+}
+
+export function getDefaultCollection(ownerType, ownerId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_DEFAULT_COLLECTION,
+                types.GET_DEFAULT_COLLECTION_SUCCESS,
+                types.GET_DEFAULT_COLLECTION_FAILURE,
+            ],
+            remote: client => requests.getDefaultCollection(client, ownerType, ownerId),
+        }
+    };
 }
