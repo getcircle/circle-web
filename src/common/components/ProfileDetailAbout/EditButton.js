@@ -1,7 +1,8 @@
 import { IconButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
-import { showModal } from '../../actions/profiles';
+import { EDIT_PROFILE } from '../../constants/forms';
+import { showFormDialog } from '../../actions/formDialogs';
 
 import EditIcon from '../EditIcon';
 
@@ -16,7 +17,7 @@ const EditButton = ({dispatch}, {muiTheme}) => {
         }
     }
     const handleTouchTap = () => {
-        dispatch(showModal());
+        dispatch(showFormDialog(EDIT_PROFILE));
     };
     return (
         <div>

@@ -2,14 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
-import { hideModal, updateProfile } from '../actions/profiles';
+import { hideFormDialog } from '../actions/formDialogs';
+import { updateProfile } from '../actions/profiles';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { profileValidator } from '../utils/validators';
-import { PROFILE_DETAIL } from '../constants/forms';
+import { EDIT_PROFILE } from '../constants/forms';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import tracker from '../utils/tracker';
-import { uploadMedia } from '../actions/media';
 
 import FormContactList from './FormContactList';
 import FormDialog from './FormDialog';
@@ -36,16 +36,17 @@ export const fieldNames = [
 const selector = selectors.createImmutableSelector(
     [
         selectors.mediaUploadSelector,
-        selectors.updateProfileSelector,
+        selectors.formDialogsSelector,
     ],
     (
         mediaUploadState,
-        updateProfileState,
+        formDialogsState,
     ) => {
+        const dialogState = formDialogsState.get(EDIT_PROFILE);
         return {
             mediaUrl: mediaUploadState.get('mediaUrl'),
-            formSubmitting: updateProfileState.get('formSubmitting'),
-            visible: updateProfileState.get('modalVisible'),
+            submitting: dialogState.get('submitting'),
+            visible: dialogState.get('visible'),
         };
     }
 );
@@ -85,12 +86,12 @@ export class ProfileDetailForm extends Component {
         dirty: PropTypes.bool,
         dispatch: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
-        formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
         manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
         mediaUrl: PropTypes.string,
         profile: PropTypes.instanceOf(services.profile.containers.ProfileV1).isRequired,
         resetForm: PropTypes.func.isRequired,
+        submitting: PropTypes.bool,
         visible: PropTypes.bool.isRequired,
     };
 
@@ -119,7 +120,7 @@ export class ProfileDetailForm extends Component {
             /*eslint-enable camelcase*/
         });
 
-        const action = initialize(PROFILE_DETAIL, {
+        const action = initialize(EDIT_PROFILE, {
             bio: profile.bio,
             contacts,
             email: profile.email,
@@ -160,7 +161,7 @@ export class ProfileDetailForm extends Component {
     }
 
     handleCancel = () => {
-        this.props.dispatch(hideModal());
+        this.props.dispatch(hideFormDialog(EDIT_PROFILE));
     }
 
     renderFields() {
@@ -238,7 +239,7 @@ export class ProfileDetailForm extends Component {
     }
 
     render() {
-        const { formSubmitting, handleSubmit, visible } = this.props;
+        const { submitting, handleSubmit, visible } = this.props;
 
         return (
             <FormDialog
@@ -247,7 +248,7 @@ export class ProfileDetailForm extends Component {
                 onSubmit={handleSubmit(this.submit)}
                 pageType={PAGE_TYPE.EDIT_PROFILE}
                 submitLabel={t('Update')}
-                submitting={formSubmitting}
+                submitting={submitting}
                 title={t('Edit Profile')}
                 visible={visible}
             >
@@ -259,7 +260,7 @@ export class ProfileDetailForm extends Component {
 
 export default reduxForm(
     {
-      form: PROFILE_DETAIL,
+      form: EDIT_PROFILE,
       fields: fieldNames,
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
       validate: profileValidator,

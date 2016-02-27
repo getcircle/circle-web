@@ -3,9 +3,10 @@ import { Tabs, Tab } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
+import { EDIT_PROFILE } from '../constants/forms';
 import { PostStateURLString } from '../utils/post';
 import { replaceProfileSlug } from '../utils/routes';
-import { showModal } from '../actions/profiles';
+import { showFormDialog } from '../actions/formDialogs';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';
@@ -136,7 +137,7 @@ class ProfileDetail extends CSSComponent {
     }
 
     editButtonTapped() {
-        this.props.dispatch(showModal());
+        this.props.dispatch(showFormDialog(EDIT_PROFILE));
     }
 
     // Helpers

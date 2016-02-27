@@ -5,13 +5,12 @@ import React from 'react';
 import { services } from 'protobufs';
 
 import { getProfile } from '../../factories/ProfileFactory';
-import { hideModal, updateProfile } from '../../../src/common/actions/profiles';
-import { PROFILE_DETAIL } from '../../../src/common/constants/forms';
+import { hideFormDialog } from '../../../src/common/actions/formDialogs';
+import { EDIT_PROFILE } from '../../../src/common/constants/forms';
 import { ProfileDetailForm, fieldNames, getUpdatedProfile } from '../../../src/common/components/ProfileDetailForm';
-import FormDialog from '../../../src/common/components/FormDialog';
-import { uploadMedia } from '../../../src/common/actions/media';
+import { updateProfile } from '../../../src/common/actions/profiles';
 
-const { MediaTypeV1 } = services.media.containers.media;
+import FormDialog from '../../../src/common/components/FormDialog';
 
 function setup(overrides) {
     const defaults = {
@@ -46,7 +45,7 @@ function setup(overrides) {
 }
 
 function initializeAction(profile) {
-    return initialize(PROFILE_DETAIL, {
+    return initialize(EDIT_PROFILE, {
         bio: profile.bio,
         contacts: [],
         email: profile.email,
@@ -99,7 +98,7 @@ describe('ProfileDetailForm', () => {
             const dispatchSpy = expect.createSpy();
             const { wrapper } = setup({dispatch: dispatchSpy});
             wrapper.find(FormDialog).prop('onCancel')();
-            expect(dispatchSpy).toHaveBeenCalledWith(hideModal());
+            expect(dispatchSpy).toHaveBeenCalledWith(hideFormDialog(EDIT_PROFILE));
         });
 
     });

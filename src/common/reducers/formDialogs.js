@@ -11,6 +11,12 @@ const FORMS = [
         saveSuccess: actionTypes.ASK_QUESTION_SUCCESS,
         saveFailure: actionTypes.ASK_QUESTION_FAILURE,
     },
+    {
+        type: formTypes.EDIT_PROFILE,
+        save: actionTypes.UPDATE_PROFILE,
+        saveSuccess: actionTypes.UPDATE_PROFILE_SUCCESS,
+        saveFailure: actionTypes.UPDATE_PROFILE_FAILURE,
+    },
 ];
 
 function buildInitialState(forms) {
