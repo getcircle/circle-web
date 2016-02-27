@@ -30,13 +30,9 @@ const selector = selectors.createImmutableSelector(
         selectors.deletePostSelector,
     ],
     (cacheState, postState, paramsState, deletePostState) => {
-        let post;
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
-        if (postState.get('ids').has(postId)) {
-            post = retrievePost(postId, cache, REQUIRED_FIELDS);
-        }
-
+        const post = retrievePost(postId, cache, REQUIRED_FIELDS);
         const showLinkCopied = postState.get('showLinkCopied');
         return {
             showLinkCopied,
