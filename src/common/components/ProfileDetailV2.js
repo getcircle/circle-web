@@ -64,6 +64,7 @@ const ProfileDetail = (props) => {
                 loaded={collectionsLoaded}
                 loading={collectionsLoading}
                 onLoadMore={onLoadMoreCollections}
+                profile={profile}
             />
         );
         break;

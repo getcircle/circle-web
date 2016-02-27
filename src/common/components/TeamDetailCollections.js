@@ -4,20 +4,20 @@ import { services } from 'protobufs';
 import CreateCollectionForm from './CreateCollectionForm';
 import DetailCollections from './DetailCollections';
 
-const ProfileDetailCollections = ({ profile, ...other }) => {
+const TeamDetailCollections = ({ team, ...other }) => {
     return (
         <div>
             <DetailCollections {...other} />
             <CreateCollectionForm
-                ownerId={profile.id}
-                ownerType={services.post.containers.CollectionV1.OwnerTypeV1.PROFILE}
+                ownerId={team.id}
+                ownerType={services.post.containers.CollectionV1.OwnerTypeV1.TEAM}
             />
         </div>
     );
-}
-
-ProfileDetailCollections.propTypes = {
-    profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
 };
 
-export default ProfileDetailCollections;
+TeamDetailCollections.propTypes = {
+    team: PropTypes.instanceOf(services.team.containers.TeamV1),
+};
+
+export default TeamDetailCollections;
