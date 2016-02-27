@@ -167,7 +167,9 @@ export default function cache(state = initialState, action) {
                                 !action.payload.normalizations[entitiesType][entityId]
                             )
                         ) {
-                            map.deleteIn(['normalizations', entitiesType, entityId]);
+                            if (!(newEntity.inflations && newEntity.inflations.disabled)) {
+                                map.deleteIn(['normalizations', entitiesType, entityId]);
+                            }
                         }
                     }
                 }
