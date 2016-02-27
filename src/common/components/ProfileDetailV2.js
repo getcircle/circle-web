@@ -104,7 +104,7 @@ ProfileDetail.propTypes = {
 };
 
 ProfileDetail.defaultProps = {
-    slug: SLUGS.KNOWLEDGE,
+    slug: SLUGS.COLLECTIONS,
 };
 
 export default ProfileDetail;
