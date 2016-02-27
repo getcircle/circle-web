@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
-import { getCollectionsForOwner } from '../actions/collections';
+import { getCollectionsForOwner, getDefaultCollection } from '../actions/collections';
 import { getProfile, getReportingDetails } from '../actions/profiles';
 import {
     deletePost,
@@ -117,27 +117,32 @@ const hooks = {
         fetchReportingDetails(locals);
         fetchMemberships(locals);
         fetchCollections(locals);
+        fetchDefaultCollection(locals);
     },
 };
 
-function fetchProfile({ dispatch, params: { profileId }}) {
+function fetchProfile({ dispatch, params: { profileId } }) {
     return dispatch(getProfile(profileId));
 }
 
-function fetchReportingDetails({ dispatch, params: { profileId }}) {
+function fetchReportingDetails({ dispatch, params: { profileId } }) {
     return dispatch(getReportingDetails(profileId));
 }
 
-function fetchMemberships({ dispatch, params: { profileId }}) {
+function fetchMemberships({ dispatch, params: { profileId } }) {
     return dispatch(getMembersForProfileId(profileId));
 }
 
-function fetchPosts({ dispatch, params: { profileId }}) {
+function fetchPosts({ dispatch, params: { profileId } }) {
     return dispatch(getListedPosts(profileId));
 }
 
-function fetchCollections({ dispatch, params: { profileId }}) {
+function fetchCollections({ dispatch, params: { profileId } }) {
     return dispatch(getCollectionsForOwner(PROFILE, profileId));
+}
+
+function fetchDefaultCollection({ dispatch, params: { profileId } }) {
+    return dispatch(getDefaultCollection(PROFILE, profileId));
 }
 
 function loadProfile(locals) {
@@ -146,6 +151,7 @@ function loadProfile(locals) {
     fetchMemberships(locals);
     fetchPosts(locals);
     fetchCollections(locals);
+    fetchDefaultCollection(locals);
 }
 
 class Profile extends CSSComponent {
