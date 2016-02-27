@@ -7,6 +7,7 @@ import DetailContent from './DetailContent';
 import ProfileDetailHeader from './ProfileDetailHeaderV2';
 import ProfileDetailTabs, { SLUGS } from './ProfileDetailTabs';
 import ProfileDetailAbout from './ProfileDetailAbout';
+import ProfileDetailCollections from './ProfileDetailCollections';
 import ProfileDetailKnowledge from './ProfileDetailKnowledge';
 
 const ProfileDetail = (props) => {
@@ -48,6 +49,11 @@ const ProfileDetail = (props) => {
                 postsLoaded={postsLoaded}
                 postsLoading={postsLoading}
             />
+        );
+        break;
+    case SLUGS.COLLECTIONS:
+        content = (
+            <ProfileDetailCollections />
         );
         break;
     }

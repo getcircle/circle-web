@@ -104,14 +104,6 @@ CollectionDetailKnowledge.propTypes = {
 
 const CollectionDetailTitle = ({ collection, itemsLoaded, totalItems, ...other }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
-    const styles = {
-        divider: {
-            backgroundColor: muiTheme.luno.colors.black,
-            height: 2,
-            marginTop: 45,
-            marginBottom: 20,
-        },
-    };
     // TODO if items have loaded, display totalItems next to knowledge
     let menu;
     { /* TODO add permissions check */ }
@@ -124,7 +116,7 @@ const CollectionDetailTitle = ({ collection, itemsLoaded, totalItems, ...other }
                 <h1 style={theme.h1}>{t('Knowledge')}</h1>
                 {menu}
             </div>
-            <DetailDivider style={styles.divider} />
+            <DetailDivider style={muiTheme.luno.collections.divider} />
         </section>
     );
 };
