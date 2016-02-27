@@ -58,6 +58,15 @@ export function getCollectionsNormalizations(key, cache) {
     );
 }
 
+export function getCollectionsForOwnerNormalizations(action) {
+    return getNormalizations(
+        'collections',
+        action.meta.paginateBy,
+        services.post.actions.get_collections.ResponseV1,
+        action.payload,
+    );
+}
+
 /**
  * Return the team member ids that have been normalized in the payload.
  *

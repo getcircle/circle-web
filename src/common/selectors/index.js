@@ -86,3 +86,4 @@ export const deleteCollectionSelector = state => state.get('deleteCollection');
 export const editableCollectionsSelector = state => state.get('editableCollections');
 export const filterCollectionsSelector = state => state.get('filterCollections');
 export const collectionItemsSelector = state => state.get('collectionItems');
+export const collectionsSelector = state => state.get('collections');

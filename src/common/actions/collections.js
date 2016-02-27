@@ -229,7 +229,24 @@ export function getDefaultCollection(ownerType, ownerId) {
                 types.GET_DEFAULT_COLLECTION_SUCCESS,
                 types.GET_DEFAULT_COLLECTION_FAILURE,
             ],
-            remote: client => requests.getDefaultCollection(client, ownerType, ownerId),
+            remote: client => requests.getCollectionsForOwner(client, ownerType, ownerId, true),
         }
+    };
+}
+
+export function getCollectionsForOwner(ownerType, ownerId, nextRequest) {
+    const key = requests.getCollectionsForOwnerKey(ownerType, ownerId);
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_COLLECTIONS_FOR_OWNER,
+                types.GET_COLLECTIONS_FOR_OWNER_SUCCESS,
+                types.GET_COLLECTIONS_FOR_OWNER_FAILURE,
+            ],
+            remote: client => requests.getCollectionsForOwner(client, ownerType, ownerId, false, nextRequest),
+        },
+        meta: {
+            paginateBy: key,
+        },
     };
 }

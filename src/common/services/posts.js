@@ -184,19 +184,20 @@ export function getCollectionItems(client, collectionId, nextRequest) {
     });
 }
 
-export function getDefaultCollectionKey(ownerType, ownerId) {
-    return `${ownerType}:${ownerId}:default`;
+export function getCollectionsForOwnerKey(ownerType, ownerId, isDefault = false) {
+    return isDefault ? `${ownerType}:${ownerId}:default` : `${ownerType}:${ownerId}`;
 }
 
-export function getDefaultCollection(client, ownerType, ownerId) {
-    const request = new services.post.actions.get_collections.RequestV1({
+export function getCollectionsForOwner(client, ownerType, ownerId, isDefault, nextRequest) {
+    const request = nextRequest ? nextRequest : new services.post.actions.get_collections.RequestV1({
         /*eslint-disable camelcase*/
         owner_type: ownerType,
         owner_id: ownerId,
-        is_default: true,
+        is_default: isDefault,
+        items_per_collection: 3,
         /*eslint-enable camelcase*/
     });
-    const key = getDefaultCollectionKey(ownerType, ownerId);
+    const key = getCollectionsForOwnerKey(ownerType, ownerId, isDefault);
     return new Promise((resolve, reject) => {
         client.send(request)
             .then(response => response.finish(resolve, reject, key))

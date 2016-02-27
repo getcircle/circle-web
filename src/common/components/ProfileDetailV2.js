@@ -12,17 +12,22 @@ import ProfileDetailKnowledge from './ProfileDetailKnowledge';
 
 const ProfileDetail = (props) => {
     const {
+        collections,
+        collectionsLoaded,
+        collectionsLoading,
         dispatch,
         directReports,
+        hasMoreCollections,
         hasMorePosts,
         manager,
         memberships,
+        onLoadMoreCollections,
+        onLoadMorePosts,
         peers,
         posts,
         postsLoaded,
         postsLoading,
         profile,
-        onLoadMorePosts,
         slug,
     } = props;
 
@@ -53,7 +58,13 @@ const ProfileDetail = (props) => {
         break;
     case SLUGS.COLLECTIONS:
         content = (
-            <ProfileDetailCollections />
+            <ProfileDetailCollections
+                collections={collections}
+                hasMore={hasMoreCollections}
+                loaded={collectionsLoaded}
+                loading={collectionsLoading}
+                onLoadMore={onLoadMoreCollections}
+            />
         );
         break;
     }
@@ -74,8 +85,12 @@ const ProfileDetail = (props) => {
 };
 
 ProfileDetail.propTypes = {
+    collections: PropTypes.array,
+    collectionsLoaded: PropTypes.bool,
+    collectionsLoading: PropTypes.bool,
     directReports: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    hasMoreCollections: PropTypes.bool.isRequired,
     hasMorePosts: PropTypes.bool.isRequired,
     manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     memberships: PropTypes.array,
