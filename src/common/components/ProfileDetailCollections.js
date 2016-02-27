@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import t from '../utils/gettext';
 
 import CollectionIcon from './CollectionIcon';
-import DetailSection from './DetailSectionV2';
+import DetailDefaultCollection from './DetailDefaultCollection';
 import DetailTitle from './DetailTitle';
 import InfiniteCollectionsGrid from './InfiniteCollectionsGrid';
 
@@ -26,12 +26,8 @@ const ProfileDetailCollections = ({ collections, hasMore, loaded, loading, onLoa
                 IconComponent={CollectionIcon}
                 title={t('Collections')}
             />
-            <DetailSection
-                dividerStyle={muiTheme.luno.collections.divider}
-                style={{paddingTop: 0}}
-            >
-                {grid}
-            </DetailSection>
+            <DetailDefaultCollection />
+            {grid}
         </div>
     );
 };
