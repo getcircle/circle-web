@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import * as selectors from '../../selectors';
 import { clearCollectionsFilter, filterCollections } from '../../actions/collections';
 
+import CheckIcon from '../CheckIcon';
+import CollectionIcon from '../CollectionIcon';
 import Search from '../Search';
 import Section from './Section';
 
@@ -16,20 +18,34 @@ const selector = selectors.createImmutableSelector(
     },
 );
 
-export function createCollectionItem(collection, selectedCollectionIds = []) {
+export function createCollectionItem(collection, selectedCollectionIds = [], muiTheme) {
     const styles = {
         name: {
             fontSize: '1.4rem',
         },
+        selected: {
+            color: muiTheme.luno.tintColor,
+        },
     };
 
     const selected = selectedCollectionIds.includes(collection.id);
-    const primaryText = <span style={styles.name}>{selected ? 'selected ' : ''}{collection.display_name}</span>;
+    let icon;
+    if (selected) {
+        icon = <CheckIcon stroke={muiTheme.luno.tintColor} />;
+    } else {
+        icon = <CollectionIcon />;
+    }
+
+    let style = styles.name;
+    if (selected) {
+        style = {...styles.name, ...styles.selected};
+    }
+    const primaryText = <span style={style}>{collection.display_name}</span>;
     const item = {
+        leftIcon: icon,
         primaryText: primaryText,
         innerDivStyle: {
-            paddingTop: 10,
-            paddingLeft: 20,
+            paddingLeft: 45,
         },
         style: {
             fontSize: '1.4rem',
@@ -98,6 +114,7 @@ class AutoCompleteAddToCollection extends Component {
             undefined,
             resultFactoryFunction,
             ignoreCollectionIds,
+            this.context.muiTheme,
         );
         return [section];
     }
@@ -146,6 +163,10 @@ AutoCompleteAddToCollection.defaultProps = {
     ignoreCollectionIds: [],
     onBlur: () => {},
     onSelectItem: () => {},
+};
+
+AutoCompleteAddToCollection.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
 };
 
 export default connect(selector)(AutoCompleteAddToCollection);
