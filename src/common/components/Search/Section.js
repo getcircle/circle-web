@@ -12,6 +12,10 @@ class Section {
         }
     }
 
+    getFactoryArguments(item) {
+        return [item];
+    }
+
     getItems(maxItems) {
         if (this._items === undefined || this._items === null) {
             return null;
@@ -22,7 +26,7 @@ class Section {
         this._items.forEach((item, index) => {
             if (noMax || index < maxItems) {
                 // TODO verify this isn't called in a way that would slow us down
-                const searchResult = this.factoryFunction(item);
+                const searchResult = this.factoryFunction(...this.getFactoryArguments(item));
                 if (searchResult) {
                     items.push(searchResult);
                 }

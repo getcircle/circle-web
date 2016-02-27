@@ -6,15 +6,11 @@ import { services } from 'protobufs';
 import { reset as reduxFormReset } from 'redux-form';
 
 import { createPost, getPost, updatePost } from '../actions/posts';
-import {
-    addPostToCollections,
-    getCollections,
-    getEditableCollections,
-    removePostFromCollections,
-} from '../actions/collections';
+import { getCollections, getEditableCollections } from '../actions/collections';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
 import { reset } from '../actions/editor';
 
+import { updateCollections } from '../utils/collections';
 import { resetScroll } from '../utils/window';
 import { retrievePost, retrieveCollections } from '../reducers/denormalizations';
 import { getCollectionsNormalizations } from '../reducers/normalizations';
@@ -100,32 +96,9 @@ function fetchEditableCollections({ dispatch, getState }) {
     dispatch(getEditableCollections(profile.id));
 }
 
-function updateCollections(dispatch, post, field) {
-    const collectionsToAdd = [];
-    const collectionsToRemove = [];
-    const initialCollections = field.initial || [];
-    const initialCollectionIds = initialCollections.map(collection => collection.id);
-    const collectionIds = field.value.map(collection => collection.id);
-    for (let collection of field.value) {
-        if (!initialCollectionIds.includes(collection.id)) {
-            collectionsToAdd.push(collection);
-        }
-    }
-
-    for (let collection of initialCollections) {
-        if (!collectionIds.includes(collection.id)) {
-            collectionsToRemove.push(collection);
-        }
-    }
-
-    if (collectionsToRemove.length) {
-        dispatch(removePostFromCollections(post, collectionsToRemove));
-    }
-
-    if (collectionsToAdd.length) {
-        dispatch(addPostToCollections(post, collectionsToAdd));
-    }
-    dispatch(reduxFormReset('editPostCollections'));
+function loadPost(locals) {
+    fetchPost(locals);
+    fetchCollections(locals);
 }
 
 const hooks = {
@@ -145,7 +118,7 @@ class PostEditor extends Component {
     componentWillReceiveProps(nextProps) {
         // TODO redirect to view post if current user doesn't have permission
         if (nextProps.params.postId !== this.props.params.postId) {
-            fetchPost(nextProps);
+            loadPost(nextProps);
             resetScroll();
         }
         if (nextProps.draft) {
@@ -170,8 +143,10 @@ class PostEditor extends Component {
                 updateCollections(
                     this.props.dispatch,
                     post,
-                    form.collections,
+                    form.collections.initialValue,
+                    form.collections.value,
                 );
+                dispatch(reduxFormReset('editPostCollections'));
             }
             this.props.dispatch(updatePost(post));
         } else {

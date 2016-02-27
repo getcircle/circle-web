@@ -9,7 +9,7 @@ import { initializeCollectionsFilter } from '../actions/collections';
 
 import Form from './Form';
 import FormLabel from './FormLabel';
-import FormTokenizedCollectionsSelector from './FormCollectionSelector';
+import FormTokenizedCollectionsSelector from './FormTokenizedCollectionsSelector';
 
 const FIELD_NAMES = ['collections'];
 
@@ -67,10 +67,6 @@ EditPostCollections.propTypes = {
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
     fields: PropTypes.object.isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    post: PropTypes.instanceOf(services.post.containers.PostV1),
-    pristine: PropTypes.bool,
-    resetForm: PropTypes.func.isRequired,
 };
 
 export default reduxForm(

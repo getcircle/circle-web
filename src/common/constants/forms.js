@@ -6,3 +6,4 @@ export const REARRANGE_COLLECTIONS = 'rearrangeCollections';
 export const ADD_MEMBERS = 'addMembers';
 export const CREATE_COLLECTION = 'createCollection';
 export const EDIT_POST_COLLECTIONS = 'editPostCollections';
+export const ADD_TO_COLLECTION = 'addToCollection';

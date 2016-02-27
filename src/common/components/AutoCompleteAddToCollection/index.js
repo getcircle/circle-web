@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import * as selectors from '../selectors';
-import { clearCollectionsFilter, filterCollections } from '../actions/collections';
+import * as selectors from '../../selectors';
+import { clearCollectionsFilter, filterCollections } from '../../actions/collections';
 
-import Search from './Search';
-import Section from './Search/Section';
+import Search from '../Search';
+import Section from './Section';
 
 const selector = selectors.createImmutableSelector(
     [selectors.filterCollectionsSelector],
@@ -16,14 +16,15 @@ const selector = selectors.createImmutableSelector(
     },
 );
 
-export function createCollectionItem(collection) {
+export function createCollectionItem(collection, selectedCollectionIds = []) {
     const styles = {
         name: {
             fontSize: '1.4rem',
         },
     };
 
-    const primaryText = <span style={styles.name}>{collection.display_name}</span>;
+    const selected = selectedCollectionIds.includes(collection.id);
+    const primaryText = <span style={styles.name}>{selected ? 'selected ' : ''}{collection.display_name}</span>;
     const item = {
         primaryText: primaryText,
         innerDivStyle: {
@@ -42,7 +43,8 @@ export function createCollectionItem(collection) {
     };
 };
 
-class AutoCompleteCollection extends Component {
+// TODO i would like to have combined this with AutoCompleteCollection, but direct subclass doesn't work
+class AutoCompleteAddToCollection extends Component {
 
     state = {
         query: '',
@@ -88,16 +90,14 @@ class AutoCompleteCollection extends Component {
             resultFactoryFunction,
         } = this.props;
 
-        let sectionResults = query === '' ? collections : filteredCollections;
-        sectionResults = sectionResults.filter((collection) => {
-            return !ignoreCollectionIds.includes(collection.id);
-        });
+        const sectionResults = query === '' ? collections : filteredCollections;
 
         const section = new Section(
             sectionResults,
             undefined,
             undefined,
             resultFactoryFunction,
+            ignoreCollectionIds,
         );
         return [section];
     }
@@ -125,7 +125,7 @@ class AutoCompleteCollection extends Component {
 
 }
 
-AutoCompleteCollection.propTypes = {
+AutoCompleteAddToCollection.propTypes = {
     collections: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
     filtered: PropTypes.bool,
@@ -137,7 +137,7 @@ AutoCompleteCollection.propTypes = {
     resultFactoryFunction: PropTypes.func.isRequired,
 };
 
-AutoCompleteCollection.defaultProps = {
+AutoCompleteAddToCollection.defaultProps = {
     focued: false,
     collections: [],
     ignoreCollectionIds: [],
@@ -145,5 +145,4 @@ AutoCompleteCollection.defaultProps = {
     onSelectItem: () => {},
 };
 
-export { AutoCompleteCollection };
-export default connect(selector)(AutoCompleteCollection);
+export default connect(selector)(AutoCompleteAddToCollection);

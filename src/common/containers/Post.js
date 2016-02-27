@@ -7,9 +7,11 @@ import { browserHistory } from 'react-router';
 import { Snackbar } from 'material-ui';
 
 import { deletePost, hideConfirmDeleteModal, hideLinkCopiedSnackbar, getPost } from '../actions/posts';
+import { getCollectionsNormalizations } from '../reducers/normalizations';
+import { getCollections, getEditableCollections } from '../actions/collections';
 
 import { resetScroll } from '../utils/window';
-import { retrievePost } from '../reducers/denormalizations';
+import { retrieveCollections, retrievePost } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
@@ -22,19 +24,36 @@ import { default as PostComponent } from '../components/PostV2';
 
 const REQUIRED_FIELDS = ['content', 'by_profile'];
 
+const { SourceV1 } = services.post.containers.CollectionItemV1;
+
 const selector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
         selectors.postSelector,
         selectors.routerParametersSelector,
         selectors.deletePostSelector,
+        selectors.editableCollectionsSelector,
     ],
-    (cacheState, postState, paramsState, deletePostState) => {
+    (cacheState, postState, paramsState, deletePostState, editableCollectionsState) => {
+        let collections, editableCollections;
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
         const post = retrievePost(postId, cache, REQUIRED_FIELDS);
         const showLinkCopied = postState.get('showLinkCopied');
+
+        const collectionIds = getCollectionsNormalizations(postId, cache);
+        if (collectionIds) {
+            collections = retrieveCollections(collectionIds, cache);
+        }
+
+        const editableCollectionIds = editableCollectionsState.get('collectionIds');
+        if (editableCollectionIds.size) {
+            editableCollections = retrieveCollections(editableCollectionIds.toJS(), cache);
+        }
+
         return {
+            collections,
+            editableCollections,
             showLinkCopied,
             errorDetails: postState.get('errorDetails'),
             post: post,
@@ -48,8 +67,27 @@ function fetchPost({ dispatch, params }) {
     return dispatch(getPost(params.postId, REQUIRED_FIELDS));
 }
 
+function fetchCollections({ dispatch, params: { postId } }) {
+    return dispatch(getCollections({source: SourceV1.LUNO, sourceId: postId}));
+}
+
+function fetchEditableCollections({ dispatch, getState }) {
+    const state = getState();
+    const profile = state.get('authentication').get('profile');
+    dispatch(getEditableCollections(profile.id));
+}
+
+function loadPost(locals) {
+    fetchPost(locals);
+    fetchCollections(locals);
+}
+
 const hooks = {
     fetch: locals => fetchPost(locals),
+    defer: (locals) => {
+        fetchCollections(locals);
+        fetchEditableCollections(locals);
+    },
 };
 
 const ErrorMessage = ({ details }, { muiTheme }) => {
@@ -98,7 +136,7 @@ class Post extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.postId !== this.props.params.postId) {
-            fetchPost(nextProps);
+            loadPost(nextProps);
             resetScroll();
         }
     }
@@ -119,13 +157,24 @@ class Post extends Component {
     }
 
     render() {
-        const { errorDetails, modalVisible, pendingPostToDelete, post } = this.props;
+        const {
+            collections,
+            editableCollections,
+            errorDetails,
+            modalVisible,
+            pendingPostToDelete,
+            post,
+        } = this.props;
 
         let content;
         if (post) {
             content = (
                 <DocumentTitle title={post.title}>
-                    <PostComponent post={post} />
+                    <PostComponent
+                        collections={collections}
+                        editableCollections={editableCollections}
+                        post={post}
+                    />
                 </DocumentTitle>
             );
         } else if (errorDetails.size) {
@@ -157,7 +206,9 @@ class Post extends Component {
 }
 
 Post.propTypes = {
+    collections: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    editableCollections: PropTypes.array,
     errorDetails: PropTypes.object,
     modalVisible: PropTypes.bool,
     params: PropTypes.shape({

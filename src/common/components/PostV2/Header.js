@@ -1,16 +1,48 @@
 import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
 import { showConfirmDeleteModal } from '../../actions/posts';
 import t from '../../utils/gettext';
 import { routeToEditPost } from '../../utils/routes';
 
+import AddCollectionIcon from '../AddCollectionIcon';
+import AddToCollectionForm from '../AddToCollectionForm';
 import CircularShareShortcutMenu from '../CircularShareMenu';
+import IconMenu from '../IconMenu';
 import InternalPropTypes from '../InternalPropTypes';
 import MenuItem from '../MenuItem';
 import MoreMenu from '../MoreMenu';
 
 import Author from './Author';
 import { createShareMenuItems } from './helpers';
+
+const AddToCollectionMenu = ({ collections, editableCollections, post, ...other }, { muiTheme }) => {
+    const theme = muiTheme.luno.circularIconMenu;
+    return (
+        <IconMenu
+            iconButtonStyle={theme.button}
+            iconElement={<AddCollectionIcon {...theme.Icon} />}
+            style={theme.menu}
+            {...other}
+        >
+            <AddToCollectionForm
+                collections={collections}
+                editableCollections={editableCollections}
+                post={post}
+            />
+        </IconMenu>
+    );
+}
+
+AddToCollectionMenu.propTypes = {
+    collections: PropTypes.array,
+    editableCollections: PropTypes.array,
+    post: PropTypes.instanceOf(services.post.containers.PostV1),
+};
+
+AddToCollectionMenu.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+};
 
 const ShareShortcutMenu = ({ post }, { auth, store: { dispatch } }) => {
     // TODO track sharing of the post
@@ -46,7 +78,7 @@ AuthorOptionsMenu.contextTypes = {
     }).isRequired,
 };
 
-const Header = ({ post }, { auth, muiTheme }) => {
+const Header = ({ collections, editableCollections, post }, { auth, muiTheme }) => {
     const styles = {
         header: {
             fontSize: '3.2rem',
@@ -69,11 +101,22 @@ const Header = ({ post }, { auth, muiTheme }) => {
                 <Author className="col-xs" post={post} />
                 <div className="col-xs-3 row end-xs">
                     {authorOptions}
+                    <AddToCollectionMenu
+                        collections={collections}
+                        editableCollections={editableCollections}
+                        post={post}
+                    />
                     <ShareShortcutMenu post={post} />
                 </div>
             </div>
         </header>
     );
+};
+
+Header.propTypes = {
+    collections: PropTypes.array,
+    editableCollections: PropTypes.array,
+    post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 
 Header.contextTypes = {
