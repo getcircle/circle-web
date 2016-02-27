@@ -37,6 +37,9 @@ const FormCollectionsSelector = (props) => {
 
 FormCollectionsSelector.propTypes = {
     editableCollections: PropTypes.array,
+    inputContainerStyle: PropTypes.object,
+    inputStyle: PropTypes.object,
+    listContainerStyle: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     onSelectItem: PropTypes.func,
     value: PropTypes.array,

@@ -5,44 +5,14 @@ import { showConfirmDeleteModal } from '../../actions/posts';
 import t from '../../utils/gettext';
 import { routeToEditPost } from '../../utils/routes';
 
-import AddCollectionIcon from '../AddCollectionIcon';
-import AddToCollectionForm from '../AddToCollectionForm';
+import AddToCollectionMenu from '../AddToCollectionMenu';
 import CircularShareShortcutMenu from '../CircularShareMenu';
-import IconMenu from '../IconMenu';
 import InternalPropTypes from '../InternalPropTypes';
 import MenuItem from '../MenuItem';
 import MoreMenu from '../MoreMenu';
 
 import Author from './Author';
 import { createShareMenuItems } from './helpers';
-
-const AddToCollectionMenu = ({ collections, editableCollections, post, ...other }, { muiTheme }) => {
-    const theme = muiTheme.luno.circularIconMenu;
-    return (
-        <IconMenu
-            iconButtonStyle={theme.button}
-            iconElement={<AddCollectionIcon {...theme.Icon} />}
-            style={theme.menu}
-            {...other}
-        >
-            <AddToCollectionForm
-                collections={collections}
-                editableCollections={editableCollections}
-                post={post}
-            />
-        </IconMenu>
-    );
-}
-
-AddToCollectionMenu.propTypes = {
-    collections: PropTypes.array,
-    editableCollections: PropTypes.array,
-    post: PropTypes.instanceOf(services.post.containers.PostV1),
-};
-
-AddToCollectionMenu.contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
-};
 
 const ShareShortcutMenu = ({ post }, { auth, store: { dispatch } }) => {
     // TODO track sharing of the post
@@ -105,6 +75,7 @@ const Header = ({ collections, editableCollections, post }, { auth, muiTheme }) 
                         collections={collections}
                         editableCollections={editableCollections}
                         post={post}
+                        style={{marginRight: 10}}
                     />
                     <ShareShortcutMenu post={post} />
                 </div>

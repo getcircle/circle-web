@@ -4,7 +4,6 @@ import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
 import { updateCollections } from '../utils/collections';
-import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { ADD_TO_COLLECTION } from '../constants/forms';
 import { initializeCollectionsFilter } from '../actions/collections';
@@ -14,15 +13,6 @@ import FormLabel from './FormLabel';
 import FormCollectionsSelector from './FormCollectionsSelector';
 
 const FIELD_NAMES = ['collections'];
-
-const selector = selectors.createImmutableSelector(
-    [selectors.addToCollectionSelector],
-    (addToCollectionState) => {
-        return {
-            visible: addToCollectionState.get('modalVisible'),
-        };
-    }
-);
 
 export class AddToCollectionForm extends Component {
 
@@ -56,8 +46,11 @@ export class AddToCollectionForm extends Component {
     render() {
         const {
             editableCollections,
-            handleSubmit,
             fields: { collections },
+            handleSubmit,
+            inputContainerStyle,
+            inputStyle,
+            listContainerStyle,
             ...other,
         } = this.props;
         return (
@@ -65,6 +58,9 @@ export class AddToCollectionForm extends Component {
                 <FormLabel text={t('Add To...')} />
                 <FormCollectionsSelector
                     editableCollections={editableCollections}
+                    inputContainerStyle={inputContainerStyle}
+                    inputStyle={inputStyle}
+                    listContainerStyle={listContainerStyle}
                     onSelectItem={handleSubmit(this.submit)}
                     {...collections}
                 />
@@ -80,6 +76,9 @@ AddToCollectionForm.propTypes = {
     editableCollections: PropTypes.array,
     fields: PropTypes.object.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    inputContainerStyle: PropTypes.object,
+    inputStyle: PropTypes.object,
+    listContainerStyle: PropTypes.object,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 
@@ -89,5 +88,4 @@ export default reduxForm(
         fields: FIELD_NAMES,
         getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
     },
-    selector,
 )(AddToCollectionForm);
