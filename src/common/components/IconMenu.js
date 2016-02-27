@@ -44,6 +44,7 @@ const IconMenu = (props) => {
             open={open}
             style={merge(styles.root, style)}
             targetOrigin={{horizontal: 'middle', vertical: 'top'}}
+            touchTapCloseDelay={0}
             {...other}
         >
             {children}
