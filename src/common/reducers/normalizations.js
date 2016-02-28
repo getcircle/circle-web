@@ -49,12 +49,12 @@ export function getCollectionItemsNormalizations(action) {
     );
 }
 
-export function getCollectionsNormalizations(key, cache) {
+export function getCollectionsNormalizations(action) {
     return getNormalizations(
         'collections',
-        key,
+        action.payload.result,
         services.post.actions.get_collections.ResponseV1,
-        cache,
+        action.payload,
     );
 }
 

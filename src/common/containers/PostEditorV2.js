@@ -35,8 +35,9 @@ const selector = selectors.createImmutableSelector(
         selectors.editorSelector,
         selectors.filesSelector,
         selectors.editableCollectionsSelector,
+        selectors.postCollectionsSelector,
     ],
-    (cacheState, paramsState, editorState, filesState, editableCollectionsState) => {
+    (cacheState, paramsState, editorState, filesState, editableCollectionsState, postCollectionsState) => {
         let collections, editableCollections, post;
 
         const postId = paramsState.postId;
@@ -56,9 +57,11 @@ const selector = selectors.createImmutableSelector(
             post.content = content;
         }
 
-        const collectionIds = getCollectionsNormalizations(postId, cache);
-        if (collectionIds) {
-            collections = retrieveCollections(collectionIds, cache);
+        if (postCollectionsState.has(postId)) {
+            const ids = postCollectionsState.get(postId).get('ids');
+            if (ids.size) {
+                collections = retrieveCollections(ids.toJS(), cache);
+            }
         }
 
         const editableCollectionIds = editableCollectionsState.get('collectionIds');

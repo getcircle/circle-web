@@ -23,6 +23,7 @@ export { default as locations } from './locations';
 export { default as mediaUpload } from './media';
 export { default as post } from './post';
 export { default as posts } from './posts';
+export { default as postCollections } from './postCollections';
 export { default as profileMemberships } from './profileMemberships';
 export { default as profiles } from './profiles';
 export { default as rearrangeCollections } from './rearrangeCollections';

@@ -7,7 +7,6 @@ import { browserHistory } from 'react-router';
 import { Snackbar } from 'material-ui';
 
 import { deletePost, hideConfirmDeleteModal, hideLinkCopiedSnackbar, getPost } from '../actions/posts';
-import { getCollectionsNormalizations } from '../reducers/normalizations';
 import { getCollections, getEditableCollections } from '../actions/collections';
 
 import { resetScroll } from '../utils/window';
@@ -33,17 +32,20 @@ const selector = selectors.createImmutableSelector(
         selectors.routerParametersSelector,
         selectors.deletePostSelector,
         selectors.editableCollectionsSelector,
+        selectors.postCollectionsSelector,
     ],
-    (cacheState, postState, paramsState, deletePostState, editableCollectionsState) => {
+    (cacheState, postState, paramsState, deletePostState, editableCollectionsState, postCollectionsState) => {
         let collections, editableCollections;
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
         const post = retrievePost(postId, cache, REQUIRED_FIELDS);
         const showLinkCopied = postState.get('showLinkCopied');
 
-        const collectionIds = getCollectionsNormalizations(postId, cache);
-        if (collectionIds) {
-            collections = retrieveCollections(collectionIds, cache);
+        if (postCollectionsState.has(postId)) {
+            const ids = postCollectionsState.get(postId).get('ids');
+            if (ids.size) {
+                collections = retrieveCollections(ids.toJS(), cache);
+            }
         }
 
         const editableCollectionIds = editableCollectionsState.get('collectionIds');
