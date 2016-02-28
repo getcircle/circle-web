@@ -103,7 +103,7 @@ export function createCollectionResult({ collection, highlight }) {
     };
     return {
         item,
-        type: TYPES.COLLETION,
+        type: TYPES.COLLECTION,
         payload: collection,
     };
 }
