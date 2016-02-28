@@ -146,7 +146,7 @@ class PostEditor extends Component {
                     form.collections.initialValue,
                     form.collections.value,
                 );
-                dispatch(reduxFormReset('editPostCollections'));
+                this.props.dispatch(reduxFormReset('editPostCollections'));
             }
             this.props.dispatch(updatePost(post));
         } else {
