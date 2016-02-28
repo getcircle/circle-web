@@ -87,3 +87,4 @@ export const editableCollectionsSelector = state => state.get('editableCollectio
 export const filterCollectionsSelector = state => state.get('filterCollections');
 export const collectionItemsSelector = state => state.get('collectionItems');
 export const collectionsSelector = state => state.get('collections');
+export const requestMissingInfoSelector = state => state.get('requestMissingInfo');
