@@ -19,6 +19,7 @@ const BackButton = (props, { muiTheme }) => {
             label={t('Back')}
             labelStyle={{color: muiTheme.luno.tintColor, paddingLeft: 25}}
             onTouchTap={handleTouchTap}
+            style={{backgroundColor: 'transparent'}}
         >
             <LeftChevronIcon
                 stroke={muiTheme.luno.tintColor}
