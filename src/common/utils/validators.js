@@ -45,3 +45,7 @@ export const teamValidator = createValidator({
     name: [required],
     contacts: arrayOf({type: [required], value: [required]}),
 });
+
+export const requestMissingInfoValidator = createValidator({
+    infoRequest: [required],
+});
