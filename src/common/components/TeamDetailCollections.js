@@ -5,13 +5,19 @@ import CreateCollectionForm from './CreateCollectionForm';
 import DetailCollections from './DetailCollections';
 
 const TeamDetailCollections = ({ team, ...other }) => {
-    return (
-        <div>
-            <DetailCollections {...other} />
+    let form;
+    if (team) {
+        form = (
             <CreateCollectionForm
                 ownerId={team.id}
                 ownerType={services.post.containers.CollectionV1.OwnerTypeV1.TEAM}
             />
+        );
+    }
+    return (
+        <div>
+            <DetailCollections {...other} />
+            {form}
         </div>
     );
 };
