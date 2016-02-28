@@ -272,6 +272,14 @@ export function leaveTeam(client, teamId, memberId) {
                     reject(response.reject());
                 }
             })
+    });
+}
+
+export function getTeams(client, nextRequest, key) {
+    const request = nextRequest ? nextRequest : new services.team.actions.get_teams.RequestV1();
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => response.finish(resolve, reject, key))
             .catch(error => reject(error));
     });
 }

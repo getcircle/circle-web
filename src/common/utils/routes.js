@@ -7,6 +7,14 @@ export function getProfilePath(profile) {
     return `/profile/${profile.id}`;
 }
 
+export function getPostPath(post) {
+    return `/post/${post.id}`;
+}
+
+export function getCollectionPath(collection) {
+    return `/collection/${collection.id}`;
+}
+
 export function routeToProfile(profile) {
     browserHistory.push(getProfilePath(profile));
 }
@@ -27,7 +35,7 @@ export function replacePostState(state) {
 }
 
 export function routeToCollection(collection) {
-    browserHistory.push(`/collection/${collection.id}`);
+    browserHistory.push(getCollectionPath(collection));
 };
 
 export function routeToTeam(team) {
@@ -55,7 +63,11 @@ export function routeToDrafts() {
 }
 
 export function routeToPost(post) {
-    browserHistory.push(`/post/${post.id}`);
+    browserHistory.push(getPostPath(post));
+}
+
+export function replaceWithPost(post) {
+    browserHistory.replace(`/post/${post.id}`);
 }
 
 export function routeToSearch(query) {

@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
+import { getCollectionsForOwner } from '../actions/collections';
 import { getProfile, getReportingDetails } from '../actions/profiles';
 import {
     deletePost,
@@ -10,16 +11,25 @@ import {
     getListedPosts,
     getListedPostsPaginationKey,
 } from '../actions/posts';
+import { getCollectionsForOwnerKey } from '../services/posts';
 import { getMembersForProfileId } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { slice } from '../reducers/paginate';
-import { retrieveProfile, retrieveReportingDetails, retrievePosts, retrieveTeamMembers } from '../reducers/denormalizations';
+import {
+    retrieveCollections,
+    retrieveProfile,
+    retrieveReportingDetails,
+    retrievePosts,
+    retrieveTeamMembers,
+} from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
 import Container from '../components/Container';
 import CSSComponent from '../components/CSSComponent';
 import DeletePostConfirmation from '../components/DeletePostConfirmation';
 import ProfileDetail from '../components/ProfileDetailV2';
+
+const { PROFILE } = services.post.containers.CollectionV1.OwnerTypeV1;
 
 const selector = selectors.createImmutableSelector(
     [
@@ -28,9 +38,20 @@ const selector = selectors.createImmutableSelector(
         selectors.profileMembershipsSelector,
         selectors.postsSelector,
         selectors.deletePostSelector,
+        selectors.collectionsSelector,
     ],
-    (cacheState, parametersState, membershipsState, postsState, deletePostState) => {
-        let memberships, posts, postsLoaded, postsLoading, postsNextRequest;
+    (cacheState, parametersState, membershipsState, postsState, deletePostState, collectionsState) => {
+        let collections,
+            collectionsLoaded,
+            collectionsLoading,
+            collectionsNextRequest,
+            defaultCollection,
+            defaultCollectionLoaded,
+            memberships,
+            posts,
+            postsLoaded,
+            postsLoading,
+            postsNextRequest;
 
         const { profileId } = parametersState;
         const cache = cacheState.toJS();
@@ -45,19 +66,45 @@ const selector = selectors.createImmutableSelector(
             }
         }
 
-        const key = getListedPostsPaginationKey(profileId);
-        if (postsState.has(key)) {
-            const ids = slice(postsState.get(key));
+        const postsKey = getListedPostsPaginationKey(profileId);
+        if (postsState.has(postsKey)) {
+            const ids = slice(postsState.get(postsKey));
             if (ids.size) {
                 // TODO: support Immutable
                 posts = retrievePosts(ids.toJS(), cache);
-                postsNextRequest = postsState.get(key).get('nextRequest');
+                postsNextRequest = postsState.get(postsKey).get('nextRequest');
             }
-            postsLoading = postsState.get(key).get('loading');
-            postsLoaded = postsState.get(key).get('loaded');
+            postsLoading = postsState.get(postsKey).get('loading');
+            postsLoaded = postsState.get(postsKey).get('loaded');
+        }
+
+        const collectionsKey = getCollectionsForOwnerKey(PROFILE, profileId);
+        if (collectionsState.has(collectionsKey)) {
+            const ids = collectionsState.get(collectionsKey).get('ids');
+            if (ids.size) {
+                collections = retrieveCollections(ids.toJS(), cache);
+                collectionsNextRequest = collectionsState.get(collectionsKey).get('nextRequest');
+            }
+            collectionsLoading = collectionsState.get(collectionsKey).get('loading');
+            collectionsLoaded = collectionsState.get(collectionsKey).get('loaded');
+        }
+
+        const defaultCollectionKey = getCollectionsForOwnerKey(PROFILE, profileId, true);
+        if (collectionsState.has(defaultCollectionKey)) {
+            const ids = collectionsState.get(defaultCollectionKey).get('ids');
+            if (ids.size) {
+                defaultCollection = retrieveCollections(ids.toJS(), cache)[0];
+            }
+            defaultCollectionLoaded = collectionsState.get(defaultCollectionKey).get('loaded');
         }
 
         return {
+            defaultCollection,
+            defaultCollectionLoaded,
+            collections,
+            collectionsLoaded,
+            collectionsLoading,
+            collectionsNextRequest,
             memberships,
             posts,
             postsLoaded,
@@ -82,23 +129,33 @@ const hooks = {
     defer: (locals) => {
         fetchReportingDetails(locals);
         fetchMemberships(locals);
+        fetchCollections(locals);
+        fetchDefaultCollection(locals);
     },
 };
 
-function fetchProfile({ dispatch, params: { profileId }}) {
+function fetchProfile({ dispatch, params: { profileId } }) {
     return dispatch(getProfile(profileId));
 }
 
-function fetchReportingDetails({ dispatch, params: { profileId }}) {
+function fetchReportingDetails({ dispatch, params: { profileId } }) {
     return dispatch(getReportingDetails(profileId));
 }
 
-function fetchMemberships({ dispatch, params: { profileId }}) {
+function fetchMemberships({ dispatch, params: { profileId } }) {
     return dispatch(getMembersForProfileId(profileId));
 }
 
-function fetchPosts({ dispatch, params: { profileId }}) {
+function fetchPosts({ dispatch, params: { profileId } }) {
     return dispatch(getListedPosts(profileId));
+}
+
+function fetchCollections({ dispatch, params: { profileId } }) {
+    return dispatch(getCollectionsForOwner(PROFILE, profileId));
+}
+
+function fetchDefaultCollection({ dispatch, params: { profileId } }) {
+    return dispatch(getCollectionsForOwner(PROFILE, profileId, true));
 }
 
 function loadProfile(locals) {
@@ -106,32 +163,20 @@ function loadProfile(locals) {
     fetchReportingDetails(locals);
     fetchMemberships(locals);
     fetchPosts(locals);
+    fetchCollections(locals);
+    fetchDefaultCollection(locals);
 }
 
 class Profile extends CSSComponent {
 
-    static propTypes = {
-        modalVisible: PropTypes.bool,
-        params: PropTypes.shape({
-            slug: PropTypes.string,
-            profileId: PropTypes.string.isRequired,
-        }),
-        pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
-        posts: PropTypes.array,
-        postsLoaded: PropTypes.bool,
-        postsLoading: PropTypes.bool,
-        postsNextRequest: PropTypes.object,
-        profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
-        reportingDetails: PropTypes.instanceOf(services.profile.containers.ReportingDetailsV1),
-    }
-
-    static defaultProps = {
-        postsLoading: false,
-    }
-
     handleLoadMorePosts = () => {
         const { dispatch, params: { profileId }, postsNextRequest } = this.props;
         dispatch(getListedPosts(profileId, postsNextRequest));
+    }
+
+    handleLoadMoreCollections = () => {
+        const { dispatch, params: { profileId }, collectionsNextRequest } = this.props;
+        dispatch(getCollectionsForOwner(PROFILE, profileId, undefined, collectionsNextRequest));
     }
 
     handleRequestClose = () => {
@@ -164,8 +209,10 @@ class Profile extends CSSComponent {
             <Container title={title}>
                 <ProfileDetail
                     directReports={directReports}
+                    hasMoreCollections={!!this.props.collectionsNextRequest}
                     hasMorePosts={!!this.props.postsNextRequest}
                     manager={manager}
+                    onLoadMoreCollections={this.handleLoadMoreCollections}
                     onLoadMorePosts={this.handleLoadMorePosts}
                     peers={peers}
                     slug={slug}
@@ -181,6 +228,33 @@ class Profile extends CSSComponent {
         );
     }
 }
+
+Profile.propTypes = {
+    collections: PropTypes.array,
+    collectionsLoaded: PropTypes.bool,
+    collectionsLoading: PropTypes.bool,
+    collectionsNextRequest: PropTypes.object,
+    defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    defaultCollectionLoaded: PropTypes.bool,
+    modalVisible: PropTypes.bool,
+    params: PropTypes.shape({
+        slug: PropTypes.string,
+        profileId: PropTypes.string.isRequired,
+    }),
+    pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
+    posts: PropTypes.array,
+    postsLoaded: PropTypes.bool,
+    postsLoading: PropTypes.bool,
+    postsNextRequest: PropTypes.object,
+    profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
+    reportingDetails: PropTypes.instanceOf(services.profile.containers.ReportingDetailsV1),
+};
+
+Profile.defaultProps = {
+    collectionsLoaded: false,
+    collectionsLoading: false,
+    postsLoading: false,
+};
 
 export { Profile };
 export default provideHooks(hooks)(connect(selector)(Profile));

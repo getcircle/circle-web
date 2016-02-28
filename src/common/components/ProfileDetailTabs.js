@@ -9,6 +9,7 @@ import DetailTabs from './DetailTabs';
 import Tab from './Tab';
 
 export const SLUGS = {
+    COLLECTIONS: t('collections'),
     KNOWLEDGE: t('knowledge'),
     ABOUT: t('about'),
 };
@@ -25,6 +26,7 @@ const ProfileDetailTabs = ({ onRequestChange, profile, slug, ...other }, { store
             slug={slug}
             {...other}
         >
+            <Tab label={t('Collections')} value={SLUGS.COLLECTIONS } />
             <Tab label={t('Knowledge')} value={SLUGS.KNOWLEDGE} />
             <Tab label={t('About')} value={SLUGS.ABOUT} />
         </DetailTabs>

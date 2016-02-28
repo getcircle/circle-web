@@ -11,6 +11,7 @@ import DetailHeader from './DetailHeader';
 import EditIcon from './EditIcon';
 import IconMenu from './IconMenu';
 import MenuItem from './MenuItem';
+import InfiniteCollectionItemList from './InfiniteCollectionItemList';
 
 const EditCollectionMenu = ({ collection }, { store: { dispatch }, muiTheme }) => {
     const icon = (
@@ -57,7 +58,7 @@ CollectionDetailHeader.propTypes = {
     collection: PropTypes.instanceOf(services.post.containers.CollectionV1),
 };
 
-const CollectionDetailKnowledge = ({ items, itemsLoaded }, { muiTheme }) => {
+const CollectionDetailKnowledge = ({ items, loaded, loading, nextRequest, onLoadMore }, { muiTheme }) => {
     let content;
     const styles = {
         noContent: {
@@ -66,11 +67,20 @@ const CollectionDetailKnowledge = ({ items, itemsLoaded }, { muiTheme }) => {
             lineHeight: '2.4rem',
         },
     };
-    if ((!items || !items.length) && itemsLoaded) {
+    if ((!items || (items && !items.length)) && loaded) {
         content = (
             <div>
                 <span style={styles.noContent}>{t('This Collection doesn\'t contain any Knowledge.')}</span>
             </div>
+        );
+    } else if (items && items.length) {
+        content = (
+            <InfiniteCollectionItemList
+                hasMore={!!nextRequest}
+                items={items}
+                loading={loading}
+                onLoadMore={onLoadMore}
+            />
         );
     }
     return (
@@ -86,43 +96,51 @@ CollectionDetailKnowledge.contextTypes = {
 
 CollectionDetailKnowledge.propTypes = {
     items: PropTypes.array,
-    itemsLoaded: PropTypes.bool,
+    loaded: PropTypes.bool,
+    loading: PropTypes.bool,
+    nextRequest: PropTypes.object,
+    onLoadMore: PropTypes.func,
 };
 
 const CollectionDetailTitle = ({ collection, itemsLoaded, totalItems, ...other }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
-    const styles = {
-        divider: {
-            backgroundColor: muiTheme.luno.colors.black,
-            height: 2,
-            marginTop: 45,
-            marginBottom: 20,
-        },
-    };
     // TODO if items have loaded, display totalItems next to knowledge
+    let menu;
+    { /* TODO add permissions check */ }
+    if (collection) {
+        menu = <EditCollectionMenu collection={collection} />;
+    }
     return (
         <section {...other}>
             <div className="row middle-xs">
                 <h1 style={theme.h1}>{t('Knowledge')}</h1>
-                { /* TODO add permissions check */ }
-                <EditCollectionMenu collection={collection} />
+                {menu}
             </div>
-            <DetailDivider style={styles.divider} />
+            <DetailDivider style={muiTheme.luno.collections.divider} />
         </section>
     );
 };
 
 CollectionDetailTitle.propTypes = {
     collection: PropTypes.instanceOf(services.post.containers.CollectionV1),
-    items: PropTypes.array,
     itemsLoaded: PropTypes.bool,
+    totalItems: PropTypes.number,
 };
 
 CollectionDetailTitle.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-const CollectionDetail = ({ collection, items, itemsLoaded, totalItems }) => {
+const CollectionDetail = (props) => {
+    const {
+        collection,
+        items,
+        itemsLoaded,
+        itemsLoading,
+        itemsNextRequest,
+        onLoadMore,
+        totalItems,
+    } = props;
     return (
         <div>
             <CollectionDetailHeader collection={collection} />
@@ -134,7 +152,10 @@ const CollectionDetail = ({ collection, items, itemsLoaded, totalItems }) => {
                 />
                 <CollectionDetailKnowledge
                     items={items}
-                    itemsLoaded={itemsLoaded}
+                    loaded={itemsLoaded}
+                    loading={itemsLoading}
+                    nextRequest={itemsNextRequest}
+                    onLoadMore={onLoadMore}
                     totalItems={totalItems}
                 />
             </DetailContent>
@@ -144,8 +165,11 @@ const CollectionDetail = ({ collection, items, itemsLoaded, totalItems }) => {
 
 CollectionDetail.propTypes = {
     collection: PropTypes.instanceOf(services.post.containers.CollectionV1),
-    item: PropTypes.array,
+    items: PropTypes.array,
     itemsLoaded: PropTypes.bool,
+    itemsLoading: PropTypes.bool,
+    itemsNextRequest: PropTypes.object,
+    onLoadMore: PropTypes.func,
     totalItems: PropTypes.number,
 };
 

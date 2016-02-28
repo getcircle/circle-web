@@ -7,21 +7,29 @@ import DetailContent from './DetailContent';
 import ProfileDetailHeader from './ProfileDetailHeaderV2';
 import ProfileDetailTabs, { SLUGS } from './ProfileDetailTabs';
 import ProfileDetailAbout from './ProfileDetailAbout';
+import ProfileDetailCollections from './ProfileDetailCollections';
 import ProfileDetailKnowledge from './ProfileDetailKnowledge';
 
 const ProfileDetail = (props) => {
     const {
+        defaultCollection,
+        defaultCollectionLoaded,
+        collections,
+        collectionsLoaded,
+        collectionsLoading,
         dispatch,
         directReports,
+        hasMoreCollections,
         hasMorePosts,
         manager,
         memberships,
+        onLoadMoreCollections,
+        onLoadMorePosts,
         peers,
         posts,
         postsLoaded,
         postsLoading,
         profile,
-        onLoadMorePosts,
         slug,
     } = props;
 
@@ -30,8 +38,8 @@ const ProfileDetail = (props) => {
     case SLUGS.ABOUT:
         content = (
             <ProfileDetailAbout
-                dispatch={dispatch}
                 directReports={directReports}
+                dispatch={dispatch}
                 manager={manager}
                 memberships={memberships}
                 peers={peers}
@@ -47,6 +55,20 @@ const ProfileDetail = (props) => {
                 posts={posts}
                 postsLoaded={postsLoaded}
                 postsLoading={postsLoading}
+            />
+        );
+        break;
+    case SLUGS.COLLECTIONS:
+        content = (
+            <ProfileDetailCollections
+                collections={collections}
+                defaultCollection={defaultCollection}
+                defaultCollectionLoaded={defaultCollectionLoaded}
+                hasMore={hasMoreCollections}
+                loaded={collectionsLoaded}
+                loading={collectionsLoading}
+                onLoadMore={onLoadMoreCollections}
+                profile={profile}
             />
         );
         break;
@@ -68,14 +90,22 @@ const ProfileDetail = (props) => {
 };
 
 ProfileDetail.propTypes = {
+    collections: PropTypes.array,
+    collectionsLoaded: PropTypes.bool,
+    collectionsLoading: PropTypes.bool,
+    defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    defaultCollectionLoaded: PropTypes.bool,
     directReports: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    hasMoreCollections: PropTypes.bool.isRequired,
     hasMorePosts: PropTypes.bool.isRequired,
     manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     memberships: PropTypes.array,
+    onLoadMoreCollections: PropTypes.func,
     onLoadMorePosts: PropTypes.func,
     peers: PropTypes.array,
     posts: PropTypes.array,
+    postsLoaded: PropTypes.bool,
     postsLoading: PropTypes.bool,
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     reportingDetails: PropTypes.instanceOf(services.profile.containers.ReportingDetailsV1),
@@ -83,7 +113,7 @@ ProfileDetail.propTypes = {
 };
 
 ProfileDetail.defaultProps = {
-    slug: SLUGS.KNOWLEDGE,
+    slug: SLUGS.COLLECTIONS,
 };
 
 export default ProfileDetail;

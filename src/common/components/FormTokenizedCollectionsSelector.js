@@ -6,18 +6,19 @@ import AutoCompleteCollection, { createCollectionItem } from './AutoCompleteColl
 import FormTokenizedSelector from './FormTokenizedSelector';
 
 function getItemName(collection) {
-    // TODO if this is owned by a team add [<team name>]
-    return collection.name;
+    return collection.display_name;
 }
 
-const FormCollectionSelector = ({ active, onChange, value, ...other }) => {
+const FormTokenizedCollectionsSelector = (props) => {
+    const { active, editableCollections, onChange, value, ...other } = props;
     const collections = value || [];
     const autoComplete = (
         <AutoCompleteCollection
+            collections={editableCollections}
             focused={active}
             hasItemDivider={false}
             ignoreCollectionIds={collections.map(collection => collection.id)}
-            placeholder={t('Search by Name')}
+            placeholder={t('Search Collections')}
             resultFactoryFunction={createCollectionItem}
         />
     );
@@ -32,10 +33,11 @@ const FormCollectionSelector = ({ active, onChange, value, ...other }) => {
     );
 }
 
-FormCollectionSelector.propTypes = {
+FormTokenizedCollectionsSelector.propTypes = {
     active: PropTypes.bool,
+    editableCollections: PropTypes.array,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array,
 };
 
-export default FormCollectionSelector;
+export default FormTokenizedCollectionsSelector;

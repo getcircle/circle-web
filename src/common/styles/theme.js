@@ -62,6 +62,14 @@ export function getCustomTheme(userAgent) {
                 borderRadius: '50%',
             },
         },
+        collections: {
+            divider: {
+                backgroundColor: Colors.black,
+                height: 2,
+                marginTop: 45,
+                marginBottom: 20,
+            },
+        },
         dialog: {
             title: {
                 color: Colors.black,
@@ -214,6 +222,7 @@ export function getCustomTheme(userAgent) {
                 fontSize: '1.4rem',
                 lineHeight: '2.0rem',
                 color: Colors.lightBlack,
+                overflow: 'visible',
             },
         },
         tabs: {

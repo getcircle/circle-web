@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
 import { showConfirmDeleteModal } from '../../actions/posts';
 import t from '../../utils/gettext';
 import { routeToEditPost } from '../../utils/routes';
 
+import AddToCollectionMenu from '../AddToCollectionMenu';
 import CircularShareShortcutMenu from '../CircularShareMenu';
 import InternalPropTypes from '../InternalPropTypes';
 import MenuItem from '../MenuItem';
@@ -46,7 +48,7 @@ AuthorOptionsMenu.contextTypes = {
     }).isRequired,
 };
 
-const Header = ({ post }, { auth, muiTheme }) => {
+const Header = ({ collections, editableCollections, post }, { auth, muiTheme }) => {
     const styles = {
         header: {
             fontSize: '3.2rem',
@@ -69,11 +71,23 @@ const Header = ({ post }, { auth, muiTheme }) => {
                 <Author className="col-xs" post={post} />
                 <div className="col-xs-3 row end-xs">
                     {authorOptions}
+                    <AddToCollectionMenu
+                        collections={collections}
+                        editableCollections={editableCollections}
+                        post={post}
+                        style={{marginRight: 10}}
+                    />
                     <ShareShortcutMenu post={post} />
                 </div>
             </div>
         </header>
     );
+};
+
+Header.propTypes = {
+    collections: PropTypes.array,
+    editableCollections: PropTypes.array,
+    post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 
 Header.contextTypes = {

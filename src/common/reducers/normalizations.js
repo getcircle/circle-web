@@ -26,7 +26,7 @@ export function getTeamNormalizations(action) {
     return getNormalizations(
         'teams',
         action.meta.paginateBy,
-        services.organization.actions.get_teams.ResponseV1,
+        services.team.actions.get_teams.ResponseV1,
         action.payload
     );
 }
@@ -40,12 +40,30 @@ export function getPostsNormalizations(action) {
     );
 }
 
-export function getCollectionsNormalizations(postId, cache) {
+export function getCollectionItemsNormalizations(action) {
+    return getNormalizations(
+        'items',
+        action.meta.paginateBy,
+        services.post.actions.get_collection_items.ResponseV1,
+        action.payload,
+    );
+}
+
+export function getCollectionsNormalizations(key, cache) {
     return getNormalizations(
         'collections',
-        postId,
+        key,
         services.post.actions.get_collections.ResponseV1,
         cache,
+    );
+}
+
+export function getCollectionsForOwnerNormalizations(action) {
+    return getNormalizations(
+        'collections',
+        action.meta.paginateBy,
+        services.post.actions.get_collections.ResponseV1,
+        action.payload,
     );
 }
 

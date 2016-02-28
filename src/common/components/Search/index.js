@@ -118,6 +118,7 @@ class Search extends CSSComponent {
         },
 
         Enter(event) {
+            event.preventDefault();
             for (let section of this.props.sections) {
                 let highlightedIndex = this.highlightedIndexForSection(section);
                 if (highlightedIndex !== null) {
@@ -287,6 +288,7 @@ class Search extends CSSComponent {
             className,
             inputStyle,
             inputContainerStyle,
+            focused,
             onFocus,
             placeholder,
             listContainerStyle,
@@ -296,21 +298,23 @@ class Search extends CSSComponent {
         } = this.props;
 
         let lists = [];
-        for (let sectionIndex in sections) {
-            const section = this.props.sections[sectionIndex];
-            const maxItems = this.numberOfItemsInSection(section);
-            lists.push(
-                <List
-                    hasItemDivider={this.props.hasItemDivider}
-                    highlightedIndex={this.highlightedIndexForSection(section)}
-                    itemStyle={{...this.styles().listItem}}
-                    items={section.getItems(maxItems)}
-                    key={`list-${sectionIndex}`}
-                    onSelectItem={this.handleSelectItem}
-                    style={{...this.styles().list}}
-                    title={section.title}
-                />
-            );
+        if (focused) {
+            for (let sectionIndex in sections) {
+                const section = this.props.sections[sectionIndex];
+                const maxItems = this.numberOfItemsInSection(section);
+                lists.push(
+                    <List
+                        hasItemDivider={this.props.hasItemDivider}
+                        highlightedIndex={this.highlightedIndexForSection(section)}
+                        itemStyle={{...this.styles().listItem}}
+                        items={section.getItems(maxItems)}
+                        key={`list-${sectionIndex}`}
+                        onSelectItem={this.handleSelectItem}
+                        style={{...this.styles().list}}
+                        title={section.title}
+                    />
+                );
+            }
         }
 
         return (

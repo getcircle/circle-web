@@ -73,7 +73,7 @@ export function retrievePosts(postIds, cache) {
 }
 
 export function retrieveTeams(teamIds, cache) {
-    return retrieve(teamIds, services.organization.containers.TeamV1, cache);
+    return retrieve(teamIds, services.team.containers.TeamV1, cache);
 }
 
 export function retrieveTeam(teamId, cache, requiredFields) {
@@ -105,4 +105,8 @@ export function retrieveCollection(collectionId, cache) {
 
 export function retrieveCollections(ids, cache) {
     return retrieve(ids, services.post.containers.CollectionV1, cache);
+}
+
+export function retrieveCollectionItems(ids, cache) {
+    return retrieve(ids, services.post.containers.CollectionItemV1, cache);
 }

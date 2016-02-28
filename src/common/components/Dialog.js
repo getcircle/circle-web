@@ -110,11 +110,13 @@ class Dialog extends Component {
             open,
             saveButtonStyle,
             saveLabel,
+            style,
             title,
             ...other,
         } = this.props;
         const { muiTheme } = this.context;
 
+        const dialogStyle = merge({zIndex: 3000}, style);
         return (
             <MaterialDialog
                 bodyStyle={styles.bodyStyle}
@@ -122,6 +124,7 @@ class Dialog extends Component {
                 modal={modal}
                 onRequestClose={onRequestClose}
                 open={open}
+                style={dialogStyle}
                 {...other}
             >
                 <header className="row between-xs" style={styles.header}>
@@ -155,6 +158,7 @@ Dialog.propTypes = {
     open: PropTypes.bool.isRequired,
     saveButtonStyle: PropTypes.object,
     saveLabel: PropTypes.string,
+    style: PropTypes.object,
     title: PropTypes.string,
 };
 

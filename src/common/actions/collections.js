@@ -3,9 +3,8 @@ import { services } from 'protobufs';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
+import { paginatedShouldBail } from '../reducers/paginate';
 import { retrieveCollection } from '../reducers/denormalizations';
-
-const { SourceV1 } = services.post.containers.CollectionItemV1;
 
 export function showCreateCollectionModal() {
     return {type: types.SHOW_CREATE_COLLECTION_MODAL};
@@ -126,32 +125,38 @@ export function hideEditCollectionModal() {
     return {type: types.HIDE_EDIT_COLLECTION_MODAL};
 }
 
-export function addPostToCollection(post, collection) {
+export function addPostToCollections(post, collections) {
+    const item = new services.post.containers.CollectionItemV1({
+        /*eslint-disable camelcase*/
+        source_id: post.id,
+        /*eslint-enable camelcase*/
+    });
     return {
         [SERVICE_REQUEST]: {
             types: [
-                types.ADD_TO_COLLECTION,
-                types.ADD_TO_COLLECTION_SUCCESS,
-                types.ADD_TO_COLLECTION_FAILURE,
+                types.ADD_TO_COLLECTIONS,
+                types.ADD_TO_COLLECTIONS_SUCCESS,
+                types.ADD_TO_COLLECTIONS_FAILURE,
             ],
-            remote: client => requests.addToCollection(client, {
-                source: SourceV1.LUNO,
-                sourceId: post.id,
-                collectionId: collection.id,
-            }),
+            remote: client => requests.addToCollections(client, item, collections),
         },
     };
 }
 
-export function removeFromCollection({collectionId, collectionItemId}) {
+export function removePostFromCollections(post, collections) {
+    const item = new services.post.containers.CollectionItemV1({
+        /*eslint-disable camelcase*/
+        source_id: post.id,
+        /*eslint-enable camelcase*/
+    });
     return {
         [SERVICE_REQUEST]: {
             types: [
-                types.REMOVE_FROM_COLLECTION,
-                types.REMOVE_FROM_COLLECTION_SUCCESS,
-                types.REMOVE_FROM_COLLECTION_FAILURE,
+                types.REMOVE_FROM_COLLECTIONS,
+                types.REMOVE_FROM_COLLECTIONS_SUCCESS,
+                types.REMOVE_FROM_COLLECTIONS_FAILURE,
             ],
-            remote: client => requests.removeFromCollection(client, {collectionId, collectionItemId}),
+            remote: client => requests.removeFromCollections(client, item, collections),
         },
     };
 }
@@ -165,6 +170,70 @@ export function getCollections({source, sourceId}) {
                 types.GET_COLLECTIONS_FAILURE,
             ],
             remote: client => requests.getCollections(client, {source, sourceId}),
+        },
+    };
+}
+
+export function getEditableCollections(profileId) {
+    const permissions = new services.common.containers.PermissionsV1({
+        /*eslint-disable camelcase*/
+        can_edit: true,
+        /*eslint-enable camelcase*/
+    });
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_EDITABLE_COLLECTIONS,
+                types.GET_EDITABLE_COLLECTIONS_SUCCESS,
+                types.GET_EDITABLE_COLLECTIONS_FAILURE,
+            ],
+            remote: client => requests.getCollections(client, {profileId, permissions}),
+            bailout: state => !!state.get('editableCollections').get('collectionIds').size,
+        },
+    };
+}
+
+export function filterCollections(query) {
+    return {type: types.FILTER_COLLECTIONS, payload: query};
+}
+
+export function clearCollectionsFilter() {
+    return {type: types.CLEAR_COLLECTIONS_FILTER};
+}
+
+export function initializeCollectionsFilter(collections) {
+    return {type: types.INITIALIZE_COLLECTIONS_FILTER, payload: collections};
+}
+
+export function getCollectionItems(collectionId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_COLLECTION_ITEMS,
+                types.GET_COLLECTION_ITEMS_SUCCESS,
+                types.GET_COLLECTION_ITEMS_FAILURE,
+            ],
+            remote: client => requests.getCollectionItems(client, collectionId),
+        },
+        meta: {
+            paginateBy: collectionId,
+        },
+    };
+}
+
+export function getCollectionsForOwner(ownerType, ownerId, isDefault = false, nextRequest) {
+    const key = requests.getCollectionsForOwnerKey(ownerType, ownerId, isDefault);
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_COLLECTIONS_FOR_OWNER,
+                types.GET_COLLECTIONS_FOR_OWNER_SUCCESS,
+                types.GET_COLLECTIONS_FOR_OWNER_FAILURE,
+            ],
+            remote: client => requests.getCollectionsForOwner(client, ownerType, ownerId, isDefault, nextRequest),
+        },
+        meta: {
+            paginateBy: key,
         },
     };
 }

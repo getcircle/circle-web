@@ -1,42 +1,31 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { services } from 'protobufs';
 
 import * as selectors from '../selectors';
-
-import { clearResults, search } from '../actions/search';
+import { clearCollectionsFilter, filterCollections } from '../actions/collections';
 
 import Search from './Search';
 import Section from './Search/Section';
 
-const category = services.search.containers.search.CategoryV1.COLLECTIONS;
-
 const selector = selectors.createImmutableSelector(
-    [
-        selectors.searchSelector,
-    ],
-    (searchSelector) => {
+    [selectors.filterCollectionsSelector],
+    (filterCollectionsState) => {
         return {
-            results: searchSelector.get('results').toJS(),
+            filteredCollections: filterCollectionsState.get('filteredCollections').toJS(),
         };
     },
 );
 
-export function createCollectionItem({ collection, highlight }) {
+export function createCollectionItem(collection) {
     const styles = {
         name: {
             fontSize: '1.4rem',
         },
     };
 
-    let name;
-    if (highlight && highlight.get('name')) {
-        name = <span style={styles.name} dangerouslySetInnerHTML={{__html: highlight.get('name')}} />;
-    } else {
-        name = <span style={styles.name}>{collection.name}</span>;
-    }
+    const primaryText = <span style={styles.name}>{collection.display_name}</span>;
     const item = {
-        primaryText: name,
+        primaryText: primaryText,
         innerDivStyle: {
             paddingTop: 10,
             paddingLeft: 20,
@@ -53,25 +42,7 @@ export function createCollectionItem({ collection, highlight }) {
     };
 };
 
-// Refactor to combine AutoCompleteCollection and AutoCompleteProfile
 class AutoCompleteCollection extends Component {
-
-    static propTypes = {
-        dispatch: PropTypes.func.isRequired,
-        focused: PropTypes.bool,
-        ignoreCollectionIds: PropTypes.arrayOf(PropTypes.string),
-        onBlur: PropTypes.func,
-        onSelectItem: PropTypes.func,
-        resultFactoryFunction: PropTypes.func.isRequired,
-        results: PropTypes.object,
-    }
-
-    static defaultProps = {
-        focued: false,
-        ignoreCollectionIds: [],
-        onBlur: () => {},
-        onSelectItem: () => {},
-    }
 
     state = {
         query: '',
@@ -83,8 +54,10 @@ class AutoCompleteCollection extends Component {
         // into an issue where it keeps focusing even if it hasn't lost focus.
         // This causes an issue when using this as a form field.
         const hasChanged = (
+            nextProps.collections !== this.props.collections ||
             nextProps.ignoreCollectionIds !== this.props.ignoreCollectionIds ||
-            nextProps.results !== this.props.results ||
+            nextProps.filteredCollections !== this.props.filteredCollections ||
+            nextProps.filtered !== this.props.filtered ||
             nextState.query !== this.state.query ||
             nextProps.focused !== this.props.focused
         );
@@ -93,12 +66,12 @@ class AutoCompleteCollection extends Component {
 
     handleDelayedChange = (value) => {
         this.setState({query: value});
-        this.props.dispatch(search(value, category));
+        this.props.dispatch(filterCollections(value));
     }
 
     handleBlur = () => {
         this.setState({query: ''});
-        this.props.dispatch(clearResults());
+        this.props.dispatch(clearCollectionsFilter());
         this.props.onBlur();
     }
 
@@ -108,17 +81,24 @@ class AutoCompleteCollection extends Component {
 
     getSections() {
         const { query } = this.state;
-        const { ignoreCollectionIds, resultFactoryFunction, results } = this.props;
-        let section;
-        if (query === '') {
-            section = new Section([]);
-        } else {
-            let querySpecificResults = results[query];
-            if (querySpecificResults) {
-                querySpecificResults = querySpecificResults.filter(result => !ignoreCollectionIds.includes(result.collection.id));
-            }
-            section = new Section(querySpecificResults, undefined, undefined, resultFactoryFunction);
-        }
+        const {
+            collections,
+            filteredCollections,
+            ignoreCollectionIds,
+            resultFactoryFunction,
+        } = this.props;
+
+        let sectionResults = query === '' ? collections : filteredCollections;
+        sectionResults = sectionResults.filter((collection) => {
+            return !ignoreCollectionIds.includes(collection.id);
+        });
+
+        const section = new Section(
+            sectionResults,
+            undefined,
+            undefined,
+            resultFactoryFunction,
+        );
         return [section];
     }
 
@@ -126,7 +106,6 @@ class AutoCompleteCollection extends Component {
         const {
             onBlur,
             onSelectItem,
-            results,
             ...other,
         } = this.props;
         const sections = this.getSections();
@@ -145,6 +124,26 @@ class AutoCompleteCollection extends Component {
     }
 
 }
+
+AutoCompleteCollection.propTypes = {
+    collections: PropTypes.array,
+    dispatch: PropTypes.func.isRequired,
+    filtered: PropTypes.bool,
+    filteredCollections: PropTypes.array,
+    focused: PropTypes.bool,
+    ignoreCollectionIds: PropTypes.arrayOf(PropTypes.string),
+    onBlur: PropTypes.func,
+    onSelectItem: PropTypes.func,
+    resultFactoryFunction: PropTypes.func.isRequired,
+};
+
+AutoCompleteCollection.defaultProps = {
+    focued: false,
+    collections: [],
+    ignoreCollectionIds: [],
+    onBlur: () => {},
+    onSelectItem: () => {},
+};
 
 export { AutoCompleteCollection };
 export default connect(selector)(AutoCompleteCollection);

@@ -24,7 +24,10 @@ const nameSpaces = transit.withNameSpaces(
     [protobufs.soa, protobufs.services],
     new protobufs.services.$type.clazz().constructor,
 );
-const initialState = nameSpaces.fromJSON(window.__INITIAL_STATE);
+let initialState;
+if (window.__INITIAL_STATE) {
+    initialState = nameSpaces.fromJSON(window.__INITIAL_STATE);
+}
 const store = createStore(client, initialState);
 
 const url = {
