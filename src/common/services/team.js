@@ -238,13 +238,7 @@ export function joinTeam(client, teamId) {
     });
     return new Promise((resolve, reject) => {
         client.sendRequest(joinRequest)
-            .then(response => {
-                if (response.isSuccess()) {
-                    response.finish(resolve, reject, teamId)
-                } else {
-                    reject(response.reject());
-                }
-            })
+            .then(response => response.finish(resolve, reject, teamId))
             .catch(error => reject(error));
     });
 }
