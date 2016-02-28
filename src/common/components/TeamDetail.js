@@ -16,6 +16,8 @@ const TeamDetail = (props) => {
         collectionsLoaded,
         collectionsLoading,
         coordinators,
+        defaultCollection,
+        defaultCollectionLoaded,
         dispatch,
         hasMoreCollections,
         hasMoreMembers,
@@ -55,6 +57,8 @@ const TeamDetail = (props) => {
         content = (
             <TeamDetailCollections
                 collections={collections}
+                defaultCollection={defaultCollection}
+                defaultCollectionLoaded={defaultCollectionLoaded}
                 hasMore={!!hasMoreCollections}
                 loaded={collectionsLoaded}
                 loading={collectionsLoading}
@@ -84,6 +88,8 @@ TeamDetail.propTypes = {
     collectionsLoaded: PropTypes.bool,
     collectionsLoading: PropTypes.bool,
     coordinators: PropTypes.array,
+    defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    defaultCollectionLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     hasMoreCollections: PropTypes.bool,
     hasMoreMembers: PropTypes.bool,

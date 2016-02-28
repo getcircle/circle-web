@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import { provideHooks } from 'redial';
 
-import { getCollectionsForOwner, getDefaultCollection } from '../actions/collections';
+import { getCollectionsForOwner } from '../actions/collections';
 import { getCollectionsForOwnerKey } from '../services/posts';
 import { getTeam, getCoordinators, getMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
@@ -33,6 +33,8 @@ const selector = createSelector(
             collectionsLoading,
             collectionsNextRequest,
             coordinators,
+            defaultCollection,
+            defaultCollectionLoaded,
             members,
             membersNextRequest,
             membersLoading;
@@ -67,12 +69,23 @@ const selector = createSelector(
             collectionsLoaded = collectionsState.get(collectionsKey).get('loaded');
         }
 
+        const defaultCollectionKey = getCollectionsForOwnerKey(TEAM, teamId, true);
+        if (collectionsState.has(defaultCollectionKey)) {
+            const ids = collectionsState.get(defaultCollectionKey).get('ids');
+            if (ids.size) {
+                defaultCollection = retrieveCollections(ids.toJS(), cache)[0];
+            }
+            defaultCollectionLoaded = collectionsState.get(defaultCollectionKey).get('loaded');
+        }
+
         return {
             collections,
             collectionsLoaded,
             collectionsLoading,
             collectionsNextRequest,
             coordinators,
+            defaultCollection,
+            defaultCollectionLoaded,
             members,
             membersLoading,
             membersNextRequest,
@@ -112,7 +125,7 @@ function fetchCollections({ dispatch, params: { teamId } }) {
 }
 
 function fetchDefaultCollection({ dispatch, params: { teamId } }) {
-    return dispatch(getDefaultCollection(TEAM, teamId));
+    return dispatch(getCollectionsForOwner(TEAM, teamId, true));
 }
 
 function loadTeam({dispatch, params}) {
@@ -183,6 +196,8 @@ Team.propTypes = {
     collectionsLoading: PropTypes.bool,
     collectionsNextRequest: PropTypes.object,
     coordinators: PropTypes.array,
+    defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    defaultCollectionLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     members: PropTypes.array,
     membersLoading: PropTypes.bool,
