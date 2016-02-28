@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
-import { getCollectionsForOwner, getDefaultCollection } from '../actions/collections';
+import { getCollectionsForOwner } from '../actions/collections';
 import { getProfile, getReportingDetails } from '../actions/profiles';
 import {
     deletePost,
@@ -41,15 +41,17 @@ const selector = selectors.createImmutableSelector(
         selectors.collectionsSelector,
     ],
     (cacheState, parametersState, membershipsState, postsState, deletePostState, collectionsState) => {
-        let memberships,
+        let collections,
+            collectionsLoaded,
+            collectionsLoading,
+            collectionsNextRequest,
+            defaultCollection,
+            defaultCollectionLoaded,
+            memberships,
             posts,
             postsLoaded,
             postsLoading,
-            postsNextRequest,
-            collections,
-            collectionsLoaded,
-            collectionsLoading,
-            collectionsNextRequest;
+            postsNextRequest;
 
         const { profileId } = parametersState;
         const cache = cacheState.toJS();
@@ -87,7 +89,18 @@ const selector = selectors.createImmutableSelector(
             collectionsLoaded = collectionsState.get(collectionsKey).get('loaded');
         }
 
+        const defaultCollectionKey = getCollectionsForOwnerKey(PROFILE, profileId, true);
+        if (collectionsState.has(defaultCollectionKey)) {
+            const ids = collectionsState.get(defaultCollectionKey).get('ids');
+            if (ids.size) {
+                defaultCollection = retrieveCollections(ids.toJS(), cache)[0];
+            }
+            defaultCollectionLoaded = collectionsState.get(defaultCollectionKey).get('loaded');
+        }
+
         return {
+            defaultCollection,
+            defaultCollectionLoaded,
             collections,
             collectionsLoaded,
             collectionsLoading,
@@ -142,7 +155,7 @@ function fetchCollections({ dispatch, params: { profileId } }) {
 }
 
 function fetchDefaultCollection({ dispatch, params: { profileId } }) {
-    return dispatch(getDefaultCollection(PROFILE, profileId));
+    return dispatch(getCollectionsForOwner(PROFILE, profileId, true));
 }
 
 function loadProfile(locals) {
@@ -163,7 +176,7 @@ class Profile extends CSSComponent {
 
     handleLoadMoreCollections = () => {
         const { dispatch, params: { profileId }, collectionsNextRequest } = this.props;
-        dispatch(getCollectionsForOwner(PROFILE, profileId, collectionsNextRequest));
+        dispatch(getCollectionsForOwner(PROFILE, profileId, undefined, collectionsNextRequest));
     }
 
     handleRequestClose = () => {
@@ -221,6 +234,8 @@ Profile.propTypes = {
     collectionsLoaded: PropTypes.bool,
     collectionsLoading: PropTypes.bool,
     collectionsNextRequest: PropTypes.object,
+    defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    defaultCollectionLoaded: PropTypes.bool,
     modalVisible: PropTypes.bool,
     params: PropTypes.shape({
         slug: PropTypes.string,

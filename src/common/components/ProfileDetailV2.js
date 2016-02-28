@@ -12,6 +12,8 @@ import ProfileDetailKnowledge from './ProfileDetailKnowledge';
 
 const ProfileDetail = (props) => {
     const {
+        defaultCollection,
+        defaultCollectionLoaded,
         collections,
         collectionsLoaded,
         collectionsLoading,
@@ -36,8 +38,8 @@ const ProfileDetail = (props) => {
     case SLUGS.ABOUT:
         content = (
             <ProfileDetailAbout
-                dispatch={dispatch}
                 directReports={directReports}
+                dispatch={dispatch}
                 manager={manager}
                 memberships={memberships}
                 peers={peers}
@@ -60,6 +62,8 @@ const ProfileDetail = (props) => {
         content = (
             <ProfileDetailCollections
                 collections={collections}
+                defaultCollection={defaultCollection}
+                defaultCollectionLoaded={defaultCollectionLoaded}
                 hasMore={hasMoreCollections}
                 loaded={collectionsLoaded}
                 loading={collectionsLoading}
@@ -89,15 +93,19 @@ ProfileDetail.propTypes = {
     collections: PropTypes.array,
     collectionsLoaded: PropTypes.bool,
     collectionsLoading: PropTypes.bool,
+    defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    defaultCollectionLoaded: PropTypes.bool,
     directReports: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
     hasMoreCollections: PropTypes.bool.isRequired,
     hasMorePosts: PropTypes.bool.isRequired,
     manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     memberships: PropTypes.array,
+    onLoadMoreCollections: PropTypes.func,
     onLoadMorePosts: PropTypes.func,
     peers: PropTypes.array,
     posts: PropTypes.array,
+    postsLoaded: PropTypes.bool,
     postsLoading: PropTypes.bool,
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     reportingDetails: PropTypes.instanceOf(services.profile.containers.ReportingDetailsV1),

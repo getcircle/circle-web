@@ -1,11 +1,26 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { Divider } from 'material-ui';
+import { Divider, List } from 'material-ui';
 
 import t from '../utils/gettext';
 
-const DetailDefaultCollection = ({ collection, ...other }, { muiTheme }) => {
+import DetailListItemCollection from './DetailListItemCollection';
+
+const DefaultCollection = ({ collection, ...other }) => {
+    const items = collection.items.map((item, index) => {
+        return (
+            <DetailListItemCollection
+                className="col-xs-12"
+                item={item}
+                key={`default-collection-item-${index}`}
+            />
+        );
+    });
+    return <List children={items} {...other} />;
+};
+
+const DetailDefaultCollection = ({ collection, loaded, ...other }, { muiTheme }) => {
     const styles = {
         container: {
             paddingTop: 20,
@@ -23,9 +38,14 @@ const DetailDefaultCollection = ({ collection, ...other }, { muiTheme }) => {
     };
 
     let content;
-    content = (
-        <span style={styles.secondaryText}>{t('This Collection doesn\'t contain any Knowledge.')}</span>
-    );
+    if (loaded && !collection) {
+        content = (
+            <span style={styles.secondaryText}>{t('This Collection doesn\'t contain any Knowledge.')}</span>
+        );
+    } else if (collection) {
+        content = <DefaultCollection collection={collection} />;
+    }
+
     return (
         <section {...other}>
             <Divider style={muiTheme.luno.collections.divider} />
@@ -39,6 +59,7 @@ const DetailDefaultCollection = ({ collection, ...other }, { muiTheme }) => {
 
 DetailDefaultCollection.propTypes = {
     collection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    loaded: PropTypes.bool,
 };
 
 DetailDefaultCollection.contextTypes = {

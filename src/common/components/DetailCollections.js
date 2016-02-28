@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
 import t from '../utils/gettext';
 
@@ -33,7 +34,16 @@ EditCollectionsMenu.contextTypes = {
     }).isRequired,
 };
 
-const DetailCollections = ({ collections, hasMore, loaded, loading, onLoadMore }, { muiTheme }) => {
+const DetailCollections = (props, { muiTheme }) => {
+    const {
+        collections,
+        defaultCollection,
+        defaultCollectionLoaded,
+        hasMore,
+        loaded,
+        loading,
+        onLoadMore,
+    } = props;
 
     let menu;
     // TODO permissions check;
@@ -59,7 +69,10 @@ const DetailCollections = ({ collections, hasMore, loaded, loading, onLoadMore }
             >
                 {menu}
             </DetailTitle>
-            <DetailDefaultCollection />
+            <DetailDefaultCollection
+                collection={defaultCollection}
+                loaded={defaultCollectionLoaded}
+            />
             {grid}
         </div>
     );
@@ -67,6 +80,8 @@ const DetailCollections = ({ collections, hasMore, loaded, loading, onLoadMore }
 
 DetailCollections.propTypes = {
     collections: PropTypes.array,
+    defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    defaultCollectionLoaded: PropTypes.bool,
     hasMore: PropTypes.bool.isRequired,
     loaded: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
