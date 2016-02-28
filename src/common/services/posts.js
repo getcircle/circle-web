@@ -165,7 +165,7 @@ export function getCollections(client, parameters) {
 
     const key = sourceId ? sourceId : profileId;
     return new Promise((resolve, reject) => {
-        client.send(request)
+        client.send(request, true)
             .then(response => response.finish(resolve, reject, key))
             .catch(error => reject(error));
     });

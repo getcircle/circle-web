@@ -9,7 +9,7 @@ class Client {
         this.transport = new Transport(req, transportAuth);
     }
 
-    buildRequest(action, params) {
+    buildRequest(action, params, allPages = false) {
         // $type.fqn is something like ".services.user.actions.get_active_devices.RequestV1"
         let service = params.$type.fqn().split('.')[2];
         let actionExtensionName = this._getRequestExtensionName(service, action);
@@ -17,7 +17,13 @@ class Client {
         let serviceControl = new protobufs.soa.ControlV1({service: service});
         let serviceRequest = new protobufs.soa.ServiceRequestV1({control: serviceControl});
 
-        let actionControl = new protobufs.soa.ActionControlV1({service: service, action: action});
+        const controlParams = {service, action};
+        if (allPages) {
+            /*eslint-disable camelcase*/
+            controlParams.paginator = {page_size: 500};
+            /*eslint-enable camelcase*/
+        }
+        let actionControl = new protobufs.soa.ActionControlV1(controlParams);
         let actionParams = new protobufs.soa.ActionRequestParamsV1();
         // TODO this should raise an exception if we can't find
         // actionExtensionName within the actionRequestParams object, i'm not
@@ -29,12 +35,12 @@ class Client {
         return serviceRequest;
     }
 
-    send(partialOrFullRequest) {
+    send(partialOrFullRequest, allPages = false) {
         let request;
         if (partialOrFullRequest instanceof protobufs.soa.ServiceRequestV1) {
             request = partialOrFullRequest;
         } else {
-            request = this.buildRequest(partialOrFullRequest.$type.parent.name, partialOrFullRequest);
+            request = this.buildRequest(partialOrFullRequest.$type.parent.name, partialOrFullRequest, allPages);
         }
         return this.transport.sendRequest(request);
     }
