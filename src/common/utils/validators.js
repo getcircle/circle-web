@@ -1,6 +1,6 @@
 import t from '../utils/gettext';
 
-const isEmpty = value => value === undefined || value === null || value.trim() === '';
+const isEmpty = value => value === undefined || value === null || (value.trim && value.trim() === '');
 const join = (rules) => (value, data) => rules.map(rule => rule(value, data)).filter(error => !!error)[0 /* first error */ ];
 
 function required(value) {
