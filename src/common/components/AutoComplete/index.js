@@ -43,6 +43,7 @@ class AutoComplete extends CSSComponent {
         defaults: PropTypes.arrayOf(PropTypes.instanceOf(Section)),
         dispatch: PropTypes.func.isRequired,
         onBlur: PropTypes.func,
+        onFocus: PropTypes.func,
         results: PropTypes.object,
     }
 
@@ -106,6 +107,7 @@ class AutoComplete extends CSSComponent {
         const {
             defaults,
             onBlur,
+            onFocus,
             ...other,
         } = this.props;
         const sections = this.getSections();
@@ -114,6 +116,7 @@ class AutoComplete extends CSSComponent {
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}
                 onDelayedChange={this.handleDelayedChange}
+                onFocus={onFocus}
                 onSelectItem={this.handleSelectItem}
                 sections={sections}
                 {...other}
