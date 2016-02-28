@@ -38,11 +38,11 @@ const DetailDefaultCollection = ({ collection, loaded, ...other }, { muiTheme })
     };
 
     let content;
-    if (loaded && !collection) {
+    if (loaded && collection && collection.items && !collection.items.length) {
         content = (
             <span style={styles.secondaryText}>{t('This Collection doesn\'t contain any Knowledge.')}</span>
         );
-    } else if (collection) {
+    } else if (collection && collection.items && collection.items.length) {
         content = <DefaultCollection collection={collection} />;
     }
 
