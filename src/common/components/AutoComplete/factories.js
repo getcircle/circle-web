@@ -29,6 +29,7 @@ export const TYPES = keymirror({
     PROFILE: null,
     TEAM: null,
     POST: null,
+    COLLECTION: null,
 });
 
 export function createSearchTrigger(query) {

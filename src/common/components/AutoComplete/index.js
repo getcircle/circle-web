@@ -84,6 +84,8 @@ class AutoComplete extends CSSComponent {
             return routes.routeToTeam(payload);
         case factories.TYPES.POST:
             return routes.routeToPost(payload);
+        case factories.TYPES.COLLECTION:
+            return routes.routeToCollection(payload);
         }
     }
 
