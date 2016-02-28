@@ -60,8 +60,8 @@ export function createProfileResult({ profile, highlight }) {
 
 export function createTeamResult({ team, highlight }) {
     let primaryText = team.display_name;
-    if (highlight && highlight.get('display_name')) {
-        primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('display_name')}} />);
+    if (highlight && highlight.get('name')) {
+        primaryText = (<div dangerouslySetInnerHTML={{__html: highlight.get('name')}} />);
     }
     const item = {
         leftAvatar: <IconContainer IconClass={GroupIcon} {...ICON_CONTAINER_STYLE} />,
