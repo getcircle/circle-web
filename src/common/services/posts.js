@@ -134,7 +134,7 @@ export function addToCollections(client, item, collections) {
     return new Promise((resolve, reject) => {
         client.send(request)
             .then((response) => {
-                return response.finish(resolve, reject, item.source_id, { item });
+                return response.finish(resolve, reject, item.source_id, {item, collections});
             })
             .catch(error => reject(error));
     });
@@ -147,7 +147,7 @@ export function removeFromCollections(client, item, collections) {
     });
     return new Promise((resolve, reject) => {
         client.send(request)
-            .then(response => response.simple(resolve, reject, {item, collections}))
+            .then(response => response.simple(resolve, reject, {item, collections, result: item.source_id}))
             .catch(error => reject(error));
     });
 }
