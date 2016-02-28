@@ -66,6 +66,10 @@ export function routeToPost(post) {
     browserHistory.push(getPostPath(post));
 }
 
+export function replaceWithPost(post) {
+    browserHistory.replace(`/post/${post.id}`);
+}
+
 export function routeToSearch(query) {
     query = encodeURIComponent(query);
     browserHistory.push(`/search/${query}`);

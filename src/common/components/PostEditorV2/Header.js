@@ -5,7 +5,7 @@ import { services } from 'protobufs';
 import { FlatButton } from 'material-ui';
 
 import t from '../../utils/gettext';
-import { routeToPost } from '../../utils/routes';
+import { replaceWithPost } from '../../utils/routes';
 
 import LeftChevronIcon from '../LeftChevronIcon';
 import RoundedButton from '../RoundedButton';
@@ -62,7 +62,7 @@ const Header = ({ post, onPublish, saving }, { muiTheme }) => {
     function handleTouchTap() {
         post.state = PostStateV1.LISTED;
         onPublish(post);
-        routeToPost(post);
+        replaceWithPost(post);
     }
 
     let saveNotification;
