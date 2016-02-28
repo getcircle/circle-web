@@ -266,6 +266,7 @@ export function leaveTeam(client, teamId, memberId) {
                     reject(response.reject());
                 }
             })
+            .catch(error => reject(error));
     });
 }
 
