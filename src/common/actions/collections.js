@@ -170,6 +170,10 @@ export function getCollections({source, sourceId}) {
                 types.GET_COLLECTIONS_FAILURE,
             ],
             remote: client => requests.getCollections(client, {source, sourceId}),
+            bailout: state => {
+                const collections = state.get('postCollections').get(sourceId);
+                return collections && collections.get('loaded');
+            }
         },
     };
 }
