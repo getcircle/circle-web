@@ -21,7 +21,12 @@ const selector = selectors.createImmutableSelector(
 export function createCollectionItem(collection, selectedCollectionIds = [], muiTheme) {
     const styles = {
         name: {
+            display: 'block',
             fontSize: '1.4rem',
+            maxWidth: 180,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
         },
         selected: {
             color: muiTheme.luno.tintColor,
