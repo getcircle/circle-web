@@ -9,7 +9,12 @@ import { getCollectionsForOwnerKey } from '../services/posts';
 import { getTeam, getCoordinators, getMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { slice } from '../reducers/paginate';
-import { retrieveCollections, retrieveTeam, retrieveTeamMembers } from '../reducers/denormalizations';
+import {
+    retrieveCollections,
+    retrieveTeam,
+    retrieveTeamMember,
+    retrieveTeamMembers,
+} from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -23,11 +28,12 @@ const selector = createSelector(
     [
         selectors.cacheSelector,
         selectors.routerParametersSelector,
+        selectors.teamMembershipSelector,
         selectors.teamCoordinatorsSelector,
         selectors.teamMembersSelector,
         selectors.collectionsSelector,
     ],
-    (cacheState, parametersState, coordinatorsState, membersState, collectionsState) => {
+    (cacheState, parametersState, teamMembershipState, coordinatorsState, membersState, collectionsState) => {
         let collections,
             collectionsLoaded,
             collectionsLoading,
@@ -42,6 +48,8 @@ const selector = createSelector(
         const teamId = parametersState.teamId;
         const cache = cacheState.toJS();
         const team = retrieveTeam(teamId, cache);
+        const memberId = teamMembershipState.getIn([teamId, 'memberId']);
+        const currentUserMember = retrieveTeamMember(memberId, cache);
         if (coordinatorsState.has(teamId)) {
             const ids = coordinatorsState.get(teamId).get('ids');
             if (ids.size) {
@@ -84,6 +92,7 @@ const selector = createSelector(
             collectionsLoading,
             collectionsNextRequest,
             coordinators,
+            currentUserMember,
             defaultCollection,
             defaultCollectionLoaded,
             members,

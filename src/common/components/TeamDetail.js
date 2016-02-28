@@ -16,6 +16,7 @@ const TeamDetail = (props) => {
         collectionsLoaded,
         collectionsLoading,
         coordinators,
+        currentUserMember,
         defaultCollection,
         defaultCollectionLoaded,
         dispatch,
@@ -70,7 +71,11 @@ const TeamDetail = (props) => {
     }
     return (
         <div>
-            <TeamDetailHeader coordinators={coordinators} team={team} />
+            <TeamDetailHeader
+                coordinators={coordinators}
+                currentUserMember={currentUserMember}
+                team={team}
+            />
             <TeamDetailTabs
                 onRequestChange={replaceTeamSlug}
                 slug={slug}
@@ -88,6 +93,7 @@ TeamDetail.propTypes = {
     collectionsLoaded: PropTypes.bool,
     collectionsLoading: PropTypes.bool,
     coordinators: PropTypes.array,
+    currentUserMember: PropTypes.instanceOf(services.team.containers.TeamMemberV1),
     defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
     defaultCollectionLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,

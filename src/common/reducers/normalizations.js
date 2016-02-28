@@ -1,6 +1,6 @@
 import { getNormalizations } from 'protobuf-normalizr';
 import { services } from 'protobufs';
-import { retrieveTeamMembers } from './denormalizations';
+import { retrieveTeamMember, retrieveTeamMembers } from './denormalizations';
 
 import * as requests from '../services/team';
 
@@ -156,4 +156,15 @@ export function getTeamMemberNormalizationsFromUpdateMembers(action, role = null
 export function getTeamCoordinatorNormalizationsFromUpdateMembers(action) {
     const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
     return getTeamMemberNormalizationsFromUpdateMembers(action, role);
+}
+
+export function getTeamMemberNormalizationFromJoinTeam(action, role = null) {
+    const id = getNormalizations(
+        'member',
+        action.payload.result,
+        services.team.actions.join_team.ResponseV1,
+        action.payload,
+    );
+    const member = retrieveTeamMember(id, action.payload);
+    return member.role === role ? id : null;
 }

@@ -73,6 +73,7 @@ export const rearrangeCollectionsSelector = state => state.get('rearrangeCollect
 export const responsiveSelector = state => state.get('responsive');
 export const routerParametersSelector = (_, props) => props.params;
 export const searchSelector = state => state.get('search');
+export const teamMembershipSelector = state => state.get('teamMembership');
 export const teamCoordinatorsSelector = state => state.get('teamCoordinators');
 export const teamMembersSelector = state => state.get('teamMembers');
 export const updateProfileSelector = state => state.get('updateProfile');

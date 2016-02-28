@@ -31,6 +31,7 @@ export { default as requestMissingInfo } from './requestMissingInfo';
 export { default as search } from './search';
 export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';
+export { default as teamMembership } from './teamMembership';
 export { default as updateProfile } from './profile';
 export { default as updateTeam } from './updateTeam';
 
