@@ -21,7 +21,7 @@ export const SearchDetailHeader = ({ totalResults, query }) => {
     );
 };
 
-const SearchDetailMissingInfo = ({ dispatch, query, ...other}) => {
+const SearchDetailMissingInfo = ({ query, ...other}, { store }) => {
     const styles = {
         text: {
             fontSize: '1.8rem',
@@ -39,7 +39,7 @@ const SearchDetailMissingInfo = ({ dispatch, query, ...other}) => {
     };
 
     const onRequestMissingInfo = () => {
-        dispatch(showRequestMissingInfoModal());
+        store.dispatch(showRequestMissingInfoModal());
     };
 
     return (
@@ -52,20 +52,20 @@ const SearchDetailMissingInfo = ({ dispatch, query, ...other}) => {
                 style={styles.button}
             />
             <RequestMissingInfoForm
-                dispatch={dispatch}
                 query={query}
             />
         </DetailSection>
     );
 };
 
-SearchDetailMissingInfo.propTypes = {
-    dispatch: PropTypes.func,
+SearchDetailMissingInfo.contextTypes = {
+    store: PropTypes.shape({
+         dispatch: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 const SearchDetail = (props) => {
     const {
-        dispatch,
         hasMore,
         loading,
         onLoadMore,
@@ -81,7 +81,6 @@ const SearchDetail = (props) => {
             <section className="row">
                 <section className="col-xs-3">
                     <SearchDetailMissingInfo
-                        dispatch={dispatch}
                         query={query}
                     />
                 </section>
@@ -102,7 +101,6 @@ const SearchDetail = (props) => {
 };
 
 SearchDetail.propTypes = {
-    dispatch: PropTypes.func,
     hasMore: PropTypes.bool.isRequired,
     loading: PropTypes.bool,
     onLoadMore: PropTypes.func,

@@ -29,7 +29,6 @@ const selector = selectors.createImmutableSelector(
 export class RequestMissingInfoForm extends Component {
 
     static propTypes = {
-        dispatch: PropTypes.func.isRequired,
         fields: PropTypes.object.isRequired,
         formSubmitting: PropTypes.bool,
         handleSubmit: PropTypes.func.isRequired,
@@ -37,6 +36,12 @@ export class RequestMissingInfoForm extends Component {
         resetForm: PropTypes.func.isRequired,
         visible: PropTypes.bool.isRequired,
     };
+
+    static contextTypes = {
+        store: PropTypes.shape({
+             dispatch: PropTypes.func.isRequired,
+        }).isRequired,
+    }
 
     componentWillReceiveProps(nextProps) {
         if (!this.props.visible && nextProps.visible) {
@@ -51,12 +56,12 @@ export class RequestMissingInfoForm extends Component {
     }
 
     handleCancel = () => {
-        this.props.dispatch(hideRequestMissingInfoModal());
+        this.context.store.dispatch(hideRequestMissingInfoModal());
     }
 
     render() {
         const {
-            fields: {infoRequest},
+            fields: { infoRequest },
             formSubmitting,
             handleSubmit,
             visible,

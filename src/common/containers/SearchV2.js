@@ -76,7 +76,7 @@ class Search extends CSSComponent {
     }
 
     render() {
-        const { dispatch, loading, params: { query } } = this.props;
+        const { loading, params: { query } } = this.props;
         const title = t(`Search \u2013 ${query}`);
 
         let content;
@@ -86,7 +86,6 @@ class Search extends CSSComponent {
             const queryResults = this.props.results[query] || [];
             content = (
                 <SearchDetail
-                    dispatch={dispatch}
                     hasMore={false}
                     onLoadMore={this.handleLoadMore}
                     onSelectResult={this.handleSelectResult}
