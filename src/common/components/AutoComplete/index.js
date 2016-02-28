@@ -33,6 +33,8 @@ function createResult(result) {
         searchResult = factories.createTeamResult(result);
     } else if (result.post) {
         searchResult = factories.createPostResult(result);
+    } else if (result.collection) {
+        searchResult = factories.createCollectionResult(result);
     }
     return searchResult;
 }
