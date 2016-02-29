@@ -33,8 +33,8 @@ describe('ProfileDetailTabs', () => {
         const tabs = wrapper.find(Tab);
         expect(tabs.length).toEqual(3);
 
-        expect(tabs.nodes[0].props.label).toEqual('Collections');
-        expect(tabs.nodes[1].props.label).toEqual('Knowledge');
+        expect(tabs.nodes[0].props.label).toEqual('Knowledge');
+        expect(tabs.nodes[1].props.label).toEqual('Collections');
         expect(tabs.nodes[2].props.label).toEqual('About');
     });
 
