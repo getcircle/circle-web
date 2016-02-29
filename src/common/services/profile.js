@@ -80,10 +80,10 @@ export function updateProfile(client, profile, manager, photo) {
             /*eslint-enable camelcase*/
             let promises = [];
 
-            let request = new services.profile.actions.update_profile.RequestV1({profile: profile});
+            let request = new services.profile.actions.update_profile.RequestV1({profile});
             promises.push(new Promise((resolve, reject) => {
                 client.sendRequest(request)
-                    .then(response => response.finish(resolve, reject, profile))
+                    .then(response => response.finish(resolve, reject, profile.id))
                     .catch(error => reject(error));
             }));
 
