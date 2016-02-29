@@ -133,7 +133,7 @@ export default function paginate({
         const { payload } = action;
         switch (action.type) {
         case requestType:
-            return state.set('loading', true);
+            return state.set('loading', true, 'loaded', false);
         case successType:
             return state.withMutations(map => {
                 const { paginator } = payload;

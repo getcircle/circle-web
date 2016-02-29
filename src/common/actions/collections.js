@@ -241,10 +241,6 @@ export function getCollectionsForOwner(ownerType, ownerId, isDefault = false, ne
                 isDefault,
                 nextRequest,
             ),
-            bailout: state => {
-                const { bail } = paginatedShouldBail('collections', key, nextRequest, state);
-                return bail;
-            },
         },
         meta: {
             paginateBy: key,
