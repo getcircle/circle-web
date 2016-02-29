@@ -36,6 +36,7 @@ EditCollectionsMenu.contextTypes = {
 
 const DetailCollections = (props, { muiTheme }) => {
     const {
+        canEdit,
         collections,
         collectionsCount,
         defaultCollection,
@@ -47,8 +48,9 @@ const DetailCollections = (props, { muiTheme }) => {
     } = props;
 
     let menu;
-    // TODO permissions check;
-    menu = <EditCollectionsMenu />;
+    if (canEdit) {
+        menu = <EditCollectionsMenu />;
+    }
 
     let grid;
     let collectionsCountString = '';
@@ -82,6 +84,7 @@ const DetailCollections = (props, { muiTheme }) => {
 };
 
 DetailCollections.propTypes = {
+    canEdit: PropTypes.bool,
     collections: PropTypes.array,
     collectionsCount: PropTypes.number,
     defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),

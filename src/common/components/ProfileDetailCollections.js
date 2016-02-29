@@ -4,9 +4,11 @@ import { services } from 'protobufs';
 import CreateCollectionForm from './CreateCollectionForm';
 import DetailCollections from './DetailCollections';
 
-const ProfileDetailCollections = ({ profile, ...other }) => {
+const ProfileDetailCollections = ({ isAdmin, isLoggedInUser, profile, ...other }) => {
+    const canEdit = isLoggedInUser;
+
     let form;
-    if (profile) {
+    if (profile && canEdit) {
         form = (
             <CreateCollectionForm
                 ownerId={profile.id}
@@ -16,13 +18,18 @@ const ProfileDetailCollections = ({ profile, ...other }) => {
     }
     return (
         <div>
-            <DetailCollections {...other} />
+            <DetailCollections
+                canEdit={canEdit}
+                {...other}
+            />
             {form}
         </div>
     );
 }
 
 ProfileDetailCollections.propTypes = {
+    isAdmin: PropTypes.bool,
+    isLoggedInUser: PropTypes.bool,
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
 };
 

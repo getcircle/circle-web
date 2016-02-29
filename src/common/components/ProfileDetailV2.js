@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 
 import { replaceProfileSlug } from '../utils/routes';
 
+import InternalPropTypes from '../components/InternalPropTypes';
 import DetailContent from './DetailContent';
 import ProfileDetailHeader from './ProfileDetailHeaderV2';
 import ProfileDetailTabs, { SLUGS } from './ProfileDetailTabs';
@@ -10,14 +11,14 @@ import ProfileDetailAbout from './ProfileDetailAbout';
 import ProfileDetailCollections from './ProfileDetailCollections';
 import ProfileDetailKnowledge from './ProfileDetailKnowledge';
 
-const ProfileDetail = (props) => {
+const ProfileDetail = (props, { auth }) => {
     const {
-        defaultCollection,
-        defaultCollectionLoaded,
         collections,
         collectionsCount,
         collectionsLoaded,
         collectionsLoading,
+        defaultCollection,
+        defaultCollectionLoaded,
         dispatch,
         directReports,
         hasMoreCollections,
@@ -35,6 +36,9 @@ const ProfileDetail = (props) => {
         slug,
     } = props;
 
+    const isLoggedInUser = profile.id == auth.profile.id;
+    const isAdmin = auth.profile.is_admin;
+
     let content;
     switch (slug) {
     case SLUGS.ABOUT:
@@ -42,6 +46,8 @@ const ProfileDetail = (props) => {
             <ProfileDetailAbout
                 directReports={directReports}
                 dispatch={dispatch}
+                isAdmin={isAdmin}
+                isLoggedInUser={isLoggedInUser}
                 manager={manager}
                 memberships={memberships}
                 peers={peers}
@@ -53,6 +59,8 @@ const ProfileDetail = (props) => {
         content = (
             <ProfileDetailKnowledge
                 hasMorePosts={hasMorePosts}
+                isAdmin={isAdmin}
+                isLoggedInUser={isLoggedInUser}
                 onLoadMorePosts={onLoadMorePosts}
                 posts={posts}
                 postsCount={postsCount}
@@ -69,6 +77,8 @@ const ProfileDetail = (props) => {
                 defaultCollection={defaultCollection}
                 defaultCollectionLoaded={defaultCollectionLoaded}
                 hasMore={hasMoreCollections}
+                isAdmin={isAdmin}
+                isLoggedInUser={isLoggedInUser}
                 loaded={collectionsLoaded}
                 loading={collectionsLoading}
                 onLoadMore={onLoadMoreCollections}
@@ -96,6 +106,7 @@ const ProfileDetail = (props) => {
 };
 
 ProfileDetail.propTypes = {
+    canEdit: PropTypes.bool,
     collections: PropTypes.array,
     collectionsCount: PropTypes.number,
     collectionsLoaded: PropTypes.bool,
@@ -122,6 +133,10 @@ ProfileDetail.propTypes = {
 
 ProfileDetail.defaultProps = {
     slug: SLUGS.KNOWLEDGE,
+};
+
+ProfileDetail.contextTypes = {
+    auth: InternalPropTypes.AuthContext.isRequired,
 };
 
 export default ProfileDetail;
