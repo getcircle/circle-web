@@ -61,14 +61,11 @@ class AutogrowTextarea extends CSSComponent {
                 },
                 shadowStyle: {
                     fontFamily: 'inherit',
-                    float: 'right',
                     opacity: 0,
                     outline: 0,
                     overflow: 'hidden',
-                    padding: 0,
-                    position: 'relative',
+                    position: 'absolute',
                     resize: 'none',
-                    top: '-2000px',
                     width: '100%',
                 }
             },
