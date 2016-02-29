@@ -28,7 +28,6 @@ const DetailHeader = (props, { muiTheme }) => {
             paddingLeft: 22,
         },
         detailsSection: {
-            paddingTop: 20,
         },
         root: {
             backgroundColor: 'rgb(67, 69, 76)',
@@ -66,7 +65,7 @@ const DetailHeader = (props, { muiTheme }) => {
                             {icon}
                         </div>
                     </div>
-                    <div style={styles.details}>
+                    <div className="row middle-xs" style={styles.details}>
                         <section style={styles.detailsSection}>
                             <div className="row start-xs">
                                 <span style={theme.primaryText}>{primaryText}</span>
