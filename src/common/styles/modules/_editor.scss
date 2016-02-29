@@ -32,7 +32,7 @@ trix-toolbar.sticky {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     margin-top: 0;
     position: fixed;
-    top: 58px;
+    top: 0;
     z-index: 10;
 }
 
@@ -202,7 +202,6 @@ trix-editor.luno-editor {
     font-style: italic;
     font-size: $fontSize;
     line-height: 1.58;
-    letter-spacing: -0.003em;
     padding-left: 20px;
     margin-left: -23px;
     padding-bottom: 3px;
@@ -222,7 +221,6 @@ trix-editor.luno-editor {
     font-style: normal;
     font-size: 36px;
     line-height: 1.15;
-    letter-spacing: -0.02em;
     margin-top: 56px;
 }
 
@@ -236,7 +234,6 @@ trix-editor.luno-editor {
     font-style: normal;
     font-size: 28px;
     line-height: 1.22;
-    letter-spacing: -0.022em;
     margin-top: 39px;
 }
 
@@ -250,7 +247,6 @@ trix-editor.luno-editor {
     font-style: normal;
     font-size: $fontSize;
     line-height: 1.68;
-    letter-spacing: -0.003em;
 }
 
 .luno-editor ul+div,
@@ -268,7 +264,6 @@ trix-editor.luno-editor {
 .luno-editor li {
     font-size: $fontSize;
     font-style: normal;
-    letter-spacing: .01rem;
     line-height: 1.58;
     margin-left: 30px;
 }
