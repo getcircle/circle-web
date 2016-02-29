@@ -9,9 +9,8 @@ const IconMenu = (props) => {
         iconButtonStyle,
         iconButtonElement,
         menuStyle,
-        onRequestChange,
-        open,
         style,
+        touchTapCloseDelay,
         ...other,
     } = props;
     const styles = {
@@ -40,11 +39,9 @@ const IconMenu = (props) => {
             anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
             iconButtonElement={button}
             menuStyle={merge(styles.menu, menuStyle)}
-            onRequestChange={onRequestChange}
-            open={open}
             style={merge(styles.root, style)}
             targetOrigin={{horizontal: 'middle', vertical: 'top'}}
-            touchTapCloseDelay={0}
+            touchTapCloseDelay={touchTapCloseDelay}
             {...other}
         >
             {children}
@@ -58,14 +55,15 @@ IconMenu.propTypes = {
     iconButtonStyle: PropTypes.object,
     iconElement: PropTypes.node,
     menuStyle: PropTypes.object,
-    onRequestChange: PropTypes.func,
     open: PropTypes.bool,
     style: PropTypes.object,
+    touchTapCloseDelay: PropTypes.number,
 };
 
 IconMenu.defaultProps = {
     menuStyle: {},
     style: {},
+    touchTapCloseDelay: 0,
 };
 
 export default IconMenu;

@@ -1,6 +1,9 @@
 import { merge } from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { services } from 'protobufs';
+import { getValues } from 'redux-form';
+
+import { updateCollections } from '../utils/collections';
 
 import AddCollectionIcon from './AddCollectionIcon';
 import AddToCollectionForm from './AddToCollectionForm';
@@ -10,6 +13,7 @@ class AddToCollectionMenu extends Component {
 
     state = {
         muiTheme: this.context.muiTheme,
+        open: false,
     }
 
     getChildContext() {
@@ -22,6 +26,31 @@ class AddToCollectionMenu extends Component {
         const muiTheme = merge({}, this.state.muiTheme);
         muiTheme.paper.backgroundColor = muiTheme.luno.colors.offWhite,
         this.setState({muiTheme});
+    }
+
+    handleRequestChange = (open) => {
+        this.setState({open});
+        if (!open) {
+            this.submit();
+        }
+    }
+
+    handleSubmit = (form, dispatch) => {
+        // TODO there is a bug in redux-form where values from `form` aren't up to date.
+        form = getValues(this.context.store.getState().get('form').addToCollection);
+        const { collections, post } = this.props;
+        updateCollections(dispatch, post, collections, form.collections);
+    }
+
+    handleItemTouchTap = () => {
+        this.setState({open: false});
+        this.submit();
+    }
+
+    submit() {
+        if (this.refs.form) {
+            this.refs.form.submit();
+        }
     }
 
     render() {
@@ -58,9 +87,13 @@ class AddToCollectionMenu extends Component {
         const theme = muiTheme.luno.circularIconMenu;
         return (
             <IconMenu
+                closeOnItemTouchTap={false}
                 iconButtonStyle={theme.button}
                 iconElement={<AddCollectionIcon {...theme.Icon} />}
                 menuStyle={styles.menu}
+                onItemTouchTap={this.handleItemTouchTap}
+                onRequestChange={this.handleRequestChange}
+                open={this.state.open}
                 style={merge(theme.menu, style)}
                 {...other}
             >
@@ -71,7 +104,9 @@ class AddToCollectionMenu extends Component {
                         inputContainerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         listContainerStyle={styles.listContainer}
+                        onSubmit={this.handleSubmit}
                         post={post}
+                        ref="form"
                         style={styles.form}
                     />
                 </div>
@@ -85,10 +120,14 @@ AddToCollectionMenu.propTypes = {
     collections: PropTypes.array,
     editableCollections: PropTypes.array,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
+    style: PropTypes.object,
 };
 
 AddToCollectionMenu.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
+    store: PropTypes.shape({
+        getState: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 AddToCollectionMenu.childContextTypes = {
