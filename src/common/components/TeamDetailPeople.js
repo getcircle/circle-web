@@ -7,11 +7,12 @@ import t from '../utils/gettext';
 import { removeMembers, updateMembers } from '../actions/teams';
 
 import DetailSection from './DetailSectionV2';
-import InfiniteProfilesGrid from './InfiniteProfilesGrid';
-import PlusIcon from './PlusIcon';
-import InternalPropTypes from './InternalPropTypes';
 import HoverMoreMenu from './HoverMoreMenu';
+import InfiniteProfilesGrid from './InfiniteProfilesGrid';
+import InternalPropTypes from './InternalPropTypes';
 import MenuItem from './MenuItem';
+import PersonIcon from './PersonIcon';
+import PlusIcon from './PlusIcon';
 import ProfilesGrid from './ProfilesGrid';
 import TeamAddMembersForm from './TeamAddMembersForm';
 
@@ -63,6 +64,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
         dispatch,
         hasMoreMembers,
         members,
+        membersCount,
         membersLoading,
         onLoadMoreMembers,
         team,
@@ -121,6 +123,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     }
 
     let membersSection;
+    const membersCountString = membersCount ? ` (${membersCount})` : '';
     if (members && members.length) {
         const memberProfiles = members.map(m => m.profile);
         const MenuComponent = canEdit ? TeamMemberMenu : null;
@@ -145,7 +148,8 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     return (
         <div>
             <section className="row middle-xs">
-                <h1 style={theme.h1}>{t('People')}</h1>
+                <PersonIcon />
+                <h1 style={theme.h1}>{t('People')}{membersCountString}</h1>
                 {plusIcon}
             </section>
             {coordinatorsSection}
@@ -160,6 +164,7 @@ TeamDetailPeople.propTypes = {
     dispatch: PropTypes.func.isRequired,
     hasMoreMembers: PropTypes.bool.isRequired,
     members: PropTypes.array,
+    membersCount: PropTypes.number,
     membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,
     team: InternalPropTypes.TeamV1.isRequired,

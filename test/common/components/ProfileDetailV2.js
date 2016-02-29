@@ -37,9 +37,9 @@ describe('ProfileDetail', () => {
 
     describe('ProfileDetailsTab', () => {
 
-        it('renders with "Collections" as the default', () => {
+        it('renders with "Knowledge" as the default', () => {
             const { wrapper } = setup();
-            expect(wrapper.find(ProfileDetailTabs).props().slug).toEqual(SLUGS.COLLECTIONS);
+            expect(wrapper.find(ProfileDetailTabs).props().slug).toEqual(SLUGS.KNOWLEDGE);
         });
 
         it('renders the "About" section if provided the correct slug', () => {
