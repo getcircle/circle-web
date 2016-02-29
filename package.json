@@ -12,7 +12,7 @@
     "open": "open http://local.lunohq.com:9110/",
     "package": "npm run build && docker build -t lunohq/web-local .",
     "package-dev": "npm run build-dev && docker build -t lunohq/web-dev .",
-    "package-prod": "npm run build-prod && docker build -t lunohq/web-prod .",
+    "package-prod": "NODE_ENV=production npm run build-prod && docker build -t lunohq/web-prod .",
     "package-staging": "npm run build-staging && docker build -t lunohq/web-staging .",
     "setup-dns": "echo '127.0.0.1 local.lunohq.com' >> /etc/hosts && dscacheutil -flushcache",
     "start": "node bin/server.js",
