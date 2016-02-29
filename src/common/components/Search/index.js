@@ -61,8 +61,9 @@ class Search extends CSSComponent {
     }
 
     componentDidUpdate() {
-        if (this.props.focused) {
+        if (this.props.focused && !this.state.focused) {
             ReactDOM.findDOMNode(this.refs.input).focus();
+            this.setState({focused: true});
         }
     }
 
@@ -81,6 +82,7 @@ class Search extends CSSComponent {
 
     state = {
         highlightedIndex: null,
+        focused: false,
     }
 
     configure(props, state) {
@@ -136,7 +138,7 @@ class Search extends CSSComponent {
 
     cleanupAndBlur = (event) => {
         ReactDOM.findDOMNode(this.refs.input).blur();
-        this.setState({highlightedIndex: null})
+        this.setState({highlightedIndex: null, focused: false});
         this.props.onBlur(event);
     }
 
