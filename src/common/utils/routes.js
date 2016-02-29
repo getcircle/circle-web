@@ -11,6 +11,10 @@ export function getPostPath(post) {
     return `/post/${post.id}`;
 }
 
+export function getTeamPath(team) {
+    return `/team/${team.id}`;
+}
+
 export function getCollectionPath(collection) {
     return `/collection/${collection.id}`;
 }
@@ -39,7 +43,7 @@ export function routeToCollection(collection) {
 };
 
 export function routeToTeam(team) {
-    browserHistory.push(`/team/${team.id}`);
+    browserHistory.push(getTeamPath(team));
 }
 
 export function routeToLocation(location) {

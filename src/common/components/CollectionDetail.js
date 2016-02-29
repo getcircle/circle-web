@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
+import { Link } from 'react-router';
 
 import { showConfirmDeleteModal, showEditCollectionModal } from '../actions/collections';
 import t from '../utils/gettext';
+import { getProfilePath, getTeamPath } from '../utils/routes';
 
 import CollectionIcon from './CollectionIcon';
 import DetailContent from './DetailContent';
@@ -40,10 +42,41 @@ EditCollectionMenu.contextTypes = {
     }),
 };
 
-const CollectionDetailHeader = ({ collection }) => {
+const CollectionDetailHeader = ({ collection }, { muiTheme }) => {
     let primaryText, secondaryText;
     if (collection) {
         primaryText = collection.name;
+    }
+
+    const styles = {
+        link: {
+            color: muiTheme.luno.colors.white,
+            fontWeight: muiTheme.luno.fontWeights.black,
+            textDecoration: 'none',
+        },
+    };
+
+    if (collection && collection.owner) {
+        let main, byLine;
+        switch (collection.owner) {
+        case 'team':
+            main = <span>{t('Curated in ')}</span>;
+            byLine = (
+                <Link style={styles.link} to={getTeamPath(collection.team)}>
+                    {collection.team.name}
+                </Link>
+            );
+            break;
+        case 'profile':
+            main = <span>{t('Curated by ')}</span>;
+            byLine = (
+                <Link style={styles.link} to={getProfilePath(collection.profile)}>
+                    {collection.profile.full_name}
+                </Link>
+            );
+            break;
+        }
+        secondaryText = <span>{main}{byLine}</span>;
     }
     return (
         <DetailHeader
@@ -56,6 +89,10 @@ const CollectionDetailHeader = ({ collection }) => {
 
 CollectionDetailHeader.propTypes = {
     collection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+};
+
+CollectionDetailHeader.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
 };
 
 const CollectionDetailKnowledge = ({ items, loaded, loading, nextRequest, onLoadMore }, { muiTheme }) => {
