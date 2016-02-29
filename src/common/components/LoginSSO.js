@@ -27,6 +27,7 @@ class LoginSSO extends CSSComponent {
         return {
             default: {
                 button: {
+                    boxShadow: 'none',
                     height: '50px',
                     marginBottom: '5%',
                     marginTop: '5%',
