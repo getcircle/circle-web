@@ -36,8 +36,11 @@ const ProfileDetail = (props, { auth }) => {
         slug,
     } = props;
 
-    const isLoggedInUser = profile.id == auth.profile.id;
-    const isAdmin = auth.profile.is_admin;
+    let isAdmin, isLoggedInUser;
+    if (profile && auth) {
+        isLoggedInUser = profile.id === auth.profile.id;
+        isAdmin = auth.profile.is_admin;
+    }
 
     let content;
     switch (slug) {
