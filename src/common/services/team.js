@@ -22,7 +22,12 @@ export function createTeam(client, team, members) {
     const request = new services.team.actions.create_team.RequestV1(parameters);
     return new Promise((resolve, reject) => {
         client.sendRequest(request)
-            .then(response => response.finish(resolve, reject, response.result.team.id))
+            .then(response => response.finish(
+                resolve,
+                reject,
+                response.result.team.id,
+                { collectionId: response.result.collection.id },
+            ))
             .catch(error => reject(error));
     });
 }
