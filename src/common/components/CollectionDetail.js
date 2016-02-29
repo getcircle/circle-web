@@ -106,8 +106,7 @@ const CollectionDetailTitle = ({ collection, itemsLoaded, totalItems, ...other }
     const theme = muiTheme.luno.detail;
     // TODO if items have loaded, display totalItems next to knowledge
     let menu;
-    { /* TODO add permissions check */ }
-    if (collection) {
+    if (collection && collection.permissions && collection.permissions.can_edit) {
         menu = <EditCollectionMenu collection={collection} />;
     }
     return (

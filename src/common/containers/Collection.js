@@ -14,6 +14,8 @@ import CollectionDetail from '../components/CollectionDetail';
 import DeleteCollectionConfirmation from '../components/DeleteCollectionConfirmation';
 import EditCollectionForm from '../components/EditCollectionForm';
 
+const REQUIRED_FIELDS = ['permissions'];
+
 const selector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
@@ -56,7 +58,7 @@ const hooks = {
 };
 
 function fetchCollection({ dispatch, params: { collectionId } }) {
-    return dispatch(getCollection(collectionId));
+    return dispatch(getCollection(collectionId, REQUIRED_FIELDS));
 }
 
 function fetchCollectionItems({ dispatch, params: { collectionId } }) {

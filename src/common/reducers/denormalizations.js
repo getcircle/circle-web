@@ -99,8 +99,8 @@ export function retrieveReportingDetails(profileId, cache) {
     return retrieve(profileId, services.profile.containers.ReportingDetailsV1, cache);
 }
 
-export function retrieveCollection(collectionId, cache) {
-    return retrieve(collectionId, services.post.containers.CollectionV1, cache);
+export function retrieveCollection(collectionId, cache, requiredFields) {
+    return retrieve(collectionId, services.post.containers.CollectionV1, cache, requiredFields);
 }
 
 export function retrieveCollections(ids, cache) {
