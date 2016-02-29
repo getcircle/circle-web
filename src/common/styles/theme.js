@@ -223,7 +223,6 @@ export function getCustomTheme(userAgent) {
                 fontSize: '1.4rem',
                 lineHeight: '2.0rem',
                 color: Colors.lightBlack,
-                overflow: 'visible',
             },
         },
         tabs: {
