@@ -61,12 +61,14 @@ class AutogrowTextarea extends CSSComponent {
                 },
                 shadowStyle: {
                     fontFamily: 'inherit',
+                    float: 'right',
                     opacity: 0,
                     outline: 0,
                     overflow: 'hidden',
                     padding: 0,
-                    position: 'absolute',
+                    position: 'relative',
                     resize: 'none',
+                    top: '-2000px',
                     width: '100%',
                 }
             },
@@ -132,7 +134,6 @@ class AutogrowTextarea extends CSSComponent {
         };
 
         const finalValue = this.getValue(value);
-
         return (
             <div style={{...this.styles().root, ...style}}>
                 { /*

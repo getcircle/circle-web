@@ -31,8 +31,8 @@ class Editor extends Component {
             textarea: {
                 border: '0',
                 fontSize: '3.2rem',
-                lineHeight: '3.9rem',
                 fontWeight: muiTheme.luno.fontWeights.bold,
+                lineHeight: '3.9rem',
                 minHeight: 49,
             },
         };
