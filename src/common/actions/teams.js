@@ -65,10 +65,12 @@ export function getTeam(teamId) {
             ],
             remote: client => requests.getTeam(client, teamId),
             bailout: (state) => {
+                // The get team request provides both the team with permissions
+                // as well as the current user's membership in the team, so only
+                // bail out if both of those are available for this team.
                 const team = retrieveTeam(teamId, state.get('cache').toJS(), ['permissions']);
                 const teamMembership = selectors.teamMembershipSelector(state)[teamId];
-                const memberId = teamMembership && teamMembership.memberId;
-                return team && memberId;
+                return team && teamMembership;
             },
         },
     };
