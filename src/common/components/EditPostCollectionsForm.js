@@ -1,7 +1,6 @@
 import { isEqual } from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
-import { services } from 'protobufs';
 
 import t from '../utils/gettext';
 import { EDIT_POST_COLLECTIONS } from '../constants/forms';
@@ -13,22 +12,16 @@ import FormTokenizedCollectionsSelector from './FormTokenizedCollectionsSelector
 
 const FIELD_NAMES = ['collections'];
 
-/**
- * Form for editing collections a post belongs to.
- *
- * Because we save the collections a form belongs to when you publish the post,
- * this is mostly used as a state container for the collections the user has
- * added. The post gets added to the collections within the post editor.
- *
- */
-class EditPostCollections extends Component {
+class EditPostCollectionsForm extends Component {
+
+    componentWillMount() {
+        if (this.props.collectionsLoaded) {
+            this.setInitialValues(this.props);
+        }
+    }
 
     componentWillReceiveProps(nextProps) {
-        if (
-            nextProps.collections &&
-            nextProps.collections.length &&
-            nextProps.fields.collections.initialValue === undefined
-        ) {
+        if (!this.props.collectionsLoaded && nextProps.collectionsLoaded) {
             this.setInitialValues(nextProps);
         }
 
@@ -62,8 +55,9 @@ class EditPostCollections extends Component {
 
 };
 
-EditPostCollections.propTypes = {
+EditPostCollectionsForm.propTypes = {
     collections: PropTypes.array,
+    collectionsLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
     fields: PropTypes.object.isRequired,
@@ -75,4 +69,4 @@ export default reduxForm(
         fields: FIELD_NAMES,
         getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
     },
-)(EditPostCollections);
+)(EditPostCollectionsForm);

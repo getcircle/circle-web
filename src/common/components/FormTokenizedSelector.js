@@ -94,6 +94,7 @@ class FormTokenizedSelector extends Component {
                 marginBottom: 10,
             },
             container: {
+                backgroundColor: muiTheme.luno.colors.white,
                 flexWrap: 'wrap',
                 ...muiTheme.luno.form.field,
                 paddingLeft: 10,

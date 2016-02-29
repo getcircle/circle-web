@@ -2,31 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import { services } from 'protobufs';
 import Immutable from 'immutable';
 
+import { updateCollections } from '../../utils/collections';
+
 import DetailContent from '../DetailContent';
 import ListItemProfile from '../ListItemProfile';
-import EditPostCollections from '../EditPostCollections';
+import EditPostCollectionsForm from '../EditPostCollectionsForm';
 
 import Editor from './Editor';
 import Header from './Header';
-
-const PostCollections = ({ collections, editableCollections, post }) => {
-    let content;
-    if (post) {
-        content = (
-            <EditPostCollections
-                collections={collections}
-                editableCollections={editableCollections}
-                post={post}
-                style={{paddingTop: 10}}
-            />
-        );
-    }
-    return (
-        <div>
-            {content}
-        </div>
-    );
-}
 
 class PostEditor extends Component {
 
@@ -47,6 +30,17 @@ class PostEditor extends Component {
         }
     }
 
+    handlePublish = (post) => {
+        if (this.refs.form) {
+            this.refs.form.submit();
+        }
+        this.props.onSave(post);
+    }
+
+    handleSubmitCollections = (form, dispatch) => {
+        updateCollections(dispatch, this.props.post, this.props.collections, form.collections);
+    }
+
     saveTimeout = null
 
     save(props) {
@@ -63,10 +57,10 @@ class PostEditor extends Component {
     render() {
         const {
             collections,
+            collectionsLoaded,
             editableCollections,
             onFileDelete,
             onFileUpload,
-            onSave,
             post,
             profile,
             saving,
@@ -74,11 +68,26 @@ class PostEditor extends Component {
             uploadedFiles,
         } = this.props;
 
+        let form;
+        if (post) {
+            form = (
+                <EditPostCollectionsForm
+                    collections={collections}
+                    collectionsLoaded={collectionsLoaded}
+                    editableCollections={editableCollections}
+                    onSubmit={this.handleSubmitCollections}
+                    post={post}
+                    ref="form"
+                    style={{paddingTop: 10}}
+                />
+            );
+        }
+
         return (
             <div>
                 { /* this could be an admin editing the post, we should still show the original author */ }
                 <Header
-                    onPublish={onSave}
+                    onPublish={this.handlePublish}
                     post={post}
                     profile={profile}
                     saving={saving}
@@ -92,11 +101,7 @@ class PostEditor extends Component {
                         uploadProgress={uploadProgress}
                         uploadedFiles={uploadedFiles}
                     />
-                    <PostCollections
-                        collections={collections}
-                        editableCollections={editableCollections}
-                        post={post}
-                    />
+                    {form}
                 </DetailContent>
             </div>
         );
@@ -107,6 +112,7 @@ class PostEditor extends Component {
 PostEditor.propTypes = {
     autoSave: PropTypes.bool,
     collections: PropTypes.array,
+    collectionsLoaded: PropTypes.bool,
     editableCollections: PropTypes.array,
     onFileDelete: PropTypes.func,
     onFileUpload: PropTypes.func,

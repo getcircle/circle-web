@@ -36,7 +36,8 @@ class AddToCollectionMenu extends Component {
     }
 
     handleSubmit = (form, dispatch) => {
-        // TODO there is a bug in redux-form where values from `form` aren't up to date.
+        // TODO there is a bug in redux-form (? maybe? this works with
+        // PostEditor) where values from `form` aren't up to date.
         form = getValues(this.context.store.getState().get('form').addToCollection);
         const { collections, post } = this.props;
         updateCollections(dispatch, post, collections, form.collections);

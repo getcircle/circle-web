@@ -3,17 +3,14 @@ import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import { provideHooks } from 'redial';
 import { services } from 'protobufs';
-import { reset as reduxFormReset } from 'redux-form';
 
 import { createPost, getPost, updatePost } from '../actions/posts';
 import { getCollections, getEditableCollections } from '../actions/collections';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
 import { reset } from '../actions/editor';
 
-import { updateCollections } from '../utils/collections';
 import { resetScroll } from '../utils/window';
 import { retrievePost, retrieveCollections } from '../reducers/denormalizations';
-import { getCollectionsNormalizations } from '../reducers/normalizations';
 import { replaceWithEditPost } from '../utils/routes';
 import * as selectors from '../selectors';
 
@@ -38,7 +35,7 @@ const selector = selectors.createImmutableSelector(
         selectors.postCollectionsSelector,
     ],
     (cacheState, paramsState, editorState, filesState, editableCollectionsState, postCollectionsState) => {
-        let collections, editableCollections, post;
+        let collections, collectionsLoaded, editableCollections, post;
 
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
@@ -62,6 +59,7 @@ const selector = selectors.createImmutableSelector(
             if (ids.size) {
                 collections = retrieveCollections(ids.toJS(), cache);
             }
+            collectionsLoaded = postCollectionsState.get(postId).get('loaded');
         }
 
         const editableCollectionIds = editableCollectionsState.get('collectionIds');
@@ -71,6 +69,7 @@ const selector = selectors.createImmutableSelector(
 
         return {
             collections,
+            collectionsLoaded,
             editableCollections,
             post,
             draft: editorState.get('draft'),
@@ -137,20 +136,6 @@ class PostEditor extends Component {
 
     handleSave = (post) => {
         if (post.id) {
-            // not sure if there is a better way to hook into the state of the form
-            // than accessing the form state directly. we need to do this
-            // because the publish button drives the form submission
-            const state = this.context.store.getState();
-            const form = state.get('form').editPostCollections;
-            if (form) {
-                updateCollections(
-                    this.props.dispatch,
-                    post,
-                    form.collections.initialValue,
-                    form.collections.value,
-                );
-                this.props.dispatch(reduxFormReset('editPostCollections'));
-            }
             this.props.dispatch(updatePost(post));
         } else {
             this.props.dispatch(createPost(post));
@@ -170,6 +155,7 @@ class PostEditor extends Component {
     render() {
         const {
             collections,
+            collectionsLoaded,
             editableCollections,
             post,
             saving,
@@ -186,6 +172,7 @@ class PostEditor extends Component {
                     <PostEditorComponent
                         autoSave={autoSave}
                         collections={collections}
+                        collectionsLoaded={collectionsLoaded}
                         editableCollections={editableCollections}
                         onFileDelete={this.handleFileDelete}
                         onFileUpload={this.handleFileUpload}
@@ -214,6 +201,7 @@ class PostEditor extends Component {
 
 PostEditor.propTypes = {
     collections: PropTypes.array,
+    collectionsLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
     params: PropTypes.shape({
