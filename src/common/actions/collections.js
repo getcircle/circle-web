@@ -234,7 +234,17 @@ export function getCollectionsForOwner(ownerType, ownerId, isDefault = false, ne
                 types.GET_COLLECTIONS_FOR_OWNER_SUCCESS,
                 types.GET_COLLECTIONS_FOR_OWNER_FAILURE,
             ],
-            remote: client => requests.getCollectionsForOwner(client, ownerType, ownerId, isDefault, nextRequest),
+            remote: client => requests.getCollectionsForOwner(
+                client,
+                ownerType,
+                ownerId,
+                isDefault,
+                nextRequest,
+            ),
+            bailout: state => {
+                const { bail } = paginatedShouldBail('collections', key, nextRequest, state);
+                return bail;
+            },
         },
         meta: {
             paginateBy: key,
