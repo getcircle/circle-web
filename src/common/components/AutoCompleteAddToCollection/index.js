@@ -23,7 +23,7 @@ export function createCollectionItem(collection, selectedCollectionIds = [], mui
         name: {
             display: 'block',
             fontSize: '1.4rem',
-            maxWidth: 180,
+            width: 280,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',

@@ -88,7 +88,7 @@ class AddToCollectionMenu extends Component {
             },
             menu: {
                 height: 270,
-                width: 280,
+                width: 360,
             },
         };
 
