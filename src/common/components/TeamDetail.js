@@ -13,6 +13,7 @@ import TeamDetailTabs, { SLUGS } from './TeamDetailTabs';
 const TeamDetail = (props) => {
     const {
         collections,
+        collectionsCount,
         collectionsLoaded,
         collectionsLoading,
         coordinators,
@@ -23,6 +24,7 @@ const TeamDetail = (props) => {
         hasMoreCollections,
         hasMoreMembers,
         members,
+        membersCount,
         membersLoading,
         onLoadMoreMembers,
         onLoadMoreCollections,
@@ -48,6 +50,7 @@ const TeamDetail = (props) => {
                 dispatch={dispatch}
                 hasMoreMembers={hasMoreMembers}
                 members={members}
+                membersCount={membersCount}
                 membersLoading={membersLoading}
                 onLoadMoreMembers={onLoadMoreMembers}
                 team={team}
@@ -58,6 +61,7 @@ const TeamDetail = (props) => {
         content = (
             <TeamDetailCollections
                 collections={collections}
+                collectionsCount={collectionsCount}
                 defaultCollection={defaultCollection}
                 defaultCollectionLoaded={defaultCollectionLoaded}
                 hasMore={!!hasMoreCollections}
@@ -77,6 +81,8 @@ const TeamDetail = (props) => {
                 team={team}
             />
             <TeamDetailTabs
+                collectionsCount={collectionsCount}
+                membersCount={membersCount}
                 onRequestChange={replaceTeamSlug}
                 slug={slug}
                 team={team}
@@ -90,6 +96,7 @@ const TeamDetail = (props) => {
 
 TeamDetail.propTypes = {
     collections: PropTypes.array,
+    collectionsCount: PropTypes.number,
     collectionsLoaded: PropTypes.bool,
     collectionsLoading: PropTypes.bool,
     coordinators: PropTypes.array,
@@ -100,6 +107,7 @@ TeamDetail.propTypes = {
     hasMoreCollections: PropTypes.bool,
     hasMoreMembers: PropTypes.bool,
     members: PropTypes.array,
+    membersCount: PropTypes.number,
     membersLoading: PropTypes.bool,
     onLoadMoreCollections: PropTypes.func,
     onLoadMoreMembers: PropTypes.func,

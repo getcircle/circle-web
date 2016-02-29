@@ -6,6 +6,7 @@ import { provideHooks } from 'redial';
 
 import { getCollectionsForOwner } from '../actions/collections';
 import { getCollectionsForOwnerKey } from '../services/posts';
+import { getPaginator } from '../services/helpers';
 import { getTeam, getCoordinators, getMembers } from '../actions/teams';
 import { resetScroll } from '../utils/window';
 import { slice } from '../reducers/paginate';
@@ -35,6 +36,7 @@ const selector = createSelector(
     ],
     (cacheState, parametersState, teamMembershipState, coordinatorsState, membersState, collectionsState) => {
         let collections,
+            collectionsCount,
             collectionsLoaded,
             collectionsLoading,
             collectionsNextRequest,
@@ -42,6 +44,7 @@ const selector = createSelector(
             defaultCollection,
             defaultCollectionLoaded,
             members,
+            membersCount,
             membersNextRequest,
             membersLoading;
 
@@ -62,6 +65,7 @@ const selector = createSelector(
             if (ids.size) {
                 members = retrieveTeamMembers(ids.toJS(), cache);
                 membersNextRequest = membersState.get(teamId).get('nextRequest');
+                membersCount = membersNextRequest ? getPaginator(membersNextRequest).count : members.length;
             }
             membersLoading = membersState.get(teamId).get('loading');
         }
@@ -72,6 +76,7 @@ const selector = createSelector(
             if (ids.size) {
                 collections = retrieveCollections(ids.toJS(), cache);
                 collectionsNextRequest = collectionsState.get(collectionsKey).get('nextRequest');
+                collectionsCount = collectionsNextRequest ? getPaginator(collectionsNextRequest).count : collections.length;
             }
             collectionsLoading = collectionsState.get(collectionsKey).get('loading');
             collectionsLoaded = collectionsState.get(collectionsKey).get('loaded');
@@ -88,6 +93,7 @@ const selector = createSelector(
 
         return {
             collections,
+            collectionsCount,
             collectionsLoaded,
             collectionsLoading,
             collectionsNextRequest,
@@ -96,6 +102,7 @@ const selector = createSelector(
             defaultCollection,
             defaultCollectionLoaded,
             members,
+            membersCount,
             membersLoading,
             membersNextRequest,
             team,
@@ -201,6 +208,7 @@ class Team extends CSSComponent {
 
 Team.propTypes = {
     collections: PropTypes.array,
+    collectionsCount: PropTypes.number,
     collectionsLoaded: PropTypes.bool,
     collectionsLoading: PropTypes.bool,
     collectionsNextRequest: PropTypes.object,
@@ -209,6 +217,7 @@ Team.propTypes = {
     defaultCollectionLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     members: PropTypes.array,
+    membersCount: PropTypes.number,
     membersLoading: PropTypes.bool,
     membersNextRequest: PropTypes.object,
     params: PropTypes.shape({
@@ -219,8 +228,10 @@ Team.propTypes = {
 }
 
 Team.defaultProps = {
+    collectionsCount: 0,
     collectionsLoaded: false,
     collectionsLoading: false,
+    membersCount: 0,
     membersLoading: false,
 }
 
