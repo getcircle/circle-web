@@ -25,7 +25,7 @@ const SecondaryText = ({ post }) => {
     return (
         <div>
             <div>
-                <span style={{...styles.text, ...styles.created}}>{moment(post.created).format('ll')} &ndash; </span>
+                <span style={{...styles.text, ...styles.created}}>{moment(post.changed).format('ll')} &ndash; </span>
                 <span style={{...styles.text, ...styles.snippet}}>{post.snippet}</span>
             </div>
         </div>

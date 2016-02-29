@@ -33,7 +33,7 @@ const SecondaryText = ({ post }) => {
     return (
         <div>
             <div>
-                <span style={{...styles.text, ...styles.created}}>{moment(post.created).fromNow()} &ndash; </span>
+                <span style={{...styles.text, ...styles.created}}>{moment(post.changed).fromNow()} &ndash; </span>
                 {author}
                 <br />
                 <span style={{...styles.text, ...styles.main}}>{post.snippet}</span>

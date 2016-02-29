@@ -38,7 +38,7 @@ class PostItem extends DetailListItem {
 
         const secondaryText = (
             <div>
-                <span style={styles.secondaryText}>{moment(post.created).fromNow()}</span>
+                <span style={styles.secondaryText}>{moment(post.changed).fromNow()}</span>
             </div>
         );
         const item = (
