@@ -98,6 +98,7 @@ export function getCollection(client, collectionId) {
     const request = new services.post.actions.get_collection.RequestV1({
         /*eslint-disable camelcase*/
         collection_id: collectionId,
+        inflations: new services.common.containers.InflationsV1({exclude: ['display_name']}),
         /*eslint-enable camelcase*/
     });
     return new Promise((resolve, reject) => {
