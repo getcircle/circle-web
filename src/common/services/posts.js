@@ -88,7 +88,7 @@ export function createCollection(client, collection) {
         client.send(request)
             .then((response) => {
                 const { collection } = response.result;
-                response.finish(resolve, reject, collection.id);
+                response.finish(resolve, reject, collection.id, { collection });
             })
             .catch(error => reject(error));
     });

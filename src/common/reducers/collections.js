@@ -5,11 +5,16 @@ import { getCollectionsForOwnerNormalizations } from './normalizations';
 import * as types from '../constants/actionTypes';
 
 function additionalTypesCallback(state, action) {
+    let collection, key;
     switch (action.type) {
     case types.DELETE_COLLECTION_SUCCESS:
-        const { collection } = action.payload;
-        const key = getCollectionsForOwnerKey(collection.owner_type, collection.owner_id);
+        collection = action.payload.collection;
+        key = getCollectionsForOwnerKey(collection.owner_type, collection.owner_id);
         return state.updateIn([key, 'ids'], set => set ? set.delete(collection.id) : set);
+    case types.CREATE_COLLECTION_SUCCESS:
+        collection = action.payload.collection;
+        key = getCollectionsForOwnerKey(collection.owner_type, collection.owner_id);
+        return state.updateIn([key, 'ids'], set => set ? set.add(collection.id) : set);
     }
     return state;
 }
