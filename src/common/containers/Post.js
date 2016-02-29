@@ -43,7 +43,7 @@ const selector = selectors.createImmutableSelector(
 
         if (postCollectionsState.has(postId)) {
             const ids = postCollectionsState.get(postId).get('ids');
-            if (ids.size) {
+            if (ids && ids.size) {
                 collections = retrieveCollections(ids.toJS(), cache);
             }
         }
