@@ -37,6 +37,7 @@ EditCollectionsMenu.contextTypes = {
 const DetailCollections = (props, { muiTheme }) => {
     const {
         collections,
+        collectionsCount,
         defaultCollection,
         defaultCollectionLoaded,
         hasMore,
@@ -50,6 +51,7 @@ const DetailCollections = (props, { muiTheme }) => {
     menu = <EditCollectionsMenu />;
 
     let grid;
+    let collectionsCountString = '';
     if (collections) {
         grid = (
             <InfiniteCollectionsGrid
@@ -60,12 +62,13 @@ const DetailCollections = (props, { muiTheme }) => {
                 onLoadMore={onLoadMore}
             />
         );
+        collectionsCountString = collectionsCount ? ` (${collectionsCount})` : '';
     }
     return (
         <div>
             <DetailTitle
                 IconComponent={CollectionIcon}
-                title={t('Collections')}
+                title={t('Collections') + collectionsCountString}
             >
                 {menu}
             </DetailTitle>
@@ -80,6 +83,7 @@ const DetailCollections = (props, { muiTheme }) => {
 
 DetailCollections.propTypes = {
     collections: PropTypes.array,
+    collectionsCount: PropTypes.number,
     defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
     defaultCollectionLoaded: PropTypes.bool,
     hasMore: PropTypes.bool.isRequired,

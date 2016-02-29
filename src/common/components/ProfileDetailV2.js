@@ -15,6 +15,7 @@ const ProfileDetail = (props) => {
         defaultCollection,
         defaultCollectionLoaded,
         collections,
+        collectionsCount,
         collectionsLoaded,
         collectionsLoading,
         dispatch,
@@ -27,6 +28,7 @@ const ProfileDetail = (props) => {
         onLoadMorePosts,
         peers,
         posts,
+        postsCount,
         postsLoaded,
         postsLoading,
         profile,
@@ -53,6 +55,7 @@ const ProfileDetail = (props) => {
                 hasMorePosts={hasMorePosts}
                 onLoadMorePosts={onLoadMorePosts}
                 posts={posts}
+                postsCount={postsCount}
                 postsLoaded={postsLoaded}
                 postsLoading={postsLoading}
             />
@@ -62,6 +65,7 @@ const ProfileDetail = (props) => {
         content = (
             <ProfileDetailCollections
                 collections={collections}
+                collectionsCount={collectionsCount}
                 defaultCollection={defaultCollection}
                 defaultCollectionLoaded={defaultCollectionLoaded}
                 hasMore={hasMoreCollections}
@@ -78,7 +82,9 @@ const ProfileDetail = (props) => {
         <div>
             <ProfileDetailHeader profile={profile} />
             <ProfileDetailTabs
+                collectionsCount={collectionsCount}
                 onRequestChange={replaceProfileSlug}
+                postsCount={postsCount}
                 profile={profile}
                 slug={slug}
             />
@@ -91,6 +97,7 @@ const ProfileDetail = (props) => {
 
 ProfileDetail.propTypes = {
     collections: PropTypes.array,
+    collectionsCount: PropTypes.number,
     collectionsLoaded: PropTypes.bool,
     collectionsLoading: PropTypes.bool,
     defaultCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
@@ -105,6 +112,7 @@ ProfileDetail.propTypes = {
     onLoadMorePosts: PropTypes.func,
     peers: PropTypes.array,
     posts: PropTypes.array,
+    postsCount: PropTypes.number,
     postsLoaded: PropTypes.bool,
     postsLoading: PropTypes.bool,
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),
@@ -113,7 +121,7 @@ ProfileDetail.propTypes = {
 };
 
 ProfileDetail.defaultProps = {
-    slug: SLUGS.COLLECTIONS,
+    slug: SLUGS.KNOWLEDGE,
 };
 
 export default ProfileDetail;

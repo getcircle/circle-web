@@ -6,11 +6,12 @@ import { showConfirmDeleteModal } from '../actions/posts';
 
 import CenterLoadingIndicator from './CenterLoadingIndicator';
 import DetailSection from './DetailSectionV2';
-import InfinitePostsList from './InfinitePostsList';
-import PostItemMenu, { MENU_CHOICES } from './PostItemMenu';
 import EditIcon from './EditIcon';
 import IconMenu from './IconMenu';
+import InfinitePostsList from './InfinitePostsList';
+import LightBulbIcon from './LightBulbIcon';
 import MenuItem from './MenuItem';
+import PostItemMenu, { MENU_CHOICES } from './PostItemMenu';
 
 const EditKnowledgeMenu = (props, { muiTheme }) => {
     const icon = (
@@ -70,10 +71,11 @@ const EmptyState = () => {
     );
 };
 
-const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsLoaded, postsLoading }, { muiTheme }) => {
+const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsCount, postsLoaded, postsLoading }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     let postsSection;
+    let postsCountString = '';
     if (posts && posts.length) {
         postsSection = (
             <Posts
@@ -83,15 +85,19 @@ const ProfileDetailKnowledge = ({ hasMorePosts, onLoadMorePosts, posts, postsLoa
                 posts={posts}
             />
         );
+        postsCountString = postsCount ? ` (${postsCount})` : '';
     } else if (postsLoaded) {
         postsSection = <EmptyState />;
     } else {
         postsSection = <CenterLoadingIndicator />;
     }
+
+
     return (
         <div>
             <section className="row middle-xs">
-                <h1 style={theme.h1}>{t('Knowledge')}</h1>
+                <LightBulbIcon />
+                <h1 style={theme.h1}>{t('Knowledge')}{postsCountString}</h1>
                 <EditKnowledgeMenu />
             </section>
             <section className="row">
@@ -109,6 +115,7 @@ ProfileDetailKnowledge.propTypes = {
     hasMorePosts: PropTypes.bool.isRequired,
     onLoadMorePosts: PropTypes.func,
     posts: PropTypes.array,
+    postsCount: PropTypes.number,
     postsLoading: PropTypes.bool,
 };
 

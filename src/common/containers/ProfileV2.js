@@ -13,6 +13,7 @@ import {
 } from '../actions/posts';
 import { getCollectionsForOwnerKey } from '../services/posts';
 import { getMembersForProfileId } from '../actions/teams';
+import { getPaginator } from '../services/helpers';
 import { resetScroll } from '../utils/window';
 import { slice } from '../reducers/paginate';
 import {
@@ -42,6 +43,7 @@ const selector = selectors.createImmutableSelector(
     ],
     (cacheState, parametersState, membershipsState, postsState, deletePostState, collectionsState) => {
         let collections,
+            collectionsCount,
             collectionsLoaded,
             collectionsLoading,
             collectionsNextRequest,
@@ -49,6 +51,7 @@ const selector = selectors.createImmutableSelector(
             defaultCollectionLoaded,
             memberships,
             posts,
+            postsCount,
             postsLoaded,
             postsLoading,
             postsNextRequest;
@@ -73,6 +76,7 @@ const selector = selectors.createImmutableSelector(
                 // TODO: support Immutable
                 posts = retrievePosts(ids.toJS(), cache);
                 postsNextRequest = postsState.get(postsKey).get('nextRequest');
+                postsCount = postsNextRequest ? getPaginator(postsNextRequest).count : posts.length;
             }
             postsLoading = postsState.get(postsKey).get('loading');
             postsLoaded = postsState.get(postsKey).get('loaded');
@@ -84,6 +88,7 @@ const selector = selectors.createImmutableSelector(
             if (ids.size) {
                 collections = retrieveCollections(ids.toJS(), cache);
                 collectionsNextRequest = collectionsState.get(collectionsKey).get('nextRequest');
+                collectionsCount = collectionsNextRequest ? getPaginator(collectionsNextRequest).count : collections.length;
             }
             collectionsLoading = collectionsState.get(collectionsKey).get('loading');
             collectionsLoaded = collectionsState.get(collectionsKey).get('loaded');
@@ -102,11 +107,13 @@ const selector = selectors.createImmutableSelector(
             defaultCollection,
             defaultCollectionLoaded,
             collections,
+            collectionsCount,
             collectionsLoaded,
             collectionsLoading,
             collectionsNextRequest,
             memberships,
             posts,
+            postsCount,
             postsLoaded,
             postsLoading,
             postsNextRequest,
@@ -231,6 +238,7 @@ class Profile extends CSSComponent {
 
 Profile.propTypes = {
     collections: PropTypes.array,
+    collectionsCount: PropTypes.number,
     collectionsLoaded: PropTypes.bool,
     collectionsLoading: PropTypes.bool,
     collectionsNextRequest: PropTypes.object,
@@ -243,6 +251,7 @@ Profile.propTypes = {
     }),
     pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
     posts: PropTypes.array,
+    postsCount: PropTypes.number,
     postsLoaded: PropTypes.bool,
     postsLoading: PropTypes.bool,
     postsNextRequest: PropTypes.object,
@@ -251,8 +260,10 @@ Profile.propTypes = {
 };
 
 Profile.defaultProps = {
+    collectionsCount: 0,
     collectionsLoaded: false,
     collectionsLoading: false,
+    postsCount: 0,
     postsLoading: false,
 };
 

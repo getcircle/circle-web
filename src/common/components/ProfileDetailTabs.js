@@ -14,27 +14,31 @@ export const SLUGS = {
     ABOUT: t('about'),
 };
 
-const ProfileDetailTabs = ({ onRequestChange, profile, slug, ...other }, { store: { dispatch } }) => {
+const ProfileDetailTabs = ({ collectionsCount, onRequestChange, postsCount, profile, slug, ...other }, { store: { dispatch } }) => {
     function handleRequestChange(e, nextSlug) {
         dispatch(updateProfileSlug(profile, slug, nextSlug));
         onRequestChange(profile, nextSlug);
     }
 
+    const collectionsCountString = collectionsCount ? ` (${collectionsCount})` : '';
+    const postsCountString = postsCount ? ` (${postsCount})` : '';
     return (
         <DetailTabs
             onRequestChange={handleRequestChange}
             slug={slug}
             {...other}
         >
-            <Tab label={t('Collections')} value={SLUGS.COLLECTIONS } />
-            <Tab label={t('Knowledge')} value={SLUGS.KNOWLEDGE} />
+            <Tab label={t('Knowledge') + postsCountString} value={SLUGS.KNOWLEDGE} />
+            <Tab label={t('Collections') + collectionsCountString} value={SLUGS.COLLECTIONS} />
             <Tab label={t('About')} value={SLUGS.ABOUT} />
         </DetailTabs>
     );
 };
 
 ProfileDetailTabs.propTypes = {
+    collectionsCount: PropTypes.number,
     onRequestChange: PropTypes.func.isRequired,
+    postsCount: PropTypes.number,
     profile: InternalPropTypes.ProfileV1,
     slug: PropTypes.oneOf(Object.values(SLUGS)),
 };
