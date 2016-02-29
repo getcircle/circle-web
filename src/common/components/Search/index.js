@@ -32,6 +32,7 @@ class Search extends CSSComponent {
     static propTypes = {
         focused: PropTypes.bool,
         hasItemDivider: PropTypes.bool,
+        inputClassName: PropTypes.string,
         inputContainerStyle: PropTypes.object,
         inputStyle: PropTypes.object,
         listContainerStyle: PropTypes.object,
@@ -332,6 +333,7 @@ class Search extends CSSComponent {
                     style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <input
                         autoFocus={this.props.focused}
+                        className={this.props.inputClassName}
                         onBlur={::this.handleInputBlur}
                         onChange={::this.handleChange}
                         placeholder={placeholder}

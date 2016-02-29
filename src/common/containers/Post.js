@@ -179,7 +179,7 @@ class Post extends Component {
                     />
                 </DocumentTitle>
             );
-        } else if (errorDetails.size) {
+        } else if (errorDetails && errorDetails.size) {
             content = <ErrorMessage details={errorDetails} />;
         } else  {
             content = <CenterLoadingIndicator />;

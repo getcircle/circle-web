@@ -44,6 +44,7 @@ class AutoComplete extends CSSComponent {
     static propTypes = {
         defaults: PropTypes.arrayOf(PropTypes.instanceOf(Section)),
         dispatch: PropTypes.func.isRequired,
+        inputClassName: PropTypes.string,
         onBlur: PropTypes.func,
         onFocus: PropTypes.func,
         results: PropTypes.object,

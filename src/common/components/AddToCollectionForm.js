@@ -29,6 +29,7 @@ export class AddToCollectionForm extends Component {
         const {
             editableCollections,
             fields: { collections },
+            inputClassName,
             inputContainerStyle,
             inputStyle,
             listContainerStyle,
@@ -39,6 +40,7 @@ export class AddToCollectionForm extends Component {
                 <FormLabel text={t('Add To...')} />
                 <FormCollectionsSelector
                     editableCollections={editableCollections}
+                    inputClassName={inputClassName}
                     inputContainerStyle={inputContainerStyle}
                     inputStyle={inputStyle}
                     listContainerStyle={listContainerStyle}
@@ -55,6 +57,7 @@ AddToCollectionForm.propTypes = {
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
     fields: PropTypes.object.isRequired,
+    inputClassName: PropTypes.string,
     inputContainerStyle: PropTypes.object,
     inputStyle: PropTypes.object,
     listContainerStyle: PropTypes.object,

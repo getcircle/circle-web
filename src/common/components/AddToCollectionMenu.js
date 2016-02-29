@@ -9,6 +9,8 @@ import AddCollectionIcon from './AddCollectionIcon';
 import AddToCollectionForm from './AddToCollectionForm';
 import IconMenu from './IconMenu';
 
+const FILTER_INPUT_CLASS_NAME = 'add-to-collection-input';
+
 class AddToCollectionMenu extends Component {
 
     state = {
@@ -43,7 +45,12 @@ class AddToCollectionMenu extends Component {
         updateCollections(dispatch, post, collections, form.collections);
     }
 
-    handleItemTouchTap = () => {
+    handleItemTouchTap = (event) => {
+        if (event.target.className === FILTER_INPUT_CLASS_NAME) {
+            event.preventDefault();
+            return;
+        }
+
         this.setState({open: false});
         this.submit();
     }
@@ -102,6 +109,7 @@ class AddToCollectionMenu extends Component {
                     <AddToCollectionForm
                         collections={collections}
                         editableCollections={editableCollections}
+                        inputClassName={FILTER_INPUT_CLASS_NAME}
                         inputContainerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         listContainerStyle={styles.listContainer}
