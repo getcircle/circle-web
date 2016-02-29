@@ -49,7 +49,7 @@ const selector = selectors.createImmutableSelector(
         }
 
         const editableCollectionIds = editableCollectionsState.get('collectionIds');
-        if (editableCollectionIds.size) {
+        if (editableCollectionIds && editableCollectionIds.size) {
             editableCollections = retrieveCollections(editableCollectionIds.toJS(), cache);
         }
 

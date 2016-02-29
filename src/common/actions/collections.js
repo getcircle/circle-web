@@ -192,7 +192,7 @@ export function getEditableCollections(profileId) {
                 types.GET_EDITABLE_COLLECTIONS_FAILURE,
             ],
             remote: client => requests.getCollections(client, {profileId, permissions}),
-            bailout: state => !!state.get('editableCollections').get('collectionIds').size,
+            bailout: state => state.get('editableCollections').get('loaded'),
         },
     };
 }
