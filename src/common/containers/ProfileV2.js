@@ -206,7 +206,6 @@ class Profile extends CSSComponent {
     render() {
         let directReports, manager, peers;
         const { modalVisible, pendingPostToDelete, profile, reportingDetails, params: { slug } } = this.props;
-        const { auth } = this.context;
 
         if (reportingDetails) {
             directReports = reportingDetails.direct_reports;
