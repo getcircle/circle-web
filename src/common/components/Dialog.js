@@ -86,6 +86,7 @@ class Dialog extends Component {
     render() {
         const styles = {
             contentStyle: {
+                marginBottom: 50,
                 maxWidth: 640,
                 width: 640,
             },
@@ -99,6 +100,11 @@ class Dialog extends Component {
                 borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                 paddingBottom: 10,
             },
+            root: {
+                overflow: 'scroll',
+                position: 'absolute',
+                zIndex: 3000,
+            }
         };
         const {
             children,
@@ -116,9 +122,10 @@ class Dialog extends Component {
         } = this.props;
         const { muiTheme } = this.context;
 
-        const dialogStyle = merge({zIndex: 3000}, style);
+        const dialogStyle = merge(styles.root, style);
         return (
             <MaterialDialog
+                autoDetectWindowHeight={false}
                 bodyStyle={styles.bodyStyle}
                 contentStyle={styles.contentStyle}
                 modal={modal}
