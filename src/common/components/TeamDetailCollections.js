@@ -5,8 +5,9 @@ import CreateCollectionForm from './CreateCollectionForm';
 import DetailCollections from './DetailCollections';
 
 const TeamDetailCollections = ({ team, ...other }) => {
+    const canEdit = team && team.permissions && team.permissions.can_edit;
     let form;
-    if (team && team.permissions.can_edit) {
+    if (team && canEdit) {
         form = (
             <CreateCollectionForm
                 ownerId={team.id}
@@ -17,7 +18,7 @@ const TeamDetailCollections = ({ team, ...other }) => {
     return (
         <div>
             <DetailCollections
-                canEdit={team.permissions.can_edit}
+                canEdit={canEdit}
                 {...other}
             />
             {form}
