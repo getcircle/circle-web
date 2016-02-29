@@ -186,6 +186,7 @@ export function getCollectionItems(client, collectionId, nextRequest) {
 }
 
 export function getCollectionsForOwnerKey(ownerType, ownerId, isDefault = false) {
+    ownerType = ownerType === null ? services.post.containers.CollectionV1.OwnerTypeV1.PROFILE : ownerType;
     return isDefault ? `${ownerType}:${ownerId}:default` : `${ownerType}:${ownerId}`;
 }
 
