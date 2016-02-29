@@ -105,6 +105,7 @@ export function getCustomTheme(userAgent) {
                 fontSize: '13px',
                 lineHeight: '20px',
                 color: Colors.lightBlack,
+                whiteSpace: 'pre',
             },
             section: {
                 padding: 0,
