@@ -64,10 +64,10 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
         dispatch,
         hasMoreMembers,
         members,
-        membersCount,
         membersLoading,
         onLoadMoreMembers,
         team,
+        teamPeopleCount,
     } = props;
     const theme = muiTheme.luno.detail;
     const canEdit = team.permissions && team.permissions.can_edit;
@@ -123,7 +123,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     }
 
     let membersSection;
-    const membersCountString = membersCount ? ` (${membersCount})` : '';
+    const teamPeopleCountString = teamPeopleCount ? ` (${teamPeopleCount})` : '';
     if (members && members.length) {
         const memberProfiles = members.map(m => m.profile);
         const MenuComponent = canEdit ? TeamMemberMenu : null;
@@ -149,7 +149,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
         <div>
             <section className="row middle-xs">
                 <PersonIcon />
-                <h1 style={theme.h1}>{t('People')}{membersCountString}</h1>
+                <h1 style={theme.h1}>{t('People')}{teamPeopleCountString}</h1>
                 {plusIcon}
             </section>
             {coordinatorsSection}
@@ -164,10 +164,10 @@ TeamDetailPeople.propTypes = {
     dispatch: PropTypes.func.isRequired,
     hasMoreMembers: PropTypes.bool.isRequired,
     members: PropTypes.array,
-    membersCount: PropTypes.number,
     membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,
     team: InternalPropTypes.TeamV1.isRequired,
+    teamPeopleCount: PropTypes.number,
 };
 
 TeamDetailPeople.contextTypes = {

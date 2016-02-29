@@ -14,14 +14,14 @@ export const SLUGS = {
     PEOPLE: t('people'),
 };
 
-const TeamDetailTabs = ({ collectionsCount, membersCount, onRequestChange, team, slug, ...other}, { store: { dispatch } }) => {
+const TeamDetailTabs = ({ collectionsCount, onRequestChange, slug, team, teamPeopleCount, ...other}, { store: { dispatch } }) => {
     function handleRequestChange(e, nextSlug) {
         dispatch(updateTeamSlug(team, slug, nextSlug));
         onRequestChange(team, nextSlug);
     }
 
     const collectionsCountString = collectionsCount ? ` (${collectionsCount})` : '';
-    const membersCountString = membersCount ? ` (${membersCount})` : '';
+    const teamPeopleCountString = teamPeopleCount ? ` (${teamPeopleCount})` : '';
     return (
         <DetailTabs
             onRequestChange={handleRequestChange}
@@ -29,7 +29,7 @@ const TeamDetailTabs = ({ collectionsCount, membersCount, onRequestChange, team,
             {...other}
         >
             <Tab label={t('Collections') + collectionsCountString} value={SLUGS.COLLECTIONS} />
-            <Tab label={t('People') + membersCountString} value={SLUGS.PEOPLE} />
+            <Tab label={t('People') + teamPeopleCountString} value={SLUGS.PEOPLE} />
             <Tab label={t('About')} value={SLUGS.ABOUT} />
         </DetailTabs>
     );
@@ -37,10 +37,10 @@ const TeamDetailTabs = ({ collectionsCount, membersCount, onRequestChange, team,
 
 TeamDetailTabs.propTypes = {
     collectionsCount: PropTypes.number,
-    membersCount: PropTypes.number,
     onRequestChange: PropTypes.func.isRequired,
     slug: PropTypes.oneOf(Object.values(SLUGS)),
     team: InternalPropTypes.TeamV1,
+    teamPeopleCount: PropTypes.number,
 };
 
 TeamDetailTabs.contextTypes = {

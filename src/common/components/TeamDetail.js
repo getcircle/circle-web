@@ -33,6 +33,7 @@ const TeamDetail = (props) => {
     } = props;
 
     let content;
+    const teamPeopleCount = membersCount + (coordinators ? coordinators.length : 0);
     switch (slug) {
     case SLUGS.ABOUT:
         content = (
@@ -50,10 +51,10 @@ const TeamDetail = (props) => {
                 dispatch={dispatch}
                 hasMoreMembers={hasMoreMembers}
                 members={members}
-                membersCount={membersCount}
                 membersLoading={membersLoading}
                 onLoadMoreMembers={onLoadMoreMembers}
                 team={team}
+                teamPeopleCount={teamPeopleCount}
             />
         );
         break;
@@ -82,10 +83,10 @@ const TeamDetail = (props) => {
             />
             <TeamDetailTabs
                 collectionsCount={collectionsCount}
-                membersCount={membersCount}
                 onRequestChange={replaceTeamSlug}
                 slug={slug}
                 team={team}
+                teamPeopleCount={teamPeopleCount}
             />
             <DetailContent>
                 {content}
