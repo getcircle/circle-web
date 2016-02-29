@@ -82,7 +82,7 @@ const Header = ({ post, onPublish, saving }, { muiTheme }) => {
     }
 
     return (
-        <header style={{paddingLeft: 10, paddingRight: 10}}>
+        <header style={{paddingLeft: 10, paddingRight: 10, position: 'fixed', 'width': '100%'}}>
             <section className="row between-xs">
                 <div className="start-xs col-xs">
                     <BackButton />
