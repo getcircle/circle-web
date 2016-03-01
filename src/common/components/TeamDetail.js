@@ -24,7 +24,6 @@ const TeamDetail = (props) => {
         hasMoreCollections,
         hasMoreMembers,
         members,
-        membersCount,
         membersLoading,
         onLoadMoreMembers,
         onLoadMoreCollections,
@@ -33,7 +32,6 @@ const TeamDetail = (props) => {
     } = props;
 
     let content;
-    const teamPeopleCount = membersCount + (coordinators ? coordinators.length : 0);
     switch (slug) {
     case SLUGS.ABOUT:
         content = (
@@ -54,7 +52,6 @@ const TeamDetail = (props) => {
                 membersLoading={membersLoading}
                 onLoadMoreMembers={onLoadMoreMembers}
                 team={team}
-                teamPeopleCount={teamPeopleCount}
             />
         );
         break;
@@ -86,7 +83,6 @@ const TeamDetail = (props) => {
                 onRequestChange={replaceTeamSlug}
                 slug={slug}
                 team={team}
-                teamPeopleCount={teamPeopleCount}
             />
             <DetailContent>
                 {content}
@@ -108,7 +104,6 @@ TeamDetail.propTypes = {
     hasMoreCollections: PropTypes.bool,
     hasMoreMembers: PropTypes.bool,
     members: PropTypes.array,
-    membersCount: PropTypes.number,
     membersLoading: PropTypes.bool,
     onLoadMoreCollections: PropTypes.func,
     onLoadMoreMembers: PropTypes.func,

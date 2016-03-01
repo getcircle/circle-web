@@ -14,14 +14,14 @@ export const SLUGS = {
     PEOPLE: t('people'),
 };
 
-const TeamDetailTabs = ({ collectionsCount, onRequestChange, slug, team, teamPeopleCount, ...other}, { store: { dispatch } }) => {
+const TeamDetailTabs = ({ collectionsCount, onRequestChange, slug, team, ...other}, { store: { dispatch } }) => {
     function handleRequestChange(e, nextSlug) {
         dispatch(updateTeamSlug(team, slug, nextSlug));
         onRequestChange(team, nextSlug);
     }
 
     const collectionsCountString = collectionsCount ? ` (${collectionsCount})` : '';
-    const teamPeopleCountString = teamPeopleCount ? ` (${teamPeopleCount})` : '';
+    const teamPeopleCountString = team.total_members ? ` (${team.total_members})` : '';
     return (
         <DetailTabs
             onRequestChange={handleRequestChange}
@@ -40,7 +40,6 @@ TeamDetailTabs.propTypes = {
     onRequestChange: PropTypes.func.isRequired,
     slug: PropTypes.oneOf(Object.values(SLUGS)),
     team: InternalPropTypes.TeamV1,
-    teamPeopleCount: PropTypes.number,
 };
 
 TeamDetailTabs.contextTypes = {

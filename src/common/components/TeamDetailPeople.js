@@ -67,7 +67,6 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
         membersLoading,
         onLoadMoreMembers,
         team,
-        teamPeopleCount,
     } = props;
     const theme = muiTheme.luno.detail;
     const canEdit = team.permissions && team.permissions.can_edit;
@@ -123,7 +122,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
     }
 
     let membersSection;
-    const teamPeopleCountString = teamPeopleCount ? ` (${teamPeopleCount})` : '';
+    const teamPeopleCountString = team.total_members ? ` (${team.total_members})` : '';
     if (members && members.length) {
         const memberProfiles = members.map(m => m.profile);
         const MenuComponent = canEdit ? TeamMemberMenu : null;
@@ -167,7 +166,6 @@ TeamDetailPeople.propTypes = {
     membersLoading: PropTypes.bool,
     onLoadMoreMembers: PropTypes.func,
     team: InternalPropTypes.TeamV1.isRequired,
-    teamPeopleCount: PropTypes.number,
 };
 
 TeamDetailPeople.contextTypes = {

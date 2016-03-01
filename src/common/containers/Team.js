@@ -44,7 +44,6 @@ const selector = createSelector(
             defaultCollection,
             defaultCollectionLoaded,
             members,
-            membersCount,
             membersNextRequest,
             membersLoading;
 
@@ -65,7 +64,6 @@ const selector = createSelector(
             if (ids.size) {
                 members = retrieveTeamMembers(ids.toJS(), cache);
                 membersNextRequest = membersState.get(teamId).get('nextRequest');
-                membersCount = membersNextRequest ? getPaginator(membersNextRequest).count : members.length;
             }
             membersLoading = membersState.get(teamId).get('loading');
         }
@@ -102,7 +100,6 @@ const selector = createSelector(
             defaultCollection,
             defaultCollectionLoaded,
             members,
-            membersCount,
             membersLoading,
             membersNextRequest,
             team,
@@ -217,7 +214,6 @@ Team.propTypes = {
     defaultCollectionLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     members: PropTypes.array,
-    membersCount: PropTypes.number,
     membersLoading: PropTypes.bool,
     membersNextRequest: PropTypes.object,
     params: PropTypes.shape({
@@ -231,7 +227,6 @@ Team.defaultProps = {
     collectionsCount: 0,
     collectionsLoaded: false,
     collectionsLoading: false,
-    membersCount: 0,
     membersLoading: false,
 }
 
