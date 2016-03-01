@@ -61,7 +61,7 @@ export function createProfileResult({ profile, highlight }) {
 };
 
 export function createTeamResult({ team, highlight }) {
-    let primaryText = team.display_name;
+    let primaryText = team.name;
     if (highlight && highlight.get('name')) {
         primaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('name')}} />;
     }
