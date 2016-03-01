@@ -85,10 +85,8 @@ export class EditCollectionForm extends CSSComponent {
     }
 
     submit = ({ name, items }, dispatch) => {
-        const collection = {
-            ...this.props.collection,
-            name,
-        };
+        const { collection } = this.props;
+        collection.setName(name);
 
         // TODO: calculate diffs, send reorder action
         dispatch(updateCollection(collection));
