@@ -72,7 +72,7 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
                     {peersSection}
                     {directReportsSection}
                 </section>
-                <section className="col-xs-offset-1 col-xs-3">
+                <section className="col-xs-4" style={theme.secondarySection}>
                     <ContactMethods canEdit={canEdit} dispatch={dispatch} profile={profile} />
                     {itemsSection}
                     {teamsSection}

@@ -47,7 +47,6 @@ const CollectionDetailHeader = ({ collection }, { muiTheme }) => {
     let primaryText, secondaryText;
     if (collection) {
         primaryText = collection.name;
-        console.log(collection);
     }
 
     const styles = {

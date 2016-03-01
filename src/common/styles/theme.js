@@ -105,11 +105,14 @@ export function getCustomTheme(userAgent) {
                 fontSize: '13px',
                 lineHeight: '20px',
                 color: Colors.lightBlack,
-                whiteSpace: 'pre',
+                whiteSpace: 'pre-wrap',
             },
             section: {
                 padding: 0,
             },
+            secondarySection: {
+                paddingLeft: 27,
+            }
         },
         form: {
             field: {

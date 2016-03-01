@@ -21,9 +21,6 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
             marginBottom: 2,
             verticalAlign: 'middle',
         },
-        section: {
-            padding: 0,
-        },
     };
 
     let coordinatorsSection;
@@ -56,7 +53,7 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
                 {editIcon}
             </section>
             <section className="row">
-                <section className="col-xs-8" style={styles.section}>
+                <section className="col-xs-8" style={theme.section}>
                     <Description
                         dispatch={dispatch}
                         team={team}
@@ -64,7 +61,7 @@ const TeamDetailAbout = ({ coordinators, dispatch, team }, { muiTheme }) => {
                     />
                     {coordinatorsSection}
                 </section>
-                <section className="col-xs-offset-1 col-xs-3" style={styles.section}>
+                <section className="col-xs-4" style={theme.secondarySection}>
                     <ContactMethods
                         dispatch={dispatch}
                         team={team}
