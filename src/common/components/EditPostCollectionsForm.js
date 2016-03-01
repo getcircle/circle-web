@@ -18,6 +18,10 @@ class EditPostCollectionsForm extends Component {
         if (this.props.collectionsLoaded) {
             this.setInitialValues(this.props);
         }
+
+        if (this.props.editableCollections) {
+            this.props.dispatch(initializeCollectionsFilter(this.props.editableCollections));
+        }
     }
 
     componentWillReceiveProps(nextProps) {
