@@ -4,7 +4,7 @@ import { getPostStateURLString } from './post';
 const NEXT_PATHNAME_KEY = 'n:p';
 
 export function getProfilePath(profile) {
-    return `/profile/${profile.id}`;
+    return `/profile/${profile.id}/knowledge`;
 }
 
 export function getPostPath(post) {
@@ -12,7 +12,7 @@ export function getPostPath(post) {
 }
 
 export function getTeamPath(team) {
-    return `/team/${team.id}`;
+    return `/team/${team.id}/collections`;
 }
 
 export function getCollectionPath(collection) {
