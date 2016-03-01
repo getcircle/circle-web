@@ -32,6 +32,16 @@ function getExcludedInflations(entity, inflations) {
     return otherInflations.filter((elem) => elem !== undefined && elem !== null);
 }
 
+function getInflationFieldNames(entity) {
+    const fieldNames = [];
+    for (let field of entity.$type._fields) {
+        if (field.options[INFLATION_OPTION]) {
+            fieldNames.push(field.name);
+        }
+    }
+    return fieldNames;
+}
+
 /**
  * Return any field names within entity that aren't within fields.
  *
@@ -70,12 +80,15 @@ function getExcludedFields(newEntity, oldEntity) {
             excludedFields = excludedFields.concat(otherFields);
         }
     }
+
     if (newEntity.inflations) {
         if (newEntity.inflations.exclude.length > 0) {
             excludedFields = excludedFields.concat(newEntity.inflations.exclude);
         } else if (newEntity.inflations.only.length > 0) {
             const inflations = getExcludedInflations(oldEntity, newEntity.inflations.only);
             excludedFields = excludedFields.concat(inflations);
+        } else if (newEntity.inflations.disabled) {
+            excludedFields = getInflationFieldNames(oldEntity);
         }
     }
     return excludedFields;
