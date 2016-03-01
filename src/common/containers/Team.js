@@ -141,7 +141,7 @@ function fetchDefaultCollection({ dispatch, params: { teamId } }) {
     return dispatch(getCollectionsForOwner(TEAM, teamId, true));
 }
 
-function loadTeam({dispatch, params}) {
+function loadTeam(locals) {
     fetchTeam(locals);
     fetchTeamCoordinators(locals);
     fetchTeamMembers(locals);
