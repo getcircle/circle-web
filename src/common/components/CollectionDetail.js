@@ -12,8 +12,9 @@ import DetailDivider from './DetailDivider';
 import DetailHeader from './DetailHeader';
 import EditIcon from './EditIcon';
 import IconMenu from './IconMenu';
-import MenuItem from './MenuItem';
 import InfiniteCollectionItemList from './InfiniteCollectionItemList';
+import LightBulbIcon from './LightBulbIcon';
+import MenuItem from './MenuItem';
 
 const EditCollectionMenu = ({ collection }, { store: { dispatch }, muiTheme }) => {
     const icon = (
@@ -142,15 +143,17 @@ CollectionDetailKnowledge.propTypes = {
 
 const CollectionDetailTitle = ({ collection, itemsLoaded, totalItems, ...other }, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
-    // TODO if items have loaded, display totalItems next to knowledge
     let menu;
     if (collection && collection.permissions && collection.permissions.can_edit) {
         menu = <EditCollectionMenu collection={collection} />;
     }
+
+    const itemsCountString = totalItems && itemsLoaded ? ` (${totalItems})` : '';
     return (
         <section {...other}>
             <div className="row middle-xs">
-                <h1 style={theme.h1}>{t('Knowledge')}</h1>
+                <LightBulbIcon />
+                <h1 style={theme.h1}>{t('Knowledge')}{itemsCountString}</h1>
                 {menu}
             </div>
             <DetailDivider style={muiTheme.luno.collections.divider} />

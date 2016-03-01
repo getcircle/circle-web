@@ -95,7 +95,7 @@ const ProfileDetailKnowledge = (props, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     let postsSection;
-    let postsCountString = '';
+    const postsCountString = postsCount ? ` (${postsCount})` : '';
     if (posts && posts.length) {
         postsSection = (
             <Posts
@@ -106,7 +106,6 @@ const ProfileDetailKnowledge = (props, { muiTheme }) => {
                 posts={posts}
             />
         );
-        postsCountString = postsCount ? ` (${postsCount})` : '';
     } else if (postsLoaded) {
         postsSection = <EmptyState />;
     } else {
