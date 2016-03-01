@@ -43,52 +43,54 @@ const ProfileDetail = (props, { auth }) => {
     }
 
     let content;
-    switch (slug) {
-    case SLUGS.ABOUT:
-        content = (
-            <ProfileDetailAbout
-                directReports={directReports}
-                dispatch={dispatch}
-                isAdmin={isAdmin}
-                isLoggedInUser={isLoggedInUser}
-                manager={manager}
-                memberships={memberships}
-                peers={peers}
-                profile={profile}
-            />
-        );
-        break;
-    case SLUGS.KNOWLEDGE:
-        content = (
-            <ProfileDetailKnowledge
-                hasMorePosts={hasMorePosts}
-                isAdmin={isAdmin}
-                isLoggedInUser={isLoggedInUser}
-                onLoadMorePosts={onLoadMorePosts}
-                posts={posts}
-                postsCount={postsCount}
-                postsLoaded={postsLoaded}
-                postsLoading={postsLoading}
-            />
-        );
-        break;
-    case SLUGS.COLLECTIONS:
-        content = (
-            <ProfileDetailCollections
-                collections={collections}
-                collectionsCount={collectionsCount}
-                defaultCollection={defaultCollection}
-                defaultCollectionLoaded={defaultCollectionLoaded}
-                hasMore={hasMoreCollections}
-                isAdmin={isAdmin}
-                isLoggedInUser={isLoggedInUser}
-                loaded={collectionsLoaded}
-                loading={collectionsLoading}
-                onLoadMore={onLoadMoreCollections}
-                profile={profile}
-            />
-        );
-        break;
+    if (profile) {
+        switch (slug) {
+        case SLUGS.ABOUT:
+            content = (
+                <ProfileDetailAbout
+                    directReports={directReports}
+                    dispatch={dispatch}
+                    isAdmin={isAdmin}
+                    isLoggedInUser={isLoggedInUser}
+                    manager={manager}
+                    memberships={memberships}
+                    peers={peers}
+                    profile={profile}
+                />
+            );
+            break;
+        case SLUGS.KNOWLEDGE:
+            content = (
+                <ProfileDetailKnowledge
+                    hasMorePosts={hasMorePosts}
+                    isAdmin={isAdmin}
+                    isLoggedInUser={isLoggedInUser}
+                    onLoadMorePosts={onLoadMorePosts}
+                    posts={posts}
+                    postsCount={postsCount}
+                    postsLoaded={postsLoaded}
+                    postsLoading={postsLoading}
+                />
+            );
+            break;
+        case SLUGS.COLLECTIONS:
+            content = (
+                <ProfileDetailCollections
+                    collections={collections}
+                    collectionsCount={collectionsCount}
+                    defaultCollection={defaultCollection}
+                    defaultCollectionLoaded={defaultCollectionLoaded}
+                    hasMore={hasMoreCollections}
+                    isAdmin={isAdmin}
+                    isLoggedInUser={isLoggedInUser}
+                    loaded={collectionsLoaded}
+                    loading={collectionsLoading}
+                    onLoadMore={onLoadMoreCollections}
+                    profile={profile}
+                />
+            );
+            break;
+        }
     }
 
     return (
