@@ -16,7 +16,7 @@ export default function (state = initialState, action) {
     case types.CREATE_COLLECTION_SUCCESS:
         return state.update('collectionIds', set => set.add(action.payload.result));
     case types.DELETE_COLLECTION_SUCCESS:
-        return state.update('collectionIds', set => set.remove(action.payload.result));
+        return state.update('collectionIds', set => set.remove(action.payload.collection.id));
     case types.CREATE_TEAM_SUCCESS:
         return state.update('collectionIds', set => set.add(action.payload.collectionId));
     }
