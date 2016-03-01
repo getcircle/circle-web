@@ -10,7 +10,10 @@ function updateStateForPost(state = Immutable.fromJS({loaded: false, ids: Immuta
     switch (action.type) {
     case types.GET_COLLECTIONS_SUCCESS:
         ids = getCollectionsNormalizations(action);
-        return state.withMutations(map => map.set('loaded', true).update('ids', set => set.union(ids)));
+        if (ids) {
+            return state.withMutations(map => map.set('loaded', true).update('ids', set => set.union(ids)));
+        }
+        break;
     case types.ADD_TO_COLLECTIONS_SUCCESS:
         ids = action.payload.collections.map(collection => collection.id);
         return state.update('ids', set => set.union(ids));
