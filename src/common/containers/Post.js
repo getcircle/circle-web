@@ -8,9 +8,10 @@ import { Snackbar } from 'material-ui';
 
 import { deletePost, hideConfirmDeleteModal, hideLinkCopiedSnackbar, getPost } from '../actions/posts';
 import { getCollections, getEditableCollections } from '../actions/collections';
+import { getMembersForProfileId } from '../actions/teams';
 
 import { resetScroll } from '../utils/window';
-import { retrieveCollections, retrievePost } from '../reducers/denormalizations';
+import { retrieveCollections, retrievePost, retrieveTeamMembers } from '../reducers/denormalizations';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 
@@ -27,15 +28,17 @@ const { SourceV1 } = services.post.containers.CollectionItemV1;
 
 const selector = selectors.createImmutableSelector(
     [
+        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.postSelector,
         selectors.routerParametersSelector,
         selectors.deletePostSelector,
         selectors.editableCollectionsSelector,
         selectors.postCollectionsSelector,
+        selectors.profileMembershipsSelector,
     ],
-    (cacheState, postState, paramsState, deletePostState, editableCollectionsState, postCollectionsState) => {
-        let collections, editableCollections;
+    (authenticationState, cacheState, postState, paramsState, deletePostState, editableCollectionsState, postCollectionsState, membershipsState) => {
+        let collections, editableCollections, memberships;
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
         const post = retrievePost(postId, cache, REQUIRED_FIELDS);
@@ -45,6 +48,15 @@ const selector = selectors.createImmutableSelector(
             const ids = postCollectionsState.get(postId).get('ids');
             if (ids && ids.size) {
                 collections = retrieveCollections(ids.toJS(), cache);
+            }
+        }
+
+        const profileId = authenticationState.getIn(['profile', 'id']);
+        if (membershipsState.has(profileId)) {
+            const ids = membershipsState.get(profileId).get('ids');
+            if (ids.size) {
+                // TODO: support Immutable
+                memberships = retrieveTeamMembers(ids.toJS(), cache);
             }
         }
 
@@ -58,7 +70,9 @@ const selector = selectors.createImmutableSelector(
             editableCollections,
             showLinkCopied,
             errorDetails: postState.get('errorDetails'),
+            memberships,
             post: post,
+            profileId,
             modalVisible: deletePostState.get('modalVisible'),
             pendingPostToDelete: deletePostState.get('pendingPostToDelete'),
         };
@@ -79,9 +93,16 @@ function fetchEditableCollections({ dispatch, getState }) {
     dispatch(getEditableCollections(profile.id));
 }
 
+function fetchMemberships({ dispatch, getState }) {
+    const state = getState();
+    const profile = state.get('authentication').get('profile');
+    return dispatch(getMembersForProfileId(profile.id));
+}
+
 function loadPost(locals) {
     fetchPost(locals);
     fetchCollections(locals);
+    fetchMemberships(locals);
 }
 
 const hooks = {
@@ -89,6 +110,7 @@ const hooks = {
     defer: (locals) => {
         fetchCollections(locals);
         fetchEditableCollections(locals);
+        fetchMemberships(locals);
     },
 };
 
@@ -163,6 +185,7 @@ class Post extends Component {
             collections,
             editableCollections,
             errorDetails,
+            memberships,
             modalVisible,
             pendingPostToDelete,
             post,
@@ -175,6 +198,7 @@ class Post extends Component {
                     <PostComponent
                         collections={collections}
                         editableCollections={editableCollections}
+                        memberships={memberships}
                         post={post}
                     />
                 </DocumentTitle>
@@ -212,6 +236,7 @@ Post.propTypes = {
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
     errorDetails: PropTypes.object,
+    memberships: PropTypes.array.isRequired,
     modalVisible: PropTypes.bool,
     params: PropTypes.shape({
         postId: PropTypes.string.isRequired,

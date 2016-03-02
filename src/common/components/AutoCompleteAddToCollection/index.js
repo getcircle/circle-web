@@ -1,13 +1,21 @@
+import keymirror from 'keymirror';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import * as selectors from '../../selectors';
+import t from '../../utils/gettext';
 import { clearCollectionsFilter, filterCollections } from '../../actions/collections';
 
 import CheckIcon from '../CheckIcon';
 import CollectionIcon from '../CollectionIcon';
+import PlusIcon from '../PlusIcon';
 import Search from '../Search';
 import Section from './Section';
+
+export const TYPES = keymirror({
+    COLLECTION: null,
+    ADD_COLLECTION: null,
+});
 
 const selector = selectors.createImmutableSelector(
     [selectors.filterCollectionsSelector],
@@ -59,10 +67,40 @@ export function createCollectionItem(collection, selectedCollectionIds = [], mui
     };
     return {
         item,
-        type: 'collection',
+        type: TYPES.COLLECTION,
         payload: collection,
     };
 };
+
+export function createNewCollectionItem() {
+    const styles = {
+        name: {
+            display: 'block',
+            fontSize: '1.4rem',
+            width: 280,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+        },
+    };
+    const primaryText = <span style={styles.name}>{t('New Collection')}</span>;
+    const item = {
+        leftIcon: <PlusIcon />,
+        primaryText: primaryText,
+        innerDivStyle: {
+            paddingLeft: 45,
+        },
+        style: {
+            fontSize: '1.4rem',
+        },
+
+    };
+    return {
+        item,
+        type: TYPES.ADD_COLLECTION,
+        payload: TYPES.ADD_COLLECTION,
+    };
+}
 
 // TODO i would like to have combined this with AutoCompleteCollection, but direct subclass doesn't work
 class AutoCompleteAddToCollection extends Component {
@@ -98,8 +136,8 @@ class AutoCompleteAddToCollection extends Component {
         this.props.onBlur();
     }
 
-    handleSelectItem = ({ payload }) => {
-        this.props.onSelectItem(payload);
+    handleSelectItem = ({ payload }, event) => {
+        this.props.onSelectItem(payload, event);
     }
 
     getSections() {
@@ -108,20 +146,28 @@ class AutoCompleteAddToCollection extends Component {
             collections,
             filteredCollections,
             ignoreCollectionIds,
+            newCollectionFactoryFunction,
             resultFactoryFunction,
         } = this.props;
 
-        const sectionResults = query === '' ? collections : filteredCollections;
+        const sections = [];
 
-        const section = new Section(
+        if (newCollectionFactoryFunction) {
+            const addCollectionItem = newCollectionFactoryFunction()
+            sections.push(new Section([addCollectionItem], undefined, undefined));
+        }
+
+        const sectionResults = query === '' ? collections : filteredCollections;
+        sections.push(new Section(
             sectionResults,
             undefined,
             undefined,
             resultFactoryFunction,
             ignoreCollectionIds,
             this.context.muiTheme,
-        );
-        return [section];
+        ));
+
+        return sections;
     }
 
     render() {
@@ -157,6 +203,7 @@ AutoCompleteAddToCollection.propTypes = {
     inputContainerStyle: PropTypes.object,
     inputStyle: PropTypes.object,
     listContainerStyle: PropTypes.object,
+    newCollectionFactoryFunction: PropTypes.func,
     onBlur: PropTypes.func,
     onSelectItem: PropTypes.func,
     resultFactoryFunction: PropTypes.func.isRequired,

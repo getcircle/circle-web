@@ -28,7 +28,7 @@ export default function form(types) {
             }
 
         case save:
-            return state.merge({formSubmitting: true});
+            return state.merge({formSubmitting: true, id: undefined});
 
         case saveSuccess:
             return state.merge({

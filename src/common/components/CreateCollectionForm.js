@@ -38,7 +38,7 @@ class CreateCollectionForm extends Component {
             this.props.resetForm();
         }
 
-        if (!this.props.id && nextProps.id) {
+        if (this.props.visible && !this.props.id && nextProps.id) {
             routeToCollection({id: nextProps.id});
         }
     }

@@ -134,8 +134,8 @@ class Search extends CSSComponent {
         this.props.onBlur(event);
     }
 
-    handleSelectItem = (item) => {
-        this.props.onSelectItem(item);
+    handleSelectItem = (item, event) => {
+        this.props.onSelectItem(item, event);
         this.cleanupAndBlur();
     }
 

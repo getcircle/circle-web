@@ -14,6 +14,7 @@ const FILTER_INPUT_CLASS_NAME = 'add-to-collection-input';
 class AddToCollectionMenu extends Component {
 
     state = {
+        addingNewCollection: false,
         muiTheme: this.context.muiTheme,
         open: false,
     }
@@ -31,10 +32,21 @@ class AddToCollectionMenu extends Component {
     }
 
     handleRequestChange = (open) => {
-        this.setState({open});
+        this.setState({addingNewCollection: false, open});
         if (!open) {
             this.submit();
         }
+    }
+
+    handleNewCollection = (event) => {
+        this.setState({addingNewCollection: true});
+
+        // Prevent event from triggering close on IconMenu
+        event.stopPropagation();
+    }
+
+    handleCollectionAdded = () => {
+        this.setState({addingNewCollection: false});
     }
 
     handleSubmit = (form, dispatch) => {
@@ -43,15 +55,17 @@ class AddToCollectionMenu extends Component {
         form = getValues(this.context.store.getState().get('form').addToCollection);
         const { collections, post } = this.props;
         updateCollections(dispatch, post, collections, form.collections);
+        this.setState({addingNewCollection: false, open: false});
     }
 
     handleItemTouchTap = (event) => {
-        if (event.target.className === FILTER_INPUT_CLASS_NAME) {
+        const inputTarget = event.target.className === FILTER_INPUT_CLASS_NAME;
+        if (inputTarget || this.state.addingNewCollection) {
             event.preventDefault();
             return;
         }
 
-        this.setState({open: false});
+        this.setState({open: false, addingNewCollection: false});
         this.submit();
     }
 
@@ -62,16 +76,14 @@ class AddToCollectionMenu extends Component {
     }
 
     render() {
-        const { collections, editableCollections, post, style, ...other } = this.props;
+        const { collections, editableCollections, memberships, post, style, ...other } = this.props;
         const { muiTheme } = this.context;
+        const { addingNewCollection } = this.state;
 
         const styles = {
             formContainer: {
                 padding: 20,
                 paddingTop: 0,
-            },
-            form: {
-                padding: 0,
             },
             inputContainer: {
                 border: `1px solid ${muiTheme.luno.colors.lightWhite}`,
@@ -103,16 +115,21 @@ class AddToCollectionMenu extends Component {
                 onRequestChange={this.handleRequestChange}
                 open={this.state.open}
                 style={merge(theme.menu, style)}
+                useLayerForClickAway={true}
                 {...other}
             >
                 <div style={styles.formContainer}>
                     <AddToCollectionForm
+                        addingNewCollection={addingNewCollection}
                         collections={collections}
                         editableCollections={editableCollections}
                         inputClassName={FILTER_INPUT_CLASS_NAME}
                         inputContainerStyle={styles.inputContainer}
                         inputStyle={styles.input}
                         listContainerStyle={styles.listContainer}
+                        memberships={memberships}
+                        newCollectionAllowed={true}
+                        onNewCollection={this.handleNewCollection}
                         onSubmit={this.handleSubmit}
                         post={post}
                         ref="form"
@@ -128,6 +145,7 @@ class AddToCollectionMenu extends Component {
 AddToCollectionMenu.propTypes = {
     collections: PropTypes.array,
     editableCollections: PropTypes.array,
+    memberships: PropTypes.array.isRequired,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
     style: PropTypes.object,
 };
