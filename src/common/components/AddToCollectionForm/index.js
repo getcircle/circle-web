@@ -21,9 +21,10 @@ const selector = selectors.createImmutableSelector(
         selectors.createCollectionSelector,
     ],
     (cacheState, collectionState) => {
+        const newCollectionId = collectionState.get('id');
+        const newCollection = retrieveCollection(newCollectionId, cacheState.toJS());
         return {
-            cache: cacheState.toJS(),
-            newCollectionId: collectionState.get('id'),
+            newCollection,
         };
     }
 );
@@ -36,7 +37,7 @@ export class AddToCollectionForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!this.props.newCollectionId && nextProps.newCollectionId) {
+        if (!this.props.newCollection && nextProps.newCollection) {
             this.addNewCollection(nextProps);
         }
     }
@@ -49,16 +50,16 @@ export class AddToCollectionForm extends Component {
 
     addNewCollection(props) {
         const {
-            cache,
             fields: { collections: { onChange, value: collections } },
             handleSubmit,
-            newCollectionId,
+            newCollection,
         } = props;
 
-        const existing = collections.find(c => c.id === newCollectionId);
+        const existing = collections && collections.find(c => {
+            return c.id === newCollection.id
+        });
         if (!existing) {
-            const addedCollection = retrieveCollection(newCollectionId, cache);
-            collections.push(addedCollection);
+            collections.push(newCollection);
             onChange(collections);
             handleSubmit();
             props.dispatch(initializeCollectionsFilter(props.editableCollections));
@@ -122,8 +123,8 @@ AddToCollectionForm.propTypes = {
     inputStyle: PropTypes.object,
     listContainerStyle: PropTypes.object,
     memberships: PropTypes.array.isRequired,
+    newCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
     newCollectionAllowed: PropTypes.bool,
-    newCollectionId: PropTypes.string,
     onNewCollection: PropTypes.func,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
