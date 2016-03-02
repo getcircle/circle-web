@@ -102,7 +102,7 @@ class Dialog extends Component {
             },
             root: {
                 overflow: 'scroll',
-                position: 'absolute',
+                position: 'fixed',
                 zIndex: 3000,
             }
         };
