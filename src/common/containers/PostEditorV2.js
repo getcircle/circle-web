@@ -25,33 +25,37 @@ const REQUIRED_FIELDS = ['content', 'by_profile'];
 const { PostStateV1 } = services.post.containers;
 const { SourceV1 } = services.post.containers.CollectionItemV1;
 
-const selector = selectors.createImmutableSelector(
+const editorSelector = selectors.createImmutableSelector(
+    [selectors.editorSelector],
+    (editorState) => {
+        return {
+            title: editorState.get('title').get('value'),
+            content: editorState.get('content'),
+            draft: editorState.get('draft'),
+            saving: editorState.get('saving'),
+        };
+    }
+);
+
+const cacheSelector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
         selectors.routerParametersSelector,
-        selectors.editorSelector,
         selectors.filesSelector,
         selectors.editableCollectionsSelector,
         selectors.postCollectionsSelector,
     ],
-    (cacheState, paramsState, editorState, filesState, editableCollectionsState, postCollectionsState) => {
+    (cacheState, paramsState, filesState, editableCollectionsState, postCollectionsState) => {
         let collections, collectionsLoaded, editableCollections, post;
 
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
         if (postId) {
             post = retrievePost(postId, cache, REQUIRED_FIELDS);
-        } else {
-            post = new services.post.containers.PostV1();
         }
 
-        const title = editorState.get('title').get('value');
-        if (title !== undefined && title !== null) {
-            post.title = title;
-        }
-        const content = editorState.get('content');
-        if (content !== null) {
-            post.content = content;
+        if (!post) {
+            post = new services.post.containers.PostV1();
         }
 
         if (postCollectionsState.has(postId)) {
@@ -72,12 +76,31 @@ const selector = selectors.createImmutableSelector(
             collectionsLoaded,
             editableCollections,
             post,
-            draft: editorState.get('draft'),
-            saving: editorState.get('saving'),
             uploadProgress: filesState.get('progress'),
             uploadedFiles: filesState.get('files'),
         };
     }
+);
+
+const selector = selectors.createImmutableSelector(
+    [editorSelector, cacheSelector],
+    (editorState, cacheState) => {
+        let { post, ...cache } = cacheState;
+        const { title, content, ...editor } = editorState;
+        // don't mutate the original post
+        post = post.$type.decode(post.encode());
+        if (title !== null && title !== undefined) {
+            post.title = title;
+        }
+        if (content !== null && content !== undefined) {
+            post.content = content;
+        }
+        return {
+            post,
+            ...cache,
+            ...editor,
+        };
+    },
 );
 
 function fetchPost({ dispatch, params: { postId } }) {
