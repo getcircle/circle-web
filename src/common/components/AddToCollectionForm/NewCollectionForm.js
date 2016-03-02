@@ -56,6 +56,7 @@ class NewCollectionForm extends Component {
             <Form onSubmit={handleSubmit(this.submit)}>
                 <FormLabel text={t('New Collection')} />
                 <FormTextField
+                    autoFocus={true}
                     placeholder={t('Collection Name')}
                     {...name}
                 />
