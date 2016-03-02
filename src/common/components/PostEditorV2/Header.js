@@ -8,7 +8,7 @@ import t from '../../utils/gettext';
 import { replaceWithPost } from '../../utils/routes';
 
 import LeftChevronIcon from '../LeftChevronIcon';
-import RoundedButton from '../RoundedButton';
+import PrimaryRoundedButton from '../PrimaryRoundedButton';
 
 const { PostStateV1 } = services.post.containers;
 
@@ -30,31 +30,6 @@ const BackButton = (props, { muiTheme }) => {
 };
 
 BackButton.contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
-};
-
-const PublishButton = (props, { muiTheme }) => {
-    const styles = {
-        button: {
-            backgroundColor: muiTheme.luno.tintColor,
-            lineHeight: '4.0rem',
-            minWidth: 100,
-        },
-        label: {
-            color: muiTheme.luno.colors.white,
-        },
-    };
-    return (
-        <RoundedButton
-            label={t('Publish')}
-            labelStyle={styles.label}
-            style={styles.button}
-            {...props}
-        />
-    );
-};
-
-PublishButton.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
@@ -89,7 +64,10 @@ const Header = ({ post, onPublish, saving }, { muiTheme }) => {
                 </div>
                 <div className="end-xs col-xs">
                     {saveNotification}
-                    <PublishButton onTouchTap={handleTouchTap} />
+                    <PrimaryRoundedButton
+                        label={t('Publish')}
+                        onTouchTap={handleTouchTap}
+                    />
                 </div>
             </section>
         </header>
