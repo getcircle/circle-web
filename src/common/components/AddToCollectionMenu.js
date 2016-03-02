@@ -99,7 +99,7 @@ class AddToCollectionMenu extends Component {
                 WebkitBoxShadow: 'none',
             },
             menu: {
-                height: 270,
+                height: addingNewCollection ? undefined : 270,
                 width: 360,
             },
         };
