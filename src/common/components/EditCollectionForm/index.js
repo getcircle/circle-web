@@ -106,7 +106,8 @@ export class EditCollectionForm extends CSSComponent {
         } = this.props;
 
         let sortItems;
-        if (collection.items.length) {
+        // XXX temporarily disable until we support
+        if (false && collection.items.length) {
             sortItems = (
                 <div>
                     <label style={styles.label}>
