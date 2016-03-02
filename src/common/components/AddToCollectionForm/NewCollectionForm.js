@@ -53,7 +53,10 @@ class NewCollectionForm extends Component {
             choices.push({label: team.name, value: team.id});
         });
         return (
-            <Form onSubmit={handleSubmit(this.submit)}>
+            <Form
+                onSubmit={handleSubmit(this.submit)}
+                style={{padding: '0 15px'}}
+            >
                 <FormLabel text={t('New Collection')} />
                 <FormTextField
                     autoFocus={true}
@@ -64,13 +67,14 @@ class NewCollectionForm extends Component {
                 <FormLabel text={t('In')} />
                 <FormSelectField
                     choices={choices}
+                    width={320}
                     {...ownerId}
                 />
 
                 <PrimaryRoundedButton
                     label={t('Create & Add To')}
                     onTouchTap={handleSubmit(this.submit)}
-                    style={{float: 'right', marginTop: 35}}
+                    style={{float: 'right', marginBottom: 25, marginTop: 35}}
                 />
             </Form>
         );

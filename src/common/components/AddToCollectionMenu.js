@@ -100,7 +100,7 @@ class AddToCollectionMenu extends Component {
             },
             menu: {
                 height: addingNewCollection ? undefined : 270,
-                width: 360,
+                width: 340,
             },
         };
 

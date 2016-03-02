@@ -36,6 +36,7 @@ class FormSelectField extends Component {
             name,
             touched,
             value,
+            width,
             ...other,
         } = this.props;
 
@@ -62,7 +63,6 @@ class FormSelectField extends Component {
                 textAlign: 'left',
             },
             menu: {
-                width: 128,
                 zIndex: 3100,
             },
             underline: {
@@ -89,10 +89,12 @@ class FormSelectField extends Component {
         return (
             <div>
                 <DropDownMenu
+                    autoWidth={!width}
                     children={items}
                     iconStyle={{top: 8}}
                     labelStyle={styles.label}
-                    menuStyle={styles.menu}
+                    listStyle={{width}}
+                    menuStyle={merge(styles.menu, {width})}
                     onChange={handleChange}
                     style={styles.main}
                     underlineStyle={styles.underline}
@@ -114,6 +116,9 @@ FormSelectField.propTypes = {
     onChange: PropTypes.func.isRequired,
     touched: PropTypes.bool,
     value: PropTypes.node,
+
+    // Note that Material-UI will round up to the nearest 64px for the menu
+    width: PropTypes.number,
 };
 
 FormSelectField.contextTypes = {

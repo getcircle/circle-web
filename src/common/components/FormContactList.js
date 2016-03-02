@@ -20,11 +20,11 @@ function createContactRecordComponent(types) {
             type: {
                 float: 'left',
                 marginRight: 15,
-                width: 150,
+                width: 192,
             },
             value: {
                 float: 'left',
-                width: 362,
+                width: 320,
             },
         };
 
@@ -33,6 +33,7 @@ function createContactRecordComponent(types) {
                 <div style={styles.type}>
                     <FormSelectField
                         choices={contactTypes}
+                        width={192}
                         {...record.type}
                     />
                 </div>

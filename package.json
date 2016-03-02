@@ -76,7 +76,7 @@
     "immutable": "^3.7.4",
     "keymirror": "^0.1.1",
     "lodash": "^3.9.3",
-    "material-ui": "git+https://github.com/getcircle/material-ui.git#f8574ec1daab5312497096b01dc830f0e5468f76",
+    "material-ui": "git+https://github.com/getcircle/material-ui.git#4a92c7af566877ff9e79c4e40466f8f05c971a9c",
     "moment": "^2.10.6",
     "moment-timezone": "^0.4.0",
     "morgan": "^1.6.1",
