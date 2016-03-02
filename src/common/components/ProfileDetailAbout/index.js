@@ -57,7 +57,7 @@ const ProfileDetailAbout = (props, { muiTheme }) => {
     const managerSection = manager ? <Manager profiles={[manager]} /> : null;
     const peersSection = peers && peers.length ? <Peers profiles={peers} /> : null;
     const directReportsSection = directReports && directReports.length ? <DirectReports profiles={directReports} /> : null;
-    const itemsSection = profile.items && profile.items.length ? <Items items={profile.items} /> : null;
+    const itemsSection = profile && profile.items && profile.items.length ? <Items items={profile.items} /> : null;
     const teamsSection = memberships && memberships.length ? <Teams members={memberships} /> : null;
     return (
         <div>
