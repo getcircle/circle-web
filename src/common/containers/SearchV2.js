@@ -59,6 +59,9 @@ class Search extends CSSComponent {
         case TYPES.TEAM:
             routes.routeToTeam(payload);
             break;
+        case TYPES.COLLECTION:
+            routes.routeToCollection(payload);
+            break;
         }
     }
 

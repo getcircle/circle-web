@@ -73,7 +73,11 @@ class Editor extends CSSComponent {
         this.setup();
         this.attachEventListeners();
         this.dragEventCounter = 0;
-        this.headerOffsetHeight = document.querySelector('header').offsetHeight;
+        // Use this if the toolbar should stick to the header. Currently, its going beyond
+        // that, so set it to zero
+        //document.querySelector('header').offsetHeight;
+        this.headerOffsetHeight = 0;
+
     }
 
     componentWillReceiveProps(nextProps) {

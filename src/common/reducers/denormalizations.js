@@ -73,7 +73,7 @@ export function retrievePosts(postIds, cache) {
 }
 
 export function retrieveTeams(teamIds, cache) {
-    return retrieve(teamIds, services.organization.containers.TeamV1, cache);
+    return retrieve(teamIds, services.team.containers.TeamV1, cache);
 }
 
 export function retrieveTeam(teamId, cache, requiredFields) {
@@ -91,6 +91,22 @@ export function retrieveTeamMembers(ids, cache) {
     return retrieve(ids, services.team.containers.TeamMemberV1, cache);
 }
 
+export function retrieveTeamMember(id, cache) {
+    return retrieve(id, services.team.containers.TeamMemberV1, cache);
+}
+
 export function retrieveReportingDetails(profileId, cache) {
     return retrieve(profileId, services.profile.containers.ReportingDetailsV1, cache);
+}
+
+export function retrieveCollection(collectionId, cache, requiredFields) {
+    return retrieve(collectionId, services.post.containers.CollectionV1, cache, requiredFields);
+}
+
+export function retrieveCollections(ids, cache) {
+    return retrieve(ids, services.post.containers.CollectionV1, cache);
+}
+
+export function retrieveCollectionItems(ids, cache) {
+    return retrieve(ids, services.post.containers.CollectionItemV1, cache);
 }

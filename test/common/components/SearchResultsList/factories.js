@@ -31,7 +31,7 @@ describe('SearchResultsList factories', () => {
             const searchResult = itemFactory.createProfileResult(result, theme);
             const { wrapper } = setup(searchResult.item);
             const html = wrapper.html();
-            expect(html.includes(result.highlight.get('full_name'))).toExist();
+            expect(html.includes(result.profile.full_name)).toExist();
         });
 
         it('handles profiles with a highlighted title', () => {
@@ -63,7 +63,7 @@ describe('SearchResultsList factories', () => {
             const searchResult = itemFactory.createPostResult(result, theme);
             const { wrapper } = setup(searchResult.item);
             const html = wrapper.html();
-            expect(html.includes(result.highlight.get('title'))).toExist();
+            expect(html.includes(result.post.title)).toExist();
         });
 
         it('handles posts with a highlighted content', () => {

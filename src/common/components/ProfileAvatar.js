@@ -17,7 +17,10 @@ export function getInitials(profile) {
 class ProfileAvatar extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
-        return (nextProps.profile.id !== this.props.profile.id);
+        return (
+            nextProps.profile.id !== this.props.profile.id ||
+            nextProps.profile.image_url !== this.props.profile.image_url
+        );
     }
 
     render() {

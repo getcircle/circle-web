@@ -51,7 +51,7 @@ describe('FormPersonSelector', () => {
             const profile = ProfileFactory.getProfile();
             wrapper.find(SelectedProfile).prop('onTouchTap')();
             wrapper.update();
-            wrapper.find(AutoCompleteProfile).prop('onSelectProfile')(profile);
+            wrapper.find(AutoCompleteProfile).prop('onSelectItem')(profile);
             expect(props.onChange).toHaveBeenCalledWith(profile);
         });
 
@@ -60,7 +60,7 @@ describe('FormPersonSelector', () => {
             const profile = ProfileFactory.getProfile();
             wrapper.find(SelectedProfile).prop('onTouchTap')();
             wrapper.update();
-            wrapper.find(AutoCompleteProfile).prop('onSelectProfile')(profile);
+            wrapper.find(AutoCompleteProfile).prop('onSelectItem')(profile);
             wrapper.update();
             expect(wrapper.find(AutoCompleteProfile).length).toBe(0);
         });

@@ -178,8 +178,9 @@ class Tracker {
      * @param {string} pageType One of the PAGE_TYPE constants
      * @param {?string} pageId Optional identifier for the page (can be the PK
      *         of the associated object)
+     * @param {?string} pageSlug Optional specific slug representing the tab on a page
      */
-    trackPageView(pageType, pageId) {
+    trackPageView(pageType, pageId, pageSlug) {
         this.withMixpanel(() => {
             logger.log('Track page view');
             if (!pageType) {
@@ -190,6 +191,7 @@ class Tracker {
             const attributes = {
                 'Page Type': pageType,
                 'Page ID': pageId && pageId !== '' ? pageId : undefined,
+                'Page Slug': pageSlug && pageSlug !== '' ? pageSlug : undefined,
             };
             const source = this.getLunoSource();
             if (source) {

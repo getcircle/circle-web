@@ -64,7 +64,6 @@ class AutogrowTextarea extends CSSComponent {
                     opacity: 0,
                     outline: 0,
                     overflow: 'hidden',
-                    padding: 0,
                     position: 'absolute',
                     resize: 'none',
                     width: '100%',
@@ -132,7 +131,6 @@ class AutogrowTextarea extends CSSComponent {
         };
 
         const finalValue = this.getValue(value);
-
         return (
             <div style={{...this.styles().root, ...style}}>
                 { /*

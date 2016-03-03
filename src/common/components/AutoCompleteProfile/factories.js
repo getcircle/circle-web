@@ -1,3 +1,4 @@
+import React from 'react';
 import Colors from '../../styles/Colors';
 
 export const createProfileWithTitle = ({ profile, highlight }) => {

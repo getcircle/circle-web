@@ -6,8 +6,7 @@ import * as types from '../constants/actionTypes';
 
 import { getPosts } from '../services/posts';
 import { getProfiles } from '../services/profile';
-import { getTeams } from '../services/organization';
-import { PostStateURLString } from '../utils/post';
+import { getTeams } from '../services/team';
 import {
     retrievePosts,
     retrieveProfiles,
@@ -65,7 +64,7 @@ export function exploreTeams(nextRequest) {
     return {
         [SERVICE_REQUEST]: {
             types: exploreActionTypes,
-            remote: (client) => getTeams(client, null, nextRequest, TEAMS),
+            remote: (client) => getTeams(client,  nextRequest, TEAMS),
             bailout: (state) => {
                 return shouldBail(state, nextRequest, TEAMS);
             },

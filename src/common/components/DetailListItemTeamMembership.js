@@ -44,13 +44,20 @@ class DetailListItemTeamMembership extends Component {
             primaryText = <span style={styles.primaryText}>{team.name}</span>;
         }
 
+        let teamMemberCountString = team.total_members;
+        if (team.total_members === 1) {
+            teamMemberCountString += ` ${t('Person')}`;
+        } else {
+            teamMemberCountString += ` ${t('People')}`;
+        }
+
         return (
             <div {...other}>
                 <ListItem
                     innerDivStyle={styles.innerDivStyle}
                     onTouchTap={this.handleTouchTap}
                     primaryText={primaryText}
-                    secondaryText={<div><span style={styles.secondaryText}>{`${team.total_members} ${t('People')}`}</span></div>}
+                    secondaryText={<div><span style={styles.secondaryText}>{teamMemberCountString}</span></div>}
                 />
             </div>
         );

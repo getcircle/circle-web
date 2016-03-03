@@ -1,5 +1,6 @@
 import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
+import { services } from 'protobufs';
 
 import { Menu, MenuItem, Popover } from 'material-ui';
 
@@ -7,10 +8,12 @@ import { logout } from '../actions/authentication';
 import { PostStateURLString } from '../utils/post';
 import { routeToNewPost, routeToDrafts, routeToProfile, routeToTeam, routeToAddIntegration } from '../utils/routes';
 import { showCreateTeamModal } from '../actions/teams';
+import { showCreateCollectionModal } from '../actions/collections';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 import { IntegrationString } from '../utils/integrations';
 
+import CreateCollectionForm from './CreateCollectionForm';
 import CreateTeamForm from './CreateTeamForm';
 import CSSComponent from './CSSComponent';
 import DownArrowIcon from './DownArrowIcon';
@@ -164,6 +167,10 @@ class HeaderMenu extends CSSComponent {
         this.props.dispatch(showCreateTeamModal());
     }
 
+    handleCreateCollection(event) {
+        this.props.dispatch(showCreateCollectionModal());
+    }
+
     handleAddToSlack = () => {
         routeToAddIntegration(this.context.history, IntegrationString.SLACK);
     }
@@ -195,6 +202,7 @@ class HeaderMenu extends CSSComponent {
                     />
                     {this.renderMyKnowledgeMenuItem()}
                     {this.renderCreateTeamMenuItem()}
+                    {this.renderCreateCollectionMenuItem()}
                     {this.renderAddToSlackMenuItem()}
                     <MenuItem
                         desktop={true}
@@ -278,6 +286,27 @@ class HeaderMenu extends CSSComponent {
         );
     }
 
+    renderCreateCollectionMenuItem() {
+        return (
+            <MenuItem
+                desktop={true}
+                innerDivStyle={{...this.styles().menuItemDivStyle}}
+                onTouchTap={(e) => this.handleCreateCollection(e)}
+                primaryText={t('Create Collection')}
+            />
+        );
+    }
+
+    renderCreateCollectionForm() {
+        const { profile } = this.context.auth;
+        return (
+            <CreateCollectionForm
+                ownerId={profile.id}
+                ownerType={services.post.containers.CollectionV1.OwnerTypeV1.PROFILE}
+            />
+        );
+    }
+
     render() {
         const { profile } = this.context.auth;
         return (
@@ -304,6 +333,7 @@ class HeaderMenu extends CSSComponent {
                     {this.renderMenu()}
                 </Popover>
                 {this.renderCreateTeamForm()}
+                {this.renderCreateCollectionForm()}
             </div>
         );
     }

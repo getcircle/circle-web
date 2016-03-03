@@ -134,11 +134,11 @@ export function deletePost(post) {
 }
 
 export function showConfirmDeleteModal(post) {
-    return {type: types.SHOW_CONFIRM_DELETE_MODAL, payload: post};
+    return {type: types.SHOW_CONFIRM_DELETE_POST_MODAL, payload: post};
 }
 
 export function hideConfirmDeleteModal() {
-    return {type: types.HIDE_CONFIRM_DELETE_MODAL};
+    return {type: types.HIDE_CONFIRM_DELETE_POST_MODAL};
 }
 
 export function showLinkCopiedSnackbar() {

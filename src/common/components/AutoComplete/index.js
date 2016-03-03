@@ -33,6 +33,8 @@ function createResult(result) {
         searchResult = factories.createTeamResult(result);
     } else if (result.post) {
         searchResult = factories.createPostResult(result);
+    } else if (result.collection) {
+        searchResult = factories.createCollectionResult(result);
     }
     return searchResult;
 }
@@ -42,7 +44,9 @@ class AutoComplete extends CSSComponent {
     static propTypes = {
         defaults: PropTypes.arrayOf(PropTypes.instanceOf(Section)),
         dispatch: PropTypes.func.isRequired,
+        inputClassName: PropTypes.string,
         onBlur: PropTypes.func,
+        onFocus: PropTypes.func,
         results: PropTypes.object,
     }
 
@@ -81,6 +85,8 @@ class AutoComplete extends CSSComponent {
             return routes.routeToTeam(payload);
         case factories.TYPES.POST:
             return routes.routeToPost(payload);
+        case factories.TYPES.COLLECTION:
+            return routes.routeToCollection(payload);
         }
     }
 
@@ -106,6 +112,7 @@ class AutoComplete extends CSSComponent {
         const {
             defaults,
             onBlur,
+            onFocus,
             ...other,
         } = this.props;
         const sections = this.getSections();
@@ -114,6 +121,7 @@ class AutoComplete extends CSSComponent {
                 onBlur={this.handleBlur}
                 onChange={this.handleChange}
                 onDelayedChange={this.handleDelayedChange}
+                onFocus={onFocus}
                 onSelectItem={this.handleSelectItem}
                 sections={sections}
                 {...other}

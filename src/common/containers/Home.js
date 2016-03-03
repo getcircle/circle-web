@@ -41,7 +41,7 @@ class Home extends CSSComponent {
                 exploreLink: {
                     fontSize: '1.4rem',
                     lineHeight: '1.7rem',
-                    characterSpacing: '1.27px',
+                    letterSpacing: '1.27px',
                     fontWeight: muiTheme.luno.fontWeights.black,
                     color: muiTheme.luno.colors.extraLightBlack,
                     textDecoration: 'none',

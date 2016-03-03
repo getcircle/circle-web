@@ -71,6 +71,7 @@ class LoginInternal extends CSSComponent {
                     cursor: 'pointer',
                 },
                 button: {
+                    boxShadow: 'none',
                     height: '50px',
                     width: '100%',
                 },

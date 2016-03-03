@@ -41,6 +41,7 @@ export const PAGE_TYPE = {
     POST_DETAIL: 'Post Detail',
     PROFILE_DETAIL: SharedConstants.PROFILE_DETAIL,
     TEAM_DETAIL: 'Team Detail',
+    COLLECTION_DETAIL: 'Collection Detail',
 
     // List pages
     CHANGE_POST_OWNER: 'Change Post Owner',
@@ -52,13 +53,17 @@ export const PAGE_TYPE = {
     TEAM_SUBTEAMS: SharedConstants.TEAM_SUBTEAMS,
 
     // Editable Form
+    EDIT_COLLECTION: 'Edit Collection',
     EDIT_POST: 'Edit Post',
     EDIT_PROFILE: 'Edit Profile',
     EDIT_TEAM: 'Edit Team',
     ADD_MEMBERS: 'Add Members',
+    REARRANGE_COLLECTIONS: 'Rearrange Collections',
+    REQUEST_MISSING_INFO: 'Request Missing Info',
 
     // Create forms
     CREATE_TEAM: 'Create Team',
+    CREATE_COLLECTION: 'Create Collection',
 
     // Selector pages
     PROFILE_SELECTOR: 'Profile Selector'

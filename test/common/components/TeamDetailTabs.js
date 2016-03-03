@@ -31,10 +31,11 @@ describe('TeamDetailTabs', () => {
     it('has the correct tabs', () => {
         const { wrapper } = setup();
         const tabs = wrapper.find(Tab);
-        expect(tabs.length).toEqual(2);
+        expect(tabs.length).toEqual(3);
 
-        expect(tabs.nodes[0].props.label).toEqual('People');
-        expect(tabs.nodes[1].props.label).toEqual('About');
+        expect(tabs.nodes[0].props.label).toEqual('Collections');
+        expect(tabs.nodes[1].props.label).toEqual('People');
+        expect(tabs.nodes[2].props.label).toEqual('About');
     });
 
     describe('slug', () => {
@@ -49,6 +50,12 @@ describe('TeamDetailTabs', () => {
             const { wrapper } = setup({slug: SLUGS.PEOPLE});
             const tabs = wrapper.find(DetailTabs);
             expect(tabs.props().slug).toEqual(SLUGS.PEOPLE);
+        });
+
+        it('activates the "COLLECTIONS" tab when the collection slug is present', () => {
+            const { wrapper } = setup({slug: SLUGS.COLLECTION});
+            const tabs = wrapper.find(DetailTabs);
+            expect(tabs.props().slug).toEqual(SLUGS.COLLECTION);
         });
 
     });

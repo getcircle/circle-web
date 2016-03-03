@@ -32,6 +32,7 @@ class Search extends CSSComponent {
     static propTypes = {
         focused: PropTypes.bool,
         hasItemDivider: PropTypes.bool,
+        inputClassName: PropTypes.string,
         inputContainerStyle: PropTypes.object,
         inputStyle: PropTypes.object,
         listContainerStyle: PropTypes.object,
@@ -57,12 +58,6 @@ class Search extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         this.configure(nextProps, Object.assign(this.state, nextState));
-    }
-
-    componentDidUpdate() {
-        if (this.props.focused) {
-            ReactDOM.findDOMNode(this.refs.input).focus();
-        }
     }
 
     static defaultProps = {
@@ -118,6 +113,7 @@ class Search extends CSSComponent {
         },
 
         Enter(event) {
+            event.preventDefault();
             for (let section of this.props.sections) {
                 let highlightedIndex = this.highlightedIndexForSection(section);
                 if (highlightedIndex !== null) {
@@ -134,7 +130,7 @@ class Search extends CSSComponent {
 
     cleanupAndBlur = (event) => {
         ReactDOM.findDOMNode(this.refs.input).blur();
-        this.setState({highlightedIndex: null})
+        this.setState({highlightedIndex: null});
         this.props.onBlur(event);
     }
 
@@ -287,6 +283,7 @@ class Search extends CSSComponent {
             className,
             inputStyle,
             inputContainerStyle,
+            focused,
             onFocus,
             placeholder,
             listContainerStyle,
@@ -296,21 +293,23 @@ class Search extends CSSComponent {
         } = this.props;
 
         let lists = [];
-        for (let sectionIndex in sections) {
-            const section = this.props.sections[sectionIndex];
-            const maxItems = this.numberOfItemsInSection(section);
-            lists.push(
-                <List
-                    hasItemDivider={this.props.hasItemDivider}
-                    highlightedIndex={this.highlightedIndexForSection(section)}
-                    itemStyle={{...this.styles().listItem}}
-                    items={section.getItems(maxItems)}
-                    key={`list-${sectionIndex}`}
-                    onSelectItem={this.handleSelectItem}
-                    style={{...this.styles().list}}
-                    title={section.title}
-                />
-            );
+        if (focused) {
+            for (let sectionIndex in sections) {
+                const section = this.props.sections[sectionIndex];
+                const maxItems = this.numberOfItemsInSection(section);
+                lists.push(
+                    <List
+                        hasItemDivider={this.props.hasItemDivider}
+                        highlightedIndex={this.highlightedIndexForSection(section)}
+                        itemStyle={{...this.styles().listItem}}
+                        items={section.getItems(maxItems)}
+                        key={`list-${sectionIndex}`}
+                        onSelectItem={this.handleSelectItem}
+                        style={{...this.styles().list}}
+                        title={section.title}
+                    />
+                );
+            }
         }
 
         return (
@@ -328,6 +327,7 @@ class Search extends CSSComponent {
                     style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <input
                         autoFocus={this.props.focused}
+                        className={this.props.inputClassName}
                         onBlur={::this.handleInputBlur}
                         onChange={::this.handleChange}
                         placeholder={placeholder}

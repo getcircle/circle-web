@@ -38,7 +38,7 @@ class FormPersonSelector extends Component {
         this.setState({selectedHovered: hover});
     }
 
-    handleSelectProfile = (profile) => {
+    handleSelectItem = (profile) => {
         this.props.onChange(profile);
         this.setState({expanded: false})
     }
@@ -107,7 +107,7 @@ class FormPersonSelector extends Component {
                     inputStyle={styles.autoCompleteInput}
                     listContainerStyle={listStyle}
                     onBlur={this.handleBlurAutoComplete}
-                    onSelectProfile={this.handleSelectProfile}
+                    onSelectItem={this.handleSelectItem}
                     placeholder={t('Search by Name')}
                     resultFactoryFunction={createProfileWithTitle}
                     style={styles.autoComplete}

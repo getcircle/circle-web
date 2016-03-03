@@ -5,11 +5,12 @@ import { provideHooks } from 'redial';
 import { services } from 'protobufs';
 
 import { createPost, getPost, updatePost } from '../actions/posts';
+import { getCollections, getEditableCollections } from '../actions/collections';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
 import { reset } from '../actions/editor';
 
 import { resetScroll } from '../utils/window';
-import { retrievePost } from '../reducers/denormalizations';
+import { retrievePost, retrieveCollections } from '../reducers/denormalizations';
 import { replaceWithEditPost } from '../utils/routes';
 import * as selectors from '../selectors';
 
@@ -22,42 +23,84 @@ import { default as PostEditorComponent } from '../components/PostEditorV2';
 const REQUIRED_FIELDS = ['content', 'by_profile'];
 
 const { PostStateV1 } = services.post.containers;
+const { SourceV1 } = services.post.containers.CollectionItemV1;
 
-const selector = selectors.createImmutableSelector(
+const editorSelector = selectors.createImmutableSelector(
+    [selectors.editorSelector],
+    (editorState) => {
+        return {
+            title: editorState.get('title').get('value'),
+            content: editorState.get('content'),
+            draft: editorState.get('draft'),
+            saving: editorState.get('saving'),
+        };
+    }
+);
+
+const cacheSelector = selectors.createImmutableSelector(
     [
         selectors.cacheSelector,
         selectors.routerParametersSelector,
-        selectors.editorSelector,
         selectors.filesSelector,
+        selectors.editableCollectionsSelector,
+        selectors.postCollectionsSelector,
     ],
-    (cacheState, paramsState, editorState, filesState) => {
-        let post;
+    (cacheState, paramsState, filesState, editableCollectionsState, postCollectionsState) => {
+        let collections, collectionsLoaded, editableCollections, post;
 
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
         if (postId) {
             post = retrievePost(postId, cache, REQUIRED_FIELDS);
-        } else {
+        }
+
+        if (!post) {
             post = new services.post.containers.PostV1();
         }
 
-        const title = editorState.get('title').get('value');
-        if (title !== undefined && title !== null) {
-            post.title = title;
+        if (postCollectionsState.has(postId)) {
+            const ids = postCollectionsState.get(postId).get('ids');
+            if (ids && ids.size) {
+                collections = retrieveCollections(ids.toJS(), cache);
+            }
+            collectionsLoaded = postCollectionsState.get(postId).get('loaded');
         }
-        const content = editorState.get('content');
-        if (content !== null) {
-            post.content = content;
+
+        const editableCollectionIds = editableCollectionsState.get('collectionIds');
+        if (editableCollectionIds.size) {
+            editableCollections = retrieveCollections(editableCollectionIds.toJS(), cache);
         }
 
         return {
+            collections,
+            collectionsLoaded,
+            editableCollections,
             post,
-            draft: editorState.get('draft'),
-            saving: editorState.get('saving'),
             uploadProgress: filesState.get('progress'),
             uploadedFiles: filesState.get('files'),
         };
     }
+);
+
+const selector = selectors.createImmutableSelector(
+    [editorSelector, cacheSelector],
+    (editorState, cacheState) => {
+        let { post, ...cache } = cacheState;
+        const { title, content, ...editor } = editorState;
+        // don't mutate the original post
+        post = post.$type.decode(post.encode());
+        if (title !== null && title !== undefined) {
+            post.title = title;
+        }
+        if (content !== null && content !== undefined) {
+            post.content = content;
+        }
+        return {
+            post,
+            ...cache,
+            ...editor,
+        };
+    },
 );
 
 function fetchPost({ dispatch, params: { postId } }) {
@@ -66,8 +109,29 @@ function fetchPost({ dispatch, params: { postId } }) {
     }
 }
 
+function fetchCollections({ dispatch, params: { postId } }) {
+    if (postId) {
+        return dispatch(getCollections({source: SourceV1.LUNO, sourceId: postId}));
+    }
+}
+
+function fetchEditableCollections({ dispatch, getState }) {
+    const state = getState();
+    const profile = state.get('authentication').get('profile');
+    dispatch(getEditableCollections(profile.id));
+}
+
+function loadPost(locals) {
+    fetchPost(locals);
+    fetchCollections(locals);
+}
+
 const hooks = {
     fetch: locals => fetchPost(locals),
+    defer: (locals) => {
+        fetchCollections(locals);
+        fetchEditableCollections(locals);
+    },
 };
 
 class PostEditor extends Component {
@@ -79,7 +143,7 @@ class PostEditor extends Component {
     componentWillReceiveProps(nextProps) {
         // TODO redirect to view post if current user doesn't have permission
         if (nextProps.params.postId !== this.props.params.postId) {
-            fetchPost(nextProps);
+            loadPost(nextProps);
             resetScroll();
         }
         if (nextProps.draft) {
@@ -112,7 +176,15 @@ class PostEditor extends Component {
     }
 
     render() {
-        const { post, saving, uploadProgress, uploadedFiles } = this.props;
+        const {
+            collections,
+            collectionsLoaded,
+            editableCollections,
+            post,
+            saving,
+            uploadProgress,
+            uploadedFiles,
+        } = this.props;
         const { auth: { profile }, muiTheme } = this.context;
 
         let content;
@@ -122,6 +194,9 @@ class PostEditor extends Component {
                 <DocumentTitle title={post.title}>
                     <PostEditorComponent
                         autoSave={autoSave}
+                        collections={collections}
+                        collectionsLoaded={collectionsLoaded}
+                        editableCollections={editableCollections}
                         onFileDelete={this.handleFileDelete}
                         onFileUpload={this.handleFileUpload}
                         onSave={this.handleSave}
@@ -148,7 +223,10 @@ class PostEditor extends Component {
 }
 
 PostEditor.propTypes = {
+    collections: PropTypes.array,
+    collectionsLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
+    editableCollections: PropTypes.array,
     params: PropTypes.shape({
         postId: PropTypes.string,
     }),
@@ -160,6 +238,7 @@ PostEditor.propTypes = {
 
 PostEditor.contextTypes = {
     auth: InternalPropTypes.AuthContext.isRequired,
+    store: PropTypes.object,
     muiTheme: PropTypes.object.isRequired,
 };
 

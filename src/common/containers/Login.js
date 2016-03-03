@@ -103,10 +103,12 @@ class Login extends CSSComponent {
     }
 
     classes() {
+        const { muiTheme } = this.context;
         return {
             default: {
                 container: {
                     backgroundColor: '#ffffff',
+                    boxShadow: '0px 1px 6px rgba(0, 0, 0, 0.2)',
                     marginTop: '24px',
                     maxWidth: 600,
                     padding: '60px 0',
@@ -133,6 +135,12 @@ class Login extends CSSComponent {
                     position: 'absolute',
                     top: '320px',
                     width: '100%',
+                },
+                root: {
+                    backgroundColor: muiTheme.luno.colors.offWhite,
+                    height: '100vh',
+                    paddingBottom: 20,
+                    width: '100vw',
                 },
                 section: {
                     marginLeft: 20,

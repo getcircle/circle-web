@@ -22,5 +22,6 @@ export default {
     blue500: '#5C6BBF',
     blue200: '#D7DDFF',
 
+    lightRed: '#F46F6F',
     red700: '#C20000',
 };

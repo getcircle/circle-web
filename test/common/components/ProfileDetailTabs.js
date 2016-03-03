@@ -31,10 +31,11 @@ describe('ProfileDetailTabs', () => {
     it('has the correct tabs', () => {
         const { wrapper } = setup();
         const tabs = wrapper.find(Tab);
-        expect(tabs.length).toEqual(2);
+        expect(tabs.length).toEqual(3);
 
         expect(tabs.nodes[0].props.label).toEqual('Knowledge');
-        expect(tabs.nodes[1].props.label).toEqual('About');
+        expect(tabs.nodes[1].props.label).toEqual('Collections');
+        expect(tabs.nodes[2].props.label).toEqual('About');
     });
 
     describe('slug', () => {
@@ -49,6 +50,12 @@ describe('ProfileDetailTabs', () => {
             const { wrapper } = setup({slug: SLUGS.KNOWLEDGE});
             const tabs = wrapper.find(DetailTabs);
             expect(tabs.props().slug).toEqual(SLUGS.KNOWLEDGE);
+        });
+
+        it('activates the "COLLECTIONS" tab when the people slug is present', () => {
+            const { wrapper } = setup({slug: SLUGS.COLLECTIONS});
+            const tabs = wrapper.find(DetailTabs);
+            expect(tabs.props().slug).toEqual(SLUGS.COLLECTIONS);
         });
 
     });

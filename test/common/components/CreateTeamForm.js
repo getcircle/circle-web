@@ -5,6 +5,8 @@ import React from 'react';
 import { CreateTeamForm } from '../../../src/common/components/CreateTeamForm';
 import FormDialog from '../../../src/common/components/FormDialog';
 import { createTeam, hideCreateTeamModal } from '../../../src/common/actions/teams';
+import { getDefaultContext } from '../../componentWithContext';
+
 
 function setup(overrides) {
     const defaults = {
@@ -20,9 +22,9 @@ function setup(overrides) {
         visible: false,
     };
     const props = Object.assign({}, defaults, overrides);
-    const context = {history: {pushState: expect.createSpy()}};
+    const context = getDefaultContext({history: {pushState: expect.createSpy()}});
 
-    const wrapper = shallow(<CreateTeamForm {...props} />, {context: context});
+    const wrapper = shallow(<CreateTeamForm {...props} />, { context });
 
     return {
         props,

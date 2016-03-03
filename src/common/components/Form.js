@@ -40,7 +40,7 @@ export default class Form extends CSSComponent {
     static propTypes = {
         children: PropTypes.node,
         error: PropTypes.string,
-        onSubmit: PropTypes.func.isRequired,
+        onSubmit: PropTypes.func,
         submitting: PropTypes.bool,
         warning: PropTypes.string,
     };
@@ -65,6 +65,7 @@ export default class Form extends CSSComponent {
                 <form
                     onSubmit={onSubmit}
                     style={this.styles().form}
+                    {...other}
                 >
                     {children}
                 </form>
