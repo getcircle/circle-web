@@ -103,7 +103,7 @@ export function getFile(client, id) {
                 if (response.isSuccess()) {
                     resolve({file: response.result.file});
                 } else {
-                    reject({errors: response.result.errors});
+                    reject({errors: response.errors});
                 }
             })
             .catch(error => reject(error));
