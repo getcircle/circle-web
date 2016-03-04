@@ -14,17 +14,23 @@ export { default as editableCollections } from './editableCollections';
 export { default as editCollection } from './editCollection';
 export { default as editor } from './editor';
 export { default as explore } from './explore';
+// TODO delete
 export { default as extendedProfiles } from './extendedProfiles';
+// TODO delete
 export { default as extendedTeams } from './extendedTeams';
 export { default as files } from './files';
 export { default as filterCollections } from './filterCollections';
+// TODO delete
 export { default as locationMembers } from './locationMembers';
+// TODO delete
 export { default as locations } from './locations';
+// TODO delete
 export { default as mediaUpload } from './media';
 export { default as post } from './post';
 export { default as posts } from './posts';
 export { default as postCollections } from './postCollections';
 export { default as profileMemberships } from './profileMemberships';
+// TODO delete
 export { default as profiles } from './profiles';
 export { default as rearrangeCollections } from './rearrangeCollections';
 export { default as responsive } from './responsive';
