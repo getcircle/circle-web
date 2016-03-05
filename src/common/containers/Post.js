@@ -236,7 +236,7 @@ Post.propTypes = {
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
     errorDetails: PropTypes.object,
-    memberships: PropTypes.array.isRequired,
+    memberships: PropTypes.array,
     modalVisible: PropTypes.bool,
     params: PropTypes.shape({
         postId: PropTypes.string.isRequired,

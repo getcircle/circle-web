@@ -48,7 +48,7 @@ class Post extends Component {
 Post.propTypes = {
     collections: PropTypes.array,
     editableCollections: PropTypes.array,
-    memberships: PropTypes.array.isRequired,
+    memberships: PropTypes.array,
     onDelete: PropTypes.func,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };

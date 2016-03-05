@@ -88,7 +88,7 @@ const Header = ({ collections, editableCollections, memberships, post }, { auth,
 Header.propTypes = {
     collections: PropTypes.array,
     editableCollections: PropTypes.array,
-    memberships: PropTypes.array.isRequired,
+    memberships: PropTypes.array,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 

@@ -78,6 +78,7 @@ class FormSelectField extends Component {
         const items = choices.map(({label, value}, i) => {
             return (
                 <MenuItem
+                    className="form-select-menu-item"
                     innerDivStyle={styles.item}
                     key={`form-select-choice-${name}-${i}`}
                     primaryText={label}
@@ -115,7 +116,7 @@ FormSelectField.propTypes = {
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     touched: PropTypes.bool,
-    value: PropTypes.node,
+    value: PropTypes.any,
 
     // Note that Material-UI will round up to the nearest 64px for the menu
     width: PropTypes.number,

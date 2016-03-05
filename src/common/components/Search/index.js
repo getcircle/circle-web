@@ -1,11 +1,10 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import mui from 'material-ui';
 import ReactDOM from 'react-dom';
 
 import { backgroundColors, fontColors } from '../../constants/styles';
 import t from '../../utils/gettext';
 
-import CSSComponent from '../CSSComponent';
 import InternalPropTypes from '../InternalPropTypes';
 
 import List from './List';
@@ -17,6 +16,10 @@ const SEARCH_RESULTS_MAX_HEIGHT = 620;
 const RESULT_HEIGHT = 56;
 const UPDATE_QUERY_DELAY = 100;
 
+const commonStyles = {
+    borderRadius: 4,
+};
+
 /* TODO:
  * - copy over trackSearch logic from search component
  */
@@ -27,7 +30,7 @@ const UPDATE_QUERY_DELAY = 100;
  * the search trigger as the first result.
  *
  */
-class Search extends CSSComponent {
+class Search extends Component {
 
     static propTypes = {
         focused: PropTypes.bool,
@@ -143,54 +146,6 @@ class Search extends CSSComponent {
         this.ignoreBlur = ignoreBlur;
     }
 
-    classes() {
-        const common = {
-            borderRadius: 4,
-        };
-        return {
-            'default': {
-                listContainer: {
-                    justifyContent: 'flex-start',
-                    textAlign: 'start',
-                    overflowY: 'hidden',
-                    height: 'auto',
-                    width: '100%',
-                    borderRadius: '0px 0px 3px 3px',
-                    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
-                    backgroundColor: 'white',
-                    maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
-                },
-                root: {
-                    padding: 0,
-                },
-                input: {
-                    border: 'none',
-                    borderRadius: common.borderRadius,
-                    flex: 1,
-                    fontSize: '14px',
-                    lineHeight: '19px',
-                    outline: 'none',
-                    paddingLeft: 5,
-                    height: '100%',
-                    ...fontColors.light,
-                },
-                inputContainer: {
-                    borderRadius: common.borderRadius,
-                    height: 50,
-                    width: '100%',
-                    ...backgroundColors.light,
-                },
-                list: {
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                },
-                listItem: {
-                    height: this.props.resultHeight,
-                },
-            },
-        }
-    }
-
     handleChange(event) {
         const inputValue = event.target.value;
         clearTimeout(this.updateQueryTimer);
@@ -288,9 +243,51 @@ class Search extends CSSComponent {
             placeholder,
             listContainerStyle,
             sections,
+            resultHeight,
             style,
             ...other,
         } = this.props;
+
+        const styles = {
+            listContainer: {
+                justifyContent: 'flex-start',
+                textAlign: 'start',
+                overflowY: 'hidden',
+                height: 'auto',
+                width: '100%',
+                borderRadius: '0px 0px 3px 3px',
+                boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.09)',
+                backgroundColor: 'white',
+                maxHeight: SEARCH_RESULTS_MAX_HEIGHT,
+            },
+            root: {
+                padding: 0,
+            },
+            input: {
+                border: 'none',
+                borderRadius: commonStyles.borderRadius,
+                flex: 1,
+                fontSize: '14px',
+                lineHeight: '19px',
+                outline: 'none',
+                paddingLeft: 5,
+                height: '100%',
+                ...fontColors.light,
+            },
+            inputContainer: {
+                borderRadius: commonStyles.borderRadius,
+                height: 50,
+                width: '100%',
+                ...backgroundColors.light,
+            },
+            list: {
+                paddingTop: 0,
+                paddingBottom: 0,
+            },
+            listItem: {
+                height: resultHeight,
+            },
+        };
 
         let lists = [];
         if (focused) {
@@ -301,11 +298,11 @@ class Search extends CSSComponent {
                     <List
                         hasItemDivider={this.props.hasItemDivider}
                         highlightedIndex={this.highlightedIndexForSection(section)}
-                        itemStyle={{...this.styles().listItem}}
+                        itemStyle={{...styles.listItem}}
                         items={section.getItems(maxItems)}
                         key={`list-${sectionIndex}`}
                         onSelectItem={this.handleSelectItem}
-                        style={{...this.styles().list}}
+                        style={{...styles.list}}
                         title={section.title}
                     />
                 );
@@ -320,11 +317,11 @@ class Search extends CSSComponent {
                 onKeyDown={::this.handleKeyDown}
                 onMouseEnter={() => this.setIgnoreBlur(true)}
                 onMouseLeave={() => this.setIgnoreBlur(false)}
-                style={{...this.styles().root, ...style}}
+                style={{...styles.root, ...style}}
             >
                 <div
                     className="row middle-xs"
-                    style={{...this.styles().inputContainer, ...inputContainerStyle}}>
+                    style={{...styles.inputContainer, ...inputContainerStyle}}>
                     <input
                         autoFocus={this.props.focused}
                         className={this.props.inputClassName}
@@ -332,12 +329,12 @@ class Search extends CSSComponent {
                         onChange={::this.handleChange}
                         placeholder={placeholder}
                         ref="input"
-                        style={{...this.styles().input, ...inputStyle}}
+                        style={{...styles.input, ...inputStyle}}
                     />
                 </div>
                 <Paper
                     className="search-results"
-                    style={{...this.styles().listContainer, ...listContainerStyle}}
+                    style={{...styles.listContainer, ...listContainerStyle}}
                 >
                     {lists}
                 </Paper>

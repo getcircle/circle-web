@@ -26,6 +26,7 @@ class AddToCollectionMenu extends Component {
         confirmationMessage: null,
         muiTheme: this.context.muiTheme,
         open: false,
+        submitting: false,
     }
 
     getChildContext() {
@@ -69,8 +70,8 @@ class AddToCollectionMenu extends Component {
     handleRequestChange = (open) => {
         if (open) {
             this.setState({
-                addingNewCollection: false,
                 confirmationMessage: null,
+                submitting: false,
                 open
             });
         } else {
@@ -81,17 +82,6 @@ class AddToCollectionMenu extends Component {
         if (this.confirmationTimeout) {
             clearTimeout(this.confirmationTimeout);
         }
-    }
-
-    handleNewCollection = (event) => {
-        this.setState({addingNewCollection: true});
-
-        // Prevent event from triggering close on IconMenu
-        event.stopPropagation();
-    }
-
-    handleCollectionAdded = () => {
-        this.setState({addingNewCollection: false});
     }
 
     handleSubmit = (form, dispatch) => {
@@ -105,11 +95,19 @@ class AddToCollectionMenu extends Component {
     handleItemTouchTap = (event) => {
         event.preventDefault();
 
-        const inputTarget = event.target.className === FILTER_INPUT_CLASS_NAME;
-        if (inputTarget || this.state.addingNewCollection) {
+        if (event.target.className === FILTER_INPUT_CLASS_NAME) {
             return;
         }
 
+        this.submit();
+    }
+
+    handleOpenNewForm = () => {
+        this.setState({addingNewCollection: true});
+    }
+
+    handleCloseNewForm = () => {
+        this.setState({addingNewCollection: false, submitting: true});
         this.submit();
     }
 
@@ -122,7 +120,7 @@ class AddToCollectionMenu extends Component {
     render() {
         const { collections, editableCollections, memberships, post, style, ...other } = this.props;
         const { muiTheme } = this.context;
-        const { addingNewCollection, confirmationMessage } = this.state;
+        const { addingNewCollection, confirmationMessage, submitting } = this.state;
 
         const styles = {
             confirmation: {
@@ -130,8 +128,9 @@ class AddToCollectionMenu extends Component {
                 padding: '5px 15px',
             },
             formContainer: {
-                padding: 20,
-                paddingTop: 0,
+                padding: 0,
+                paddingLeft: 20,
+                paddingRight: 20,
             },
             inputContainer: {
                 border: `1px solid ${muiTheme.luno.colors.lightWhite}`,
@@ -165,7 +164,7 @@ class AddToCollectionMenu extends Component {
             content = (
                 <div style={styles.formContainer}>
                     <AddToCollectionForm
-                        addingNewCollection={addingNewCollection}
+                        addingNewCollection={addingNewCollection || submitting}
                         collections={collections}
                         editableCollections={editableCollections}
                         inputClassName={FILTER_INPUT_CLASS_NAME}
@@ -174,7 +173,8 @@ class AddToCollectionMenu extends Component {
                         listContainerStyle={styles.listContainer}
                         memberships={memberships}
                         newCollectionAllowed={true}
-                        onNewCollection={this.handleNewCollection}
+                        onCloseNewForm={this.handleCloseNewForm}
+                        onOpenNewForm={this.handleOpenNewForm}
                         onSubmit={this.handleSubmit}
                         post={post}
                         ref="form"
@@ -206,7 +206,7 @@ class AddToCollectionMenu extends Component {
 AddToCollectionMenu.propTypes = {
     collections: PropTypes.array,
     editableCollections: PropTypes.array,
-    memberships: PropTypes.array.isRequired,
+    memberships: PropTypes.array,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
     style: PropTypes.object,
 };

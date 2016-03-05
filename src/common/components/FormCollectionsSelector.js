@@ -2,18 +2,18 @@ import React, { PropTypes } from 'react';
 
 import t from '../utils/gettext';
 
-import AutoCompleteAddToCollection, {
-    createCollectionItem,
-    createNewCollectionItem,
-    TYPES,
-} from './AutoCompleteAddToCollection';
+import AutoCompleteCollection, {
+    createCollectionItemWithIcon,
+    NEW_ITEM_POSITION,
+} from './AutoCompleteCollection';
 
 const FormCollectionsSelector = (props) => {
     const {
         editableCollections,
+        listContainerStyle,
+        memberships,
         newCollectionAllowed,
         onChange,
-        onNewCollection,
         onSelectItem,
         value,
         ...other,
@@ -21,31 +21,32 @@ const FormCollectionsSelector = (props) => {
     const collections = value ? value.slice() : [];
     const existingCollectionIds = collections.map(collection => collection.id);
 
-    const handleSelectItem = (item, event) => {
-        if (item === TYPES.ADD_COLLECTION) {
-            onNewCollection(event);
+    const handleSelectItem = (item) => {
+        const index = existingCollectionIds.indexOf(item.id);
+        if (index >= 0) {
+            collections.splice(index, 1);
         } else {
-            const index = existingCollectionIds.indexOf(item.id);
-            if (index >= 0) {
-                collections.splice(index, 1);
-            } else {
-                collections.push(item);
-            }
-            onChange(collections);
+            collections.push(item);
         }
+        onChange(collections);
     };
 
     return (
         <div>
-            <AutoCompleteAddToCollection
+            <AutoCompleteCollection
                 collections={editableCollections}
                 focused={true}
                 hasItemDivider={false}
+                hideSearchWhenAdding={true}
                 ignoreCollectionIds={collections.map(collection => collection.id)}
-                newCollectionFactoryFunction={newCollectionAllowed ? createNewCollectionItem : null}
+                listContainerStyle={listContainerStyle}
+                memberships={memberships}
+                newCollectionButtonText={t('Create & Add To')}
+                newCollectionPosition={NEW_ITEM_POSITION.TOP}
+                newCollectionStyle={listContainerStyle}
                 onSelectItem={handleSelectItem}
                 placeholder={t('Search Collections')}
-                resultFactoryFunction={createCollectionItem}
+                resultFactoryFunction={createCollectionItemWithIcon}
                 {...other}
             />
         </div>
@@ -58,9 +59,9 @@ FormCollectionsSelector.propTypes = {
     inputContainerStyle: PropTypes.object,
     inputStyle: PropTypes.object,
     listContainerStyle: PropTypes.object,
+    memberships: PropTypes.array,
     newCollectionAllowed: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
-    onNewCollection: PropTypes.func,
     onSelectItem: PropTypes.func,
     value: PropTypes.array,
 };

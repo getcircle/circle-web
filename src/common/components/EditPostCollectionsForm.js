@@ -14,6 +14,10 @@ const FIELD_NAMES = ['collections'];
 
 class EditPostCollectionsForm extends Component {
 
+    state = {
+        addingNewCollection: false,
+    }
+
     componentWillMount() {
         if (this.props.collectionsLoaded) {
             this.setInitialValues(this.props);
@@ -34,6 +38,14 @@ class EditPostCollectionsForm extends Component {
         }
     }
 
+    handleOpenNewForm = () => {
+        this.setState({addingNewCollection: true});
+    }
+
+    handleCloseNewForm = () => {
+        this.setState({addingNewCollection: false});
+    }
+
     setInitialValues(props) {
         const { dispatch, collections } = props;
         const action = initialize(EDIT_POST_COLLECTIONS, {collections}, FIELD_NAMES);
@@ -43,14 +55,21 @@ class EditPostCollectionsForm extends Component {
     render() {
         const {
             editableCollections,
+            memberships,
             fields: { collections },
             ...other,
         } = this.props;
+        const { addingNewCollection } = this.state;
         return (
             <Form {...other}>
                 <FormLabel text={t('Collections')} />
                 <FormTokenizedCollectionsSelector
+                    addingNewCollection={addingNewCollection}
                     editableCollections={editableCollections}
+                    memberships={memberships}
+                    newCollectionAllowed={true}
+                    onCloseNewForm={this.handleCloseNewForm}
+                    onOpenNewForm={this.handleOpenNewForm}
                     {...collections}
                 />
             </Form>
@@ -65,6 +84,7 @@ EditPostCollectionsForm.propTypes = {
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
     fields: PropTypes.object.isRequired,
+    memberships: PropTypes.array,
 };
 
 export default reduxForm(

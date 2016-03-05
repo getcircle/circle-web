@@ -1,4 +1,5 @@
 import keymirror from 'keymirror';
+import { Paper } from 'material-ui';
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
@@ -8,6 +9,7 @@ import { clearCollectionsFilter, filterCollections } from '../../actions/collect
 
 import CheckIcon from '../CheckIcon';
 import CollectionIcon from '../CollectionIcon';
+import NewCollectionForm from './NewCollectionForm';
 import PlusIcon from '../PlusIcon';
 import Search from '../Search';
 import Section from './Section';
@@ -16,6 +18,14 @@ export const TYPES = keymirror({
     COLLECTION: null,
     ADD_COLLECTION: null,
 });
+
+export const NEW_ITEM_POSITION = keymirror({
+    TOP: null,
+    BOTTOM: null,
+})
+
+// Ensure that there's room in Search for the new collection item
+const MAX_SEARCH_RESULTS = 6;
 
 const selector = selectors.createImmutableSelector(
     [selectors.filterCollectionsSelector],
@@ -26,7 +36,33 @@ const selector = selectors.createImmutableSelector(
     },
 );
 
-export function createCollectionItem(collection, selectedCollectionIds = [], muiTheme) {
+export function createCollectionItem(collection) {
+    const styles = {
+        name: {
+            fontSize: '1.4rem',
+        },
+    };
+
+    const primaryText = <span style={styles.name}>{collection.display_name}</span>;
+    const item = {
+        primaryText: primaryText,
+        innerDivStyle: {
+            paddingTop: 10,
+            paddingLeft: 20,
+        },
+        style: {
+            fontSize: '1.4rem',
+        },
+
+    };
+    return {
+        item,
+        type: 'collection',
+        payload: collection,
+    };
+};
+
+export function createCollectionItemWithIcon(collection, selectedCollectionIds = [], muiTheme) {
     const styles = {
         name: {
             display: 'block',
@@ -102,10 +138,10 @@ export function createNewCollectionItem() {
     };
 }
 
-// TODO i would like to have combined this with AutoCompleteCollection, but direct subclass doesn't work
-class AutoCompleteAddToCollection extends Component {
+class AutoCompleteCollection extends Component {
 
     state = {
+        initialName: '',
         query: '',
     }
 
@@ -115,6 +151,7 @@ class AutoCompleteAddToCollection extends Component {
         // into an issue where it keeps focusing even if it hasn't lost focus.
         // This causes an issue when using this as a form field.
         const hasChanged = (
+            nextProps.addingNewCollection !== this.props.addingNewCollection ||
             nextProps.collections !== this.props.collections ||
             nextProps.ignoreCollectionIds !== this.props.ignoreCollectionIds ||
             nextProps.filteredCollections !== this.props.filteredCollections ||
@@ -137,7 +174,23 @@ class AutoCompleteAddToCollection extends Component {
     }
 
     handleSelectItem = ({ payload }, event) => {
-        this.props.onSelectItem(payload, event);
+        if (payload === TYPES.ADD_COLLECTION) {
+            this.setState({
+                initialName: this.state.query,
+            });
+            this.props.onOpenNewForm();
+        } else {
+            this.props.onSelectItem(payload, event);
+        }
+    }
+
+    handleNewCollection = (collection) => {
+        this.props.onSelectItem(collection);
+        this.props.onCloseNewForm();
+    }
+
+    handleCloseNewCollection = () => {
+        this.props.onCloseNewForm();
     }
 
     getSections() {
@@ -146,70 +199,118 @@ class AutoCompleteAddToCollection extends Component {
             collections,
             filteredCollections,
             ignoreCollectionIds,
-            newCollectionFactoryFunction,
+            newCollectionPosition,
             resultFactoryFunction,
         } = this.props;
 
-        const sections = [];
-
-        if (newCollectionFactoryFunction) {
-            const addCollectionItem = newCollectionFactoryFunction()
-            sections.push(new Section([addCollectionItem], undefined, undefined));
-        }
-
         const sectionResults = query === '' ? collections : filteredCollections;
-        sections.push(new Section(
-            sectionResults,
+        const sections = [new Section(
+            sectionResults.slice(0, MAX_SEARCH_RESULTS),
             undefined,
             undefined,
             resultFactoryFunction,
             ignoreCollectionIds,
             this.context.muiTheme,
-        ));
+        )];
+
+        const newCollectionSection = new Section(
+            [createNewCollectionItem()],
+            undefined,
+            undefined
+        );
+        switch(newCollectionPosition) {
+        case NEW_ITEM_POSITION.TOP:
+            sections.unshift(newCollectionSection);
+            break;
+        case NEW_ITEM_POSITION.BOTTOM:
+            sections.push(newCollectionSection);
+            break;
+        }
 
         return sections;
     }
 
     render() {
         const {
+            addingNewCollection,
+            hideSearchWhenAdding,
+            listContainerStyle,
+            memberships,
+            newCollectionButtonText,
+            newCollectionStyle,
             onBlur,
             onSelectItem,
             ...other,
         } = this.props;
-        const sections = this.getSections();
+        const { initialName } = this.state;
+        const sections = addingNewCollection ? [] : this.getSections();
+
+        let newForm;
+        if (addingNewCollection) {
+            newForm = (
+                <Paper style={newCollectionStyle}>
+                    <NewCollectionForm
+                        buttonText={newCollectionButtonText}
+                        initialName={initialName}
+                        memberships={memberships}
+                        onClickAway={this.handleCloseNewCollection}
+                        onCreate={this.handleNewCollection}
+                    />
+                </Paper>
+            );
+        }
+
+        let search;
+        if (!addingNewCollection || !hideSearchWhenAdding) {
+            search = (
+                <Search
+                    listContainerStyle={listContainerStyle}
+                    maxListHeight={300}
+                    onBlur={this.handleBlur}
+                    onDelayedChange={this.handleDelayedChange}
+                    onSelectItem={this.handleSelectItem}
+                    resultHeight={40}
+                    searchContainerWidth={280}
+                    sections={sections}
+                    {...other}
+                />
+            );
+        }
+
         return (
-            <Search
-                maxListHeight={300}
-                onBlur={this.handleBlur}
-                onDelayedChange={this.handleDelayedChange}
-                onSelectItem={this.handleSelectItem}
-                resultHeight={40}
-                searchContainerWidth={280}
-                sections={sections}
-                {...other}
-            />
+            <div>
+                {search}
+                {newForm}
+            </div>
         );
     }
 
 }
 
-AutoCompleteAddToCollection.propTypes = {
+AutoCompleteCollection.propTypes = {
+    addingNewCollection: PropTypes.bool,
     collections: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
     filtered: PropTypes.bool,
     filteredCollections: PropTypes.array,
     focused: PropTypes.bool,
+    hideSearchWhenAdding: PropTypes.bool,
     ignoreCollectionIds: PropTypes.arrayOf(PropTypes.string),
     inputContainerStyle: PropTypes.object,
     inputStyle: PropTypes.object,
     listContainerStyle: PropTypes.object,
-    newCollectionFactoryFunction: PropTypes.func,
+    memberships: PropTypes.array,
+    newCollectionButtonText: PropTypes.string,
+    newCollectionPosition: PropTypes.oneOf([NEW_ITEM_POSITION.TOP, NEW_ITEM_POSITION.BOTTOM]),
+    newCollectionStyle: PropTypes.object,
     onBlur: PropTypes.func,
+    onCloseNewForm: PropTypes.func.isRequired,
+    onOpenNewForm: PropTypes.func.isRequired,
     onSelectItem: PropTypes.func,
     resultFactoryFunction: PropTypes.func.isRequired,
 };
 
-AutoCompleteAddToCollection.defaultProps = {
+AutoCompleteCollection.defaultProps = {
     focued: false,
     collections: [],
     ignoreCollectionIds: [],
@@ -217,8 +318,8 @@ AutoCompleteAddToCollection.defaultProps = {
     onSelectItem: () => {},
 };
 
-AutoCompleteAddToCollection.contextTypes = {
+AutoCompleteCollection.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-export default connect(selector)(AutoCompleteAddToCollection);
+export default connect(selector)(AutoCompleteCollection);
