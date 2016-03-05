@@ -36,13 +36,13 @@ const FormTokenizedCollectionsSelector = (props) => {
     };
     const styles = {
         listContainer: {
-            width: 280,
+            width: 392,
         },
         newCollection: {
-            paddingLeft: 20,
-            paddingRight: 20,
+            paddingLeft: 35,
+            paddingRight: 35,
             position: 'absolute',
-            width: 280,
+            width: 392,
         },
     }
     const autoComplete = (

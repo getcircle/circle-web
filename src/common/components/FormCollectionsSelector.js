@@ -31,6 +31,13 @@ const FormCollectionsSelector = (props) => {
         onChange(collections);
     };
 
+    const styles = {
+        listContainer: {
+            paddingLeft: 15,
+            paddingRight: 15,
+        },
+    };
+
     return (
         <div>
             <AutoCompleteCollection
@@ -43,7 +50,7 @@ const FormCollectionsSelector = (props) => {
                 memberships={memberships}
                 newCollectionButtonText={t('Create & Add To')}
                 newCollectionPosition={NEW_ITEM_POSITION.TOP}
-                newCollectionStyle={listContainerStyle}
+                newCollectionStyle={{...styles.listContainer, ...listContainerStyle}}
                 onSelectItem={handleSelectItem}
                 placeholder={t('Search Collections')}
                 resultFactoryFunction={createCollectionItemWithIcon}
