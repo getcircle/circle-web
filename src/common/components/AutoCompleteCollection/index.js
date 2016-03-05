@@ -198,14 +198,21 @@ class AutoCompleteCollection extends Component {
         const {
             collections,
             filteredCollections,
+            hideSelectedCollections,
             ignoreCollectionIds,
             newCollectionPosition,
             resultFactoryFunction,
         } = this.props;
 
-        const sectionResults = query === '' ? collections : filteredCollections;
+        let results = query === '' ? collections : filteredCollections;
+
+        if (hideSelectedCollections) {
+            results = results.filter(result => !ignoreCollectionIds.includes(result.id));
+        }
+
+        results = results.slice(0, MAX_SEARCH_RESULTS)
         const sections = [new Section(
-            sectionResults.slice(0, MAX_SEARCH_RESULTS),
+            results,
             undefined,
             undefined,
             resultFactoryFunction,
@@ -295,6 +302,7 @@ AutoCompleteCollection.propTypes = {
     filteredCollections: PropTypes.array,
     focused: PropTypes.bool,
     hideSearchWhenAdding: PropTypes.bool,
+    hideSelectedCollections: PropTypes.bool,
     ignoreCollectionIds: PropTypes.arrayOf(PropTypes.string),
     inputContainerStyle: PropTypes.object,
     inputStyle: PropTypes.object,

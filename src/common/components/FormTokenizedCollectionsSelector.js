@@ -51,6 +51,7 @@ const FormTokenizedCollectionsSelector = (props) => {
             collections={editableCollections}
             focused={active}
             hasItemDivider={false}
+            hideSelectedCollections={true}
             ignoreCollectionIds={collections.map(collection => collection.id)}
             memberships={memberships}
             newCollectionButtonText={t('Create')}
