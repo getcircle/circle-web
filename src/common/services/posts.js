@@ -1,3 +1,4 @@
+import { merge } from 'lodash';
 import { services } from 'protobufs';
 
 import { getPostsPaginationKey } from '../actions/posts';
@@ -130,12 +131,37 @@ export function updateCollection(client, collection) {
     });
 }
 
-export function addToCollections(client, item, collections) {
-    const request = new services.post.actions.add_to_collections.RequestV1({item, collections});
+function sendAddToCollectionsRequest(client, item, collections) {
+    const request = new services.post.actions.add_to_collections.RequestV1({
+        item,
+        collections,
+    });
     return new Promise((resolve, reject) => {
         client.send(request)
             .then((response) => {
-                return response.finish(resolve, reject, item.source_id, {item, collections});
+                return response.finish(resolve, reject, item.source_id, {
+                    item,
+                    collections: request.collections,
+                });
+            })
+            .catch(error => reject(error));
+    })
+}
+
+export function addToCollections(client, item, collections) {
+    return new Promise((resolve, reject) => {
+        const existingCollections = collections.filter(c => c.id !== null)
+        const newCollections = collections.filter(c => c.id === null)
+        const promises = newCollections.map(c => createCollection(client, c))
+        Promise.all(promises)
+            .then(createResponses => {
+                const createdCollections = createResponses.map(r => r.collection);
+                const collectionsToSend = existingCollections.concat(createdCollections);
+                sendAddToCollectionsRequest(client, item, collectionsToSend)
+                    .then(response => {
+                        resolve(merge(...createResponses, response));
+                    })
+                    .catch(error => reject(error));
             })
             .catch(error => reject(error));
     });
