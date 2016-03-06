@@ -169,7 +169,7 @@ const ProfileDetailKnowledge = (props, { muiTheme }) => {
                 {editMenu}
             </section>
             <section className="row">
-                <section className="col-xs-8" style={theme.section}>
+                <section className={question ? 'col-xs-8' : 'col-xs-12'} style={theme.section}>
                     <DetailSection dividerStyle={{marginBottom: 0}}>
                         {postsSection}
                     </DetailSection>
