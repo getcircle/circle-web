@@ -49,9 +49,9 @@ const FORMS = [
     },
     {
         type: formTypes.CREATE_TEAM,
-        save: types.CREATE_TEAM,
-        saveFailure: types.CREATE_TEAM_FAILURE,
-        saveSuccess: types.CREATE_TEAM_SUCCESS,
+        save: actionTypes.CREATE_TEAM,
+        saveFailure: actionTypes.CREATE_TEAM_FAILURE,
+        saveSuccess: actionTypes.CREATE_TEAM_SUCCESS,
     },
 ];
 
