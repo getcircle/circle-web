@@ -44,7 +44,11 @@ export default function (store, url) {
         return (nextState, replaceState, exit) => {
             function checkAuth() {
                 if (!isAuthenticated(store.getState())) {
-                    replaceState(null, '/login', {next: nextState.location.pathname});
+                    let state;
+                    if (nextState.location.pathname !== '/') {
+                        state = {next: nextState.location.pathname};
+                    }
+                    replaceState(null, '/login', state);
                     return exit();
                 }
                 next(nextState, replaceState, exit);
