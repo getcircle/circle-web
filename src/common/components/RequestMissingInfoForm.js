@@ -14,7 +14,7 @@ import FormLabel from './FormLabel';
 import FormTextArea from './FormTextArea';
 
 const selector = selectors.createImmutableSelector(
-    [selectors.formDialogs],
+    [selectors.formDialogsSelector],
     (formDialogsState) => {
         const formState = formDialogsState.get(REQUEST_MISSING_INFO);
         return {
