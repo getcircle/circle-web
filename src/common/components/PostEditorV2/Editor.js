@@ -26,14 +26,14 @@ class Editor extends Component {
                 paddingTop: 0,
             },
             title: {
-                padding: 30,
             },
             textarea: {
                 border: '0',
                 fontSize: '3.2rem',
-                lineHeight: '3.9rem',
                 fontWeight: muiTheme.luno.fontWeights.bold,
+                lineHeight: '3.9rem',
                 minHeight: 49,
+                padding: 30,
             },
         };
 

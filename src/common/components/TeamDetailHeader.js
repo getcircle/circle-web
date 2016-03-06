@@ -7,6 +7,17 @@ import t from '../utils/gettext';
 
 import DetailHeader from './DetailHeader';
 import GroupIcon from './GroupIcon';
+import TeamJoinButton from './TeamJoinButton';
+
+function getJoinButton(team, currentUserMember, dispatch) {
+    return (
+        <TeamJoinButton
+            currentUserMember={currentUserMember}
+            dispatch={dispatch}
+            team={team}
+        />
+    );
+}
 
 function getCoordinatorNames(coordinators, style) {
     return coordinators.map((c, i) => {
@@ -48,15 +59,22 @@ function getCoordinatorDetails(coordinators, muiTheme) {
     return <span>{main}{byLine}</span>;
 }
 
-const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
-    let primaryText, secondaryText;
+const TeamDetailHeader = (props, {store: { dispatch }, muiTheme}) => {
+    const {
+        coordinators,
+        currentUserMember,
+        team
+    } = props;
+    let joinButton, primaryText, secondaryText;
     if (team) {
+        joinButton = getJoinButton(team, currentUserMember, dispatch);
         primaryText = team.name;
         secondaryText = getCoordinatorDetails(coordinators, muiTheme);
     }
     return (
         <DetailHeader
             Icon={GroupIcon}
+            button={joinButton}
             primaryText={primaryText}
             secondaryText={secondaryText}
         />
@@ -64,10 +82,17 @@ const TeamDetailHeader = ({team, coordinators}, {muiTheme}) => {
 };
 
 TeamDetailHeader.propTypes = {
+    coordinators: PropTypes.arrayOf(
+        PropTypes.instanceOf(services.team.containers.TeamMemberV1)
+    ),
+    currentUserMember: PropTypes.instanceOf(services.team.containers.TeamMemberV1),
     team: PropTypes.instanceOf(services.team.containers.TeamV1),
 };
 TeamDetailHeader.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
+    store: PropTypes.shape({
+        dispatch: PropTypes.func.isRequired,
+    }),
 };
 
 export default TeamDetailHeader;

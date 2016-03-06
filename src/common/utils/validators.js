@@ -1,6 +1,6 @@
 import t from '../utils/gettext';
 
-const isEmpty = value => value === undefined || value === null || value === '';
+const isEmpty = value => value === undefined || value === null || (value.trim && value.trim() === '');
 const join = (rules) => (value, data) => rules.map(rule => rule(value, data)).filter(error => !!error)[0 /* first error */ ];
 
 function required(value) {
@@ -49,4 +49,8 @@ export const questionValidator = createValidator({
 export const teamValidator = createValidator({
     name: [required],
     contacts: arrayOf({type: [required], value: [required]}),
+});
+
+export const requestMissingInfoValidator = createValidator({
+    infoRequest: [required],
 });

@@ -3,6 +3,7 @@ import { services } from 'protobufs';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
+import { paginatedShouldBail } from '../reducers/paginate';
 import { retrieveCollection } from '../reducers/denormalizations';
 
 export function showCreateCollectionModal() {
@@ -169,6 +170,10 @@ export function getCollections({source, sourceId}) {
                 types.GET_COLLECTIONS_FAILURE,
             ],
             remote: client => requests.getCollections(client, {source, sourceId}),
+            bailout: state => {
+                const collections = state.get('postCollections').get(sourceId);
+                return collections && collections.get('loaded');
+            }
         },
     };
 }
@@ -187,7 +192,7 @@ export function getEditableCollections(profileId) {
                 types.GET_EDITABLE_COLLECTIONS_FAILURE,
             ],
             remote: client => requests.getCollections(client, {profileId, permissions}),
-            bailout: state => !!state.get('editableCollections').get('collectionIds').size,
+            bailout: state => state.get('editableCollections').get('loaded'),
         },
     };
 }
@@ -202,4 +207,43 @@ export function clearCollectionsFilter() {
 
 export function initializeCollectionsFilter(collections) {
     return {type: types.INITIALIZE_COLLECTIONS_FILTER, payload: collections};
+}
+
+export function getCollectionItems(collectionId) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_COLLECTION_ITEMS,
+                types.GET_COLLECTION_ITEMS_SUCCESS,
+                types.GET_COLLECTION_ITEMS_FAILURE,
+            ],
+            remote: client => requests.getCollectionItems(client, collectionId),
+        },
+        meta: {
+            paginateBy: collectionId,
+        },
+    };
+}
+
+export function getCollectionsForOwner(ownerType, ownerId, isDefault = false, nextRequest) {
+    const key = requests.getCollectionsForOwnerKey(ownerType, ownerId, isDefault);
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.GET_COLLECTIONS_FOR_OWNER,
+                types.GET_COLLECTIONS_FOR_OWNER_SUCCESS,
+                types.GET_COLLECTIONS_FOR_OWNER_FAILURE,
+            ],
+            remote: client => requests.getCollectionsForOwner(
+                client,
+                ownerType,
+                ownerId,
+                isDefault,
+                nextRequest,
+            ),
+        },
+        meta: {
+            paginateBy: key,
+        },
+    };
 }

@@ -74,6 +74,7 @@ export const rearrangeCollectionsSelector = state => state.get('rearrangeCollect
 export const responsiveSelector = state => state.get('responsive');
 export const routerParametersSelector = (_, props) => props.params;
 export const searchSelector = state => state.get('search');
+export const teamMembershipSelector = state => state.get('teamMembership');
 export const teamCoordinatorsSelector = state => state.get('teamCoordinators');
 export const teamMembersSelector = state => state.get('teamMembers');
 export const updateTeamSelector = state => state.get('updateTeam');
@@ -85,3 +86,7 @@ export const createCollectionSelector = state => state.get('createCollection');
 export const deleteCollectionSelector = state => state.get('deleteCollection');
 export const editableCollectionsSelector = state => state.get('editableCollections');
 export const filterCollectionsSelector = state => state.get('filterCollections');
+export const collectionItemsSelector = state => state.get('collectionItems');
+export const collectionsSelector = state => state.get('collections');
+export const requestMissingInfoSelector = state => state.get('requestMissingInfo');
+export const postCollectionsSelector = state => state.get('postCollections');

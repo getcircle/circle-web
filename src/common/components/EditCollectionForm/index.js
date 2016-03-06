@@ -85,10 +85,8 @@ export class EditCollectionForm extends CSSComponent {
     }
 
     submit = ({ name, items }, dispatch) => {
-        const collection = {
-            ...this.props.collection,
-            name,
-        };
+        const { collection } = this.props;
+        collection.setName(name);
 
         // TODO: calculate diffs, send reorder action
         dispatch(updateCollection(collection));
@@ -108,7 +106,8 @@ export class EditCollectionForm extends CSSComponent {
         } = this.props;
 
         let sortItems;
-        if (collection.items.length) {
+        // XXX temporarily disable until we support
+        if (false && collection.items.length) {
             sortItems = (
                 <div>
                     <label style={styles.label}>

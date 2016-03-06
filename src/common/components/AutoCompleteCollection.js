@@ -23,7 +23,7 @@ export function createCollectionItem(collection) {
         },
     };
 
-    const primaryText = <span style={styles.name}>{collection.name}</span>;
+    const primaryText = <span style={styles.name}>{collection.display_name}</span>;
     const item = {
         primaryText: primaryText,
         innerDivStyle: {

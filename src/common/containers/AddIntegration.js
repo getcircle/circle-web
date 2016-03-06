@@ -8,7 +8,6 @@ import { getIntegrationAuthenticationInstructions } from '../actions/authenticat
 import { getNextPathname, routeToURL } from '../utils/routes';
 import { providerForIntegration } from '../utils/integrations';
 
-import CSSComponent from '../components/CSSComponent';
 import Container from '../components/Container';
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
 
@@ -22,7 +21,7 @@ const selector = createSelector(
 )
 
 const hooks = {
-    fetch: ({ dispatch, params: { integration } }) => {
+    fetch: ({ dispatch, params: { integration }, url }) => {
         const provider = providerForIntegration(integration);
         return dispatch(getIntegrationAuthenticationInstructions(provider, url));
     },

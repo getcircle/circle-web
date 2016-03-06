@@ -9,13 +9,15 @@ function getItemName(profile) {
     return profile.full_name;
 }
 
-const FormPeopleSelector = ({ active, onChange, value, ...other }) => {
+const FormPeopleSelector = ({ active, ignoreProfileIds, onChange, value, ...other }) => {
     const profiles = value || [];
+    const ignoreIds = profiles.map(profile => profile.id);
+    ignoreIds.push(...ignoreProfileIds);
     const autoComplete = (
         <AutoCompleteProfile
             focused={active}
             hasItemDivider={false}
-            ignoreProfileIds={profiles.map(profile => profile.id)}
+            ignoreProfileIds={ignoreIds}
             placeholder={t('Search by Name')}
             resultFactoryFunction={createProfileWithTitle}
         />
@@ -33,8 +35,13 @@ const FormPeopleSelector = ({ active, onChange, value, ...other }) => {
 
 FormPeopleSelector.propTypes = {
     active: PropTypes.bool,
+    ignoreProfileIds: PropTypes.array,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array,
+};
+
+FormPeopleSelector.defaultProps = {
+    ignoreProfileIds: [],
 };
 
 export default FormPeopleSelector;

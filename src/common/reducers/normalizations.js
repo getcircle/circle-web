@@ -1,6 +1,6 @@
 import { getNormalizations } from 'protobuf-normalizr';
 import { services } from 'protobufs';
-import { retrieveTeamMembers } from './denormalizations';
+import { retrieveTeamMember, retrieveTeamMembers } from './denormalizations';
 
 import * as requests from '../services/team';
 
@@ -40,12 +40,30 @@ export function getPostsNormalizations(action) {
     );
 }
 
-export function getCollectionsNormalizations(key, cache) {
+export function getCollectionItemsNormalizations(action) {
+    return getNormalizations(
+        'items',
+        action.meta.paginateBy,
+        services.post.actions.get_collection_items.ResponseV1,
+        action.payload,
+    );
+}
+
+export function getCollectionsNormalizations(action) {
     return getNormalizations(
         'collections',
-        key,
+        action.payload.result,
         services.post.actions.get_collections.ResponseV1,
-        cache,
+        action.payload,
+    );
+}
+
+export function getCollectionsForOwnerNormalizations(action) {
+    return getNormalizations(
+        'collections',
+        action.meta.paginateBy,
+        services.post.actions.get_collections.ResponseV1,
+        action.payload,
     );
 }
 
@@ -138,4 +156,15 @@ export function getTeamMemberNormalizationsFromUpdateMembers(action, role = null
 export function getTeamCoordinatorNormalizationsFromUpdateMembers(action) {
     const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
     return getTeamMemberNormalizationsFromUpdateMembers(action, role);
+}
+
+export function getTeamMemberNormalizationFromJoinTeam(action, role = null) {
+    const id = getNormalizations(
+        'member',
+        action.payload.result,
+        services.team.actions.join_team.ResponseV1,
+        action.payload,
+    );
+    const member = retrieveTeamMember(id, action.payload);
+    return member.role === role ? id : null;
 }

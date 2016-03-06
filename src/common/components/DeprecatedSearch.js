@@ -11,7 +11,7 @@ import * as exploreActions from '../actions/explore';
 import {
     loadSearchResults,
     clearSearchResults,
-    noSearchResults,
+    requestMissingInfo,
     viewSearchResult,
 } from '../actions/search';
 import { mailto } from '../utils/contact';
@@ -1188,7 +1188,7 @@ class DeprecatedSearch extends CSSComponent {
 
     handleDialogSubmit() {
         this.props.dispatch(
-            noSearchResults(this.state.query, this.state.infoRequest)
+            requestMissingInfo(this.state.query, this.state.infoRequest)
         );
         this.setState({
             feedbackDialogOpen: false,

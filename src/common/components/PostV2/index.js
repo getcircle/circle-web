@@ -29,10 +29,14 @@ class Post extends Component {
     }
 
     render() {
-        const { onDelete, post, ...other } = this.props;
+        const { collections, editableCollections, onDelete, post, ...other } = this.props;
         return (
             <DetailContent style={{paddingTop: 10}}>
-                <Header post={post} />
+                <Header
+                    collections={collections}
+                    editableCollections={editableCollections}
+                    post={post}
+                />
                 <Content post={post} />
                 <Footer post={post} />
             </DetailContent>
@@ -41,6 +45,8 @@ class Post extends Component {
 };
 
 Post.propTypes = {
+    collections: PropTypes.array,
+    editableCollections: PropTypes.array,
     onDelete: PropTypes.func,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };

@@ -104,16 +104,17 @@ export default function (store, url) {
     const trackPageView = (pageType, paramKey) => {
         return (next) => {
             return (nextState, replaceState, exit) => {
-                let state = store.getState();
+                const state = store.getState();
                 if (isAuthenticated(state)) {
-                    let pageId = paramKey !== undefined ? nextState.params[paramKey] : '';
+                    const pageId = paramKey !== undefined ? nextState.params[paramKey] : '';
+                    const pageSlug = nextState.params && nextState.params.slug ? nextState.params.slug : '';
                     // Init session is idempotent
-                    let authenticationState = state.get('authentication');
+                    const authenticationState = state.get('authentication');
                     tracker.initSession(
                         authenticationState.get('profile'),
                         authenticationState.get('organization'),
                     );
-                    tracker.trackPageView(pageType, pageId);
+                    tracker.trackPageView(pageType, pageId, pageSlug);
                 }
                 next(nextState, replaceState, exit);
             }

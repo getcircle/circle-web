@@ -11,12 +11,13 @@ import AskQuestionForm from './AskQuestionForm';
 import CenterLoadingIndicator from './CenterLoadingIndicator';
 import DetailSection from './DetailSectionV2';
 import DetailQuestionSection from './DetailQuestionSection';
-import InfinitePostsList from './InfinitePostsList';
-import PostItemMenu, { MENU_CHOICES } from './PostItemMenu';
 import ProfileAvatar from './ProfileAvatar';
 import EditIcon from './EditIcon';
 import IconMenu from './IconMenu';
+import InfinitePostsList from './InfinitePostsList';
+import LightBulbIcon from './LightBulbIcon';
 import MenuItem from './MenuItem';
+import PostItemMenu, { MENU_CHOICES } from './PostItemMenu';
 
 const EditKnowledgeMenu = (props, { muiTheme }) => {
     const icon = (
@@ -40,7 +41,7 @@ EditKnowledgeMenu.contextTypes = {
     muiTheme: PropTypes.object.isRequired,
 };
 
-const Posts = (props, { store: { dispatch } }) => {
+const Posts = ({ canEdit, ...other }, { store: { dispatch } }) => {
 
     function handleMenuChoice(choice, post) {
         switch(choice) {
@@ -53,13 +54,22 @@ const Posts = (props, { store: { dispatch } }) => {
         }
     };
 
+    let menu;
+    if (canEdit) {
+        menu = PostItemMenu;
+    }
+
     return (
         <InfinitePostsList
-            MenuComponent={PostItemMenu}
+            MenuComponent={menu}
             onMenuChoice={handleMenuChoice}
-            {...props}
+            {...other}
         />
     );
+};
+
+Posts.propTypes = {
+    canEdit: PropTypes.bool,
 };
 
 Posts.contextTypes = {
@@ -105,8 +115,11 @@ Question.contextTypes = {
 const ProfileDetailKnowledge = (props, { muiTheme }) => {
     const {
         hasMorePosts,
+        isAdmin,
+        isLoggedInUser,
         onLoadMorePosts,
         posts,
+        postsCount,
         postsLoaded,
         postsLoading,
         profile,
@@ -114,9 +127,11 @@ const ProfileDetailKnowledge = (props, { muiTheme }) => {
     const theme = muiTheme.luno.detail;
 
     let postsSection;
+    const postsCountString = postsCount ? ` (${postsCount})` : '';
     if (posts && posts.length) {
         postsSection = (
             <Posts
+                canEdit={isLoggedInUser || isAdmin}
                 hasMore={hasMorePosts}
                 loading={postsLoading}
                 onLoadMore={onLoadMorePosts}
@@ -128,11 +143,30 @@ const ProfileDetailKnowledge = (props, { muiTheme }) => {
     } else {
         postsSection = <CenterLoadingIndicator />;
     }
+
+
+    let editMenu;
+    // edit menu doesn't show anything interesting for admins
+    if (isLoggedInUser) {
+        editMenu = <EditKnowledgeMenu />;
+    }
+
+    let question;
+    // TODO enable this
+    if (false) {
+        question = (
+            <section className="col-xs-offset-1 col-xs-3" style={theme.section}>
+                <Question profile={profile} />
+                <AskQuestionForm profile={profile} />
+            </section>
+        );
+    }
     return (
         <div>
             <section className="row middle-xs">
-                <h1 style={theme.h1}>{t('Knowledge')}</h1>
-                <EditKnowledgeMenu />
+                <LightBulbIcon />
+                <h1 style={theme.h1}>{t('Knowledge')}{postsCountString}</h1>
+                {editMenu}
             </section>
             <section className="row">
                 <section className="col-xs-8" style={theme.section}>
@@ -140,10 +174,7 @@ const ProfileDetailKnowledge = (props, { muiTheme }) => {
                         {postsSection}
                     </DetailSection>
                 </section>
-                <section className="col-xs-offset-1 col-xs-3" style={theme.section}>
-                    <Question profile={profile} />
-                    <AskQuestionForm profile={profile} />
-                </section>
+                {question}
             </section>
         </div>
     );
@@ -151,8 +182,11 @@ const ProfileDetailKnowledge = (props, { muiTheme }) => {
 
 ProfileDetailKnowledge.propTypes = {
     hasMorePosts: PropTypes.bool.isRequired,
+    isAdmin: PropTypes.bool,
+    isLoggedInUser: PropTypes.bool,
     onLoadMorePosts: PropTypes.func,
     posts: PropTypes.array,
+    postsCount: PropTypes.number,
     postsLoaded: PropTypes.bool,
     postsLoading: PropTypes.bool,
     profile: PropTypes.instanceOf(services.profile.containers.ProfileV1),

@@ -5,6 +5,8 @@ import React from 'react';
 import ProfileDetail from '../../../src/common/components/ProfileDetailV2';
 import ProfileDetailHeader from '../../../src/common/components/ProfileDetailHeaderV2';
 import ProfileDetailTabs, { SLUGS } from '../../../src/common/components/ProfileDetailTabs';
+import AuthContextFactory from '../../factories/AuthContextFactory';
+import { getDefaultContext } from '../../componentWithContext';
 
 import ProfileFactory from '../../factories/ProfileFactory';
 
@@ -21,7 +23,10 @@ function setup(propsOverrides, profileOverrides) {
         coordinators: [],
         ...propsOverrides,
     };
-    const wrapper = shallow(<ProfileDetail {...props} />);
+
+    const auth = AuthContextFactory.getContext(undefined, undefined, profile);
+    const context = getDefaultContext({auth});
+    const wrapper = shallow(<ProfileDetail {...props} />, { context });
     return {
         props,
         wrapper,

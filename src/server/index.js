@@ -13,6 +13,9 @@ import favicon from 'serve-favicon';
 import main from './routes/main';
 import validateConfig from './validateConfig';
 
+import Client from '../common/services/Client';
+import { getFile } from '../common/services/file';
+
 const requiredKeys = [
     'SESSION_SECRET',
     'REDIS_URL',
@@ -82,6 +85,23 @@ app.use('/api', (req, res) => {
         sentry.captureError(e);
         console.error('ERROR PROXING API:', pretty.render(e));
     }
+});
+
+app.use('/file/:id/:name', (req, res) => {
+    const client = new Client(req)
+    getFile(client, req.params.id)
+        .then(({ file }) => {
+            res.set({
+                'Content-Type': file.content_type,
+                'Content-Length': file.size,
+            })
+                .status(200)
+                .send(file.bytes.toBuffer());
+        })
+        .catch(error => {
+            console.error(error)
+            res.status(404).end();
+        });
 });
 
 app.use(session(sess));

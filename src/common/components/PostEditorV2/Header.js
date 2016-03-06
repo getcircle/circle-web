@@ -5,7 +5,7 @@ import { services } from 'protobufs';
 import { FlatButton } from 'material-ui';
 
 import t from '../../utils/gettext';
-import { routeToPost } from '../../utils/routes';
+import { replaceWithPost } from '../../utils/routes';
 
 import LeftChevronIcon from '../LeftChevronIcon';
 import RoundedButton from '../RoundedButton';
@@ -19,6 +19,7 @@ const BackButton = (props, { muiTheme }) => {
             label={t('Back')}
             labelStyle={{color: muiTheme.luno.tintColor, paddingLeft: 25}}
             onTouchTap={handleTouchTap}
+            style={{backgroundColor: 'transparent'}}
         >
             <LeftChevronIcon
                 stroke={muiTheme.luno.tintColor}
@@ -61,7 +62,7 @@ const Header = ({ post, onPublish, saving }, { muiTheme }) => {
     function handleTouchTap() {
         post.state = PostStateV1.LISTED;
         onPublish(post);
-        routeToPost(post);
+        replaceWithPost(post);
     }
 
     let saveNotification;
@@ -81,7 +82,7 @@ const Header = ({ post, onPublish, saving }, { muiTheme }) => {
     }
 
     return (
-        <header style={{paddingLeft: 10, paddingRight: 10}}>
+        <header style={{paddingLeft: 10, paddingRight: 10, position: 'fixed', 'width': '100%'}}>
             <section className="row between-xs">
                 <div className="start-xs col-xs">
                     <BackButton />

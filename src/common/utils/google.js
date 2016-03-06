@@ -10,10 +10,6 @@ export function getAuthInstance() {
                 instance = window.gapi.auth2.init({
                     /*eslint-disable camelcase*/
                     client_id: process.env.GOOGLE_CLIENT_ID,
-                    scope: (
-                        'https://www.googleapis.com/auth/plus.login ' +
-                        'https://www.googleapis.com/auth/plus.profile.emails.read'
-                    ),
                     /*eslint-enable camelcase*/
                 });
             }

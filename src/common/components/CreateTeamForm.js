@@ -10,6 +10,7 @@ import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { teamValidator } from '../utils/validators';
 
+import InternalPropTypes from './InternalPropTypes';
 import FormDialog from './FormDialog';
 import FormPeopleSelector from './FormPeopleSelector';
 import FormLabel from './FormLabel';
@@ -31,7 +32,7 @@ const selector = selectors.createImmutableSelector(
     }
 );
 
-export class CreateTeamForm extends Component {
+class CreateTeamForm extends Component {
 
     static propTypes = {
         dispatch: PropTypes.func.isRequired,
@@ -75,6 +76,7 @@ export class CreateTeamForm extends Component {
             handleSubmit,
             visible,
         } = this.props;
+        const { auth: { profile } } = this.context;
 
         return (
             <FormDialog
@@ -93,7 +95,10 @@ export class CreateTeamForm extends Component {
                     {...name}
                 />
                 <FormLabel text={t('Invite Others To Join')} />
-                <FormPeopleSelector {...people} />
+                <FormPeopleSelector
+                    ignoreProfileIds={[profile.id]}
+                    {...people}
+                />
                 <FormLabel text={t('Description')} />
                 <FormTextArea
                     placeholder={t('What are the responsibilities or the purpose of this team?')}
@@ -104,6 +109,11 @@ export class CreateTeamForm extends Component {
     }
 }
 
+CreateTeamForm.contextTypes = {
+    auth: InternalPropTypes.AuthContext.isRequired,
+};
+
+export { CreateTeamForm };
 export default reduxForm(
     {
       form: CREATE_TEAM,

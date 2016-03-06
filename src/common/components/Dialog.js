@@ -86,6 +86,7 @@ class Dialog extends Component {
     render() {
         const styles = {
             contentStyle: {
+                marginBottom: 50,
                 maxWidth: 640,
                 width: 640,
             },
@@ -99,6 +100,11 @@ class Dialog extends Component {
                 borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                 paddingBottom: 10,
             },
+            root: {
+                overflow: 'scroll',
+                position: 'fixed',
+                zIndex: 3000,
+            }
         };
         const {
             children,
@@ -110,18 +116,22 @@ class Dialog extends Component {
             open,
             saveButtonStyle,
             saveLabel,
+            style,
             title,
             ...other,
         } = this.props;
         const { muiTheme } = this.context;
 
+        const dialogStyle = merge(styles.root, style);
         return (
             <MaterialDialog
+                autoDetectWindowHeight={false}
                 bodyStyle={styles.bodyStyle}
                 contentStyle={styles.contentStyle}
                 modal={modal}
                 onRequestClose={onRequestClose}
                 open={open}
+                style={dialogStyle}
                 {...other}
             >
                 <header className="row between-xs" style={styles.header}>
@@ -155,6 +165,7 @@ Dialog.propTypes = {
     open: PropTypes.bool.isRequired,
     saveButtonStyle: PropTypes.object,
     saveLabel: PropTypes.string,
+    style: PropTypes.object,
     title: PropTypes.string,
 };
 

@@ -25,12 +25,13 @@ export default function (content, store, assets, title) {
         styles = `<style>${require('../common/styles/app.scss')}</style>`;
     }
 
-    let serializedState;
-    try {
-        serializedState = nameSpaces.toJSON(store.getState());
-    } catch (e) {
-        raven.captureException(e);
-        serializedState = '{}';
+    let serializedState = '';
+    if (!__DISABLE_SSR__) {
+        try {
+            serializedState = nameSpaces.toJSON(store.getState());
+        } catch (e) {
+            raven.captureException(e);
+        }
     }
 
     const windowTitle = title || '';

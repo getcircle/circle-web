@@ -32,6 +32,7 @@ class Search extends CSSComponent {
     static propTypes = {
         focused: PropTypes.bool,
         hasItemDivider: PropTypes.bool,
+        inputClassName: PropTypes.string,
         inputContainerStyle: PropTypes.object,
         inputStyle: PropTypes.object,
         listContainerStyle: PropTypes.object,
@@ -57,12 +58,6 @@ class Search extends CSSComponent {
 
     componentWillReceiveProps(nextProps, nextState) {
         this.configure(nextProps, Object.assign(this.state, nextState));
-    }
-
-    componentDidUpdate() {
-        if (this.props.focused) {
-            ReactDOM.findDOMNode(this.refs.input).focus();
-        }
     }
 
     static defaultProps = {
@@ -135,7 +130,7 @@ class Search extends CSSComponent {
 
     cleanupAndBlur = (event) => {
         ReactDOM.findDOMNode(this.refs.input).blur();
-        this.setState({highlightedIndex: null})
+        this.setState({highlightedIndex: null});
         this.props.onBlur(event);
     }
 
@@ -332,6 +327,7 @@ class Search extends CSSComponent {
                     style={{...this.styles().inputContainer, ...inputContainerStyle}}>
                     <input
                         autoFocus={this.props.focused}
+                        className={this.props.inputClassName}
                         onBlur={::this.handleInputBlur}
                         onChange={::this.handleChange}
                         placeholder={placeholder}

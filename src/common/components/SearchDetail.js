@@ -1,11 +1,13 @@
 import React, { PropTypes } from 'react';
 
 import Colors from '../styles/Colors';
+import { showRequestMissingInfoModal } from '../actions/search';
 import t from '../utils/gettext';
 
 import DetailContent from './DetailContent';
 import DetailQuestionSection from './DetailQuestionSection';
 import DetailSection from './DetailSectionV2';
+import RequestMissingInfoForm from './RequestMissingInfoForm';
 import SearchResultsList from './SearchResultsList';
 
 export const SearchDetailHeader = ({ totalResults, query }) => {
@@ -16,6 +18,29 @@ export const SearchDetailHeader = ({ totalResults, query }) => {
             <span style={{fontSize: '1.3rem', color: Colors.extraLightBlack}}>{title}</span>
         </section>
     );
+};
+
+const SearchDetailMissingInfo = ({ query, ...other}, { store }) => {
+    const onRequestMissingInfo = () => {
+        store.dispatch(showRequestMissingInfoModal());
+    };
+
+    return (
+        <div>
+            <DetailQuestionSection
+                buttonText={t('Request Missing Info')}
+                onTouchTap={onRequestMissingInfo}
+                questionText={t('Didn\'t find what you were looking for?')}
+            />
+            <RequestMissingInfoForm query={query} />
+        </div>
+    );
+};
+
+SearchDetailMissingInfo.contextTypes = {
+    store: PropTypes.shape({
+         dispatch: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 const SearchDetail = (props) => {
@@ -34,10 +59,7 @@ const SearchDetail = (props) => {
             <SearchDetailHeader query={query} totalResults={totalResults} />
             <section className="row">
                 <section className="col-xs-3">
-                    <DetailQuestionSection
-                        buttonText={t('Request Missing Info')}
-                        questionText={t('Didn\'t find what you were looking for?')}
-                    />
+                    <SearchDetailMissingInfo query={query} />
                 </section>
                 <section className="col-xs-8 col-xs-offset-1">
                     <DetailSection dividerStyle={{marginBottom: 0}}>

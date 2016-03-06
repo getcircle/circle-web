@@ -88,7 +88,7 @@ export function createCollection(client, collection) {
         client.send(request)
             .then((response) => {
                 const { collection } = response.result;
-                response.finish(resolve, reject, collection.id);
+                response.finish(resolve, reject, collection.id, { collection });
             })
             .catch(error => reject(error));
     });
@@ -98,6 +98,7 @@ export function getCollection(client, collectionId) {
     const request = new services.post.actions.get_collection.RequestV1({
         /*eslint-disable camelcase*/
         collection_id: collectionId,
+        inflations: new services.common.containers.InflationsV1({exclude: ['items', 'display_name']}),
         /*eslint-enable camelcase*/
     });
     return new Promise((resolve, reject) => {
@@ -134,7 +135,7 @@ export function addToCollections(client, item, collections) {
     return new Promise((resolve, reject) => {
         client.send(request)
             .then((response) => {
-                return response.finish(resolve, reject, item.source_id, { item });
+                return response.finish(resolve, reject, item.source_id, {item, collections});
             })
             .catch(error => reject(error));
     });
@@ -147,7 +148,7 @@ export function removeFromCollections(client, item, collections) {
     });
     return new Promise((resolve, reject) => {
         client.send(request)
-            .then(response => response.simple(resolve, reject, {item, collections}))
+            .then(response => response.simple(resolve, reject, {item, collections, result: item.source_id}))
             .catch(error => reject(error));
     });
 }
@@ -160,13 +161,49 @@ export function getCollections(client, parameters) {
         source,
         source_id: sourceId,
         profile_id: profileId,
+        inflations: new services.common.containers.InflationsV1({exclude: ['items']}),
         /*eslint-enable camelcase*/
     });
 
     const key = sourceId ? sourceId : profileId;
     return new Promise((resolve, reject) => {
-        client.send(request)
+        client.send(request, true)
             .then(response => response.finish(resolve, reject, key))
             .catch(error => reject(error));
     });
 }
+
+export function getCollectionItems(client, collectionId, nextRequest) {
+    const request = nextRequest ? nextRequest : new services.post.actions.get_collection_items.RequestV1({
+        /*eslint-disable camelcase*/
+        collection_id: collectionId,
+        /*eslint-enable camelcase*/
+    });
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => response.finish(resolve, reject, collectionId))
+            .catch(error => reject(error));
+    });
+}
+
+export function getCollectionsForOwnerKey(ownerType, ownerId, isDefault = false) {
+    ownerType = ownerType === null ? services.post.containers.CollectionV1.OwnerTypeV1.PROFILE : ownerType;
+    return isDefault ? `${ownerType}:${ownerId}:default` : `${ownerType}:${ownerId}`;
+}
+
+export function getCollectionsForOwner(client, ownerType, ownerId, isDefault, nextRequest) {
+    const request = nextRequest ? nextRequest : new services.post.actions.get_collections.RequestV1({
+        /*eslint-disable camelcase*/
+        owner_type: ownerType,
+        owner_id: ownerId,
+        is_default: isDefault,
+        items_per_collection: 3,
+        /*eslint-enable camelcase*/
+    });
+    const key = getCollectionsForOwnerKey(ownerType, ownerId, isDefault);
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => response.finish(resolve, reject, key))
+            .catch(error => reject(error));
+    });
+};

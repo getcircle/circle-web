@@ -26,6 +26,7 @@ function setup(propsOverrides, Component = ProfileDetailAbout) {
     const props = {
         dispatch: expect.createSpy(),
         profile,
+        isLoggedInUser: true,
         ...propsOverrides,
     };
     const location = LocationFactory.getLocation();
@@ -49,6 +50,11 @@ describe('ProfileDetailAbout', () => {
     it('renders a link to the edit profile modal', () => {
         const { wrapper } = setup();
         expect(wrapper.find(EditButton).length).toBe(1);
+    });
+
+    it('doesn\'t rendersa link to the edit profile modal if not logged in user', () => {
+        const { wrapper } = setup({ isLoggedInUser: false });
+        expect(wrapper.find(EditButton).length).toBe(0);
     });
 
     describe('Bio', () => {

@@ -298,11 +298,9 @@ class HeaderMenu extends CSSComponent {
     }
 
     renderCreateCollectionForm() {
-        const { dispatch } = this.props;
         const { profile } = this.context.auth;
         return (
             <CreateCollectionForm
-                dispatch={dispatch}
                 ownerId={profile.id}
                 ownerType={services.post.containers.CollectionV1.OwnerTypeV1.PROFILE}
             />

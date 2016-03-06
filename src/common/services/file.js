@@ -94,3 +94,18 @@ export function deleteFile(client, fileIds) {
             .catch(error => reject(error));
     });
 }
+
+export function getFile(client, id) {
+    let request = new services.file.actions.get_file.RequestV1({id});
+    return new Promise((resolve, reject) => {
+        client.send(request)
+            .then(response => {
+                if (response.isSuccess()) {
+                    resolve({file: response.result.file});
+                } else {
+                    reject({errors: response.errors});
+                }
+            })
+            .catch(error => reject(error));
+    });
+}

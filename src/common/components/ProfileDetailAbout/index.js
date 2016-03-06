@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import InternalPropTypes from '../InternalPropTypes';
 import t from '../../utils/gettext';
 
 import DetailSection from '../DetailSectionV2';
@@ -40,23 +39,25 @@ const DirectReports = buildProfileList(t('Direct Reports'));
 const Manager = buildProfileList(t('Manager'));
 const Peers = buildProfileList(t('Peers'));
 
-const ProfileDetailAbout = (props, { muiTheme, auth }) => {
+const ProfileDetailAbout = (props, { muiTheme }) => {
     const {
         dispatch,
         directReports,
+        isAdmin,
+        isLoggedInUser,
         manager,
         peers,
         profile,
         memberships
     } = props;
     const theme = muiTheme.luno.detail;
-    const isLoggedInUser = profile.id === auth.profile.id;
 
-    const editButton = isLoggedInUser ? <EditButton dispatch={dispatch} /> : null;
+    const canEdit = isLoggedInUser || isAdmin;
+    const editButton = canEdit ? <EditButton dispatch={dispatch} /> : null;
     const managerSection = manager ? <Manager profiles={[manager]} /> : null;
     const peersSection = peers && peers.length ? <Peers profiles={peers} /> : null;
     const directReportsSection = directReports && directReports.length ? <DirectReports profiles={directReports} /> : null;
-    const itemsSection = profile.items && profile.items.length ? <Items items={profile.items} /> : null;
+    const itemsSection = profile && profile.items && profile.items.length ? <Items items={profile.items} /> : null;
     const teamsSection = memberships && memberships.length ? <Teams members={memberships} /> : null;
     return (
         <div>
@@ -66,13 +67,13 @@ const ProfileDetailAbout = (props, { muiTheme, auth }) => {
             </section>
             <section className="row">
                 <section className="col-xs-8" style={theme.section}>
-                    <Bio canEdit={isLoggedInUser} dispatch={dispatch} profile={profile} />
+                    <Bio canEdit={canEdit} dispatch={dispatch} profile={profile} />
                     {managerSection}
                     {peersSection}
                     {directReportsSection}
                 </section>
-                <section className="col-xs-offset-1 col-xs-3">
-                    <ContactMethods canEdit={isLoggedInUser} dispatch={dispatch} profile={profile} />
+                <section className="col-xs-4" style={theme.secondarySection}>
+                    <ContactMethods canEdit={canEdit} dispatch={dispatch} profile={profile} />
                     {itemsSection}
                     {teamsSection}
                 </section>
@@ -85,6 +86,7 @@ const ProfileDetailAbout = (props, { muiTheme, auth }) => {
 ProfileDetailAbout.propTypes = {
     directReports: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
+    isAdmin: PropTypes.bool,
     isLoggedInUser: PropTypes.bool,
     manager: PropTypes.instanceOf(services.profile.containers.ProfileV1),
     memberships: PropTypes.array,
@@ -93,7 +95,6 @@ ProfileDetailAbout.propTypes = {
 };
 
 ProfileDetailAbout.contextTypes = {
-    auth: InternalPropTypes.AuthContext.isRequired,
     muiTheme: PropTypes.object.isRequired,
 };
 

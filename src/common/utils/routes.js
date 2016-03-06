@@ -4,7 +4,19 @@ import { getPostStateURLString } from './post';
 const NEXT_PATHNAME_KEY = 'n:p';
 
 export function getProfilePath(profile) {
-    return `/profile/${profile.id}`;
+    return `/profile/${profile.id}/knowledge`;
+}
+
+export function getPostPath(post) {
+    return `/post/${post.id}`;
+}
+
+export function getTeamPath(team) {
+    return `/team/${team.id}/collections`;
+}
+
+export function getCollectionPath(collection) {
+    return `/collection/${collection.id}`;
 }
 
 export function routeToProfile(profile) {
@@ -27,11 +39,11 @@ export function replacePostState(state) {
 }
 
 export function routeToCollection(collection) {
-    browserHistory.push(`/collection/${collection.id}`);
+    browserHistory.push(getCollectionPath(collection));
 };
 
 export function routeToTeam(team) {
-    browserHistory.push(`/team/${team.id}`);
+    browserHistory.push(getTeamPath(team));
 }
 
 export function routeToLocation(location) {
@@ -55,7 +67,11 @@ export function routeToDrafts() {
 }
 
 export function routeToPost(post) {
-    browserHistory.push(`/post/${post.id}`);
+    browserHistory.push(getPostPath(post));
+}
+
+export function replaceWithPost(post) {
+    browserHistory.replace(`/post/${post.id}`);
 }
 
 export function routeToSearch(query) {
