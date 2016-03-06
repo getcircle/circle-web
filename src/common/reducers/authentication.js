@@ -52,6 +52,10 @@ function handleLoadAuthSuccess(state, action) {
     return nextState;
 }
 
+function handleLoadAuthFailure(state, action) {
+    return state.merge({loaded: true});
+}
+
 function handleGetAuthenticationInstructionsSuccess(state, action) {
     return state.merge({...action.payload});
 }
@@ -103,6 +107,8 @@ export default function authentication(state = initialState, action) {
         return getInitialState();
     case types.LOAD_AUTH_SUCCESS:
         return handleLoadAuthSuccess(state, action);
+    case types.LOAD_AUTH_FAILURE:
+        return handleLoadAuthFailure(state, action);
     default:
         return state;
     }
