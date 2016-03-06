@@ -29,6 +29,12 @@ const FORMS = [
         saveFailure: actionTypes.CREATE_COLLECTION_FAILURE,
         saveSuccess: actionTypes.CREATE_COLLECTION_SUCCESS,
     },
+    {
+        type: formTypes.EDIT_COLLECTION,
+        save: actionTypes.UPDATE_COLLECTION,
+        saveFailure: actionTypes.UPDATE_COLLECTION_FAILURE,
+        saveSuccess: actionTypes.UPDATE_COLLECTION_SUCCESS,
+    },
 ];
 
 function buildInitialState(forms) {

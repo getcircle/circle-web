@@ -3,7 +3,8 @@ import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
 import { EDIT_COLLECTION } from '../../constants/forms';
-import { hideEditCollectionModal, updateCollection } from '../../actions/collections';
+import { updateCollection } from '../../actions/collections';
+import { hideFormDialog } from '../../actions/forms';
 import { PAGE_TYPE } from '../../constants/trackerProperties';
 import * as selectors from '../../selectors';
 import t from '../../utils/gettext';
@@ -18,15 +19,12 @@ import FormTextField from '../FormTextField';
 import ItemMenu, { MENU_CHOICES } from './ItemMenu';
 
 const selector = selectors.createImmutableSelector(
-    [
-        selectors.editCollectionSelector,
-    ],
-    (
-        editCollectionState,
-    ) => {
+    [selectors.formDialogsSelector],
+    (formDialogsState) => {
+        const formState = formDialogsState.get(EDIT_COLLECTION);
         return {
-            formSubmitting: editCollectionState.get('formSubmitting'),
-            visible: editCollectionState.get('modalVisible'),
+            formSubmitting: formState.get('sumbitting'),
+            visible: formState.get('visible'),
         };
     }
 );
@@ -93,7 +91,7 @@ export class EditCollectionForm extends CSSComponent {
     }
 
     handleCancel() {
-        this.props.dispatch(hideEditCollectionModal());
+        this.props.dispatch(hideFormDialog(EDIT_COLLECTION));
     }
 
     render() {

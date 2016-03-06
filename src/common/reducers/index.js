@@ -9,7 +9,6 @@ export { default as createTeam} from './createTeam';
 export { default as deleteCollection } from './deleteCollection';
 export { default as deletePost } from './deletePost';
 export { default as editableCollections } from './editableCollections';
-export { default as editCollection } from './editCollection';
 export { default as editor } from './editor';
 export { default as explore } from './explore';
 // TODO delete

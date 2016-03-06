@@ -2,9 +2,11 @@ import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 import { Link } from 'react-router';
 
-import { showConfirmDeleteModal, showEditCollectionModal } from '../actions/collections';
+import { showConfirmDeleteModal } from '../actions/collections';
 import t from '../utils/gettext';
 import { getProfilePath, getTeamPath } from '../utils/routes';
+import { EDIT_COLLECTION } from '../constants/forms';
+import { showFormDialog } from '../actions/forms';
 
 import CollectionIcon from './CollectionIcon';
 import DetailContent from './DetailContent';
@@ -22,7 +24,7 @@ const EditCollectionMenu = ({ collection }, { store: { dispatch }, muiTheme }) =
     );
 
     function handleDelete() { dispatch(showConfirmDeleteModal(collection)); }
-    function handleEdit() { dispatch(showEditCollectionModal()); }
+    function handleEdit() { dispatch(showFormDialog(EDIT_COLLECTION)); }
 
     return (
         <IconMenu iconElement={icon}>

@@ -59,7 +59,6 @@ export const explorePostsLoadingSelector = exploreTypeLoadingSelectorFactory(exp
 export const explorePostsIdsSelector = exploreTypeIdsSelectorFactory(explorePostsSelector);
 
 export const createTeamSelector = state => state.get('createTeam');
-export const editCollectionSelector = state => state.get('editCollection');
 export const extendedProfilesSelector = state => state.get('extendedProfiles');
 export const extendedTeamsSelector = state => state.get('extendedTeams');
 export const filesSelector = state => state.get('files');
