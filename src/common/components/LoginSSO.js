@@ -20,10 +20,6 @@ class LoginSSO extends CSSComponent {
         providerName: PropTypes.string.isRequired,
     }
 
-    static contextTypes = {
-        location: PropTypes.object,
-    }
-
     classes() {
         return {
             default: {

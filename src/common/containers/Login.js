@@ -233,6 +233,7 @@ class Login extends CSSComponent {
                     getAuthenticationInstructions={(email) => {
                         return dispatch(getAuthenticationInstructions(email, this.context.url));
                     }}
+                    location={this.props.location}
                     providerName={this.props.providerName}
                     userExists={this.props.userExists}
                 />

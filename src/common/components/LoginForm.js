@@ -19,6 +19,7 @@ class LoginForm extends CSSComponent {
         backend: PropTypes.number,
         email: PropTypes.string,
         getAuthenticationInstructions: PropTypes.func.isRequired,
+        location: PropTypes.object.isRequired,
         providerName: PropTypes.string,
         userExists: PropTypes.bool,
     }
@@ -170,6 +171,7 @@ class LoginForm extends CSSComponent {
             return (
                 <LoginSSO
                     authorizationUrl={authorizationUrl || this.state.authorizationUrl}
+                    location={this.props.location}
                     onGuestLogin={() => {
                         this.setState({guest: true, singleSignOn: false});
                     }}
