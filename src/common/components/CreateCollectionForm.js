@@ -2,9 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
-import { createCollection, hideCreateCollectionModal } from '../actions/collections';
+import { createCollection } from '../actions/collections';
 import { CREATE_COLLECTION } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
+import { hideFormDialog } from '../actions/forms';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
 import { collectionValidator } from '../utils/validators';
@@ -17,16 +18,13 @@ import FormTextField from './FormTextField';
 const { OwnerTypeV1 } = services.post.containers.CollectionV1;
 
 const selector = selectors.createImmutableSelector(
-    [
-        selectors.createCollectionSelector,
-    ],
-    (
-        collectionState,
-    ) => {
+    [selectors.formDialogsSelector],
+    (formDialogsState) => {
+        const formState = formDialogsState.get(CREATE_COLLECTION);
         return {
-            formSubmitting: collectionState.get('formSubmitting'),
-            id: collectionState.get('id'),
-            visible: collectionState.get('modalVisible'),
+            formSubmitting: formState.get('submitting'),
+            id: formState.get('result'),
+            visible: formState.get('visible'),
         };
     }
 );
@@ -50,7 +48,7 @@ class CreateCollectionForm extends Component {
     }
 
     handleCancel = () => {
-        this.props.dispatch(hideCreateCollectionModal());
+        this.props.dispatch(hideFormDialog(CREATE_COLLECTION));
     }
 
     render() {

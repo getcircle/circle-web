@@ -3,7 +3,8 @@ import { services } from 'protobufs';
 
 import t from '../utils/gettext';
 
-import { showCreateCollectionModal } from '../actions/collections';
+import { CREATE_COLLECTION } from '../constants/forms';
+import { showFormDialog } from '../actions/forms';
 
 import CollectionIcon from './CollectionIcon';
 import DetailDefaultCollection from './DetailDefaultCollection';
@@ -18,7 +19,7 @@ const EditCollectionsMenu = (props, { store: { dispatch }, muiTheme }) => {
         <EditIcon stroke={muiTheme.luno.tintColor} />
     );
 
-    function handleNewCollection() { dispatch(showCreateCollectionModal()) };
+    function handleNewCollection() { dispatch(showFormDialog(CREATE_COLLECTION)) };
 
     return (
         <IconMenu iconElement={icon}>

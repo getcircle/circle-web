@@ -3,16 +3,7 @@ import { services } from 'protobufs';
 import { SERVICE_REQUEST } from '../middleware/services';
 import * as types from '../constants/actionTypes';
 import * as requests from '../services/posts';
-import { paginatedShouldBail } from '../reducers/paginate';
 import { retrieveCollection } from '../reducers/denormalizations';
-
-export function showCreateCollectionModal() {
-    return {type: types.SHOW_CREATE_COLLECTION_MODAL};
-}
-
-export function hideCreateCollectionModal() {
-    return {type: types.HIDE_CREATE_COLLECTION_MODAL};
-}
 
 export function showConfirmDeleteModal(collection) {
     return {type: types.SHOW_CONFIRM_DELETE_COLLECTION_MODAL, payload: collection};

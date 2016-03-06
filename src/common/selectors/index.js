@@ -81,7 +81,6 @@ export const updateTeamSelector = state => state.get('updateTeam');
 export const profileMembershipsSelector = state => state.get('profileMemberships');
 export const deletePostSelector = state => state.get('deletePost');
 export const editorSelector = state => state.get('editor');
-export const createCollectionSelector = state => state.get('createCollection');
 export const deleteCollectionSelector = state => state.get('deleteCollection');
 export const editableCollectionsSelector = state => state.get('editableCollections');
 export const filterCollectionsSelector = state => state.get('filterCollections');

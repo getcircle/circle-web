@@ -23,6 +23,12 @@ const FORMS = [
         saveFailure: actionTypes.ADD_MEMBERS_FAILURE,
         saveSuccess: actionTypes.ADD_MEMBERS_SUCCESS,
     },
+    {
+        type: formTypes.CREATE_COLLECTION,
+        save: actionTypes.CREATE_COLLECTION,
+        saveFailure: actionTypes.CREATE_COLLECTION_FAILURE,
+        saveSuccess: actionTypes.CREATE_COLLECTION_SUCCESS,
+    },
 ];
 
 function buildInitialState(forms) {
@@ -63,6 +69,7 @@ function handleSaveActions(state, action) {
         return state.mergeIn([form], {
             submitting: false,
             visible: false,
+            ...action.payload,
         });
     } else if (saveFailure) {
         return state.mergeIn([form], {submitting: false});

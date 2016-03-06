@@ -5,10 +5,10 @@ import { services } from 'protobufs';
 import { Menu, MenuItem, Popover } from 'material-ui';
 
 import { logout } from '../actions/authentication';
-import { PostStateURLString } from '../utils/post';
-import { routeToNewPost, routeToDrafts, routeToProfile, routeToTeam, routeToAddIntegration } from '../utils/routes';
+import { routeToNewPost, routeToDrafts, routeToProfile, routeToAddIntegration } from '../utils/routes';
 import { showCreateTeamModal } from '../actions/teams';
-import { showCreateCollectionModal } from '../actions/collections';
+import { CREATE_COLLECTION } from '../constants/forms';
+import { showFormDialog } from '../actions/forms';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 import { IntegrationString } from '../utils/integrations';
@@ -16,8 +16,6 @@ import { IntegrationString } from '../utils/integrations';
 import CreateCollectionForm from './CreateCollectionForm';
 import CreateTeamForm from './CreateTeamForm';
 import CSSComponent from './CSSComponent';
-import DownArrowIcon from './DownArrowIcon';
-import IconContainer from './IconContainer';
 import InternalPropTypes from './InternalPropTypes';
 import LightBulbIcon from './LightBulbIcon';
 import ProfileAvatar from './ProfileAvatar';
@@ -168,7 +166,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleCreateCollection(event) {
-        this.props.dispatch(showCreateCollectionModal());
+        this.props.dispatch(showFormDialog(CREATE_COLLECTION));
     }
 
     handleAddToSlack = () => {
