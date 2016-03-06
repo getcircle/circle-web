@@ -2,9 +2,10 @@ import { IconButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 import { services } from 'protobufs';
 
-import { showAddMembersModal } from '../actions/teams';
 import t from '../utils/gettext';
 import { removeMembers, updateMembers } from '../actions/teams';
+import { ADD_MEMBERS } from '../constants/forms';
+import { showFormDialog } from '../actions/forms';
 
 import DetailSection from './DetailSectionV2';
 import HoverMoreMenu from './HoverMoreMenu';
@@ -113,7 +114,7 @@ const TeamDetailPeople = (props, { device, muiTheme }) => {
                 borderRadius: '25px',
             },
         };
-        const handleTouchTap = () => dispatch(showAddMembersModal());
+        const handleTouchTap = () => dispatch(showFormDialog(ADD_MEMBERS));
         plusIcon = (
             <IconButton iconStyle={styles.icon} onTouchTap={handleTouchTap}>
                 <PlusIcon stroke={muiTheme.luno.tintColor} />

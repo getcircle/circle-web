@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
-import { hideFormDialog } from '../actions/formDialogs';
+import { hideFormDialog } from '../actions/forms';
 import { ASK_QUESTION } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';

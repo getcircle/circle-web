@@ -2,7 +2,7 @@ import { IconButton } from 'material-ui';
 import React, { PropTypes } from 'react';
 
 import { EDIT_PROFILE } from '../../constants/forms';
-import { showFormDialog } from '../../actions/formDialogs';
+import { showFormDialog } from '../../actions/forms';
 
 import EditIcon from '../EditIcon';
 

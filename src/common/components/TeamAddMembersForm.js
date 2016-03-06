@@ -3,10 +3,11 @@ import { reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
 import { ADD_MEMBERS } from '../constants/forms';
-import { hideAddMembersModal, addMembers } from '../actions/teams';
+import { addMembers } from '../actions/teams';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
+import { hideFormDialog } from '../actions/forms';
 
 import FormDialog from './FormDialog';
 import CSSComponent from  './CSSComponent';
@@ -14,15 +15,12 @@ import FormLabel from './FormLabel';
 import FormPeopleSelector from './FormPeopleSelector';
 
 const selector = selectors.createImmutableSelector(
-    [
-        selectors.addMembersSelector,
-    ],
-    (
-        addMembersState,
-    ) => {
+    [selectors.formDialogsSelector],
+    (formDialogsState) => {
+        const formState = formDialogsState.get(ADD_MEMBERS);
         return {
-            formSubmitting: addMembersState.get('formSubmitting'),
-            visible: addMembersState.get('modalVisible'),
+            formSubmitting: formState.get('submitting'),
+            visible: formState.get('visible'),
         };
     }
 );
@@ -77,7 +75,7 @@ export class TeamAddMembersForm extends CSSComponent {
     }
 
     handleCancel() {
-        this.props.dispatch(hideAddMembersModal());
+        this.props.dispatch(hideFormDialog(ADD_MEMBERS));
     }
 
     render() {

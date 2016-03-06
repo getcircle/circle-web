@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
-import { hideFormDialog } from '../actions/formDialogs';
+import { hideFormDialog } from '../actions/forms';
 import { updateProfile } from '../actions/profiles';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { profileValidator } from '../utils/validators';

@@ -17,6 +17,12 @@ const FORMS = [
         saveSuccess: actionTypes.UPDATE_PROFILE_SUCCESS,
         saveFailure: actionTypes.UPDATE_PROFILE_FAILURE,
     },
+    {
+        type: formTypes.ADD_MEMBERS,
+        save: actionTypes.ADD_MEMBERS,
+        saveFailure: actionTypes.ADD_MEMBERS_FAILURE,
+        saveSuccess: actionTypes.ADD_MEMBERS_SUCCESS,
+    },
 ];
 
 function buildInitialState(forms) {

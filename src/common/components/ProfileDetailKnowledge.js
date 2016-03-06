@@ -5,7 +5,7 @@ import { services } from 'protobufs';
 import t from '../utils/gettext';
 import { routeToDrafts, routeToNewPost, routeToEditPost } from '../utils/routes';
 import { showConfirmDeleteModal } from '../actions/posts';
-import { showFormDialog } from '../actions/formDialogs';
+import { showFormDialog } from '../actions/forms';
 
 import AskQuestionForm from './AskQuestionForm';
 import CenterLoadingIndicator from './CenterLoadingIndicator';

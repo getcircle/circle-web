@@ -9,7 +9,7 @@ import {
 } from '../../../src/common/constants/actionTypes';
 import { ASK_QUESTION as FORM } from '../../../src/common/constants/forms';
 import formDialogs from '../../../src/common/reducers/formDialogs';
-import { hideFormDialog, showFormDialog } from '../../../src/common/actions/formDialogs';
+import { hideFormDialog, showFormDialog } from '../../../src/common/actions/forms';
 
 function getState(attributes) {
     const state = {};

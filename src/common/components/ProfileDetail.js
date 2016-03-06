@@ -6,7 +6,7 @@ import { services } from 'protobufs';
 import { EDIT_PROFILE } from '../constants/forms';
 import { PostStateURLString } from '../utils/post';
 import { replaceProfileSlug } from '../utils/routes';
-import { showFormDialog } from '../actions/formDialogs';
+import { showFormDialog } from '../actions/forms';
 import t from '../utils/gettext';
 
 import CSSComponent from './CSSComponent';

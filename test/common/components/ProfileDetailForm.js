@@ -5,7 +5,7 @@ import React from 'react';
 import { services } from 'protobufs';
 
 import { getProfile } from '../../factories/ProfileFactory';
-import { hideFormDialog } from '../../../src/common/actions/formDialogs';
+import { hideFormDialog } from '../../../src/common/actions/forms';
 import { EDIT_PROFILE } from '../../../src/common/constants/forms';
 import { ProfileDetailForm, fieldNames, getUpdatedProfile } from '../../../src/common/components/ProfileDetailForm';
 import { updateProfile } from '../../../src/common/actions/profiles';

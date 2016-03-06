@@ -285,24 +285,6 @@ export function hideTeamEditModal() {
     return {type: types.MODAL_TEAM_EDIT_HIDE};
 }
 
-/**
- * Show the add members modal
- *
- * @return {Object} redux action
- */
-export function showAddMembersModal() {
-    return {type: types.MODAL_ADD_MEMBERS_SHOW};
-}
-
-/**
- * Hide the add members modal
- *
- * @return {Object} redux action
- */
-export function hideAddMembersModal() {
-    return {type: types.MODAL_ADD_MEMBERS_HIDE};
-}
-
 export function updateTeamSlug(team, previousSlug, nextSlug) {
     return {
         type: types.UPDATE_TEAM_SLUG,
