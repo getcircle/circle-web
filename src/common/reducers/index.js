@@ -37,7 +37,6 @@ export { default as search } from './search';
 export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';
 export { default as teamMembership } from './teamMembership';
-export { default as updateTeam } from './updateTeam';
 
 // external reducers
 export function form(state, action) {

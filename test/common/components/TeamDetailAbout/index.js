@@ -5,7 +5,8 @@ import React from 'react';
 import { IconButton } from 'material-ui';
 
 import { getCustomTheme } from '../../../../src/common/styles/theme';
-import { showTeamEditModal } from '../../../../src/common/actions/teams';
+import { EDIT_TEAM } from '../../../../src/common/constants/forms';
+import { showFormDialog } from '../../../../src/common/actions/forms';
 
 import DetailSection from '../../../../src/common/components/DetailSectionV2';
 import DetailListProfiles from '../../../../src/common/components/DetailListProfiles';
@@ -57,7 +58,7 @@ describe('TeamDetailAbout', () => {
             const dispatchSpy = expect.createSpy();
             const { wrapper } = setup({dispatch: dispatchSpy}, undefined, true);
             wrapper.find(IconButton).prop('onTouchTap')();
-            const action = showTeamEditModal();
+            const action = showFormDialog(EDIT_TEAM);
             expect(dispatchSpy).toHaveBeenCalledWith(action);
         });
 

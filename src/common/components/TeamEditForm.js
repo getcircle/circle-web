@@ -3,7 +3,8 @@ import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
 import { EDIT_TEAM } from '../constants/forms';
-import { hideTeamEditModal, updateTeam } from '../actions/teams';
+import { updateTeam } from '../actions/teams';
+import { hideFormDialog } from '../actions/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import t from '../utils/gettext';
@@ -19,15 +20,12 @@ import FormTextField from './FormTextField';
 const { ContactMethodV1 } = services.team.containers;
 
 const selector = selectors.createImmutableSelector(
-    [
-        selectors.updateTeamSelector,
-    ],
-    (
-        updateTeamState,
-    ) => {
+    [selectors.formDialogsSelector],
+    (formDialogsState) => {
+        const formState = formDialogsState.get(EDIT_TEAM);
         return {
-            formSubmitting: updateTeamState.get('formSubmitting'),
-            visible: updateTeamState.get('modalVisible'),
+            formSubmitting: formState.get('submitting'),
+            visible: formState.get('visible'),
         };
     }
 );
@@ -91,7 +89,7 @@ export class TeamEditForm extends CSSComponent {
     }
 
     handleCancel() {
-        this.props.dispatch(hideTeamEditModal());
+        this.props.dispatch(hideFormDialog(EDIT_TEAM));
     }
 
     render() {

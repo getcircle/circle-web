@@ -267,24 +267,6 @@ export function leaveTeam(teamId, memberId) {
     };
 }
 
-/**
- * Show the team edit modal
- *
- * @return {Object} plain object redux action
- */
-export function showTeamEditModal() {
-    return {type: types.MODAL_TEAM_EDIT_SHOW};
-}
-
-/**
- * Hide the team edit modal
- *
- * @return {Object} plain object redux action
- */
-export function hideTeamEditModal() {
-    return {type: types.MODAL_TEAM_EDIT_HIDE};
-}
-
 export function updateTeamSlug(team, previousSlug, nextSlug) {
     return {
         type: types.UPDATE_TEAM_SLUG,

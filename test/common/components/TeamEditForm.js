@@ -5,7 +5,9 @@ import React from 'react';
 import FormDialog from '../../../src/common/components/FormDialog';
 import { getTeam } from '../../factories/TeamFactory';
 import { TeamEditForm } from '../../../src/common/components/TeamEditForm';
-import { updateTeam, hideTeamEditModal } from '../../../src/common/actions/teams';
+import { updateTeam } from '../../../src/common/actions/teams';
+import { hideFormDialog } from '../../../src/common/actions/forms';
+import { EDIT_TEAM } from '../../../src/common/constants/forms';
 
 function setup(overrides) {
     const defaults = {
@@ -51,7 +53,7 @@ describe('TeamEditForm', () => {
             const dispatchSpy = expect.createSpy();
             const { wrapper } = setup({dispatch: dispatchSpy});
             wrapper.find(FormDialog).prop('onCancel')();
-            expect(dispatchSpy).toHaveBeenCalledWith(hideTeamEditModal());
+            expect(dispatchSpy).toHaveBeenCalledWith(hideFormDialog(EDIT_TEAM));
         });
 
     });

@@ -35,6 +35,12 @@ const FORMS = [
         saveFailure: actionTypes.UPDATE_COLLECTION_FAILURE,
         saveSuccess: actionTypes.UPDATE_COLLECTION_SUCCESS,
     },
+    {
+        type: formTypes.EDIT_TEAM,
+        save: actionTypes.UPDATE_TEAM,
+        saveFailure: actionTypes.UPDATE_TEAM_FAILURE,
+        saveSuccess: actionTypes.UPDATE_TEAM_SUCCESS,
+    },
 ];
 
 function buildInitialState(forms) {
