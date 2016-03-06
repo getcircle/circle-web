@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 
-import { requestMissingInfo, hideRequestMissingInfoModal } from '../actions/search';
+import { requestMissingInfo } from '../actions/search';
+import { hideFormDialog } from '../actions/forms';
 import { REQUEST_MISSING_INFO } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
@@ -13,15 +14,12 @@ import FormLabel from './FormLabel';
 import FormTextArea from './FormTextArea';
 
 const selector = selectors.createImmutableSelector(
-    [
-        selectors.requestMissingInfoSelector,
-    ],
-    (
-        requestMissingInfoState,
-    ) => {
+    [selectors.formDialogs],
+    (formDialogsState) => {
+        const formState = formDialogsState.get(REQUEST_MISSING_INFO);
         return {
-            formSubmitting: requestMissingInfoState.get('formSubmitting'),
-            visible: requestMissingInfoState.get('modalVisible'),
+            formSubmitting: formState.get('submitting'),
+            visible: formState.get('visible'),
         };
     }
 );
@@ -56,7 +54,7 @@ export class RequestMissingInfoForm extends Component {
     }
 
     handleCancel = () => {
-        this.context.store.dispatch(hideRequestMissingInfoModal());
+        this.context.store.dispatch(hideFormDialog(REQUEST_MISSING_INFO));
     }
 
     render() {

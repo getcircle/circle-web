@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
 
 import Colors from '../styles/Colors';
-import { showRequestMissingInfoModal } from '../actions/search';
 import t from '../utils/gettext';
+import { showFormDialog } from '../actions/forms';
+import { REQUEST_MISSING_INFO } from '../constants/forms';
 
 import DetailContent from './DetailContent';
 import DetailQuestionSection from './DetailQuestionSection';
@@ -22,7 +23,7 @@ export const SearchDetailHeader = ({ totalResults, query }) => {
 
 const SearchDetailMissingInfo = ({ query, ...other}, { store }) => {
     const onRequestMissingInfo = () => {
-        store.dispatch(showRequestMissingInfoModal());
+        store.dispatch(showFormDialog(REQUEST_MISSING_INFO));
     };
 
     return (

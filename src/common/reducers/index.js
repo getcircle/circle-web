@@ -32,7 +32,6 @@ export { default as profileMemberships } from './profileMemberships';
 export { default as profiles } from './profiles';
 export { default as rearrangeCollections } from './rearrangeCollections';
 export { default as responsive } from './responsive';
-export { default as requestMissingInfo } from './requestMissingInfo';
 export { default as search } from './search';
 export { default as teamCoordinators } from './teamCoordinators';
 export { default as teamMembers } from './teamMembers';

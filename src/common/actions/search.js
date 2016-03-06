@@ -67,21 +67,3 @@ export function requestMissingInfo(query, comment) {
         }
     }
 }
-
-/**
- * Show the request missing info modal
- *
- * @return {Object} plain object redux action
- */
-export function showRequestMissingInfoModal() {
-    return {type: types.MODAL_REQUEST_MISSING_INFO_SHOW};
-}
-
-/**
- * Hide the request missing info modal
- *
- * @return {Object} plain object redux action
- */
-export function hideRequestMissingInfoModal() {
-    return {type: types.MODAL_REQUEST_MISSING_INFO_HIDE};
-}

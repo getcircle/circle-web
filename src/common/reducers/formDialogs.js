@@ -41,6 +41,12 @@ const FORMS = [
         saveFailure: actionTypes.UPDATE_TEAM_FAILURE,
         saveSuccess: actionTypes.UPDATE_TEAM_SUCCESS,
     },
+    {
+        type: formTypes.REQUEST_MISSING_INFO,
+        save: actionTypes.REQUEST_MISSING_INFO,
+        saveFailure: actionTypes.REQUEST_MISSING_INFO_FAILURE,
+        saveSuccess: actionTypes.REQUEST_MISSING_INFO_SUCCESS,
+    },
 ];
 
 function buildInitialState(forms) {
