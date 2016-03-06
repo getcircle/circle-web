@@ -15,6 +15,7 @@ class LoginSSO extends CSSComponent {
 
     static propTypes = {
         authorizationUrl: PropTypes.string.isRequired,
+        location: PropTypes.object.isRequired,
         onGuestLogin: PropTypes.func.isRequired,
         providerName: PropTypes.string.isRequired,
     }
@@ -55,7 +56,7 @@ class LoginSSO extends CSSComponent {
             onGuestLogin,
             providerName,
         } = this.props;
-        const nextPathname = getNextPathname(this.context.location, '/');
+        const nextPathname = getNextPathname(this.props.location, '/');
         return (
             <section>
                 <section>

@@ -34,6 +34,7 @@ class AddIntegration extends Component {
     static propTypes = {
         authorizationUrl: PropTypes.string,
         dispatch: PropTypes.func.isRequired,
+        location: PropTypes.object.isRequired,
         params: PropTypes.shape({
             integration: PropTypes.string.isRequired,
         }).isRequired,
@@ -45,7 +46,7 @@ class AddIntegration extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         const { authorizationUrl } = this.props;
-        const nextPathname = getNextPathname(this.context.location, '/');
+        const nextPathname = getNextPathname(this.props.location, '/');
         if (authorizationUrl) {
             routeToURL(authorizationUrl, nextPathname);
         }
