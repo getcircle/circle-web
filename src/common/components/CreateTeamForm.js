@@ -2,8 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
-import { createTeam, hideCreateTeamModal } from '../actions/teams';
+import { createTeam } from '../actions/teams';
 import { CREATE_TEAM } from '../constants/forms';
+import { hideFormDialog } from '../actions/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import { routeToTeam } from '../utils/routes';
 import * as selectors from '../selectors';
@@ -18,16 +19,13 @@ import FormTextArea from './FormTextArea';
 import FormTextField from './FormTextField';
 
 const selector = selectors.createImmutableSelector(
-    [
-        selectors.createTeamSelector,
-    ],
-    (
-        teamState,
-    ) => {
+    [selectors.formDialogsSelector],
+    (formDialogsState) => {
+        const formState = formDialogsState.get(CREATE_TEAM);
         return {
-            formSubmitting: teamState.get('formSubmitting'),
-            id: teamState.get('id'),
-            visible: teamState.get('modalVisible'),
+            formSubmitting: formState.get('formSubmitting'),
+            id: formState.getIn(['payload', 'result']),
+            visible: formState.get('visible'),
         };
     }
 );
@@ -66,7 +64,7 @@ class CreateTeamForm extends Component {
     }
 
     handleCancel = () => {
-        this.props.dispatch(hideCreateTeamModal());
+        this.props.dispatch(hideFormDialog(CREATE_TEAM));
     }
 
     render() {

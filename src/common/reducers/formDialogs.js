@@ -47,6 +47,12 @@ const FORMS = [
         saveFailure: actionTypes.REQUEST_MISSING_INFO_FAILURE,
         saveSuccess: actionTypes.REQUEST_MISSING_INFO_SUCCESS,
     },
+    {
+        type: formTypes.CREATE_TEAM,
+        save: types.CREATE_TEAM,
+        saveFailure: types.CREATE_TEAM_FAILURE,
+        saveSuccess: types.CREATE_TEAM_SUCCESS,
+    },
 ];
 
 function buildInitialState(forms) {
@@ -87,7 +93,7 @@ function handleSaveActions(state, action) {
         return state.mergeIn([form], {
             submitting: false,
             visible: false,
-            ...action.payload,
+            payload: action.payload,
         });
     } else if (saveFailure) {
         return state.mergeIn([form], {submitting: false});

@@ -4,7 +4,9 @@ import React from 'react';
 
 import { CreateTeamForm } from '../../../src/common/components/CreateTeamForm';
 import FormDialog from '../../../src/common/components/FormDialog';
-import { createTeam, hideCreateTeamModal } from '../../../src/common/actions/teams';
+import { createTeam } from '../../../src/common/actions/teams';
+import { hideFormDialog } from '../../../src/common/actions/forms';
+import { CREATE_TEAM } from '../../../src/common/constants/forms';
 import { getDefaultContext } from '../../componentWithContext';
 
 
@@ -51,7 +53,7 @@ describe('CreateTeamForm', () => {
             const dispatchSpy = expect.createSpy();
             const { wrapper } = setup({dispatch: dispatchSpy});
             wrapper.find(FormDialog).prop('onCancel')();
-            expect(dispatchSpy).toHaveBeenCalledWith(hideCreateTeamModal());
+            expect(dispatchSpy).toHaveBeenCalledWith(hideFormDialog(CREATE_TEAM));
         });
 
     });

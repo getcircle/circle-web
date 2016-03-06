@@ -6,8 +6,7 @@ import { Menu, MenuItem, Popover } from 'material-ui';
 
 import { logout } from '../actions/authentication';
 import { routeToNewPost, routeToDrafts, routeToProfile, routeToAddIntegration } from '../utils/routes';
-import { showCreateTeamModal } from '../actions/teams';
-import { CREATE_COLLECTION } from '../constants/forms';
+import { CREATE_COLLECTION, CREATE_TEAM } from '../constants/forms';
 import { showFormDialog } from '../actions/forms';
 import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
@@ -162,7 +161,7 @@ class HeaderMenu extends CSSComponent {
     }
 
     handleCreateTeam(event) {
-        this.props.dispatch(showCreateTeamModal());
+        this.props.dispatch(showFormDialog(CREATE_TEAM));
     }
 
     handleCreateCollection(event) {

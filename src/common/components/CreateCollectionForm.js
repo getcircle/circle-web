@@ -23,7 +23,7 @@ const selector = selectors.createImmutableSelector(
         const formState = formDialogsState.get(CREATE_COLLECTION);
         return {
             formSubmitting: formState.get('submitting'),
-            id: formState.get('result'),
+            id: formState.getIn(['payload', 'result']),
             visible: formState.get('visible'),
         };
     }

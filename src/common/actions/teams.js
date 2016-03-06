@@ -155,24 +155,6 @@ export function getCoordinators(teamId, nextRequest = null) {
 }
 
 /**
- * Show the create team modal
- *
- * @return {Object} plain object redux action
- */
-export function showCreateTeamModal() {
-    return {type: types.MODAL_CREATE_TEAM_SHOW};
-}
-
-/**
- * Hide the create team modal
- *
- * @return {Object} plain object redux action
- */
-export function hideCreateTeamModal() {
-    return {type: types.MODAL_CREATE_TEAM_HIDE};
-}
-
-/**
  * Update the team
  *
  * @param {services.team.containers.TeamV1} team team we're updating

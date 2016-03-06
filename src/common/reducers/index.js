@@ -5,7 +5,6 @@ export { default as autocomplete } from './autocomplete';
 export { default as cache } from './cache';
 export { default as collectionItems } from './collectionItems';
 export { default as collections } from './collections';
-export { default as createTeam} from './createTeam';
 export { default as deleteCollection } from './deleteCollection';
 export { default as deletePost } from './deletePost';
 export { default as editableCollections } from './editableCollections';
