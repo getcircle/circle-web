@@ -15,7 +15,6 @@ import DocumentTitle from '../components/DocumentTitle';
 import InternalPropTypes from '../components/InternalPropTypes';
 import Header from '../components/Header';
 import HeaderSearch from '../components/HeaderSearch';
-import TabBar from '../components/TabBar';
 
 const UNAUTHENTICATED_ROUTES = [
     '/auth',
@@ -140,10 +139,6 @@ class App extends CSSComponent {
     }
 
     render() {
-        let footer;
-        if (this.props.authenticated && this.props.displayFooter) {
-            footer = <TabBar profile={this.props.profile} {...this.styles().TabBar} />;
-        }
         let header;
         if (this.props.authenticated && this.props.displayHeader) {
             header = (
@@ -160,7 +155,6 @@ class App extends CSSComponent {
                         <div>
                             {header}
                             {this.props.children}
-                            {footer}
                         </div>
                     </Canvas>
                 </div>
