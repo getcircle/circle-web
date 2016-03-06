@@ -91,13 +91,13 @@ const Question = ({ profile }, { store: { dispatch } }) => {
     const styles = {
         avatar: { height: 42, marginBottom: 5, width: 42 },
     };
-    const top = <ProfileAvatar profile={profile} style={styles.avatar} />;
+    const header = <ProfileAvatar profile={profile} style={styles.avatar} />;
     return (
         <DetailQuestionSection
             buttonText={t('Ask a question')}
+            header={header}
             onTouchTap={handleTouchTap}
             questionText={t('Need me to share some knowledge?')}
-            top={top}
         />
     );
 };

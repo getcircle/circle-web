@@ -11,7 +11,7 @@ const DetailQuestionSection = (props) => {
         buttonText,
         onTouchTap,
         questionText,
-        top,
+        header,
     } = props;
     const styles = {
         text: {
@@ -30,7 +30,7 @@ const DetailQuestionSection = (props) => {
     };
     return (
         <DetailSection>
-            {top}
+            {header}
             <div style={styles.text}>{questionText}</div>
             <RoundedButton
                 label={buttonText}
@@ -44,9 +44,9 @@ const DetailQuestionSection = (props) => {
 
 DetailQuestionSection.propTypes = {
     buttonText: PropTypes.string.isRequired,
+    header: PropTypes.node,
     onTouchTap: PropTypes.func,
     questionText: PropTypes.string.isRequired,
-    top: PropTypes.node,
 };
 
 export default DetailQuestionSection;

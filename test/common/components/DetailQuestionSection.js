@@ -27,10 +27,10 @@ describe('DetailQuestionSection', () => {
         expect(wrapper.find(RoundedButton).prop('label')).toEqual(BUTTON_TEXT);
     });
 
-    it('renders a top if provided', () => {
-        const top = <span/>;
-        const { wrapper } = setup({top});
-        expect(wrapper.contains(top)).toBe(true);
+    it('renders a header if provided', () => {
+        const header = <span/>;
+        const { wrapper } = setup({header});
+        expect(wrapper.contains(header)).toBe(true);
     });
 
     describe('onTouchTap of the button', () => {
