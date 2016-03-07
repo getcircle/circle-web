@@ -67,6 +67,12 @@ class AddToCollectionMenu extends Component {
         }
     }
 
+    componentWillUnmount() {
+        if (this.confirmationTimeout) {
+            clearTimeout(this.confirmationTimeout);
+        }
+    }
+
     handleRequestChange = (open) => {
         if (open) {
             this.setState({
