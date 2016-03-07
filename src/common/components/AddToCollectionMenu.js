@@ -11,7 +11,7 @@ import AddToCollectionForm from './AddToCollectionForm';
 import IconMenu from './IconMenu';
 
 const FILTER_INPUT_CLASS_NAME = 'add-to-collection-input';
-const CONFIRMATION_CLOSE_DELAY = 3000;
+const CONFIRMATION_CLOSE_DELAY = 1500;
 
 function missingCollection(collections, otherCollections) {
     return collections.find(collection => {
