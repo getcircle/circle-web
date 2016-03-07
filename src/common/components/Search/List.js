@@ -27,10 +27,10 @@ class ListItem extends CSSComponent {
         onSelectItem: PropTypes.func,
     }
 
-    handleTouchTap = () => {
+    handleTouchTap = (event) => {
         const { item, onSelectItem } = this.props;
         if (typeof onSelectItem === 'function') {
-            onSelectItem(item);
+            onSelectItem(item, event);
         }
     }
 

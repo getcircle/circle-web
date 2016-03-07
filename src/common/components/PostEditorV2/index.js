@@ -59,6 +59,7 @@ class PostEditor extends Component {
             collections,
             collectionsLoaded,
             editableCollections,
+            memberships,
             onFileDelete,
             onFileUpload,
             post,
@@ -75,10 +76,11 @@ class PostEditor extends Component {
                     collections={collections}
                     collectionsLoaded={collectionsLoaded}
                     editableCollections={editableCollections}
+                    memberships={memberships}
                     onSubmit={this.handleSubmitCollections}
                     post={post}
                     ref="form"
-                    style={{paddingTop: 10}}
+                    style={{marginBottom: 200, paddingTop: 10}}
                 />
             );
         }
@@ -114,6 +116,7 @@ PostEditor.propTypes = {
     collections: PropTypes.array,
     collectionsLoaded: PropTypes.bool,
     editableCollections: PropTypes.array,
+    memberships: PropTypes.array,
     onFileDelete: PropTypes.func,
     onFileUpload: PropTypes.func,
     onSave: PropTypes.func.isRequired,

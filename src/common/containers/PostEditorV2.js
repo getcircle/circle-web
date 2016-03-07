@@ -6,11 +6,12 @@ import { services } from 'protobufs';
 
 import { createPost, getPost, updatePost } from '../actions/posts';
 import { getCollections, getEditableCollections } from '../actions/collections';
+import { getMembersForProfileId } from '../actions/teams';
 import { clearFileUploads, deleteFiles, uploadFile } from '../actions/files';
 import { reset } from '../actions/editor';
 
 import { resetScroll } from '../utils/window';
-import { retrievePost, retrieveCollections } from '../reducers/denormalizations';
+import { retrievePost, retrieveCollections, retrieveTeamMembers } from '../reducers/denormalizations';
 import { replaceWithEditPost } from '../utils/routes';
 import * as selectors from '../selectors';
 
@@ -39,14 +40,16 @@ const editorSelector = selectors.createImmutableSelector(
 
 const cacheSelector = selectors.createImmutableSelector(
     [
+        selectors.authenticationSelector,
         selectors.cacheSelector,
         selectors.routerParametersSelector,
         selectors.filesSelector,
         selectors.editableCollectionsSelector,
         selectors.postCollectionsSelector,
+        selectors.profileMembershipsSelector,
     ],
-    (cacheState, paramsState, filesState, editableCollectionsState, postCollectionsState) => {
-        let collections, collectionsLoaded, editableCollections, post;
+    (authenticationState, cacheState, paramsState, filesState, editableCollectionsState, postCollectionsState, membershipsState) => {
+        let collections, collectionsLoaded, editableCollections, memberships, post;
 
         const postId = paramsState.postId;
         const cache = cacheState.toJS();
@@ -71,10 +74,20 @@ const cacheSelector = selectors.createImmutableSelector(
             editableCollections = retrieveCollections(editableCollectionIds.toJS(), cache);
         }
 
+        const profileId = authenticationState.getIn(['profile', 'id']);
+        if (membershipsState.has(profileId)) {
+            const ids = membershipsState.get(profileId).get('ids');
+            if (ids.size) {
+                // TODO: support Immutable
+                memberships = retrieveTeamMembers(ids.toJS(), cache);
+            }
+        }
+
         return {
             collections,
             collectionsLoaded,
             editableCollections,
+            memberships,
             post,
             uploadProgress: filesState.get('progress'),
             uploadedFiles: filesState.get('files'),
@@ -121,9 +134,16 @@ function fetchEditableCollections({ dispatch, getState }) {
     dispatch(getEditableCollections(profile.id));
 }
 
+function fetchMemberships({ dispatch, getState }) {
+    const state = getState();
+    const profile = state.get('authentication').get('profile');
+    return dispatch(getMembersForProfileId(profile.id));
+}
+
 function loadPost(locals) {
     fetchPost(locals);
     fetchCollections(locals);
+    fetchMemberships(locals);
 }
 
 const hooks = {
@@ -131,6 +151,7 @@ const hooks = {
     defer: (locals) => {
         fetchCollections(locals);
         fetchEditableCollections(locals);
+        fetchMemberships(locals);
     },
 };
 
@@ -180,6 +201,7 @@ class PostEditor extends Component {
             collections,
             collectionsLoaded,
             editableCollections,
+            memberships,
             post,
             saving,
             uploadProgress,
@@ -197,6 +219,7 @@ class PostEditor extends Component {
                         collections={collections}
                         collectionsLoaded={collectionsLoaded}
                         editableCollections={editableCollections}
+                        memberships={memberships}
                         onFileDelete={this.handleFileDelete}
                         onFileUpload={this.handleFileUpload}
                         onSave={this.handleSave}
@@ -227,6 +250,7 @@ PostEditor.propTypes = {
     collectionsLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
+    memberships: PropTypes.array,
     params: PropTypes.shape({
         postId: PropTypes.string,
     }),

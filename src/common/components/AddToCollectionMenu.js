@@ -3,6 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import { services } from 'protobufs';
 import { getValues } from 'redux-form';
 
+import t from '../utils/gettext';
 import { updateCollections } from '../utils/collections';
 
 import AddCollectionIcon from './AddCollectionIcon';
@@ -10,12 +11,22 @@ import AddToCollectionForm from './AddToCollectionForm';
 import IconMenu from './IconMenu';
 
 const FILTER_INPUT_CLASS_NAME = 'add-to-collection-input';
+const CONFIRMATION_CLOSE_DELAY = 1500;
+
+function missingCollection(collections, otherCollections) {
+    return collections.find(collection => {
+        return !otherCollections.find(o => o.id === collection.id);
+    });
+}
 
 class AddToCollectionMenu extends Component {
 
     state = {
+        addingNewCollection: false,
+        confirmationMessage: null,
         muiTheme: this.context.muiTheme,
         open: false,
+        submitting: false,
     }
 
     getChildContext() {
@@ -30,10 +41,52 @@ class AddToCollectionMenu extends Component {
         this.setState({muiTheme});
     }
 
+    componentWillReceiveProps(nextProps) {
+        const oldCollections = this.props.collections;
+        const newCollections = nextProps.collections;
+        if (!oldCollections || !newCollections) {
+            return;
+        }
+
+        const added = missingCollection(newCollections, oldCollections);
+        const removed = missingCollection(oldCollections, newCollections);
+
+        let confirmationMessage;
+        if (added) {
+            confirmationMessage = t('Added to ') + added.display_name;
+        } else if (removed) {
+            confirmationMessage = t('Removed from ') + removed.display_name;
+        }
+
+        if (confirmationMessage) {
+            this.setState({confirmationMessage});
+
+            this.confirmationTimeout = setTimeout(() => {
+                this.setState({open: false});
+            }, CONFIRMATION_CLOSE_DELAY);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.confirmationTimeout) {
+            clearTimeout(this.confirmationTimeout);
+        }
+    }
+
     handleRequestChange = (open) => {
-        this.setState({open});
-        if (!open) {
+        if (open) {
+            this.setState({
+                confirmationMessage: null,
+                submitting: false,
+                open
+            });
+        } else {
+            this.setState({open});
             this.submit();
+        }
+
+        if (this.confirmationTimeout) {
+            clearTimeout(this.confirmationTimeout);
         }
     }
 
@@ -46,12 +99,21 @@ class AddToCollectionMenu extends Component {
     }
 
     handleItemTouchTap = (event) => {
+        event.preventDefault();
+
         if (event.target.className === FILTER_INPUT_CLASS_NAME) {
-            event.preventDefault();
             return;
         }
 
-        this.setState({open: false});
+        this.submit();
+    }
+
+    handleOpenNewForm = () => {
+        this.setState({addingNewCollection: true});
+    }
+
+    handleCloseNewForm = () => {
+        this.setState({addingNewCollection: false, submitting: true});
         this.submit();
     }
 
@@ -62,16 +124,19 @@ class AddToCollectionMenu extends Component {
     }
 
     render() {
-        const { collections, editableCollections, post, style, ...other } = this.props;
+        const { collections, editableCollections, memberships, post, style, ...other } = this.props;
         const { muiTheme } = this.context;
+        const { addingNewCollection, confirmationMessage, submitting } = this.state;
 
         const styles = {
-            formContainer: {
-                padding: 20,
-                paddingTop: 0,
+            confirmation: {
+                fontSize: '1.5rem',
+                padding: '5px 15px',
             },
-            form: {
+            formContainer: {
                 padding: 0,
+                paddingLeft: 20,
+                paddingRight: 20,
             },
             inputContainer: {
                 border: `1px solid ${muiTheme.luno.colors.lightWhite}`,
@@ -87,12 +152,43 @@ class AddToCollectionMenu extends Component {
                 WebkitBoxShadow: 'none',
             },
             menu: {
-                height: 270,
-                width: 360,
+                height: addingNewCollection || confirmationMessage ? undefined : 270,
+                width: 340,
             },
         };
 
         const theme = muiTheme.luno.circularIconMenu;
+
+        let content;
+        if (confirmationMessage) {
+            content = (
+                <div style={styles.confirmation}>
+                    {confirmationMessage}
+                </div>
+            );
+        } else {
+            content = (
+                <div style={styles.formContainer}>
+                    <AddToCollectionForm
+                        addingNewCollection={addingNewCollection || submitting}
+                        collections={collections}
+                        editableCollections={editableCollections}
+                        inputClassName={FILTER_INPUT_CLASS_NAME}
+                        inputContainerStyle={styles.inputContainer}
+                        inputStyle={styles.input}
+                        listContainerStyle={styles.listContainer}
+                        memberships={memberships}
+                        newCollectionAllowed={true}
+                        onCloseNewForm={this.handleCloseNewForm}
+                        onOpenNewForm={this.handleOpenNewForm}
+                        onSubmit={this.handleSubmit}
+                        post={post}
+                        ref="form"
+                        style={styles.form}
+                    />
+                </div>
+            );
+        }
         return (
             <IconMenu
                 closeOnItemTouchTap={false}
@@ -103,22 +199,10 @@ class AddToCollectionMenu extends Component {
                 onRequestChange={this.handleRequestChange}
                 open={this.state.open}
                 style={merge(theme.menu, style)}
+                useLayerForClickAway={true}
                 {...other}
             >
-                <div style={styles.formContainer}>
-                    <AddToCollectionForm
-                        collections={collections}
-                        editableCollections={editableCollections}
-                        inputClassName={FILTER_INPUT_CLASS_NAME}
-                        inputContainerStyle={styles.inputContainer}
-                        inputStyle={styles.input}
-                        listContainerStyle={styles.listContainer}
-                        onSubmit={this.handleSubmit}
-                        post={post}
-                        ref="form"
-                        style={styles.form}
-                    />
-                </div>
+                {content}
             </IconMenu>
         );
     }
@@ -128,6 +212,7 @@ class AddToCollectionMenu extends Component {
 AddToCollectionMenu.propTypes = {
     collections: PropTypes.array,
     editableCollections: PropTypes.array,
+    memberships: PropTypes.array,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
     style: PropTypes.object,
 };

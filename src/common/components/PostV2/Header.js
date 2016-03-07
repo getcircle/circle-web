@@ -48,7 +48,7 @@ AuthorOptionsMenu.contextTypes = {
     }).isRequired,
 };
 
-const Header = ({ collections, editableCollections, post }, { auth, muiTheme }) => {
+const Header = ({ collections, editableCollections, memberships, post }, { auth, muiTheme }) => {
     const styles = {
         header: {
             fontSize: '3.2rem',
@@ -74,6 +74,7 @@ const Header = ({ collections, editableCollections, post }, { auth, muiTheme }) 
                     <AddToCollectionMenu
                         collections={collections}
                         editableCollections={editableCollections}
+                        memberships={memberships}
                         post={post}
                         style={{marginRight: 10}}
                     />
@@ -87,6 +88,7 @@ const Header = ({ collections, editableCollections, post }, { auth, muiTheme }) 
 Header.propTypes = {
     collections: PropTypes.array,
     editableCollections: PropTypes.array,
+    memberships: PropTypes.array,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 

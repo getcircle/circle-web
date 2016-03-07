@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
@@ -19,6 +20,12 @@ export class AddToCollectionForm extends Component {
         this.props.dispatch(initializeCollectionsFilter(this.props.editableCollections));
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (!isEqual(this.props.editableCollections, nextProps.editableCollections)) {
+            this.props.dispatch(initializeCollectionsFilter(nextProps.editableCollections));
+        }
+    }
+
     setInitialValues(props) {
         const { dispatch, collections } = props;
         const action = initialize(ADD_TO_COLLECTION, {collections}, FIELD_NAMES);
@@ -27,23 +34,39 @@ export class AddToCollectionForm extends Component {
 
     render() {
         const {
+            addingNewCollection,
             editableCollections,
             fields: { collections },
             inputClassName,
             inputContainerStyle,
             inputStyle,
             listContainerStyle,
+            memberships,
+            newCollectionAllowed,
+            onCloseNewForm,
+            onOpenNewForm,
             ...other,
         } = this.props;
+
+        let label;
+        if (!addingNewCollection) {
+            label = <FormLabel text={t('Add To...')} />;
+        }
+
         return (
             <Form {...other}>
-                <FormLabel text={t('Add To...')} />
+                {label}
                 <FormCollectionsSelector
+                    addingNewCollection={addingNewCollection}
                     editableCollections={editableCollections}
                     inputClassName={inputClassName}
                     inputContainerStyle={inputContainerStyle}
                     inputStyle={inputStyle}
                     listContainerStyle={listContainerStyle}
+                    memberships={memberships}
+                    newCollectionAllowed={newCollectionAllowed}
+                    onCloseNewForm={onCloseNewForm}
+                    onOpenNewForm={onOpenNewForm}
                     {...collections}
                 />
             </Form>
@@ -53,14 +76,21 @@ export class AddToCollectionForm extends Component {
 }
 
 AddToCollectionForm.propTypes = {
+    addingNewCollection: PropTypes.bool,
     collections: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
     fields: PropTypes.object.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
     inputClassName: PropTypes.string,
     inputContainerStyle: PropTypes.object,
     inputStyle: PropTypes.object,
     listContainerStyle: PropTypes.object,
+    memberships: PropTypes.array,
+    newCollection: PropTypes.instanceOf(services.post.containers.CollectionV1),
+    newCollectionAllowed: PropTypes.bool,
+    onCloseNewForm: PropTypes.func,
+    onOpenNewForm: PropTypes.func,
     post: PropTypes.instanceOf(services.post.containers.PostV1),
 };
 
