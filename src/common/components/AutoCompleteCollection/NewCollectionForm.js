@@ -73,6 +73,11 @@ class NewCollectionForm extends Component {
         }
     }
 
+    handleSubmit = (event) => {
+        event.stopPropagation();
+        this.props.handleSubmit(this.submit)(event);
+    }
+
     render() {
         const {
             buttonText,
@@ -113,7 +118,7 @@ class NewCollectionForm extends Component {
                 <div style={styles.buttonContainer}>
                     <PrimaryRoundedButton
                         label={buttonText}
-                        onTouchTap={handleSubmit(this.submit)}
+                        onTouchTap={this.handleSubmit}
                         style={styles.button}
                     />
                 </div>
