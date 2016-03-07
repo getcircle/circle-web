@@ -16,7 +16,7 @@ const selector = selectors.createImmutableSelector(
         selectors.exploreTeamsSelector,
     ],
     (cacheState, exploreTeamsState) => {
-        let loading, teams, teamsCount, nextRequest;
+        let loaded, loading, teams, teamsCount, nextRequest;
         if (exploreTeamsState) {
             if (exploreTeamsState.get('ids').size) {
                 const ids = exploreTeamsState.get('ids');
@@ -24,9 +24,11 @@ const selector = selectors.createImmutableSelector(
                 nextRequest = exploreTeamsState.get('nextRequest');
                 teamsCount = exploreTeamsState.get('count');
             }
+            loaded = exploreTeamsState.get('loaded');
             loading = exploreTeamsState.get('loading');
         }
         return {
+            loaded,
             loading,
             nextRequest,
             teams,
@@ -63,6 +65,7 @@ class ExploreTeams extends Component {
 
 ExploreTeams.propTypes = {
     dispatch: PropTypes.func.isRequired,
+    loaded: PropTypes.bool,
     loading: PropTypes.bool,
     nextRequest: PropTypes.object,
     teams: PropTypes.array,
