@@ -145,6 +145,11 @@ class AutoCompleteCollection extends Component {
         query: '',
     }
 
+    componentWillMount() {
+        this.setState({query: ''});
+        this.props.dispatch(clearCollectionsFilter());
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         // If the props haven't changed, we don't want to update the component.
         // Since we focus the Search input if `focused` is true, we can run
@@ -168,8 +173,6 @@ class AutoCompleteCollection extends Component {
     }
 
     handleBlur = () => {
-        this.setState({query: ''});
-        this.props.dispatch(clearCollectionsFilter());
         this.props.onBlur();
     }
 
