@@ -36,6 +36,7 @@ const FormTokenizedCollectionsSelector = (props) => {
     };
     const styles = {
         listContainer: {
+            marginBottom: 30,
             width: 392,
         },
         newCollection: {

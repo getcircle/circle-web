@@ -80,7 +80,7 @@ class PostEditor extends Component {
                     onSubmit={this.handleSubmitCollections}
                     post={post}
                     ref="form"
-                    style={{paddingTop: 10}}
+                    style={{marginBottom: 200, paddingTop: 10}}
                 />
             );
         }
