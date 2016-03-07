@@ -40,6 +40,11 @@ export default function (store, url) {
             return exit();
         }
 
+        let nextPath;
+        if (query.next_path && query.next_path.trim()) {
+            nextPath = query.next_path;
+        }
+
         let { identity } = query;
         identity = services.user.containers.IdentityV1.decode64(identity);
         if (identity.provider === services.user.containers.IdentityV1.ProviderV1.OKTA) {
@@ -50,8 +55,7 @@ export default function (store, url) {
             });
         } else if (identity.provider === services.user.containers.IdentityV1.ProviderV1.GOOGLE) {
             return handleGoogleAuthorization(store.dispatch, query, url).then(() => {
-                // XXX support the previous path they came to
-                replaceState(null, '/');
+                replaceState(null, nextPath || '/');
                 exit();
             });
         }

@@ -1,8 +1,24 @@
-import {services} from 'protobufs';
+import { services } from 'protobufs';
 
 import logger from '../utils/logger';
 
 export const AUTH_BACKENDS = services.user.actions.authenticate_user.RequestV1.AuthBackendV1;
+
+function getRedirectUri(url) {
+    return `${url.protocol}//${url.host}/auth`;
+}
+
+export function getNextPath(url) {
+    const search = url.raw.split('?')[1];
+    if (search) {
+        for (let param of search.split('&')) {
+            const [key, value] = param.split('=');
+            if (key === 'next' && value && value.trim()) {
+                return decodeURIComponent(value);
+            }
+        }
+    }
+}
 
 export function authenticate(client, backend, key, secret, domain) {
     /*eslint-disable camelcase*/
@@ -37,7 +53,8 @@ export function getAuthenticationInstructions(client, email, url) {
         email,
         /*eslint-disable camelcase*/
         organization_domain: url.subdomain,
-        redirect_uri: `${url.protocol}//${url.host}/auth`,
+        redirect_uri: getRedirectUri(url),
+        next_path: getNextPath(url),
         /*eslint-enable camelcase*/
     };
     let request = new services.user.actions.get_authentication_instructions.RequestV1(parameters);
@@ -72,7 +89,7 @@ export function getIntegrationAuthenticationInstructions(client, integration, ur
     const parameters = {
         /*eslint-disable camelcase*/
         organization_domain: url.subdomain,
-        redirect_uri: `${url.protocol}//${url.host}/auth`,
+        redirect_uri: getRedirectUri(url),
         provider: integration,
         /*eslint-enable camelcase*/
     };
