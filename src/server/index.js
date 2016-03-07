@@ -87,8 +87,15 @@ app.use('/api', (req, res) => {
     }
 });
 
+app.use(session(sess));
+
 app.use('/file/:id/:name', (req, res) => {
-    const client = new Client(req)
+    let auth;
+    if (req.session) {
+        auth = req.session.auth;
+    }
+
+    const client = new Client(req, auth);
     getFile(client, req.params.id)
         .then(({ file }) => {
             res.set({
@@ -99,12 +106,17 @@ app.use('/file/:id/:name', (req, res) => {
                 .send(file.bytes.toBuffer());
         })
         .catch(error => {
-            console.error(error)
-            res.status(404).end();
+            if (error.errors && error.errors.includes('FORBIDDEN')) {
+                const next = encodeURIComponent(req.originalUrl);
+                res.redirect(`/login?next=${next}`);
+            } else if (error.errors && error.errors.includes('FIELD_ERROR')) {
+                res.redirect('/notfound');
+            } else {
+                console.error(error)
+                res.status(404).end();
+            }
         });
 });
-
-app.use(session(sess));
 
 app.use((req, res) => {
     try {
