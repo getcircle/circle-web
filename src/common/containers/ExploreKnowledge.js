@@ -16,7 +16,7 @@ const selector = selectors.createImmutableSelector(
         selectors.explorePostsSelector,
     ],
     (cacheState, explorePostsState) => {
-        let loading, posts, postsCount, nextRequest;
+        let loaded, loading, posts, postsCount, nextRequest;
         if (explorePostsState) {
             if (explorePostsState.get('ids').size) {
                 const ids = explorePostsState.get('ids');
@@ -24,9 +24,11 @@ const selector = selectors.createImmutableSelector(
                 nextRequest = explorePostsState.get('nextRequest');
                 postsCount = explorePostsState.get('count');
             }
+            loaded = explorePostsState.get('loaded');
             loading = explorePostsState.get('loading');
         }
         return {
+            loaded,
             loading,
             nextRequest,
             posts,
@@ -63,6 +65,7 @@ class ExploreKnowledge extends Component {
 
 ExploreKnowledge.propTypes = {
     dispatch: PropTypes.func.isRequired,
+    loaded: PropTypes.bool,
     loading: PropTypes.bool,
     nextRequest: PropTypes.object,
     posts: PropTypes.array,

@@ -12,13 +12,12 @@ import t from '../utils/gettext';
 import { tintColor } from '../constants/styles';
 import { IntegrationString } from '../utils/integrations';
 
+import AddKnowledgeButton from './AddKnowledgeButton';
 import CreateCollectionForm from './CreateCollectionForm';
 import CreateTeamForm from './CreateTeamForm';
 import CSSComponent from './CSSComponent';
 import InternalPropTypes from './InternalPropTypes';
-import LightBulbIcon from './LightBulbIcon';
 import ProfileAvatar from './ProfileAvatar';
-import RoundedButton from '../components/RoundedButton';
 
 const BACKGROUND_COLOR = 'rgb(42, 42, 42)';
 
@@ -89,14 +88,6 @@ class HeaderMenu extends CSSComponent {
                 container: {
                     cursor: 'pointer',
                 },
-                LightBulbIcon: {
-                    height: 30,
-                    stroke: this.context.muiTheme.luno.tintColor,
-                    style: {
-                        margin: 0,
-                    },
-                    width: 30,
-                },
                 menu: {
                     backgroundColor: 'transparent',
                 },
@@ -130,15 +121,6 @@ class HeaderMenu extends CSSComponent {
                     lineHeight: 2,
                     marginLeft: '10px',
                     marginRight: '5px',
-                },
-                RoundedButton: {
-                    labelStyle: {
-                        padding: '0 14px 0 0',
-                    },
-                    style: {
-                        marginRight: 12,
-                        whiteSpace: 'nowrap',
-                    },
                 },
             },
         };
@@ -251,14 +233,7 @@ class HeaderMenu extends CSSComponent {
             this.context.flags.get('posts') &&
             (this.context.showCTAsInHeader === undefined || this.context.showCTAsInHeader === true)
         ) {
-            return (
-                <RoundedButton
-                    icon={<LightBulbIcon {...this.styles().LightBulbIcon} />}
-                    label={t('Add Knowledge')}
-                    onTouchTap={::this.onAddPostTapped}
-                    {...this.styles().RoundedButton}
-                />
-            );
+            return <AddKnowledgeButton onTouchTap={::this.onAddPostTapped} />;
         }
     }
 
