@@ -77,7 +77,6 @@ export class AddToCollectionForm extends Component {
 
 AddToCollectionForm.propTypes = {
     addingNewCollection: PropTypes.bool,
-    cache: PropTypes.object.isRequired,
     collections: PropTypes.array,
     dispatch: PropTypes.func.isRequired,
     editableCollections: PropTypes.array,
