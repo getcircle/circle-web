@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
 
-// import { createCollection } from '../../actions/collections';
 import { CREATE_COLLECTION } from '../../constants/forms';
 import t from '../../utils/gettext';
 import { collectionValidator } from '../../utils/validators';
