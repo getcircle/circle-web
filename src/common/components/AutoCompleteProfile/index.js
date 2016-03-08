@@ -35,7 +35,7 @@ class AutoCompleteProfile extends Component {
     }
 
     static defaultProps = {
-        focued: false,
+        focused: false,
         ignoreProfileIds: [],
         onBlur: () => {},
         onSelectItem: () => {},

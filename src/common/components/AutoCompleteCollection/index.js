@@ -146,8 +146,13 @@ class AutoCompleteCollection extends Component {
     }
 
     componentWillMount() {
-        this.setState({query: ''});
-        this.props.dispatch(clearCollectionsFilter());
+        this.reset();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.focused && nextProps.focused) {
+            this.reset();
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -165,6 +170,11 @@ class AutoCompleteCollection extends Component {
             nextProps.focused !== this.props.focused
         );
         return !!hasChanged;
+    }
+
+    reset() {
+        this.setState({query: ''});
+        this.props.dispatch(clearCollectionsFilter());
     }
 
     handleDelayedChange = (value) => {
@@ -322,7 +332,7 @@ AutoCompleteCollection.propTypes = {
 };
 
 AutoCompleteCollection.defaultProps = {
-    focued: false,
+    focused: false,
     collections: [],
     ignoreCollectionIds: [],
     onBlur: () => {},
