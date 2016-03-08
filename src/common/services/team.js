@@ -244,7 +244,7 @@ export function joinTeam(client, teamId) {
     });
     return new Promise((resolve, reject) => {
         client.sendRequest(joinRequest)
-            .then(response => response.finish(resolve, reject, teamId))
+            .then(response => response.finish(resolve, reject, teamId, { member: response.result.member }))
             .catch(error => reject(error));
     });
 }
@@ -254,10 +254,10 @@ export function joinTeam(client, teamId) {
  *
  * @param {Object} client the service client
  * @param {String} teamId the id of the team
- * @param {String} memberId id of the team member
+ * @param {services.team.containers.TeamMemberV1} member team member
  *
  */
-export function leaveTeam(client, teamId, memberId) {
+export function leaveTeam(client, teamId, member) {
     const leaveRequest = new services.team.actions.leave_team.RequestV1({
         /*eslint-disable camelcase*/
         team_id: teamId,
@@ -267,7 +267,7 @@ export function leaveTeam(client, teamId, memberId) {
         client.sendRequest(leaveRequest)
             .then(response => {
                 if (response.isSuccess()) {
-                    resolve(merge(response, { teamId, memberId }));
+                    resolve(merge(response, { teamId, member }));
                 } else {
                     reject(response.reject());
                 }

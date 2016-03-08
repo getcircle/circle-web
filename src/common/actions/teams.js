@@ -234,9 +234,9 @@ export function joinTeam(teamId) {
  * Leave team
  *
  * @param {String} teamId the id of the team
- * @param {String} memberId id of the team member
+ * @param {services.team.containers.TeamMemberV1} member team member
  */
-export function leaveTeam(teamId, memberId) {
+export function leaveTeam(teamId, member) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -244,7 +244,7 @@ export function leaveTeam(teamId, memberId) {
                 types.LEAVE_TEAM_SUCCESS,
                 types.LEAVE_TEAM_FAILURE,
             ],
-            remote: (client) => requests.leaveTeam(client, teamId, memberId),
+            remote: (client) => requests.leaveTeam(client, teamId, member),
         },
     };
 }

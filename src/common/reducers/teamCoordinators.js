@@ -45,7 +45,7 @@ function additionalTypesCallback(state, action) {
         return handleRemoveMembersSuccess(state, action);
     case types.LEAVE_TEAM_SUCCESS:
         return state.updateIn([action.payload.teamId, 'ids'], set => {
-            return set.delete(action.payload.memberId);
+            return set.delete(action.payload.member.id);
         });
     }
     return state;

@@ -1,9 +1,13 @@
-import { getTeamMemberForProfileNormalizations, getTeamMemberNormalizationsFromCreateTeam } from './normalizations';
+import {
+    getTeamMemberForProfileNormalizations,
+    getTeamMemberNormalizationsFromCreateTeam,
+} from './normalizations';
 import { retrieveTeamMembers } from './denormalizations';
 import paginate from './paginate';
 import * as types from '../constants/actionTypes';
 
 function additionalTypesCallback(state, action) {
+    let member;
     switch(action.type) {
     case types.CREATE_TEAM_SUCCESS:
         const ids = getTeamMemberNormalizationsFromCreateTeam(action);
@@ -28,6 +32,16 @@ function additionalTypesCallback(state, action) {
             }
             return map;
         });
+    case types.JOIN_TEAM_SUCCESS:
+        member = action.payload.member;
+        if (state.has(member.profile_id)) {
+            return state.updateIn([member.profile_id, 'ids'], set => set.add(member.id));
+        }
+    case types.LEAVE_TEAM_SUCCESS:
+        member = action.payload.member;
+        if (state.has(member.profile_id)) {
+            return state.updateIn([member.profile_id, 'ids'], set => set.remove(member.id));
+        }
     }
     return state;
 }

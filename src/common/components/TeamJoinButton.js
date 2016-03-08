@@ -24,7 +24,7 @@ class TeamJoinButton extends Component {
     handleTouchTap = () => {
         const { currentUserMember, dispatch, team } = this.props;
         if (currentUserMember) {
-            dispatch(leaveTeam(team.id, currentUserMember.id));
+            dispatch(leaveTeam(team.id, currentUserMember));
         } else {
             this.setState({justJoined: true})
             dispatch(joinTeam(team.id));
