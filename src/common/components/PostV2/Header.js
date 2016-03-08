@@ -35,13 +35,15 @@ const OptionsMenu = ({ post }, { auth: { profile }, store: { dispatch } }) => {
     function handleEdit() { routeToEditPost(post); }
     function handleDelete() { dispatch(showConfirmDeleteModal(post)); }
 
-    const options = [<MenuItem key="post-option-0" onTouchTap={handleCopy} text={t('Copy')} />];
+    const options = [];
     if (post.by_profile.id === profile.id) {
         options.push(...[
-            <MenuItem key="post-option-1" onTouchTap={handleEdit} text={t('Edit')} />,
-            <MenuItem key="post-option-2" onTouchTap={handleDelete} text={t('Delete')} />,
+            <MenuItem key="post-option-edit" onTouchTap={handleEdit} text={t('Edit')} />,
+            <MenuItem key="post-option-delete" onTouchTap={handleDelete} text={t('Delete')} />,
         ]);
     }
+    const copy = <MenuItem key="post-option-copy" onTouchTap={handleCopy} text={t('Copy')} />;
+    options.splice(1, 0, copy);
 
     return (
         <MoreMenu style={{marginRight: 10}}>
