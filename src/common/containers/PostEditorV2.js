@@ -47,8 +47,18 @@ const cacheSelector = selectors.createImmutableSelector(
         selectors.editableCollectionsSelector,
         selectors.postCollectionsSelector,
         selectors.profileMembershipsSelector,
+        selectors.propsSelector,
     ],
-    (authenticationState, cacheState, paramsState, filesState, editableCollectionsState, postCollectionsState, membershipsState) => {
+    (
+        authenticationState,
+        cacheState,
+        paramsState,
+        filesState,
+        editableCollectionsState,
+        postCollectionsState,
+        membershipsState,
+        props,
+    ) => {
         let collections, collectionsLoaded, editableCollections, memberships, post;
 
         const postId = paramsState.postId;
@@ -59,6 +69,11 @@ const cacheSelector = selectors.createImmutableSelector(
 
         if (!post) {
             post = new services.post.containers.PostV1();
+            const copyFrom = props.location.state && props.location.state.post;
+            if (copyFrom) {
+                post.title = copyFrom.title;
+                post.content = copyFrom.content;
+            }
         }
 
         if (postCollectionsState.has(postId)) {
@@ -164,7 +179,11 @@ class PostEditor extends Component {
     componentWillReceiveProps(nextProps) {
         // TODO redirect to view post if current user doesn't have permission
         if (nextProps.params.postId !== this.props.params.postId) {
-            loadPost(nextProps);
+            const { store: { getState } } = this.context;
+            loadPost({
+                getState,
+                ...nextProps,
+            });
             resetScroll();
         }
         if (nextProps.draft) {

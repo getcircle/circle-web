@@ -3,7 +3,7 @@ import { services } from 'protobufs';
 
 import { showConfirmDeleteModal } from '../../actions/posts';
 import t from '../../utils/gettext';
-import { routeToEditPost } from '../../utils/routes';
+import { routeToEditPost, routeToNewPost } from '../../utils/routes';
 
 import AddToCollectionMenu from '../AddToCollectionMenu';
 import CircularShareShortcutMenu from '../CircularShareMenu';
@@ -30,25 +30,34 @@ ShareShortcutMenu.contextTypes = {
     }).isRequired,
 };
 
-const AuthorOptionsMenu = ({ post }, { store: { dispatch } }) => {
+const OptionsMenu = ({ post }, { auth: { profile }, store: { dispatch } }) => {
+    function handleCopy() { routeToNewPost({ post }); }
     function handleEdit() { routeToEditPost(post); }
     function handleDelete() { dispatch(showConfirmDeleteModal(post)); }
 
+    const options = [<MenuItem key="post-option-0" onTouchTap={handleCopy} text={t('Copy')} />];
+    if (post.by_profile.id === profile.id) {
+        options.push(...[
+            <MenuItem key="post-option-1" onTouchTap={handleEdit} text={t('Edit')} />,
+            <MenuItem key="post-option-2" onTouchTap={handleDelete} text={t('Delete')} />,
+        ]);
+    }
+
     return (
         <MoreMenu style={{marginRight: 10}}>
-            <MenuItem onTouchTap={handleEdit} text={t('Edit')} />
-            <MenuItem onTouchTap={handleDelete} text={t('Delete')} />
+            {options}
         </MoreMenu>
     );
 };
 
-AuthorOptionsMenu.contextTypes = {
+OptionsMenu.contextTypes = {
+    auth: InternalPropTypes.AuthContext.isRequired,
     store: PropTypes.shape({
         dispatch: PropTypes.func.isRequired,
     }).isRequired,
 };
 
-const Header = ({ collections, editableCollections, memberships, post }, { auth, muiTheme }) => {
+const Header = ({ collections, editableCollections, memberships, post }, { muiTheme }) => {
     const styles = {
         header: {
             fontSize: '3.2rem',
@@ -56,11 +65,6 @@ const Header = ({ collections, editableCollections, memberships, post }, { auth,
             fontWeight: muiTheme.luno.fontWeights.bold,
         },
     };
-
-    let authorOptions;
-    if (post.by_profile.id === auth.profile.id) {
-        authorOptions = <AuthorOptionsMenu post={post} />;
-    }
 
     return (
         <header>
@@ -70,7 +74,7 @@ const Header = ({ collections, editableCollections, memberships, post }, { auth,
             <div className="row between-xs middle-xs">
                 <Author className="col-xs" post={post} />
                 <div className="col-xs-3 row end-xs">
-                    {authorOptions}
+                    <OptionsMenu post={post} />
                     <AddToCollectionMenu
                         collections={collections}
                         editableCollections={editableCollections}
@@ -93,10 +97,9 @@ Header.propTypes = {
 };
 
 Header.contextTypes = {
-    auth: InternalPropTypes.AuthContext.isRequired,
     muiTheme: PropTypes.object.isRequired,
 };
 
 // export for testing
-export { Author, AuthorOptionsMenu };
+export { Author, OptionsMenu };
 export default Header;

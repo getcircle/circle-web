@@ -1,6 +1,6 @@
 import expect from 'expect'
 
-import Post, { Author, AuthorOptionsMenu, Content, Header, Footer } from '../../../src/common/components/PostV2';
+import Post, { Author, OptionsMenu, Content, Header, Footer } from '../../../src/common/components/PostV2';
 
 const setup = buildSetup(Post, () => {
     return {
@@ -23,17 +23,23 @@ describe('Post', () => {
         expect(footer.prop('post')).toEqual(props.post);
     });
 
-    describe('AuthorOptionsMenu', () => {
-        it('isn\'t rendered if we\'re not the author', () => {
+    describe('OptionsMenu', () => {
+        it('is always rendered', () => {
             const { wrapper } = setup(undefined, Header);
-            expect(wrapper.find(AuthorOptionsMenu).length).toEqual(0);
+            expect(wrapper.find(OptionsMenu).length).toEqual(1);
         });
 
-        it('is rendered if we\'re the author', () => {
+        it('includes edit and delete options when author', () => {
             const post = factories.post.getPost();
-            const { wrapper } = setup({post}, Header, {auth: {profile: post.by_profile}});
-            expect(wrapper.find(AuthorOptionsMenu).length).toEqual(1);
+            const { wrapper } = setup({post}, OptionsMenu, {auth: {profile: post.by_profile}});
+            expect(wrapper.children().length).toEqual(3);
         });
+
+        it('only includes copy when not the author', () => {
+            const { wrapper } = setup(undefined, OptionsMenu);
+            expect(wrapper.children().length).toEqual(1);
+        });
+
     });
 
 });

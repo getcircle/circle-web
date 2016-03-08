@@ -58,8 +58,11 @@ export function replaceWithEditPost(post) {
     browserHistory.replace(`/post/${post.id}/edit`);
 }
 
-export function routeToNewPost() {
-    browserHistory.push('/new-post');
+export function routeToNewPost(state) {
+    browserHistory.push({
+        state,
+        pathname: '/new-post',
+    });
 }
 
 export function routeToDrafts() {

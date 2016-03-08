@@ -6,7 +6,7 @@ import { routeToSearch } from '../../utils/routes';
 import DetailContent from '../DetailContent';
 
 import Content from './Content';
-import Header, { Author, AuthorOptionsMenu } from './Header';
+import Header, { Author, OptionsMenu } from './Header';
 import Footer from './Footer';
 
 class Post extends Component {
@@ -54,5 +54,5 @@ Post.propTypes = {
 };
 
 // export for testing
-export { Author, AuthorOptionsMenu, Content, Footer, Header };
+export { Author, OptionsMenu, Content, Footer, Header };
 export default Post;

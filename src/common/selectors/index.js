@@ -84,3 +84,4 @@ export const filterCollectionsSelector = state => state.get('filterCollections')
 export const collectionItemsSelector = state => state.get('collectionItems');
 export const collectionsSelector = state => state.get('collections');
 export const postCollectionsSelector = state => state.get('postCollections');
+export const propsSelector = (_, props) => props;
