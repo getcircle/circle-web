@@ -5,6 +5,17 @@ import ProfileFactory from './ProfileFactory';
 
 export default {
 
+    getCollection(overrides) {
+        return new services.post.containers.CollectionV1({
+            /*eslint-disable camelcase*/
+            id: faker.random.uuid(),
+            owner_id: faker.random.uuid(),
+            name: faker.hacker.noun(),
+            /*eslint-enable camelcase*/
+            ...overrides,
+        });
+    },
+
     getPost(overrides) {
         const content = faker.lorem.paragraph();
         return new services.post.containers.PostV1({
@@ -46,5 +57,13 @@ export default {
             posts.push(this.getPost(state));
         }
         return posts;
+    },
+
+    getCollections(number) {
+        const collections = [];
+        for (let i = 0; i < number; i++) {
+            collections.push(this.getCollection());
+        }
+        return collections;
     },
 }

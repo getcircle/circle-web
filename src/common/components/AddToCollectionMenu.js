@@ -11,10 +11,28 @@ import AddToCollectionForm from './AddToCollectionForm';
 import IconMenu from './IconMenu';
 
 const FILTER_INPUT_CLASS_NAME = 'add-to-collection-input';
-const CONFIRMATION_CLOSE_DELAY = 1500;
+const CONFIRMATION_CLOSE_DELAY = 1000;
 
-function missingCollection(collections, otherCollections) {
-    return collections.find(collection => {
+/**
+ * Return the collections from the first array that aren't within the second.
+ *
+ * @param {Array} collections a list of collections
+ * @param {Array} collections a list of collections
+ *
+ * @returns {Array} the collections from the first array that aren't within the
+ * second array
+ *
+ */
+export function missingCollections(collections, otherCollections) {
+    if (!otherCollections) {
+        return collections;
+    }
+
+    if (!collections) {
+        return [];
+    }
+
+    return collections.filter(collection => {
         return !otherCollections.find(o => o.id === collection.id);
     });
 }
@@ -44,18 +62,15 @@ class AddToCollectionMenu extends Component {
     componentWillReceiveProps(nextProps) {
         const oldCollections = this.props.collections;
         const newCollections = nextProps.collections;
-        if (!oldCollections || !newCollections) {
-            return;
-        }
 
-        const added = missingCollection(newCollections, oldCollections);
-        const removed = missingCollection(oldCollections, newCollections);
+        const added = missingCollections(newCollections, oldCollections);
+        const removed = missingCollections(oldCollections, newCollections);
 
         let confirmationMessage;
-        if (added) {
-            confirmationMessage = t('Added to ') + added.display_name;
-        } else if (removed) {
-            confirmationMessage = t('Removed from ') + removed.display_name;
+        if (added && added.length) {
+            confirmationMessage = t('Added to ') + added[0].display_name;
+        } else if (removed && removed.length) {
+            confirmationMessage = t('Removed from ') + removed[0].display_name;
         }
 
         if (confirmationMessage) {
