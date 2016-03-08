@@ -140,6 +140,10 @@ NewCollectionForm.propTypes = {
     onCreate: PropTypes.func,
 };
 
+NewCollectionForm.defaultProps = {
+    memberships: [],
+};
+
 NewCollectionForm.contextTypes = {
     auth: InternalPropTypes.AuthContext.isRequired,
 };
