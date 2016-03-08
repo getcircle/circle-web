@@ -53,6 +53,12 @@ const FORMS = [
         saveFailure: actionTypes.CREATE_TEAM_FAILURE,
         saveSuccess: actionTypes.CREATE_TEAM_SUCCESS,
     },
+    {
+        type: formTypes.REORDER_COLLECTIONS,
+        save: actionTypes.REORDER_COLLECTIONS,
+        saveFailure: actionTypes.REORDER_COLLECTIONS_FAILURE,
+        saveSuccess: actionTypes.REORDER_COLLECTIONS_SUCCESS,
+    },
 ];
 
 function buildInitialState(forms) {

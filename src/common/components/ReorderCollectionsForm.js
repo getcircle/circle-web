@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 
-import { hideRearrangeCollectionsModal } from '../actions/collections';
-import { REARRANGE_COLLECTIONS } from '../constants/forms';
+import { hideFormDialog } from '../actions/forms';
+import { REORDER_COLLECTIONS } from '../constants/forms';
 import { PAGE_TYPE } from '../constants/trackerProperties';
 import * as selectors from '../selectors';
 import { services } from 'protobufs';
@@ -15,14 +15,14 @@ const fieldNames = ['collections'];
 
 const selector = selectors.createImmutableSelector(
     [
-        selectors.rearrangeCollectionsSelector,
+        selectors.reorderCollectionsSelector,
     ],
     (
-        rearrangeState,
+        reorderState,
     ) => {
         return {
-            formSubmitting: rearrangeState.get('formSubmitting'),
-            visible: rearrangeState.get('modalVisible'),
+            formSubmitting: reorderState.get('formSubmitting'),
+            visible: reorderState.get('modalVisible'),
         };
     }
 );
@@ -37,7 +37,7 @@ const styles = {
     }
 };
 
-export default class CollectionsRearrangeForm extends Component {
+export default class ReorderCollectionsForm extends Component {
 
     static propTypes = {
         collections: PropTypes.arrayOf(
@@ -62,7 +62,7 @@ export default class CollectionsRearrangeForm extends Component {
     setInitialValues() {
         const { collections, dispatch } = this.props;
 
-        const action = initialize(REARRANGE_COLLECTIONS, {
+        const action = initialize(REORDER_COLLECTIONS, {
             collections: collections.map(c => {return {id: c.id, text: c.name}}),
         }, fieldNames);
 
@@ -74,7 +74,7 @@ export default class CollectionsRearrangeForm extends Component {
     }
 
     handleCancel = () => {
-        this.props.dispatch(hideRearrangeCollectionsModal());
+        this.props.dispatch(hideFormDialog(REORDER_COLLECTIONS));
     }
 
     render() {
@@ -107,9 +107,9 @@ export default class CollectionsRearrangeForm extends Component {
 
 export default reduxForm(
     {
-      form: REARRANGE_COLLECTIONS,
+      form: REORDER_COLLECTIONS,
       fields: fieldNames,
       getFormState: (state, reduxMountPoint) => state.get(reduxMountPoint),
     },
     selector
-)(CollectionsRearrangeForm);
+)(ReorderCollectionsForm);

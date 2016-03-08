@@ -80,24 +80,6 @@ export function updateCollection(collection) {
     };
 }
 
-/**
- * Show the rearrange collections modal
- *
- * @return {Object} redux action
- */
-export function showRearrangeCollectionsModal() {
-    return {type: types.MODAL_REARRANGE_COLLECTIONS_SHOW};
-}
-
-/**
- * Hide the rearrange collections modal
- *
- * @return {Object} redux action
- */
-export function hideRearrangeCollectionsModal() {
-    return {type: types.MODAL_REARRANGE_COLLECTIONS_HIDE};
-}
-
 export function addPostToCollections(post, collections) {
     const item = new services.post.containers.CollectionItemV1({
         /*eslint-disable camelcase*/

@@ -29,7 +29,6 @@ export { default as postCollections } from './postCollections';
 export { default as profileMemberships } from './profileMemberships';
 // TODO delete
 export { default as profiles } from './profiles';
-export { default as rearrangeCollections } from './rearrangeCollections';
 export { default as responsive } from './responsive';
 export { default as search } from './search';
 export { default as teamCoordinators } from './teamCoordinators';
