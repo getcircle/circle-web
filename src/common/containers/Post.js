@@ -159,12 +159,14 @@ class Post extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        const { store: { getState } } = this.context;
+        const locals = {
+            getState,
+            ...nextProps,
+        };
+        fetchEditableCollections(locals);
         if (nextProps.params.postId !== this.props.params.postId) {
-            const { store: { getState } } = this.context;
-            loadPost({
-                getState,
-                ...nextProps,
-            });
+            loadPost(locals);
             resetScroll();
         }
     }
