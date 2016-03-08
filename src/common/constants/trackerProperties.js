@@ -103,6 +103,7 @@ export const SEARCH_RESULT_TYPE = {
 // Search Location (Convention: Titlecase, Separator - Space)
 // Where the search was performed
 export const SEARCH_LOCATION = {
+    AUTOCOMPLETE: 'AutoComplete',
     HOME: 'Home',
     // This is web specific.
     PAGE_HEADER: 'Page Header',

@@ -19,6 +19,7 @@ import CSSComponent from '../CSSComponent';
 class ListItem extends CSSComponent {
 
     static propTypes = {
+        index: PropTypes.number,
         item: PropTypes.shape({
             item: PropTypes.object,
             type: PropTypes.string.isRequired,
@@ -28,9 +29,9 @@ class ListItem extends CSSComponent {
     }
 
     handleTouchTap = (event) => {
-        const { item, onSelectItem } = this.props;
+        const { index, item, onSelectItem } = this.props;
         if (typeof onSelectItem === 'function') {
-            onSelectItem(item, event);
+            onSelectItem(item, event, index);
         }
     }
 
@@ -96,6 +97,7 @@ class List extends CSSComponent {
                 key={`item-${index}`}
             >
                 <ListItem
+                    index={index}
                     item={item}
                     onSelectItem={this.props.onSelectItem}
                     style={{...this.props.itemStyle, ...style}}

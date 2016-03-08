@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { clearResults, autocomplete } from '../../actions/autocomplete';
 import * as selectors from '../../selectors';
 import * as routes from '../../utils/routes';
+import { SEARCH_LOCATION, SEARCH_RESULT_SOURCE } from '../../constants/trackerProperties';
+import tracker from '../../utils/tracker';
 
 import CSSComponent from '../CSSComponent';
 import Search from '../Search';
@@ -74,8 +76,15 @@ class AutoComplete extends CSSComponent {
         this.props.dispatch(clearResults());
     }
 
-    handleSelectItem = ({ type, payload }) => {
-        // TODO track search results and recents here
+    handleSelectItem = ({ type, payload }, event, index) => {
+        tracker.trackSearchResultTap(
+            this.state.query,
+            SEARCH_RESULT_SOURCE.SUGGESTION,
+            type,
+            parseInt(index, 10) + 1,
+            SEARCH_LOCATION.AUTOCOMPLETE,
+            payload.id,
+        );
         switch (type) {
         case factories.TYPES.TRIGGER:
             return routes.routeToSearch(payload);

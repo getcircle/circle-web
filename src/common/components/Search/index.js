@@ -120,7 +120,7 @@ class Search extends Component {
             for (let section of this.props.sections) {
                 let highlightedIndex = this.highlightedIndexForSection(section);
                 if (highlightedIndex !== null) {
-                    this.handleSelectItem(section.getItems()[highlightedIndex]);
+                    this.handleSelectItem(section.getItems()[highlightedIndex], event, highlightedIndex);
                     break;
                 }
             }
@@ -137,8 +137,8 @@ class Search extends Component {
         this.props.onBlur(event);
     }
 
-    handleSelectItem = (item, event) => {
-        this.props.onSelectItem(item, event);
+    handleSelectItem = (item, event, index) => {
+        this.props.onSelectItem(item, event, index);
         this.cleanupAndBlur();
     }
 

@@ -10,9 +10,9 @@ import InfiniteGrid from '../InfiniteGrid';
 class SearchResultItem extends Component {
 
     handleTouchTap = () => {
-        const { item, onSelectItem } = this.props;
+        const { index, item, onSelectItem } = this.props;
         if (typeof onSelectItem === 'function') {
-            onSelectItem(item);
+            onSelectItem(item, index);
         }
     }
 
@@ -29,6 +29,7 @@ class SearchResultItem extends Component {
 
 SearchResultItem.propTypes = {
     className: PropTypes.string,
+    index: PropTypes.number,
     item: PropTypes.shape({
         item: PropTypes.object,
         type: PropTypes.string.isRequired,
@@ -47,6 +48,7 @@ const SearchResultsList = ({ onSelectItem, results, ...other }, { muiTheme }) =>
             const item = (
                 <SearchResultItem
                     className="col-xs-12"
+                    index={index}
                     item={searchResult}
                     key={`search-result-${index}`}
                     onSelectItem={onSelectItem}

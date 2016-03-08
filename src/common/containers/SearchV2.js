@@ -5,7 +5,9 @@ import { provideHooks } from 'redial';
 
 import { clearSearchResults, search } from '../actions/search';
 import * as selectors from '../selectors';
+import { SEARCH_LOCATION, SEARCH_RESULT_SOURCE } from '../constants/trackerProperties';
 import t from '../utils/gettext';
+import tracker from '../utils/tracker';
 import * as routes from '../utils/routes';
 
 import CenterLoadingIndicator from '../components/CenterLoadingIndicator';
@@ -46,9 +48,15 @@ class Search extends CSSComponent {
     handleLoadMore = () => {
     }
 
-    handleSelectResult = ({ payload, type }) => {
-        // TODO track search result
-        // TODO ensure we have access to the index of the result that was clicked
+    handleSelectResult = ({ payload, type }, index) => {
+        tracker.trackSearchResultTap(
+            this.props.params.query,
+            SEARCH_RESULT_SOURCE.SUGGESTION,
+            type,
+            parseInt(index, 10) + 1,
+            SEARCH_LOCATION.SEARCH,
+            payload.id,
+        );
         switch(type) {
         case TYPES.PROFILE:
             routes.routeToProfile(payload);
