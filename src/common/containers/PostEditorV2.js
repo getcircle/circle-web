@@ -69,7 +69,11 @@ const cacheSelector = selectors.createImmutableSelector(
 
         if (!post) {
             post = new services.post.containers.PostV1();
-            const copyFrom = props.location.state && props.location.state.post;
+            const copyFrom = (
+                props.location &&
+                props.location.state &&
+                props.location.state.post
+            );
             if (copyFrom) {
                 post.title = copyFrom.title;
                 post.content = copyFrom.content;
