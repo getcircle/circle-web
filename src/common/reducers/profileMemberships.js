@@ -18,6 +18,16 @@ function additionalTypesCallback(state, action) {
                 return map;
             });
         }
+    case types.REMOVE_MEMBERS_SUCCESS:
+        const { payload: { members } } = action;
+        return state.withMutations(map => {
+            for (let member of members) {
+                if (map.has(member.profile_id)) {
+                    map.updateIn([member.profile_id, 'ids'], set => set.remove(member.id));
+                }
+            }
+            return map;
+        });
     }
     return state;
 }

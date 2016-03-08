@@ -153,6 +153,11 @@ export function getTeamMemberNormalizationsFromUpdateMembers(action, role = null
     );
 }
 
+export function getTeamCoordinatorNormalizationsFromUpdateMembers(action) {
+    const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
+    return getTeamMemberNormalizationsFromUpdateMembers(action, role);
+}
+
 export function getTeamMemberNormalizationsFromCreateTeam(action) {
     return getTeamMemberNormalizationsFromResponse(
         action,

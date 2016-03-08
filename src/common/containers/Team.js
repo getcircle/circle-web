@@ -170,6 +170,19 @@ class Team extends CSSComponent {
             resetScroll();
             loadTeam(nextProps);
         }
+
+        const roleChanged = (
+            nextProps.params.teamId === this.props.params.teamId &&
+            this.props.currentUserMember && nextProps.currentUserMember &&
+            nextProps.currentUserMember.role !== this.props.currentUserMember.role
+        );
+        const memberRemoved = (
+            nextProps.params.teamId === this.props.params.teamId &&
+            this.props.currentUserMember && !nextProps.currentUserMember
+        );
+        if (roleChanged || memberRemoved) {
+            nextProps.team.permissions = new services.common.containers.PermissionsV1();
+        }
     }
 
     render() {

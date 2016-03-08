@@ -125,6 +125,7 @@ export function getMembersForProfileId(client, profileId) {
         /*eslint-enable camelcase*/
         fields: new services.common.containers.FieldsV1({
             only: [
+                '[]members.team_id',
                 '[]members.team.id',
                 '[]members.team.name',
                 '[]members.id',
