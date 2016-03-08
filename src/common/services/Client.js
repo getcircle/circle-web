@@ -19,9 +19,7 @@ class Client {
 
         const controlParams = {service, action};
         if (allPages) {
-            /*eslint-disable camelcase*/
-            controlParams.paginator = {page_size: 500};
-            /*eslint-enable camelcase*/
+            controlParams.paginator = {disabled: true};
         }
         let actionControl = new protobufs.soa.ActionControlV1(controlParams);
         let actionParams = new protobufs.soa.ActionRequestParamsV1();
