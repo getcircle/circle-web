@@ -174,6 +174,34 @@ export function updateTeam(team) {
 }
 
 /**
+ * Delete the team
+ *
+ * @param {services.team.containers.TeamV1} team team to delete
+ *
+ */
+export function deleteTeam(team) {
+    return {
+        [SERVICE_REQUEST]: {
+            types: [
+                types.DELETE_TEAM,
+                types.DELETE_TEAM_SUCCESS,
+                types.DELETE_TEAM_FAILURE,
+            ],
+            remote: client => requests.deleteTeam(client, team),
+        },
+    };
+}
+
+export function showConfirmDeleteModal(team) {
+    return {type: types.SHOW_CONFIRM_DELETE_TEAM_MODAL, payload: team};
+}
+
+export function hideConfirmDeleteModal() {
+    return {type: types.HIDE_CONFIRM_DELETE_TEAM_MODAL};
+}
+
+
+/**
  * Update team members
  *
  * @param {String} teamId the id of the team

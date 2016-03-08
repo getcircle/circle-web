@@ -173,6 +173,15 @@ export function updateTeam(client, team) {
     });
 }
 
+export function deleteTeam(client, team) {
+    const request = new services.team.actions.delete_team.RequestV1({id: team.id});
+    return new Promise((resolve, reject) => {
+        client.sendRequest(request)
+            .then(response => response.simple(resolve, reject, { team }))
+            .catch(error => reject(error));
+    });
+}
+
 /**
  * Update members
  *

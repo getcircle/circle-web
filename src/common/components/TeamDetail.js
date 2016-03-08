@@ -24,9 +24,11 @@ const TeamDetail = (props) => {
         hasMoreCollections,
         hasMoreMembers,
         members,
+        membersCount,
         membersLoading,
         onLoadMoreMembers,
         onLoadMoreCollections,
+        pendingTeamToDelete,
         slug,
         team,
     } = props;
@@ -36,8 +38,11 @@ const TeamDetail = (props) => {
     case SLUGS.ABOUT:
         content = (
             <TeamDetailAbout
+                collectionsCount={collectionsCount}
                 coordinators={coordinators}
                 dispatch={dispatch}
+                membersCount={membersCount}
+                pendingTeamToDelete={pendingTeamToDelete}
                 team={team}
             />
         );
@@ -104,9 +109,11 @@ TeamDetail.propTypes = {
     hasMoreCollections: PropTypes.bool,
     hasMoreMembers: PropTypes.bool,
     members: PropTypes.array,
+    membersCount: PropTypes.number,
     membersLoading: PropTypes.bool,
     onLoadMoreCollections: PropTypes.func,
     onLoadMoreMembers: PropTypes.func,
+    pendingTeamToDelete: PropTypes.instanceOf(services.team.containers.TeamV1),
     slug: PropTypes.oneOf(Object.values(SLUGS)),
     team: PropTypes.instanceOf(services.team.containers.TeamV1).isRequired,
 };

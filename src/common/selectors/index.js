@@ -75,6 +75,7 @@ export const searchSelector = state => state.get('search');
 export const teamMembershipSelector = state => state.get('teamMembership');
 export const teamCoordinatorsSelector = state => state.get('teamCoordinators');
 export const teamMembersSelector = state => state.get('teamMembers');
+export const deleteTeamSelector = state => state.get('deleteTeam');
 export const profileMembershipsSelector = state => state.get('profileMemberships');
 export const deletePostSelector = state => state.get('deletePost');
 export const editorSelector = state => state.get('editor');

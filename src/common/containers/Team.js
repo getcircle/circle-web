@@ -33,8 +33,9 @@ const selector = createSelector(
         selectors.teamCoordinatorsSelector,
         selectors.teamMembersSelector,
         selectors.collectionsSelector,
+        selectors.deleteTeamSelector,
     ],
-    (cacheState, parametersState, teamMembershipState, coordinatorsState, membersState, collectionsState) => {
+    (cacheState, parametersState, teamMembershipState, coordinatorsState, membersState, collectionsState, deleteTeamState) => {
         let collections,
             collectionsCount,
             collectionsLoaded,
@@ -44,6 +45,7 @@ const selector = createSelector(
             defaultCollection,
             defaultCollectionLoaded,
             members,
+            membersCount,
             membersNextRequest,
             membersLoading;
 
@@ -64,6 +66,7 @@ const selector = createSelector(
             if (ids.size) {
                 members = retrieveTeamMembers(ids.toJS(), cache);
                 membersNextRequest = membersState.get(teamId).get('nextRequest');
+                membersCount = membersNextRequest ? getPaginator(membersNextRequest).count : members.length;
             }
             membersLoading = membersState.get(teamId).get('loading');
         }
@@ -100,8 +103,10 @@ const selector = createSelector(
             defaultCollection,
             defaultCollectionLoaded,
             members,
+            membersCount,
             membersLoading,
             membersNextRequest,
+            pendingTeamToDelete: deleteTeamState.get('pendingTeamToDelete'),
             team,
         };
     }
@@ -214,12 +219,14 @@ Team.propTypes = {
     defaultCollectionLoaded: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     members: PropTypes.array,
+    membersCount: PropTypes.number,
     membersLoading: PropTypes.bool,
     membersNextRequest: PropTypes.object,
     params: PropTypes.shape({
         slug: PropTypes.string,
         teamId: PropTypes.string.isRequired,
     }),
+    pendingTeamToDelete: PropTypes.instanceOf(services.team.containers.TeamV1),
     team: PropTypes.instanceOf(services.team.containers.TeamV1),
 }
 
