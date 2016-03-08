@@ -21,13 +21,14 @@ export const createProfileWithTitle = ({ profile, highlight }) => {
 
     if (highlight && highlight.get('title')) {
         title = <span dangerouslySetInnerHTML={{__html: highlight.get('title')}} />;
-    } else {
+    } else if (profile.title) {
         title = <span>{profile.title}</span>;
     }
 
+    const titleString = typeof title === 'string' && title.trim() ? (<span style={styles.title}>{' ('}{title}{')'}</span>) : '';
     const primaryText = (
         <div>
-            {fullName}<span style={styles.title}>{' ('}{title}{')'}</span>
+            {fullName}{titleString}
         </div>
     );
     const item = {
