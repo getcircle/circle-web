@@ -7,7 +7,6 @@ import DocumentTitle from './DocumentTitle';
 const Container = ({children, style, title, ...other}) => {
     const styles = {
         root: {
-            minHeight: '100vh',
             paddingBottom: 100,
             ...backgroundColors.light,
         },
