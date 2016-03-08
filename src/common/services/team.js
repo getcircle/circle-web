@@ -139,7 +139,7 @@ export function getMembersForProfileId(client, profileId) {
         }),
     });
     return new Promise((resolve, reject) => {
-        client.send(request)
+        client.send(request, true)
             .then(response => response.finish(resolve, reject, profileId))
             .catch(error => reject(error));
     });
