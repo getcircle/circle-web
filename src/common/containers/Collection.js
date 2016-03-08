@@ -72,6 +72,10 @@ function loadCollection(locals) {
 
 class Collection extends Component {
 
+    componentWillMount() {
+        resetScroll();
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.collectionId !== this.props.params.collectionId) {
             resetScroll();

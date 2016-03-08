@@ -196,6 +196,10 @@ class Profile extends CSSComponent {
         dispatch(deletePost(pendingPostToDelete));
     }
 
+    componentWillMount() {
+        resetScroll();
+    }
+
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.profileId !== this.props.params.profileId) {
             resetScroll();

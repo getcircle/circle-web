@@ -161,6 +161,10 @@ class Team extends CSSComponent {
         dispatch(getMembers(teamId, membersNextRequest));
     }
 
+    componentWillMount() {
+        resetScroll();
+    }
+
     componentWillReceiveProps(nextProps, nextState) {
         if (nextProps.params.teamId !== this.props.params.teamId) {
             resetScroll();
