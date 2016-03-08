@@ -14,6 +14,7 @@ import InternalPropTypes from '../InternalPropTypes';
 import PrimaryRoundedButton from '../PrimaryRoundedButton';
 
 const { OwnerTypeV1 } = services.post.containers.CollectionV1;
+const { COORDINATOR } = services.team.containers.TeamMemberV1.RoleV1;
 
 const FIELD_NAMES = ['name', 'owner'];
 
@@ -90,8 +91,10 @@ class NewCollectionForm extends Component {
         const choices = [
             {label: t('My Collections'), value: profile},
         ];
-        memberships.forEach(({team}) => {
-            choices.push({label: team.name, value: team});
+        memberships.forEach(({ role, team }) => {
+            if (role === COORDINATOR) {
+                choices.push({label: team.name, value: team});
+            }
         });
         return (
             <ClickAwayListener
