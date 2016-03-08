@@ -160,7 +160,11 @@ class Post extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.params.postId !== this.props.params.postId) {
-            loadPost(nextProps);
+            const { store: { getState } } = this.context;
+            loadPost({
+                getState,
+                ...nextProps,
+            });
             resetScroll();
         }
     }
@@ -244,6 +248,12 @@ Post.propTypes = {
     pendingPostToDelete: PropTypes.instanceOf(services.post.containers.PostV1),
     post: InternalPropTypes.PostV1,
     showLinkCopied: PropTypes.bool,
+};
+
+Post.contextTypes = {
+    store: PropTypes.shape({
+        getState: PropTypes.func.isRequired,
+    }).isRequired,
 };
 
 export default provideHooks(hooks)(connect(selector)(Post));
