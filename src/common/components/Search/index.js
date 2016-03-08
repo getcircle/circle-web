@@ -33,6 +33,7 @@ const commonStyles = {
 class Search extends Component {
 
     static propTypes = {
+        className: PropTypes.string,
         focused: PropTypes.bool,
         hasItemDivider: PropTypes.bool,
         inputClassName: PropTypes.string,
@@ -55,14 +56,6 @@ class Search extends Component {
         device: InternalPropTypes.DeviceContext.isRequired,
     }
 
-    componentWillMount() {
-        this.configure(this.props, this.state);
-    }
-
-    componentWillReceiveProps(nextProps, nextState) {
-        this.configure(nextProps, Object.assign(this.state, nextState));
-    }
-
     static defaultProps = {
         focused: true,
         hasItemDivider: true,
@@ -78,6 +71,14 @@ class Search extends Component {
 
     state = {
         highlightedIndex: null,
+    }
+
+    componentWillMount() {
+        this.configure(this.props, this.state);
+    }
+
+    componentWillReceiveProps(nextProps, nextState) {
+        this.configure(nextProps, Object.assign(this.state, nextState));
     }
 
     configure(props, state) {
