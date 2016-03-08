@@ -115,7 +115,7 @@ export function getTeamCoordinatorNormalizations(action) {
     return getTeamMemberNormalizations(action, role);
 }
 
-function getTeamMemberNormalizationsFromResponse(action, response, role = null) {
+function getTeamMemberNormalizationsFromResponse(action, response, role = null, allRoles = false) {
     const ids = getNormalizations(
         'members',
         action.payload.result,
@@ -125,7 +125,7 @@ function getTeamMemberNormalizationsFromResponse(action, response, role = null) 
     const members = retrieveTeamMembers(ids, action.payload);
     const memberIds = [];
     for (let member of members) {
-        if (member.role === role) {
+        if (allRoles || member.role === role) {
             memberIds.push(member.id);
         }
     }
@@ -153,9 +153,13 @@ export function getTeamMemberNormalizationsFromUpdateMembers(action, role = null
     );
 }
 
-export function getTeamCoordinatorNormalizationsFromUpdateMembers(action) {
-    const role = services.team.containers.TeamMemberV1.RoleV1.COORDINATOR;
-    return getTeamMemberNormalizationsFromUpdateMembers(action, role);
+export function getTeamMemberNormalizationsFromCreateTeam(action) {
+    return getTeamMemberNormalizationsFromResponse(
+        action,
+        services.team.actions.create_team.ResponseV1,
+        undefined,
+        true,
+    );
 }
 
 export function getTeamMemberNormalizationFromJoinTeam(action, role = null) {
