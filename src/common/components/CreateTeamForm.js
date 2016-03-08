@@ -47,7 +47,7 @@ class CreateTeamForm extends Component {
             this.props.resetForm();
         }
 
-        if (!this.props.id && nextProps.id) {
+        if (this.props.visible && nextProps.id && this.props.id !== nextProps.id) {
             routeToTeam({id: nextProps.id});
         }
     }
