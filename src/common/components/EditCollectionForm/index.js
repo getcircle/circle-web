@@ -1,14 +1,16 @@
 import React, { PropTypes } from 'react';
 import { initialize, reduxForm } from 'redux-form';
 import { services } from 'protobufs';
+import { difference } from 'lodash';
 
 import { EDIT_COLLECTION } from '../../constants/forms';
-import { updateCollection } from '../../actions/collections';
+import { updateCollection, removePostFromCollections } from '../../actions/collections';
 import { hideFormDialog } from '../../actions/forms';
 import { PAGE_TYPE } from '../../constants/trackerProperties';
 import * as selectors from '../../selectors';
 import t from '../../utils/gettext';
 import { collectionValidator } from '../../utils/validators';
+import { getPositionDiffs } from '../../utils/collections';
 
 import CSSComponent from  '../CSSComponent';
 import FormDialog from '../FormDialog';
@@ -46,16 +48,6 @@ const styles = {
 
 export class EditCollectionForm extends CSSComponent {
 
-    static propTypes = {
-        collection: PropTypes.instanceOf(services.post.containers.CollectionV1).isRequired,
-        dispatch: PropTypes.func.isRequired,
-        fields: PropTypes.object.isRequired,
-        formSubmitting: PropTypes.bool,
-        handleSubmit: PropTypes.func.isRequired,
-        resetForm: PropTypes.func.isRequired,
-        visible: PropTypes.bool.isRequired,
-    };
-
     componentWillReceiveProps(nextProps) {
         if (!this.props.visible && nextProps.visible) {
             this.props.resetForm();
@@ -64,30 +56,38 @@ export class EditCollectionForm extends CSSComponent {
     }
 
     setInitialValues() {
-        const { collection, dispatch } = this.props;
+        const { collection, dispatch, items = [] } = this.props;
 
         const action = initialize(EDIT_COLLECTION, {
-            items: collection.items.map(i => {return {id: i.id, text: i.post.title}}),
+            items: items.map((item, index) => {
+                return {item, id: item.id, text: item.post.title};
+            }),
             name: collection.name,
         }, fieldNames);
 
         dispatch(action);
     }
 
-    handleMenuChoice = (choice, profile) => {
+    handleMenuChoice = (choice, item) => {
+        const { fields: { items: { onChange, value } } } = this.props;
         switch(choice) {
         case MENU_CHOICES.REMOVE:
-            // TODO: dispatch remove from collection action
+            const newItems = value.slice();
+            const index = value.findIndex(i => i.id === item.id);
+            newItems.splice(index, 1);
+            onChange(newItems);
             break;
         }
     }
 
     submit = ({ name, items }, dispatch) => {
-        const { collection } = this.props;
+        const { collection, fields } = this.props;
         collection.setName(name);
 
-        // TODO: calculate diffs, send reorder action
-        dispatch(updateCollection(collection));
+        const removedItems = difference(fields.items.initialValue, items);
+        const itemsToRemove = removedItems.map(item => item.item);
+        const diffs = getPositionDiffs(items, fields.items.initialValue);
+        dispatch(updateCollection(collection, itemsToRemove, diffs));
     }
 
     handleCancel() {
@@ -96,16 +96,15 @@ export class EditCollectionForm extends CSSComponent {
 
     render() {
         const {
-            collection,
             fields: { items, name },
             formSubmitting,
             handleSubmit,
+            items: collectionItems,
             visible,
         } = this.props;
 
         let sortItems;
-        // XXX temporarily disable until we support
-        if (false && collection.items.length) {
+        if (collectionItems && collectionItems.length) {
             sortItems = (
                 <div>
                     <label style={styles.label}>
@@ -141,6 +140,17 @@ export class EditCollectionForm extends CSSComponent {
         );
     }
 }
+
+EditCollectionForm.propTypes = {
+    collection: PropTypes.instanceOf(services.post.containers.CollectionV1).isRequired,
+    dispatch: PropTypes.func.isRequired,
+    fields: PropTypes.object.isRequired,
+    items: PropTypes.array,
+    formSubmitting: PropTypes.bool,
+    handleSubmit: PropTypes.func.isRequired,
+    resetForm: PropTypes.func.isRequired,
+    visible: PropTypes.bool.isRequired,
+};
 
 export default reduxForm(
     {

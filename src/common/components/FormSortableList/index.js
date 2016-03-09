@@ -36,6 +36,7 @@ class FormSortableList extends Component {
                             MenuComponent={MenuComponent}
                             id={item.id}
                             index={i}
+                            item={item}
                             key={item.id}
                             moveItem={this.moveItem}
                             onMenuChoice={onMenuChoice}

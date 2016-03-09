@@ -62,9 +62,6 @@ class FormSelectField extends Component {
                 padding: 0,
                 textAlign: 'left',
             },
-            menu: {
-                zIndex: 3100,
-            },
             underline: {
                 borderBottom: 'none',
                 borderTop: 'none',
@@ -95,7 +92,7 @@ class FormSelectField extends Component {
                     iconStyle={{top: 8}}
                     labelStyle={styles.label}
                     listStyle={{width}}
-                    menuStyle={merge(styles.menu, {width})}
+                    menuStyle={{width}}
                     onChange={handleChange}
                     style={styles.main}
                     underlineStyle={styles.underline}

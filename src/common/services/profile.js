@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import merge from 'lodash/object/merge';
+import { capitalize, merge } from 'lodash';
 import { services } from 'protobufs';
 
 import * as mediaRequests from '../services/media';
@@ -59,7 +58,7 @@ export function getExtendedProfile(client, profileId) {
 }
 
 export function getInitialsForProfile(profile) {
-    return [profile.first_name[0], profile.last_name[0]].map((character) => _.capitalize(character)).join('');
+    return [profile.first_name[0], profile.last_name[0]].map((character) => capitalize(character)).join('');
 }
 
 export function updateProfile(client, profile, manager, photo) {

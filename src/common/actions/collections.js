@@ -67,7 +67,7 @@ export function deleteCollection(collection) {
     };
 }
 
-export function updateCollection(collection) {
+export function updateCollection(collection, itemsToRemove, diffs) {
     return {
         [SERVICE_REQUEST]: {
             types: [
@@ -75,7 +75,7 @@ export function updateCollection(collection) {
                 types.UPDATE_COLLECTION_SUCCESS,
                 types.UPDATE_COLLECTION_FAILURE,
             ],
-            remote: client => requests.updateCollection(client, collection),
+            remote: client => requests.updateCollection(client, collection, itemsToRemove, diffs),
         },
     };
 }

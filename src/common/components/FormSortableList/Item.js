@@ -73,6 +73,7 @@ const itemTarget = {
     isDragging: monitor.isDragging()
 }))
 export default class Item extends Component {
+
     static propTypes = {
         MenuComponent: PropTypes.func,
         connectDragSource: PropTypes.func.isRequired,
@@ -80,6 +81,7 @@ export default class Item extends Component {
         id: PropTypes.any.isRequired,
         index: PropTypes.number.isRequired,
         isDragging: PropTypes.bool.isRequired,
+        item: PropTypes.object.isRequired,
         moveItem: PropTypes.func.isRequired,
         onMenuChoice: PropTypes.func,
         text: PropTypes.string.isRequired,
@@ -103,6 +105,7 @@ export default class Item extends Component {
             connectDragSource,
             connectDropTarget,
             isDragging,
+            item,
             onMenuChoice,
             text,
         } = this.props;
@@ -151,6 +154,7 @@ export default class Item extends Component {
             menu = (
                 <MenuComponent
                     hover={hover}
+                    item={item}
                     onMenuChoice={onMenuChoice}
                     style={styles.menu}
                 />

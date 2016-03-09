@@ -122,11 +122,81 @@ export function deleteCollection(client, collection) {
     });
 }
 
-export function updateCollection(client, collection) {
-    const request = new services.post.actions.update_collection.RequestV1({collection});
+export function updateCollection(client, collection, itemsToRemove, diffs) {
+    function removeItems() {
+        let promises = [];
+        // TODO this should be a batch operation
+        for (let item of itemsToRemove) {
+            promises.push(removeFromCollections(client, item, [collection]));
+        }
+        return new Promise((resolve, reject) => {
+            Promise.all(promises)
+                .then(values => {
+                    const payload = {removedItems: [], collection: collection};
+                    for (let value of values) {
+                        payload.removedItems.push(value.item);
+                    }
+                    resolve(payload);
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    function reorderCollection() {
+        const request = new services.post.actions.reorder_collection.RequestV1({
+            /*eslint-disable camelcase*/
+            diffs,
+            collection_id: collection.id,
+            /*eslint-enable camelcase*/
+        });
+        return new Promise((resolve, reject) => {
+            client.send(request)
+                .then(response => response.finish(resolve, reject, collection.id, { diffs }))
+                .catch(error => reject(error));
+        });
+    }
+
+    function updateCollection() {
+        const request = new services.post.actions.update_collection.RequestV1({collection});
+        return new Promise((resolve, reject) => {
+            client.send(request)
+                .then(response => response.finish(resolve, reject, collection.id))
+                .catch(error => reject(error));
+        });
+    }
+
+    let promises = [];
+    promises.push(updateCollection());
+
+    if (diffs && diffs.length) {
+        promises.push(reorderCollection());
+    }
+
     return new Promise((resolve, reject) => {
-        client.send(request)
-            .then(response => response.finish(resolve, reject, collection.id))
+        // We don't fire all these promises at once since we could be removing and
+        // re-ordering items from the collection
+        const results = [];
+        updateCollection()
+            .then(result => {
+                results.push(result);
+                if (itemsToRemove && itemsToRemove.length) {
+                    return removeItems();
+                } else {
+                    return Promise.resolve({});
+                }
+            })
+            .then(result => {
+                results.push(result);
+                if (diffs && diffs.length) {
+                    return reorderCollection();
+                } else {
+                    return Promise.resolve({});
+                }
+            })
+            .then(result => {
+                results.push(result);
+                resolve(merge(...results));
+            })
             .catch(error => reject(error));
     });
 }

@@ -145,6 +145,7 @@ export default function paginate({
                     .set('nextRequest', payload.nextRequest)
                     .set('paginator', paginator)
                     .updateIn(['pages'], (set) => {
+                        set = set || Immutable.OrderedSet();
                         if (!paginator) return;
                         if (paginator.page !== null) {
                             return set.add(paginator.page);

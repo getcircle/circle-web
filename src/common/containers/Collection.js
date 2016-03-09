@@ -102,7 +102,6 @@ class Collection extends Component {
     render() {
         const {
             collection,
-            dispatch,
             items,
             itemsLoaded,
             itemsLoading,
@@ -124,7 +123,7 @@ class Collection extends Component {
                     />
                     <EditCollectionForm
                         collection={collection}
-                        dispatch={dispatch}
+                        items={items}
                     />
                 </div>
             );

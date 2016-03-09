@@ -31,7 +31,7 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
     if (!collection.total_items) {
         items = <span style={styles.title}>{t('No Knowledge')}</span>
     } else {
-        const titles = collection.items.map((item, index) => {
+        const titles = collection.items.slice(0, 3).map((item, index) => {
             return (
                 <li key={`collection-item-${index}`}>
                     <Link
