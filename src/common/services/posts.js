@@ -132,9 +132,9 @@ export function updateCollection(client, collection, itemsToRemove, diffs) {
         return new Promise((resolve, reject) => {
             Promise.all(promises)
                 .then(values => {
-                    const payload = {items: [], collection: collection};
+                    const payload = {removedItems: [], collection: collection};
                     for (let value of values) {
-                        payload.items.push(value.item);
+                        payload.removedItems.push(value.item);
                     }
                     resolve(payload);
                 })
@@ -151,7 +151,7 @@ export function updateCollection(client, collection, itemsToRemove, diffs) {
         });
         return new Promise((resolve, reject) => {
             client.send(request)
-                .then(response => response.finish(resolve, reject, collection.id))
+                .then(response => response.finish(resolve, reject, collection.id, { diffs }))
                 .catch(error => reject(error));
         });
     }
@@ -167,17 +167,36 @@ export function updateCollection(client, collection, itemsToRemove, diffs) {
 
     let promises = [];
     promises.push(updateCollection());
-    if (itemsToRemove && itemsToRemove.length) {
-        promises.push(removeItems());
-    }
 
     if (diffs && diffs.length) {
         promises.push(reorderCollection());
     }
 
     return new Promise((resolve, reject) => {
-        Promise.all(promises)
-            .then(values => resolve(merge(...values)))
+        // We don't fire all these promises at once since we could be removing and
+        // re-ordering items from the collection
+        const results = [];
+        updateCollection()
+            .then(result => {
+                results.push(result);
+                if (itemsToRemove && itemsToRemove.length) {
+                    return removeItems();
+                } else {
+                    return Promise.resolve({});
+                }
+            })
+            .then(result => {
+                results.push(result);
+                if (diffs && diffs.length) {
+                    return reorderCollection();
+                } else {
+                    return Promise.resolve({});
+                }
+            })
+            .then(result => {
+                results.push(result);
+                resolve(merge(...results));
+            })
             .catch(error => reject(error));
     });
 }

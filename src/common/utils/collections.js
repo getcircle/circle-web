@@ -49,7 +49,7 @@ export function getPositionDiffs(newItems, initialItems) {
     }
 
     for (let index in initialItemsWithoutRemoved) {
-        const item = initialItems[index];
+        const item = initialItemsWithoutRemoved[index];
         items.setIn([item.id, 'currentPosition'], index);
     }
 
