@@ -10,6 +10,7 @@ import { PAGE_TYPE } from '../../constants/trackerProperties';
 import * as selectors from '../../selectors';
 import t from '../../utils/gettext';
 import { collectionValidator } from '../../utils/validators';
+import { getPositionDiffs } from '../../utils/collections';
 
 import CSSComponent from  '../CSSComponent';
 import FormDialog from '../FormDialog';
@@ -59,7 +60,7 @@ export class EditCollectionForm extends CSSComponent {
 
         const action = initialize(EDIT_COLLECTION, {
             items: items.map((item, index) => {
-                return {id: item.id, text: item.post.title, post: item.post};
+                return {item, id: item.id, text: item.post.title};
             }),
             name: collection.name,
         }, fieldNames);
@@ -82,18 +83,11 @@ export class EditCollectionForm extends CSSComponent {
     submit = ({ name, items }, dispatch) => {
         const { collection, fields } = this.props;
         collection.setName(name);
-        // TODO: have a function which returns an array of PositionDiffV1s when
-        // given an array of original items and an array of newly sorted items
 
-        // TODO: calculate diffs, send reorder action
-        //
         const removedItems = difference(fields.items.initialValue, items);
-        const postsToRemove = removedItems.map(item => item.post);
-        // TODO this should be a batch operation
-        for (let post of postsToRemove) {
-            dispatch(removePostFromCollections(post, [collection]));
-        }
-        dispatch(updateCollection(collection));
+        const itemsToRemove = removedItems.map(item => item.item);
+        const diffs = getPositionDiffs(items, fields.items.initialValue);
+        dispatch(updateCollection(collection, itemsToRemove, diffs));
     }
 
     handleCancel() {
