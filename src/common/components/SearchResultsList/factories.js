@@ -106,10 +106,12 @@ export function createTeamResult({ team, highlight }, theme) {
         description = <span style={theme.secondaryText}>{team.description.value}</span>;
     }
 
-    if (team.total_members && team.total_members > 1) {
-        members = t(`${team.total_members} Members`);
-    } else if (members !== null && members !== undefined) {
-        members = t(`${team.total_members} Member`);
+    if (team.total_members) {
+        if (team.total_members > 1) {
+            members = t(`${team.total_members} Members`);
+        } else {
+            members = t(`${team.total_members} Member`);
+        }
     }
 
     const primaryText = (
