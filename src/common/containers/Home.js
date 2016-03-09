@@ -43,7 +43,6 @@ class Home extends CSSComponent {
                     lineHeight: '1.7rem',
                     letterSpacing: '1.27px',
                     fontWeight: muiTheme.luno.fontWeights.black,
-                    color: muiTheme.luno.colors.extraLightBlack,
                     textDecoration: 'none',
                     padding: '0 15px',
                     textTransform: 'uppercase',
@@ -126,9 +125,27 @@ class Home extends CSSComponent {
                             </div>
                         </div>
                         <div className="row center-xs">
-                            <Link style={this.styles().exploreLink} to="/explore/people">{t('People')}</Link>
-                            <Link style={this.styles().exploreLink} to="/explore/knowledge">{t('Knowledge')}</Link>
-                            <Link style={this.styles().exploreLink} to="/explore/teams">{t('Teams')}</Link>
+                            <Link
+                                className="explore-link"
+                                style={this.styles().exploreLink}
+                                to="/explore/people"
+                            >
+                                {t('People')}
+                            </Link>
+                            <Link
+                                className="explore-link"
+                                style={this.styles().exploreLink}
+                                to="/explore/knowledge"
+                            >
+                                {t('Knowledge')}
+                            </Link>
+                            <Link
+                                className="explore-link"
+                                style={this.styles().exploreLink}
+                                to="/explore/teams"
+                            >
+                                {t('Teams')}
+                            </Link>
                         </div>
                     </section>
                     <section style={this.styles().searchSection}>

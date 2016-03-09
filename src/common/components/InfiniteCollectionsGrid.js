@@ -12,7 +12,6 @@ import InfiniteGrid from './InfiniteGrid';
 const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
     const styles = {
         header: {
-            color: muiTheme.luno.colors.black,
             fontSize: '2.4rem',
             fontWeight: muiTheme.luno.fontWeights.bold,
             lineHeight: '2.8rem',
@@ -24,7 +23,6 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
         title: {
             fontSize: '1.4rem',
             lineHeight: '2.2rem',
-            color: muiTheme.luno.colors.lightBlack,
             textDecoration: 'none',
         },
     };
@@ -36,7 +34,13 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
         const titles = collection.items.map((item, index) => {
             return (
                 <li key={`collection-item-${index}`}>
-                    <Link style={styles.title} to={getPostPath(item.post)}>{item.post.title}</Link>
+                    <Link
+                        className="collection-preview-post"
+                        style={styles.title}
+                        to={getPostPath(item.post)}
+                    >
+                        {item.post.title}
+                    </Link>
                 </li>
             );
         });
@@ -51,7 +55,13 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
     return (
         <div {...other}>
             <Divider style={muiTheme.luno.collections.divider} />
-            <Link style={styles.header} to={getCollectionPath(collection)}>{collection.name}</Link>
+            <Link
+                className="collection-preview-header"
+                style={styles.header}
+                to={getCollectionPath(collection)}
+            >
+                {collection.name}
+            </Link>
             <div style={styles.items}>
                 {items}
             </div>
