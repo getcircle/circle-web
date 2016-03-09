@@ -51,7 +51,7 @@ class ItemMenu extends Component {
 
 ItemMenu.propTypes = {
     hover: PropTypes.bool,
-    item: PropTypes.instanceOf(services.post.containers.CollectionItemV1),
+    item: PropTypes.object.isRequired,
     onMenuChoice: PropTypes.func.isRequired,
     style: PropTypes.object,
 };
