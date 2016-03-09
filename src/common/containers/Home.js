@@ -45,7 +45,7 @@ class Home extends CSSComponent {
                     fontWeight: muiTheme.luno.fontWeights.black,
                     color: muiTheme.luno.colors.extraLightBlack,
                     textDecoration: 'none',
-                    paddingLeft: 30,
+                    padding: '0 15px',
                     textTransform: 'uppercase',
                 },
                 header: {
