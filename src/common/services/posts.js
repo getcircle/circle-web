@@ -203,6 +203,7 @@ export function getCollectionItems(client, collectionId, nextRequest) {
     const request = nextRequest ? nextRequest : new services.post.actions.get_collection_items.RequestV1({
         /*eslint-disable camelcase*/
         collection_id: collectionId,
+        inflations: new services.common.containers.InflationsV1({exclude: ['post.html_document']}),
         /*eslint-enable camelcase*/
     });
     return new Promise((resolve, reject) => {
