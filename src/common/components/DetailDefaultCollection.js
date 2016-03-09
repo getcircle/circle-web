@@ -5,6 +5,7 @@ import { Divider, List } from 'material-ui';
 
 import t from '../utils/gettext';
 
+import CollectionViewAllLink from './CollectionViewAllLink';
 import DetailListItemCollection from './DetailListItemCollection';
 
 const DefaultCollection = ({ collection, ...other }) => {
@@ -17,7 +18,18 @@ const DefaultCollection = ({ collection, ...other }) => {
             />
         );
     });
-    return <List children={items} {...other} />;
+
+    let viewAll;
+    if (collection.total_items > 3) {
+        viewAll = <CollectionViewAllLink collection={collection} />;
+    }
+
+    return (
+        <div>
+            <List children={items} {...other} />
+            {viewAll}
+        </div>
+    );
 };
 
 const DetailDefaultCollection = ({ collection, loaded, ...other }, { muiTheme }) => {

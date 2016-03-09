@@ -6,6 +6,7 @@ import { Divider } from 'material-ui';
 import t from '../utils/gettext';
 import { getPostPath, getCollectionPath } from '../utils/routes';
 
+import CollectionViewAllLink from './CollectionViewAllLink';
 import InfiniteGrid from './InfiniteGrid';
 
 const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
@@ -26,15 +27,6 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
             color: muiTheme.luno.colors.lightBlack,
             textDecoration: 'none',
         },
-        viewAll: {
-            fontSize: '1.4rem',
-            lineHeight: '2.2rem',
-            color: muiTheme.luno.tintColor,
-            textDecoration: 'none',
-        },
-        viewAllContainer: {
-            paddingTop: 10,
-        },
     };
 
     let items;
@@ -53,13 +45,7 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
 
     let viewAll;
     if (collection.total_items > 3) {
-        viewAll = (
-            <div style={styles.viewAllContainer}>
-                <Link style={styles.viewAll} to={getCollectionPath(collection)}>
-                    {t(`View All ${collection.total_items} Resources`)}
-                </Link>
-            </div>
-        );
+        viewAll = <CollectionViewAllLink collection={collection} />;
     }
 
     return (

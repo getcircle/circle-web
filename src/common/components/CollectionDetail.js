@@ -47,8 +47,12 @@ EditCollectionMenu.contextTypes = {
 
 const CollectionDetailHeader = ({ collection }, { muiTheme }) => {
     let primaryText, secondaryText;
-    if (collection) {
+    if (collection && collection.name) {
         primaryText = collection.name;
+    }
+
+    if (!primaryText) {
+        primaryText = t('Pinned Knowledge');
     }
 
     const styles = {
