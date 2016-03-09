@@ -12,6 +12,7 @@ const Tabs = ({ children, onRequestChange, value }, { muiTheme }) => {
             paddingTop: 0,
         },
         selectedItemStyle: {
+            borderBottom: '2px solid ' + muiTheme.luno.tintColor,
             color: muiTheme.luno.tintColor,
         },
     };
