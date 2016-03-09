@@ -18,6 +18,7 @@ import { resetScroll } from '../utils/window';
 import { slice } from '../reducers/paginate';
 import {
     retrieveCollections,
+    retrieveCollectionItems,
     retrieveProfile,
     retrieveReportingDetails,
     retrievePosts,
@@ -40,8 +41,9 @@ const selector = selectors.createImmutableSelector(
         selectors.postsSelector,
         selectors.deletePostSelector,
         selectors.collectionsSelector,
+        selectors.collectionItemsSelector,
     ],
-    (cacheState, parametersState, membershipsState, postsState, deletePostState, collectionsState) => {
+    (cacheState, parametersState, membershipsState, postsState, deletePostState, collectionsState, collectionItemsSelector) => {
         let collections,
             collectionsCount,
             collectionsLoaded,
@@ -87,6 +89,15 @@ const selector = selectors.createImmutableSelector(
             const ids = collectionsState.get(collectionsKey).get('ids');
             if (ids.size) {
                 collections = retrieveCollections(ids.toJS(), cache);
+                if (collections) {
+                    for (let collection of collections) {
+                        if (collectionItemsSelector.has(collection.id)) {
+                            const itemIds = collectionItemsSelector.get(collection.id).get('ids');
+                            const items = retrieveCollectionItems(itemIds.toJS(), cache);
+                            collection.items = items;
+                        }
+                    }
+                }
                 collectionsNextRequest = collectionsState.get(collectionsKey).get('nextRequest');
                 collectionsCount = collectionsNextRequest ? getPaginator(collectionsNextRequest).count : collections.length;
             }
