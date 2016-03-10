@@ -77,7 +77,7 @@ const ContactMethods = ({ dispatch, team, ...other }, { muiTheme }) => {
                 {team.contact_methods.map((method, index) => <ContactMethod key={`contact-method-${index}`} method={method} />)}
             </ul>
         );
-    } else if (team.permissions.can_edit) {
+    } else if (team.permissions && team.permissions.can_edit) {
         value = <a onTouchTap={buildShowTeamEditModal(dispatch)} style={{...theme.primaryText, ...theme.link}}>{t('Add info')}</a>;
     } else {
         value = <p style={theme.primaryText}>{t('No info')}</p>;

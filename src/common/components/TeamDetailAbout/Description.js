@@ -13,7 +13,7 @@ const Description = ({ dispatch, team, ...other }, { muiTheme }) => {
     let value;
     if (team.description && team.description.value) {
         value = <p style={theme.primaryText}>{team.description.value}</p>;
-    } else if (team.permissions.can_edit) {
+    } else if (team.permissions && team.permissions.can_edit) {
         value = <a onTouchTap={buildShowTeamEditModal(dispatch)} style={{...theme.primaryText, ...theme.link}}>{t('Add description')}</a>;
     } else {
         value = <p style={theme.primaryText}>{t('No info')}</p>;
