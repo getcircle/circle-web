@@ -117,7 +117,10 @@ export function getMembersForProfileId(profileId) {
                 types.GET_TEAM_MEMBERS_FOR_PROFILE_SUCCESS,
                 types.GET_TEAM_MEMBERS_FOR_PROFILE_FAILURE,
             ],
-            remote: client => requests.getMembersForProfileId(client, profileId),
+            remote: (client, state) => {
+                const profile = state.get('authentication').get('profile');
+                return requests.getMembersForProfileId(client, profileId, profile.id === profileId);
+            },
             bailout: (state) => state.get('profileMemberships').has(profileId),
         },
         meta: {

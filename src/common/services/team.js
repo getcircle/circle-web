@@ -116,9 +116,10 @@ export function getMembers(client, teamId, role = services.team.containers.TeamM
  *
  * @param {Object} client the service client
  * @param {String} profileId the id of the profile
+ * @param {Bool} isCurrentUser boolean for whether or not this is the current user
  *
  */
-export function getMembersForProfileId(client, profileId) {
+export function getMembersForProfileId(client, profileId, isCurrentUser) {
     const request = new services.team.actions.get_members.RequestV1({
         /*eslint-disable camelcase*/
         profile_id: profileId,
@@ -141,7 +142,7 @@ export function getMembersForProfileId(client, profileId) {
     });
     return new Promise((resolve, reject) => {
         client.send(request, true)
-            .then(response => response.finish(resolve, reject, profileId))
+            .then(response => response.finish(resolve, reject, profileId, { isCurrentUser }))
             .catch(error => reject(error));
     });
 }

@@ -53,15 +53,18 @@ export default function (state = initialState, action) {
     case types.LEAVE_TEAM_SUCCESS:
         return state.setIn([payload.teamId, 'memberId'], null);
     case types.GET_TEAM_MEMBERS_FOR_PROFILE_SUCCESS:
-        ids = getTeamMemberForProfileNormalizations(action);
-        if (ids) {
-            const members = retrieveTeamMembers(ids, action.payload);
-            return state.withMutations(map => {
-                for (let member of members) {
-                    map.setIn([member.team_id, 'memberId'], member.id);
-                }
-                return map;
-            });
+        const { isCurrentUser } = action.payload;
+        if (isCurrentUser) {
+            ids = getTeamMemberForProfileNormalizations(action);
+            if (ids) {
+                const members = retrieveTeamMembers(ids, action.payload);
+                return state.withMutations(map => {
+                    for (let member of members) {
+                        map.setIn([member.team_id, 'memberId'], member.id);
+                    }
+                    return map;
+                });
+            }
         }
     }
     return state;
