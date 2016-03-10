@@ -4,7 +4,7 @@ import { services } from 'protobufs';
 import { difference } from 'lodash';
 
 import { EDIT_COLLECTION } from '../../constants/forms';
-import { updateCollection, removePostFromCollections } from '../../actions/collections';
+import { updateCollection } from '../../actions/collections';
 import { hideFormDialog } from '../../actions/forms';
 import { PAGE_TYPE } from '../../constants/trackerProperties';
 import * as selectors from '../../selectors';
@@ -34,6 +34,7 @@ const selector = selectors.createImmutableSelector(
 const fieldNames = [
     'items',
     'name',
+    'isDefault',
 ];
 
 const styles = {
@@ -59,6 +60,7 @@ export class EditCollectionForm extends CSSComponent {
         const { collection, dispatch, items = [] } = this.props;
 
         const action = initialize(EDIT_COLLECTION, {
+            isDefault: collection.is_default,
             items: items.map((item, index) => {
                 return {item, id: item.id, text: item.post.title};
             }),
@@ -96,6 +98,7 @@ export class EditCollectionForm extends CSSComponent {
 
     render() {
         const {
+            collection,
             fields: { items, name },
             formSubmitting,
             handleSubmit,
@@ -119,6 +122,19 @@ export class EditCollectionForm extends CSSComponent {
             );
         }
 
+        let nameField;
+        if (!collection.is_default) {
+            nameField = (
+                <div>
+                    <FormLabel text={t('Collection Name')} />
+                    <FormTextField
+                        placeholder={t('Name your Collection')}
+                        {...name}
+                    />
+                </div>
+            );
+        }
+
         return (
             <FormDialog
                 modal={true}
@@ -130,12 +146,8 @@ export class EditCollectionForm extends CSSComponent {
                 title={t('Edit Collection')}
                 visible={visible}
             >
-                <FormLabel text={t('Collection Name')} />
-                <FormTextField
-                    placeholder={t('Name your Collection')}
-                    {...name}
-                 />
-                 {sortItems}
+                {nameField}
+                {sortItems}
             </FormDialog>
         );
     }
@@ -145,9 +157,9 @@ EditCollectionForm.propTypes = {
     collection: PropTypes.instanceOf(services.post.containers.CollectionV1).isRequired,
     dispatch: PropTypes.func.isRequired,
     fields: PropTypes.object.isRequired,
-    items: PropTypes.array,
     formSubmitting: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
+    items: PropTypes.array,
     resetForm: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired,
 };

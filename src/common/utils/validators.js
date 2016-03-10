@@ -30,9 +30,15 @@ function createValidator(rules) {
   };
 }
 
-export const collectionValidator = createValidator({
-    name: [required],
-});
+export function collectionValidator(values) {
+    let errors = {};
+    if (!values.isDefault) {
+        errors = createValidator({
+            name: [required],
+        })(values);
+    }
+    return errors;
+}
 
 export const profileValidator = createValidator({
     contacts: arrayOf({type: [required], value: [required]}),

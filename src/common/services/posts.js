@@ -165,19 +165,16 @@ export function updateCollection(client, collection, itemsToRemove, diffs) {
         });
     }
 
-    let promises = [];
-    promises.push(updateCollection());
-
-    if (diffs && diffs.length) {
-        promises.push(reorderCollection());
-    }
-
     return new Promise((resolve, reject) => {
         // We don't fire all these promises at once since we could be removing and
         // re-ordering items from the collection
-        const results = [];
-        updateCollection()
-            .then(result => {
+        const results = [{result: collection.id}];
+        let initialPromise = Promise.resolve();
+        if (!collection.is_default) {
+            initialPromise = updateCollection();
+        }
+        initialPromise
+            .then((result = {}) => {
                 results.push(result);
                 if (itemsToRemove && itemsToRemove.length) {
                     return removeItems();
@@ -197,7 +194,10 @@ export function updateCollection(client, collection, itemsToRemove, diffs) {
                 results.push(result);
                 resolve(merge(...results));
             })
-            .catch(error => reject(error));
+            .catch(error => {
+                debugger;
+                reject(error)
+            });
     });
 }
 
