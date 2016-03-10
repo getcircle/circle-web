@@ -181,7 +181,6 @@ class HeaderMenu extends CSSComponent {
                     />
                     {this.renderMyKnowledgeMenuItem()}
                     {this.renderCreateTeamMenuItem()}
-                    {this.renderCreateCollectionMenuItem()}
                     {this.renderAddToSlackMenuItem()}
                     <MenuItem
                         desktop={true}
