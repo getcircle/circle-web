@@ -20,9 +20,11 @@ function additionalTypesCallback(state, action) {
                         services.post.containers.CollectionV1,
                         action.payload,
                     );
-                    // collectionId should map to value used in
-                    // `mapActionToKey` below (which is collectionId)
-                    map.updateIn([collectionId, 'ids'], set => set ? set.union(itemIds) : Immutable.OrderedSet(itemIds));
+                    if (itemIds) {
+                        // collectionId should map to value used in
+                        // `mapActionToKey` below (which is collectionId)
+                        map.updateIn([collectionId, 'ids'], set => set ? set.union(itemIds) : Immutable.OrderedSet(itemIds));
+                    }
                 }
                 return map;
             });
