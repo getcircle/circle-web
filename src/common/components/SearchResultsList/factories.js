@@ -99,11 +99,12 @@ export function createTeamResult({ team, highlight }, theme) {
 
     let description, members;
     const name = <span style={theme.primaryText}>{team.name}</span>;
+    const secondaryTextStyle = {...theme.secondaryText, ...{overflow: 'hidden', 'textOverflow': 'ellipsis'}};
 
     if (highlight && highlight.get('description')) {
-        description = <div dangerouslySetInnerHTML={{__html: highlight.get('description')}} style={theme.secondaryText} />;
+        description = <div dangerouslySetInnerHTML={{__html: highlight.get('description')}} style={secondaryTextStyle} />;
     } else if (team.description) {
-        description = <span style={theme.secondaryText}>{team.description.value}</span>;
+        description = <div style={secondaryTextStyle}>{team.description.value}</div>;
     }
 
     if (team.total_members) {
@@ -127,9 +128,8 @@ export function createTeamResult({ team, highlight }, theme) {
     );
 
     const secondaryText = (
-        <div style={{overflow: 'visible'}}>
+        <div style={{'height': 'auto'}}>
             <span style={{...theme.secondaryText, ...{color: Colors.extraLightBlack}}}>{members}</span>
-            <br />
             {description}
         </div>
     );

@@ -95,8 +95,8 @@ ExploreTeams.propTypes = {
     nextRequest: PropTypes.object,
     onLoadMore: PropTypes.func,
     onSelectItem: PropTypes.func,
-    posts: PropTypes.array,
-    postsCount: PropTypes.number,
+    teams: PropTypes.array,
+    teamsCount: PropTypes.number,
 };
 
 ExploreTeams.contextTypes = {
