@@ -62,13 +62,14 @@ export function createPostResult({ post, highlight }, theme) {
 
     let secondaryText;
     const text = <span style={theme.primaryText}>{post.title}</span>;
+    const secondaryTextStyle = {...theme.secondaryText, ...{height: 'auto'}};
 
     // posts always return content in the highlight, even if nothing is
     // highlighted
     if (highlight.get('content')) {
-        secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} style={theme.secondaryText} />;
+        secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} style={secondaryTextStyle} />;
     } else {
-        secondaryText = <span style={theme.secondaryText}>{post.snippet}</span>;
+        secondaryText = <div style={secondaryTextStyle}>{post.snippet}</div>;
     }
 
     const primaryText = (
