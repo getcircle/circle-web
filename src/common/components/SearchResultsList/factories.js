@@ -2,6 +2,7 @@ import keymirror from 'keymirror';
 import React from 'react';
 
 import Colors from '../../styles/Colors';
+import moment from '../../utils/moment';
 import t from '../../utils/gettext';
 
 import CollectionIcon from '../CollectionIcon';
@@ -60,16 +61,16 @@ export function createProfileResult(result, theme) {
 
 export function createPostResult({ post, highlight }, theme) {
 
-    let secondaryText;
+    let postContent;
     const text = <span style={theme.primaryText}>{post.title}</span>;
-    const secondaryTextStyle = {...theme.secondaryText, ...{height: 'auto'}};
+    const secondaryTextStyle = {...theme.secondaryText, ...{overflow: 'hidden', 'textOverflow': 'ellipsis'}};
 
     // posts always return content in the highlight, even if nothing is
     // highlighted
     if (highlight.get('content')) {
-        secondaryText = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} style={secondaryTextStyle} />;
+        postContent = <div dangerouslySetInnerHTML={{__html: highlight.get('content')}} style={secondaryTextStyle} />;
     } else {
-        secondaryText = <div style={secondaryTextStyle}>{post.snippet}</div>;
+        postContent = <div style={secondaryTextStyle}>{post.snippet}</div>;
     }
 
     const primaryText = (
@@ -81,6 +82,19 @@ export function createPostResult({ post, highlight }, theme) {
                 width={35}
             />
             {text}
+        </div>
+    );
+
+    const lastUpdated = moment(post.changed).calendar(null, {
+        sameDay: '[Today at] LT',
+        lastDay: '[Yesterday at] LT',
+        lastWeek: 'MMM D, YYYY',
+        sameElse: 'MMM D, YYYY'
+    });
+    const secondaryText = (
+        <div style={{'height': 'auto'}}>
+            <span style={{...theme.secondaryText, ...{color: Colors.extraLightBlack}}}>{lastUpdated}</span>
+            {postContent}
         </div>
     );
 
