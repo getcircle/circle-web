@@ -63,7 +63,7 @@ const ExploreKnowledge = ({ hasMore, loaded, loading, onLoadMore, posts, postsCo
     }
 
     return (
-        <Explore count={postsCount} noun={t('Posts')}>
+        <Explore count={postsCount} noun={t('Knowledge')}>
             {content}
         </Explore>
     );
