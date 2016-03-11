@@ -17,12 +17,16 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
             lineHeight: '2.8rem',
             textDecoration: 'none',
         },
-        items: {
+        itemsContainer: {
             paddingTop: 10,
         },
+        item: {
+            paddingBottom: 6,
+        },
         title: {
+            display: 'block',
             fontSize: '1.4rem',
-            lineHeight: '2.2rem',
+            lineHeight: '1.6rem',
             textDecoration: 'none',
         },
     };
@@ -33,7 +37,7 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
     } else {
         const titles = collection.items.slice(0, 3).map((item, index) => {
             return (
-                <li key={`collection-item-${index}`}>
+                <li key={`collection-item-${index}`} style={styles.item}>
                     <Link
                         className="collection-preview-post"
                         style={styles.title}
@@ -62,7 +66,7 @@ const CollectionsGridItem = ({ collection, ...other }, { muiTheme }) => {
             >
                 {collection.name}
             </Link>
-            <div style={styles.items}>
+            <div style={styles.itemsContainer}>
                 {items}
             </div>
             {viewAll}
