@@ -13,10 +13,10 @@ import SearchResultsList from './SearchResultsList';
 
 export const SearchDetailHeader = ({ totalResults, query }) => {
     const resultsKeyword = totalResults === 1 ? 'Result' : 'Results';
-    const title = t(`${totalResults} ${resultsKeyword} for "${query}"`);
+    const title = t(`${totalResults} ${resultsKeyword} for `);
     return (
         <section>
-            <span style={{fontSize: '1.3rem', color: Colors.extraLightBlack}}>{title}</span>
+            <span style={{fontSize: '2.4rem', color: Colors.extraLightBlack}}>{title}<em>{`"${query}"`}</em></span>
         </section>
     );
 };
