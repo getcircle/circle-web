@@ -18,7 +18,7 @@ describe('ExploreKnowledge', () => {
         const { wrapper } = setup({postsCount: 10});
         const explore = wrapper.find(Explore);
         expect(explore.length).toEqual(1);
-        expect(explore.prop('noun')).toEqual('Posts');
+        expect(explore.prop('noun')).toEqual('Knowledge');
         expect(explore.prop('count')).toEqual(10);
     });
 
