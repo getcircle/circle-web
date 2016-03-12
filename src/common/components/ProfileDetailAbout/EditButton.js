@@ -15,7 +15,7 @@ const EditButton = ({dispatch}, {muiTheme}) => {
             padding: 0,
             width: 24,
         }
-    }
+    };
     const handleTouchTap = () => {
         dispatch(showFormDialog(EDIT_PROFILE));
     };

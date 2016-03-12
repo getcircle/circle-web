@@ -69,6 +69,16 @@ export function getCustomTheme(userAgent) {
                 marginTop: 45,
                 marginBottom: 20,
             },
+            primaryText: {
+                fontSize: '1.6rem',
+                fontWeight: FontWeights.bold,
+                lineHeight: '2.4rem',
+            },
+            secondaryText: {
+                fontSize: '1.4rem',
+                lineHeight: '2.0rem',
+                color: Colors.lightBlack,
+            },
         },
         dialog: {
             title: {
@@ -82,6 +92,14 @@ export function getCustomTheme(userAgent) {
             },
         },
         detail: {
+            footer: {
+                sectionTitle: {
+                    color: palette.primaryTextColor,
+                    fontSize: '1.1rem',
+                    fontWeight: FontWeights.bold,
+                    letterSpacing: '1px',
+                },
+            },
             h1: {
                 fontSize: '21px',
                 lineHeight: '25px',

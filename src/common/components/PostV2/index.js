@@ -6,6 +6,7 @@ import { routeToSearch } from '../../utils/routes';
 import DetailContent from '../DetailContent';
 
 import Content from './Content';
+import Collections from './Collections';
 import Header, { Author, OptionsMenu } from './Header';
 import Footer from './Footer';
 
@@ -31,16 +32,21 @@ class Post extends Component {
     render() {
         const { collections, editableCollections, memberships, onDelete, post, ...other } = this.props;
         return (
-            <DetailContent style={{paddingTop: 10}}>
-                <Header
+            <div>
+                <DetailContent style={{paddingTop: 10}}>
+                    <Header
+                        collections={collections}
+                        editableCollections={editableCollections}
+                        memberships={memberships}
+                        post={post}
+                    />
+                    <Content post={post} />
+                    <Footer post={post} />
+                </DetailContent>
+                <Collections
                     collections={collections}
-                    editableCollections={editableCollections}
-                    memberships={memberships}
-                    post={post}
                 />
-                <Content post={post} />
-                <Footer post={post} />
-            </DetailContent>
+            </div>
         );
     }
 };
