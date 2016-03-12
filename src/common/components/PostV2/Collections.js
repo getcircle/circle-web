@@ -59,25 +59,27 @@ export const Collections = ({ collections, ...other}, { muiTheme }) => {
         },
     };
 
-    if (collections) {
+    if (collections.length) {
         collectionItems = collections.map((item, index) => {
             return (
                 <CollectionItem collection={item} key={item.id} />
             );
         });
-    }
 
-    return (
-        <div style={styles.root}>
-            <section className="wrap" style={styles.collectionsSection}>
-                <div style={theme.footer.sectionTitle}>{t('Collected In').toUpperCase()}</div>
-                <Divider style={{...muiTheme.luno.collections.divider, ...{marginTop: 15}}} />
-                <List style={styles.collectionsList}>
-                    {collectionItems}
-                </List>
-            </section>
-        </div>
-    );
+        return (
+            <div style={styles.root}>
+                <section className="wrap" style={styles.collectionsSection}>
+                    <div style={theme.footer.sectionTitle}>{t('Collected In').toUpperCase()}</div>
+                    <Divider style={{...muiTheme.luno.collections.divider, ...{marginTop: 15}}} />
+                    <List style={styles.collectionsList}>
+                        {collectionItems}
+                    </List>
+                </section>
+            </div>
+        );
+    } else {
+        return <span />;
+    }
 };
 
 
