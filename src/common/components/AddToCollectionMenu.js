@@ -214,6 +214,7 @@ class AddToCollectionMenu extends Component {
                 onRequestChange={this.handleRequestChange}
                 open={this.state.open}
                 style={merge(theme.menu, style)}
+                tooltip={t('Add to Collection')}
                 useLayerForClickAway={true}
                 {...other}
             >

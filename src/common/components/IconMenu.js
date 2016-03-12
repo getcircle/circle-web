@@ -2,7 +2,7 @@ import { IconButton, IconMenu as MaterialIconMenu } from 'material-ui';
 import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
 
-const IconMenu = (props) => {
+const IconMenu = (props, {muiTheme}) => {
     const {
         children,
         iconElement,
@@ -10,6 +10,8 @@ const IconMenu = (props) => {
         iconButtonElement,
         menuStyle,
         style,
+        tooltip,
+        tooltipPosition,
         touchTapCloseDelay,
         ...other,
     } = props;
@@ -28,7 +30,12 @@ const IconMenu = (props) => {
         button = iconButtonElement;
     } else {
         button = (
-            <IconButton style={iconButtonStyle}>
+            <IconButton
+                style={{...iconButtonStyle, ...{transition: 'none'}}}
+                tooltip={tooltip}
+                tooltipPosition={tooltipPosition}
+                tooltipStyles={muiTheme.luno.iconButton.tooltip}
+            >
                 {iconElement}
             </IconButton>
         );
@@ -57,6 +64,8 @@ IconMenu.propTypes = {
     menuStyle: PropTypes.object,
     open: PropTypes.bool,
     style: PropTypes.object,
+    tooltip: PropTypes.string,
+    tooltipPosition: PropTypes.string,
     touchTapCloseDelay: PropTypes.number,
 };
 
@@ -64,6 +73,12 @@ IconMenu.defaultProps = {
     menuStyle: {},
     style: {},
     touchTapCloseDelay: 0,
+    tooltip: '',
+    tooltipPosition: 'top-center',
+};
+
+IconMenu.contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
 };
 
 export default IconMenu;

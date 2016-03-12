@@ -181,6 +181,12 @@ export function getCustomTheme(userAgent) {
                 backgroundColor: Colors.minWhite,
             },
         },
+        iconButton: {
+            tooltip: {
+                fontSize: '1.4rem',
+                transition: 'none',
+            },
+        },
         listItemProfile: {
             avatar: {
                 left: 5,

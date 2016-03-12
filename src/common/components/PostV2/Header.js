@@ -17,7 +17,9 @@ import { createShareMenuItems } from './helpers';
 const ShareShortcutMenu = ({ post }, { auth, store: { dispatch } }) => {
     // TODO track sharing of the post
     return (
-        <CircularShareShortcutMenu>
+        <CircularShareShortcutMenu
+            tooltip={t('Share Knowledge')}
+        >
             {createShareMenuItems(post, auth, dispatch)}
         </CircularShareShortcutMenu>
     );

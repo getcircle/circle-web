@@ -1,6 +1,8 @@
 import { merge } from 'lodash';
 import React, { PropTypes } from 'react';
 
+import t from '../utils/gettext';
+
 import IconMenu from './IconMenu';
 import MoreIcon from './MoreIcon';
 
@@ -12,6 +14,7 @@ const MoreMenu = ({ style, ...other }, { muiTheme }) => {
             iconButtonStyle={theme.button}
             iconElement={<MoreIcon {...theme.Icon} />}
             style={menuStyle}
+            tooltip={t('More Actions')}
             {...other}
         />
     );
