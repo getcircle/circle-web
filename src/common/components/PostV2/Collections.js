@@ -60,7 +60,8 @@ export const Collections = ({ collections, ...other}, { muiTheme }) => {
     };
 
     if (collections.length) {
-        collectionItems = collections.map((item, index) => {
+        // TODO: See if we can get correct order from the backend
+        collectionItems = collections.reverse().map((item, index) => {
             return (
                 <CollectionItem collection={item} key={item.id} />
             );
