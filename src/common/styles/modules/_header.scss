@@ -1,0 +1,24 @@
+.header {}
+
+.header-image {
+    padding-left: 6px;
+    max-height: 80px;
+}
+
+.header-title {
+    color: #fff;
+    display: table-cell;
+    font-size: 28px;
+    padding-left: 25px;
+    padding-bottom: 10px;
+    vertical-align: middle;
+}
+
+.header__nav--primary {
+    height: 60px;
+}
+
+.header__nav--secondary {
+    display: table;
+    height: 80px;
+}

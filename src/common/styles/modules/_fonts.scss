@@ -1,0 +1,35 @@
+/**
+ * Text
+ *
+ * Partial classes for now to force more semantic naming of classes.
+ *
+ * Example:
+ * .text--hero {
+ *     @extend %text--1;
+ *     color: ...;
+ * }
+ */
+
+$font-base-size: 12;
+$font-base-line-height: 18;
+$font-sizes: 24 22 20 18 16 14 12;
+$font-stack: "Lato", Arial, sans-serif;
+
+html {
+    font-size: 10px;
+}
+
+body {
+    font-size: ($font-base-size)px;
+    font-family: $font-stack;
+}
+
+$font-count: 0;
+@each $size in $font-sizes {
+    $font-count: $font-count + 1;
+    .text-#{$font-count} {
+        font-size: $size;
+        line-height: (ceil($size / $font-base-line-height) * ($font-base-line-height / $size))em;
+        margin-bottom: ($font-base-line-height)em;
+    }
+}

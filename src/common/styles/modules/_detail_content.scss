@@ -1,0 +1,27 @@
+a:link.collection-preview-header, a:visited.collection-preview-header {
+    color: $black;
+    text-decoration: none;
+}
+
+a:hover.collection-preview-header {
+    color: $tintColor;
+    text-decoration: none;
+}
+
+a:link.collection-preview-post, a:visited.collection-preview-post {
+    color: $lightBlack;
+    text-decoration: none;
+}
+
+a:hover.collection-preview-post {
+    color: $tintColor;
+    text-decoration: none;
+}
+
+section.detail-section:first-child {
+    padding-top: 15px;
+}
+
+section.detail-section {
+    padding-top: 35px;
+}

@@ -1,0 +1,18 @@
+web:
+  image: lunohq/web-dev
+  ports:
+    - "3000:3000"
+  environment:
+    - NODE_ENV=development
+    - REMOTE_API_ENDPOINT=http://services:8000/v1/
+    - ADMIN_USERNAME=luno
+    - ADMIN_PASSWORD=circle
+    - SESSION_SECRET=shhhh
+    - REDIS_URL=redis://redis:6379
+    - AUTHENTICATION_TOKEN_SECURE=0
+  external_links:
+    - services_services_1:services
+    - services_redis_1:redis
+  log_opt:
+    max-size: "100k"
+    max-file: "20"

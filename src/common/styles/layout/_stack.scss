@@ -1,0 +1,13 @@
+.stack {}
+
+// Poorly named. Many times you'll want the first stacked item to collapse its top margin.
+// Not sure what to call that.
+.stack--collapsing {
+    .stack__item:first-child {
+        margin-top: 0;
+    }
+}
+
+.stack__item {
+    margin-top: $vertical-unit;
+}

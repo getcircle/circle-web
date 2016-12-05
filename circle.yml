@@ -1,0 +1,30 @@
+dependencies:
+  override:
+    - npm update -g npm
+    - npm install
+machine:
+  node:
+    version: iojs-v1.3.0
+  services:
+    - docker
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      # We need to build the assets with webpack which varies for both dev and
+      # production. We can either package these as separate docker files, or
+      # have 1 docker file which builds the assets when it runs (and can check
+      # an environmental variable to determine what should be built). The
+      # latter means that we would have to build for every N containers we
+      # deploy, vs always building twice (dev and production) as two separate
+      # images and then being able to deploy those images to as many containers
+      # we want without rebuilding the assets. We're going with building two
+      # images, first dev and then production.
+      - npm run package-dev
+      - docker tag lunohq/web-dev lunohq/web-dev:$CIRCLE_SHA1
+      - npm run package-prod
+      - docker tag lunohq/web-prod lunohq/web-prod:$CIRCLE_SHA1
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push lunohq/web-dev
+      - docker push lunohq/web-prod
